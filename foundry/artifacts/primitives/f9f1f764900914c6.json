@@ -1,0 +1,720 @@
+{
+  "book_id": "f9f1f764900914c6",
+  "source_status": "COMPLETE",
+  "source_note": "Charles D. Daly, American Football, copyright 1921 by Harper and Brothers, printed in the United States of America (edition mark Q-v on the copyright page; frontispiece portrait captioned CHARLES D. DALY; contents lists nine chapters from Organization to Generalship and Quarterback Play). Local PDF is an image only scan whose shipped extracted text is Google Books boilerplate only, so quotes are sourced from the full OCR text of the same Google scan at books-38/Daly-1921-American-Football.txt (189639 bytes, 32941 words), copied to motif-foundry/work/daly-1921/daly-1921-full.txt, following the Tolman route. PDF identity: 210 pages, 7011427 bytes, full sha256 f9f1f764900914c6f9cc8645ee874ce63e27ee38096477810ecbe018773a6c0d computed over str(size) plus file bytes, book_id is its first 16 hex characters. OCR quality is uneven with garbled watermarks and occasional digit errors noted in page anchors where quoted; all verbatim quotes were verified as contiguous substrings of the OCR text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "reserve_energy_guard",
+      "name": "Reserve energy must never be spent in training, only in the final contest",
+      "verbatim_quote": "Drill should never draw on anything except the excess and ordinary energy of the player.",
+      "page": "Ch. I, Organization, Condition and Training, p. 9 (line anchor: reserve energy passage)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Players have separable ordinary energy and reserve energy.",
+        "Exhaustion of reserve requires extended rest to reverse."
+      ],
+      "breakdown_regime": "Fails when a contest cannot be scheduled in advance or when reserve cannot be measured separately from ordinary capacity.",
+      "domain": "training load",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine treats capacity as a protected reserve. Routine inference and exploration draw only on ordinary budget, while a reserved budget is held for decisive, high stakes evaluation. Load is monitored per unit and work stops before the reserve is touched, because depleting it creates a long recovery debt that degrades later performance.",
+        "source_operator": "reserve_energy_guard",
+        "telemetry": "Per unit workload, recovery time, error rate under load, and reserve remaining before a decisive run."
+      }
+    },
+    {
+      "primitive_id": "condition_before_coaching",
+      "name": "Physical condition is paramount and coaching is secondary",
+      "verbatim_quote": "The last word on every item of condition and training is: Never exhaust the reserve vitality of the players; always keep them eager for a whole afternoon's battle.",
+      "page": "Ch. I, p. 8 (line anchor: preparation as race against time)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A minimum condition threshold exists below which tactics cannot compensate.",
+        "Condition is observable before play begins."
+      ],
+      "breakdown_regime": "Fails when condition and tactics interact so strongly that separating them hides the true cause of failure.",
+      "domain": "training load",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine checks substrate health before strategy. Data quality, compute health, and calibration state gate any tactical choice, because a clever plan executed on a degraded substrate produces noise rather than signal. Condition metrics are read first in every decision cycle.",
+        "source_operator": "condition_before_coaching",
+        "telemetry": "Substrate health scores, data freshness, calibration error, and missingness rates."
+      }
+    },
+    {
+      "primitive_id": "trainer_telemetry_ledger",
+      "name": "The trainer keeps a daily book of weights, work tolerance, recuperation, and food for each player",
+      "verbatim_quote": "The trainer should make a careful note of each player's physical and nervous qualities.",
+      "page": "Ch. I, p. 10 (line anchor: trainer duties)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Individual differences in tolerance are stable enough to learn from records.",
+        "Daily measurement does not itself distort performance."
+      ],
+      "breakdown_regime": "Fails when measurement is sparse, gamed, or when conditions change faster than the ledger updates.",
+      "domain": "monitoring",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine maintains a per unit longitudinal ledger rather than a single snapshot. Tolerance, recovery speed, and input needs are tracked over time so that load decisions are individualized. A unit that recovers slowly gets less load even if its current output looks strong.",
+        "source_operator": "trainer_telemetry_ledger",
+        "telemetry": "Daily per unit measurements, tolerance thresholds, recuperation latency, and intake logs."
+      }
+    },
+    {
+      "primitive_id": "no_scrimmage_without_doctor",
+      "name": "No scrimmage is held when the doctor is absent",
+      "verbatim_quote": "Scrimmage should not be held if the doctor is absent. This rule is a vital one in safeguarding the best interests of the players and the sport.",
+      "page": "Ch. I, p. 10 (line anchor: doctor and trainer)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "An independent expert can judge readiness better than the operator driving the work.",
+        "Some operations are irreversible enough to require presence, not remote approval."
+      ],
+      "breakdown_regime": "Fails if the veto becomes a bottleneck that pushes work into unreviewed informal channels.",
+      "domain": "safety gate",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine applies a hard safety veto. High risk operations do not run when the independent safety reviewer is unavailable, regardless of expected gain. The veto is structural, not discretionary, and it protects both the units and the legitimacy of the whole system.",
+        "source_operator": "no_scrimmage_without_doctor",
+        "telemetry": "Presence of independent review, injury or incident rates, and blocked operation counts."
+      }
+    },
+    {
+      "primitive_id": "equipment_weight_cap",
+      "name": "All clothing and equipment together must not weigh over eight pounds when dry",
+      "verbatim_quote": "All clothing and equipment should not weigh over eight pounds when dry.",
+      "page": "Ch. I, Equipment, p. 11",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Overhead accumulates additively and degrades speed past a threshold.",
+        "Dry weight is a fair proxy for in use burden."
+      ],
+      "breakdown_regime": "Fails when protection needs genuinely exceed the cap for a specific high risk role.",
+      "domain": "equipment design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine imposes a hard overhead budget on instrumentation and protection. Every added feature, check, and wrapper costs weight that slows the core action, so total overhead is capped and each addition must displace or justify itself against the cap.",
+        "source_operator": "equipment_weight_cap",
+        "telemetry": "Overhead per operation, latency added by checks, and feature weight inventory."
+      }
+    },
+    {
+      "primitive_id": "hard_schedule_principle",
+      "name": "A schedule that is too hard is better than one that is too weak",
+      "verbatim_quote": "It is better to have too hard than too weak a schedule. The teams played should demand the maximum effort without drawing on the reserve energy.",
+      "page": "Ch. I, Schedule, p. 14",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Hard cases are representative of decisive cases.",
+        "Maximum effort can be demanded without routinely spending reserve."
+      ],
+      "breakdown_regime": "Fails when hard cases are unrepresentative outliers that distort priorities away from common cases.",
+      "domain": "evaluation design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine evaluates against strong opponents and hard cases by default. Weak evaluation sets create false confidence and hide failure modes, while hard sets that stay below the reserve threshold reveal true capability and force adaptation without destroying the system under test.",
+        "source_operator": "hard_schedule_principle",
+        "telemetry": "Difficulty distribution of evaluation cases, effort required per case, and performance drop from easy to hard sets."
+      }
+    },
+    {
+      "primitive_id": "play_to_opponent_weakness",
+      "name": "Design play to minimize own weaknesses and exploit the opponent weakness",
+      "verbatim_quote": "Play to the other team's weakness is one of the basic principles of both football and war.",
+      "page": "Ch. I, The Material, p. 3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Weaknesses on both sides are identifiable before action.",
+        "A plan can shield one weakness while attacking another at the same time."
+      ],
+      "breakdown_regime": "Fails against an opponent with no clear weakness or when profiling data is stale or deceptive.",
+      "domain": "strategy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine profiles both sides before choosing an action. Own weaknesses are shielded by design and opponent weaknesses set the target, rather than running a fixed favorite play. The same profiling runs continuously, because weaknesses shift as personnel and conditions change.",
+        "source_operator": "play_to_opponent_weakness",
+        "telemetry": "Own weakness inventory, opponent weakness inventory, and matchup specific success rates."
+      }
+    },
+    {
+      "primitive_id": "assistant_coach_limit",
+      "name": "Five assistant coaches are necessary and more than seven are harmful",
+      "verbatim_quote": "Five assistant coaches are necessary. Daily attendance from the first day's practice is imperative. More than seven assistants are bad.",
+      "page": "Ch. I, The Assistant Coaches, p. 5",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Specialist instruction is the main driver of individual excellence.",
+        "Coordination cost rises faster than benefit past a small team size."
+      ],
+      "breakdown_regime": "Fails for highly heterogeneous units that genuinely need many distinct specialists.",
+      "domain": "organization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine limits the number of coordinating voices per unit. Too few coordinators leave units untrained, while too many produce conflicting instruction and a characterless, underdeveloped system. Each unit gets one accountable specialist who attends consistently.",
+        "source_operator": "assistant_coach_limit",
+        "telemetry": "Coordinator to unit ratios, instruction conflict rates, and unit performance by coordinator continuity."
+      }
+    },
+    {
+      "primitive_id": "head_coach_morale_responsibility",
+      "name": "The head coach is responsible above all for spirit and morale",
+      "verbatim_quote": "Above all, the head coach is responsible for the spirit and morale of the team.",
+      "page": "Ch. I, The Coach, p. 4",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Morale causally affects execution under pressure.",
+        "One accountable integrator can coordinate parts without micromanaging them."
+      ],
+      "breakdown_regime": "Fails when morale work substitutes for fixing real material or tactical defects.",
+      "domain": "leadership",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine assigns one owner for system level coherence and confidence. Local optimizers handle parts, but a single integrator owns whether the parts trust the plan and sustain effort at the decisive moment. Morale is treated as a performance variable, not decoration.",
+        "source_operator": "head_coach_morale_responsibility",
+        "telemetry": "Confidence indicators, effort persistence under adversity, and integrator intervention logs."
+      }
+    },
+    {
+      "primitive_id": "captain_first_duty",
+      "name": "A good captain first plays his own position excellently in the final game",
+      "verbatim_quote": "He plays his own position excellently in the final game. This is his first duty. All others are secondary.",
+      "page": "Ch. I, The Captain, p. 6",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Coordination credibility comes from demonstrated individual execution.",
+        "Secondary duties can be sequenced after the primary duty is secured."
+      ],
+      "breakdown_regime": "Fails in pure coordination roles where the primary function is coordination itself.",
+      "domain": "leadership",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine requires every coordinating node to perform its own primary function first. A coordinator that stops doing its core job to manage others degrades both functions. Leadership duties are layered on top of proven individual execution, never instead of it.",
+        "source_operator": "captain_first_duty",
+        "telemetry": "Coordinator core task performance, peer coordination actions, and performance in decisive cases."
+      }
+    },
+    {
+      "primitive_id": "three_basic_fundamentals",
+      "name": "The game rests on three basic fundamentals: tackling, interference, and following the ball",
+      "verbatim_quote": "HE game of football is based on three underlying fundamentals: tackling, interference, and following the ball.",
+      "page": "Ch. II, Fundamentals, p. 15",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A small set of fundamentals causally underlies most outcomes.",
+        "Fundamentals are trainable and measurable separately from schemes."
+      ],
+      "breakdown_regime": "Fails when rule or environment changes shift which skills are actually fundamental.",
+      "domain": "fundamentals",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine reduces a complex domain to a small set of load bearing fundamentals whose execution determines success across all higher schemes. Investment flows first to those fundamentals, and any advanced method that degrades them is rejected no matter how elegant it looks.",
+        "source_operator": "three_basic_fundamentals",
+        "telemetry": "Execution rates on each fundamental, correlation of fundamental scores with overall outcomes."
+      }
+    },
+    {
+      "primitive_id": "following_the_ball_value",
+      "name": "Following the ball is a key to success and value falls with distance from the ball",
+      "verbatim_quote": "Following the ball is one of the attributes of all good players. Without it the best of teams will lose.",
+      "page": "Ch. II, Following the Ball, p. 19",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The central object determines where value will be created or lost.",
+        "All units can contribute by tracking, regardless of assigned position."
+      ],
+      "breakdown_regime": "Fails when fixation on the central object blinds units to off ball threats that decide the play.",
+      "domain": "attention",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine keeps every unit oriented to the central object of the contest at all times, on offense and defense alike. Attention drift is treated as a primary failure mode, and responsibility for a long gain is assigned to whoever lost sight of the object.",
+        "source_operator": "following_the_ball_value",
+        "telemetry": "Attention coverage, time to reacquire the central object, and failures traced to lost tracking."
+      }
+    },
+    {
+      "primitive_id": "tackling_result_standard",
+      "name": "Good tackling is low, but at all costs the runner must be brought down",
+      "verbatim_quote": "Good tackling is always low. However, if the situation is such that the tackler cannot get low or will not get the runner by going low, let him tackle any way he can.",
+      "page": "Ch. II, Tackling, p. 18",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Low tackling succeeds most often across conditions.",
+        "Adapted methods retain enough success to be worth using when the standard form is blocked."
+      ],
+      "breakdown_regime": "Fails when adapted methods carry injury or penalty risk that outweighs the single stop.",
+      "domain": "fundamentals",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine prefers the canonical technique but grades on the result when conditions block the canonical form. Form is a strong prior, not an absolute constraint. A unit that achieves the required stop by an adapted method is credited, while perfect form that misses is not.",
+        "source_operator": "tackling_result_standard",
+        "telemetry": "Stop success rate, technique compliance rate, and success rate when technique is adapted."
+      }
+    },
+    {
+      "primitive_id": "keep_weight_in_hand",
+      "name": "Never commit the body until sure of effective work; keep weight in hand under control",
+      "verbatim_quote": "This is a wide principle in all athletics and is no better exemplified in boxing or wrestling than in the game of football. Keep your weight in hand, under control.",
+      "page": "Ch. II, Use of Hands by Line Men, p. 27 (line anchor: retaining control of body)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Control retained can still be committed later at full value.",
+        "Opponents actively exploit premature commitment."
+      ],
+      "breakdown_regime": "Fails when delay itself forfeits the only opening and speed matters more than control.",
+      "domain": "control",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine delays irreversible commitment until the action is likely to be effective. Once a unit surrenders control of its position or resources to an opponent, the opponent steers the outcome. Reversible probing comes first, full commitment only on a clear opening.",
+        "source_operator": "keep_weight_in_hand",
+        "telemetry": "Commitment timing, reversal costs, and outcomes after early versus delayed commitment."
+      }
+    },
+    {
+      "primitive_id": "ball_fixing_no_fumble",
+      "name": "Fix the ball tight to the body and never swing it loosely, as the answer to fumbling",
+      "verbatim_quote": "Receiving and fixing the ball is an essential drill of back-field work and a matter that must be watched the entire season. It is the answer to all the fumbling in scrimmage work.",
+      "page": "Ch. II, Carrying the Ball, p. 21",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Most fumbles come from loose carrying rather than from contact alone.",
+        "Secure grip and forward effort can be sequenced without losing speed."
+      ],
+      "breakdown_regime": "Fails when securing takes so long that the opening closes before advance begins.",
+      "domain": "fundamentals",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine secures the payload before attempting advance. Data, state, and intermediate results are held in a fixed, verified grip during transfer, because most catastrophic losses come from loose handling in transit rather than from failed strategy.",
+        "source_operator": "ball_fixing_no_fumble",
+        "telemetry": "Transfer loss rate, handling error rate, and advance attempted before secure receipt."
+      }
+    },
+    {
+      "primitive_id": "team_excellence_limit",
+      "name": "Team excellence is limited absolutely by individual excellence in the fundamentals",
+      "verbatim_quote": "The excellence of the team is limited absolutely by the excellence of the individual players. The excellence of the individual is measured by his skill in executing the above fundamentals.",
+      "page": "Ch. II, Summary, p. 29",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Components interact additively enough that the weakest units bind the total.",
+        "Fundamental skill is measurable per individual."
+      ],
+      "breakdown_regime": "Fails when strong interaction effects let well matched mediocre units outperform star units.",
+      "domain": "fundamentals",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine treats system performance as capped by component performance on fundamentals. No scheme, however clever, lifts the ceiling set by the weakest load bearing units. Audits therefore measure individuals first and schemes second.",
+        "source_operator": "team_excellence_limit",
+        "telemetry": "Individual fundamental scores, weakest unit scores, and system outcome ceilings."
+      }
+    },
+    {
+      "primitive_id": "offensive_decisive_principle",
+      "name": "Decisive results are obtained only by the offensive; passive defense is a temporary expedient",
+      "verbatim_quote": "Decisive results are obtained only by the offensive.",
+      "page": "Ch. III, Combat, p. 30",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Initiative, not holding, produces decisive outcomes in contested settings.",
+        "Conditions for a favorable return to initiative eventually appear."
+      ],
+      "breakdown_regime": "Fails when proactive action predictably destroys a winning position that holding would preserve.",
+      "domain": "strategy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine defaults to proactive action that can produce a decisive result. Purely defensive operation is allowed only when the mission is fully accomplished by holding, and otherwise it is a temporary state with a planned return to initiative at the first favorable opportunity.",
+        "source_operator": "offensive_decisive_principle",
+        "telemetry": "Share of actions that are initiative taking, duration in passive states, and decisive outcome rate."
+      }
+    },
+    {
+      "primitive_id": "simplicity_and_concentration",
+      "name": "Simple direct plans win; complexity and dispersion cause most defeats",
+      "verbatim_quote": "Simple and direct plans and methods are productive of the best results in war and football.",
+      "page": "Ch. III, Combat Principles, p. 31",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Execution reliability falls sharply with plan complexity under stress.",
+        "Concentration at one point beats equal force spread across many points."
+      ],
+      "breakdown_regime": "Fails when the problem genuinely requires simultaneous action at multiple separated points.",
+      "domain": "strategy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine prefers the simplest plan that a typical unit can execute under stress, executed with concentrated force. Complexity and dispersion are paired failure modes, because a complex plan forces units to spread attention and force thin. Plans are cut until execution under pressure is reliable.",
+        "source_operator": "simplicity_and_concentration",
+        "telemetry": "Plan complexity scores, execution success under stress, and force concentration at the chosen point."
+      }
+    },
+    {
+      "primitive_id": "eight_running_plays",
+      "name": "The running attack has exactly eight plays: two drives, two close slants, two wide slants, two end runs",
+      "verbatim_quote": "This gives eight plays in the running attack, and there can be no more or no less. The end run and the wide slant to the short side are weak.",
+      "page": "Ch. III, The Attack, p. 35",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Geometry of the field and line fixes the distinct attack lines.",
+        "Each line can be executed from any valid concentration."
+      ],
+      "breakdown_regime": "Fails when rule changes or new formations genuinely create a new geometric category.",
+      "domain": "offense structure",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine enumerates the complete action space from geometry rather than inventing plays freely. Given the structure of the contest, the distinct lines of attack are finite and countable, and each has a known strength profile. Novelty outside the enumeration is treated as a variant, not a new category.",
+        "source_operator": "eight_running_plays",
+        "telemetry": "Action space enumeration, usage and success by category, and weak category identification."
+      }
+    },
+    {
+      "primitive_id": "delay_is_fatal",
+      "name": "Delay of any character is fatal to the running attack; backs start immediately at full speed",
+      "verbatim_quote": "If the ball is behind the line of scrimmage for any reason such as line divides, splits, crisscrosses, or brain storms, for more than the time it takes a fast man to start and to take five steps running (say, one and one half seconds), the play is weak.",
+      "page": "Ch. III, The Attack, basic principles, p. 35",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Openings close at a roughly known rate.",
+        "Speed at commitment matters more than minor positional gain from waiting."
+      ],
+      "breakdown_regime": "Fails for actions where deliberate delay creates the opening, such as the forward pass.",
+      "domain": "offense execution",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine penalizes latency behind the decision point. Work that lingers in a vulnerable intermediate state loses value rapidly, and time spent maneuvering before commitment counts against the action. A hard time budget, about one and one half seconds in the source case, marks a play as weak.",
+        "source_operator": "delay_is_fatal",
+        "telemetry": "Latency from start to commitment, success by latency band, and time in vulnerable states."
+      }
+    },
+    {
+      "primitive_id": "kicking_attack_distance_time",
+      "name": "A kick must go at least thirty yards, be high enough to cover, and leave within two seconds",
+      "verbatim_quote": "The kick should advance the ball at least thirty yards beyond the line of scrimmage.",
+      "page": "Ch. III, The Kicking Attack, p. 45",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Thirty yards is the minimum transfer that changes field position materially.",
+        "Coverage needs flight time to arrive with the ball."
+      ],
+      "breakdown_regime": "Fails in short field situations where distance must be traded for placement near a corner.",
+      "domain": "kicking game",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine treats the long transfer as an offensive weapon with explicit service levels: minimum distance, enough height for coverage to arrive, and a strict release deadline under pressure. Falling short on any one level voids the play even if the others are met.",
+        "source_operator": "kicking_attack_distance_time",
+        "telemetry": "Transfer distance, hang time or coverage arrival margin, and release time under pressure."
+      }
+    },
+    {
+      "primitive_id": "forward_pass_open_space",
+      "name": "The forward pass is thrown to open space and received on the run, never to a covered man",
+      "verbatim_quote": "The forward pass is executed from any formation. It is always made to an open space and almost always received on the run.",
+      "page": "Ch. III, The Attack by Forward Passing, p. 50",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Defensive structure leaves predictable open spaces.",
+        "Receivers can reach a led spot at speed without slowing materially."
+      ],
+      "breakdown_regime": "Fails when the defense disguises coverage so the apparent open space is a trap.",
+      "domain": "passing game",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine aims projections at where a receiver will be open, not where a target currently stands. Open spaces are mapped from the defensive structure, including spaces that deception can create, and the throw leads the receiver so arrival and opportunity coincide.",
+        "source_operator": "forward_pass_open_space",
+        "telemetry": "Open space maps, lead distance, completion rate by space type, and interception rate on flat throws."
+      }
+    },
+    {
+      "primitive_id": "pass_delay_requirement",
+      "name": "A good pass attempt needs about two seconds of delay, bought by protection or deception",
+      "verbatim_quote": "Delay is desirable. Two seconds' delay is necessary to make a good attempt from close formation.",
+      "page": "Ch. III, The Attack by Forward Passing, p. 52",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Receiver routes need a minimum development time.",
+        "Protection can reliably purchase that time against a known rush."
+      ],
+      "breakdown_regime": "Fails against a rush so strong that no protection scheme purchases the minimum time.",
+      "domain": "passing game",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine buys time for high value, slower developing actions through protection and deception rather than rushing them. The required delay is quantified, protectors are assigned to purchase it, and the action aborts if the time cannot be secured.",
+        "source_operator": "pass_delay_requirement",
+        "telemetry": "Time available per attempt, protection assignments, and success by time available band."
+      }
+    },
+    {
+      "primitive_id": "deception_limit",
+      "name": "Deceptions are all weak and too many are ruinous; adopt the fake kick and at most one more",
+      "verbatim_quote": "Deceptions are all weak. Too many are ruinous. A fake kick, and possibly one other from the well-proved standard list, might be adopted.",
+      "page": "Ch. III, The Attack by Deception, p. 56",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Defenses identify most deceptions quickly.",
+        "Force diverted to deception is force removed from the attack."
+      ],
+      "breakdown_regime": "Fails against a defense that overcommits so reliably that repeated deception becomes the strongest attack.",
+      "domain": "deception",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine caps deceptive actions at a small, proven set. Deception that sends force away from the real attack weakens the attack itself, so each deception must also serve a protective function, as the fake kick slows the rush that threatens the kicker.",
+        "source_operator": "deception_limit",
+        "telemetry": "Deception usage counts, success by deception type, and main attack strength with and without deception."
+      }
+    },
+    {
+      "primitive_id": "fourteen_play_cap",
+      "name": "A well rounded attack has at most fourteen plays and may be reduced further",
+      "verbatim_quote": "Under no circumstances should there be more than these fourteen plays. If the character of the team and its development permit, the number may be reduced.",
+      "page": "Ch. III, Summary, p. 57",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Practice time is fixed, so playbook size trades directly against repetitions per play.",
+        "The enumerated set covers the useful action space."
+      ],
+      "breakdown_regime": "Fails when opponents scout a tiny playbook so completely that predictability outweighs mastery.",
+      "domain": "offense structure",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine caps the active playbook. Eight runs, one kick, three passes, and one or two deceptions cover the space, and adding more dilutes practice time and execution quality. A smaller, mastered set beats a larger, shallow set, and reduction is encouraged when the team allows it.",
+        "source_operator": "fourteen_play_cap",
+        "telemetry": "Playbook size, practice repetitions per play, and execution quality by playbook size."
+      }
+    },
+    {
+      "primitive_id": "defense_center_of_mass",
+      "name": "Defense mirrors offense: its center of mass stays opposite the offensive center of mass",
+      "verbatim_quote": "In each case the remainder of the defensive team shift their position so that the center of mass of the defensive distribution is opposite that of the offense.",
+      "page": "Ch. IV, The Defense, p. 59",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Matching mass prevents a local overload from deciding the play.",
+        "The defense can reshape as fast as the offense presents its formation."
+      ],
+      "breakdown_regime": "Fails when mirroring is exploited by a late shift the defense cannot answer before the snap.",
+      "domain": "defense structure",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine mirrors the opposing distribution geometrically. When the opponent concentrates, spreads, divides, or deepens, the response reshapes in kind so that mass stays opposite mass. Flank detachments are matched man for man and the remainder recenters after every shift.",
+        "source_operator": "defense_center_of_mass",
+        "telemetry": "Center of mass offset between sides, flank matching counts, and success by offset band."
+      }
+    },
+    {
+      "primitive_id": "defense_outguess_quarterback",
+      "name": "Defense trains every player to predict the opposing play caller choice before the snap",
+      "verbatim_quote": "The players must be trained to figure, while on the defense, upon what play the opposing quarterback is about to call.",
+      "page": "Ch. IV, Outguess the Quarterback, p. 64",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Play callers follow learnable principles and tendencies.",
+        "Distributed prediction beats a single central predictor when cues are local."
+      ],
+      "breakdown_regime": "Fails against a caller who randomizes well or breaks tendencies deliberately in big moments.",
+      "domain": "defense cognition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine models the opposing decision maker, not only the opposing formation. Every defensive unit studies generalship principles, down and distance, and tendencies so it can form a reasonable prediction and concentrate quickly when the prediction firms up. Units talk constantly to share cues.",
+        "source_operator": "defense_outguess_quarterback",
+        "telemetry": "Prediction accuracy by unit, cue sharing frequency, and concentration speed after prediction."
+      }
+    },
+    {
+      "primitive_id": "defense_triangle_groups",
+      "name": "Flank defense is a triangle of end, tackle, and wing back who must coordinate as a group",
+      "verbatim_quote": "There are three groups in all defensive distributions. The end, tackle, and wing back form a triangle on either flank, while the center of the defense is held by the two guards, the center, and the middle back.",
+      "page": "Ch. IV, The Defense, p. 61",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Flank threats require combined responses no single unit can cover.",
+        "Members can signal intent changes fast enough to matter."
+      ],
+      "breakdown_regime": "Fails when communication breaks down under noise or speed and groups revert to individuals.",
+      "domain": "defense structure",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine organizes defense into small interdependent groups with explicit internal communication duties. A member who changes his action must warn the others whose coverage his change exposes, using private signals. Group integrity, not individual heroics, holds the flank.",
+        "source_operator": "defense_triangle_groups",
+        "telemetry": "Group coordination events, exposed territory incidents, and flank success by group stability."
+      }
+    },
+    {
+      "primitive_id": "drill_subconscious_obedience",
+      "name": "Drill creates prompt subconscious obedience and reliable performance under great pressure",
+      "verbatim_quote": "It is through drill, and drill only, that the coach can make reasonably sure of good performance under great pressure.",
+      "page": "Ch. VI, Drill, p. 100",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Repetition converts deliberate actions into reliable automatic ones.",
+        "Pressure degrades deliberative performance more than drilled performance."
+      ],
+      "breakdown_regime": "Fails when situations are so novel that drilled responses misfire and deliberation is required.",
+      "domain": "training method",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine relies on rehearsed, automatic execution for critical moments rather than on deliberation under pressure. Drill is planned and scheduled with the same care as strategy, and brief returns to basic drill restore control after complex exercises.",
+        "source_operator": "drill_subconscious_obedience",
+        "telemetry": "Drill frequency, automaticity measures, and performance degradation under pressure with and without recent drill."
+      }
+    },
+    {
+      "primitive_id": "basic_drills_never_omitted",
+      "name": "Basic individual drills in tackling and interference are short, daily, and never omitted",
+      "verbatim_quote": "The basic individual drills are tackling and interference. These two fundamentals must be drilled daily at the tackling and interference dummies, under the close supervision of a coach.",
+      "page": "Ch. VI, Basic Individual and Group Drills, p. 105",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fundamental skill decays without regular practice.",
+        "Short supervised sessions maintain skill efficiently."
+      ],
+      "breakdown_regime": "Fails during injury or overload periods when even light drill spends needed recovery.",
+      "domain": "training method",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine schedules short daily practice of the core fundamentals under supervision and never trades it away for advanced work. The time cost is small, but omission is treated as a defect, because fundamentals decay and every advanced structure rests on them.",
+        "source_operator": "basic_drills_never_omitted",
+        "telemetry": "Daily fundamental drill completion, fundamental skill trend, and advanced work scheduled in its place."
+      }
+    },
+    {
+      "primitive_id": "kicking_game_creates_breaks",
+      "name": "Press the kicking game because close contests turn on breaks the kicking game develops",
+      "verbatim_quote": "Most closely contested games are kicking contests, from which the break and the opportunity are developed.",
+      "page": "Ch. III, The Kicking Attack, conclusion, p. 50",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Repeated pressure raises opponent error probability over a contest.",
+        "Breaks are convertible only if the scoring attack is ready at that moment."
+      ],
+      "breakdown_regime": "Fails when the opponent kicking game is superior, so pressure rebounds on the pressing side.",
+      "domain": "kicking game",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine uses repeated low risk pressure to create opponent errors rather than waiting for a single brilliant play. Sustained kicking pressure tests catching, protection, and nerve until a weakness cracks, and the scoring attack is held ready to convert the break immediately.",
+        "source_operator": "kicking_game_creates_breaks",
+        "telemetry": "Pressure repetitions, opponent error rate over time, and conversion rate after a break."
+      }
+    },
+    {
+      "primitive_id": "passer_dominance",
+      "name": "Forward pass success is ninety percent dependent on the passer, a high class individual performance",
+      "verbatim_quote": "Experience has shown that the vital element in the forward-pass game is the efficiency of the passer. The success of the forward pass is 9o per cent dependent upon the passer.",
+      "page": "Ch. VIII, Conclusion, p. 145 (OCR reads 9o for 90)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Passer skill varies more and matters more than receiver or scheme variation.",
+        "Passing skill is largely developed before the current season."
+      ],
+      "breakdown_regime": "Fails when protection collapses so completely that no passer skill can express itself.",
+      "domain": "passing game",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine weights the single highest leverage operator far above scheme in the passing domain. A great passer makes ordinary receivers effective and can defeat even a strong defense, while scheme cannot manufacture a passer in one season. Resources go to finding and protecting that operator.",
+        "source_operator": "passer_dominance",
+        "telemetry": "Passer efficiency, receiver performance with different passers, and scheme variation effects."
+      }
+    },
+    {
+      "primitive_id": "rushing_advance_forty_yard_limit",
+      "name": "A rushing advance of more than forty yards against stout resistance is rarely successful",
+      "verbatim_quote": "An advance by rushing of more than 40 yards is rarely successful. Experience has shown that the great concentration and stress of the rushing attack can be maintained, without break, against strong opposition for a distance of not more than 4o yards.",
+      "page": "Ch. IX, Basic Principles in Choice of Plays, p. 148 (OCR reads 4o for 40)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Error probability accumulates with each play against stout resistance.",
+        "A mode switch resets the accumulation."
+      ],
+      "breakdown_regime": "Fails against weak opposition that can be overrun in two or three plays, where the limit does not apply by the source own exception.",
+      "domain": "generalship",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine segments long advances into bounded stages. Sustained concentrated effort against strong resistance breaks down past a known distance through errors and defensive adaptation, so the plan interleaves a different mode, usually kicking, to reset field position before the breakdown arrives.",
+        "source_operator": "rushing_advance_forty_yard_limit",
+        "telemetry": "Advance length before error, error type by distance, and success of staged versus continuous advances."
+      }
+    },
+    {
+      "primitive_id": "never_lose_ball_on_downs",
+      "name": "Never surrender the ball on downs, because the ball is worth about thirty five yards",
+      "verbatim_quote": "Never lose the ball on downs. The value of the ball to a football team is measured in yards by the distance the team is able to kick it.",
+      "page": "Ch. IX, Basic Principles in Choice of Plays, p. 150",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Possession value is approximated by kicking distance.",
+        "Kicking from a stall is almost always available."
+      ],
+      "breakdown_regime": "Fails late in a contest when trailing, where forfeiting field position logic is overridden by the need to score now.",
+      "domain": "generalship",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine prices possession explicitly and refuses to forfeit it for free. When an attack stalls, it converts possession into field position by kicking rather than handing the opponent the equivalent yardage. Near the opponent goal the same logic selects among corner kick, scoring kick, and scoring pass.",
+        "source_operator": "never_lose_ball_on_downs",
+        "telemetry": "Possession value in yards, turnover on downs frequency, and field position after stall resolution."
+      }
+    },
+    {
+      "primitive_id": "backfield_run_climax",
+      "name": "Backs run in climax, gathering speed to hit the line with maximum momentum, collected and never backward",
+      "verbatim_quote": "Run in climax. By this is meant, gather speed as you approach the line of scrimmage and hit the line with maximum momentum.",
+      "page": "Ch. V, Position Play, Underlying Principles, p. 95",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Momentum at the line, not average speed, decides penetration.",
+        "Collected running preserves the option to change direction."
+      ],
+      "breakdown_regime": "Fails when the opening is lateral and early speed in the wrong direction must be discarded.",
+      "domain": "position play",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine shapes effort as a rising curve into the decisive contact point rather than a flat or front loaded effort. The unit stays collected, with weight in hand and direction change available, so maximum momentum coincides with maximum control at the moment that decides the play.",
+        "source_operator": "backfield_run_climax",
+        "telemetry": "Speed profile approaching contact, momentum at contact, and direction change success."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f9f1f764900914c6-t1",
+      "think": "This book is a compact field manual that treats American football as applied combat, and its value for a reasoning engine lies in how completely it reduces a chaotic contest to a small set of governing principles, measurable limits, and assigned responsibilities. Charles D. Daly writes from the large college game, with a squad of fifty or more and one or two decisive contests at the end of a ten week season, yet he insists the same principles scale down to small colleges and schools. That scaling claim matters: the machinery is not a collection of plays but a hierarchy. At the top sit combat principles borrowed directly from war: individual superiority, unity of command, simplicity, concentration, reserves, flank protection, and continuous reconnaissance. Below them sit organization, condition, fundamentals, offense, defense, position play, drill, the kicking game, the forward pass, and generalship, each layer constraining the next. A reasoning engine should copy that hierarchy exactly, because Daly shows what happens when it is inverted. Teams that start with formations and deceptions, the fashionable spreads and shifts he criticizes in Yale after 1908, lose to teams that start with individual excellence and simple direct assault, as Harvard did in taking preeminence from Yale. The book therefore argues for building capability bottom up: secure the material, protect condition, drill fundamentals until they are automatic, and only then choose plays, and it gives numbers at every level so the hierarchy can be tested rather than merely admired. Preparation is a race against a fixed budget of about one hundred twenty five practice hours. Kicks must leave within two seconds and travel at least thirty yards. A rushing advance against stout resistance breaks down past forty yards. Possession is worth about thirty five yards. A well rounded attack contains at most fourteen plays. Pass success is ninety percent the passer. Even a striking statistic is offered for defensive hand work, about thirty successes in one hundred attempts, which teaches the engine to expect low base rates and drill anyway. These quantified limits are the most transferable part of the work, because they convert coaching lore into thresholds a system can enforce, log, and revise. Equally transferable is the treatment of energy and attention as scarce resources. Reserve energy is guarded all season and spent only in the final game, drill draws only on ordinary energy, and overtraining costs at least three weeks of rest, a concrete recovery debt. Attention is governed by following the ball, with a man value falling as his distance from the ball grows, so every unit, not only the one assigned to the play, is responsible for tracking the decisive object. Control is governed by keeping weight in hand: never commit the body, in tackling, interfering, charging, or breaking through, until effective work is sure, because a committed unit can be steered by the opponent. Together these form a resource doctrine that a modern engine can state plainly: protect reserves, track the central object with all sensors, and delay irreversible commitment until the opening is real. The offensive and defensive chapters then show paired reasoning. Offense concentrates, starts immediately, and accepts that delay behind the line is fatal, with a five step and one and one half second test for a weak play. Defense mirrors the offensive center of mass, organizes into triangles and a central group with explicit signalling duties, and trains every man to outguess the opposing quarterback by learning generalship itself. That last move is a theory of mind requirement built into a 1921 manual: prediction improves when the predictor studies the principles the decision maker is using, not only his past frequencies. The kicking game receives the longest strategic respect, because between equals the rushing and passing attacks stall and the contest becomes a kicking contest of thirty to fifty kicks per side, from which breaks develop. Pressing that game is not passivity; it is a method for manufacturing opponent error under repeated pressure, then converting with rush, pass, or scoring kick when the crack appears. Generalship closes the loop with rules that bind the decision maker himself: never lose the ball on downs, segment advances at forty yards, play for breaks against equals, and resist overcoaching so the quarterback develops initiative and self reliance. Where the work breaks, it breaks honestly and instructively. Its evidence is experiential, drawn from successful coaches and famous programs, without controlled comparison, so its percentages and yardages are seasoned estimates, not measurements with error bounds. Its game is the 1921 game: limited substitution, a heavier role for kicking, and medical guidance, including head injury signs and treatments such as baking and hot water, that no modern system should copy as practice, only as evidence that condition and independent medical authority were already treated as hard constraints. Its war analogy, powerful for organization and concentration, can mislead when a contest rewards dispersion, deception, or rule exploitation more than direct assault, and Daly himself concedes exceptions near the goal line, against weak opponents, and for the delayed forward pass, where his own delay is fatal rule reverses. A sound engine therefore takes Daly as a source of structure, thresholds, and vetoes, tests each threshold on current data, and keeps his deepest lesson intact: simplicity, concentration, individual excellence, protected reserves, and a decision maker trained to reason, in that order, beat complexity every time the pressure is highest. That final ordering is itself a usable diagnostic: when a prediction fails, Daly would ask first whether a fundamental failed, then whether concentration or simplicity failed, and only last whether the chosen play was wrong.",
+      "retrocausal_genealogy": "The ideas descend from nineteenth century military science, above all Clausewitz on the application of force, and from the United States Army Field Service Regulations and Infantry Drill Regulations, which Daly quotes and adapts almost verbatim for combat and drill. Inside football the lineage runs through Walter Camp, the father of American football pictured among the coaches, and the Yale direct assault tradition from 1890 to 1907, then its Harvard successor under Percy Haughton from 1908, with Alonzo Stagg, Fielding Yost, and Army coach Ernest Graves representing the contemporary coaching network Daly acknowledges for material. The forward pass chapters extend an older rushing doctrine to a newer legal weapon.",
+      "theory_of_mind": "Daly believes the reader is a coach or captain whose knowledge decides team success, and that the ordinary player, not the star, is the real design problem: under combat stress only what is simple and clear can be executed by a player of ordinary ability. His model of the domain is a battle between organized forces where morale, character, and fighting spirit are causal, where opponents have discoverable weaknesses, and where the quarterback is a field general whose carriage and voice set the team tempo. He trusts principles proved by years of successful application over novelty, and he expects the reader to enforce hard rules while adapting schedules and stances to individuals.",
+      "cross_layer_veto": "Several rules in this work veto signals that other layers might favor. The reserve energy rule vetoes any training or schedule signal that would spend protected capacity before the final contest, and the doctor absence rule vetoes scrimmage entirely. The fourteen play cap vetoes adding a promising new play when the playbook is full, and the simplicity principle vetoes complex formations even when they look advantageous on paper. Possession value vetoes a fourth down gamble that surrenders the ball on downs, the forty yard rule vetoes continuing a rushing drive that statistics say will break, and the concentration principle vetoes deception that disperses force away from the point of attack."
+    }
+  ],
+  "universal_lens": "Beyond football, this work is a template for operating any small expert team under a fixed preparation budget against a thinking opponent. Define a few fundamentals that cap all performance, measure individuals on them daily, protect a reserve that is spent only at the decisive moment, cap the active method set so practice depth beats breadth, price possession of the initiative in concrete units, mirror the opponent distribution, study the opponent decision principles, and use repeated low risk pressure to manufacture the error you then convert. Simplicity and concentration are not style preferences here; they are what survives stress.",
+  "gsi_mapping": "The Galaxy Sports Institute takes from Daly a curriculum and research agenda: teach combat principles, organization, and generalship as one hierarchy, quantify coaching lore into testable thresholds such as time budgets, advance limits, and possession value, and study how individual fundamental skill caps team outcomes. His trainer ledger, drill schedules, and position group methods give the Institute historically grounded models for load management, automaticity under pressure, and distributed prediction, while his experiential evidence standard marks exactly where modern controlled measurement must replace seasoned estimate before a principle is promoted.",
+  "gse_mapping": "The Galaxy Sports Edge engine takes from Daly a reasoning architecture, not plays: fundamentals first scoring of individual units, hard thresholds for latency, advance segmentation, and possession value, a capped action set chosen by concentration and simplicity, opponent modeling that learns the decision maker principles, and vetoes that protect reserves and possession against attractive but dispersing options. The kicking game logic becomes a general pressure and break conversion module, drill becomes scheduled automaticity maintenance for core inferences, and the center of mass mirror becomes a distribution matching check applied before any prediction is emitted."
+}

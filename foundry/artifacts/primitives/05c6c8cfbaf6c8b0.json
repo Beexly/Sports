@@ -1,0 +1,700 @@
+{
+  "book_id": "05c6c8cfbaf6c8b0",
+  "source_status": "COMPLETE",
+  "source_note": "William W. Roper, Winning Football, copyright 1920 by Dodd, Mead and Company. The text itself signs the introduction W. W. ROPER and carries the 1920 Dodd, Mead copyright line; the task brief named the author William T. Roper, but the middle initial visible in the text is W, and no title page line in the OCR gives a fuller form, so the initial is recorded as printed. Contents list nine chapters from Modern Football a Battle of Wits (page 1) to The Day of the Big Game (page 200), with illustrations credited to photographs supplied by the Orren Jack Turner Company of Princeton. Local PDF: Roper-1920-Winning-Football.pdf, 273 pages, 5216289 bytes, full sha256 05c6c8cfbaf6c8b067369866a4322be6bcca7db706901c4c004afa9753a0c574, book_id 05c6c8cfbaf6c8b0 computed over str(size) plus file bytes. The PDF is an image only scan and its shipped extracted text is Google Books boilerplate only, so quotes are sourced from the books-38 full OCR text of the same Google scan at Roper-1920-Winning-Football.txt (262292 bytes, 46960 words), copied to motif-foundry/work/roper-1920/roper-1920-full.txt and used as the quote source (the Tolman route). OCR quality is good for prose with occasional letter errors such as feld for field, which are preserved inside verbatim quotes. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "thinking_football_first",
+      "name": "Winning football is played first with the mind and only incidentally with hands, feet and heart",
+      "verbatim_quote": "Winning football means thinking football, football played first with a man's mind and only incidentally with his hands and feet and heart, football reduced to a strategy which has far more to do with defeat or success than the precision and perfection of field tactics.",
+      "page": "Chapter I, Modern Football a Battle of Wits, text line 140",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The rules in force reward thought over mass, as Roper argues the post 1906 open game does.",
+        "Players can be taught to think faster without losing physical effort."
+      ],
+      "breakdown_regime": "Fails when physical mismatch is extreme, a limit Roper concedes by requiring teams to be anywhere nearly equal for the mental edge to decide.",
+      "domain": "strategy and cognition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine treats cognition as the primary layer and physical execution as a downstream expression of a prior decision. Every projection begins from a reasoned read of matchup, situation and opponent intent, and only then attaches expected execution quality, instead of starting from raw physical ratings alone.",
+        "source_operator": "thinking_football_first",
+        "telemetry": "Play by play decision logs, pre snap reads, and the stated reason recorded for each chosen action."
+      }
+    },
+    {
+      "primitive_id": "self_effacement_for_team_cause",
+      "name": "Individual ambition is subordinated to the team and the institution it represents",
+      "verbatim_quote": "For winning football, more than ever in the old days, is a game of self-effacement for the common good, of willing subordination of selfish motive and individual ambition to the cause of a team which only personifies the university or school behind it.",
+      "page": "Chapter I, text line 138",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Eleven players act as one unit rather than as independent performers.",
+        "The institution behind the team supplies a shared purpose players accept."
+      ],
+      "breakdown_regime": "Breaks down when incentives reward individual statistics, because players then chase visible credit instead of enabling work.",
+      "domain": "team coordination",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A multi agent system gains when local actors suppress locally glorious actions in favor of the action that raises team outcome. The mapping is a credit assignment rule: value the enabling action, such as a block that frees a teammate, at the point where the outcome was actually created.",
+        "source_operator": "self_effacement_for_team_cause",
+        "telemetry": "Touch and involvement logs showing off ball actions, screens, decoy routes and their effect on play success."
+      }
+    },
+    {
+      "primitive_id": "institutional_atmosphere_precondition",
+      "name": "A winning combination cannot be developed without a winning atmosphere in the institution",
+      "verbatim_quote": "I found it then and I have found it since a stark impossibility to develop a winning combination on the field unless I had or developed a winning atmosphere in the institution.",
+      "page": "Chapter II, The Spirit Behind the Team, text line 219",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Spirit exists in most institutions and can be stimulated and guided by the coach.",
+        "Atmosphere affects players even though it never touches the ball."
+      ],
+      "breakdown_regime": "Roper offers experience rather than measurement here, and the effect is hard to separate from material quality, so it should be weighted as a soft prior.",
+      "domain": "organizational context",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Context outside the immediate contest is a real input, not decoration. Surrounding support, expectations and norms change effort and discipline inside the contest, so the engine should carry an environment variable for institutional backing rather than modeling the eleven actors in isolation.",
+        "source_operator": "institutional_atmosphere_precondition",
+        "telemetry": "Attendance, support and conduct indicators, plus effort measures such as late game performance drop off."
+      }
+    },
+    {
+      "primitive_id": "learnability_over_physical_handicap",
+      "name": "A physically handicapped player who absorbs instruction is worth more time than an unwilling or dull learner",
+      "verbatim_quote": "It is possible to do a great deal with a man physically handicapped who will absorb and profit by instruction, but the season is too short and crowded to divert much time to unwilling learners or essentially stupid ones.",
+      "page": "Chapter III, The Routine of Early Season Practise, text line 285",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The season is short, so coaching time is a scarce resource to allocate.",
+        "Responsiveness to instruction is observable early."
+      ],
+      "breakdown_regime": "Fails if applied as a fixed label too early, since Roper also notes that slow developing candidates sometimes become the best players.",
+      "domain": "selection and development",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Selection should weight learning rate heavily. A unit that updates quickly from coaching and from error compounds across a season, while a unit that does not update stays at its initial level, so projected late season value depends on measured responsiveness to instruction, not only on current ability.",
+        "source_operator": "learnability_over_physical_handicap",
+        "telemetry": "Correction uptake after coaching points, error repetition rates, and improvement slope across practise sessions."
+      }
+    },
+    {
+      "primitive_id": "protective_equipment_avoidable_injury",
+      "name": "No player belongs on the field before taking every precaution against avoidable injury",
+      "verbatim_quote": "Every good player is always keen to get out of the dressing-room and on the field, and unless a very careful and painstaking eye is kept on the detail of protective equipment, every season will yield minor injuries which could easily have been avoided.",
+      "page": "Chapter III, text line 303",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Many early season injuries are minor and avoidable rather than inherent to contact.",
+        "Players left alone will rush onto the field underprepared."
+      ],
+      "breakdown_regime": "Cannot remove the irreducible risk of a contact game, which Roper states plainly; it only removes the avoidable share.",
+      "domain": "risk control and availability",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Availability is protected by removing preventable losses before optimizing performance. The engine analogue is a preflight check: known, cheaply preventable failure modes are eliminated first, because a preventable absence destroys more value than marginal tactical refinement creates.",
+        "source_operator": "protective_equipment_avoidable_injury",
+        "telemetry": "Equipment and readiness checklists, minor injury counts, and days lost to preventable causes."
+      }
+    },
+    {
+      "primitive_id": "reject_falling_on_the_ball",
+      "name": "Do not teach falling on a loose ball, because the habit fires at the wrong moment and costs yards or a score",
+      "verbatim_quote": "I do not want to teach my players to fall on a ball at any time, because in the heat of a game some of them will certainly do it at the wrong time and cost us yards or a score instead of winning them.",
+      "page": "Chapter III, text line 353",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Habits trained in practise transfer automatically into games.",
+        "The value of a possible score outweighs the occasional lost fumble, in Roper's judgment."
+      ],
+      "breakdown_regime": "The tradeoff reverses late in a game when protecting a lead makes securing the ball worth more than advancing it.",
+      "domain": "habit design and turnover play",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A drilled default becomes the action taken under pressure, so defaults must be chosen for their game consequences, not their practise convenience. Teaching recovery and advance as the default converts a loose ball from a dead possession into a scoring chance, at the cost of occasional lost fumbles.",
+        "source_operator": "reject_falling_on_the_ball",
+        "telemetry": "Loose ball outcomes, recovery advance yards, and instances of a player falling on a ball with open field ahead."
+      }
+    },
+    {
+      "primitive_id": "fixed_program_and_stopwatch",
+      "name": "Practise runs on a fixed program timed by stopwatch, planned in advance rather than improvised",
+      "verbatim_quote": "I think this is always a mistake and that it pays heavily to have a fixed program and to use a stopwatch in carrying it out.",
+      "page": "Chapter III, text line 360",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Judgment made beforehand is better than judgment made during the work.",
+        "Fatigue sharply raises injury risk."
+      ],
+      "breakdown_regime": "A rigid plan can miss a live teaching moment, so the plan governs time allocation rather than forbidding all adaptation.",
+      "domain": "training process control",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Preparation quality is a controllable process variable. A precommitted plan with timed blocks prevents the common failure of overrunning an enjoyable or urgent drill into fatigue, which Roper links directly to injuries, so the reasoning layer should treat session design as part of performance, not administration.",
+        "source_operator": "fixed_program_and_stopwatch",
+        "telemetry": "Planned versus actual drill durations, fatigue markers, and injuries occurring late in sessions."
+      }
+    },
+    {
+      "primitive_id": "ten_days_then_a_week_of_scrimmage",
+      "name": "Ten days of preliminary work fits a team for its first scrimmage and a week of scrimmaging readies it for the opening game",
+      "verbatim_quote": "I think that ten days is enough to fit a team for its first scrimmage and that a week is enough scrimmaging to make ready for the opening game.",
+      "page": "Chapter III, text line 374",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Rudimentary work wearies players mentally when prolonged.",
+        "Live scrimmage is itself a distinct preparation stage."
+      ],
+      "breakdown_regime": "The specific day counts belong to a 1920 college calendar and short season, so the transferable content is the sequencing and the dose limit, not the literal numbers.",
+      "domain": "training periodization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "There is an optimal dose of foundational work beyond which returns turn negative through boredom and dulled interest. The mapping is a periodization prior: sequence fundamentals, then live work, then competition, and treat excess preliminary volume as a cost rather than as diligence.",
+        "source_operator": "ten_days_then_a_week_of_scrimmage",
+        "telemetry": "Days in each training phase, engagement indicators, and performance in the first live scrimmage."
+      }
+    },
+    {
+      "primitive_id": "rules_made_subconscious_by_repetition",
+      "name": "Rule observance must become subconscious mechanics through everlasting repetition, or it will lose a game",
+      "verbatim_quote": "The only possible way of making reasonably sure that these two modern innovations will not lose a game, is to make their observance a subconscious affair of pure mechanics and that can be accomplished only by everlasting repetition.",
+      "page": "Chapter III, text line 402",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Repetition can make observance automatic.",
+        "Practise with a full set of officials transfers to game conditions."
+      ],
+      "breakdown_regime": "Automation can entrench a wrong habit just as firmly, a danger Roper flags elsewhere, so repetition must follow correct instruction.",
+      "domain": "procedural compliance",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Any rule that must be obeyed under time pressure has to be automated before the contest, because conscious attention is fully consumed by play. For a reasoning engine this separates hard constraints, which are compiled into procedure and never renegotiated in the moment, from open decisions, which deserve deliberation.",
+        "source_operator": "rules_made_subconscious_by_repetition",
+        "telemetry": "Penalty and procedural error counts, substitution reporting errors, and offside infractions in practise and games."
+      }
+    },
+    {
+      "primitive_id": "live_tackling_not_the_dummy",
+      "name": "Tackling must be taught against live runners, because a dummy teaches the wrong tackle",
+      "verbatim_quote": "Teaching a man to dive at a stuffed cloth bag will never teach him to bring down a shifty open-field runner, and it actually teaches a line-man how not to tackle a plunging back with high knee-action.",
+      "page": "Chapter III, text line 425",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Tackling differs radically by position and by situation.",
+        "Instinct against a human runner is damaged, not helped, by dummy work."
+      ],
+      "breakdown_regime": "Live tackling carries injury cost, which is why Roper introduces it gradually and by theory first.",
+      "domain": "skill acquisition and transfer",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Training stimuli must resemble the real target or they teach a different skill. A static target produces timing and angles that fail against a moving, evasive opponent, so evaluation and practise data should be drawn from live, representative situations rather than from simplified drills that flatter performance.",
+        "source_operator": "live_tackling_not_the_dummy",
+        "telemetry": "Missed tackle rates against live runners by position, separated for line and open field situations."
+      }
+    },
+    {
+      "primitive_id": "tackling_as_defensive_deterrent",
+      "name": "Sure, hard, aggressive tackling disheartens the opposing attack, and weak tackling nullifies strong ground gaining",
+      "verbatim_quote": "The best conceivable defense lies in the disheartening effect which sure, hard aggressive tackling has on the opposing attack, and weak, loose tackling will nullify the best ground-gaining ability imaginable.",
+      "page": "Chapter III, text line 432",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Attacking players respond to the expected cost of running into sure tackling.",
+        "Ground gained is worthless if it cannot be kept."
+      ],
+      "breakdown_regime": "The effect is opponent dependent and fades against a disciplined opponent that keeps its plan regardless of contact.",
+      "domain": "defense and opponent morale",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Defensive value includes a psychological term: reliable tackling changes what the opponent is willing to attempt. The engine should therefore value tackling reliability not only for yards prevented on the play itself but for its effect on subsequent opponent play selection and aggression.",
+        "source_operator": "tackling_as_defensive_deterrent",
+        "telemetry": "Opponent play selection after hard stops, yards after contact allowed, and missed tackle frequency."
+      }
+    },
+    {
+      "primitive_id": "interference_timing_stay_on_feet",
+      "name": "The great interference error is leaving the feet too soon, which lets the tackler dodge and removes the blocker from the play",
+      "verbatim_quote": "The great mistake that most men make in interference is in leaving their feet too soon and giving the tackler a good chance to dodge, while the interferer has put himself finally out of the play.",
+      "page": "Chapter III, text line 441",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A defender who is set and braced can be taken out by a well timed block.",
+        "A blocker on the ground cannot affect the play further."
+      ],
+      "breakdown_regime": "Staying on the feet too long against a much larger defender can fail to move him at all, so timing trades against raw displacement.",
+      "domain": "blocking technique and timing",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Commitment timing is the variable: an early irreversible commitment gives the opponent a free evasion and removes the actor from further influence. The general operator is to delay irreversible commitment until the opponent's own movement has reduced his options, preserving the ability to adjust.",
+        "source_operator": "interference_timing_stay_on_feet",
+        "telemetry": "Block success by timing of contact, defender evasion rate, and whether the blocker remains in the play after first contact."
+      }
+    },
+    {
+      "primitive_id": "interferer_value_over_runners",
+      "name": "One good interferer is worth more than three first class runners with the ball",
+      "verbatim_quote": "If I had to choose between one good interferer and three first-class runners-with-the-ball, in my back-field, I should always choose the former and it would win me games.",
+      "page": "Chapter III, text line 459",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Few runners gain ground without interference at least as effective as their own running.",
+        "Interference is needed on nearly every running play, while carries are divided."
+      ],
+      "breakdown_regime": "In an open, pass heavy structure the relative value shifts toward receivers and passers, so the ratio is era dependent even though the undervaluation point is not.",
+      "domain": "personnel valuation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enabling skill is systematically undervalued because its output appears in another player's statistics. Valuation must credit the blocker for the yards his work creates, which usually exceeds the marginal value of another ball carrier competing for the same touches.",
+        "source_operator": "interferer_value_over_runners",
+        "telemetry": "Yards gained with and without a given blocker on the field, and block win rates on scoring plays."
+      }
+    },
+    {
+      "primitive_id": "signals_made_subconscious",
+      "name": "Understanding each called play must become a subconscious process so conscious intelligence stays free for emergencies",
+      "verbatim_quote": "The task of understanding each play called for by the quarter-back must be reduced as soon as possible to the same subconscious process as tackling and interfering.",
+      "page": "Chapter III, text line 502",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Numbered codes impose a translation cost that steals playing ability and speed of thought.",
+        "Repetition can make the translation automatic."
+      ],
+      "breakdown_regime": "Overly simple codes are easier for an opponent to learn, which is why Roper still wants a system that resists casual decoding.",
+      "domain": "communication and cognitive load",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A shared code only works if decoding costs almost nothing. When signal comprehension is automatic, each actor's full attention is available for the novel features of the play, so system design should minimize code complexity and repertory size rather than maximizing expressive range.",
+        "source_operator": "signals_made_subconscious",
+        "telemetry": "Signal errors, wrong direction plays, and response time from signal to correct alignment."
+      }
+    },
+    {
+      "primitive_id": "execution_over_variety",
+      "name": "Within a complete catalogue of attack, aim at perfection of execution rather than variety",
+      "verbatim_quote": "This catalogue includes every element of a sound attack, and within its limits the aim of the coach, as I see it, should be to attain perfection of execution rather than variety.",
+      "page": "Chapter IV, Every Man in Every Play, text line 599",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The catalogue of line thrusts, end runs, passes, punts and kicks covers a sound attack.",
+        "Practise time is the binding constraint."
+      ],
+      "breakdown_regime": "A repertory narrowed too far becomes predictable, so the floor is full category coverage before depth is preferred.",
+      "domain": "repertory design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Breadth of options has diminishing and then negative value once the essential categories are covered, because practise time is fixed and precision falls. The engine analogue is feature and play selection discipline: cover every necessary category, then spend remaining capacity on reliability of the core set.",
+        "source_operator": "execution_over_variety",
+        "telemetry": "Execution success by play, practise repetitions per play, and error rates on rarely used plays."
+      }
+    },
+    {
+      "primitive_id": "punt_coverage_over_distance",
+      "name": "A shorter punt with the line downfield abreast of the ends beats a long punt without coverage",
+      "verbatim_quote": "The real difficulty is to instill the necessary speed into the punter and to correlate his play with that of the ends and the line.",
+      "page": "Chapter IV, text line 651",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Average championship punts are under forty yards, so distance is attainable by most trained kickers.",
+        "Ends alone cannot cover a punt safely."
+      ],
+      "breakdown_regime": "On a very long punt from deep territory, distance can matter more than coverage if the returner is pinned against his own goal.",
+      "domain": "kicking game and field position",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Gross distance is the wrong metric for a punt; net outcome after the return is the metric. Coverage speed and coordination determine that net figure, so evaluation must use the full play result, including return yards and starting position surrendered, rather than the headline kick length.",
+        "source_operator": "punt_coverage_over_distance",
+        "telemetry": "Punt distance, return yards, net field position change, and coverage arrival times."
+      }
+    },
+    {
+      "primitive_id": "yards_not_touchdowns_objective",
+      "name": "The objective of every play is to gain yards, not touchdowns, except as a lucky incident",
+      "verbatim_quote": "I am far from minimizing the value of such variations in attack and I use them myself all I can, but I maintain that the objective of every play is to gain yards and not touchdowns except as a lucky incident.",
+      "page": "Chapter IV, text line 570",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Standard plays exist to supply the field general with raw material for strategy.",
+        "Defenses prepare specifically for obvious scoring attempts."
+      ],
+      "breakdown_regime": "Near the goal or late with a deficit, the objective legitimately becomes the score itself, which Roper treats under field generalship rather than under repertory design.",
+      "domain": "play objective and risk",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Setting the objective at steady gain rather than at the spectacular score changes play selection toward repeatable value. Chasing the long score wastes downs and exposes the ball, while accumulated yardage moves the team into scoring range as a byproduct, so the objective function should reward expected advance, not highlight probability.",
+        "source_operator": "yards_not_touchdowns_objective",
+        "telemetry": "Yards per play, success rate by play type, and frequency of long shot calls on early downs."
+      }
+    },
+    {
+      "primitive_id": "forward_pass_as_threat",
+      "name": "The pass is worth using even if it never gains an inch, because it keeps the defense worried and spread",
+      "verbatim_quote": "I use it to gain ground, of course, but if I knew that it would never gain me an inch, I should still use it about as often as I do, merely to keep the defense worried and spread.",
+      "page": "Chapter VI, Running the Team, text line 1002",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Defenders must honor a demonstrated passing ability.",
+        "The pass also gains ground directly when completed."
+      ],
+      "breakdown_regime": "A threat that is never executed stops being believed, so the option must be used at a real rate to retain its spacing value.",
+      "domain": "threat value and spacing",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An option can earn its place through the defensive distortion it forces rather than through its own output. Credible passing threat widens and loosens a defense, improving every other play, so the engine must carry a threat term for options that are used often enough to be believed but valued mainly for spacing.",
+        "source_operator": "forward_pass_as_threat",
+        "telemetry": "Defensive alignment depth and width, box counts, and rushing success before and after pass attempts."
+      }
+    },
+    {
+      "primitive_id": "three_zones_of_the_field",
+      "name": "The field divides into defensive, neutral and enemy territory, each with its own general policy",
+      "verbatim_quote": "I divide the field into three zones, which I call for convenience: defensive, neutral and enemy territory.",
+      "page": "Chapter V, A Real Quarter Back Must Have Brains, text line 733",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Neutral ground extends roughly to the line from which the drop kicker can be relied upon.",
+        "Zone policy should guide rather than dictate, which Roper stresses repeatedly."
+      ],
+      "breakdown_regime": "Fixed zone rules become predictable, and Roper explicitly warns against the idea that a certain yard line and down require a certain play.",
+      "domain": "field position framework",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Field position is a state variable that changes the value of every action. Deep in home territory the cost of a turnover dominates, in midfield the repertory widens, and in enemy territory scoring plays become rational, so decisions should be conditioned on zone first and on the specific play second.",
+        "source_operator": "three_zones_of_the_field",
+        "telemetry": "Field position at each snap, turnover location, and scoring rate by starting zone."
+      }
+    },
+    {
+      "primitive_id": "unpredictability_on_early_downs",
+      "name": "Early down plays must never be ones the enemy can count on with any degree of certainty",
+      "verbatim_quote": "The punt becomes, of course, advisable on the third down and almost inevitable on the fourth, but the first two plays, it seems to me, should never be such that the enemy can count with any degree of certainty on their being adopted.",
+      "page": "Chapter V, text line 765",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A defense that knows the play can position and time itself against it.",
+        "Third and fourth down options narrow by necessity."
+      ],
+      "breakdown_regime": "Randomness for its own sake wastes the best plays; Roper's point is avoiding foreseeable monotony, not abandoning sound tendencies.",
+      "domain": "strategy and unpredictability",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Predictability is the one fatal defect Roper names in offensive play. When the opponent can anticipate, his preparation converts directly into stopped plays, so selection should preserve genuine uncertainty on the downs where the repertory is widest, reserving the obvious play for the downs where it is forced.",
+        "source_operator": "unpredictability_on_early_downs",
+        "telemetry": "Opponent anticipation indicators, play tendency frequencies by down and zone, and success of tendency breaking plays."
+      }
+    },
+    {
+      "primitive_id": "every_defender_influences_play_choice",
+      "name": "Every opposing defender ought to exert a direct influence on the choice of every play sent against his team",
+      "verbatim_quote": "Every one of these men ought to exert a direct influence on the choice of every individual play sent against his team.",
+      "page": "Chapter V, text line 840",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Defenders reveal intentions through position and stance often enough to be worth charting.",
+        "Games have been won and lost on which way a guard or tackle happened to be standing, in Roper's account."
+      ],
+      "breakdown_regime": "Reads can be faked by a sophisticated defense, and a quarter who trusts every tell becomes manipulable.",
+      "domain": "opponent modeling",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Play choice is a function of the whole opposing alignment, not of a single matchup. Stance, depth, width and habits of each defender carry information, and Roper trains the quarter to read from the center outward, so the reasoning layer should ingest the full defensive picture before ranking any option.",
+        "source_operator": "every_defender_influences_play_choice",
+        "telemetry": "Defender alignment and stance charting, pre snap movement, and play success conditioned on those reads."
+      }
+    },
+    {
+      "primitive_id": "quarterback_field_command",
+      "name": "On the field the quarter back is in command of play choice and not even the captain should overrule him",
+      "verbatim_quote": "From the outset the quarter-back should understand that on the field he is in command so far as the choice of play is involved and not even the captain should overrule his judgment in this re spect.",
+      "page": "Chapter V, text line 867",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Only the man on the field has the close view essential to sound tactics.",
+        "A leader trained to obey cannot suddenly improvise in an unforeseen emergency."
+      ],
+      "breakdown_regime": "Unchecked authority fails when the field general is inexperienced or rattled, which is why Roper pairs autonomy with daily half hour instruction.",
+      "domain": "decision authority",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Decision rights must sit with the actor who sees the situation, because sideline direction arrives too late and lacks the field view. The coach's leverage is upstream, in training judgment and principles, not in real time instruction, so systems should invest in the decision maker's preparation and then protect his authority.",
+        "source_operator": "quarterback_field_command",
+        "telemetry": "Play outcomes by who selected the play, sideline intervention frequency, and delay caused by looking for direction."
+      }
+    },
+    {
+      "primitive_id": "distributed_eyes_feed_the_quarter",
+      "name": "Teammates supply the quarter with what they alone can see, such as whether their own opponent plays in or out",
+      "verbatim_quote": "A guard, for instance, knows whether his opponent is playing in or out on the defensive and he also should know that the quarter can use this information and may not see it for himself.",
+      "page": "Chapter V, text line 888",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Each position has a privileged view of its own opponent.",
+        "The game allows only brief bunching up for such conversation."
+      ],
+      "breakdown_regime": "Unfiltered reporting confuses the decision maker, a failure Roper says he has seen do more damage than silence.",
+      "domain": "distributed sensing",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "No single observer sees the whole field, so information must be gathered from every position and routed to the decision maker in usable form. Roper's discipline is selective reporting: teach men what to tell and what not to tell, because excess information is worse than none.",
+        "source_operator": "distributed_eyes_feed_the_quarter",
+        "telemetry": "Reports given during time outs, their accuracy, and subsequent play success against the reported tendency."
+      }
+    },
+    {
+      "primitive_id": "pass_failure_asymmetry",
+      "name": "A failed forward pass costs no territory and a fumble on a pass play retains possession, unlike other attacking plays",
+      "verbatim_quote": "Anyway, the danger of the pass is no more than is inherent in every attacking play, and it possesses this one element of safety which is not found in any other, namely, a fumble retains possession of the ball without losing an inch of territory.",
+      "page": "Chapter VI, text line 1073",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Twice as many passes are completed as intercepted, by the analysis Roper cites.",
+        "Interceptions often cost the intercepting team yardage on the return."
+      ],
+      "breakdown_regime": "The asymmetry depends on the specific rules of the era, including how an incomplete pass and a fumble were treated, so it must be recomputed under current rules rather than imported whole.",
+      "domain": "risk asymmetry of the pass",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Downside shape matters as much as average gain. The pass, under the rules Roper describes, has a bounded failure cost, an incomplete attempt wastes a down but surrenders neither ground nor usually the ball, which makes its risk profile fundamentally different from a running play that can lose both.",
+        "source_operator": "pass_failure_asymmetry",
+        "telemetry": "Pass outcomes split into completion, incompletion, interception and fumble, compared with running play losses."
+      }
+    },
+    {
+      "primitive_id": "off_tackle_numerical_advantage",
+      "name": "The off tackle drive can throw two men on every defensive lineman involved, leaving interferers for the backs",
+      "verbatim_quote": "It is so built that two men can be thrown on every defensive lineman involved, with two interferers left to take care of the defensive end when necessary or the defensive full or half-back as they come up.",
+      "page": "Chapter VI, text line 1163",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The objective is a sure two or three yards rather than a possible long gain.",
+        "Defenses stiffen and narrow at the center in obvious short yardage situations."
+      ],
+      "breakdown_regime": "The advantage vanishes if the defense anticipates the play and shifts its strength there, so it depends on the center threat remaining credible.",
+      "domain": "short yardage play design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "For a sure short gain, choose the play that creates a local numerical advantage at the point of attack instead of the most direct play at the center, where the defense is massed and expects it. Roper's reasoning is structural: if one forward must stop two men, the presumptive advantage sits with the attack.",
+        "source_operator": "off_tackle_numerical_advantage",
+        "telemetry": "Short yardage conversion rate by play direction, and blockers assigned per defender at the point of attack."
+      }
+    },
+    {
+      "primitive_id": "fluid_campaign_instant_variation",
+      "name": "An attack must be a campaign susceptible of instant variation for an unforeseen emergency or unexpected defense",
+      "verbatim_quote": "It must be not merely a well-conceived campaign, but a campaign susceptible of instant variation to meet an unforeseen emergency or an unexpected line of defense.",
+      "page": "Chapter VI, text line 1218",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Defenses present unforeseen formations and emergencies in every game.",
+        "Linked plays set up later plays, as with plays used to draw a defense out of position."
+      ],
+      "breakdown_regime": "Constant variation without a stable core produces the incoherence Roper condemns in over elaborate repertories.",
+      "domain": "adaptive strategy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A plan that cannot change mid contest is a liability, because the opponent co authors the attack by his own choices. Roper compares the game to chess, where no move can be considered except as linked to those before and after it, so the reasoning layer must hold a linked sequence with branch points rather than a fixed script.",
+        "source_operator": "fluid_campaign_instant_variation",
+        "telemetry": "In game adjustments, success of plays called after a defensive change, and sequence level rather than single play evaluation."
+      }
+    },
+    {
+      "primitive_id": "defense_concentration_at_the_point",
+      "name": "Defense interposes one or two men where a foreseeable attack will strike, as offense throws superior force at the point of impact",
+      "verbatim_quote": "In the main the idea underlying defense is to interpose a man or two men at the point where any foreseeable attack is apt to strike, just as the aim of the offense is to throw a superior force at the point of impact.",
+      "page": "Chapter VI, text line 1281",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Foreseeable attacks can be anticipated from formation and tendency.",
+        "The pass is a continuing clash between these two ambitions, in Roper's framing."
+      ],
+      "breakdown_regime": "Concentrating on the expected point strips another area, which is exactly what a good field general exploits with a counter play.",
+      "domain": "defensive structure",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Defense and offense are the same problem with opposite signs: local superiority at the point of contact. The defensive task is anticipation, placing strength where the attack is likely to land, which makes opponent tendency modeling the core defensive input rather than reaction speed alone.",
+        "source_operator": "defense_concentration_at_the_point",
+        "telemetry": "Defensive alignment relative to eventual point of attack, and yards allowed by whether the defense outnumbered the attack there."
+      }
+    },
+    {
+      "primitive_id": "defense_requires_every_man_to_think",
+      "name": "On defense every man must be taught to think effectively and fast, unlike the attack where one man thinks for the team",
+      "verbatim_quote": "On the defense, every man has to be taught to think effectively and fast, although even here the captain must exercise a general supervision of individual play and is to that extent a defensive strategist.",
+      "page": "Chapter VI, text line 1376",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "No coach can lay down a policy covering more than a few common offensive types.",
+        "The captain supervises but cannot direct each man's play."
+      ],
+      "breakdown_regime": "Distributed thinking produces inconsistency if principles are not shared, so the common fundamentals must be drilled first.",
+      "domain": "distributed defensive cognition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Defensive cognition cannot be centralized, because the defense reacts to a formation it did not choose and has no huddle leader calling each response. Every defender needs principles he can apply to unfamiliar formations, which Roper tests by confronting his men with strange scrub formations until application becomes fast.",
+        "source_operator": "defense_requires_every_man_to_think",
+        "telemetry": "Performance against novel formations, assignment errors, and response time to unexpected alignments."
+      }
+    },
+    {
+      "primitive_id": "punt_as_possession_for_position_exchange",
+      "name": "The punt exchanges the advantage of possession for a lessened disadvantage of position, with relative certainty",
+      "verbatim_quote": "The punt, in brief, is one effective means whereby a team may exchange the advantage of possession for a lessened disadvantage of position with relative certainty that this will be the result.",
+      "page": "Chapter VII, The Kicking Game, text line 1426",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Every game produces situations where the exchange is advisable or necessary.",
+        "A team without a reliable punter is at a strong disadvantage."
+      ],
+      "breakdown_regime": "When points are desperately needed or when protecting a late lead, possession dominates position and the exchange becomes poor policy at almost any price.",
+      "domain": "decision tradeoff",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Punting is a priced exchange, not an admission of failure: possession is surrendered for field position, and the price is worth paying only when position is worth more than possession in that state. Score, time and the quality of the opposing attack all move the price, which Roper insists quarters routinely ignore.",
+        "source_operator": "punt_as_possession_for_position_exchange",
+        "telemetry": "Field position before and after punts, opponent scoring rate by starting position, and score and time state at the decision."
+      }
+    },
+    {
+      "primitive_id": "drop_kick_only_when_first_down_is_gone",
+      "name": "Do not attempt the field goal until the possibility of gaining a first down seems practically gone",
+      "verbatim_quote": "Under these conditions it does not seem to me worth while to attempt the kick until the possibility of gaining a first down seems practically gone.",
+      "page": "Chapter VII, text line 1494",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The play is essentially a third or fourth down affair, and nearly always the latter.",
+        "Its value depends on time, score, the kicker's certainty and position relative to side and goal lines."
+      ],
+      "breakdown_regime": "If three points win or tie the game outright late, the threshold collapses and the attempt is correct as soon as range is reached.",
+      "domain": "scoring decision threshold",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A three point attempt is a compromise between a touchdown that seems out of reach and losing the ball, so it should be taken only when the higher value outcome is no longer realistically available and when the three points themselves change the game's needs. Taking it earlier surrenders a live chance at more.",
+        "source_operator": "drop_kick_only_when_first_down_is_gone",
+        "telemetry": "Field goal attempts by down and distance, subsequent scoring when teams instead continued the drive, and score state."
+      }
+    },
+    {
+      "primitive_id": "schedule_of_gradually_harder_games",
+      "name": "Practise games should start not too hard and gradually increase in difficulty as the team is knitted together",
+      "verbatim_quote": "I want practise games which are not at first too hard for my team, and which gradually in crease in difficulty as the team learns more football and is knitted more and more closely into a team and out of an eleven.",
+      "page": "Chapter VIII, The Schedule, text line 1659",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A team does not exist as a team until its season is five or six weeks along, in Roper's account.",
+        "Substitutes need real game instruction to be usable later."
+      ],
+      "breakdown_regime": "Financial pressure can force early games against far stronger teams, which Roper accepts as sometimes unavoidable but warns against disparity so great that a team is merely trampled.",
+      "domain": "season scheduling and development",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sequencing of opposition is a development instrument. Early games test material and permit selection, a harder fourth game tests the chosen combination, and only then does polishing begin, so results in early games should be read as information about development rather than as verdicts on the team.",
+        "source_operator": "schedule_of_gradually_harder_games",
+        "telemetry": "Opponent strength by week, personnel changes after each game, and performance trend across the season."
+      }
+    },
+    {
+      "primitive_id": "peak_form_cannot_be_held",
+      "name": "A team cannot be brought to practically perfect form and kept there for three or four weeks",
+      "verbatim_quote": "There is no way in which a team can be brought to practically perfect form and kept there for three or four weeks, and the coach who tries it will hurt himself and his team almost infallibly.",
+      "page": "Chapter VIII, text line 1678",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prematurely perfected teams go back steadily after mid season, as Roper illustrates with Colgate in 1919 and Princeton in 1897.",
+        "Records across seasons prove the pattern, in his claim."
+      ],
+      "breakdown_regime": "Individual teams vary, and a deep squad with heavy substitution can flatten the curve somewhat, but Roper treats the decline as close to a law.",
+      "domain": "peaking and form timing",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Form is a curve with a peak, not a level that can be held. Development must therefore be timed so the peak lands on the championship games, and a coach who hurries development to win an early practise game spends the peak where it earns nothing.",
+        "source_operator": "peak_form_cannot_be_held",
+        "telemetry": "Performance trend by week, early season margins against weak opposition, and results in the final games."
+      }
+    },
+    {
+      "primitive_id": "halftime_protected_rest",
+      "name": "For five minutes after the halftime whistle the men are guaranteed absolute and undisturbed rest and quiet",
+      "verbatim_quote": "For five minutes after the whistle my men are guaranteed absolute and undisturbed rest and quiet.",
+      "page": "Chapter IX, The Day of the Big Game, text line 1848",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Nervous strain alone makes the rest indispensable, however good the physical condition.",
+        "A coach who is visibly aware of minor happenings earns better attention after the rest."
+      ],
+      "breakdown_regime": "In a very short interval the rest share must shrink, but Roper's ordering, rest before instruction, is the transferable element.",
+      "domain": "recovery and halftime process",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Adjustment quality depends on the state of the people receiving it. Exhausted, crowded players cannot listen intelligently, so protected rest comes first and criticism second, and intruders are barred entirely. The general operator is to sequence recovery before analysis in any high strain interval.",
+        "source_operator": "halftime_protected_rest",
+        "telemetry": "Second half performance after structured halftime routines, and error rates on adjustments introduced at halftime."
+      }
+    },
+    {
+      "primitive_id": "prearranged_substitutions_and_calm",
+      "name": "Substitutions are written down in advance and thought over as carefully as the most important play",
+      "verbatim_quote": "I know and write down exactly how I am going to make substitutions and I think this over about as carefully as if it were our most important play.",
+      "page": "Chapter IX, text line 1791",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A championship has been thrown away by confusion in a single substitution, in Roper's observation.",
+        "Players take their emotional cue from the coach's visible composure."
+      ],
+      "breakdown_regime": "Prearrangement cannot foresee injuries, so the plan needs grouped substitutes by position who watch their own predecessors, as Roper arranges.",
+      "domain": "game day operations",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Game day failures are usually operational, not strategic: a confused substitution, a leader losing composure over a trivial defect, a missed reporting rule. Prearranging the operational layer and scripting the leader's own conduct removes those losses, leaving the contest to be decided by play rather than by administration.",
+        "source_operator": "prearranged_substitutions_and_calm",
+        "telemetry": "Substitution errors, procedural penalties on entering players, and time lost to sideline confusion."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "05c6c8cfbaf6c8b0-t1",
+      "think": "Roper's book is a conversion narrative disguised as a coaching manual, and that structure is the first thing a reasoning engine should take from it. He opens with three seconds from November 1919, a lateral pass in the Yale and Princeton game, where a defending player gave up his own chance at a famous touchdown to block the one opponent who could still prevent a score by his teammate. From that single play Roper derives his whole system: the winning action was not the touchdown, it was the unselfish, correctly reasoned act thirty yards earlier, and a game that rewards that act must be a game played first with the mind. Everything that follows is an attempt to build an organization in which such acts become normal rather than heroic. The old football he played was a trial of weight, strength and courage in which intelligence was a minor incident, mass plays let a runner be pushed and dragged forward, and ten yards in three downs could be battered out by a heavier line. The new rules changed the arithmetic and therefore changed the epistemology. Ten yards in four downs, mass play abolished, the forward pass legal, and defenses free to vary their formations together mean that physical superiority no longer converts reliably into ground gained, especially near the goal where the defense can crowd the line. Roper's conclusion is that the burden of proof has moved wholly onto the attack, and that the only compensating resource is brains, which he calls generalship. That single move reorganizes the entire book. Because the attack must outwit rather than outpush, the quarter back stops being a ball handler chosen for small hands and quick passing from center and becomes a field general chosen for brains, voice and the ability to inspire confidence, taught daily in separate sessions, given a three zone map of the field, trained to read every defender from the center outward, and then left alone on the field with undivided authority over play choice. Because no single man can see everything, the rest of the team becomes a sensing network that reports selected facts upward. Because the defense faces formations it did not choose, defensive thinking cannot be centralized at all and every man must be taught principles he can apply to formations he has never seen. Because habits fire automatically under pressure, practise is engineered so that the automatic layer is correct: signals reduced until decoding is subconscious, rule observance repeated until it is mechanical, falling on the ball deliberately untaught, tackling taught live rather than on a dummy because a dummy teaches a different skill. Because practise time is the scarcest resource in a short season, the repertory is deliberately small, covering every category of attack and then pursuing perfection of execution rather than variety, with trick plays cut to an emergency minimum. Because form rises and falls, the schedule is treated as a timing instrument, with games of increasing difficulty, a hard test in the fourth game, and an explicit refusal to hurry development for an early win, since a team brought to perfection in mid season declines exactly when the championship games arrive. Because the kicking game is a set of exchanges rather than a specialty, the punt is priced as possession traded for position, the drop kick is deferred until a first down is practically out of reach, and punt coverage is valued above punt distance. Because none of this works without people willing to subordinate themselves, the book begins its practical program not with plays but with atmosphere, the spirit of the whole institution, which Roper insists is a precondition and not a garnish, and it ends with game day operations, protected rest at halftime, prewritten substitutions and a coach who refuses to lose his temper over a shoe lace because his players read his composure as information. For a reasoning engine the value of the book is this completeness of levels. It refuses to let any layer be analyzed alone. A play is evaluated inside a sequence, a sequence inside a zone and a score state, a player inside a development curve, a team inside an institution, and a season inside a multi year policy that Roper calls continuous. It also supplies a discipline of evidence that is easy to miss because the prose is Edwardian and anecdotal. Roper repeatedly prefers the measured or observed fact to the inherited belief: average championship punts are under forty yards, twice as many passes are completed as intercepted, men are hurt more easily when tired, a pass play that fails costs no ground. He is willing to reverse a lifelong position in public and to name the games that reversed it, and he is equally willing to state where his claims rest only on experience, as with institutional spirit. The weaknesses are real and should be carried with the extraction. The rules he reasons from are those of 1920, so specific asymmetries, such as the treatment of a fumbled pass, must be recomputed rather than imported. His evidence is case based, drawn from a handful of famous games and his own teams, with no systematic record, and his confidence sometimes outruns his sample, as when two games are offered as settling the contest between two schools of football. His moral framing, in which football builds citizens and institutional loyalty is treated as an unqualified good, belongs to his period and should be read as a claim about motivation rather than as established fact. He also writes from the coach's chair, so the player's own perspective on risk, pain and consent is largely absent. None of that cancels the central transfer, which is a method: identify what the rules actually reward, rebuild selection, training, communication and scheduling around that reward, automate everything that must happen under pressure, reserve conscious thought for the genuinely novel, and time the whole system so that it is best when it matters most.",
+      "retrocausal_genealogy": "The lineage runs from the rugby derived American game of the 1880s and 1890s, built on mass momentum plays and flying wedges, through the rules crisis after the brutal 1905 season and the legalization of the forward pass in 1906, which gradually opened the field and made the old battering model obsolete. Roper played in the older world and coached into the newer one, and he names his debts openly: Tom Shevlin's dictum that a player had to go partly crazy represents the school he abandons, while the 1919 Yale Princeton and Yale Harvard games, and players such as Garrity, Scheerer, Eddie Casey, Brickley and Eddie Mahan, supply the evidence he uses to convert. Behind the football sits an older military vocabulary of generalship, campaigns and flank protection, and a chess analogy he develops at length.",
+      "theory_of_mind": "Roper believes his reader is a coach or an intelligent player who already knows the standard plays and does not need diagrams, which he openly distrusts as teachers. His model of the domain is that football is decided by minds operating under severe time pressure with incomplete information, so the practical problem is never knowledge alone but knowledge made fast, shared and automatic. He assumes players are proud, imitative and sensitive to the opinion of their institution, that they will chase individual glory unless the system rewards enabling work, and that they learn principles by working out hypothetical cases on the field far better than by memorizing rules. He also assumes the coach's real product is judgment in other men, not instructions.",
+      "cross_layer_veto": "Several claims in this book veto habits that other layers of a system might otherwise adopt. The burden of proof resting on the attack vetoes any model that treats physical superiority as sufficient explanation of scoring. The warning that habits trained in practise fire automatically in games vetoes convenient drills whose game consequences are bad, however tidy they look. The insistence that a field general must not be directed from the sideline vetoes real time external control of decisions that depend on a close field view. The peaking argument vetoes optimizing early results at the cost of late form. And the treatment of possession as more valuable than position in most late game states vetoes any simple field position rule applied without score and time."
+    }
+  ],
+  "universal_lens": "Any competitive craft undergoes the same transition Roper describes when its rules stop rewarding raw force and start rewarding information. The transferable template is to rebuild the whole practice around the new reward: select people for learning speed and judgment, shrink the repertory until execution is reliable, automate every procedure that must survive pressure, distribute sensing to everyone who holds a privileged view, protect the decision maker closest to the action from remote second guessing, sequence challenges so that difficulty rises with capability, and time the peak of form for the moment that decides the outcome rather than for the earliest applause.",
+  "gsi_mapping": "The Galaxy Sports Institute takes from Roper a curriculum architecture rather than a set of plays. Teach principles before repertory, use hypothetical cases worked out in position rather than lectures, test understanding with a written check and then stop boring those who have passed it, confront learners with unfamiliar formations to reveal whether they are thinking or reciting, and treat atmosphere and conduct as part of instruction rather than as decoration around it. His insistence that a good player and a good citizen are developed together, and that the institution behind a team is part of its performance, gives the Institute its model of education as environment design.",
+  "gse_mapping": "The Galaxy Sports Edge engine takes a layered decision model. Field position becomes a three zone state that conditions every evaluation, score and time modify the price of exchanging possession for position, and each opposing defender's alignment is an input to play level reasoning rather than background detail. Threat value is credited to options that distort a defense even when they gain nothing, enabling actions are credited at the point where an outcome was created instead of only to the ball carrier, and season level form is modeled as a curve to be timed rather than a rating to be maximized at every date. Above all, the engine separates automated procedure from open judgment, and it records reasons, because Roper shows that the decisive act is usually a reasoned one made before the visible score."
+}

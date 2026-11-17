@@ -1,0 +1,685 @@
+{
+ "book_id": "136f6949e9cf6b25",
+ "source_status": "COMPLETE",
+ "source_note": "Fielding H. Yost, Football for Player and Spectator, copyright 1905 by Fielding H. Yost, published by The Ann Arbor Press, Ann Arbor, Michigan; preface signed F. H. Yost, Ann Arbor, September, 1905; contents run from Football: Its Origin and Development (p. 1) through Photographs of Formations and Diagrams of Plays (p. 189), Generalship (p. 260) and Rules (p. 273, the official football rules for 1905 reprinted from Spalding's Official Football Guide by special permission). Local PDF: ~/workspace/full-library-2026-11-12/library/books-a-sports/Yost-1905-Football-for-Player-and-Spectator.pdf, 320 pages, 4,551,636 bytes, plain sha256 of the PDF bytes 3b1a5eb9a2cb0e899946cbba4f0d2c666a2317928b9646d9baaeac33d7b23b8d; gatekeeper digest (sha256 over str(size) encoded plus full file bytes) 136f6949e9cf6b2513aa3e571223f8a1692d6836a301115515cbcaf824f0074a, whose first 16 hex chars are the book_id. The PDF is an image-only scan and the shipped extracted text is a stub (Google Books boilerplate only). Quotes are therefore sourced from the full OCR text of the same Google scan at ~/workspace/full-library-2026-11-12/books-38/Yost-1905-Football-for-Player-and-Spectator.txt (342,185 bytes, 61,199 words), copied to ~/workspace/motif-foundry/work/yost-1905/yost-1905-full.txt and used as the quote source (the Tolman route); every verbatim_quote was verified as a contiguous substring of that file. OCR quality is generally good with occasional character level errors; quoted passages were chosen from clean passages and are reproduced exactly as printed in that text. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "fundamentals_before_team_assembly",
+   "name": "No team machine can be assembled until each individual player is first developed in the fundamentals",
+   "verbatim_quote": "It is useless to attempt the construction of a successful football machine until the raw material in the form of the individual players has been thoroughly developed in the fundamentals of the game.",
+   "page": "Preparing the Material (contents p. 73), OCR text line 592",
+   "latex": "",
+   "assumptions": [
+    "Individual skill is a prerequisite, not a byproduct, of team play",
+    "The fundamentals are enumerable: passing, catching, starting, kicking, tackling, carrying, blocking, breaking through, interference, falling on the ball"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. It breaks when schedule pressure forces scrimmage before fundamentals are installed, which Yost warns ruins later team development.",
+   "domain": "team construction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine builds player level skill estimates before any team level projection: a team rating assembled from unmeasured individual components inherits their error, so component measurement precedes aggregation in the pipeline.",
+    "source_operator": "fundamentals_before_team_assembly",
+    "telemetry": "Per player drill and game grades for each fundamental skill, timestamped before team level snap data is aggregated"
+   }
+  },
+  {
+   "primitive_id": "passing_errors_drive_fumbling",
+   "name": "Most fumbling is caused by poor passing, not by the receiver of the pass",
+   "verbatim_quote": "More of the fumbling in a game is due to poor passing than to any error of the one receiving the ball.",
+   "page": "Preparing the Material, Passing (contents p. 73), OCR text line 598",
+   "latex": "",
+   "assumptions": [
+    "Fumbles have assignable causes and the passer is the first place to look",
+    "Pass quality is observable in time, form and placement"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. It is an experience claim without counts; a modern fumble audit could reverse the attribution for a given team or era.",
+   "domain": "ball handling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Error attribution in the engine assigns a failed play to the earliest faulty component in the chain rather than to the player holding the ball when the failure surfaces, which changes which player grade is debited.",
+    "source_operator": "passing_errors_drive_fumbling",
+    "telemetry": "Play by play fumble logs coded by pass placement, pass timing and receiver handling"
+   }
+  },
+  {
+   "primitive_id": "pass_received_at_waist",
+   "name": "A pass is easiest to handle when it arrives at the waist of the receiver",
+   "verbatim_quote": "The proper place to receive a pass and the point where it can be easily handled is at the waist.",
+   "page": "Preparing the Material, Passing, OCR text line 606",
+   "latex": "",
+   "assumptions": [
+    "There is an optimal reception height and it is the same across short passes",
+    "Knee high and shoulder high arrivals are the hard cases"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. It holds for the short hand passes of the 1905 game; long throws and modern passing change the reception geometry.",
+   "domain": "ball handling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Delivery quality is scored against a target window rather than as a binary completion: the engine grades a throw, snap or handoff by distance from the receiver optimal handling point.",
+    "source_operator": "pass_received_at_waist",
+    "telemetry": "Target point coordinates for snaps, handoffs and throws relative to the receiver body"
+   }
+  },
+  {
+   "primitive_id": "spiral_pass_wind_penetration",
+   "name": "The spiral pass rotates on its axis, so it can be thrown with, through and against the wind and is easily handled",
+   "verbatim_quote": "Its value lies in the fact that it can be passed through, with and against the wind and is very easily handled by the receiver.",
+   "page": "Preparing the Material, Spiral Pass, OCR text line 624",
+   "latex": "",
+   "assumptions": [
+    "Rotation stabilizes flight, as in the spiral kick",
+    "Wind is a first order condition on pass selection, not background"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. It breaks in extreme wind or with a wet, heavy ball, where Yost elsewhere demands extra care.",
+   "domain": "passing mechanics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Environmental adjustment enters at the level of technique selection: the engine conditions expected completion and distance on wind by throw type instead of applying one global weather discount.",
+    "source_operator": "spiral_pass_wind_penetration",
+    "telemetry": "Wind speed and direction at kickoff and by quarter, joined to throw type and outcome"
+   }
+  },
+  {
+   "primitive_id": "low_pass_for_line_plunge",
+   "name": "A runner cannot buck the line low if the ball is given to him high",
+   "verbatim_quote": "No player can buck the line low if the ball comes to him high.",
+   "page": "Preparing the Material, Pass to Back for Straight Buck, OCR text line 644",
+   "latex": "",
+   "assumptions": [
+    "Body position at the line is set by ball height at reception",
+    "The runner must not have to straighten up before contact"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. It applies to plunges between the tackles; open field carries use a different, one arm hold.",
+   "domain": "ball handling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine treats reception posture as a state variable: a play projection conditioned on a high exchange downgrades the expected gain before any defender is modeled.",
+    "source_operator": "low_pass_for_line_plunge",
+    "telemetry": "Exchange height and runner body position coded from film at the mesh point"
+   }
+  },
+  {
+   "primitive_id": "catching_pocket_form",
+   "name": "A punt or pass is caught in a pocket formed by the two hands and the body, one hand always under the ball",
+   "verbatim_quote": "The lower or right hand is to form the bottom of the pocket into which the ball is to fall.",
+   "page": "Preparing the Material, Catching, Form for Making the Catch, OCR text line 670",
+   "latex": "",
+   "assumptions": [
+    "The arms are not the catching surface; the hands and body are",
+    "The same form adapts to high, low and side catches by shifting the hands"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. It presumes the catcher can get to the landing spot; a kick that forces a dive or a contested catch leaves the form behind.",
+   "domain": "catching mechanics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Reception is modeled as a formed target with a support point underneath: the engine can grade catch probability by whether the receiver arrived set, in position, with hands presented, rather than by hands alone.",
+    "source_operator": "catching_pocket_form",
+    "telemetry": "Receiver positioning relative to ball landing point and catch outcome on punts and passes"
+   }
+  },
+  {
+   "primitive_id": "starting_weight_forward",
+   "name": "Starting speed comes from weight carried principally on the hands, so body weight itself assists the first motion when the hands lift",
+   "verbatim_quote": "The weight of the body should be principally on the hands, so that the instant the hands are removed from the ground the weight of the body will assist him in getting under rapid motion.",
+   "page": "Preparing the Material, Position in Starting, OCR text line 708",
+   "latex": "",
+   "assumptions": [
+    "The sprinter stance is the template, widened and adjusted for football",
+    "Linemen modify the stance because an opponent can jerk them forward"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. It breaks for linemen in close quarters, where too much weight on the hands invites being pulled off balance.",
+   "domain": "starting mechanics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Get off is a measurable initial condition, not a trait word: the engine can use stance and first step timing as the opening state of every line play projection.",
+    "source_operator": "starting_weight_forward",
+    "telemetry": "Snap to first movement times and stance coding for linemen and backs"
+   }
+  },
+  {
+   "primitive_id": "punt_distance_from_leg_snap",
+   "name": "Punt distance comes from the snap put into the leg at the moment it strikes the ball, not from the force of the whole approach motion",
+   "verbatim_quote": "It is not the force that is put into the whole motion of the kick that will give it distance, but the snap that is put into the leg at the moment it strikes the ball.",
+   "page": "Preparing the Material, Punt and Spiral, OCR text line 760",
+   "latex": "",
+   "assumptions": [
+    "Form is mastered before distance is chased",
+    "Short steps keep the kicker from crowding his own line and being blocked"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. It is a coaching cue about where power is generated; it does not deny that approach and leg strength bound the result.",
+   "domain": "kicking mechanics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine separates terminal action quality from approach volume: for kicks, throws and shots, the contact instant variables carry the projection, and buildup metrics are demoted to context.",
+    "source_operator": "punt_distance_from_leg_snap",
+    "telemetry": "Contact quality measures for kicks and punts, with distance and direction outcomes"
+   }
+  },
+  {
+   "primitive_id": "place_kick_accuracy_and_holder",
+   "name": "Place kicking displaced drop kicking because it is more accurate, and its execution depends almost as much on the holder as on the kicker",
+   "verbatim_quote": "Place kicking has almost entirely taken the place of drop kicking, because it is more accurate.",
+   "page": "Preparing the Material, Place Kick, OCR text line 768",
+   "latex": "",
+   "assumptions": [
+    "The holder must place the ball exactly as the kicker wants it and not shift it while removing his hands",
+    "Short kicks are taken from about four feet behind the ball on a straight line through the center of the goal bar"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. It is a 1905 comparison of two techniques under 1905 rules; later rule and tee changes alter the comparison.",
+   "domain": "kicking",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A two person operation is graded as a unit: the engine attributes kick outcomes jointly to placement and strike, so a holder error is not charged to the kicker rating.",
+    "source_operator": "place_kick_accuracy_and_holder",
+    "telemetry": "Hold placement, hold stability and kick outcome logged as one operation"
+   }
+  },
+  {
+   "primitive_id": "drop_kick_instant_contact",
+   "name": "A drop kick must be struck the instant the ball reaches the ground, never on the rebound and never with the instep",
+   "verbatim_quote": "The ball must be hit the instant it reaches the ground.",
+   "page": "Preparing the Material, Drop Kick, OCR text line 825",
+   "latex": "",
+   "assumptions": [
+    "The ball should strike the ground nearly vertical, top slanting toward the kicker",
+    "Height and direction must be learned because the kick is made from behind a scrimmage line and can be blocked"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. The technique was already uncommon in 1905 and later nearly vanished, so the primitive survives as a timing principle rather than a living play.",
+   "domain": "kicking mechanics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Timing windows can be near zero width: the engine represents some actions as contact at a single instant, where small timing errors flip the outcome class entirely.",
+    "source_operator": "drop_kick_instant_contact",
+    "telemetry": "Contact timing relative to ball bounce or release point, with outcome class"
+   }
+  },
+  {
+   "primitive_id": "tackling_target_hips_to_knees",
+   "name": "In both long and short tackling the aim point is midway between the hips and the knees, with both arms wrapped round the legs",
+   "verbatim_quote": "In each case, however, the aim of the tackler should be directed at a point midway between the hips and the knees.",
+   "page": "Preparing the Material, Tackling, OCR text line 835",
+   "latex": "",
+   "assumptions": [
+    "The long tackle is for the open field and the short tackle for the line, but the aim point is shared",
+    "A tackle low enough pins the legs together and brings the runner down"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. It breaks against a hurdler or a stiff arm if the tackler dives too low or fails to anticipate, cases Yost treats separately.",
+   "domain": "tackling mechanics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Tackle probability is conditioned on aim height and wrap, observable on film: the engine grades a missed tackle by where it was aimed, not only by the fact that it missed.",
+    "source_operator": "tackling_target_hips_to_knees",
+    "telemetry": "Tackle attempt height, wrap completion and result coded per defender"
+   }
+  },
+  {
+   "primitive_id": "ball_security_two_hand_carry",
+   "name": "On line plunges the ball is held tight against the pit of the stomach with both hands and arms, and the grip must become instinctive",
+   "verbatim_quote": "In all plunges into the line the ball should be held tightly against the pit of the runner's stomach, both hands and arms being used.",
+   "page": "Preparing the Material, Carrying the Ball, OCR text line 859",
+   "latex": "",
+   "assumptions": [
+    "Open field carries switch to the outside arm so the free arm can stiff arm",
+    "Throwing out an arm to break a fall endangers both the ball and the arm"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. It governs plunges; Yost himself prescribes a different hold for end runs and open field running.",
+   "domain": "ball security",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Ball security is a posture state that changes by play phase: the engine can carry a fumble risk term that switches value when a runner moves from line contact to open field.",
+    "source_operator": "ball_security_two_hand_carry",
+    "telemetry": "Carry type, contact phase and fumble outcomes by runner"
+   }
+  },
+  {
+   "primitive_id": "blocking_two_methods",
+   "name": "Opponents are blocked with the shoulder or with the hip; blocking with the arms is both less effective and close to holding",
+   "verbatim_quote": "There are two methods of blocking an opponent, although these two permit of numerous variations.",
+   "page": "Preparing the Material, Blocking and Making Holes, OCR text line 881",
+   "latex": "",
+   "assumptions": [
+    "The blocker knows the play and its direction from the signals, which is his marked superiority over the man he blocks",
+    "The block usually needs to detain the opponent only a fraction of a second"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. It is bounded by the holding rules of the period; legal hand use in blocking changed greatly in later eras.",
+   "domain": "blocking",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Blocking is modeled as a timed detention with a required duration set by the play, not as winning or losing a duel: the engine asks whether the defender was delayed long enough, which is a lower and more useful bar.",
+    "source_operator": "blocking_two_methods",
+    "telemetry": "Block engagement start, defender release time and play arrival time at the point of attack"
+   }
+  },
+  {
+   "primitive_id": "breaking_through_requires_variation",
+   "name": "Breaking through depends on sizing up the opponent, avoiding his block and rapidity of thought and motion, and any method fails once the opponent learns to anticipate it",
+   "verbatim_quote": "All methods of breaking through, tried with success in the early stages of the game, may fail as the opponent learns to anticipate them.",
+   "page": "Preparing the Material, Breaking Through, OCR text line 919",
+   "latex": "",
+   "assumptions": [
+    "Brute force alone does not break through",
+    "The defender has the use of hands and arms and should keep the opponent at arm's length until the snap"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. Variation has a cost: a defender who invents on every snap can abandon his gap, a constraint Yost handles through positional responsibility chapters.",
+   "domain": "defensive line play",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats pass rush and penetration moves as a repeated game against a learning opponent: move effectiveness decays with use within a game, so move mix is a state variable, not a static rating.",
+    "source_operator": "breaking_through_requires_variation",
+    "telemetry": "Rush move type by snap, opponent blocker identity and pressure outcome across a game"
+   }
+  },
+  {
+   "primitive_id": "stiff_arm_concealed_timing",
+   "name": "The stiff arm works only if its intention is concealed and it is shot out at exactly the moment the tackler attempts the tackle",
+   "verbatim_quote": "In delivering the stiff arm the runner should always aim to conceal his intention as far as possible from the tackler, avoiding the habit of carrying the arm in an advanced position before the tackler gets close enough to permit its use, and shooting out the arm at exactly the moment when the opponent attempts the tackle.",
+   "page": "Preparing the Material, Use of Stiff Arm and How to Avoid It, OCR text line 933",
+   "latex": "",
+   "assumptions": [
+    "Use is confined to the open field; in line plunging it is a hindrance",
+    "The tackler should anticipate it on every occasion and parry it upward like a boxer"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. It fails when shown early, and it has no use where tacklers can arrive from all sides.",
+   "domain": "open field running",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Deception value lives in reveal timing: the engine can value a move by how late its intention becomes readable to the defender, a timing quantity, not a style label.",
+    "source_operator": "stiff_arm_concealed_timing",
+    "telemetry": "Move reveal time relative to defender commitment, with tackle outcome"
+   }
+  },
+  {
+   "primitive_id": "interference_wards_off_tacklers",
+   "name": "Effective interference, warding tacklers off the runner with knees, body or shoulders matched to the tackler height, is an absolute necessity on any open field play",
+   "verbatim_quote": "Effective interference, or the warding off of tacklers from the runner with the ball by the members of his team, is one of the absolute necessities to success in any offensive plays not directed as plunges into the opposing line.",
+   "page": "Preparing the Material, Warding or Interfering, OCR text line 949",
+   "latex": "",
+   "assumptions": [
+    "The interferer must not be driven back into the runner path, or he becomes an impediment",
+    "The interferer must find his man, keep him in sight and charge him rather than wait for him"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. It does not apply to straight line plunges, which Yost explicitly excepts.",
+   "domain": "interference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Lead blocking is matched to defender approach angle and height in the engine model of an outside play: the same blocker has different value against a low, medium or high tackler.",
+    "source_operator": "interference_wards_off_tacklers",
+    "telemetry": "Blocker and defender approach geometry on outside runs, with yards after the block point"
+   }
+  },
+  {
+   "primitive_id": "falling_on_ball_technique",
+   "name": "A loose ball on the ground is fallen on, never picked up, with the fall broken by knees and elbows and the ball pocketed against the body",
+   "verbatim_quote": "In falling on the ball, do not fall with your weight directly on it, as this is likely to produce injury, but break the fall with the knees and elbows.",
+   "page": "Preparing the Material, Falling on the Ball, OCR text line 980",
+   "latex": "",
+   "assumptions": [
+    "Technique differs for a ball coming toward, going away from, or crossing in front of the player",
+    "Securing the ball outranks any attempt to advance it"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. A bounding ball that can be caught cleanly off the ground is the stated exception.",
+   "domain": "ball recovery",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Recovery situations are modeled as secure first decisions: the engine values the recovery choice that maximizes possession probability over the choice that adds return upside with possession risk.",
+    "source_operator": "falling_on_ball_technique",
+    "telemetry": "Loose ball situations coded by ball motion, recovery action chosen and possession result"
+   }
+  },
+  {
+   "primitive_id": "end_position_widest_duties",
+   "name": "The end has the widest area and the most varied duties on the rush line, needing speed, endurance, a quick eye and judgment against trick plays designed to deceive him",
+   "verbatim_quote": "The position of end calls for notable physical and mental qualities on the part of the player and for a knowledge of the fine points of the game that can result only from long experience.",
+   "page": "Individual Positions, The End (contents p. 122), OCR text line 989",
+   "latex": "",
+   "assumptions": [
+    "On defense the end plays three to four yards from his tackle, close enough not to be boxed in and not so wide as to open a weak point",
+    "On plays away he becomes the general safety man behind his own line"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. The specific alignments are 1905 formations; the breadth of responsibility is the durable part.",
+   "domain": "positional requirements",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Positional value is partly option value against deception: the engine credits an edge defender for the trick and reverse plays that do not happen because he stayed home, which snap counts alone never show.",
+    "source_operator": "end_position_widest_duties",
+    "telemetry": "Edge defender positioning on reverses, fakes and plays away, with contain outcomes"
+   }
+  },
+  {
+   "primitive_id": "tackle_position_pivotal",
+   "name": "The result of every game depends largely on the strength of the two tackles, the work horses at whom nine tenths of the attack is aimed",
+   "verbatim_quote": "The result of every game will depend largely on the strength of the two tackles.",
+   "page": "Individual Positions, The Tackle, OCR text line 1071",
+   "latex": "",
+   "assumptions": [
+    "The tackle must combine an end speed with a back all round ability, plus weight, strength and endurance",
+    "He must never be caught twice in the same manner by a trick"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. The nine tenths figure is Yost era play distribution; in a pass heavy era the pivotal defender changes, which is itself the point to remeasure.",
+   "domain": "positional requirements",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine finds the pivotal position empirically per era and opponent: the position absorbing the largest share of opponent attacks carries the largest leverage in the projection, and it is recomputed, not assumed.",
+    "source_operator": "tackle_position_pivotal",
+    "telemetry": "Opponent play direction shares by position attacked, per season and per opponent"
+   }
+  },
+  {
+   "primitive_id": "guard_position_low_and_undrawn",
+   "name": "The guard needs strength, weight and aggressiveness, must play very low, and must never be drawn out of the hole he is responsible for",
+   "verbatim_quote": "Strength, weight and aggressiveness are as essential to a good guard as speed is to an end.",
+   "page": "Individual Positions, The Guard, OCR text line 1077",
+   "latex": "",
+   "assumptions": [
+    "His area of play is limited but attacks at his point strike immediately",
+    "The center trio can scheme one man through to the punter with a prearranged signal"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. The guard is nearly useless as a ground gainer from his position in this system, a role judgment specific to the 1905 offense.",
+   "domain": "positional requirements",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Interior line value is mostly negative space: the engine grades a guard on attacks deterred and holes never opened, using opponent success when he is drawn out as the observable trace.",
+    "source_operator": "guard_position_low_and_undrawn",
+    "telemetry": "Interior run outcomes by guard alignment and whether the guard was displaced"
+   }
+  },
+  {
+   "primitive_id": "center_pass_invariance",
+   "name": "The center must never change the direction or speed of his passes, because much of the quarter back fumbling traces to center unsteadiness",
+   "verbatim_quote": "The center must always remember not to change the direction or speed of his passes.",
+   "page": "Individual Positions, The Center, OCR text line 1114",
+   "latex": "",
+   "assumptions": [
+    "No play can start without the center, so his failure generally means no gain or loss of the ball",
+    "Direct passes to half, quarter or full back extend the center passing duty under the rules of the period"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. Invariance is for the exchange itself; Yost also wants the center to vary his defensive position and work with the offensive quarter.",
+   "domain": "positional requirements",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Consistency of a repeated delivery is itself a performance variable: the engine can grade a snapper, holder or passer on variance of delivery, separate from average quality.",
+    "source_operator": "center_pass_invariance",
+    "telemetry": "Snap velocity and placement variance per center, with exchange fumble rate"
+   }
+  },
+  {
+   "primitive_id": "halfback_beyond_carrying",
+   "name": "Carrying the ball is not more than one third of a half back work; the rest is interference, clearing the track and pushing or pulling the runner",
+   "verbatim_quote": "Carrying the ball is not more than one-third of the work required of a half back on the offensive.",
+   "page": "Individual Positions, The Half Backs, OCR text line 1156",
+   "latex": "",
+   "assumptions": [
+    "The half back must use his eyes constantly because the hole will not always be where it is expected",
+    "Backs must not give away the point of attack by word or act"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. The one third share is a role description for this offense, not a measured workload; the durable claim is that non carry work dominates.",
+   "domain": "positional requirements",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Player value is decomposed by task share in the engine: a back is graded on blocking, interference and decoy snaps with the same seriousness as carries, because those snaps are the majority of his work.",
+    "source_operator": "halfback_beyond_carrying",
+    "telemetry": "Snap level task coding for backs: carry, lead block, pass protection, decoy, with outcomes"
+   }
+  },
+  {
+   "primitive_id": "quarterback_as_general",
+   "name": "The quarter back is the general of the team: he directs the battle, must inspire confidence, and should be the practical captain on the field, unhampered",
+   "verbatim_quote": "What the general is to the army, the quarter back is to the football team.",
+   "page": "Individual Positions, The Quarter Back, OCR text line 1162",
+   "latex": "",
+   "assumptions": [
+    "He must know his full list of plays and the conditions under which each is best used, including when to kick and when to rush",
+    "He must not give away the intended point of attack when starting a play"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. The model concentrates decision rights in one player; it breaks when that player is rattled, overworked or wrong, risks Yost manages through captain consultation when time is out.",
+   "domain": "field leadership",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Play selection is a single accountable decision node in the engine: projections condition on who is choosing plays and his state, because the same playbook yields different results under different callers.",
+    "source_operator": "quarterback_as_general",
+    "telemetry": "Play caller identity, situation and play choice logs with outcomes"
+   }
+  },
+  {
+   "primitive_id": "fullback_final_defense",
+   "name": "On defense the full back is the final obstacle, stationed well behind the line, following the play side to side and required to be a sure catcher of opponent punts",
+   "verbatim_quote": "On defense the full back is the final obstacle in the path of the enemy.",
+   "page": "Individual Positions, The Full Back, OCR text line 1200",
+   "latex": "",
+   "assumptions": [
+    "On offense he is the battering ram of the eleven and a member of the interference on nearly every play he does not carry",
+    "He must also be a good kicker or able to take the kicker place"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. A last line defender who commits early is beaten by any cutback; the role presumes the patience to stay in the runner path.",
+   "domain": "positional requirements",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps an explicit last line term: expected points on a broken play depend on the deepest defender positioning and open field tackling, a separate factor from front seven success.",
+    "source_operator": "fullback_final_defense",
+    "telemetry": "Deepest defender depth and lateral position at the snap, with breakaway play outcomes"
+   }
+  },
+  {
+   "primitive_id": "charging_machine_measures_charge_speed",
+   "name": "The charging machine gives the coach data on the relative charging speed of his candidates, so a slow man can be spotted and paired with a faster man to cultivate his speed",
+   "verbatim_quote": "One of the pronounced benefits of a charging machine is the fact that it also gives the coach or trainer an excellent opportunity of securing data regarding the relative speed of his candidates in charging.",
+   "page": "Individual Positions, The Charging Machine, OCR text line 1239",
+   "latex": "",
+   "assumptions": [
+    "The machine pad must be placed low or players learn to rise as they strike it",
+    "Machine work gives many benefits of scrimmage without its dangers"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. Machine speed is a drill measure; it transfers only insofar as form under the machine matches form against a live blocker.",
+   "domain": "training apparatus",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is an early instrumented drill: the engine principle is to replace impression with a timed, comparable measurement taken under controlled conditions, then use pairing to close the measured gap.",
+    "source_operator": "charging_machine_measures_charge_speed",
+    "telemetry": "Timed charge and get off measurements per lineman across practice sessions"
+   }
+  },
+  {
+   "primitive_id": "training_individualized_by_characteristics",
+   "name": "No two men can be trained successfully on the same plan; the characteristics of each individual furnish the data for the trainer allotment of work",
+   "verbatim_quote": "The characteristics of each individual should furnish the data for the trainer's allotment of work.",
+   "page": "Training (contents p. 148), OCR text line 1265",
+   "latex": "",
+   "assumptions": [
+    "The same work cannot be laid out for a growing freshman as for a developed senior",
+    "Late in the season the binding risk reverses to over training, and the day before a hard game is for light work only"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. Individualization is bounded by team regularity: meals, rising and retiring hours stay uniform for all.",
+   "domain": "training",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Load management in the engine is per athlete, driven by measured individual characteristics, while team level routines stay fixed: the two levels are modeled separately instead of one workload number for a roster.",
+    "source_operator": "training_individualized_by_characteristics",
+    "telemetry": "Per player workload, age, experience and injury history joined to performance by week"
+   }
+  },
+  {
+   "primitive_id": "squads_of_four_rudimentary_teams",
+   "name": "Before a team exists, all material is divided into squads of four, a center, quarter back and two halves, so linemen learn backfield duties and backs learn handling",
+   "verbatim_quote": "These are little, rudimentary teams consisting of a center, quarter back and two halves.",
+   "page": "Development of the Team (contents p. 153), Formations of Fours, OCR text line 1363",
+   "latex": "",
+   "assumptions": [
+    "Every candidate for center and quarter back rotates through those spots in the squads",
+    "Pairing a fast man with a slow man develops the slow man rather than retarding the fast one, on Yost account"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. The squad of four cannot teach line play against a full front; it is a preliminary formation, replaced once signal drills and scrimmage begin.",
+   "domain": "team development",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Small sided decomposition is the training and evaluation unit: the engine can estimate player interactions from reduced units before full unit data exists, the same way a four man squad previews an eleven.",
+    "source_operator": "squads_of_four_rudimentary_teams",
+    "telemetry": "Small unit drill and preseason snap data grouped by combination of players"
+   }
+  },
+  {
+   "primitive_id": "signal_practice_action_and_thought",
+   "name": "Signal practice develops speed of action and speed of thought together, and the eleven is no faster than its slowest member, substitutes included",
+   "verbatim_quote": "The speed developed by the signal practice is speed both of action and of thought.",
+   "page": "Development of the Team, Signal Work, OCR text line 1387",
+   "latex": "",
+   "assumptions": [
+    "Substitutes must be trained as thoroughly as regulars in the positions they will fill",
+    "Plays in signal practice are run faster than in a game because no defensive lining up is awaited"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. Speed without comprehension is useless on Yost own account; the drill fails if men execute fast but cannot state the play.",
+   "domain": "team development",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Tempo is a cognitive and physical joint quantity in the engine: play execution speed is modeled with a decision latency term per player, and unit tempo is set by the maximum latency, not the average.",
+    "source_operator": "signal_practice_action_and_thought",
+    "telemetry": "Snap to execution latencies per player in practice and games, including substitutes"
+   }
+  },
+  {
+   "primitive_id": "evening_review_corrects_past_mistakes",
+   "name": "The week is run as an evening study cycle at the training table, and Monday evening review of the game just played is where past mistakes are corrected",
+   "verbatim_quote": "It is in correcting the mistakes of the past that hopes rest for a better future, and the Monday evening half-hour can be made one of great profit.",
+   "page": "The Evening's Work (contents p. 165), Monday, OCR text line 1447",
+   "latex": "",
+   "assumptions": [
+    "Players themselves present criticisms and questions; the coach comments on their correctness or fallacy",
+    "Friday evening is deliberately given to rest and amusement so men enter the game with fresh minds"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. Review corrects only mistakes the room can name; queer conditions arise in every game that no book or review has covered, which Yost states plainly.",
+   "domain": "review cycle",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine runs a fixed post game review cadence: errors are classified by the participants, logged, and checked for recurrence in the next game, so learning is a tracked loop with a schedule, not a hope.",
+    "source_operator": "evening_review_corrects_past_mistakes",
+    "telemetry": "Post game error logs by player and unit, with recurrence flags in following games"
+   }
+  },
+  {
+   "primitive_id": "signals_simple_secret_code",
+   "name": "Signals transmit the field captain orders in terms unintelligible to opponents, and the system must above all be plain and simple so every man grasps it instantly",
+   "verbatim_quote": "Signals in football enable a field captain to transmit his orders to his team in terms unintelligible to the opponents.",
+   "page": "Signals (contents p. 176), OCR text line 1555",
+   "latex": "",
+   "assumptions": [
+    "Number signals are the generally employed form in 1905",
+    "Simple systems can be changed more easily than complicated ones when compromise is suspected"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. Simplicity trades against code space: a very small code is easier for opponents to crack by frequency, a tension Yost answers with the guarded working number.",
+   "domain": "communication system",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats the play call as an encrypted broadcast with a comprehension constraint: a call system is valued by decode speed and accuracy for teammates minus decode success for opponents.",
+    "source_operator": "signals_simple_secret_code",
+    "telemetry": "Call complexity, teammate execution errors and opponent pre snap movement indicating decoded calls"
+   }
+  },
+  {
+   "primitive_id": "team_play_chain_common_asset",
+   "name": "Team play welds eleven individuals into a chain in which every advantage of one member becomes a common asset, and one lagging man can nullify the rest",
+   "verbatim_quote": "Individual strength, wit, courage and agility must be there, but they must weld themselves into a chain that makes every advantage possessed by one of the members of the eleven a common asset.",
+   "page": "Team Play (contents p. 183), OCR text line 1689",
+   "latex": "",
+   "assumptions": [
+    "Reliability is social as well as technical: each man foremost endeavor is to show his comrades he can be relied on",
+    "Combination at one point can also be turned against a team when a play, such as a kick, is hinted in advance"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. The chain metaphor overstates serial dependence for plays with genuine redundancy, such as a broken play saved by one runner; Yost own open field examples show the exception.",
+   "domain": "team play",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Unit output is modeled with a weakest link term alongside average talent: the engine carries both a mean component rating and a minimum component rating for each unit, because Yost chain makes the minimum decisive on many plays.",
+    "source_operator": "team_play_chain_common_asset",
+    "telemetry": "Per snap component grades per unit, with play success modeled against unit minimum and mean"
+   }
+  },
+  {
+   "primitive_id": "captain_field_and_conditions_inspection",
+   "name": "Before the game the coach and captain walk the field and note its condition in detail, and wind, sun and weather are brought into the plan, including which kicks to use and how often",
+   "verbatim_quote": "Some time before the game the coach and captain should go over the field carefully and note its condition.",
+   "page": "Generalship (contents p. 260), Looking Forward, OCR text line 3311",
+   "latex": "",
+   "assumptions": [
+    "The plan meeting is held the day before, with all data on opposing players considered, singly and as a team, on offense and defense",
+    "Opponent knowledge is best gained by actual observation of the opponents in action against another team"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. Conditions change between inspection and kickoff; the inspection sets priors that the captain must update in play.",
+   "domain": "game preparation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Venue and weather are scouted inputs gathered before modeling, not generic adjustments: the engine ingests a field condition report and lets it move technique selection, such as kick type and frequency, before the first snap.",
+    "source_operator": "captain_field_and_conditions_inspection",
+    "telemetry": "Field condition, wind and sun reports by venue and date, joined to play mix and outcomes"
+   }
+  },
+  {
+   "primitive_id": "offense_varies_by_field_section",
+   "name": "Play selection is sectioned by field position: inside the opponents 35 yard line their scoring danger governs, the center of the field is the maneuver ground, and the attack strengthens once that line is crossed",
+   "verbatim_quote": "When the opponents are inside your own 35-yard line, there is always much danger of their scoring either by a touchdown or a goal from the field.",
+   "page": "Generalship, Offense in Different Sections of the Field, OCR text line 3383",
+   "latex": "",
+   "assumptions": [
+    "In the danger section no play with a likelihood of a fumble may be tried",
+    "In the middle section, kicking on third down protects the ball when loss is possible, and a wind advantage argues for frequent punting"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. The section boundaries are 1905 scoring values, where a goal from the field rivaled a touchdown; the sectioning principle outlives the specific yard lines.",
+   "domain": "situational play selection",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine conditions play value on field section as a discrete regime with its own risk rules: turnover cost, not just yardage expectation, changes by section, so the same play is a different asset in different sections.",
+    "source_operator": "offense_varies_by_field_section",
+    "telemetry": "Play outcomes, turnovers and scoring by field section and down"
+   }
+  },
+  {
+   "primitive_id": "defense_arranged_against_specific_attack",
+   "name": "Defense is arranged against the specific attack it faces, with men disposition governed by field position and surface, and it needs its own system of signals just as the attack does",
+   "verbatim_quote": "The great variety of attack now in use in the different schools and colleges of the country demands that the defense be arranged for the best manner of stopping the attack.",
+   "page": "Generalship, Defense, OCR text line 3408",
+   "latex": "",
+   "assumptions": [
+    "The style of defense depends largely on the style of attack of the opponents",
+    "On a wet, slippery field ends and tackles can be played in close because end runs become nearly impossible"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. A defense arranged too narrowly for one attack is exposed to the other; Yost answers with the captain duty to evolve a new plan in adversity.",
+   "domain": "defensive design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Defensive projection is opponent conditional in the engine: there is no single defensive rating, only a rating against a described attack, recomputed when the opponent play mix or the surface changes.",
+    "source_operator": "defense_arranged_against_specific_attack",
+    "telemetry": "Opponent play mix, surface and weather, joined to defensive alignment and success rate"
+   }
+  },
+  {
+   "primitive_id": "michigan_shifting_offense",
+   "name": "The Michigan offense Yost built from 1901 is shifting: men are drawn back from the line to attack, ends swap into the backfield, and a shifting interference veils the point of attack",
+   "verbatim_quote": "A shifting interference, in which the point of attack is veiled, is also a feature of the Michigan play.",
+   "page": "Football: Its Varied Characteristics, Michigan, OCR text line 493",
+   "latex": "",
+   "assumptions": [
+    "The defense shifts in the same spirit, adapting its secondary line, sometimes three men and sometimes two, to the attack",
+    "Regional styles in this survey are stable identities: Princeton regular, Harvard tandem, Pennsylvania guards back, Chicago shifting"
+   ],
+   "breakdown_regime": "no_equation_domain: the work is a 1905 coaching manual and states no equation for this; the claim is qualitative and procedural. Shifting costs simplicity; a team without drilled signal speed will shift itself into confusion, which is why Yost signal chapters precede the play diagrams.",
+   "domain": "offensive design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Formation movement before the snap is an information weapon in the engine: pre snap shifts are valued by how much they delay or misdirect defensive assignment, measurable in defender movement before the snap.",
+    "source_operator": "michigan_shifting_offense",
+    "telemetry": "Pre snap shift frequency, defender adjustment movement and play success"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "136f6949e9cf6b25-t1",
+   "think": "This book is a complete operating system for a football team, written in 1905 by the coach who was then building the Michigan teams that the book itself describes, and its order of construction is the first thing a reasoning engine should notice. Yost does not begin with plays. He begins with history, then with what the game does to a player, then with the spectator view, then with regional styles, and only after all of that does he teach a single skill. When the teaching starts it starts at the smallest unit that can be measured: one player passing, catching, starting, kicking, tackling, carrying, blocking, breaking through, interfering and falling on the ball. The sentence that governs the whole book is that it is useless to attempt the construction of a successful football machine until the raw material in the form of the individual players has been thoroughly developed in the fundamentals of the game. Everything after that sentence is an assembly sequence. Individuals master fundamentals, then they are given positions with written responsibilities, then they are trained under a regime that is individualized in workload and uniform in habit, then they are combined into rudimentary squads of four, then signal work welds the squads into an eleven that can execute at machine speed, then team play is named as the chain in which one lagging man nullifies ten good ones, then hundreds of pages of photographed formations and diagrams give the assembled machine its playbook, and finally generalship teaches the captain and quarter back how to run the machine against a specific opponent, on a specific field, in specific weather, section by section of the field. The reasoning trace of the book is therefore a build order with dependencies, and any engine that ingests it should preserve that order: component skill before position, position before combination, combination before playbook, playbook before opponent specific planning.\n\nInside that build order Yost keeps returning to a small set of mechanisms that generalize well beyond 1905 football. The first is attribution discipline. Fumbles are charged to the pass before they are charged to the receiver. Quarter back fumbles are charged to center unsteadiness. A kick is charged jointly to holder and kicker. A block is judged not by whether the blocker won a duel but by whether he detained his man for the fraction of a second the play required. In each case the failure is located at the earliest faulty component of a chain, and the standard of success is set by what the play actually needed, not by an absolute standard of domination. The second mechanism is invariance where invariance protects the chain, and variation where variation defeats learning. The center must never change the direction or speed of his passes. The guard must never be drawn out. But the man breaking through must vary his method constantly because any method fails once the opponent learns to anticipate it, the stiff arm must be concealed until the exact moment of use, and the quarter back who suspects his signals have been noted changes which number in the series is the working number. Yost holds both ideas at once without confusion because he locates them correctly: repeat exactly what your own team depends on for coordination, and vary exactly what the opponent is trying to predict. The third mechanism is measurement under controlled conditions. The charging machine is praised less as exercise than as an instrument that gives the coach data regarding the relative speed of his candidates in charging, so the slow man can be identified and paired with a faster man. Trainers charts of players measurements before and after are cited as evidence for the game physical benefits. Kicking candidates are found by giving everyone an equal opportunity for a few days, because the best kicker sometimes develops where ability was least expected. The method is always the same: create a comparable trial, read the result, then allocate work by what the trial showed, since the characteristics of each individual furnish the data for the trainer allotment of work.\n\nThe fourth mechanism is situational sectioning. Generalship divides the field into sections and changes the rules of decision inside each one: near your own goal the governing fact is that a fumble hands the opponents a scoring chance, so no play with a likelihood of a fumble may be tried there at all; in the center of the field, the great battle ground, exchanges of punts are a rational way to gain ground gradually when you can out kick the opponents; once the opponents 35 yard line is crossed the attack grows stronger and only the strongest plays are attempted. Wind, sun, field condition, cleating and the state of the ball all enter the same calculus, and the captain is ordered to walk the field before the game and note its condition in the minutest detail, the way an army commander studies his battle ground. Nothing in this section is a formula, but the structure is unmistakably a decision procedure: observe conditions, classify the situation, apply the rule set belonging to that class, and keep the plan subordinate to the opponents actual strength and weakness rather than to your own preferences, since the game must not be played to suit the opponents but planned to take every possible advantage of their weakness.\n\nWhat does this change for a reasoning engine? It argues for a layered model in which player skill states are estimated first and team projections are built from them with explicit weakest link terms, in which every failure event is attributed along a chain to its earliest faulty component, in which consistency metrics and variation metrics are both first class but are attached to different objects, in which drills and controlled trials are treated as measurement instruments whose results allocate training and roles, and in which play value is computed inside situational sections with their own risk rules instead of on an open field of yardage expectation alone. It also argues for a weekly learning loop with a fixed cadence: the evening work systematizes review, with Monday for the game just played, blackboard work for problems of the field, a weekly rules quiz in which every player must bring questions, Thursday for the captain and quarter back, Friday deliberately emptied so minds are fresh, and Saturday night left alone because Monday is time enough. The engine analogue is a post game error classification that is scheduled, participatory and checked for recurrence, rather than a passive accumulation of results.\n\nWhere the book breaks must be stated as plainly as where it holds. Its scoring values are those of 1905, when a touchdown and a goal from the field were near neighbors, and its play geometry is the geometry of the mass and momentum game just before the forward pass era transformed it, so its specific yard lines, formations and role shares cannot be carried forward as numbers. Several of its training claims are the settled opinion of its period rather than measured results, including its water discipline during practice, which later sports medicine reversed, and its confidence about injury frequency rests on enquiries and testimony rather than on counted exposure. Its mental and moral claims for the game are argued, not demonstrated. And its centralization of all decision in the quarter back is a single point of failure that Yost himself has to hedge with captain consultation and with the demand that substitutes be trained as thoroughly as regulars. The durable content is the architecture: build components first, attribute failures to their first faulty link, hold invariant what coordination depends on, vary what the opponent predicts, measure with instruments before allocating, section the field of decision, and review on a cadence. That architecture is era proof even where every number in the book is not.",
+   "retrocausal_genealogy": "The genealogy of the ideas runs from the English public schools through Rugby codification to the American colleges and then to the western programs that Yost himself coached. The text traces football to Greek and Roman antiquity as a vague ancestry, gives the English schoolboy the real origin, dates the first codification attempt to London clubs in 1863 and the agreed code to 1871, follows the game through Yale inter class contests under modified Rugby Union rules in 1873, and names Walter Camp as the standing authority whose committee work underpins its defense of the game. The regional chapter is a map of descent with modification: Princeton regular system, Yale tackle back, Harvard tandem, Pennsylvania guards back, Chicago under Stagg, and Michigan shifting under Yost from 1901, each style carried to other schools by graduating coaches. The rules appendix, the official rules for 1905 reprinted from Spalding Official Football Guide by permission, closes the lineage by showing the code still in motion.",
+   "theory_of_mind": "Yost model of his reader is double, as the title promises: a young player in a high school, preparatory school or college who needs instruction he can act on the same afternoon, and a spectator who has never played and wants the game made plain. His model of the domain is that football is a learnable machine built from teachable parts, that example is the very best teacher, which is why positions, plays and formations are posed in photographs throughout, and that the reader player is improvable without limit if he will submit to regularity, discipline and honest self criticism. He also models the opponent as a learning reader of your own habits: signals can be noted, methods can be anticipated, intentions can be divulged too early, so the competent player treats his own predictability as a liability to be managed.",
+   "cross_layer_veto": "The work vetoes several tempting shortcuts across layers. It vetoes assembling team play before individual fundamentals are installed, and vetoes early scrimmage that injures unconditioned men. It vetoes any play with a likelihood of a fumble in the danger section near your own goal, whatever its yardage promise. It vetoes complexity in the signal code, because a code the slowest member cannot grasp instantly caps the speed of the whole eleven. It vetoes changing the style of coaching a player mid season and vetoes assistants coaching the regulars in conflicting styles. It vetoes over training late in the season and vetoes eleventh hour scrimmage before a hard game. And it vetoes playing the game to suit the opponents: every plan layer is constrained to attack measured weakness, so a fashionable formation or a star reputation cannot override the scouting layer."
+  }
+ ],
+ "universal_lens": "Read outside sport, the book is a manual for building any coordinated human machine: decompose the whole into named fundamentals, train each fundamental in isolation until it is instinctive, define every role by its responsibilities and its failure modes, standardize the signals by which parts coordinate, measure the parts with instruments instead of impressions, and only then assemble, plan against a specific counterpart, and review errors on a fixed weekly cadence. Its deepest general claim is that system performance is set jointly by the quality of the parts and by the quality of the assembly order, and that skipping a stage does not save time but moves the cost into failures that are harder to attribute.",
+ "gsi_mapping": "The Galaxy Sports Institute takes from Yost a curriculum architecture and a research method. The curriculum architecture is his build order: fundamentals, positions, training regime, small unit combination, signal fluency, team play, opponent specific generalship, taught in that sequence with photographed example as the primary medium. The research method is his instrument habit: comparable trials for everyone before roles are assigned, trainer measurements before and after as evidence, drill machines that return relative speed data, and a weekly rules quiz that makes the participants generate the questions. GSI can also take his regional survey as a template for style genealogy, tracing how a system of play descends, mutates and spreads through the coaches who carry it.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes the reasoning architecture, not any 1905 number. Player projections are built from component skill states before team projections, with a weakest link term beside the average. Failures are attributed to the earliest faulty component in the chain, so exchanges, holds and blocks are graded as operations with owners. Consistency is measured where coordination depends on it, and variation is measured where an opponent is learning to predict. Play value is computed inside field sections with section specific risk rules, venue and weather enter as scouted inputs that move technique selection, and a scheduled post game review loop classifies errors and checks them for recurrence in the next game."
+}

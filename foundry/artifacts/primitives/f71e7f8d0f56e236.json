@@ -1,0 +1,700 @@
+{
+ "book_id": "f71e7f8d0f56e236",
+ "source_status": "COMPLETE",
+ "source_note": "Spalding Official Foot Ball Guide 1915, Spalding Athletic Library Group II No. 2, edited by Walter Camp, official publication of the American Intercollegiate Foot Ball Rules Committee, published by American Sports Publishing Company, 21 Warren Street, New York, copyright 1915. Title page facts from the text: rules as recommended by the Rules Committee consisting of E. K. Hall, Dartmouth, Chairman, Walter Camp, Yale, Secretary, and members including Dr. Jas. A. Babbitt, Percy Haughton, Paul J. Dashiell, Parke H. Davis and A. A. Stagg. Local PDF file is 15056111 bytes, 337 pages, full sha256 over the PDF bytes f71e7f8d0f56e2368bc67fc584ed03e355f6ba14a888bdf97d4f2f815f43bccd, with book_id f71e7f8d0f56e236 computed by the gatekeeper method of sha256 over str(size) encoded plus the full file bytes, verified in this run. Provenance: the PDF is an image only scan and the shipped extracted text for the PDF is Google Books boilerplate only, so quotes are sourced from the full OCR text of the same Google scan at books-38, copied to the work folder as spaldings-1915-full.txt, 820083 bytes and 128376 words, the Tolman route. Every verbatim quote in this artifact was proven as a contiguous substring of that full OCR text file, taken from inside one page with no stitching across page breaks. OCR artifacts in quoted passages are preserved as printed. The work contains no equations, so all latex fields are empty. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "field_dimensions_360_by_160",
+   "name": "The field is a rectangle 360 feet long and 160 feet wide, with goal lines ten yards inside the end lines",
+   "verbatim_quote": "The game shall be played upon a rectangular field, 360 feet in length and 160 feet in width.",
+   "page": "Rule I, Section 1, Field; full OCR text line 1330",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Play takes place on a marked rectangle whose dimensions are fixed before play begins",
+    "End lines, side lines, goal lines and end zones are distinct regions of that rectangle"
+   ],
+   "breakdown_regime": "Fixed dimensions describe the 1915 college field only. Later field sizes, hash marks and end zone depths are outside this specification.",
+   "domain": "football rules, field geometry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Geometry first reasoning: a reasoning engine should fix the state space before evaluating any play. Field length, width, goal line position and end zones define where every later event can occur, what counts as in bounds, and how distance to a goal is measured on every snap.",
+    "source_operator": "field_dimensions_360_by_160",
+    "telemetry": "Field dimensions, yard line position, side line and end line coordinates for every play"
+   }
+  },
+  {
+   "primitive_id": "goal_posts_18ft6_crossbar_10ft",
+   "name": "Goal posts stand in the middle of each goal line, 18 feet 6 inches apart, over 20 feet high, with a crossbar 10 feet from the ground",
+   "verbatim_quote": "The goal posts shall be placed in the middle of each goal line, shall exceed 20 feet in height and be placed 18 feet 6 inches apart, with a horizontal cross-bar 10 feet from the ground.",
+   "page": "Rule I, Section 3, Goal; full OCR text line 1336",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The target for a goal kick is a fixed physical apparatus on the goal line",
+    "A kick is judged against the posts and crossbar, not against the end line alone"
+   ],
+   "breakdown_regime": "Post and crossbar dimensions are specific to this era. Later wider or narrower goals and posts moved to the end line change kick difficulty and cannot be read back into 1915 results.",
+   "domain": "football rules, scoring apparatus",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Target specification as a measurement device: the engine treats a goal attempt as a trajectory judged against a fixed frame with known width and height. That separates kick execution from outcome luck and gives a stable reference for comparing kickers across seasons and fields.",
+    "source_operator": "goal_posts_18ft6_crossbar_10ft",
+    "telemetry": "Kick trajectory, result by distance, post and crossbar dimensions in force for the season"
+   }
+  },
+  {
+   "primitive_id": "ball_prolate_spheroid_specification",
+   "name": "The ball is a prolate spheroid with long axis circumference 28 to 28.5 inches, short axis 22.5 to 23 inches, weight 14 to 15 ounces",
+   "verbatim_quote": "Circumference, long axis, from 28 inches to 28½ inches; short axis, from 22½ inches to 23 inches; Weight, from 14 ounces to 15 ounces.",
+   "page": "Rule II, Section 1, Ball; full OCR text line 1352",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The ball is leather enclosing a rubber bladder and tightly inflated",
+    "Shape and weight tolerances are part of legality, not a matter of team preference"
+   ],
+   "breakdown_regime": "Tolerances describe the 1915 ball. A larger, rounder or lighter later ball changes passing, kicking and handling, so handling statistics are not directly comparable across ball specifications.",
+   "domain": "football rules, equipment specification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Equipment as a controlled variable: when the object itself is specified within tight tolerances, differences in outcomes can be attributed to players and conditions rather than to the ball. A reasoning engine should log the equipment specification in force before comparing handling, kicking or passing across eras.",
+    "source_operator": "ball_prolate_spheroid_specification",
+    "telemetry": "Ball circumference, weight, inflation and era specification attached to each season record"
+   }
+  },
+  {
+   "primitive_id": "eleven_players_per_side",
+   "name": "The game is played by two teams of eleven men each, in named customary positions",
+   "verbatim_quote": "The game shall be played by Players. two teams of eleven men each.",
+   "page": "Rule III, Section 1, Players and Substitutes; full OCR text line 1358",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Eleven is the legal unit size for both sides at the start of play",
+    "Positions are named in a customary offensive formation diagram in the same section"
+   ],
+   "breakdown_regime": "Eleven a side is a rule choice, not a physical necessity. Formations, platoons and later free substitution change how the eleven are used without changing the number itself.",
+   "domain": "football rules, team composition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Fixed roster size as a constraint on every matchup: with eleven per side, every assignment is a covering problem in which one player used in one place cannot also be used in another. The engine reasons about matchups as allocation under a hard count constraint, not as an open ended list of strengths.",
+    "source_operator": "eleven_players_per_side",
+    "telemetry": "Players on field by team and position, formation alignment, personnel grouping per play"
+   }
+  },
+  {
+   "primitive_id": "substitution_reporting_requirement",
+   "name": "A substitute may enter at any time but must report to the Referee or Umpire before engaging in play or communicating with his team",
+   "verbatim_quote": "A player may be substituted for another at any time, but, before engaging in play, or communicating with any members of his team, he must report to the Referee or Umpire.",
+   "page": "Rule III, Section 2, Substitutes; full OCR text line 1374",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Substitution is allowed during the game rather than only at period breaks",
+    "Reporting to an official is the act that makes the substitution legal"
+   ],
+   "breakdown_regime": "The reporting rule controls information flow as well as personnel. It assumes officials can police communication, which breaks down when signals, messengers or later communication devices bypass the report.",
+   "domain": "football rules, substitution control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Personnel change as a governed state transition: the engine should treat a substitution as valid only after a declared check in event, and should treat undeclared communication as a separate violation. That models depth, fatigue replacement and information transfer as distinct, auditable events.",
+    "source_operator": "substitution_reporting_requirement",
+    "telemetry": "Substitution log with reporting time, player in, player out, period and down"
+   }
+  },
+  {
+   "primitive_id": "withdrawn_player_return_once",
+   "name": "A withdrawn player may return only once, and only at the beginning of a subsequent period",
+   "verbatim_quote": "A player who has been withdrawn from the game may return once, at the beginning of a subsequent period.",
+   "page": "Rule III, Section 2, Substitutes; full OCR text line 1374",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Return is a scarce right, limited to a single re entry",
+    "Re entry is tied to period boundaries rather than to any stoppage"
+   ],
+   "breakdown_regime": "The once only return rule makes rest a costly decision. Under later unlimited substitution the same coaching choice carries almost no cost, so substitution patterns from 1915 cannot be projected onto later seasons.",
+   "domain": "football rules, substitution limits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Scarce return rights turn rotation into resource management: taking a player out spends an option that cannot be fully recovered. A reasoning engine evaluating 1915 personnel decisions must price rest, injury checks and matchup changes against the loss of flexibility later in the game.",
+    "source_operator": "withdrawn_player_return_once",
+    "telemetry": "Withdrawal and return events, period of return, minutes missed, reason for withdrawal when recorded"
+   }
+  },
+  {
+   "primitive_id": "player_equipment_safety_ban",
+   "name": "No player may wear projecting nails, iron plates on shoes, or any projecting metallic or hard substance on his person",
+   "verbatim_quote": "No player having projecting nails or iron plates on his shoes or any projecting metallic or hard substance on his person shall be allowed in the game.",
+   "page": "Rule III, Section 3, Equipment of Players; full OCR text line 1390",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Protective devices must, in the judgment of the Umpire, be without danger to other players",
+    "Leather cleats are allowed while hard projecting materials are not"
+   ],
+   "breakdown_regime": "The ban judges danger by inspection before play. It does not measure impact force, and it leaves borderline devices to official judgment rather than to a laboratory standard.",
+   "domain": "football rules, player safety",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Safety constraint as a pre play veto: equipment legality is checked before performance is evaluated, and a dangerous device removes the player regardless of skill. The engine mirrors that order, applying hard safety and legality constraints before any performance reasoning is allowed to proceed.",
+    "source_operator": "player_equipment_safety_ban",
+    "telemetry": "Equipment inspection results, suspensions for uncorrected faults, device types in use"
+   }
+  },
+  {
+   "primitive_id": "game_length_sixty_minutes_four_periods",
+   "name": "The game lasts 60 minutes in four periods of 15 minutes each, exclusive of time taken out",
+   "verbatim_quote": "The length of the game shall be 60 minutes, divided into four periods of 15 minutes each, exclusive of time taken out, although it may be of shorter duration by mutual agreement between representatives of the contesting teams.",
+   "page": "Rule IV, Section 1, Length of Game; full OCR text line 1404",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Playing time excludes time taken out, so elapsed wall clock time is longer than game time",
+    "A shorter game is possible only by mutual agreement of the contesting teams"
+   ],
+   "breakdown_regime": "Period structure shapes strategy near boundaries. Darkness, agreement and forfeiture provisions in the same rule are exceptions that can truncate the standard sixty minutes.",
+   "domain": "football rules, game clock structure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Time as four bounded segments: splitting sixty minutes into four periods creates recurring reset points for goals, possession, substitution return and strategy. The engine should reason period by period, because the same score and field position mean different things in different periods with different resets ahead.",
+    "source_operator": "game_length_sixty_minutes_four_periods",
+    "telemetry": "Period, game clock, time taken out, score and possession at each period boundary"
+   }
+  },
+  {
+   "primitive_id": "scoring_values_1915",
+   "name": "Scoring values are touchdown 6 points, goal from touchdown 1 point, goal from the field 3 points, safety by opponents 2 points",
+   "verbatim_quote": "The following shall be the value of plays in scoring:\n\nTouchdown, 6 points.\n\nGoal from touchdown, 1 point.\n\nGoal from the field, 3 points.\n\nSafety by opponents, 2 points:",
+   "page": "Rule V, Scoring; full OCR text line 1444",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The game is decided by the final score at the end of the four periods",
+    "Each scoring play has a single fixed point value set by rule"
+   ],
+   "breakdown_regime": "Point values are conventions of this rules era. Comparing scores across eras without adjusting for value changes, especially the touchdown and field goal values, misstates how dominant a performance was.",
+   "domain": "football rules, scoring system",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A fixed scoring table is the payoff function of the whole game: every tactical choice in the book is ultimately valued by these numbers. The engine should make the payoff table explicit for the era being reasoned about, because optimal choices change when the relative value of a touchdown, a field goal and a safety changes.",
+    "source_operator": "scoring_values_1915",
+    "telemetry": "Scoring play type, points awarded, era scoring table, score differential after each score"
+   }
+  },
+  {
+   "primitive_id": "punt_definition",
+   "name": "A punt is made by dropping the ball from the hands and kicking it before it touches the ground",
+   "verbatim_quote": "A Punt is made by dropping the ball from the hand or hands and kicking it before it touches the ground.",
+   "page": "Rule VI, Section 1, Definitions; full OCR text line 1476",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The ball must be dropped, not placed or thrown, for a punt",
+    "Contact must occur before the ball reaches the ground, which separates a punt from a drop kick"
+   ],
+   "breakdown_regime": "The definition classifies by mechanics, not by intent or result. A mishit that still meets the mechanics is a punt, and a punt that travels poorly is still governed by punt rules.",
+   "domain": "football rules, kicking definitions",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Precise mechanical definitions let an engine classify an observed kick without guessing intent. Drop timing and ground contact are observable events, so punt, drop kick and place kick can be separated from video or play records and then governed by the correct restart and recovery rules.",
+    "source_operator": "punt_definition",
+    "telemetry": "Kick type classified from drop and contact timing, kick distance, return and possession result"
+   }
+  },
+  {
+   "primitive_id": "snapping_the_ball_definition",
+   "name": "Snapping the ball is putting it back from the ground in one quick continuous motion of the hands, the ball actually leaving the hands",
+   "verbatim_quote": "Snapping the ball is putting it back from its position on the ground with one quick and continuous motion of the hand or hands, the ball actually leaving the hands on this motion.",
+   "page": "Rule VI, Section 2, Definitions; full OCR text line 1486",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The snap is a single continuous motion, not a held or staged movement",
+    "The ball must actually leave the snapper hands on that motion"
+   ],
+   "breakdown_regime": "The 1915 alterations note a practised abuse in which the center held the ball after an apparent snap. The definition fails if officials cannot see whether the ball left the hands.",
+   "domain": "football rules, scrimmage mechanics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A play cannot be reasoned about until its legal start event is defined. The snap definition gives the engine a crisp start trigger with a continuity condition, and the documented held ball abuse shows why a start event needs an anti deception condition built into the definition itself.",
+    "source_operator": "snapping_the_ball_definition",
+    "telemetry": "Snap event timing, snapper identity, fumbled or held snaps, false start and delay calls"
+   }
+  },
+  {
+   "primitive_id": "scrimmage_definition",
+   "name": "A scrimmage begins when the holder places the ball flat on the ground, long axis at right angles to the line, and snaps it back",
+   "verbatim_quote": "A Scrimmage takes place when the holder of the ball places it flat upon the ground, with its long axis at right angles to the line of scrimmage, and puts it in play by snapping it back.",
+   "page": "Rule VI, Section 3, Definitions; full OCR text line 1490",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The scrimmage does not end until the ball is dead",
+    "Ball orientation on the ground is prescribed before the snap"
+   ],
+   "breakdown_regime": "Orientation and placement are formalities that matter only because measurement and the neutral zone depend on them. On poor fields or with a mishandled placement the formal start can be disputed.",
+   "domain": "football rules, scrimmage mechanics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The scrimmage is the atomic unit of the 1915 game: a defined start, a defined end when the ball is dead, and a measured result in between. The engine should segment all play into these units, because downs, distance, penalties and possession are all accounted per scrimmage.",
+    "source_operator": "scrimmage_definition",
+    "telemetry": "Scrimmage start and end, ball spot before and after, down, distance and result per scrimmage"
+   }
+  },
+  {
+   "primitive_id": "neutral_zone_definition",
+   "name": "The two lines of scrimmage are separated by a space equal to the length of the ball, the neutral zone, which may not be encroached upon until the ball is in play",
+   "verbatim_quote": "This space is known as the neutral zone and may not be encroached upon until the ball is put in play.",
+   "page": "Rule VI, Section 3, Definitions, Neutral Zone; full OCR text line 1504",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "There are two lines of scrimmage, one for each side",
+    "The separation between them is set by the length of the ball itself"
+   ],
+   "breakdown_regime": "The zone is only as wide as the ball is long, so encroachment is a matter of inches and of official sight lines. It offers almost no buffer against early movement.",
+   "domain": "football rules, line play",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A small protected buffer between opposing lines turns line play into a timing contest with a measurable boundary. The engine can treat encroachment as a boundary crossing event, and can reason about how a narrow buffer rewards snap timing and punishes anticipation.",
+    "source_operator": "neutral_zone_definition",
+    "telemetry": "Line alignment, encroachment calls, snap timing, defensive line penetration depth"
+   }
+  },
+  {
+   "primitive_id": "fair_catch_definition_and_signal",
+   "name": "A fair catch is catching a kicked ball before it touches the ground, after signalling the intention by raising a hand clearly above the head, taking no more than two steps after the catch",
+   "verbatim_quote": "A Fair Catch is made by catching the ball after it has been kicked by one of the opponents and before it touches the ground, or in similarly catching a punt-out by another of the catcher's own side, provided the player(except in case of punt-out, where no signal is necessary), while advancing toward the ball, signals his intention of making a fair catch by raising his hand clearly above his head and does not take more than two steps after making the catch.",
+   "page": "Rule VI, Section 5, Definitions, Fair Catch; full OCR text line 1508",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The signal must be made while advancing toward the ball",
+    "A ball touched by another of the catcher side before the catch is not a fair catch, as stated in the following paragraph"
+   ],
+   "breakdown_regime": "Protection depends on a visible signal seen by officials and opponents in time. A late, low or ambiguous signal leaves the catcher exposed and the ruling disputed.",
+   "domain": "football rules, kick reception",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The fair catch is a declared intent protocol: a player trades the right to advance the ball for protection, and the trade is valid only if the declaration is public and early. The engine should model declared intent as part of the play state, because the same catch has different rights depending on the signal.",
+    "source_operator": "fair_catch_definition_and_signal",
+    "telemetry": "Fair catch signal, catch spot or mark, interference with the catch, restart choice after the catch"
+   }
+  },
+  {
+   "primitive_id": "kickoff_definition_and_restarts",
+   "name": "A kick off is the opening play of the first and third periods, a place kick from the 40 yard line of the team entitled to kick, and also restarts play after a goal from the field and after a try at goal",
+   "verbatim_quote": "A Kick-off is the term used to designate the opening play of the first and third periods and it shall consist of a place-kick from the 40-yard line of the team entitled to kick.",
+   "page": "Rule VI, Section 1, Definitions, Kick-off; full OCR text line 1462",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The kick off spot is the kicking team own 40 yard line",
+    "After a goal from the field and after a try at goal following touchdown, the ball must be put in play by a kick off, as stated in the following paragraph"
+   ],
+   "breakdown_regime": "Kick off rules assume a place kick from a fixed line. Onside recovery, touchback and out of bounds provisions elsewhere in the rules govern the outcomes the definition itself does not settle.",
+   "domain": "football rules, restarts",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A single standardized restart after scores and at period openings keeps possession accounting clean: every scoring sequence closes with the same reset. The engine should treat the kick off as the closing event of a scoring drive and the opening event of the next possession, with a fixed starting geometry.",
+    "source_operator": "kickoff_definition_and_restarts",
+    "telemetry": "Kick off spot, kick result, touchbacks, returns, starting field position of the next possession"
+   }
+  },
+  {
+   "primitive_id": "on_line_of_scrimmage_criterion",
+   "name": "A player is on the line of scrimmage if both hands or both feet are up to or within one foot of the line, or one foot and the opposite hand are within one foot of it",
+   "verbatim_quote": "A player shall be considered to be on the line of scrimmage if he has both hands or both feet up to or within one foot of this line, or if he has one foot and the opposite hand up to or within one foot of it.",
+   "page": "Rule IX, Section 1, Position of Players at Scrimmage; full OCR text line 1724",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "At least seven players of the side holding the ball shall be on the line, as stated at the start of the same section",
+    "Guards next to the snapper back are allowed a leg locking exception described in the same section"
+   ],
+   "breakdown_regime": "The one foot tolerance makes legality a judgment within a band rather than a line. Players aligned near the edge of the band will be ruled differently by different officials.",
+   "domain": "football rules, formation legality",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Formation legality defined by a tolerance band is an early example of a threshold rule with measurement error built in. The engine should treat alignment as a measured position with a tolerance, not as a binary label, and should expect borderline formations to carry ruling variance.",
+    "source_operator": "on_line_of_scrimmage_criterion",
+    "telemetry": "Player alignment distances from the line, number on the line, illegal formation calls"
+   }
+  },
+  {
+   "primitive_id": "coin_toss_goal_or_kickoff_choice",
+   "name": "Captains toss a coin before the game, the winner choosing goal or kick off irrevocably, and the loser of the toss holding the same privileges at the start of the third period",
+   "verbatim_quote": "The captains of the opposing teams shall toss up a coin before the game. The winner of the toss shall have the choice of goal or kick-off, which choice shall not be revokable.",
+   "page": "Rule VII, Section 1, Kick-off; full OCR text line 1664",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "If the winner selects the goal, the loser must kick off",
+    "The loser of the toss has the same privileges at the beginning of the third period that the winner had at the beginning of the game"
+   ],
+   "breakdown_regime": "The choice bundles goal direction and first kick off into one decision. Wind, sun and field condition values change during a game, so a choice that is right at the opening may be wrong by the third period.",
+   "domain": "football rules, game opening procedure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An opening choice under uncertainty, made once and mirrored later, is a clean decision problem: direction advantages against possession advantages, with the second half choice compensating the loser. The engine can use the toss structure to reason about how rule designers balance a random allocation with a compensating second choice.",
+    "source_operator": "coin_toss_goal_or_kickoff_choice",
+    "telemetry": "Toss winner, choice taken, goal direction, weather and field conditions, third period choice"
+   }
+  },
+  {
+   "primitive_id": "necessary_gain_ten_yards_four_downs",
+   "name": "A team that does not advance the ball 10 yards in four consecutive downs, having constantly had possession, loses the ball to the opponents on the spot of the fifth down",
+   "verbatim_quote": "If in four consecutive downs a team, having constantly had the ball in its possession, shall not have advanced the ball 10 yards, it shall go to the opponents on the spot of the fifth down, except as provided in Section 2.",
+   "page": "Rule XX, Section 1, Necessary Gain on Downs; full OCR text line 2412",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Continuity of possession matters: Section 2 breaks the constant possession condition when the opponents gain and lose the ball or are given a fair chance on a kick",
+    "Measurement uses the forward point of the ball, as provided in Section 3 of the same rule"
+   ],
+   "breakdown_regime": "The rule is the core scarcity of the game, but it is silent on play selection. It also interacts with kicks, since a kick that gives opponents a fair chance resets the accounting in ways a simple four down count misses.",
+   "domain": "football rules, downs system",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Ten yards in four downs is the central resource constraint of American football reasoning: every scrimmage spends one of four attempts to buy ten yards. The engine should evaluate each play by yards gained relative to the remaining downs and distance, and should treat failure as a possession transfer at a defined spot, not as a vague loss.",
+    "source_operator": "necessary_gain_ten_yards_four_downs",
+    "telemetry": "Down, distance, yards gained per scrimmage, series outcomes, turnover on downs spot"
+   }
+  },
+  {
+   "primitive_id": "backward_pass_unrestricted_direction",
+   "name": "Any player may at any time pass or throw the ball in any direction except toward the opponents goal",
+   "verbatim_quote": "Any player may, at any time, pass or throw the ball in any direction except toward his opponents'goal.",
+   "page": "Rule XVIII, Section 1, Passing or Throwing the Ball; full OCR text line 2260",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Direction, not the identity of the passer, is what separates a backward pass from a forward pass",
+    "A backward pass by the snapper back that goes out of bounds has special possession and down consequences stated in the same section"
+   ],
+   "breakdown_regime": "Unrestricted backward passing keeps the ball live and risky. A backward pass that is dropped is not protected the way an incomplete forward pass is, so the freedom carries a fumble cost the single sentence does not state.",
+   "domain": "football rules, ball movement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Direction based classification gives the engine a simple geometric test for a complex event: compare the throw direction with the goal direction. That one test then routes the play to entirely different consequences for incompletion, recovery and possession, which is a model for routing by a single decisive feature.",
+    "source_operator": "backward_pass_unrestricted_direction",
+    "telemetry": "Pass direction, passer and receiver positions, backward pass recoveries and out of bounds results"
+   }
+  },
+  {
+   "primitive_id": "one_forward_pass_per_scrimmage",
+   "name": "Only one forward pass may be made in each scrimmage",
+   "verbatim_quote": "Only one forward pass may be made in each scrimmage.",
+   "page": "Rule XVIII, Section 3, Passing or Throwing the Ball; full OCR text line 2288",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The limit is counted per scrimmage, not per possession or per period",
+    "A second forward pass is an illegal forward pass governed by the penalties of the same rule"
+   ],
+   "breakdown_regime": "The one pass limit channels the passing game into a single decisive throw. It does not limit backward passes, so lateral chains after or before the throw remain a separate design space.",
+   "domain": "football rules, forward pass limits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A hard count limit on the highest value action forces commitment: the single forward pass must be spent at the chosen moment of the scrimmage. The engine should treat that pass as a once per play resource and evaluate when in the play structure it is spent, rather than treating passing as repeatable within a play.",
+    "source_operator": "one_forward_pass_per_scrimmage",
+    "telemetry": "Forward passes per scrimmage, illegal second pass calls, pass timing within the play"
+   }
+  },
+  {
+   "primitive_id": "forward_pass_striking_ground_incomplete",
+   "name": "A legally passed forward ball that strikes the ground within the field of play, before or after being touched by an eligible player of either side, is not a completed pass",
+   "verbatim_quote": "If the ball, after having been legally passed forward, strikes the ground within the field of play, either before or after having been touched by an eligible player of either side, the pass shall not be considered as completed.",
+   "page": "Rule XVIII, Section 4, Passing or Throwing the Ball; full OCR text line 2296",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Ground contact ends the completion question regardless of a prior touch by an eligible player",
+    "An incompleted pass carries the penalty accounting stated under Section 3 of the same rule in this era"
+   ],
+   "breakdown_regime": "In this era an incompletion is not cost free, which changes passing incentives sharply compared with later rules. The ground rule also does not by itself settle passes that strike goal posts, cross the end line or leave the field, which Section 5 handles separately.",
+   "domain": "football rules, forward pass completion",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Completion defined by an uninterrupted chain from throw to possession, broken by ground contact, is a state machine the engine can apply exactly: legal throw, eligible touch, ground contact, ruling. Making each transition explicit prevents a touched but dropped pass from being scored as a completion.",
+    "source_operator": "forward_pass_striking_ground_incomplete",
+    "telemetry": "Pass attempts, touches by eligible players, ground contact, completions and incompletions by field region"
+   }
+  },
+  {
+   "primitive_id": "eligible_forward_pass_receiver_rule",
+   "name": "After a legal forward pass, the ball may first be touched only by players of the passer side who were at least 1 yard behind the line of scrimmage when the ball was put in play, or who were playing at either end of the line",
+   "verbatim_quote": "After the ball has been legally passed forward, it may first be touched only by such players of the passer's side as were at the time the ball was put in play at least 1 yard behind the line of scrimmage or were playing at either end of the said line.",
+   "page": "Rule XVIII, Section 7, Passing or Throwing the Ball; full OCR text line 2322",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Eligibility is fixed at the moment the ball is put in play, not when the pass is thrown",
+    "A player more than one foot back of the line but not one yard back is eligible in neither class, as the note to the section states"
+   ],
+   "breakdown_regime": "Eligibility by starting position creates a dead band between one foot and one yard behind the line. Alignment errors of inches therefore change who may legally touch the pass.",
+   "domain": "football rules, receiver eligibility",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Eligibility as a pre play label that governs a later event is a powerful reasoning pattern: the engine should stamp each player with an eligibility state at the snap and carry that state through the play, instead of trying to reconstruct legality from where a player happens to be when the ball arrives.",
+    "source_operator": "eligible_forward_pass_receiver_rule",
+    "telemetry": "Receiver starting position, eligibility class, first touch of a forward pass, illegal touching calls"
+   }
+  },
+  {
+   "primitive_id": "try_at_goal_after_touchdown",
+   "name": "A side that has made a touchdown shall try at goal by a place kick, either direct or preceded by a punt out",
+   "verbatim_quote": "A side which has made a touchdown shall try at goal by a place-kick, either direct or preceded by a punt-out.",
+   "page": "Rule XXII, Section 1, Try at Goal; full OCR text line 2456",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The try follows the touchdown as a prescribed procedure, worth 1 point under Rule V",
+    "The punt out option exists to improve the kicking angle after a touchdown scored near a side line"
+   ],
+   "breakdown_regime": "The punt out route depends on a fair catch by the scoring side and adds its own failure modes. A direct kick from a poor angle and a punt out that is mishandled are different risks for the same single point.",
+   "domain": "football rules, conversion procedure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The try is a small standalone decision problem attached to a touchdown: two routes to the same one point, differing in angle, handling risk and field position. The engine can value the routes separately from historical try records instead of treating the extra point as automatic.",
+    "source_operator": "try_at_goal_after_touchdown",
+    "telemetry": "Touchdown scoring position, try route chosen, punt out catch, try success by angle and distance"
+   }
+  },
+  {
+   "primitive_id": "kickoff_touchback_rule",
+   "name": "At kick off, a ball kicked across the goal line and declared dead there in possession of the defending side is a touchback",
+   "verbatim_quote": "At kick-off, if the ball is kicked across the goal line and is there declared dead when in the possession of one of the side defending the goal, it is a touchback.",
+   "page": "Rule VII, Section 2, Kick-off; full OCR text line 1670",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Possession by the defending side and a dead ball ruling are both required",
+    "The same kick caught and advanced, or recovered by the kicking side under other provisions, is a different outcome"
+   ],
+   "breakdown_regime": "Touchback on a kick off rewards kick depth with no return risk in this ruling, but the definition does not state the ensuing spot, which is handled elsewhere in the rules and rulings.",
+   "domain": "football rules, kick outcomes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Kick outcomes need terminal state labels that an engine can accumulate: touchback, return, recovery and out of bounds each start the next possession in a different state. The touchback label closes a kick off cleanly and lets starting field position be modeled as an outcome distribution rather than a single average.",
+    "source_operator": "kickoff_touchback_rule",
+    "telemetry": "Kick off depth, touchbacks, returns, ensuing starting field position"
+   }
+  },
+  {
+   "primitive_id": "captain_time_calls_three_per_half",
+   "name": "Either captain may ask that time be called three times during each half without penalty, with a two yard penalty for later captain requested stoppages unless the player is removed",
+   "verbatim_quote": "Either captain may ask that time be called three times during each half (the first half consisting of the first and second periods, and the second half of the third and fourth periods), without penalty.",
+   "page": "Rule XV, Section 2, Delay of Game; full OCR text line 2072",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A half consists of the first and second periods, then the third and fourth periods",
+    "The Referee may suspend play at his own discretion without penalty to either side, as stated in the same section"
+   ],
+   "breakdown_regime": "Three free calls per half is a small budget. Injury stoppages, official stoppages and captain calls are governed differently, so a simple count of stoppages overstates how many discretionary calls remain.",
+   "domain": "football rules, timeouts",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A limited stoppage budget is a strategic resource separate from downs and field position. The engine should track remaining captain calls per half as part of the game state, because a late stoppage that preserves time or removes a player has value that depends entirely on how many calls remain.",
+    "source_operator": "captain_time_calls_three_per_half",
+    "telemetry": "Captain time calls used and remaining per half, stoppage reason, player removals on stoppages"
+   }
+  },
+  {
+   "primitive_id": "conduct_striking_and_kneeing_ban",
+   "name": "There shall be no striking with fist or elbows, kneeing, kicking, meeting with the knee, or striking with locked hands by line men breaking through, and no striking a ball carrier in the face with the heel of the hand",
+   "verbatim_quote": "There shall be no striking with the fist or elbows, kneeing, kicking, meeting with the knee, striking with the locked hands by line men when they are breaking through; nor shall a player on defense strike in the face with the heel of the hand an opponent who is carrying the ball.",
+   "page": "Rule XXIII, Section 1, Conduct of Players; full OCR text line 2464",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Violation of this section carries disqualification and loss of half the distance to the offending team own goal line, as stated in the penalty following the section",
+    "The Referee, Umpire and Linesman all have reporting roles for this section"
+   ],
+   "breakdown_regime": "The ban lists acts rather than outcomes, so a strike that does no injury is still a foul and a damaging legal block is not. Enforcement depends on officials seeing acts in crowded line play.",
+   "domain": "football rules, fouls and safety",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Act based foul definitions give the engine a conduct layer that runs independently of play outcome: a gain does not excuse a banned act, and a banned act is recorded even on a failed play. Keeping the conduct layer separate prevents performance evaluation from absorbing or hiding safety violations.",
+    "source_operator": "conduct_striking_and_kneeing_ban",
+    "telemetry": "Fouls by type, disqualifications, half distance enforcements, official reporting the foul"
+   }
+  },
+  {
+   "primitive_id": "penalty_enforcement_from_spot_of_foul",
+   "name": "Penalties for fouls by players are enforced from the spot where the foul was committed, even behind the goal line, unless otherwise specified",
+   "verbatim_quote": "Penalties for fouls committed by players shall be enforced from the spot where the foul was committed, even though it be behind the goal line, unless otherwise specified.",
+   "page": "Rule XXV, Section 1, Enforcement of Penalties; full OCR text line 2628",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "This section governs all cases not otherwise specifically provided for, as the rule heading states",
+    "Fouls by persons other than players are enforced as provided under Rule XXIV, as stated in the same section"
+   ],
+   "breakdown_regime": "Spot enforcement requires officials to mark a foul location during live play. When the spot is uncertain, the enforcement inherits that uncertainty, and behind the goal line cases push against safety and touchback logic.",
+   "domain": "football rules, penalty administration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Spot of foul enforcement ties a penalty to the geography of the violation rather than to the end of the play. The engine should store foul location as data, because the same foul at different spots has different yardage value, especially near a goal line where half distance limits apply.",
+    "source_operator": "penalty_enforcement_from_spot_of_foul",
+    "telemetry": "Foul type, foul spot, enforcement spot, yards actually enforced, down and distance after enforcement"
+   }
+  },
+  {
+   "primitive_id": "referee_general_authority_and_score",
+   "name": "The Referee has general oversight and control of the game and is sole authority for the score and sole judge of forfeiture under the rules",
+   "verbatim_quote": "The Referee shall have general oversight and control of the game. He shall be sole authority for the score and sole judge of forfeiture of the game under the rules.",
+   "page": "Rule XXVII, Section 1, Duties of the Referee; full OCR text line 2694",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The Referee usually takes position behind the side having possession of the ball, as the section parenthetical states",
+    "Decisions on matters not designated to other officials are final with the Referee under Section 2 of the same rule"
+   ],
+   "breakdown_regime": "Single authority for score and forfeiture concentrates disputes in one official. It does not remove error, and the same rule requires the Referee to give precedence to penalties declared by the Umpire.",
+   "domain": "football officiating, authority structure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A named final authority is what makes a record official: score, forfeiture and undesignated questions all close with the Referee. The engine mirrors this with a single closing authority for each game record, while preserving the reports of other officials as inputs rather than as competing final records.",
+    "source_operator": "referee_general_authority_and_score",
+    "telemetry": "Referee identity, score certification, forfeiture rulings, decisions on undesignated matters"
+   }
+  },
+  {
+   "primitive_id": "umpire_jurisdiction_conduct_and_position",
+   "name": "The Umpire judges conduct and position of the players, final on fouls not placed with the Referee or Linesman, positioned behind the defending side",
+   "verbatim_quote": "The Umpire shall be judge of the conduct and position of the players, and his decision shall be final regarding such fouls as are not specifically placed within the jurisdiction of the Referee or the Linesman.",
+   "page": "Rule XXVIII, Section 1, Duties of the Umpire; full OCR text line 2864",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The Umpire should take position behind the defending side, as the section parenthetical states",
+    "The Umpire signals fouls with a horn while play continues until the Referee declares the ball dead, under Section 3 of the same rule"
+   ],
+   "breakdown_regime": "Divided jurisdiction works only if the division is written in advance, as the brief of rules in Rule XXVII attempts. Overlapping observation still produces cases where two officials see the same act under different rules.",
+   "domain": "football officiating, jurisdiction division",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Jurisdiction divided by subject matter, with each official final inside an assigned domain, is a model for multi signal reasoning: assign each class of observation to the observer positioned to see it, record who reported what, and let a central authority enforce. The engine should keep observer identity attached to every foul and ruling.",
+    "source_operator": "umpire_jurisdiction_conduct_and_position",
+    "telemetry": "Umpire reported fouls, conduct and position calls, horn signals, possession assistance rulings"
+   }
+  },
+  {
+   "primitive_id": "linesman_chain_measurement_system",
+   "name": "The Linesman marks distances gained or lost, using two assistants with two rods about 6 feet long connected by a cord or chain 10 yards in length, and marks each down spot with a short iron rod",
+   "verbatim_quote": "These assistants, in the measuring of distances, shall use two rods about 6 feet in length and connected at their lower ends by a stout cord or chain 10 yards in length.",
+   "page": "Rule XXIX, Section 1, Duties of the Linesman; full OCR text line 3014",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The Linesman works under supervision of the Referee and remains on or near a side line",
+    "The Linesman and assistants change sides of the field for the second half unless otherwise ordered by the Referee"
+   ],
+   "breakdown_regime": "A ten yard chain measures the series target, not each play precisely. Stretch, sag, rod placement and the iron rod spot all add small errors that decide close first down rulings.",
+   "domain": "football officiating, measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Physical measurement machinery is part of the rules, not an accessory: the chain defines what ten yards means in practice. The engine should treat measured distance as an instrument reading with placement error, especially on series deciding measurements, rather than as an exact geometric quantity.",
+    "source_operator": "linesman_chain_measurement_system",
+    "telemetry": "Chain set positions, measurements requested, first down rulings by measurement, down spot marks"
+   }
+  },
+  {
+   "primitive_id": "field_judge_timekeeping_duty",
+   "name": "The Field Judge keeps the time with a stop watch, starting it when the ball is actually put in play, and notifies captains of time remaining before the end of each half",
+   "verbatim_quote": "He shall keep the time and shall use a stop-watch for this purpose. He shall start the watch, not when the Referee orders play to begin, but when the ball is actually put in play.",
+   "page": "Rule XXX, Sections 1 and 2, Duties of the Field Judge; full OCR text line 3080",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The Field Judge acts as assistant to the other officials under direction of the Referee",
+    "Captains must be notified of remaining time not more than ten nor less than five minutes before the end of each half, as stated in the same section"
+   ],
+   "breakdown_regime": "Human stop watch operation adds reaction error at every start and stop. Separating timekeeping from the Linesman, as the 1915 alterations require, reduces divided attention but does not remove reaction error.",
+   "domain": "football officiating, timekeeping",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Time measured from the actual start event rather than from an official order is a general measurement principle: start the clock on the event, not on the announcement. The engine should timestamp plays by their actual snap or kick event and treat announced time as a separate, noisier signal.",
+    "source_operator": "field_judge_timekeeping_duty",
+    "telemetry": "Field Judge identity, watch starts and stops, time remaining notices to captains, period end timing"
+   }
+  },
+  {
+   "primitive_id": "central_board_neutral_official_appointments",
+   "name": "The Rules Committee endorses its Central Board on Officials and urges colleges to accept neutral appointments by the Board, with stated appointments for major games secured on or before October 1 each year",
+   "verbatim_quote": "The Rules Committee fully endorses the work of its Central Board and recommends and will use its utmost influence in urging colleges and universities within its central field to accept neutral appointments by the Board, if in general managers' meeting such action be voted favorably, and further requests the managers and coaches to co-operate with the Board in securing stated appointments for major games on or before October 1 of each year.",
+   "page": "Central Board on Officials, printed page 92; full OCR text line 1274",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Board members receive no remuneration for their services, as stated in the same statement",
+    "The Board was reappointed and given a regular budget for 1915 expenses, as stated in the same statement"
+   ],
+   "breakdown_regime": "Neutral appointment is urged and endorsed, not imposed. A school that refuses neutral appointments keeps local selection, so neutrality depends on voluntary adoption across the central field.",
+   "domain": "football officiating, governance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Neutral assignment is a bias control built into governance: officials with no stake in either school are appointed by a central body on a published schedule. The engine takes the same lesson for evaluation, separating the party that assigns judges from the parties being judged, and recording assignment provenance for every ruling.",
+    "source_operator": "central_board_neutral_official_appointments",
+    "telemetry": "Official assignments by game, appointing body, neutrality status, appointment date relative to October 1"
+   }
+  },
+  {
+   "primitive_id": "statistical_review_1914_participation_census",
+   "name": "Parke H. Davis statistical review counts 1914 football as 450 college teams, 6000 secondary school elevens and 1500 athletic club teams, about 159,000 players and 31,300 games",
+   "verbatim_quote": "Intercollegiate foot ball in the autumn of 1914 was played by 450 college teams, by 6000 elevens representing secondary schools, and by 1500 teams not connected with educational institutions, but representing organized athletic clubs, large and small.",
+   "page": "Statistical Review of 1914, by Parke H. Davis, printed page 280; full OCR text line 6537",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Counts combine college, secondary school and independent club football in one census",
+    "Squad and schedule totals in the following sentences allow for two teams engaging in the same game"
+   ],
+   "breakdown_regime": "The census mixes levels of play with very different record quality. Secondary and club counts are estimates received by correspondence, not audited registrations, so totals are orders of magnitude rather than exact counts.",
+   "domain": "football records, participation statistics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A sport wide census turns a rule book into a data collection instrument: the same annual volume that defines play also counts who played it. The engine should keep participation denominators beside performance records, because rates, records and selections mean little without knowing how many teams and players produced them.",
+    "source_operator": "statistical_review_1914_participation_census",
+    "telemetry": "Team counts by level, player counts, games scheduled, attendance estimates by season"
+   }
+  },
+  {
+   "primitive_id": "field_goal_record_compilation_convention",
+   "name": "The Field Goal Record 1873 to 1914, compiled by Parke H. Davis, lists kicks by yardage and marks goals from placement with a symbol, all others being drop kicks",
+   "verbatim_quote": "Indicates a goal from placement. All others are from drop-kicks.",
+   "page": "The Field Goal Record, 1873 to 1914, Compilations of Parke H. Davis, printed page 283; full OCR text line 6634",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The record is ordered by yardage, with the longest kicks, headed by a 65 yard kick in 1882, listed first in the table that follows",
+    "Placement and drop kick goals are distinguished by a mark rather than by separate lists"
+   ],
+   "breakdown_regime": "A record list ordered by distance rewards the extreme case and hides attempt counts. Without attempts, the list cannot show how rare a long kick was among all kicks tried from that distance.",
+   "domain": "football records, kicking history",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A long horizon record table with an explicit marking convention is a durable data format: one symbol carries the kick method for four decades of entries. The engine should preserve such conventions when ingesting historical records, because losing the symbol silently merges two different skills, placed kicks and drop kicks, into one list.",
+    "source_operator": "field_goal_record_compilation_convention",
+    "telemetry": "Field goal distance, year, kicker, school, opponent, kick method mark, game date"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "f71e7f8d0f56e236-t1",
+   "think": "This guide is two books bound as one, and a reasoning engine has to hold both halves together at once. The first half is a season record for 1914: Walter Camp All America selection, regional reviews of the game in the Middle West, the South, the Middle States and New England, college notes, team by team records, schedules, and the historical tables compiled by Parke H. Davis, running from field goals and famous runs back to 1873 through dual series scores reaching to 1915. The second half is a law code: the Official Foot Ball Rules for 1915 as recommended by the Rules Committee, with E. K. Hall as chairman and Camp himself as secretary, followed by a brief of rules sorted by which official holds jurisdiction, approved rulings, and a summary of penalties. The extraction therefore treats the volume as a coupled system in which the rules define the events that the record half then counts, and the record half supplies the evidence that the next rules committee uses when it alters the code. The alterations printed for 1915 make that loop visible in a single place: the Field Judge is made obligatory and the watch is taken from the Linesman, a forward pass out of bounds on the fly becomes simply an incompleted pass, re substitution late in the game is stopped, the full back and kicker protection is split into running into and roughing with different penalties, players are recommended to be numbered, and the center must actually release the ball on the snap because a held ball trick had been practised against the older wording. Each alteration is a patch issued against observed behaviour, which means the code carries its own history of exploitation inside it. The core machinery of the code is a state machine built from a small set of defined primitives. A field of fixed dimensions, a ball of fixed shape and weight, eleven men a side, four periods of fifteen minutes, and a scoring table of six, one, three and two points set the boundary conditions. Inside those boundaries, play proceeds scrimmage by scrimmage. A scrimmage has a formal start in the snap, defined as one quick continuous motion in which the ball actually leaves the hands, a formal geography in the two lines of scrimmage separated by a neutral zone the length of the ball, a formal accounting unit in the down, and a formal end when the ball is dead. Four downs to gain ten yards is the scarcity that gives every scrimmage its value, and the chain crew with two rods and a ten yard cord is the physical instrument that decides whether the scarcity has been overcome. Around that core the code layers classification rules that route a play to its consequences: direction separates a backward pass, which any player may throw at any time, from a forward pass, which is limited to one per scrimmage, may first be touched only by men whose eligibility was fixed at the snap by being a yard back or at an end of the line, and fails if it strikes the ground. A declared signal separates a protected fair catch from an ordinary catch. A spot separates a foul from its enforcement, because penalties for fouls by players are taken from where the foul occurred, even behind a goal line. Nothing in the code is left as a vague impression if it can be turned into a test, a spot, a count or a signal, and that habit is the main transferable asset of the book. The officiating structure is the second transferable asset. Authority is divided in writing before the game begins: the Referee holds general oversight, is sole authority for the score and sole judge of forfeiture, and must give precedence to penalties declared by the Umpire; the Umpire judges conduct and position from behind the defending side and signals fouls by horn while play continues; the Linesman owns distance, the down spot and the out of bounds point on his side; the Field Judge owns time, starting a stop watch when the ball is actually put in play rather than when play is ordered. Above the crew sits the Central Board on Officials, chaired by Dr. James A. Babbitt, appointing neutral officials for major games, a governance layer whose whole purpose is to keep the judges independent of the judged. A reasoning engine that ingests signals from many observers needs exactly this discipline: each observation class assigned in advance to the observer positioned to see it, observer identity preserved with the report, one closing authority for the record, and a neutral assignment process above the individual contest. The limits of the book are equally instructive. Its definitions are strong on mechanics and weak on measurement error: the line of scrimmage test allows a man to be on the line within one foot, the neutral zone is only a ball length wide, the chain is a cord that can sag, and a human watch carries reaction error at both ends, yet the code speaks of these rulings as final. Its safety rules are lists of banned acts judged by eye, with disqualification and half distance penalties, rather than any measure of force or injury. Its record tables count extremes, the longest field goals and the longest runs, without attempt denominators, so they can rank a feat but cannot price its rarity. Its participation census for 1914 mixes audited college football with correspondence estimates for schools and clubs. An engine that learns from this volume should therefore copy its definitional discipline and its jurisdictional discipline while refusing its confidence about precision: keep the crisp event definitions, keep the assigned observers, and attach an error band to every spot, measurement and time that the 1915 code treats as exact.",
+   "retrocausal_genealogy": "The lineage runs from the rugby derived intercollegiate game of the 1870s through the successive rules committees that turned it into a distinct American code. Walter Camp sits at the center of that lineage as player, rule maker, selector and editor, and this volume shows all four roles at once: he edits the guide, serves as secretary of the Rules Committee listed on the title page, writes the All America selection reprinted from Collier Weekly, and presides over a record apparatus that Parke H. Davis had been building in these annual guides for years. The historical tables are the genealogy in data form, carrying field goals from 1873, famous runs from 1873 and dual series scores from 1873 forward, so that a reader in 1915 could place a current feat inside four decades of prior feats. The rules text is likewise genealogical, since the alterations section explains each change by the practice that provoked it, preserving the ancestor abuse alongside the descendant rule.",
+   "theory_of_mind": "Camp and the committee write for a reader who is assumed to be inside the game: a coach, captain, official or serious follower who needs rulings he can apply on Saturday, not an explanation of why football exists. Their model of the domain is that football is a contest that stays fair and intelligible only when every recurring situation has been named in advance and assigned a test, a spot, a penalty and an official. Ambiguity is treated as a defect that players will exploit, as the held ball snap and the thrown ball out of bounds practices showed, so the authorial instinct is always to close a loophole with a sharper definition rather than to trust custom or sportsmanship. At the same time the record half assumes a reader who believes a season is understood by comparing it with all previous seasons, which is why selections, censuses and forty year record tables belong in the same volume as the law.",
+   "cross_layer_veto": "Several parts of this work veto conclusions that other layers might want to draw. The scoring table vetoes any cross era comparison that treats a point total as era free, because the values of a touchdown, a field goal and a safety are set by this code and differ from other codes. The eligibility and one forward pass rules veto any reading of 1914 passing statistics as if receivers were free to touch the ball in any order, since legality was fixed at the snap. The incompletion accounting of this era vetoes importing later assumptions that an incomplete pass costs only a down. The measurement machinery vetoes false precision about first downs, because a cord, two rods and an iron spot marker cannot deliver exact yardage. The neutral appointment endorsement vetoes trusting rulings from locally chosen officials as if they carried the same independence as Board appointed crews."
+  }
+ ],
+ "universal_lens": "Beyond football, this volume is a template for governing any repeated contest with a written code: define the arena, the object, the number of participants and the payoff table first, then define the atomic event and its legal start, then write classification tests that route each event to its consequences, assign every class of judgment in advance to a positioned observer, give one authority the power to close the record, appoint the judges neutrally from a central body, publish the historical record beside the code, and revise the code each cycle by naming the exploit that forced the revision. Any domain that runs on rulings, from examinations to markets to laboratory protocols, can copy that order of construction and inherit its clarity about where disputes are supposed to end.",
+ "gsi_mapping": "The Galaxy Sports Institute takes from this guide a method for studying a sport historically without anachronism. Each era must be read under its own field dimensions, ball specification, scoring values, substitution limits and passing rules, because those constraints shaped what players attempted and what records could mean. The Institute also takes the record keeping model: long horizon tables with explicit marking conventions, participation censuses that supply denominators, named selectors whose selections can be audited, and an alterations log that explains rule changes by the behaviour that provoked them. Together those pieces support teaching the game as an evolving governed system, in which a statistic is always presented with the code that produced it and the measurement machinery that recorded it, rather than as a free standing number detached from its season.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes from this guide a discipline for its historical and situational reasoning. Era specific payoff tables, down and distance accounting, eligibility states fixed at the snap, declared intent on a fair catch, spot based penalty valuation and period by period state continuity are all structures the engine can apply when it reconstructs or reasons about games under a given rules code. The officiating model supplies a second transfer: assign each signal class to the observer positioned to judge it, preserve observer identity with each report, and let one authority close the record. The engine also takes the warning embedded in the measurement sections, attaching uncertainty to spots, chain measurements and human timing instead of treating historical game data as exact, and it uses the participation census as a reminder that every record needs a denominator."
+}

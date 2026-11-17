@@ -1,0 +1,754 @@
+{
+ "book_id": "5fee5df924431396",
+ "gse_mapping": "For the Galaxy Sports Edge engine, the book contributes doctrine rather than numbers. Its choice method, spread more options than coverage, ordered progression, declared target, is a complete decision protocol for the synthesis layer. Its passer-depth experiment and snap-quality gate define measurable inputs for the matchup layer. Its capability-overhang argument credits deep threat with the space it opens underneath, a second-order value the engine should score. Its interception accounting sets the grading baseline: compare aggressive outputs against the safe alternative, not perfection. And its rule lineage is a standing instruction to version every historical passing statistic by the clause set in force before it enters training. No figure in the book should be used as a modern constant without re-measurement.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the book is a primary-source anchor for the history and teaching of the passing game: a complete, dated rule lineage from 1903 to 1915 with the guides cited, a five-step teaching progression for the center snap that is still structurally sound as curriculum design, and a worked example of how to publish a negative example beside positive ones. It also documents the Springfield and Carlisle priority claims with their interested-party caveat, which is exactly the kind of provenance labeling the Institute should attach to every historical claim it teaches. The dedication to McCurdy and Berry's Springfield chair make the Springfield lane of football's development concrete and citable.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "assumptions": [
+    "The defense has never been restricted, never curtailed, never hampered, always free to line up as it chose (Ch. I)",
+    "Offensive strength is the recurring problem the rules committee reacts to"
+   ],
+   "breakdown_regime": "Holds for the era Berry surveys (to 1921); later eras did restrict defenses, so the asymmetry is a regime observation, not a law. no_equation_domain: the work is a coaching and rules-history monograph and states no equation for this; the claim is qualitative.",
+   "domain": "rules history",
+   "latex": "",
+   "layer2": {
+    "mapping": "The engine treats rule regimes as one-sided constraint sets: when a league changes rules, the expected direction of change is against the currently dominant side, so era adjustments should model which side the next restriction will bind rather than assuming symmetric drift.",
+    "source_operator": "offense_restriction_asymmetry",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Rule-change logs by season with the side restricted, joined to scoring and play-mix rates before and after each change"
+   },
+   "name": "Rule history is asymmetric: legislatures only ever restrict the offense; the defense is never curtailed and lines up as it chooses",
+   "page": "Ch. I; text lines 187-188",
+   "primitive_id": "offense_restriction_asymmetry",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "The history of football has been a story of limiting the power of the offense."
+  },
+  {
+   "assumptions": [
+    "Five yards were to be made in three downs in the old game (Ch. I)",
+    "With even weight, a safe conservative straight-ahead game was sure to bring the ultimate touchdown, so the coin toss could effectively decide evenly matched games"
+   ],
+   "breakdown_regime": "The equilibrium collapses the moment the required distance exceeds what body-length falls can supply, which is exactly the ten-yard change Berry credits with forcing the open game. no_equation_domain: Berry states the arithmetic in prose; no formal equation is given.",
+   "domain": "game design",
+   "latex": "",
+   "layer2": {
+    "mapping": "Strategy equilibria are set by the conversion threshold relative to the cheapest available gain: the engine should compute, for any down-distance regime, the minimum-variance play that satisfies the threshold, because rational opponents cluster there and tendencies become predictable.",
+    "source_operator": "old_game_fall_forward_equilibrium",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Down-and-distance distributions with play type and gain, used to find the cheapest threshold-satisfying action per regime"
+   },
+   "name": "Five yards in three downs made falling forward the dominant strategy: a six-foot man falling full length three times gains six yards and a first down, so possession and mass decided games",
+   "page": "Ch. I; text lines 209-211",
+   "primitive_id": "old_game_fall_forward_equilibrium",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "If a man six feet tall could fall forward his full length three times he would make six yards and first down."
+  },
+  {
+   "assumptions": [
+    "A defense has an identifiable weak spot that repeated pounding will exhaust until it gives way (Ch. I)",
+    "Men were pushed, dragged and hauled by teammates, sometimes with straps attached to the uniform, so the mass was a coordinated unit rather than independent blockers"
+   ],
+   "breakdown_regime": "Fails once rules disperse formations and once the attacked spot can be reinforced or rotated; Berry also records the injury and death toll that made the approach untenable. no_equation_domain: qualitative formation doctrine, no equation stated.",
+   "domain": "formation design",
+   "latex": "",
+   "layer2": {
+    "mapping": "Concentrated force against a scouted weak point is the pre-modern form of matchup exploitation: the engine's matchup layer should identify the single weakest defender or gap and measure how much of a team's play volume is deliberately routed at it, rather than spreading attempts evenly.",
+    "source_operator": "mass_formations_power_concentration",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Play direction and target charting by defender and gap, with success rates split by attacked versus non-attacked defenders"
+   },
+   "name": "Old-game formations (guards back, flying wedge, turtle back) were devices for massing maximum power on the defense's weak spot",
+   "page": "Ch. I; text lines 223-224",
+   "primitive_id": "mass_formations_power_concentration",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "All sorts of ingenious formations were devised for massing power on the weak spot."
+  },
+  {
+   "assumptions": [
+    "Representatives from approximately seventy colleges attended the 1906 New York conference (Ch. I)",
+    "The first fundamental suggestion was the requirement of ten yards to gain, which mass attack could never make, so the forward pass was given to the offense (Ch. I)",
+    "Berry also credits openness itself with cleaner play: publicity is a great deterrent to unfairness because spectators and officials can see what mass play hid (Ch. I)"
+   ],
+   "breakdown_regime": "A historical claim about one conference and its outcome; it does not generalize to other sports or eras without separate evidence. no_equation_domain: institutional history, no equation stated.",
+   "domain": "rules history",
+   "latex": "",
+   "layer2": {
+    "mapping": "When a system is failing, redesign the constraint set instead of abandoning the activity: the engine's governance analog is to change emission and promotion rules when outputs degrade, while keeping the underlying signal corpus intact and ungated.",
+    "source_operator": "revise_not_abolish_1906",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "LATENT_UNIDENTIFIABLE for the historical event itself; the transferable observable is the before and after play-mix and injury profile across the 1906 rule boundary"
+   },
+   "name": "The 1906 conference, called to abolish football, instead formed the NCAA and chose revision: produce a new game more open, less dangerous and more interesting",
+   "page": "Ch. I; text lines 287-289",
+   "primitive_id": "revise_not_abolish_1906",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "They contended that a new game should and could be produced that would be more open, less dangerous and more interesting than the old game."
+  },
+  {
+   "assumptions": [
+    "The first opening came in 1903: between the twenty-five yard lines seven offensive players were required on the line of scrimmage and the first man receiving the ball might run with it if he crossed the line five yards out from center (Ch. II)",
+    "The pass was completed if touched by any eligible player before it touched the ground (Ch. II)",
+    "1906 also brought two lines of scrimmage, six men regularly on the line, and ten yards in three downs (Ch. II)"
+   ],
+   "breakdown_regime": "Superseded within a few seasons; every clause of the original rule (eligibility, crossing point, penalty) was later rewritten, so it anchors the start of the rule lineage rather than any current rule. no_equation_domain: rule text stated in prose, no equation.",
+   "domain": "rules history",
+   "latex": "",
+   "layer2": {
+    "mapping": "New capabilities enter a system in a heavily constrained first form and are then relaxed or tightened clause by clause: the engine should version every rule-dependent feature by the exact clause set in force, because a stat compiled under one clause set is not the same quantity under another.",
+    "source_operator": "original_forward_pass_rule_1906",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Season-by-season rule clause tables joined to play-by-play so each play is scored under the rules actually in force"
+   },
+   "name": "The original 1906 forward pass: one pass by any player anywhere behind his line, to a man on the end of the line or one yard back, provided the pass crossed the line five yards out from center; an illegal pass went to the opponents at the spot, and a pass over the goal line was a touchback",
+   "page": "Ch. II; text lines 337-342",
+   "primitive_id": "original_forward_pass_rule_1906",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "At first one forward pass could be made by any player anywhere behind his line of scrimmage to any player on the end of the line or one yard back of it provided the pass crossed the line five yards out from center."
+  },
+  {
+   "assumptions": [
+    "In 1907 the loss of the ball on first and second down was changed to a loss of fifteen yards (Ch. II, citing Football Guide for 1907)",
+    "In 1908 the penalty for ineligible men touching the ball was also increased to loss of the ball at the spot where the pass was made (Ch. II)"
+   ],
+   "breakdown_regime": "Penalty calibration is era-specific; the transferable content is the tuning pattern (a turnover penalty proved too harsh and was converted to yardage), not the numbers. no_equation_domain: rule history in prose, no equation stated.",
+   "domain": "rules history",
+   "latex": "",
+   "layer2": {
+    "mapping": "Cost calibration for a new action class: when the penalty for failure is set at the maximum (loss of possession), usage collapses and no learning occurs; converting catastrophic cost into graded cost is what lets a new signal be explored. The engine applies the same logic to how harshly a new feature family is penalized during evaluation.",
+    "source_operator": "penalty_evolution_1907_1908",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Pass attempt rates and outcomes by season across the 1907 and 1908 penalty changes"
+   },
+   "name": "Early pass penalties were tuned by experiment: 1907 replaced loss of the ball on first and second down with a fifteen-yard penalty, and 1908 restricted recovery of a touched ball to the eligible man who first touched it",
+   "page": "Ch. II; text lines 348-350",
+   "primitive_id": "penalty_evolution_1907_1908",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "In 1908 the recovery of the touched ball was restricted to the eligible man who had first touched it on penalty of going to the opponents at the spot."
+  },
+  {
+   "assumptions": [
+    "1910 also adopted the four periods and omitted the longitudinal lines (Ch. II)",
+    "A twenty-yard zone beyond which the pass could not go was instituted in 1910 and dropped again in 1912 (Ch. II)"
+   ],
+   "breakdown_regime": "The setback was a spatial constraint on the thrower that later rules relaxed; it matters as a dated clause in the lineage, and Berry notes the parallel kicker restriction was removed in 1913. no_equation_domain: rule text in prose, no equation stated.",
+   "domain": "rules history",
+   "latex": "",
+   "layer2": {
+    "mapping": "Minimum operating depth for the decision maker: forcing the passer five yards back is the same variable Berry later turns into the thirteen-to-fifteen-yard tactical optimum, so launch depth belongs in the engine as a measured input to passing outcomes, not a fixed assumption.",
+    "source_operator": "setback_rule_1910",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Passer depth at release relative to the line, from tracking or charted film, joined to completion and pressure outcomes"
+   },
+   "name": "In 1910 the pass and the kick were both required to be made from five yards behind the line of scrimmage",
+   "page": "Ch. II; text lines 358-359",
+   "primitive_id": "setback_rule_1910",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "a pass and kick were both required to be made from five yards behind the line of scrimmage."
+  },
+  {
+   "assumptions": [
+    "The text says the field was shortened to three hundred yards; read as printed, this is Berry's figure and is not relied on for any dimension here",
+    "In 1911 a pass touching the ground either before or after being legally touched was ruled incompleted (Ch. II)"
+   ],
+   "breakdown_regime": "The end-zone clause is what made the pass a scoring play rather than only a gaining play; before it, a pass over the goal line was a touchback, so pre-1912 and post-1912 passing data are different sports for modeling purposes. no_equation_domain: rule history in prose, no equation stated.",
+   "domain": "rules history",
+   "latex": "",
+   "layer2": {
+    "mapping": "A capability becomes strategically central only when it can terminate in the terminal reward: the engine should flag which of its signal families can actually reach the final output surface, because signals that cannot terminate in a published projection behave like the pre-1912 pass, present but structurally capped.",
+    "source_operator": "end_zone_and_fourth_down_1912",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Scoring-play composition by play type across the 1912 boundary; internally, an inventory of engine signals with and without a path to the published surface"
+   },
+   "name": "1912 completed the new game: the twenty-yard zone was dropped, the end zone was added so a team could score on a pass, and the fourth down was added",
+   "page": "Ch. II; text lines 361-363",
+   "primitive_id": "end_zone_and_fourth_down_1912",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "the end zone was added so that a team could score on a pass, the field shortened to three hundred yards and the fourth down added."
+  },
+  {
+   "assumptions": [
+    "Many regarded the fourth down as a direct blow to the forward pass when it was adopted (Ch. II)",
+    "Later refinements: the kicker setback was removed in 1913, the forward passer was protected from being roughed up in 1914 with a ten-yard penalty for intentional grounding, and the forward pass out of bounds was ruled incompleted in 1915 (Ch. II)"
+   ],
+   "breakdown_regime": "The effect runs through decision-maker behavior (an extra trial changes risk appetite); where the extra down is spent conservatively by doctrine, the advantage does not appear. no_equation_domain: behavioral claim in prose, no equation stated.",
+   "domain": "decision process",
+   "latex": "",
+   "layer2": {
+    "mapping": "Adding one more trial to a sequence raises the value of the exploratory option more than the safe option: in down-series modeling, the engine should let the value of aggressive plays rise with the number of remaining trials instead of pricing each down independently.",
+    "source_operator": "fourth_down_advantages_the_pass",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Play-type mix and success by down number, especially the change in pass share on early downs when a fourth down exists"
+   },
+   "name": "The fourth down, expected to revive line bucking, actually advantaged the passing game by giving quarterbacks an extra down to experiment and take chances",
+   "page": "Ch. II; text lines 371-374",
+   "primitive_id": "fourth_down_advantages_the_pass",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "the fourth down has worked quite as advantageously to the new game as the old, in that it has given quarterbacks an additional down with which to experiment and to take chances."
+  },
+  {
+   "assumptions": [
+    "Not every center, nor every team even among the better colleges, can produce this snap; the failure is first a lack of appreciation of its importance and second an inability to teach it (Ch. III)",
+    "Some men master a one-handed backward spiral from center on the same principle as the closed grip pass; it requires a large hand and is dangerous and less effective with a wet ball (Ch. III)"
+   ],
+   "breakdown_regime": "If the snap cannot reliably reach the deep passer, the whole deep-passer system collapses back to close formations; the prerequisite is upstream of every other passing fundamental in the book. no_equation_domain: technique specification in prose, no equation stated.",
+   "domain": "passing mechanics",
+   "latex": "",
+   "layer2": {
+    "mapping": "Upstream delivery quality gates every downstream decision: the engine should model the snap as a timed, error-prone delivery input whose speed and accuracy bound the quarterback's available decision time, the same way data latency and cleanliness bound every downstream signal in the reasoning stack.",
+    "source_operator": "center_spiral_snap_indispensable",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Snap-to-quarterback time and snap accuracy charting, joined to play outcomes by snap quality"
+   },
+   "name": "A fast, accurate, true spiral snap from center, shot back speedily and accurately at least fifteen yards, is absolutely indispensable to a successful forward passing game",
+   "page": "Ch. III; text lines 400-403",
+   "primitive_id": "center_spiral_snap_indispensable",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "the writer regards a good fast, accurate, true spiral pass from the snapper-back, that can be shot back speedily and accurately to a distance of at least fifteen yards, as absolutely indispensable to a successful forward passing game."
+  },
+  {
+   "assumptions": [
+    "The same hand action must be reproduced in the backward pass from center and in the overhand forward pass (Ch. III and Ch. IV)",
+    "The hand must stay far enough under and around the ball; when a center lays the ball on the ground he forgets this, loses rotation, and the pass becomes wobbly and inaccurate (Ch. III)"
+   ],
+   "breakdown_regime": "The mechanism fails with small hands and with a wet or muddy ball, which is why Berry ranks grip variants by conditions. no_equation_domain: Berry gives the mechanism qualitatively; no rotational equation is stated.",
+   "domain": "passing mechanics",
+   "latex": "",
+   "layer2": {
+    "mapping": "A single micro-mechanism (the snap of rotation at release) determines the stability of everything downstream: the engine analog is to identify the one transformation in each data pipeline whose failure mode (wobble) corrupts all later stages, and to instrument that point first.",
+    "source_operator": "spiral_rotation_mechanism",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Ball rotation quality proxies: spiral versus wobble charting, completion and yards-after-catch splits by throw quality"
+   },
+   "name": "The spiral is produced by a peculiar pulling, lifting motion of the hand, bent inward almost at right angles to the forearm, as the ball is shot from the hand",
+   "page": "Ch. III; text lines 413-416",
+   "primitive_id": "spiral_rotation_mechanism",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "as the ball is shot forward from the hand a peculiar pulling, lifting motion is made. This motion imparts the rotation to the ball and produces the spiral."
+  },
+  {
+   "assumptions": [
+    "Extended and constant practice is still necessary to insure a consistent and accurate performance that can be depended upon under fire (Ch. III)",
+    "The follow-through with the right hand and the pulling, lifting snap at release produce the real spiral (Ch. III)"
+   ],
+   "breakdown_regime": "A teaching progression, not a performance guarantee: it transfers the already-automatic forward motion to the backward case in stages, and stalls if any stage is skipped. no_equation_domain: instructional sequence in prose, no equation stated.",
+   "domain": "passing mechanics",
+   "latex": "",
+   "layer2": {
+    "mapping": "Skill acquisition by staged transfer from an already-mastered motion: the engine's training analog is curriculum ordering, introducing a new signal family first in the low-pressure form where its mechanism is already understood, then in the full form, rather than training everything at full difficulty at once.",
+    "source_operator": "center_spiral_teaching_progression",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Practice progression records: accuracy by stage and distance before game use; internally, evaluation scores of a new feature at staged difficulty levels"
+   },
+   "name": "The center spiral is taught in five steps: forward underhand spiral, backward underhand spiral, backward spiral between the legs from a center stance, left hand added to guide, then the full snap from the ground shot at the catcher's chest, starting about seven yards back",
+   "page": "Ch. III; text lines 439-441",
+   "primitive_id": "center_spiral_teaching_progression",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "When ready pull the ball powerfully with the right hand, guiding with the left, and shoot it back at the chest of the catcher, at first about seven yards back."
+  },
+  {
+   "assumptions": [
+    "The underhand spiral is valuable for short distances where a quick pass is desired, and its execution is the same motion taught first for the center snap (Ch. IV)",
+    "Choice among the three types is governed by distance, hand size, and ball condition (Ch. IV)"
+   ],
+   "breakdown_regime": "A taxonomy of one era's technique; the types persist but modern coaching adds variants, so treat the three-way split as the book's classification, not an exhaustive modern list. no_equation_domain: classification in prose, no equation stated.",
+   "domain": "passing mechanics",
+   "latex": "",
+   "layer2": {
+    "mapping": "One output (a stable spiral) with three production methods selected by conditions: the engine should likewise keep multiple estimators for the same quantity and select among them by regime (distance, weather, sample size) rather than forcing one method everywhere.",
+    "source_operator": "three_spiral_pass_types",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Throw type charting by distance and conditions with accuracy outcomes; internally, estimator performance split by regime"
+   },
+   "name": "Practically all passes over five yards are spirals, of three types: the underhand, the overhand with closed grip, and the overhand with open grip",
+   "page": "Ch. IV; text lines 474-476",
+   "primitive_id": "three_spiral_pass_types",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "Practically all passes of more than five yards are executed as spirals. These are of three types, the underhand, the overhand with closed grip and the overhand with open grip."
+  },
+  {
+   "assumptions": [
+    "The smaller the hand, the nearer the end of the ball it must go and the harder the ball is to retain, so this pass is difficult for small-handed men and with a wet, muddy ball (Ch. IV)",
+    "Keeping the nose up requires the elbow fairly close to the body and the little-finger side of the hand kept up, a constricted position that feels weak until the snap and follow-through are learned (Ch. IV)",
+    "Mastered, it gives wonderful accuracy and great speed on a flat trajectory, is therefore less likely to be intercepted, and is ideal for shorter distances up to thirty yards and for dry days (Ch. IV)"
+   ],
+   "breakdown_regime": "Fails in wet conditions and for small hands; the flat trajectory that makes it accurate also gives the receiver less margin on deep routes. no_equation_domain: technique described qualitatively, no equation stated.",
+   "domain": "passing mechanics",
+   "latex": "",
+   "layer2": {
+    "mapping": "Precision method with a narrow operating envelope: the engine should tag each method with the conditions under which its accuracy claim holds (here: dry ball, up to thirty yards) and refuse to extrapolate the claim outside the envelope.",
+    "source_operator": "closed_grip_mechanics",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Throw accuracy by grip type, distance band, and weather or ball condition"
+   },
+   "name": "Closed grip overhand spiral: fingers along and somewhat behind the lacing, arm drawn back over the shoulder, nose of the ball kept well elevated, ball shot forward past the ear, rotation from a sharp pull downward and inward; the commonest fault is letting the nose drop",
+   "page": "Ch. IV; text lines 504-506",
+   "primitive_id": "closed_grip_mechanics",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "The nose, i.e., the forward point of the ball, should be well elevated and the ball is then shot forward past the ear at its objective."
+  },
+  {
+   "assumptions": [
+    "The ball can be literally heaved out and passes of fifty to sixty yards are easily possible (Ch. IV)",
+    "Players usually learn this pass more easily than the closed grip, and it is the most commonly used because of its usefulness with a wet and slippery ball (Ch. IV)"
+   ],
+   "breakdown_regime": "Range is bought with trajectory height and hang time; see the interception-cost primitive. The grip also depends on swing speed to retain the ball, so a checked or hurried swing loses it. no_equation_domain: mechanics in prose; the fifty-to-sixty-yard figure is a stated range, not a derived equation.",
+   "domain": "passing mechanics",
+   "latex": "",
+   "layer2": {
+    "mapping": "The long-range option exists to change the opponent's geometry, not to be the default: the engine should value deep capability partly as a constraint on defensive depth, the same way a model's credible long-range forecast changes how a market or an opponent positions against its short-range output.",
+    "source_operator": "open_grip_mechanics_and_distance",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Maximum and attempted throw distances by quarterback, with defensive depth alignment on plays following deep attempts"
+   },
+   "name": "Open grip overhand spiral: thumb alongside the fingers, ball lying open in the palm and held only by the centrifugal force of the swing; a bigger wind-up swing makes passes of fifty to sixty yards easily possible",
+   "page": "Ch. IV; text lines 529-532",
+   "primitive_id": "open_grip_mechanics_and_distance",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "the thumb lies alongside or near the fingers and the hand is open, the ball lying in the palm of the hand. It is held in position as the throw is made by the centrifugal force of the swing."
+  },
+  {
+   "assumptions": [
+    "The same nose-up difficulty applies as in the closed grip, but the hand need not come in so closely, allowing more individual peculiarity (Ch. IV)",
+    "Height and hang time give defenders time to converge on the ball (Ch. IV, developed further in Ch. V)"
+   ],
+   "breakdown_regime": "The cost is relative, not absolute: against a defense playing shallow, the high deep ball is still the correct choice, so the trade-off must be priced per opponent alignment. no_equation_domain: trade-off stated qualitatively, no equation stated.",
+   "domain": "passing mechanics",
+   "latex": "",
+   "layer2": {
+    "mapping": "Every range extension carries an exposure cost proportional to time in flight: the engine should price long-horizon or long-range predictions with an explicit exposure term (how long the prediction is contestable before it resolves) rather than treating reach as free.",
+    "source_operator": "open_grip_interception_cost",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Interception rate by throw distance and trajectory height or hang time"
+   },
+   "name": "The open grip's chief disadvantage is the greater height it usually requires, which tends to increase the danger of interception",
+   "page": "Ch. IV; text lines 543-544",
+   "primitive_id": "open_grip_interception_cost",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "Its chief disadvantage is the greater height which it usually requires. This tends to increase the danger of interception."
+  },
+  {
+   "assumptions": [
+    "The point to which the pass is supposed to be made should be known on all forward pass plays (Ch. IV)",
+    "Taking a pass from directly behind or very much over one shoulder should rarely be necessary, though the receiver should be able to do it (Ch. IV)"
+   ],
+   "breakdown_regime": "Assumes the passer leads the receiver to a pre-worked point; when the play breaks down and the throw is improvised, the securing technique still applies but the meeting-point discipline does not. no_equation_domain: technique in prose, no equation stated.",
+   "domain": "passing mechanics",
+   "latex": "",
+   "layer2": {
+    "mapping": "Reception is a rendezvous problem with a securing step: the engine's analog is that a signal is only captured when the consuming layer knows where to meet it and then clamps it (validation, range checks) before it can be knocked loose by a conflicting signal.",
+    "source_operator": "receiving_technique",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Drops and contested-catch outcomes split by whether the receiver was moving toward a pre-called point or adjusting to an off-target throw"
+   },
+   "name": "Receiving: the receiver is notified just before the pass, turns toward the known point, meets the ball on the dead run somewhat sideward to it, guides it into the body with one hand, keeps one hand well under the ball, elbows close, and secures it against the body",
+   "page": "Ch. IV; text lines 562-565",
+   "primitive_id": "receiving_technique",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "One hand should be used to guide the ball into the body, one hand should be kept well under the ball, the elbows should be kept close and the ball always be brought in against the body and held securely against any possible attack."
+  },
+  {
+   "assumptions": [
+    "A running play that gains two and a half to three yards is regarded as successful, so the pass should be judged by the same standard and used for short as well as long gains (Ch. V)",
+    "Nothing more disturbs the morale of a defense than a series of forward passes, some of which succeed even though a considerable proportion are incompleted (Ch. V)",
+    "The stereotyped sequence Berry criticizes is first and second down runs, third down pass, fourth down kick (Ch. V)"
+   ],
+   "breakdown_regime": "Persistence only pays if the short passing game is mechanically reliable; a team whose completion floor is low merely donates downs. Berry's claim is also conditioned on the defense having to respect the run. no_equation_domain: strategic doctrine in prose; Berry explicitly notes no statistics exist for the comparison he proposes.",
+   "domain": "passing tactics",
+   "latex": "",
+   "layer2": {
+    "mapping": "Usage frequency is what turns a threat into a priced signal: a play (or an engine feature) used only in desperation is discounted by opponents and never calibrated by its own side. The engine should evaluate its passing-game analogs at regular usage rates with the same success bar as the base rate play, not reserve them for low-probability spots.",
+    "source_operator": "pass_as_regular_ground_gainer",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Pass rate by down and distance with success rate per attempt, compared against the two-and-a-half-to-three-yard rushing success standard Berry states"
+   },
+   "name": "First fundamental: the forward pass must be used as a regular ground gaining play, frequently and persistently on first and second downs, not saved as a last desperate chance",
+   "page": "Ch. V; text lines 629-631",
+   "primitive_id": "pass_as_regular_ground_gainer",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "the forward pass should be used as a regular ground gaining play and not simply, as so many teams seem still to do, as a sort of last desperate chance."
+  },
+  {
+   "assumptions": [
+    "Many teams fail simply because their passer is not more than seven to ten yards back (Ch. V)",
+    "The greater distance also gives more time for running sideward and forward, confusing the defense as to whether a run or pass is intended (Ch. V)",
+    "The scheme collapses if the center cannot snap accurately to that depth; passers whose centers fail instinctively creep closer and closer, are hurried, and fail (Ch. V)"
+   ],
+   "breakdown_regime": "Depth buys time at the price of a longer snap and a longer throw; against a defense that does not rush, depth adds nothing, and Berry allows many plays will still be built with the passer up close at the legal minimum. no_equation_domain: the thirteen-to-fifteen-yard figure is reported as experimental result in prose, not derived from an equation.",
+   "domain": "passing tactics",
+   "latex": "",
+   "layer2": {
+    "mapping": "Decision depth is a measurable input: moving the decision point back (more time, wider view) raises decision quality until the delivery cost dominates. The engine should measure how much deliberation depth each prediction actually gets and treat shallow, hurried outputs as a distinct, lower-confidence class.",
+    "source_operator": "passer_well_back_distance",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Passer depth and time-to-throw from tracking, joined to completion, interception, and sack outcomes"
+   },
+   "name": "Second fundamental: put the passer well back; by actual experiment thirteen to fifteen yards was found necessary, giving receivers time to get free and the passer time to pick the open man, with little or no protection needed",
+   "page": "Ch. V; text lines 685-686",
+   "primitive_id": "passer_well_back_distance",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "By actual experiment it was found that a distance of thirteen to fifteen yards was necessary."
+  },
+  {
+   "assumptions": [
+    "Such long passes need not often be used; the knowledge that the offense possesses the ability is what keeps the secondary back (Ch. V)",
+    "The short, sharp passes then succeed for the gains of the regular ground gaining attack (Ch. V)"
+   ],
+   "breakdown_regime": "The threat must be credible: a passer who demonstrably cannot reach fifty-five yards does not hold anyone. The geometry is era-specific (secondary depth and field width), so the distances must be re-measured per era. no_equation_domain: geometry stated in prose with stated distances, no formal equation.",
+   "domain": "passing tactics",
+   "latex": "",
+   "layer2": {
+    "mapping": "Capability overhang: a demonstrated extreme capability reprices the opponent's positioning across the whole field, creating value on plays never thrown. The engine should credit a signal family with the space it opens for other signals, not only with its own direct outcomes.",
+    "source_operator": "long_pass_threat_holds_secondary",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Defensive back depth and cushion by the offense's demonstrated deep capability, with short-pass success split by secondary depth"
+   },
+   "name": "The mere ability to throw long holds the secondary defense back so short passes can succeed: with the secondary ten yards back covering twenty more and the passer fifteen yards deep, an angled pass must often travel fifty-five yards to clear it",
+   "page": "Ch. V; text lines 718-719",
+   "primitive_id": "long_pass_threat_holds_secondary",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "the pass going outward at an angle must often travel fifty-five yards to clear the secondary defense."
+  },
+  {
+   "assumptions": [
+    "As the play starts it should be difficult to diagnose whether a run or pass is intended (Ch. V)",
+    "Changing the plan on the passer's call should not be allowed early in the season but may be encouraged later as the team becomes unified; Berry calls the result basketball intuition (Ch. V)",
+    "Many splendid pass plays can still be built from ordinary close running formations (Ch. V)"
+   ],
+   "breakdown_regime": "Ambiguity costs specialization: a formation that threatens everything is usually less powerful at each single thing than a dedicated formation, so the doctrine depends on the defense being unable to sit on the most likely option. no_equation_domain: formation doctrine in prose, no equation stated.",
+   "domain": "formation design",
+   "latex": "",
+   "layer2": {
+    "mapping": "Undiagnosability as a design goal: the engine's published surface should not leak which internal signal drove a projection, and internally the same feature bundle should be able to terminate in several play types so opponents cannot key on formation tells.",
+    "source_operator": "triple_threat_formation_ideal",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Defensive pre-snap movement and play-diagnosis accuracy split by formation ambiguity; internally, outcome variance of one feature bundle across its possible outputs"
+   },
+   "name": "The ideal forward pass formation is one from which a kick, run or pass is all possible, so the play cannot be diagnosed at the start; a finished team may even switch its intention on the passer's call",
+   "page": "Ch. V; text lines 728-729",
+   "primitive_id": "triple_threat_formation_ideal",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "The ideal forward pass formation is one from which a kick, pass or run is possible."
+  },
+  {
+   "assumptions": [
+    "Single-receiver plays exist and succeed by speed and surprise, but they are the exception (Ch. V)",
+    "The mechanical method fails whenever the defense covers the one designated man; it belongs to the old game where the quarter made all decisions (Ch. V)",
+    "The choice method requires a passer of special mental type with basketball ability to dodge and throw accurately when apparently covered (Ch. V)"
+   ],
+   "breakdown_regime": "Its greatest single fault is eligible men failing to spread widely enough: two or three men in the same zone can all be covered by one defender (Ch. V). It also fails when the passer is hurried and has no time to choose. no_equation_domain: decision doctrine in prose, no equation stated.",
+   "domain": "decision process",
+   "latex": "",
+   "layer2": {
+    "mapping": "Generate more live options than the opponent has coverage resources, then select at decision time: this is the engine's core reasoning pattern, holding several candidate projections open with live evidence and letting the synthesis layer pick the best-supported one, rather than committing to a single pre-designed output.",
+    "source_operator": "choice_method_spread_all_eligible",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Receiver separation and coverage counts at throw time; internally, the number of candidate projections alive at synthesis and the selection accuracy among them"
+   },
+   "name": "The choice method: spread as many eligible men as possible so they cannot all be covered, and let the passer select the open man or the best open man, instead of the mechanical method of designing the play to one special man",
+   "page": "Ch. V; text lines 769-771",
+   "primitive_id": "choice_method_spread_all_eligible",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "These men should be so spread that they cannot all be covered by the defense. The passer then selects an open man or the best open man to whom to pass."
+  },
+  {
+   "assumptions": [
+    "In early season and practice the signalled play should be executed whether possible or not, so the progression is learned under discipline before freedom is granted (Ch. V)",
+    "The order of looking should be arranged so a quick sweep of the field in front of the passer gives him his open men (Ch. V)"
+   ],
+   "breakdown_regime": "A progression is only as good as its ordering; if the defense learns the order, it can bait the first read. Berry also concedes some gifted passers cannot work the choice method and need mechanical plays built for them. no_equation_domain: procedural rule in prose, no equation stated.",
+   "domain": "decision process",
+   "latex": "",
+   "layer2": {
+    "mapping": "Progression reads for the reasoning engine: evaluate evidence sources in a fixed, rehearsed order with the primary hypothesis first, falling through to alternates only on coverage (contradiction), so synthesis is fast, auditable, and identical in structure from case to case.",
+    "source_operator": "ordered_choice_progression",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Quarterback progression depth reached per play from tracking or charting; internally, which fallback level produced each published projection"
+   },
+   "name": "Ease the passer's choice with a fixed order of looking: the signalled play is always the first choice and is made if at all possible; then second, third and even fourth choices arranged so a quick sweep of the field reveals the open men",
+   "page": "Ch. V; text lines 780-781",
+   "primitive_id": "ordered_choice_progression",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "The first choice should always be the signal called. That play should always be made if it is at all possible"
+  },
+  {
+   "assumptions": [
+    "The usual failure is the passer hurling the ball into the air and yelling ball (Ch. V)",
+    "When the passer calls his man first, he knows what he is trying to do, the team knows, the receiver gets more time to get into position, and the rest of the team can form interference (Ch. V)"
+   ],
+   "breakdown_regime": "Requires the choice method and a passer with time; on a broken play there may be no time to call anyone. Berry presents it as a small thing that counts heavily, so its effect is coordination, not mechanics. no_equation_domain: Berry uses probability as a figure of speech; no probability is computed.",
+   "domain": "decision process",
+   "latex": "",
+   "layer2": {
+    "mapping": "Declare the target before executing: an engine (or an offense) that names its intended conclusion before running the play can be checked, coordinated around, and graded; undeclared execution is ungradeable. This is the pre-registration principle applied at play scale.",
+    "source_operator": "call_receiver_before_passing",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Completion and interception splits by whether the throw went to the pre-called receiver; internally, the share of outputs whose target was declared before generation"
+   },
+   "name": "Call the receiver by name before passing to him: this one habit changes the forward pass game from a happy-go-lucky chance into a mathematical probability",
+   "page": "Ch. V; text lines 842-843",
+   "primitive_id": "call_receiver_before_passing",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "And yet this is exactly the thing that will change the forward pass game from a happy-go-lucky chance into a mathematical probability."
+  },
+  {
+   "assumptions": [
+    "The preliminary run and the timing of the break can be almost the same on all plays, varying surprisingly little with the style of defense met (Ch. V)",
+    "In case the defensive halves refuse to cover the decoys, they should immediately be given the pass (Ch. V)",
+    "Receiver and opponent should never be crashing together struggling for a ball; it is dangerous and poor strategy (Ch. V)"
+   ],
+   "breakdown_regime": "Depends on synchronized timing across the whole team; a defense that jams or reroutes receivers destroys the pre-worked geometry, which is why Berry's defense chapter answers with blocking eligible men on the line. no_equation_domain: route doctrine in prose, no equation stated.",
+   "domain": "passing tactics",
+   "latex": "",
+   "layer2": {
+    "mapping": "Indirect approach to a known rendezvous: signals in the engine should not run straight at the output they expect to feed; they should arrive at the synthesis point at the timed moment with their provenance positioned between the claim and its challenger, and decoy signals that draw no contradiction must be promoted, not ignored.",
+    "source_operator": "receiver_route_timing_and_lead",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Receiver separation at the catch point and body-position charting; internally, arrival timing of evidence relative to synthesis deadlines"
+   },
+   "name": "Know where every eligible man is to go: he should seldom run directly to the reception spot, but at the timed instant, at the passer's call, turn and race to the spot so the passer leads him, his body between the ball and his covering opponent; decoys who are left uncovered must immediately be given the pass",
+   "page": "Ch. V; text lines 866-867",
+   "primitive_id": "receiver_route_timing_and_lead",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "The eligible man should seldom go directly to the spot where he will receive the pass if it comes to him."
+  },
+  {
+   "assumptions": [
+    "Instinctively every man on the offense tries to be where he expects the ball to go; it must be drilled into players that their business may be decidedly elsewhere (Ch. V)",
+    "A team with mechanical perfection in the passing game and the ability to select its men cannot be stopped in mid-field (Ch. V)"
+   ],
+   "breakdown_regime": "A coverage-geometry fault, not an effort fault: more effort makes it worse, since every man crowds the expected point. It is the direct negation of the choice method's spread requirement. no_equation_domain: fault diagnosis in prose, no equation stated.",
+   "domain": "passing tactics",
+   "latex": "",
+   "layer2": {
+    "mapping": "Correlated evidence is the bunching fault in data form: signals that all cluster on the same zone of the problem give an illusion of coverage while one contradiction covers them all. The engine should measure the effective spread of its evidence across independent zones, not the raw count of signals.",
+    "source_operator": "bunching_greatest_fault",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Receiver spacing distributions at throw time; internally, correlation-adjusted counts of independent evidence per projection"
+   },
+   "name": "The greatest single fault that stops most teams, outside of mechanical failure, is eligible men failing to spread widely enough, so two or three men go to the same zone and one defender covers them all",
+   "page": "Ch. V; text lines 891-893",
+   "primitive_id": "bunching_greatest_fault",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "The greatest single fault and the one thing that stops most teams, outside of mechanical failure, is the failure of eligible men to spread widely enough."
+  },
+  {
+   "assumptions": [
+    "This is particularly true for the shorter passes (Ch. V)",
+    "The receiver should know where to find interference behind which he can dodge the instant he has received the pass (Ch. V)",
+    "Linemen are tempted to take a day off on a long pass in which they are not likely to figure; Berry forbids it (Ch. V)"
+   ],
+   "breakdown_regime": "Planning post-completion blocking cannot rescue a play whose throw or catch fails; it only converts completions into gains, so its value scales with completion rate. no_equation_domain: team-play doctrine in prose, no equation stated.",
+   "domain": "passing tactics",
+   "latex": "",
+   "layer2": {
+    "mapping": "A result is not finished when it is produced; it must be escorted to value. The engine should plan the post-projection path (what the published number needs next: context, confidence, exposure) with the same definiteness as the projection itself, and no component gets to sit out a play.",
+    "source_operator": "interference_after_completion_planned",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Yards after catch split by the number of blockers downfield at the catch; internally, completion-to-consumption rates for published outputs"
+   },
+   "name": "Plan definitely for interference after the pass is completed, mapped out with each formation, so every man is in every pass play, either protecting the passer or downfield ready to block the instant the pass is caught",
+   "page": "Ch. V; text lines 904-905",
+   "primitive_id": "interference_after_completion_planned",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "Finally, plan definitely for interference after the pass is completed."
+  },
+  {
+   "assumptions": [
+    "Possession of the ball does not count for as much as in the old game (Ch. V)",
+    "A pass does not finish a play, it simply starts it, and it may start it either way (Ch. V)",
+    "The danger of interception, though much over-rated by many, should be carefully guarded (Ch. V)"
+   ],
+   "breakdown_regime": "The accounting flips near one's own goal line and late in halves, where an interception is far worse than a punt; Berry's equivalence is a mid-field claim, matching his statement that the pass cannot be stopped in mid-field. no_equation_domain: risk comparison in prose; no expected-value equation is stated.",
+   "domain": "passing tactics",
+   "latex": "",
+   "layer2": {
+    "mapping": "Compare a risky action against the true alternative, not against perfection: the engine should grade an aggressive projection against what the safe option (the punt: no published edge) would have yielded, and should pre-position its own safety (a stated confidence and a kill condition) before the risky output goes out.",
+    "source_operator": "interception_risk_accounting",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Turnover cost by field position versus punt net yardage; internally, outcome grading of published projections against the no-publication baseline"
+   },
+   "name": "Price interception risk honestly: an intercepted long pass often costs no more than a punt would have, and it should never cost a touchdown if the whole offense converts to protectors the instant the receiver is called, with the passer and his protectors as the last safety",
+   "page": "Ch. V; text lines 925-926",
+   "primitive_id": "interception_risk_accounting",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "The interception of a long pass often means nothing worse than punting to the other team would have meant."
+  },
+  {
+   "assumptions": [
+    "In strategy at least, Springfield excelled even the wonderful Indian teams produced by Glen Warner (Ch. V)",
+    "It was the smaller colleges, not the larger ones, that developed the pass, because it took away the big schools' advantage of numbers, weight and power (Ch. V)"
+   ],
+   "breakdown_regime": "A priority judgment by an interested party: Berry coached at Springfield under McCurdy's legacy and dedicated the book to him, so the claim is provenance, to be weighed accordingly. no_equation_domain: historical judgment in prose, no equation stated.",
+   "domain": "provenance",
+   "latex": "",
+   "layer2": {
+    "mapping": "Innovation comes from the resource-poor side that needs a lever against mass: when the engine looks for new signal families, it should weight methods developed by constrained practitioners over methods from incumbents whose advantage the method would dissolve.",
+    "source_operator": "mccurdy_springfield_priority",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "LATENT_UNIDENTIFIABLE for the priority claim itself; the checkable residue is Springfield and Carlisle play style and scoring in 1912 newspaper and guide records"
+   },
+   "name": "Priority: Springfield under Dr. J. H. McCurdy, with the Carlisle Indians, led the early development of the forward pass; their 1912 meeting at Springfield was probably the greatest exhibition of open football ever staged",
+   "page": "Ch. V; text lines 602-604",
+   "primitive_id": "mccurdy_springfield_priority",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "To Coach J. H. McCurdy of the Springfield team goes the honor, in the writer's judgment, of the early recognition and development of the strategy of the forward pass"
+  },
+  {
+   "assumptions": [
+    "The greatest difficulty is getting the left half to go out straight to the side and be content with a short gain; when he does, a defender must cover him, opening runs or passes to the left end or tackle (Ch. VI)",
+    "This sideward threat, almost a pure lateral pass, is an important part of the strategy of the successful forward pass attack (Ch. VI)",
+    "A quick shift of the left end to the line and the right half one yard back mirrors the play to the right (Ch. VI)"
+   ],
+   "breakdown_regime": "The formation's value is its ambiguity (the triple-threat principle in concrete form); once a defense diagnoses the sideward threat as harmless, the coverage it was designed to move stays home. no_equation_domain: formation specification in prose and diagram, no equation stated.",
+   "domain": "formation design",
+   "latex": "",
+   "layer2": {
+    "mapping": "A cheap lateral threat that must be honored moves a defender and opens the real attack elsewhere: the engine should include low-cost probe signals whose function is to force a response that reveals or opens the main line of reasoning, and credit the probe with the opening it creates.",
+    "source_operator": "punt_formation_pass",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Defensive adjustment to flat and lateral threats, with subsequent success of plays attacking the vacated defender"
+   },
+   "name": "The modified punt formation pass: left end one yard back, one half on the line, full fifteen yards back, halves about three yards back; effective for line bucking, end runs either way, punting and forward passing, with the sideward threat to the wide half forcing coverage that opens the end and tackle",
+   "page": "Ch. VI; text lines 969-972",
+   "primitive_id": "punt_formation_pass",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "in which the left end is one yard back, one half on the line, full fifteen yards back, halves about three yards back, has proven effective for line bucking, end running right or left, punting and forward passing."
+  },
+  {
+   "assumptions": [
+    "Berry notes the play has often proven surprisingly successful despite violating the principles (Ch. VI)",
+    "The full critique continues across the page break: the halves going outward have no interference and there is almost no defense for possible interception (Ch. VI)"
+   ],
+   "breakdown_regime": "Occasional success does not validate the design; Berry's point is that a play can win on surprise or execution while being structurally unsound, so it should not enter the regular repertoire. no_equation_domain: design critique in prose, no equation stated.",
+   "domain": "formation design",
+   "latex": "",
+   "layer2": {
+    "mapping": "Keep worked negative examples in the corpus with the same care as positive ones: the engine should retain anti-pattern records (structures that occasionally succeed but violate the fundamentals) so the synthesis layer can veto them by name instead of rediscovering the fault.",
+    "source_operator": "undesirable_pass_antipattern",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Outcome distribution of structurally unsound plays over many trials, showing short-run success with negative long-run expectation"
+   },
+   "name": "The anti-pattern (Fig. 2): a pass design whose ends come in at no advantage over the defense, whose halves go outward with no interference, and with almost no defense for a possible interception violates most of the fundamentals even when it sometimes succeeds",
+   "page": "Ch. VI; text lines 1001-1002",
+   "primitive_id": "undesirable_pass_antipattern",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "The ends coming in are at no advantage over the defense."
+  },
+  {
+   "assumptions": [
+    "The 1912 Springfield-Carlisle play was good enough to produce twenty-four points against the Indian team of that year, although the game was won by the Indians 30-24 (Ch. VI)",
+    "From this formation line bucks, end runs, double pass end runs, kicks and forward passes may all be used, and quick variations can make the tackles eligible (Ch. VI)",
+    "Berry warns that a common mistake is to attempt too large and varied an assortment of plays; the kick and spread formations alone hold enough possibilities for a season's repertoire (Ch. VI)"
+   ],
+   "breakdown_regime": "Extreme spread thins the interior; Berry notes the same formation was used for kicking and for sending the whole line down against Thorpe, so its value is flexibility, not any single play. no_equation_domain: formation specification in prose and diagram, no equation stated.",
+   "domain": "formation design",
+   "latex": "",
+   "layer2": {
+    "mapping": "Spread is the choice method made structural: widening the formation forces the defense to declare coverage it does not have. The engine's analog is widening the hypothesis field deliberately at the formation stage, before any play is called, so that later selection has uncovered options to find.",
+    "source_operator": "spread_formation_mc_curdy",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Formation width measures from tracking, with defensive coverage stress and play success split by width"
+   },
+   "name": "The spread formation: tackles out seven to ten yards, halves about three yards back, full back thirteen to fifteen yards; McCurdy's 1912 Springfield version spread the line practically across the whole field and produced twenty-four points against Carlisle",
+   "page": "Ch. VI; text lines 1035-1036",
+   "primitive_id": "spread_formation_mc_curdy",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "In this formation tackles are out seven to ten yards, halves about three yards back and full is back thirteen to fifteen yards."
+  },
+  {
+   "assumptions": [
+    "Hurrying greatly increases the chance of mechanical failure (Ch. VII)",
+    "Some teams send the tackles in also, or send tackles and hold the ends; holding the ends helps against the pass but makes end running very easy (Ch. VII)"
+   ],
+   "breakdown_regime": "Every rusher committed is a coverage or containment resource spent; against a passer already thirteen to fifteen yards deep, the rush may never arrive in time to matter. no_equation_domain: defensive doctrine in prose, no equation stated.",
+   "domain": "pass defense",
+   "latex": "",
+   "layer2": {
+    "mapping": "Attack the decision clock, not the decision: the engine should model opponent pressure as a reduction in the decision maker's available deliberation depth (the passer-well-back variable inverted), and should expect its own hurried outputs to fail mechanically rather than conceptually.",
+    "source_operator": "defense_hurry_the_pass",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Pressure rate and time-to-throw distributions joined to completion and error rates"
+   },
+   "name": "Pass defense, first principle: hurry the pass; some men, not the entire line, usually the ends, go through and force the throw at the earliest possible moment, before the eligible men are ready or the passer has located them",
+   "page": "Ch. VII; text lines 1068-1071",
+   "primitive_id": "defense_hurry_the_pass",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "First, \"hurry the pass.\" Some man or men, not the entire line, should go through and force the pass at the earliest possible moment, downing the passer, blocking the pass or forcing it to be made before the eligible men are ready"
+  },
+  {
+   "assumptions": [
+    "There is often an appreciable time before the pass is made when eligible men could be blocked on the line (Ch. VII)",
+    "Disrupting the receiver's release attacks the pre-worked route timing the offense depends on (Ch. V and Ch. VII)"
+   ],
+   "breakdown_regime": "Only legal and only possible before the pass is made, and only against receivers within reach of the line; spread formations move most eligible men out of the center trio's reach, which is one reason Berry pairs this with the open defense. no_equation_domain: defensive doctrine in prose, no equation stated.",
+   "domain": "pass defense",
+   "latex": "",
+   "layer2": {
+    "mapping": "Disrupt inputs at release rather than contesting them at arrival: the engine should expect adversaries (and noise) to attack its signals at ingestion, and should treat a signal that never cleanly released as a different event from a signal that was covered in flight.",
+    "source_operator": "defense_block_eligible_men",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Receiver release disruption charting: jams, reroutes, and their effect on route timing and target rates"
+   },
+   "name": "Pass defense, second principle: block eligible men on the line of scrimmage before the pass is made; this is the best work of the center trio rather than charging through",
+   "page": "Ch. VII; text lines 1077-1078",
+   "primitive_id": "defense_block_eligible_men",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "Second, block eligible men. This of course can only be done before the pass is made."
+  },
+  {
+   "assumptions": [
+    "Zone answers the choice method directly: if the passer selects whoever is open, man-following defenders are dragged out of position by decoys and route combinations (Ch. V and Ch. VII)",
+    "Playing the ball in the area, rather than the man, fits the interception emphasis of the whole defense chapter (Ch. VII)"
+   ],
+   "breakdown_regime": "Zone seams between areas are the known cost; a passer with time (the deep set) can wait for a receiver to cross from one area into another uncovered. Berry presents zone as one of four beginnings, not a solved system. no_equation_domain: defensive doctrine in prose, no equation stated.",
+   "domain": "pass defense",
+   "latex": "",
+   "layer2": {
+    "mapping": "Cover space, not instances: the engine's monitoring analog is to assign each checker a region of the problem (a layer, a market, a data family) and play whatever enters it, instead of assigning checkers to follow individual hypotheses wherever they wander.",
+    "source_operator": "defense_zone_coverage",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Target and completion rates by field zone under zone versus man coverage charting"
+   },
+   "name": "Pass defense, third principle: play a zone defense, each defensive back covering an area and playing the ball coming into that area, rather than attempting to follow individually eligible men",
+   "page": "Ch. VII; text lines 1084-1086",
+   "primitive_id": "defense_zone_coverage",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "play a zone defense having each defensive back cover an area and play the ball coming into that area rather than attempt to follow individually eligible men."
+  },
+  {
+   "assumptions": [
+    "There is no defense for the forward pass; in reality the pass cannot be prevented, particularly in the center of the field (Ch. VII)",
+    "Guards play low, hard and stalling to the center; tackles fight through the opposing end; ends play close and tear in to hurry passes; backs play seven to ten yards back; the quarter or safety plays as close as he dares considering quick punts (Ch. VII)",
+    "The first line of secondary defense is in position to intercept short passes, help stop eligible men on the line, and still assist on outside runs and center bucks (Ch. VII)",
+    "Berry concedes he has not solved the defensive problem and offers these only as a beginning (Ch. VII)"
+   ],
+   "breakdown_regime": "The open defense is supposed to make center bucking easy and does not only if the defensive line is properly coached; it is a judgment of best available, inside a chapter that admits no complete solution exists. no_equation_domain: defensive system in prose and diagram, no equation stated.",
+   "domain": "pass defense",
+   "latex": "",
+   "layer2": {
+    "mapping": "Design defense under an admitted impossibility: when a threat cannot be prevented, position flexible responders where they can intercept the cheap versions, disrupt releases, and still cover the run. The engine's risk layer should likewise place its flexible checks at the highest-traffic interior points instead of pretending a complete gate exists.",
+    "source_operator": "open_defense_best_allround",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Defensive alignment charting (second-level defenders' depth and position) joined to short-pass interception, run-stop, and completion outcomes"
+   },
+   "name": "Pass defense, fourth principle: the open defense, center played out of the line with the full back about three yards behind tackle, judged the best all-round defense yet devised for the modern open game; Berry's chapter opens by conceding there is no complete defense for the forward pass, which cannot be prevented in the center of the field",
+   "page": "Ch. VII; text lines 1087-1088",
+   "primitive_id": "open_defense_best_allround",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "play the center out of the line and with the full back about three yards behind tackle."
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "cross_layer_veto": "Berry's material vetoes several tempting moves in other layers. His rule history vetoes any cross-era comparison of passing statistics that ignores the clause set in force, since eligibility, completion, and scoring rules all changed between 1906 and 1915. His interception accounting vetoes grading a risky deep attempt against perfection rather than against the punt it replaced. His bunching fault vetoes counting correlated signals as independent coverage. And his closing admission, that no defense for the pass exists, vetoes any defensive scheme, or any engine gate, that claims completeness instead of positioning flexible responders where the cheap versions of the threat arrive.",
+   "retrocausal_genealogy": "The book's lineage runs from the crisis of the mass game: injuries, deaths, hidden foul play, and the 1905-06 public outcry produced the 1906 conference that formed the NCAA and rewrote the rules. The forward pass entered in 1906 as a concession inside a package whose main lever was ten yards in three downs. Springfield's J. H. McCurdy and Glenn Warner's Carlisle Indians did the early development work, meeting in 1912 in what Berry calls probably the greatest exhibition of open football ever staged. Berry, McCurdy's successor at Springfield, wrote the book in 1921 to codify what those fifteen years of experimentation had learned, and dedicated it to McCurdy as the man who earliest developed the pass.",
+   "theory_of_mind": "Berry writes for coaches who are skeptical of the pass and for players who must be taught it, and he models both audiences precisely. The big colleges, he says, frowned on the pass because it dissolved their advantage of numbers, weight and power; the small colleges developed it because it was their only lever. He assumes the reader respects the running game's standards, so he argues in those terms: judge the pass by the same two-and-a-half-to-three-yard success bar. He also assumes technique is teachable in stages to ordinary athletes, and that the reader's real obstacle is not talent but unexamined habit, the desperation-only pass, the passer creeping up, receivers bunching where they expect the ball.",
+   "think": "This short 1921 monograph is the earliest systematic treatise on the forward pass as a complete system, written fifteen years after the pass was legalized by a coach from the school that pioneered it. Its architecture is worth noting: Berry does not start with plays. He starts with the rule environment (Chapters I and II), then the delivery mechanism (Chapter III, the snap), then individual technique (Chapter IV), then system principles (Chapter V), then formations as illustrations of the principles (Chapter VI), and only at the end defense (Chapter VII), which he openly admits he has not solved. That ordering is itself a claim about how a capability matures: first the constraint set changes, then a enabling micro-skill appears, then technique variants differentiate, then someone states the system principles, and defensive adaptation lags a full era behind. The historical chapters carry a second, quieter argument. The old game was not stupid; it was the rational equilibrium of five yards in three downs, where a man falling forward his full length three times makes a first down. When the threshold moved to ten yards, mass attack became irrational and the pass moved from gimmick to necessity. Strategy, in Berry's account, is downstream of the conversion arithmetic and the penalty schedule. He shows the penalty schedule being tuned almost experimentally: loss of the ball proved too harsh in 1906, became fifteen yards in 1907, and the touched-ball recovery was narrowed in 1908. The 1912 changes (end zone, fourth down) then accidentally advantaged the very play they were expected to suppress, because an extra down is worth more to the side with an exploratory option. The mechanical chapters are unusually concrete for the era. The spiral is one mechanism, a pulling and lifting snap of a hand bent inward, reproduced identically in the center snap and in both overhand grips. Berry then prices each variant by conditions: the closed grip is the precision instrument, flat and accurate to thirty yards but hostile to small hands and wet balls; the open grip is the range instrument, fifty to sixty yards, bought with height and interception exposure. Nothing is best in general; everything is best somewhere. Chapter V is the intellectual core and reads like an early statement of option-based decision making. Use the pass as a regular play judged by the running game's own success bar. Put the decision maker deep enough, thirteen to fifteen yards by his reported experiment, that he has time to see. Spread more eligible men than the defense can cover and let the passer choose, with a rehearsed order of looking so the choice is fast. Call the receiver before throwing so the whole team coordinates around a declared target. Treat interception not as catastrophe but as a cost to be compared against the punt, and pre-position the safety conversion before the throw. Each principle either buys decision time, multiplies live options, declares intent, or prices risk against the real alternative. Chapter VI then does something rare: it publishes a worked anti-pattern, the Fig. 2 pass, and explains why its occasional success does not redeem its structure. Chapter VII completes the honesty: there is no defense for the forward pass, only four beginnings (hurry the passer, block the eligible men, zone coverage, the open defense), offered by a writer whose interest was admittedly on the other side. For a reasoning engine, the transferable content is dense: rule regimes version every statistic; penalty costs calibrate exploration; upstream delivery quality gates downstream decisions; decision depth is a measurable input; capability overhang reprices the whole field; spread options plus an ordered progression plus declared targets is a complete decision protocol; and risk must always be priced against the actual alternative, never against perfection. The book's limits are equally clear. It contains no statistics, by Berry's own admission none existed; its experimental claims (thirteen to fifteen yards) are reported without data; its distances and depths are era-bound; and its Springfield priority claims come from an interested party. It should be ingested as a principles and provenance source, with every quantitative figure flagged for re-measurement under modern tracking, not as a source of constants. Two further threads deserve emphasis because they connect the chapters into one argument. The first is coordination. Berry keeps returning to the same small set of synchronization devices: the receiver is called before the throw, the routes are pre-worked to known points, the break is timed to the passer's call, interference is mapped per formation, and the whole offense converts to protectors the instant the receiver is named. The pass, in his system, is not an individual act but a team-wide state change triggered by a declared signal, and most of his fundamentals are really protocols for making eleven men change state together. The second thread is geometry under coverage constraints. The choice method, the bunching fault, the decoy rule, the spread formation, and the zone defense are all the same problem viewed from opposite sides: attackers win by making their occupied set of zones larger than the set the defense can cover, and defenders answer by covering zones instead of men, disrupting releases before routes form, and compressing the time in which the geometry can develop. Berry saw, earlier than most, that the forward pass had turned football from a contest of mass into a contest of coverage arithmetic, and that insight, rather than any single play he diagrams, is the book's durable contribution. Read whole, the monograph also documents its own moment: a technique literature written when the technique was fifteen years old, by a participant arguing against an establishment that still regarded his subject as a gimmick, which is why its tone mixes instruction with advocacy throughout.",
+   "trace_id": "5fee5df924431396-t1"
+  }
+ ],
+ "source_note": "Elmer Berry, B.S., M.P.E., The Forward Pass in Football, New York: A. S. Barnes and Company, copyright 1921. The title page bills Berry as Head Coach Football and Baseball, Associate Director Physical Department, Professor Physiology and Physiology of Exercise, International Young Men's Christian Association College, Springfield, Mass. The work is dedicated to the former coach of the Springfield Y. M. C. A. College football teams, described on the dedication page as the man who earliest developed the forward pass; Chapter V names Springfield's coach as Dr. J. H. McCurdy. Local file is an Internet Archive digitization (archive.org/details/forwardpassinfooOOberriala, digitized 2007 with Microsoft funding) of a copy held at the Southern Branch, University of California, Los Angeles; PDF 1,675,749 bytes, sha256 5fee5df9244313961a571fbfff6a83dfb89a717737143d50ba9433d1f76cdfa4. The extracted text is 58,385 characters (about 8,400 words) covering printed pages 1-25 of body text in seven chapters plus front matter and publisher advertisements. OCR is generally clean; the library-stamp pages in the front and back matter are badly garbled but carry no book content, and a few in-text words are garbled (for example modem for modern), so quotes were chosen from clean passages. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "source_status": "COMPLETE",
+ "universal_lens": "Berry's book is a general template for how any newly legalized capability matures inside a rule-bound system. First the constraint set changes and old equilibria become irrational. Then a small enabling skill, here the spiral snap, turns out to gate everything downstream. Technique variants differentiate and are priced by conditions rather than ranked absolutely. A decision protocol emerges: create more live options than the opponent can cover, give the decision maker depth and time, rehearse an order of looking, declare the target before acting, and price failure against the real alternative instead of against perfection. Defense lags, admits incompleteness, and adapts by attacking the decision clock and the release point. Any domain with rules, options, and an adapting opponent can be read through this sequence."
+}

@@ -1,0 +1,720 @@
+{
+  "book_id": "496accf108936510",
+  "source_status": "COMPLETE",
+  "source_note": "Walter Camp, Walter Camp's Book of College Sports, New and Revised Edition, New York: The Century Co., title page dated 1901, copyright 1889, 1890, 1893, 1895, 1900 by The Century Co.; the assigned task dates the work 1900, matching the latest copyright entry, and the title pages in the text give the edition facts stated here. The local PDF at library/books-a-sports/Camp-1900-Book-of-College-Sports.pdf (320 pages, 5,668,512 bytes) is an image-only scan whose shipped extracted text is Google Books boilerplate only; its gatekeeper sha256 over str(size) plus full bytes is 496accf108936510d0750ab42a1d7fdf52fb28b095584c790e67b023a3ad655b, giving book_id 496accf108936510. Quotes are sourced from the full OCR text of the same Google scan at books-38/Camp-1900-Book-of-College-Sports.txt (439,090 bytes, 79,221 words), copied to motif-foundry/work/camp-1900-college-sports/camp-1900-full.txt, the Tolman route; every verbatim_quote is a contiguous substring of that file, verified programmatically. OCR artifacts in quoted passages are kept as printed and noted where they occur. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "practice_diary_record_book",
+      "name": "A captain or coach keeps a daily practice diary and each season studies the prior record before adding to it",
+      "verbatim_quote": "The method was to keep a book, in which either the captain or coach entered a record of the practice, transcribing as accurately as possible the daily work of the men; the improvement under certain conditions; any falling back, and the apparent reasons for it",
+      "page": "Introduction, printed p. 10-11; OCR text line 218",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A record is kept daily and honestly, including regressions",
+        "Later leaders actually study the earlier record"
+      ],
+      "breakdown_regime": "Fails when entries are sporadic, flattering, or never reread; a diary that is written but not studied adds no value. no_equation_domain",
+      "domain": "coaching systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a persistent practice and prediction log inside the reasoning engine: every session, signal change, and observed improvement or regression is entered with its apparent reason, and later reasoning reads the accumulated log before it acts, so small points that would otherwise be forgotten stay available as evidence.",
+        "source_operator": "practice_diary_record_book",
+        "telemetry": "Dated practice logs, per athlete or per unit performance notes, regression notes with stated reasons, season over season comparisons."
+      }
+    },
+    {
+      "primitive_id": "amateur_honor_no_money",
+      "name": "A gentleman never lets a money consideration affect his sport",
+      "verbatim_quote": "A gentleman never allows a money consideration to affect his sport.",
+      "page": "Introduction, printed p. 3; OCR text line 168",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Sport is pursued for victory and honor, not payment",
+        "Indirect payment counts the same as direct payment"
+      ],
+      "breakdown_regime": "The rule is a norm, not a measurement; it cannot detect hidden incentives by itself and needs disclosure and audit around it. no_equation_domain",
+      "domain": "amateur ethics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a conflict of interest filter in the reasoning engine: an output that is shaped by an outside payment or incentive rather than by the evidence is treated as corrupted at the source, and the reasoning layer must be able to show that its conclusions follow from the contest evidence alone.",
+        "source_operator": "amateur_honor_no_money",
+        "telemetry": "Incentive and payment disclosures attached to any input, source provenance records, cases where an incentive changed a recommendation."
+      }
+    },
+    {
+      "primitive_id": "captain_eligibility_verification",
+      "name": "A captain must verify every candidate is clearly eligible under the rules themselves before using him",
+      "verbatim_quote": "Having done that, never let a thought enter your head of making use of any man not clearly and cleanly eligible.",
+      "page": "Introduction, printed p. 7; OCR text line 198",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The written rules, not precedent or custom, define eligibility",
+        "The captain can in almost every case learn the exact truth about a candidate"
+      ],
+      "breakdown_regime": "Fails when records are incomplete or the rules themselves are ambiguous; Camp treats ambiguity as a reason to exclude, which can be costly. no_equation_domain",
+      "domain": "eligibility governance",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to an input eligibility gate in the reasoning engine: a signal, player record, or data source is checked against the governing rules themselves, not against custom or against what a rival might get away with, and anything not clearly eligible is excluded before reasoning begins rather than argued in afterward.",
+        "source_operator": "captain_eligibility_verification",
+        "telemetry": "Eligibility records per candidate, rule text version in force, verification outcome and verifier for each roster or data entry."
+      }
+    },
+    {
+      "primitive_id": "cinder_track_construction",
+      "name": "A running track is a scientific construction of layered ashes, loam, and cinders, measured eighteen inches from the inner edge",
+      "verbatim_quote": "This track is a scientific affair, and not a mere stretch of black dirt.",
+      "page": "Track Athletics, printed p. 17; OCR text line 256",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The specified layering gives a firm, dry, and elastic surface",
+        "Distance is measured eighteen inches from the inner edge so the runner runs the correct distance"
+      ],
+      "breakdown_regime": "Fails on improvised grounds where the surface is unknown; comparisons across unlike surfaces carry hidden error. no_equation_domain",
+      "domain": "track athletics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to measurement surface discipline in a reasoning engine: the surface on which performances are produced is itself engineered and specified, because times recorded on an unspecified surface cannot be compared; the engine must carry the conditions of production as part of every recorded performance.",
+        "source_operator": "cinder_track_construction",
+        "telemetry": "Track construction specification, surface condition reports, measurement offset used, weather and watering state at contest time."
+      }
+    },
+    {
+      "primitive_id": "record_validity_three_timers",
+      "name": "A record requires three timers or measurers, with two agreeing or the intermediate value taken",
+      "verbatim_quote": "two of those must agree or the intermediate one of the three be taken as the correct one.",
+      "page": "Track Athletics, printed p. 18-19; OCR text line 272",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Timers are independent and experienced",
+        "The intermediate of three values is more trustworthy than either extreme"
+      ],
+      "breakdown_regime": "Fails if the three observers share one instrument or one vantage error; consensus among correlated observers is weaker than it looks. no_equation_domain",
+      "domain": "measurement",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps directly to a multi observer consensus rule in the reasoning engine: a headline measurement is accepted only when independent observers agree, and when they disagree the middle value is taken rather than the most favorable one, which protects the record book from single instrument error and from wishful reading.",
+        "source_operator": "record_validity_three_timers",
+        "telemetry": "Three independent timing or measurement values per event, agreement status, the intermediate value when observers disagree."
+      }
+    },
+    {
+      "primitive_id": "false_start_penalty_ladder",
+      "name": "False start penalties scale with race distance and a third false start disqualifies",
+      "verbatim_quote": "In all short races, those up to 300 yards, the penalty for a false start is to be put back one yard.",
+      "page": "Track Athletics, printed p. 22; OCR text line 294",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A false start steals more advantage in a short race than the setback alone shows",
+        "Penalties are fixed in advance and known to competitors"
+      ],
+      "breakdown_regime": "A fixed ladder cannot judge intent; an involuntary flinch and a deliberate steal draw the same penalty. no_equation_domain",
+      "domain": "track rules",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a graduated penalty schedule in a reasoning engine: the cost of a premature action scales with the size of the contest it disrupts, and repeated premature actions escalate from a setback to removal, so the system prices the same fault differently according to the advantage it could steal.",
+        "source_operator": "false_start_penalty_ladder",
+        "telemetry": "Race distance, false start count per competitor, penalty yards applied, disqualification events at the third offense."
+      }
+    },
+    {
+      "primitive_id": "sprint_start_into_stride",
+      "name": "The sprint start gains ground twice: in leaving the mark and in getting instantly into stride",
+      "verbatim_quote": "for the sprinter gains not only in leaving the mark, but in getting instantly up into his stride, whereas the novice is not fairly under way for several feet after he has actually left the mark.",
+      "page": "Track Athletics, printed p. 21-22; OCR text line 294",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The start requires weeks of practice and is not a matter of luck",
+        "A fifth of a second at the start is worth about five feet of ground"
+      ],
+      "breakdown_regime": "Phase splits need observers or instruments at the start; without them the two gains are confounded in the total time. no_equation_domain",
+      "domain": "sprinting",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a two phase launch model in the reasoning engine: any timed effort has a reaction component and a transition to full operating rhythm component, and the second is separately trainable and separately measurable, so a slow total is diagnosed by phase rather than blamed on the whole effort.",
+        "source_operator": "sprint_start_into_stride",
+        "telemetry": "Start reaction observations, distance or time to full stride, split times over the first yards of a race."
+      }
+    },
+    {
+      "primitive_id": "distance_pacing_uniform_speed",
+      "name": "Races from the half-mile up require husbanding strength to run the whole distance at the best uniform speed",
+      "verbatim_quote": "the half-mile, mile, and above require the husbanding of strength and proper putting forth of just enough to run out the entire distance at the best uniform speed.",
+      "page": "Track Athletics, printed p. 16; OCR text line 250",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A runner has a finite store of strength for the distance",
+        "Uniform speed over the full distance beats early speed followed by collapse"
+      ],
+      "breakdown_regime": "Uniform pacing is wrong when a rival forces a tactical race or when wind and hills make even effort, not even speed, the right target. no_equation_domain",
+      "domain": "distance running",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to an energy budget model in the reasoning engine: for efforts above a threshold length, output must be allocated across the whole duration at a near uniform rate, and spending early speed that cannot be sustained is scored as a planning failure even when the early splits look impressive.",
+        "source_operator": "distance_pacing_uniform_speed",
+        "telemetry": "Per segment split times, finishing speed relative to early speed, distance of the event, signs of distress in the final segment."
+      }
+    },
+    {
+      "primitive_id": "scientific_hurdling_fixed_steps",
+      "name": "The scientific hurdler takes a fixed number of steps between flights and clears each without a break in stride",
+      "verbatim_quote": "The scientific hurdler now takes a certain number of steps between the flights, and, fetching each at the most favorable point for his rise, actually clears them without a break in his stride, one leg being put out while the other is bent just as though it were but an exaggerated step.",
+      "page": "Track Athletics, printed p. 23-24; OCR text line 314",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Hurdle spacing is fixed and known in advance",
+        "Clearing as low as possible wastes the least motion"
+      ],
+      "breakdown_regime": "Fails when spacing changes, when a hurdle is clipped and rhythm collapses, or when the athlete is too short or too tall for the standard cadence. no_equation_domain",
+      "domain": "hurdling",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to obstacle integration in the reasoning engine: a known recurring obstacle is not handled as an interruption but is folded into the base rhythm at a fixed cadence, with the approach engineered so the obstacle costs the least possible break in forward motion.",
+        "source_operator": "scientific_hurdling_fixed_steps",
+        "telemetry": "Steps between hurdles, clearance height above each bar, stride break observations, time lost per hurdle against flat speed."
+      }
+    },
+    {
+      "primitive_id": "walking_definition_heel_and_contact",
+      "name": "Walking is defined by heel strike first and some part of one foot always touching the ground",
+      "verbatim_quote": "The distinction between running and walking is, that in the latter the heel strikes the ground first, and some part of one foot is always touching the ground, whereas in running the toe strikes first, and there is a period in the stride when both the runner's feet are off the ground.",
+      "page": "Track Athletics, printed p. 24-25; OCR text line 320",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The criteria are observable in principle at full speed",
+        "An expert judge can detect tricks invisible to the uninitiated"
+      ],
+      "breakdown_regime": "At racing speed the criteria strain human eyesight, which is why Camp notes walking contests waning under judging difficulty. no_equation_domain",
+      "domain": "race walking",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a definitional test in the reasoning engine: a category is enforced by observable mechanical criteria, contact and strike order, rather than by how the motion looks to an untrained eye, and borderline tricks of gait are judged against those criteria by an expert judge.",
+        "source_operator": "walking_definition_heel_and_contact",
+        "telemetry": "Judge warnings and disqualifications for unfair gait, heel strike and ground contact observations, failure to straighten the leg at each step."
+      }
+    },
+    {
+      "primitive_id": "handicapping_from_records",
+      "name": "Handicapping takes away the superior men's advantages in proportion to ability shown by their records",
+      "verbatim_quote": "handicapping is the taking away certain of the advantages of the superior men, and so arranging the acknowledged superior contestants that they must not only do better than the rest in order to win, but do enough better to make it a fair struggle on both sides",
+      "page": "Track Athletics, printed p. 29-30; OCR text line 384",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Past records are an honest guide to relative ability",
+        "The handicapper knows the usual speed of every distance and keeps accurate tables"
+      ],
+      "breakdown_regime": "Fails when a runner has hidden form, has improved since the table was made, or conceals ability to win a larger allowance. This is a contest equalization device, not a prediction of the scratch outcome. no_equation_domain",
+      "domain": "handicapping",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a record based equalization layer in the reasoning engine: known strength differences are priced from recorded past performance and converted into starting offsets, so a contest tests current effort rather than merely re certifying a known gap, and the quality of the equalization is bounded by the quality of the record table behind it.",
+        "source_operator": "handicapping_from_records",
+        "telemetry": "Accurate tables of each runner's records, usual speed for each distance, handicap allowances assigned, results against expectation after handicapping."
+      }
+    },
+    {
+      "primitive_id": "rowing_swimming_prerequisite",
+      "name": "No boy or man should be allowed into school or college rowing until he can swim",
+      "verbatim_quote": "No boy or man should be allow go in for school or college rowing until he can swim.",
+      "page": "Rowing, chapter head, printed p. 50; OCR text line 554",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Shells can and do tip over, especially with beginners",
+        "Swimming ability is testable before selection"
+      ],
+      "breakdown_regime": "The gate is binary and says nothing about degree of water competence in cold or rough water; it is a floor, not a full safety case. The OCR drops the final letters of allowed, and the quote is kept exactly as printed in the text file. no_equation_domain",
+      "domain": "rowing safety",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a hard prerequisite gate in the reasoning engine: a capability that protects against the catastrophic failure mode of the activity, here drowning after a capsize, must be verified before any performance reasoning about the athlete begins, and no amount of rowing talent substitutes for it.",
+        "source_operator": "rowing_swimming_prerequisite",
+        "telemetry": "Swimming verification per candidate before crew selection, capsize and accident records, water conditions at the venue."
+      }
+    },
+    {
+      "primitive_id": "rowing_fault_correction_to_habit",
+      "name": "Correcting a rowing fault takes conscious effort at every stroke until the right way becomes more natural than the old",
+      "verbatim_quote": "At first it is a distinct effort at every stroke for him to avoid a lapse into his old or natural way.",
+      "page": "Rowing, printed p. 53; OCR text line 578",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Faults in rowing are almost ingrained, like formed habits of mature life",
+        "The individual himself must supply the unflagging attention; the coach can only correct"
+      ],
+      "breakdown_regime": "Fails when practice volume is too low for the new pattern to become natural, or when several faults are corrected at once and attention is divided. no_equation_domain",
+      "domain": "rowing coaching",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a habit replacement model in the reasoning engine: an ingrained faulty pattern is not removed by one correction but by repeated conscious execution until the new pattern becomes the default, and the engine should expect a long plateau of effortful performance before the correction shows as speed.",
+        "source_operator": "rowing_fault_correction_to_habit",
+        "telemetry": "Coach fault notes per oarsman, strokes rowed under correction, relapse frequency over days and weeks, seat selection outcomes."
+      }
+    },
+    {
+      "primitive_id": "rowing_selection_balanced_components",
+      "name": "Selecting an oarsman requires strength, skill, quickness, perseverance, and pluck nicely balanced",
+      "verbatim_quote": "strength, skill, quickness, perseverance, and bull-dog pluck, with a cheerful acquiescence to hardships and sacrifices",
+      "page": "Rowing, printed p. 54; OCR text line 582",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Rowing has usually one day of contest after months of training, with no contact with the opponent to supply stimulus",
+        "The components can be observed during the long training period"
+      ],
+      "breakdown_regime": "Character components are judgment calls and can smuggle in bias; the balance has no stated weights, so two selectors can apply it differently. no_equation_domain",
+      "domain": "rowing selection",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a multi component selection rule in the reasoning engine: a candidate for a long, unobserved, single contest effort is scored on a balanced bundle of physical, technical, and character components, and willingness to endure without applause can outweigh a rival's superior skill alone.",
+        "source_operator": "rowing_selection_balanced_components",
+        "telemetry": "Strength and skill assessments, quickness and adaptability observations, perseverance evidence from training, coach and captain selection judgments."
+      }
+    },
+    {
+      "primitive_id": "rowing_time_unison_definition",
+      "name": "Time in rowing is the technical term for the unison of a crew in every movement",
+      "verbatim_quote": "Time\" is used technically to indicate the unison of a crew in every movement.",
+      "page": "Rowing, printed p. 61; OCR text line 634",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Eight oarsmen propel one boat, so individual timing errors tax everyone",
+        "Faults of timing are observable and nameable by a coach"
+      ],
+      "breakdown_regime": "Unison is necessary but not sufficient; a crew can be perfectly together on a slow or badly rigged stroke. no_equation_domain",
+      "domain": "rowing technique",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a synchronization metric in the reasoning engine: a crew is treated as one coupled system whose output depends on every member moving in unison, and faults are named by how they break that unison, getting in late, getting out late, rushing the slide, rather than by individual effort alone.",
+        "source_operator": "rowing_time_unison_definition",
+        "telemetry": "Catch and finish timing across the crew, slide control observations, named fault frequencies from the coaching vocabulary in this chapter."
+      }
+    },
+    {
+      "primitive_id": "rowing_stroke_cycle_decomposition",
+      "name": "The stroke divides into catch, pull through, and finish, and the recover runs from finish back to catch",
+      "verbatim_quote": "recover\" is from the time the oar leaves the water until it again enters it.",
+      "page": "Rowing, printed p. 63-64; OCR text line 676",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The cycle repeats identically, so phase analysis compounds over thousands of strokes",
+        "The recover is performed in reverse order to the stroke"
+      ],
+      "breakdown_regime": "The text file truncates this sentence at a page edge in the OCR, so the quote is kept short; phase models also break down in rough water where the cycle must adapt. no_equation_domain",
+      "domain": "rowing technique",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a cyclic phase model in the reasoning engine: a repeated action is decomposed into a working phase and a recovery phase with named sub parts, each phase is coached and fault checked separately, and smoothness comes from performing the parts in proper order and time until the cycle is rhythmic.",
+        "source_operator": "rowing_stroke_cycle_decomposition",
+        "telemetry": "Phase timing within the stroke cycle, order errors between hands, slide, and shoulders, stroke rate in strokes per minute."
+      }
+    },
+    {
+      "primitive_id": "rowing_rigging_maximum_power_minimum_cost",
+      "name": "Rigging arranges each man so he gets maximum power into his stroke at minimum expenditure of strength",
+      "verbatim_quote": "the arrangement of each individual in the boat, so that he may by proper use of his seat, stretcher, outrigger, and oar, get the maximum power into his stroke at the minimum expenditure of strength, and so that the entire crew may act as a most harmonious whole.",
+      "page": "Rowing, printed p. 63; OCR text line 668",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Individual bodies differ, so one fixed geometry cannot fit a whole crew",
+        "Correct rigging is observable by careful scrutiny of each man at full reach and at finish"
+      ],
+      "breakdown_regime": "Camp gives general directions only and admits exhaustive rigging detail would multiply indefinitely; fit interacts with style, so copying another crew's numbers can misfit. no_equation_domain",
+      "domain": "rowing rigging",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to an ergonomic fitting layer in the reasoning engine: before judging a performer, fit the apparatus to the individual, seat, stretcher, outrigger, and oar, because a poorly fitted setup manufactures exhaustion and bad timing that no amount of effort or selection can overcome.",
+        "source_operator": "rowing_rigging_maximum_power_minimum_cost",
+        "telemetry": "Rigging measurements per seat, reach forward and aft of the thole pin, seat height and slide length, exhaustion and timing faults traced to fit."
+      }
+    },
+    {
+      "primitive_id": "rowing_overtraining_going_fine",
+      "name": "Going fine, the borderline of overtraining, shows in lost appetite, poor sleep, and failure to regain weight rowed off",
+      "verbatim_quote": "The only treatment for this condition of fineness is rest, either partial or, if necessary, complete.",
+      "page": "Rowing, printed p. 67-68; OCR text line 694",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Ordinary daily loss and gain of weight should be two to four pounds",
+        "The only treatment for the condition is rest; drugs are useless"
+      ],
+      "breakdown_regime": "The indicators are subjective and can be hidden by a determined athlete; the same signs can also come from illness unrelated to training. no_equation_domain",
+      "domain": "training load",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to an early warning monitor in the reasoning engine: a performer approaching staleness is detected from a cluster of soft indicators, appetite, sleep, mood, and daily weight recovery, before performance itself collapses, and the prescribed response is rest, partial or complete, rather than more work.",
+        "source_operator": "rowing_overtraining_going_fine",
+        "telemetry": "Daily weight lost and regained, appetite and sleep reports, aching and indisposition notes, training load in hours and distance per day."
+      }
+    },
+    {
+      "primitive_id": "football_rules_committee_of_graduates",
+      "name": "Rule changes sit with a Rules Committee of graduates who are not immediate participants",
+      "verbatim_quote": "a Rules Committee of graduates has been appointed, and all alteration of rules is in their hands.",
+      "page": "Foot-ball in America, printed p. 89; OCR text line 838",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Non participants with past experience judge more coolly than current players",
+        "Colleges accept the committee's rules as the standard for all games"
+      ],
+      "breakdown_regime": "Separation can drift into unaccountability; a committee that no longer watches closely can freeze a bad rule in place. no_equation_domain",
+      "domain": "rules governance",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to separated rule governance in the reasoning engine: the body that changes the rules is deliberately not the body that just lost under them, meetings happen on a fixed yearly cycle, and changes are few and considered, which keeps the rule set from being rewritten in the heat of a fresh defeat.",
+        "source_operator": "football_rules_committee_of_graduates",
+        "telemetry": "Committee membership and partisanship, changes proposed and adopted per year, stated reasons tied to fostering good features or legislating against objectionable tendencies."
+      }
+    },
+    {
+      "primitive_id": "football_snapback_quarterback_planned_outlet",
+      "name": "The American scrimmage replaces the kicking struggle with a snap-back and a quarterback pass to the man named in the plan of the play",
+      "verbatim_quote": "The snap-back rolls the ball back with his hand; the quarter seizes it and passes it to any man for whom the ball is destined in the plan of the play.",
+      "page": "Foot-ball in America, printed p. 91; OCR text line 850",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The snap-back has undisturbed possession and can aim accurately",
+        "The quarterback directs the course of the play rather than running it himself as a rule"
+      ],
+      "breakdown_regime": "A single distributor is also a single point of failure; a bad snap or a read plan collapses the design back into scramble. no_equation_domain",
+      "domain": "football tactics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a planned distribution node in the reasoning engine: instead of a scramble whose exit cannot be predicted, possession passes through one designated distributor who executes a prearranged plan, which converts chance into design and makes scientific planning of the whole play possible.",
+        "source_operator": "football_snapback_quarterback_planned_outlet",
+        "telemetry": "Snap accuracy, quarterback pass destination against the called play, success rate by intended receiver, turnovers at the exchange."
+      }
+    },
+    {
+      "primitive_id": "football_downs_rule_against_block_game",
+      "name": "In three attempts a side must advance five yards or retreat twenty, or surrender the ball",
+      "verbatim_quote": "There is a rule which says that in three attempts a side must advance the ball five or take it back twenty yards under penalty of surrendering it to the opponents.",
+      "page": "Foot-ball in America, printed p. 92; OCR text line 862",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Progress is measurable by the five yard lines marked on the field",
+        "A kick counts as an advance equivalent for this rule"
+      ],
+      "breakdown_regime": "The threshold is arbitrary and shapes strategy around itself; sides learn to play for the rule, kicking on schedule, rather than for the goal alone. no_equation_domain",
+      "domain": "football rules",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to an anti stalling progress rule in the reasoning engine: possession is conditional on measurable progress within a fixed number of attempts, which abolished the block game where an inferior side kept the ball while making only a pretense of play, and forces every holder to either advance, retreat honestly, or yield.",
+        "source_operator": "football_downs_rule_against_block_game",
+        "telemetry": "Yards gained or lost per attempt, attempts used before a kick, surrenders of possession under the rule, field position at surrender."
+      }
+    },
+    {
+      "primitive_id": "football_scoring_values",
+      "name": "Scoring values: field goal five, goal from a touchdown six, touchdown alone five, safety two to the other side",
+      "verbatim_quote": "In the scoring, the value of a field-kick goal is only five, of a goal kicked from the touch-down, six; if the touch-down does not result in a goal it counts five, and a safety by the opponents' counts the other side two.",
+      "page": "Foot-ball in America, printed p. 94; OCR text line 870",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Values are fixed before the contest and known to both captains",
+        "A touchdown entitles the side to a try at goal, and only the goal scores if the kick succeeds"
+      ],
+      "breakdown_regime": "Camp records these values as current in this edition; scoring values changed repeatedly before and after, so the table must be versioned by year. No formula is stated in the source, so no latex is given. no_equation_domain",
+      "domain": "football rules",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to an explicit value table in the reasoning engine: every scoring event carries a published numerical value, including the conversion premium that makes a goal from a touchdown worth more than the touchdown alone, so late game choices can be reasoned from arithmetic rather than from custom.",
+        "source_operator": "football_scoring_values",
+        "telemetry": "Score state, scoring event type, try at goal success, time remaining, values needed to tie or lead."
+      }
+    },
+    {
+      "primitive_id": "football_officials_divided_duties",
+      "name": "The umpire decides player conduct while the referee decides position and progress of the ball",
+      "verbatim_quote": "It is the duty of the umpire to decide all points directly connected with the players' conduct, while the referee decides questions of the position or progress of the ball.",
+      "page": "Foot-ball in America, printed p. 97; OCR text line 900",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "One referee alone demonstrably could not watch everything",
+        "Conduct fouls and ball questions are separable in real time"
+      ],
+      "breakdown_regime": "Division creates boundary cases where a foul and the ball interact; Camp notes base-ball copied the split, which suggests the fix generalizes but does not remove judgment error. no_equation_domain",
+      "domain": "officiating",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a split attention architecture in the reasoning engine: one watcher cannot follow both the ball and every player's conduct, so the duties are divided by object, conduct to one official and ball position to another, with a linesman added later, and each official's undivided attention is the resource being engineered.",
+        "source_operator": "football_officials_divided_duties",
+        "telemetry": "Fouls detected by type, ball position disputes, claims made to officials, errors traced to an official watching the wrong object."
+      }
+    },
+    {
+      "primitive_id": "football_captain_sole_selection_power",
+      "name": "The captain should have sole power to select his team, taking advice but deciding alone",
+      "verbatim_quote": "The captain should have sole power to select his team.",
+      "page": "Foot-ball in America, Generalship, printed p. 118; OCR text line 1136",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The captain must command the team in emergencies, which requires that the men are his choices",
+        "He remains ready to listen to suggestions off the field"
+      ],
+      "breakdown_regime": "Sole power concentrates error and favoritism in one man; the safeguard Camp offers is character, not review. no_equation_domain",
+      "domain": "team leadership",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a single accountable decision owner in the reasoning engine: advice is gathered widely from coach and committees, but selection decisions rest in one named pair of hands, because divided selection power dissolves the command that the same captain must exercise over the men he selected.",
+        "source_operator": "football_captain_sole_selection_power",
+        "telemetry": "Selection and dropping decisions with decision maker recorded, advice received, team response and discipline outcomes after contested selections."
+      }
+    },
+    {
+      "primitive_id": "football_adapt_play_to_material",
+      "name": "Play development follows the material at hand: a light, fast team is built on quick, deceptive movements and trick plays, just as a heavy team is built to crush rather than outpace",
+      "verbatim_quote": "If, on the other hand, the team be a light, fast one, the development of the play should be along the lines of quick and deceptive movements, combined with double passes, criss-crosses, and a fair variety of trick plays.",
+      "page": "Foot-ball in America, Generalship, printed p. 118; OCR text line 1138",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Capabilities are knowable from practice before the match",
+        "Every part of the team can be reorganized to make one exceptional skill reap its full reward"
+      ],
+      "breakdown_regime": "Self assessment can be wrong, and building everything around one man collides with Camp's own warning against the one man game when that man tires. no_equation_domain",
+      "domain": "football tactics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a capability conditioned strategy rule in the reasoning engine: the plan is derived from measured properties of the actual roster, weight, speed, and any single exceptional skill such as a punter or a runner, rather than copied from a champion's plan built for different material.",
+        "source_operator": "football_adapt_play_to_material",
+        "telemetry": "Roster weight and speed assessments, exceptional individual skills, play family usage shares, results by play family against expectation."
+      }
+    },
+    {
+      "primitive_id": "football_disguised_play_multiple_outlets",
+      "name": "A disguised play uses one formation whose final outlet can vary, so opponents cannot mass against it",
+      "verbatim_quote": "To disguise a play, the simplest method is to study out an arrangement of men of such a nature that the resulting move",
+      "page": "Foot-ball in America, Generalship, printed p. 120; OCR text line 1148",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The signal can be given as the formation sets, before the opponent can react",
+        "Branches must each be genuinely executable, not mere decoration"
+      ],
+      "breakdown_regime": "Branches multiply practice load and fumble risk; Camp warns that methods requiring hard work from men who never enter the real play exhaust the team if overused. no_equation_domain",
+      "domain": "football tactics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to an optionality design rule in the reasoning engine: a single observed setup branches into several outcomes selected by a private signal at execution time, so an opponent reading the setup gains no usable information, and the cost of defending every branch is spread across his whole formation.",
+        "source_operator": "football_disguised_play_multiple_outlets",
+        "telemetry": "Formation used, outlet selected by signal, opponent alignment before the snap, gain by outlet type, frequency of each branch."
+      }
+    },
+    {
+      "primitive_id": "football_attack_weak_point_rotate_runners",
+      "name": "Against a tiring point, vary the plays but keep them aimed at that point, rotating fresh runners against the same defenders",
+      "verbatim_quote": "The same man should not be made the runner by the assaulting team, but kept fresh by the variation of their action, and throwing the hardest work successively upon different men, while the same two or three men of the opponents are forced to meet it.",
+      "page": "Foot-ball in America, Generalship, printed p. 123; OCR text line 1170",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fatigue is cumulative and position specific",
+        "Varied plays aimed at one point prevent the defense from keying on a single runner"
+      ],
+      "breakdown_regime": "Fails if the targeted men are substituted, if the point was misdiagnosed, or if predictability of direction lets the defense shift help to the spot. no_equation_domain",
+      "domain": "football tactics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to an asymmetric fatigue strategy in the reasoning engine: repeated attacks are concentrated on a fixed defensive point while the attacking load is rotated across fresh men, so fatigue accumulates on one side of the matchup only, and the point weakens even when each individual play is stopped.",
+        "source_operator": "football_attack_weak_point_rotate_runners",
+        "telemetry": "Attempts directed at each defensive position, defender involvement counts, runner rotation, gain per attempt at the targeted point over time."
+      }
+    },
+    {
+      "primitive_id": "football_risk_geography_inside_25",
+      "name": "Trick plays and long passes must not be ventured inside one's own 25-yard line, where a loss hands the opponent a touchdown chance",
+      "verbatim_quote": "not to venture such plays when within one's own 25-yard line, on account of the risk of the opponents securing a touch-down if a fluke be made.",
+      "page": "Foot-ball in America, Generalship, printed p. 123; OCR text line 1172",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A lost ball near one's own goal is likely to become a touchdown against",
+        "Mass plays lose the ball less disastrously than trick plays and long passes"
+      ],
+      "breakdown_regime": "The 25-yard line is a rule of thumb, not a computed boundary; a desperate score state late in a game can justify breaking it. no_equation_domain",
+      "domain": "risk management",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a field position risk budget in the reasoning engine: the same play carries different risk at different field positions, because the cost of losing the ball is set by where the opponent would take over, so high variance plays are permitted far from one's own goal and forbidden near it.",
+        "source_operator": "football_risk_geography_inside_25",
+        "telemetry": "Field position at play call, play type risk class, turnover location, points conceded after turnovers by field zone."
+      }
+    },
+    {
+      "primitive_id": "football_load_management_no_one_man_game",
+      "name": "Use each man to the full extent of his capacity without exhausting any, and time the best runner for the critical moment",
+      "verbatim_quote": "The object must be to use each man to the full extent of his capacity without exhausting any.",
+      "page": "Foot-ball in America, General Strategy, printed p. 129; OCR text line 1222",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "No player can be educated to machine-like perfection or made absolutely untiring",
+        "Specialized positions regularize each man's work but do not cap his special work"
+      ],
+      "breakdown_regime": "Capacity is not directly measurable in Camp's era; the captain estimates it, and saving a star can shade into never using him at full stretch. no_equation_domain",
+      "domain": "load management",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a workload allocation rule in the reasoning engine: total team capacity is spent across all members according to their fitness for each task, the best performer's peak is saved for the critical moment rather than spent early, and the repeatedly failing one man game is treated as a known losing pattern, not a fresh idea.",
+        "source_operator": "football_load_management_no_one_man_game",
+        "telemetry": "Carries and work by player over the game, timing of the best runner's heaviest use, forward tackling condition late in the game, exhaustion indicators."
+      }
+    },
+    {
+      "primitive_id": "baseball_squad_cage_winter_training",
+      "name": "Winter candidates train in squads and pairs in the cage, acquiring form at medium speed before force and accuracy",
+      "verbatim_quote": "these candidates are usually divided into squads of perhaps four men each.",
+      "page": "Base-ball for the Player, printed p. 196; OCR text line 1788",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "About twenty candidates cannot all practise the same work at the same time",
+        "In the cage men practise form, not violent effort"
+      ],
+      "breakdown_regime": "Indoor form does not fully transfer to the field; Camp notes the first outdoor weeks still produce lameness if enthusiasm overruns the gradation. no_equation_domain",
+      "domain": "baseball training",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a structured practice architecture in the reasoning engine: a large candidate pool is divided into small squads with allotted apparatus time and paired tasks, form is acquired at controlled speed before intensity is added, and parallel stations let batting, fielding, running, and sliding all progress in the same hour.",
+        "source_operator": "baseball_squad_cage_winter_training",
+        "telemetry": "Squad assignments and allotted hours, cage task rotation, throwing accuracy and strength change over the winter, lame arm incidence after winter work."
+      }
+    },
+    {
+      "primitive_id": "baseball_short_arm_throw",
+      "name": "The best and most accurate throwers practise the short-arm throw, hand back level with the ear and driven straight forward",
+      "verbatim_quote": "The best and most accurate throwers are those who continually practise what is termed a short-arm throw.",
+      "page": "Base-ball for the Player, printed p. 207-208; OCR text line 1878",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A hand in front of the eyes aims more easily than a hand out beyond the shoulder",
+        "Speed is added with legs and body only after the straight motion is acquired"
+      ],
+      "breakdown_regime": "Deep outfield throws still need an arc for distance; Camp keeps the rule for infield distances and warns against letting the ball sail over the catcher's head. no_equation_domain",
+      "domain": "baseball throwing",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a motion simplification rule in the reasoning engine: removing the wide arc from a repeated throwing motion removes the release point error that the arc creates, so accuracy and quickness rise together, and any residual error is mostly in height, which is the least damaging direction for the receiver.",
+        "source_operator": "baseball_short_arm_throw",
+        "telemetry": "Throwing accuracy at a marked target, time from receipt to release, wild throw frequency by throwing style, catcher throws to second."
+      }
+    },
+    {
+      "primitive_id": "baseball_outfield_backup_principle",
+      "name": "On a fly to one outfielder, the center-fielder goes on not to take it but to assist if it goes through",
+      "verbatim_quote": "take the fy, but to be ready to assist if the ball goes through the left-fielder's hands.",
+      "page": "Base-ball for the Player, printed p. 213; OCR text line 1932",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Every outfielder starts toward the probable landing spot when the ball is hit",
+        "The primary fielder takes the ball in front of himself so he can throw or recover quickly"
+      ],
+      "breakdown_regime": "Backup movement can open a gap elsewhere; the right-fielder is told to stop after a step or two on a ball clearly to left, which bounds the redundancy. The OCR prints fy for fly, kept as in the text file. no_equation_domain",
+      "domain": "baseball fielding",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a redundancy assignment rule in the reasoning engine: on every play, nearby agents who are not the primary handler are assigned a backup path in advance, moving toward the play at full speed from the first instant, because a moderate runner who starts instantly outfields a faster man who starts late.",
+        "source_operator": "baseball_outfield_backup_principle",
+        "telemetry": "Backup positioning on fly balls, start reaction of outfielders, balls recovered after a muff, extra bases prevented by backup."
+      }
+    },
+    {
+      "primitive_id": "baseball_pitcher_workload_and_gradual_curves",
+      "name": "Two games a week is the limit for the amateur pitcher, and curves are added only after weeks of general arm exercise",
+      "verbatim_quote": "two games a week should be the limit for the amateur pitcher.",
+      "page": "Base-ball for the Player, The Battery, printed p. 237-238; OCR text line 2146",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A lame armed pitcher breaks down the nerve of his whole nine inning by inning",
+        "Muscles thoroughly trained and kept in condition seldom go lame except from foolish overwork"
+      ],
+      "breakdown_regime": "The cap is experience based, not measured; a strong professional may bear more and a slight amateur less, and Camp allows the limit itself likely weakens pitching if continued steadily. no_equation_domain",
+      "domain": "baseball pitching",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a specialist workload cap in the reasoning engine: the most failure prone arm in the system is rationed by a hard weekly limit, its preparation is more gradual than any other position's, in curves first and out curves later, and the regular pitcher is protected from batting practice duty that would tire him into carelessness.",
+        "source_operator": "baseball_pitcher_workload_and_gradual_curves",
+        "telemetry": "Games pitched per week, curve introduction timing, lame arm reports, batting practice pitches thrown by the regular pitcher."
+      }
+    },
+    {
+      "primitive_id": "baseball_battery_signals_simple_and_concealed",
+      "name": "Battery signals should be as simple as possible without too great risk of discovery, and the catcher should usually give them",
+      "verbatim_quote": "Signal systems of great ingenuity may be concocted, but as a rule the simpler they are, without too great risk of discovery, the better, as neither player should have his mind distracted from his work any more than is necessary by being obliged to think twice about a signal.",
+      "page": "Base-ball for the Player, The Battery, printed p. 248; OCR text line 2206",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The catcher can conceal a gesture better than the pitcher",
+        "A movement of thumb or finger, hands on knees or inner legs, is hard for a coach to catch"
+      ],
+      "breakdown_regime": "Simplicity and secrecy trade off directly; Camp's own mask wire signal was ingenious rather than simple, which shows the frontier is judged case by case. no_equation_domain",
+      "domain": "baseball signals",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to a communication protocol rule in the reasoning engine: a signal channel between two cooperating agents is designed on a simplicity against secrecy frontier, carried by the partner who can conceal it best, and the non signaling partner keeps a free veto, shaking his head to call for a different delivery.",
+        "source_operator": "baseball_battery_signals_simple_and_concealed",
+        "telemetry": "Signal type used, discovery incidents by opposing coaches or batsmen, crossed up pitches from misunderstood signals, veto frequency and outcome."
+      }
+    },
+    {
+      "primitive_id": "baseball_pitcher_controls_the_hit",
+      "name": "The pitcher's first principle is not the strikeout but making batsmen hit the ball on the handle or the end of the bat",
+      "verbatim_quote": "The first principle to keep before him, then, is to make the batsmen hit the ball either close up on the handle or out at the end of the bat.",
+      "page": "Base-ball for the Player, The Battery, printed p. 250; OCR text line 2228",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "It is not possible to strike out all or even a moderate proportion of batsmen",
+        "Fielding strength by unit is known before the game and can steer pitch selection"
+      ],
+      "breakdown_regime": "Shaping contact concedes some hits by design; with a weak fielding unit behind him the pitcher may have no good distribution to shape toward. no_equation_domain",
+      "domain": "baseball pitching",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This maps to an outcome shaping rule in the reasoning engine: instead of chasing the rarest best outcome on every trial, the pitcher shapes the distribution of contact so most hits are easily fielded, choosing rise or drop to produce flies or grounders according to whether his outfield or infield is stronger that day.",
+        "source_operator": "baseball_pitcher_controls_the_hit",
+        "telemetry": "Contact quality by pitch type, fly versus grounder share against fielding strength, strikeout attempts in bases loaded and less than two out situations, catcher workload under strikeout heavy pitching."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "496accf108936510-t1",
+      "think": "The Book of College Sports is Walter Camp's attempt to turn the tacit knowledge of captains and coaches into a written system that a schoolboy, a college captain, or a father can use without an apprenticeship beside a varsity team. Its structure is itself the first lesson. A preface states the selection principle, four sports chosen because coaching is most demanded in them. An introduction lays down the amateur code that governs everything after it. Then come four technical treatises in a deliberate order, track athletics, rowing, foot-ball, and base-ball, each moving from history to measurement to technique to training to selection, and an appendix that prints the actual governing documents, a boating agreement, the conditions for the Harvard and Yale track cup, and a form of contract. The book is therefore not a collection of tips. It is a layered operating manual in which values constrain rules, rules constrain measurement, measurement constrains records, and records constrain coaching decisions. Read as machinery, the recurring engine is specification followed by verification. The cinder track is specified layer by layer and measured eighteen inches from the inner edge, because a record made on an unspecified surface is not a record. A record itself is specified procedurally, three timers, two agreeing or the middle value taken. The shell is specified by weight, length, breadth, and depth. The foot-ball field is specified by its five yard lines, which exist so the referee can judge the progress rule, and the goal posts are specified to the inch. In every case Camp treats the apparatus and the measurement protocol as part of the sport, not as scenery, and a reasoning engine should do the same with its own inputs: a number without the protocol that produced it is an anecdote wearing a uniform. The second engine is decomposition. The rowing stroke is split into catch, pull through, and finish, with the recover running in reverse order, and a whole coaching vocabulary names the ways the cycle can break, getting in late, getting out late, rushing the slide, clipping, swinging out. The sprint start is split into leaving the mark and getting into stride. The foot-ball team is split into specialized positions that grew one by one as duties differentiated, snap-back, quarter-back, ends, guards, tackles, and the officials are split the same way, conduct to the umpire and the ball to the referee, because one watcher demonstrably could not do both. Decomposition is what makes coaching possible in Camp's world, because a fault that has a name and a phase can be corrected, while a general verdict of playing badly cannot. The third engine is load management, and it appears in every sport under different names. The distance runner husbands strength to hold uniform speed. The oarsman approaches the borderline state Camp calls going fine, detected by appetite, sleep, and weight not regained, and treated only by rest. The foot-ball captain is warned year after year against the one man game, told to use each man to the full extent of his capacity without exhausting any, and to save his best runner for the critical moment rather than the convenient one. The amateur pitcher is capped at two games a week and forbidden to exhaust himself pitching batting practice. Across all four sports the same theorem holds: capacity is finite, it is spent invisibly before it fails visibly, and the manager's real job is allocation across time, not motivation in the moment. The fourth engine is adaptation to material and to the opponent. Foot-ball generalship begins from the roster, heavy teams crush, light teams deceive, and a team with one exceptional punter reorganizes its ends, tackles, and center snap around that single skill. The pitcher shapes contact toward whichever fielding unit is stronger. The disguised play holds one formation and varies the outlet by signal, while the attack on a weak point does the opposite, showing its direction openly and rotating fresh runners against the same two or three defenders until fatigue does what deception would not. Camp holds both ideas at once because they answer different questions: disguise answers uncertainty about intention, concentration answers certainty about weakness. What this changes for a reasoning engine is the order of operations. Camp reasons from constraints inward: eligibility and the amateur code first, then the rules and their governance, then measurement, then technique, then tactics, then the single play. Modern analysis usually reasons in the opposite order, from the play backward, and treats the outer layers as context. Camp's order explains his otherwise odd emphases, why a book about winning spends pages on brackets for storing a shell, on the spool for throwing practice, on a captain's duty to know every candidate's record before the season. Those are not digressions. They are the layers where seasons are actually lost, in ruined equipment, lame arms, ineligible men, and unrecorded practice. The work also has a theory of learning that runs through it. The practice diary is the clearest statement: a captain or coach writes down each day's work, the improvement under certain conditions, any falling back, and the apparent reasons, and the next year's leader studies the book and adds to it. Knowledge is institutional, written, and cumulative, not personal and perishable. Fault correction in rowing follows the same arc at the level of the body, conscious effort at every stroke until the right way becomes more natural than the old, which is a precise description of how a drilled procedure becomes a default. The winter cage work in base-ball applies it to a squad, form at medium speed in pairs and fours, until accuracy and force arrive as byproducts. Where the book breaks must be stated plainly. Its measurements are the measurements of 1900, stopwatches and eyes, and several of its judgments, walking above all, strain the human sensors available to enforce them. Its scoring values, penalties, and many rules are version specific and were already changing under it; Camp himself chronicles the rules multiplying, being cut back, and being handed to a graduates committee. Its amateur code is a class bound ethic of its moment, presented as timeless, and its selection advice leans on character judgments that carry the biases of the men making them. Its evidence is largely the testimony of successful practitioners, which is strong on mechanism and weak on base rates; when Camp wants a number he often has only a story, as with the sliding apparatus credited with tripling stolen bases. A reasoning engine should take the architecture and discount the anecdotes. Taken whole, the book is a proof that a sport can be made legible without being made mechanical. Camp insists the foot-ball player can never be educated to machine-like perfection, and then builds the most systematic coaching apparatus of his generation around that limit. The system exists to protect judgment, not to replace it: the captain still decides, the coach still watches for the man going fine, the handicapper still needs excellent judgment on top of his tables. That is the deepest transferable claim in the work, that specification, decomposition, load accounting, and written memory are valuable exactly because the final act remains a human decision under fatigue and uncertainty, and the machinery's job is to make sure that decision is made with eligible men, honest records, fitted equipment, and strength still in reserve.",
+      "retrocausal_genealogy": "Walter Camp played half-back at Yale in the late 1870s, captained its teams, and became the central figure in converting English Rugby into the American game: the scrimmage with a snap-back, the downs rule against the block game, and numerical scoring all bear his hand, and he sat for years on the rules committees this book describes. The book itself grew by accretion across editions, with copyright entries from 1889 through 1900 and this New and Revised Edition issued by The Century Co. in 1901, gathering magazine era instruction into one manual. Its lineage runs from English university athletics, Oxford and Cambridge boat races and track clubs, through the first American intercollegiate contests of the 1870s, the formation of the Intercollegiate Association in 1876, and the professional base-ball world of the National League, whose practice Camp mines for the amateur game.",
+      "theory_of_mind": "Camp believes his reader is three people at once: the schoolboy who does not know the detail and is afraid to ask, the college captain who must command men and verify their eligibility, and the father whose support the boy needs. His model of the domain is that sports are won in preparation layers invisible to spectators, in diaries, rigging, winter cage work, and stored boats, and that character is a performance variable, because the rower must endure months for twenty minutes and the captain must remove a friend who breaks training. He writes as a preacher coach, assuming the reader wants to win, accepts fair play as a binding constraint, and can be improved by exact detail plainly stated rather than by inspiration.",
+      "cross_layer_veto": "Several layers in this work veto others outright. The amateur code vetoes any tactic or selection bought by money, however winding the payment route. Eligibility vetoes talent: a man not clearly eligible is not used, however strong. Safety prerequisites veto selection in rowing, where a non swimmer is excluded before skill is considered. Load limits veto enthusiasm: the pitcher capped at two games a week, the crew rested when going fine, and the star runner withheld early all override a captain's wish to use his best asset now. Field position vetoes cleverness, barring trick plays inside the 25-yard line. And measurement vetoes the record book: without three timers and agreement, a fast time is a story, not a record."
+    }
+  ],
+  "universal_lens": "Beyond sport, this work is a template for making any skilled collective practice legible and improvable: write down each day's work and its apparent reasons so the next leader inherits knowledge instead of folklore, specify the apparatus and the measurement protocol before trusting any number, decompose a repeated action into named phases so faults can be located and coached, cap the load on the most failure prone specialist, fit the equipment to the individual before judging the individual, and place the values and eligibility rules outside and above the tactics, so that no local cleverness is allowed to purchase a win by corrupting the contest that gives the win its meaning.",
+  "gsi_mapping": "For the Galaxy Sports Institute, the book is a founding coaching science text: it shows how a practice discipline is built from layered specification, phase decomposition of technique, graduated training stages, early warning signs of overtraining, and selection that balances physical, technical, and character components. Its practice diary is an early model of institutional learning, its rowing chapter a model of habit replacement through conscious repetition, and its four sport structure a model of teaching one underlying discipline, preparation under constraint, through several different games. The Institute takes its method, study the detail, name the fault, record the work, and its caution, that character judgments in selection carry the selector's biases and must be audited.",
+  "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the transfer is architectural. Reason in Camp's order: eligibility and integrity constraints first, then rule governance, then measurement protocol, then technique phases, then tactics, then the single decision. Adopt the three timer rule as a measurement standard, independent observers with the middle value taken on disagreement. Adopt the load accounting that treats capacity as finite and spent invisibly, the capability conditioned strategy that builds plans from the actual roster rather than a champion's template, the optionality of the disguised play and the concentration of the weak point attack as two distinct answers to two distinct questions, and the field position risk budget that prices a turnover by where it happens."
+}

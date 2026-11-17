@@ -1,1 +1,645 @@
-{"book_id":"e73b74ed0cb107fe","gse_mapping":"","gsi_mapping":"","motif_lane":"MOTIF-TIERB-DRAIN-01","primitives":[],"reasoning_traces":[],"refusal_reason":"INSUFFICIENT_OCR: the local PDF is an image-only scan with no text layer. The shipped extracted text file is 428 bytes of form-feed characters only (zero words), and a fresh pdftotext -layout run over all 428 pages yields 0 non-whitespace characters; pdffonts shows no embedded fonts and the pages are single scanned images (tiff2pdf from ScanFix TIFFs). No passage of the work can be read on this machine, so no verbatim quote of 8 or more words can be sourced and no primitive, equation, or trace can be extracted without fabricating from memory of the work, which the brief forbids. What closes this: a full-book OCR pass over the PDF (the route already used in this lane for Knight, Halmos, Wiener, and Dixon and Coles), after which extraction can proceed against the OCR text with quotes proven against that OCR file.","source_note":"Assigned work: Clark L. Hull, Principles of Behavior (1943), as named in the tasking. Local file: ~/workspace/full-library-2026-11-12/library/books-must-have/Hull-1943-PrinciplesOfBehavior.pdf, 52,078,404 bytes, 428 pages. Source identity: sha256 over (str(size) encoded + full file bytes) = e73b74ed0cb107fe4824ddcd59c0b84780a293a5750f9afba0fe595ee6793e5d; book_id e73b74ed0cb107fe is the first 16 hex chars of that digest and matches the expected id in the tasking, so unlike the missing-file refusals this refusal carries the true source identity and needs no re-keying. File internals: PDF Creator 'ScanFix(TM) Enhanced', Producer 'libtiff / tiff2pdf - 20100615'; the pages are scanned page images (page 30 sampled: one 1-bit CCITT Group 4 gray image, 3068 x 4822 px at 600 ppi) and pdffonts reports zero embedded fonts. Text quality: none. The shipped extraction at ~/workspace/full-library-2026-11-12/text/books-must-have/Hull-1943-PrinciplesOfBehavior.pdf.txt is 428 bytes containing only form-feed characters, one per page, and zero words. An independent re-extraction with pdftotext -layout over all 428 pages, run 2026-11-16, produced the same 428 bytes and 0 non-whitespace characters. No OCR text for this book exists in ~/workspace/motif-foundry/work/ (full-book OCR passes are on file there for Knight, Halmos, Wiener, Dixon and Coles, and Ashby, but not for Hull). Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.","source_status":"INSUFFICIENT_OCR","universal_lens":""}
+{
+ "book_id": "e73b74ed0cb107fe",
+ "source_status": "COMPLETE",
+ "source_note": "Clark L. Hull, Principles of Behavior: An Introduction to Behavior Theory (Appleton-Century, The Century Psychology Series, Richard M. Elliott, editor), New York, 1943; Hull was Professor of Psychology at the Institute of Human Relations, Yale University. Local file: ~/workspace/full-library-2026-11-12/library/books-must-have/Hull-1943-PrinciplesOfBehavior.pdf, 52,078,404 bytes, 428 pages, an image-only scan (ScanFix TIFF source, tiff2pdf producer, no embedded fonts, no text layer); sha256 over (str(size) encoded + full file bytes) = e73b74ed0cb107fe4824ddcd59c0b84780a293a5750f9afba0fe595ee6793e5d, book_id e73b74ed0cb107fe. Extraction text: the Indra-lane full markdown of this same work (941,837 bytes), copied to ~/workspace/motif-foundry/work/hull/hull-full.txt and verified as this book before extraction: title page, author, publisher, 1943 copyright, full contents (Chapters I-XX), and closing index all present, and three passages spot-checked against fresh tesseract OCR of the PDF itself (offset: PDF page = printed page + 9): the Hovland Tarchanoff passage at printed p. 103, the cyclic-phase conditioned reaction passage at printed p. 175, and the oscillation and reaction threshold passage at printed p. 326, all matching. Text quality: prose OCR is good with occasional typographical errors, which are preserved inside verbatim quotes; mathematical glyphs are frequently garbled, so equations are rendered in LaTeX only where the symbolic form is legible in the text (the Postulate 7 product form) and are otherwise carried by their verbal statements and stated constants. This artifact SUPERSEDES the INSUFFICIENT_OCR refusal previously standing at this path for this book_id (filed 2026-11-16): the refusal was correct about the PDF's own text layer, but the Indra full text closes the gap it named. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "deductive_system_architecture",
+   "name": "A theory is a small set of postulates plus definitions from which theorems are derived by varying antecedent conditions",
+   "verbatim_quote": "By progressively varying the antecedent conditions in this way an indefinitely large number of theorems may be derived, but all from the very same group of basic principles.",
+   "page": "Chapter I, The Nature of Scientific Theory (hull-full.txt line 131)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Primary principles are few, stated explicitly, and reused across all derivations",
+    "Theorems inherit the evidential status of the postulates when their deductions agree with observation"
+   ],
+   "breakdown_regime": "Fails when postulates are chosen ad hoc per phenomenon, which converts the system into argumentation rather than theory",
+   "domain": "behavior theory: methodology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps a small explicit rule base (postulates) and derives situation-specific conclusions (theorems) by combining rules under stated antecedent conditions, instead of storing one memorized rule per situation.",
+    "source_operator": "deductive_system_architecture",
+    "telemetry": "Count of base rules versus derived conclusions in the reasoning trace; antecedent conditions logged per derivation."
+   }
+  },
+  {
+   "primitive_id": "intervening_variable_two_sided_anchor",
+   "name": "An intervening variable is legitimate only when anchored by one equation to antecedent conditions and by a second equation to observable outcomes",
+   "verbatim_quote": "In the case of hunger, for example, there must be an equation expressing the degree of drive or motivation as a function of the number of hours’ food privation, say, and there must be a second equation expressing the vigor of organismic action as a function of the degree of drive (D) or motivation",
+   "page": "Chapter V notes, Problems Associated with the Use of Drive (D) as an Intervening Variable (hull-full.txt line 745)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The antecedent-side and consequent-side equations can in principle be determined independently",
+    "The construct is the same quantity in both equations"
+   ],
+   "breakdown_regime": "Fails if either anchor is missing: the construct then floats free and can be adjusted to fit any result, which Hull treats as unsound",
+   "domain": "behavior theory: methodology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every latent score in the engine must have a stated input function (what evidence raises or lowers it) and a stated output function (what observable it predicts), so no latent variable is a free fitting parameter.",
+    "source_operator": "intervening_variable_two_sided_anchor",
+    "telemetry": "For each latent variable: its input features and its predicted observable, both logged."
+   }
+  },
+  {
+   "primitive_id": "stimulus_trace_decay",
+   "name": "Postulate 1: the afferent impulse persists after stimulus offset and decays to zero as a simple decay function (perseverative stimulus trace)",
+   "verbatim_quote": "After the termination of the action of the stimulus energy (S) on the receptor, the afferent impulse (s) continues its activity in the central nervous tissue for some seconds, gradually diminishing to zero as a simple decay function of its value at the time the stimulus energy (S) ceases to act.",
+   "page": "Chapter III, Postulate 1 (hull-full.txt line 531)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Afferent activity rises quickly to a maximum during stimulation, then sags",
+    "The trace, not only the live stimulus, can enter receptor-effector conjunctions, which is what makes trace conditioning possible"
+   ],
+   "breakdown_regime": "The decay form is asserted, not fitted, in the postulate; very long trace intervals (tens of seconds) require the separate cyclic-phase mechanism the book discusses in Chapter XI",
+   "domain": "behavior theory: stimulation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Signals leave a short decaying trace after they end, so an event can still pair with a slightly later outcome; the trace weight is a decaying function of elapsed time since offset.",
+    "source_operator": "stimulus_trace_decay",
+    "telemetry": "Timestamped signal stream with per-signal decay applied at pairing time."
+   }
+  },
+  {
+   "primitive_id": "afferent_neural_interaction",
+   "name": "Postulate 2: concurrent afferent impulses mutually transform each other, so compounds are not sums of elements (basis of stimulus patterning)",
+   "verbatim_quote": "All afferent neural impulses (s) active in the nervous system at any given instant, interact with each other in such a way as to change each into something partially different (s) in a manner which varies with every concurrent associated afferent impulse or combination of such impulses.",
+   "page": "Chapter III, Postulate 2 (hull-full.txt line 535)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Interaction magnitude is an increasing monotonic function of the magnitude of the interacting impulse",
+    "The transformed compound, not the raw elements, is what gets conditioned"
+   ],
+   "breakdown_regime": "No quantitative interaction function is given; the postulate licenses pattern effects qualitatively and cannot by itself predict their size",
+   "domain": "behavior theory: stimulation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Concurrent signals are encoded as an interacting compound, not as independent additive features; the same signal has different effective identity depending on what co-occurs with it.",
+    "source_operator": "afferent_neural_interaction",
+    "telemetry": "Joint signal configurations recorded as compounds alongside their elements."
+   }
+  },
+  {
+   "primitive_id": "innate_response_hierarchy",
+   "name": "Postulate 3: organisms are born with receptor-effector connections yielding a hierarchy of responses more likely than chance to terminate a need",
+   "verbatim_quote": "Organisms at birth possess receptor effector connections (sUg) which under combined stimulation (S) and drive (D), have the potentiality of evoking a hierarchy of responses that either individually or in combination are more likely to terminate the need than would be a random selection from the reaction potentials resulting from other stimulus and drive combinations.",
+   "page": "Chapter V, Postulate 3 (hull-full.txt line 734)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The hierarchy is a product of organic evolution and is probabilistic, not rigid",
+    "Modal responses occur most often and earliest; rarer sequences remain available when the environment demands them"
+   ],
+   "breakdown_regime": "Covers innate tendencies only; learned behavior requires the reinforcement postulates, and the postulate gives no strengths for individual hierarchy members",
+   "domain": "behavior theory: innate behavior",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Priors over candidate responses are ordered, not uniform: a built-in hierarchy ranks plausible reactions before any learning, and learning reweights an existing distribution instead of creating one from nothing.",
+    "source_operator": "innate_response_hierarchy",
+    "telemetry": "Prior ranking of candidate outputs before evidence is applied."
+   }
+  },
+  {
+   "primitive_id": "primary_reinforcement_increment",
+   "name": "Postulate 4: receptor-effector contiguity closely associated with need diminution produces an increment of habit tendency",
+   "verbatim_quote": "there will result an increment to a tendency (AsHx) for that afferent impulse on later occasions to evoke that reaction.",
+   "page": "Chapter XI terminal block, Postulate 4 (hull-full.txt line 2379)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Temporal contiguity of receptor and effector activity is necessary",
+    "The reinforcing event is diminution of a need, or a stimulus consistently associated with such diminution (which grounds secondary reinforcement)"
+   ],
+   "breakdown_regime": "The primary gradient is short: appreciable effect requires reinforcement within roughly twenty to thirty seconds unless secondary reinforcement chains intervene",
+   "domain": "behavior theory: learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Credit assignment is local in time: an outcome strengthens the tendencies that were active just before it, in proportion to their contiguity with the outcome.",
+    "source_operator": "primary_reinforcement_increment",
+    "telemetry": "Event log pairing active tendencies with subsequent outcomes and their time gaps."
+   }
+  },
+  {
+   "primitive_id": "habit_strength_growth_and_hab_unit",
+   "name": "Habit strength is a simple positive growth function of the number of reinforcements; its unit is the hab, 1 per cent of the physiological limit",
+   "verbatim_quote": "The unit chosen for the expression of habit strength is called the hab, a shortened form of the word “habit”; a hab is 1 per cent of the physiological limit of habit strength under completely optimal conditions.",
+   "page": "Chapter XX, summary of symbolic constructs (hull-full.txt line 5825)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each reinforcement adds a roughly constant fraction of the remaining distance to the asymptote, giving the growth (negatively accelerated) shape",
+    "The physiological maximum M is taken as 100 habs under optimal conditions"
+   ],
+   "breakdown_regime": "The equation glyphs of the growth formula (eq. 16 and its cases) are not reliably legible in this text, so only the verbal growth law and the worked numerical example are used; the exact base and constants must be taken from a cleaner printing",
+   "domain": "behavior theory: learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Repeated confirming evidence accumulates with diminishing returns toward a cap: the running strength is updated by a fixed fraction of the remaining headroom, never by unbounded addition.",
+    "source_operator": "habit_strength_growth_and_hab_unit",
+    "telemetry": "Count of reinforcements per tendency and the current strength on a 0 to 100 scale."
+   }
+  },
+  {
+   "primitive_id": "reinforcement_magnitude_raises_asymptote",
+   "name": "Increasing the quality or quantity of the reinforcing agent raises the asymptote (limit m) of the habit-growth curve rather than only its rate",
+   "verbatim_quote": "Pending the appearance of more complete evidence, the working hypothesis is adopted that an increase in either the quality or the quantity of a reinforcing agent increases the rate of learning by raising the limit (m) to which the curve of habit strength approaches as an asymptote, the rate of approach (F) to this limit possibly remaining constant for all qualities and amounts of the reinforcing agent employed.",
+   "page": "Chapter IX (hull-full.txt line 1658)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stated by Hull as a working hypothesis pending better evidence",
+    "Rate of approach F may be invariant across amounts and qualities of reinforcement"
+   ],
+   "breakdown_regime": "Hull notes the empirical evidence is inadequate to decide between raising the limit and raising the fraction added per trial; the primitive records his adopted branch of that fork",
+   "domain": "behavior theory: learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Stronger outcomes raise the ceiling a tendency can reach, not merely the speed of approach: evidence quality sets the asymptote, evidence count sets position on the curve.",
+    "source_operator": "reinforcement_magnitude_raises_asymptote",
+    "telemetry": "Outcome magnitude recorded per reinforcement event, mapped to the asymptote parameter."
+   }
+  },
+  {
+   "primitive_id": "delay_of_reinforcement_gradient",
+   "name": "Habit strength falls as a negative growth function of the delay between reaction and reinforcement (Wolfe values: loss of about 1/15 to 1/16 per added second)",
+   "verbatim_quote": "This curve represents a decrease of between 1/15 and 1/16 at each additional second of delay in reinforcement.",
+   "page": "Chapter X, Figure 31 caption (hull-full.txt line 1759)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The primitive gradient (Perin) is short, probably under 30 to 60 seconds, when secondary reinforcement is excluded",
+    "Longer apparent gradients under ordinary conditions are generated by overlapping secondary reinforcement"
+   ],
+   "breakdown_regime": "Numerical rate differs between the Wolfe study (about 1/15 per second) and the theoretical goal gradient of Figure 33 (1/65 per second); the functional form is stable, the constant is paradigm-dependent",
+   "domain": "behavior theory: learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Delayed feedback is discounted geometrically: each unit of delay multiplies the credit an outcome can deliver by a constant factor less than one.",
+    "source_operator": "delay_of_reinforcement_gradient",
+    "telemetry": "Delay between action and outcome recorded per learning event."
+   }
+  },
+  {
+   "primitive_id": "goal_gradient_from_overlapping_secondary_gradients",
+   "name": "The goal gradient is the summation of an exceedingly complex series of overlapping secondary reinforcement gradients anchored on the final primary reinforcement",
+   "verbatim_quote": "Thus the goal gradient would result from the summation of an exceedingly complex series of overlapping gradients of reinforcement, in part consisting of, but largely derived from, the “primary” reinforcement occurring at the end of the temporal period covering the behavior sequence involved.",
+   "page": "Chapter X (hull-full.txt line 1809)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stimuli acquire secondary reinforcing power according to the same primitive gradient",
+    "Chains of secondary reinforcement propagate credit backward step by step through a behavior sequence"
+   ],
+   "breakdown_regime": "Hull states the exact quantitative manner of the combination is not yet clear; the mechanism is a plausible derivation, not a fitted law",
+   "domain": "behavior theory: learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Long chains of actions can be credited from a distant outcome because each intermediate state acquires reinforcing power from its successor and passes a discounted share backward.",
+    "source_operator": "goal_gradient_from_overlapping_secondary_gradients",
+    "telemetry": "Sequence structure of actions with per-step outcome linkage."
+   }
+  },
+  {
+   "primitive_id": "secondary_reinforcement_transmission",
+   "name": "Reinforcing power is transmitted to any stimulus situation by consistent repeated association with primary reinforcement, and can chain from stimulus to stimulus",
+   "verbatim_quote": "the power of reinforcement may be transmitted to any stimulus situation by the consistent and repeated association of such stimulus situation with the primary reinforcement which is characteristic of need reduction.",
+   "page": "Chapter VII (hull-full.txt line 1117)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Association must be consistent and repeated",
+    "The act secondarily reinforced need not be the act conditioned to the secondary reinforcing stimulus (Skinner and Cowles evidence)"
+   ],
+   "breakdown_regime": "Chain length is limited by the stability of the associations; Pavlov's failure to condition beyond third order is attributed to artificial procedure, not to a principled limit",
+   "domain": "behavior theory: learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Value propagates to predictive cues: a signal that reliably precedes a valued outcome itself becomes reinforcing, so credit can attach to early indicators and not only to terminal events.",
+    "source_operator": "secondary_reinforcement_transmission",
+    "telemetry": "Association counts between candidate cues and confirmed outcomes."
+   }
+  },
+  {
+   "primitive_id": "stimulus_generalization_gradient",
+   "name": "Postulate 5: effective habit strength generalizes across a stimulus continuum as a negative growth function of distance in j.n.d. units, steeper for qualitative than for quantitative differences",
+   "verbatim_quote": "where d represents a qualitative difference, the slope of the gradient of the negative growth function is steeper than where it represents a quantitative difference.",
+   "page": "Chapter XII, Postulate 5 and notes (hull-full.txt line 2718)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Distance is measured on the afferent generalization continuum in just-noticeable-difference units, not raw physical units",
+    "Hovland's galvanic skin reaction data give the empirical gradient (18.3 mm at d = 0 falling to 12.89 mm at d = 75)"
+   ],
+   "breakdown_regime": "The equation glyphs of eq. 29 are garbled in this text; the empirical constants (j' of order .01 qualitative, .006 quantitative) are stated in the notes and are used instead",
+   "domain": "behavior theory: generalization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A tendency learned at one point of a feature continuum transfers to neighboring points with strength decaying as a growth function of distance measured in discrimination units.",
+    "source_operator": "stimulus_generalization_gradient",
+    "telemetry": "Feature distances between the current situation and the situations where a tendency was learned, expressed in calibrated discrimination steps."
+   }
+  },
+  {
+   "primitive_id": "habit_summation_growth_principle",
+   "name": "Major Corollary I: all effective habit tendencies active at a given time summate by the positive growth principle, as if their producing reinforcements had been pooled",
+   "verbatim_quote": "All effective habit tendencies to a given reaction, whether positive or negative, which are active at a given time summate according to the positive growth principle exactly as would the reinforcements which would be required to produce each.",
+   "page": "Chapter XII, Major Corollary I (hull-full.txt line 2730)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Summation applies to tendencies from generalization, compound stimuli, and multiple habits alike",
+    "The combination is physiological summation under one shared ceiling M, not arithmetic addition"
+   ],
+   "breakdown_regime": "Because summation follows the growth principle, combined strength saturates at the physiological limit and cannot exceed it however many tendencies combine",
+   "domain": "behavior theory: generalization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Independent pieces of evidence for the same conclusion combine through the saturating growth rule, so corroboration helps most when existing strength is low and cannot push past the cap.",
+    "source_operator": "habit_summation_growth_principle",
+    "telemetry": "Set of active tendencies per conclusion with their individual strengths."
+   }
+  },
+  {
+   "primitive_id": "drive_stimulus",
+   "name": "Postulate 6: every drive has a characteristic drive stimulus whose intensity is an increasing monotonic function of the drive",
+   "verbatim_quote": "Associated with every drive (D) is a characteristic drive stimulus (Sp) whose intensity is an increasing monotonic function of the drive in question.",
+   "page": "Chapter XIV, Postulate 6 (hull-full.txt line 3535)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Drive stimuli are interoceptive and differ by drive, which permits differential responding to different needs in the same external situation",
+    "An endocrine or chemical motivational mechanism is Hull's suggested substrate"
+   ],
+   "breakdown_regime": "The functional form b(D) is left unspecified beyond monotonic increase; the postulate does not fix units, which the book handles separately with the mote",
+   "domain": "behavior theory: motivation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An internal state variable carries its own observable signature whose intensity tracks the state monotonically, so the state can be read from its signature rather than assumed.",
+    "source_operator": "drive_stimulus",
+    "telemetry": "State-signature measurements paired with independent state indicators."
+   }
+  },
+  {
+   "primitive_id": "reaction_potential_product",
+   "name": "Postulate 7: reaction potential is the product of an increasing function of habit strength and an increasing function of drive",
+   "verbatim_quote": "Any effective habit strength (sHg) is sensitized into reaction potentiality (sEx) by all primary drives active within an organism at a given time, the magnitude of this potentiality being a product obtained by multiplying an increasing function of sHg by an increasing function of D.",
+   "page": "Chapter XIV, Postulate 7 (hull-full.txt line 3539)",
+   "latex": "${}_sE_r = {}_sH_r \\times f(D)$",
+   "symbol_and_unit_ledger": {
+    "sEr": "reaction potential, in wats (0 to 100 scale)",
+    "sHr": "habit strength, in habs (0 to 100 scale)",
+    "D": "primary drive strength, in motes",
+    "f(D)": "increasing function of drive given in the notes to Postulate 7 (eq. 83 in the book's numbering as printed in the notes)"
+   },
+   "assumptions": [
+    "If habit strength is zero, reaction tendency is zero whatever the drive",
+    "All primary drives active at the time sensitize the habit, not only the drive present during learning"
+   ],
+   "breakdown_regime": "The product form makes drive and habit non-compensatory at zero; Hull flags that drive may prove heterogeneous across needs, in which case no single f(D) serves all drives",
+   "domain": "behavior theory: motivation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A learned tendency fires only in proportion to both its strength and the current activating state: score equals strength times a state gain, so either factor at zero silences the output.",
+    "source_operator": "reaction_potential_product",
+    "telemetry": "Tendency strengths and the current state gain, multiplied at read-out time."
+   }
+  },
+  {
+   "primitive_id": "drive_pooling_with_saturation",
+   "name": "Major Corollary II: concurrent drives pool, the dominant drive counting in full and non-dominant drives entering through a quotient bounded by the physiological drive maximum",
+   "verbatim_quote": "the quotient obtained from dividing the sum of the dominant value of the primary drive (D) plus the aggregate strength of all the non-dominant primary drives (D) active at the time, by the sum of the same nondominant drives plus the physiological drive maximum (MD).",
+   "page": "Chapter XIV, Major Corollary II (hull-full.txt line 3547)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Non-dominant drives genuinely add motivational force, which explains residual habitual action when the original drive is near zero",
+    "MD, the physiological drive maximum, is 100 motes on the book's centigrade scale"
+   ],
+   "breakdown_regime": "The quotient form is a first approximation; Hull notes the endocrine generalization behind it also underwrites weaker cross-drive facilitation, so pooling weights are not universal constants",
+   "domain": "behavior theory: motivation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Multiple concurrent activating states combine with saturation: the strongest counts fully, the rest add a bounded increment that cannot exceed the state ceiling.",
+    "source_operator": "drive_pooling_with_saturation",
+    "telemetry": "All active state variables at read-out, ranked dominant versus non-dominant."
+   }
+  },
+  {
+   "primitive_id": "reactive_inhibition",
+   "name": "Postulate 8: every response evocation generates reactive inhibition, linear in the number of evocations, a positively accelerated function of work, dissipating as a negative growth function of time",
+   "verbatim_quote": "the amount of net inhibition (Ix) generated by a sequence of reaction evocations is a simple linear increasing function of the number of evocations (n); and (c) it is a positively accelerated increasing function of the work (W) involved in the execution of the response",
+   "page": "Chapter XVI, Postulate 8 (hull-full.txt line 4270)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Reactive inhibition is a primary negative drive (need for rest) in the Mowrer-Miller hypothesis Hull adopts",
+    "Increments accumulate across evocations except as they spontaneously disintegrate with time"
+   ],
+   "breakdown_regime": "Inhibition opposes reaction potential, not habit; under parallel reinforcement the growing habit usually overrides it, so it is detected only by special arrangements such as massed practice",
+   "domain": "behavior theory: inhibition",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Use itself fatigues: each evocation of a tendency subtracts a work-proportional inhibition that decays with rest, so recently and heavily used channels are temporarily weaker.",
+    "source_operator": "reactive_inhibition",
+    "telemetry": "Evocation counts, per-evocation cost, and elapsed rest time per tendency."
+   }
+  },
+  {
+   "primitive_id": "conditioned_inhibition",
+   "name": "Postulate 9: stimuli associated with the cessation of a response become conditioned inhibitors, and conditioned inhibition summates physiologically with reactive inhibition",
+   "verbatim_quote": "Stimuli (S) closely associated with the cessation of a response (R) (a) become conditioned to the inhibition (Ix) associated with the evocation of that response, thereby generating conditioned inhibition",
+   "page": "Chapter XVI, Postulate 9 (hull-full.txt line 4276)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Conditioned inhibition is a true habit-like quantity and, unlike reactive inhibition, does not dissipate appreciably with time",
+    "Pavlov's conditioned inhibition experiment (whistle suppressing a tactile-evoked secretion from 8 drops to under 1) is the anchoring demonstration"
+   ],
+   "breakdown_regime": "Hull warns the theory of the origin of conditioned inhibition must be regarded with more than the usual distrust because not all evidence harmonizes with the a priori expectation",
+   "domain": "behavior theory: inhibition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Contexts paired with stopping acquire durable inhibitory charge of their own, distinct from transient fatigue, and the two inhibitory kinds add against the same potential.",
+    "source_operator": "conditioned_inhibition",
+    "telemetry": "Contexts present at cessation events, tracked as persistent inhibitory associations."
+   }
+  },
+  {
+   "primitive_id": "effective_reaction_potential",
+   "name": "Effective reaction potential is reaction potential minus inhibitory potential; it, not raw reaction potential, is what is available to evoke action",
+   "verbatim_quote": "effective reaction potential (Ex), the potential actually available for the evocation of action, is the reaction potential less the inhibitory potential.",
+   "page": "Chapter XVI, summary (hull-full.txt line 4252)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Reactive and conditioned inhibition summate against reaction potential",
+    "Inhibitory potential is measured in pavs, one pav being the amount that neutralizes one wat"
+   ],
+   "breakdown_regime": "Subtraction is a first approximation; at complete extinction the potential is neutralized jointly by both inhibitory components, so neither alone accounts for the full depression",
+   "domain": "behavior theory: inhibition",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The actionable score is excitatory strength minus accumulated inhibition: a single net quantity, computed by subtraction, is what downstream thresholds and comparisons see.",
+    "source_operator": "effective_reaction_potential",
+    "telemetry": "Excitatory and inhibitory totals per tendency at decision time."
+   }
+  },
+  {
+   "primitive_id": "extinction_as_derived_phenomenon",
+   "name": "Experimental extinction is a derived phenomenon: unreinforced evocations let extinctive inhibition neutralize reaction potential until the stimulus no longer evokes the response",
+   "verbatim_quote": "In case little or no reinforcement follows the reaction evocations, extinctive inhibition soon neutralizes the reaction potential, the stimulus gradually ceases to evoke the response, and there ensues the state known as experimental extinction which thus appears as a secondary or derived phenomenon.",
+   "page": "Chapter XVI, summary (hull-full.txt line 4252)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Extinction does not erase habit strength; it masks it with inhibition",
+    "Because reactive inhibition dissipates with time, spontaneous recovery after extinction is partial, the conditioned-inhibition share remaining"
+   ],
+   "breakdown_regime": "Repeated massed extinctions take progressively less time as permanent conditioned inhibition accumulates, approaching zero as a limit, so extinction rate is history-dependent",
+   "domain": "behavior theory: extinction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Loss of output under non-reinforcement is modeled as masking by inhibition rather than deletion of the learned strength, which predicts partial recovery after rest without new learning.",
+    "source_operator": "extinction_as_derived_phenomenon",
+    "telemetry": "Reinforcement status per evocation and time since last evocation."
+   }
+  },
+  {
+   "primitive_id": "distributed_practice_economy",
+   "name": "Corollary XXII: within limits, wider spacing of reinforcements yields greater effective excitatory potential at the end of learning, because inhibition dissipates during the pauses",
+   "verbatim_quote": "Within limits, the greater the time interval separating the reinforcements of learning, the greater will be the effective excitatory potential (sBx) at the conclusion of the last reinforcement.",
+   "page": "Chapter XVI, Corollary XXII (hull-full.txt line 4246)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The Calvin lid-closure study (3 versus 9 versus 18 reinforcements per minute) is the anchoring demonstration",
+    "The same dissipation principle yields reminiscence: recovery of effective potential after massed practice followed by a pause"
+   ],
+   "breakdown_regime": "Bounded by 'within limits': spacing interacts with the delay-of-reinforcement gradient, so indefinitely wide spacing eventually loses more to delay than it gains from dissipation",
+   "domain": "behavior theory: learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Scheduling matters independently of totals: the same number of updates spaced in time leaves a higher net strength than the same updates massed, because the fatigue term decays between updates.",
+    "source_operator": "distributed_practice_economy",
+    "telemetry": "Timestamps of update events, not only their count."
+   }
+  },
+  {
+   "primitive_id": "law_of_less_work",
+   "name": "Of alternative behavior sequences repeatedly executed for the same reinforcement, the one involving less work or tissue injury is finally chosen",
+   "verbatim_quote": "of two or more alternative behavior sequences repeatedly executed by the organism in the attainment of an ordinary reinforcement, that sequence will finally come to be chosen which involves the less work or the less tissue injury.",
+   "page": "Chapter XVI, summary (hull-full.txt line 4258)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Follows from Postulate 8: work generates reactive inhibition, so costlier sequences accumulate more self-opposition",
+    "Hull credits the observation to James and ties it to the prevalence of 'laziness' in organisms"
+   ],
+   "breakdown_regime": "Operates only across repeated executions with a common reinforcement; it selects among sequences, it does not set the strength of any one sequence directly",
+   "domain": "behavior theory: inhibition",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Among routes to the same payoff, prefer the cheaper route, and let repeated use shift preference toward lower-cost routes automatically through the fatigue term.",
+    "source_operator": "law_of_less_work",
+    "telemetry": "Per-route cost measurements for equivalent outcomes."
+   }
+  },
+  {
+   "primitive_id": "behavioral_oscillation",
+   "name": "Postulate 10: every reaction potential carries an inhibitory oscillation component varying from instant to instant according to the normal law of chance, uncorrelated across habits",
+   "verbatim_quote": "Associated with every reaction potential (sEx) there exists an inhibitory potentiality (sOR) which oscillates in amount from instant to instant according to the normal “law” of chance.",
+   "page": "Chapter XVII, Postulate 10 (hull-full.txt line 4553)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Oscillation amounts for different habits at the same instant are uncorrelated",
+    "The momentary diminution of effective potential is limited only by the amount of potential available at the time"
+   ],
+   "breakdown_regime": "Hull notes the principle is shifting from postulate toward theorem status in his own system, and its quantitative separation from the true reaction threshold is indirect and difficult",
+   "domain": "behavior theory: oscillation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Read-out is stochastic: the effective value at any instant is the mean strength minus a normally distributed oscillation draw, so identical states do not always produce identical outputs.",
+    "source_operator": "behavioral_oscillation",
+    "telemetry": "Repeated read-outs of the same state to estimate the oscillation spread."
+   }
+  },
+  {
+   "primitive_id": "reaction_threshold_gate",
+   "name": "Postulate 11: a stimulus evokes a reaction only when the momentary effective reaction potential exceeds the reaction threshold",
+   "verbatim_quote": "So long as the maximum reaction potential lies below the reaction threshold, no activity can be evoked.",
+   "page": "Chapter XVIII, summary of Postulate 11 (hull-full.txt line 4912)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The threshold is a property of the reaction system, distinct from the oscillation component though hard to separate empirically",
+    "In the worked example of Chapter XVIII the threshold is taken as 10 wats"
+   ],
+   "breakdown_regime": "Crossing the threshold is necessary, not sufficient: competing superthreshold potentials and oscillation can still prevent evocation of a given reaction",
+   "domain": "behavior theory: reaction potential",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A hard gate sits between latent strength and action: below threshold the output is exactly zero, not merely small, which creates the observed all-or-none onset in learning curves.",
+    "source_operator": "reaction_threshold_gate",
+    "telemetry": "Net effective scores compared against a stated threshold per output."
+   }
+  },
+  {
+   "primitive_id": "evocation_probability_ogive",
+   "name": "Postulate 12: as effective potential crosses the threshold zone under normal oscillation, evocation probability follows a skewed ogival (normal probability) curve from 0 to 100 per cent",
+   "verbatim_quote": "its passage across the reaction threshold yields during the learning process a probability-of-reaction-evocation learning curve which possesses when complete a distinctly skewed ogival form.",
+   "page": "Chapter XVIII, summary (hull-full.txt line 4921)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Oscillation is normally distributed about its central tendency",
+    "Initial zero-probability and terminal perfect-probability plateaus appear when the oscillation zone lies wholly below or above threshold"
+   ],
+   "breakdown_regime": "The ogive is derived for simple learning situations; all-or-none reactions with large fractional increments may show scarcely any ogival suggestion, as Hull notes of the Thurstone-type curves",
+   "domain": "behavior theory: reaction potential",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Convert a latent net score into an action probability by passing its distance above threshold through a normal ogive whose spread is the oscillation standard deviation.",
+    "source_operator": "evocation_probability_ogive",
+    "telemetry": "Calibrated threshold and oscillation spread per output channel."
+   }
+  },
+  {
+   "primitive_id": "latency_decreasing_in_potential",
+   "name": "Postulate 13: reaction latency is a negatively accelerated decreasing monotonic function of momentary effective reaction potential above threshold",
+   "verbatim_quote": "reaction latency (st) is a negatively accelerated decreasing function of effective reaction potential (sBx)",
+   "page": "Chapter XVIII, summary (hull-full.txt line 4925)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Derived by replacing the growth function of N in empirical latency curves with its equivalent in effective reaction potential",
+    "Holds provided the potential exceeds the reaction threshold; below threshold latency is undefined because no reaction occurs"
+   ],
+   "breakdown_regime": "Stated as a first approximation from representative data sets; the decomposition of empirical curves into growth and latency components assumes the two components combine independently",
+   "domain": "behavior theory: reaction potential",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Response speed is a monotone readout of net strength: stronger net scores respond faster with diminishing returns, so latency can be used as an observable proxy for the latent score.",
+    "source_operator": "latency_decreasing_in_potential",
+    "telemetry": "Latency measurements paired with the conditions that set the latent score."
+   }
+  },
+  {
+   "primitive_id": "extinction_resistance_linear_in_potential",
+   "name": "Postulate 14: the mean number of unreinforced evocations needed to extinguish a reaction is a simple linear increasing function of effective reaction potential",
+   "verbatim_quote": "resistance to experimental extinction (n) is an increasing linear function of effective reaction potential (Ex)",
+   "page": "Chapter XVIII, summary (hull-full.txt line 4925)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The effective potential at the outset must exceed the reaction threshold",
+    "Linearity is a first approximation obtained by the same component-substitution analysis as the latency law"
+   ],
+   "breakdown_regime": "Because conditioned inhibition accumulates across repeated extinctions, the count to extinction shrinks on later occasions even at equal starting potential",
+   "domain": "behavior theory: reaction potential",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Persistence under non-reinforcement scales linearly with net strength, giving a second observable readout of the same latent quantity that probability and latency read.",
+    "source_operator": "extinction_resistance_linear_in_potential",
+    "telemetry": "Counts of unreinforced evocations to cessation per tendency."
+   }
+  },
+  {
+   "primitive_id": "amplitude_linear_in_potential",
+   "name": "Postulate 15: the amplitude of autonomically mediated responses is a simple linear increasing function of momentary effective reaction potential",
+   "verbatim_quote": "amplitude of reaction (mediated by the autonomic nervous system) is an increasing linear function of effective reaction potential",
+   "page": "Chapter XVIII, summary (hull-full.txt line 4925)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Applies to autonomic responses such as the galvanic skin reaction and salivation, not to striated-muscle amplitude",
+    "Together with the probability, latency, and extinction laws it completes the fourfold consequent anchoring of the construct"
+   ],
+   "breakdown_regime": "Restricted to autonomically mediated reactions; skeletal response vigor is governed by the probability and latency readouts instead",
+   "domain": "behavior theory: reaction potential",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Response magnitude in graded channels is a linear readout of net latent strength, so amplitude measurements can be inverted to estimate the latent score.",
+    "source_operator": "amplitude_linear_in_potential",
+    "telemetry": "Amplitude measurements in graded response channels."
+   }
+  },
+  {
+   "primitive_id": "incompatible_potentials_winner_take_all",
+   "name": "Postulate 16: when reaction potentials to incompatible reactions coexist, only the reaction with the greatest momentary effective potential is evoked",
+   "verbatim_quote": "we may say as a first approximation that in such situations the reaction potential which is strongest will dominate the others by evoking its reaction.",
+   "page": "Chapter XVIII (hull-full.txt line 4918)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stated as a first approximation, ignoring possible mutual associative inhibition between competing potentials",
+    "The comparison uses momentary (oscillation-adjusted) values, so the winner can vary from instant to instant at near-ties"
+   ],
+   "breakdown_regime": "Hull notes evidence that interference may be mutual and may generate extinction-like inhibition; the dynamics are acknowledged as insufficiently investigated for a detailed quantitative statement",
+   "domain": "behavior theory: reaction potential",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Mutually exclusive outputs compete by argmax over momentary net scores: exactly one fires, and near-ties are decided by the stochastic component rather than by the mean alone.",
+    "source_operator": "incompatible_potentials_winner_take_all",
+    "telemetry": "Net momentary scores of all incompatible candidate outputs at decision time."
+   }
+  },
+  {
+   "primitive_id": "patterning_as_derived_theorem",
+   "name": "Conditioning to stimulus patterns is not a primary principle: it is derived as a secondary phenomenon from afferent interaction, extinction, and the generalization of excitation and of inhibition",
+   "verbatim_quote": "It can, however, be derived as a secondary phenomenon from four of his other principles (p. 349 ff.) which appear to be true primary molar laws",
+   "page": "Chapter III notes, Pavlov's Statement of the Principle of Afferent Neural Interaction (hull-full.txt line 549)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Pavlov recognized afferent interaction but left patterning itself as a primary principle; Hull's system claims the derivation",
+    "The four generating principles are afferent neural interaction, experimental extinction, generalization of excitation, and generalization of inhibition"
+   ],
+   "breakdown_regime": "The derivation is presented as a program carried out at p. 349 ff.; its completeness depends on the four principles holding in the stated forms",
+   "domain": "behavior theory: compound stimuli",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Configural effects should be derived from element-level rules plus interaction and generalization, not added as a separate configural rule: prefer the smaller postulate set that generates the pattern phenomenon.",
+    "source_operator": "patterning_as_derived_theorem",
+    "telemetry": "Pattern-level outcomes checked against predictions composed from element-level rules."
+   }
+  },
+  {
+   "primitive_id": "centigrade_construct_scales",
+   "name": "The system's constructs are measured on centigrade scales to a physiological limit: reaction potential in wats, habit in habs, inhibition in pavs, drive in motes",
+   "verbatim_quote": "reaction-evocation potential is also designed to be measured on a 100-point scale extending from a zero reaction tendency up to the physiological limit possible to a standard organism. The unit of reaction potentiality will be called the wat, a contraction of the name Watson.",
+   "page": "Chapter XIV (hull-full.txt line 3334)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "One pav of inhibition neutralizes exactly one wat of reaction potential, making subtraction across constructs meaningful",
+    "Scales are anchored to a standard organism at the physiological limit"
+   ],
+   "breakdown_regime": "The units are conventional anchors for a deductive system, not yet direct physical measurements; Hull is explicit that determining the quantitative value of an unobservable is difficult and indirect",
+   "domain": "behavior theory: measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Put every latent quantity on a shared bounded scale with named units and a stated exchange rate between quantities, so that products and differences across constructs are dimensionally disciplined.",
+    "source_operator": "centigrade_construct_scales",
+    "telemetry": "Unit definitions and conversion rules for every score the system emits."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "e73b74ed0cb107fe-t1",
+   "think": "This book is Clark Hull's attempt to do for behavior what Newton's Principia did for mechanics: state a small set of primary principles once, in quantitative form, and then derive the phenomena of learning and motivation as theorems by varying the antecedent conditions. The system contains sixteen postulates, and its pivotal construct is effective reaction potential, a latent quantity that Hull insists on anchoring twice over. On the antecedent side it is built up from measurable conditions of training and state; on the consequent side it is tied to four observable aspects of reaction, namely the probability of evocation, latency, resistance to experimental extinction, and, for autonomic responses, amplitude. That two-sided anchoring discipline is the book's methodological core: an intervening variable earns its place only when one equation says what produces it and a second equation says what it produces. The causal machinery runs in a definite order. A stimulus generates an afferent impulse that rises, sags, and after the stimulus ends persists for some seconds as a decaying trace, which is what allows a stimulus and a slightly later reaction to become associated at all. Concurrent afferent impulses interact and transform one another, so the effective stimulus is a compound or pattern rather than a list of elements. When receptor and effector activity occur together in close contiguity with the diminution of a need, habit strength grows by an increment; across reinforcements it follows a simple positive growth function of the number of reinforcements toward an asymptote. The asymptote is not fixed: it rises with the magnitude of the reinforcing agent, and it falls as a negative growth function of the delay between reaction and reinforcement and of the asynchronism between stimulus and response. Because the primary delay gradient is short, long behavior sequences are explained by secondary reinforcement, in which stimuli associated with need reduction themselves become reinforcing and pass credit backward in overlapping gradients whose summation produces the goal gradient. Habit strength also generalizes: a tendency conditioned at one point of a stimulus continuum is effective at neighboring points with strength decaying as a function of distance measured in discrimination thresholds, and all tendencies active at a moment summate by the same growth principle under one physiological ceiling. Habit alone does not act. Every drive carries a characteristic drive stimulus, and habit strength is sensitized into reaction potential by a product of an increasing function of habit and an increasing function of drive, with concurrent drives pooling under a saturation rule. Against this excitation stand two inhibitions. Reactive inhibition is generated by the very act of responding, grows linearly with the number of evocations and faster than linearly with the work involved, and dissipates with rest; this single mechanism yields experimental extinction as a derived phenomenon, the economy of distributed practice, reminiscence, and the law of less work. Conditioned inhibition is a durable habit-like charge acquired by stimuli present when responding stops, and it summates with the reactive kind. Effective reaction potential is the difference between excitation and total inhibition, and it is this net quantity that behavior reads. Read-out is stochastic and gated. Each potential carries an oscillation component distributed by the normal law of chance, so the momentary value, not the mean, decides outcomes. Nothing is evoked while the momentary effective potential lies below the reaction threshold; as it crosses the threshold zone, evocation probability traces a skewed ogive from zero to one hundred per cent, latency falls with negative acceleration, extinction resistance grows linearly, and autonomic amplitude grows linearly. When incompatible potentials coexist, only the momentarily greatest is evoked. For a reasoning engine the transferable content is the architecture rather than the physiology. Hull gives a complete, self-consistent calculus for latent strengths: saturating accumulation from repeated evidence, ceilings set by evidence quality, geometric discounting by delay, spatial discounting by similarity distance, multiplicative gating by a state variable, subtractive fatigue that recovers with rest, durable context inhibition, a hard threshold, a probabilistic read-out whose spread is estimated rather than assumed, and winner-take-all competition among incompatible outputs. Each piece is separately falsifiable, and Hull repeatedly marks which pieces are fitted, which are working hypotheses, and which are first approximations. The system breaks where its constants must be refitted for each paradigm, where drive threatens to be heterogeneous across needs so that no single drive function serves, where the oscillation and threshold components resist separate measurement, and where mutual interference among competing potentials is acknowledged but left unquantified. In this text the equation glyphs are also frequently illegible, so the verbal laws and stated constants carry the extraction while symbolic forms are recorded only where they survive cleanly. None of that undermines the design lesson: a reasoning system that keeps its latent quantities two-sided anchored, its combination rules explicit, and its read-out honest about noise will degrade gracefully, whereas one that stores conclusions without their generating conditions cannot recompute them when the conditions change. A further discipline deserves emphasis because it is easy to overlook: Hull gives every construct a named unit on a shared centigrade scale, the hab for habit, the wat for reaction potential, the pav for inhibition, the mote for drive, and he fixes the exchange rate between them, one pav neutralizing exactly one wat. That bookkeeping is what makes the subtraction in effective reaction potential and the product in reaction potential more than metaphors, and it is what allows the same latent quantity to be estimated independently from probability, latency, extinction, and amplitude and the four estimates checked against one another. A reasoning engine that emits scores without units, ceilings, or exchange rates cannot perform that cross-check, and its latent quantities will drift into whatever values flatter the latest outcome.",
+   "retrocausal_genealogy": "Hull's system descends from Pavlov's conditioned reflex work, which supplies afferent interaction, extinction, and generalization; from Thorndike's law of effect, which becomes the reinforcement postulate once need reduction is made the reinforcing event; and from Watson's behaviorism, which supplies the objectivist stance and is honored in the unit name wat, as Pavlov is honored in the pav. Newton's Principia is the explicit formal model, with definitions, laws, and derived theorems. Hull's own 1940 Mathematico-Deductive Theory of Rote Learning, written with collaborators, is the direct predecessor: the oscillation principle appears there as a postulate about the reaction threshold before being recast here as oscillation of reaction potential. The Yale Institute of Human Relations seminar culture, and Kenneth Spence's criticism in particular, shaped the insistence on quantitative intervening variables anchored at both ends.",
+   "theory_of_mind": "Hull writes for a reader he believes has been ill served by verbal, mentalistic psychology. His model of the problem is that behavior is the output of a survival machine whose states are fully determined by antecedent physical conditions plus a small set of constructs, and that anything not so anchored is subjectivism, against which he prescribes an explicit prophylaxis. He assumes the reader will accept deduction as the test of a theory: postulates must stand on their own feet and live or die by the theorems they yield, with no rescue from adaptive plausibility. He also believes the same primary laws generate normal and psychopathic, individual and social behavior, differing only in the conditions under which habits are set up, so he writes the theory at molar level for all of the behavioral sciences at once.",
+   "cross_layer_veto": "Several constructs in this system veto others outright. The reaction threshold vetoes everything beneath it: a potential can be large, well learned, and strongly motivated and still produce exactly nothing while it sits below threshold. Inhibition vetoes excitation arithmetically, since effective potential is a difference, so fatigue and conditioned inhibition can silence a strong habit without touching the habit itself. The oscillation vetoes the mean: decisions are made by the momentary value, so average-case reasoning about the system is systematically wrong at near-ties. Competition vetoes all but one incompatible output. And the product form of reaction potential vetoes compensation: zero habit or the wrong functional drive relation cannot be made good by piling up the other factor."
+  }
+ ],
+ "universal_lens": "Hull's book is a general template for modeling any system whose outputs are driven by unobserved accumulating strengths. Build latent quantities by saturating accumulation from repeated events, set their ceilings by event quality, discount them by delay and by dissimilarity, gate them multiplicatively by a state variable, subtract a fatigue term that recovers with rest and a durable inhibition term that does not, then read the net quantity out through a threshold and a noise distribution into several observable measures at once. Any domain that can name its reinforcements, its drives, and its readouts can instantiate the same calculus.",
+ "gsi_mapping": "The Institute takes the method before the doctrine: a small explicit postulate set, theorems derived by varying stated conditions, every latent construct anchored by an input equation and an output equation, named units with stated exchange rates between quantities, and an honest ledger of which relations are fitted, which are working hypotheses, and which are first approximations. It also takes the specific cautions: pattern-level effects should be derived from element-level rules rather than postulated, extinction-like losses should be modeled as masking rather than erasure, and stochastic read-out should be represented in the model rather than averaged away.",
+ "gse_mapping": "The engine takes a calculus for its latent signal strengths. Evidence for a tendency accumulates with diminishing returns toward a ceiling set by evidence quality; delayed confirmation is discounted geometrically; related situations borrow strength through a similarity gradient measured in discrimination units; a tendency's actionable score is its strength multiplied by a current-state gain, minus fatigue from recent use and minus durable inhibition from contexts associated with stopping; the score fires only above a threshold, its confidence is an ogive of its distance above threshold, and incompatible leans compete by momentary maximum rather than by committee."
+}
