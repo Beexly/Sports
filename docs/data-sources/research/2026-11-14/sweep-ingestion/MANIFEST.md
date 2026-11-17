@@ -337,3 +337,13 @@ record). Verdicts as printed: 40 CONTEXT-ONLY, 8 LEARN-ONLY, 1 TEST
 noted in the dossier). Run counts: 63 feed positions = 14 ads excluded +
 49 organic, all NEW, 0 duplicates against the seen index. IG feed now
 2,904 records. Running feed total: 11,201 records.
+
+## Delta 2026-11-17 X AM (landed 2026-11-17)
+
+Source: ~/workspace/x-for-you-sweep/reports/2026-11-17-AM.md. 148 records
+(51 dossier posts across 20 dossiers + 28 inventoried with status IDs +
+69 NO-ID slug-keyed), 0 duplicates, 6 NO-ID rows skipped on slug
+collisions, 162,462 bytes appended. Reconciliation: 79 unique NEW with
+IDs = 51 dossier + 28 inventoried; 76 NO-ID feed lines = 69 slug records
++ 6 collision skips + 1 trading-skip excluded; 15 ad rows excluded.
+X feed now 6,221 records. Running feed total: 11,349 records.
