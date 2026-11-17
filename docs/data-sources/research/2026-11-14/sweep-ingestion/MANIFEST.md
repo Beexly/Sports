@@ -282,3 +282,22 @@ AM analytics run returned Lane A only; lanes B and C were still
 pending at filing, so no section was staged for that date yet). The
 Nov 15 analytics section plus its 44 CSVs did land on Sports main
 (commit 7305b78, per the analytics worker's Nov 16 report).
+
+## 2026-11-16 PM delta (IG For You lane)
+
+IG For You PM delta: `delta-2026-11-16-ig-pm.jsonl`, 46 records
+(20 dossier + 26 inventoried, every post with a shortcode, 0 slug-keyed,
+0 duplicates, 0 collisions) from
+~/workspace/ig-for-you-sweep/reports/2026-11-16-PM.md. The run saw 60
+feed positions (13 ads + 1 sponsored partnership excluded, 46 organic
+NEW). Strongest find: Capri Desktop (mochiiwuff/capri-desktop), a
+desktop companion that narrates Claude Code, Codex, and Antigravity
+sessions via hooks, verdict TEST; license is Other/NOASSERTION on the
+repo with secondary sources citing PolyForm Noncommercial 1.0.0.
+Motif-verified: every line parses, 16-key schema exact, 0 collisions
+against the feed, no em/en dashes, 41,175 bytes. Appended to
+ig-for-you-feed.jsonl (now 2,855 records, 2,032,120 bytes).
+
+Running feed total: 10,994 records. Still pending: 2026-11-15 X
+analytics PM delta and the 2026-11-16 analytics AM section (Lane A
+only at last check).
