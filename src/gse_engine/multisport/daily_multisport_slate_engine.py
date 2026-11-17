@@ -24,6 +24,9 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
+from gse_engine.biometrics.wave34_holistic_combine_cognition_bioenergetics_crosssport_engine import (  # noqa: E501
+    evaluate_cross_sport_metric_transfers,
+)
 from gse_engine.governance.simulation_hold_gate import assert_operator_simulation_week_approved
 from gse_engine.memory.wave20b_openscholar_tddlog_woodelf_tree_suite import (
     compute_nhl_spatiotemporal_shot_xg,
@@ -1531,6 +1534,7 @@ def evaluate_multisport_sabermetrics_and_pitch_control_overlay(
         float(shot_xg["xg_prob"]),
         float(fpl["net_horizon_expected_points"]),
     ]
+    w34_xfer = evaluate_cross_sport_metric_transfers()
     return {
         "schema": "wave26_sabermetric_pitch_control_overlay_v1",
         "mlb_woba": float(saber["mlb_woba"]),
@@ -1541,6 +1545,7 @@ def evaluate_multisport_sabermetrics_and_pitch_control_overlay(
         "soccer_pitch_control_attack": float(pitch["attacker_pitch_control"]),
         "fpl_captain_id": str(fpl["captain_id"]),
         "fpl_expected_points": float(fpl["net_horizon_expected_points"]),
+        "wave34_cross_sport_transfers": w34_xfer,
         "all_finite": all(math.isfinite(v) for v in vals),
     }
 

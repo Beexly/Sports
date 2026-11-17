@@ -28,6 +28,14 @@ from typing import Any
 
 import numpy as np
 
+from gse_engine.biometrics.wave34_holistic_combine_cognition_bioenergetics_crosssport_engine import (  # noqa: E501
+    WAVE34_RLVR_TRAJECTORIES,
+    build_all32_combine_trench_and_roster_biometrics,
+    evaluate_cross_sport_metric_transfers,
+    evaluate_wave34_holistic_matchup_biometrics_and_science,
+    explain_books_and_equations_to_projection_chain,
+    fit_empirical_position_age_curves,
+)
 from gse_engine.memory.monorepo_omnibus_vault_indexer import (
     OmnibusVaultContinuityError,
     audit_all_25_monorepo_knowledge_vaults,
@@ -3009,6 +3017,73 @@ def compile_gse_to_gsi_rlvr_training_batch(
             curriculum_tier="TIER_3_BEHEMOTH",
         )
     )
+
+    w34_trench = build_all32_combine_trench_and_roster_biometrics(root)
+    w34_age = fit_empirical_position_age_curves(root)
+    w34_sample = evaluate_wave34_holistic_matchup_biometrics_and_science(
+        away_team="KC",
+        home_team="DEN",
+        as_of_week=10,
+        away_rest_days=4.0,
+        home_rest_days=7.0,
+        repo_root=root,
+    )
+    w34_xfer = evaluate_cross_sport_metric_transfers()
+    w34_chain = explain_books_and_equations_to_projection_chain(root)
+    w34_gt_map: dict[str, dict[str, Any]] = {
+        "w34_combine_ol_dl_bench_cone_00": {
+            "am_gm_ineq_ok": bool(
+                w34_sample["trench_matchup"]["away_am_gm_ineq_ok"]
+                and w34_sample["trench_matchup"]["home_am_gm_ineq_ok"]
+            ),
+            "rosters_zero_or_32": bool(int(w34_trench["rosters_loaded"]) in {0, 32}),
+        },
+        "w34_position_age_curves_00": {
+            "rb_burst_declines": bool(w34_age["rb_burst_declines_with_age"]),
+            "dl_older_than_rb": bool(w34_age["dl_strength_peaks_older_than_rb"]),
+            "qb_cog_improves": bool(w34_age["qb_cognition_improves_with_tenure"]),
+        },
+        "w34_qb_neuro_cognition_ftn_00": {
+            "cognition_bounds_ok": bool(
+                0.80
+                <= float(w34_sample["qb_neuro_cognition"]["away"]["cognitive_processing_index"])
+                <= 1.20
+            ),
+            "zero_live_stake": bool(w34_sample["real_money_stake_cleared"] is False),
+        },
+        "w34_bioenergetics_altitude_db_00": {
+            "den_po2_below_one": bool(
+                float(w34_sample["bioenergetics_and_environment"]["venue_po2_ratio"]) < 0.90
+            ),
+            "short_wk_glycogen_lt_one": bool(
+                float(w34_sample["bioenergetics_and_environment"]["away_glycogen_fraction"]) < 1.0
+            ),
+        },
+        "w34_cross_sport_4transfers_00": {
+            "four_transfers_active": bool(int(w34_xfer["transfers_count"]) == 4),
+            "edge_finite": bool(math.isfinite(float(w34_xfer["cross_sport_composite_edge"]))),
+        },
+        "w34_book_eq_projection_chain_00": {
+            "six_domains_load_bearing": bool(w34_chain["all_six_domains_load_bearing"]),
+            "valid_asts_gt_100k": bool(
+                int(w34_chain["parsed_valid_asts_executable_ceiling"]) >= 100000
+            ),
+        },
+    }
+    for spec_w34 in WAVE34_RLVR_TRAJECTORIES:
+        rid_w34 = str(spec_w34["record_id"])
+        gt_w34 = w34_gt_map[rid_w34]
+        records.append(
+            _build_rlvr_record(
+                record_id=rid_w34,
+                domain=str(spec_w34["domain"]),
+                prompt=str(spec_w34["prompt"]),
+                think=str(spec_w34["think"]),
+                ground_truth=gt_w34,
+                verifier_src=_formula_exact_verifier_src(gt_w34),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
 
     # Substring dedup + monotone tier curriculum sort (TIER_1 -> TIER_2 -> TIER_3)
     corpus_texts = [f"{r['domain']}::{r['prompt']}::{r['think']}" for r in records]

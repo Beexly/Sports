@@ -15,6 +15,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from gse_engine.biometrics.wave34_holistic_combine_cognition_bioenergetics_crosssport_engine import (  # noqa: E501
+    evaluate_wave34_holistic_matchup_biometrics_and_science,
+)
 from gse_engine.fabric.e_process import MultiplicityAgrapaOnsGate
 from gse_engine.governance.simulation_hold_gate import assert_operator_simulation_week_approved
 from gse_engine.ingestion.multimodal_vlm_and_provenance import NFL_EPA_MIN_GAMES
@@ -813,13 +816,26 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 else 0.0
             )
             alt_edge = 0.25 if (g.home_team == "DEN" and g.away_team != "DEN") else 0.0
+            w34_g = evaluate_wave34_holistic_matchup_biometrics_and_science(
+                away_team=g.away_team,
+                home_team=g.home_team,
+                as_of_week=int(wk),
+                away_rest_days=14.0 if aw_bye > 0.0 else 7.0,
+                home_rest_days=14.0 if hm_bye > 0.0 else 7.0,
+                is_indoor=bool(g.is_indoor),
+                repo_root=repo_root,
+            )
+            w34_diff = float(w34_g["stage2_deltas"]["home_epa_delta"]) - float(
+                w34_g["stage2_deltas"]["away_epa_delta"]
+            )
 
-            # Layer-1 market foundation + Wave 32 FWL-damped orthogonal situational shift
+            # Layer-1 market foundation + Wave 32/34 FWL-damped orthogonal situational shift
             epa_edge_pts = (
                 (hm_shrunk_net - aw_shrunk_net) * 18.0
                 + 0.10 * (hm_aux_sc - aw_aux_sc) * 14.0
                 + 0.45 * (hm_bye - aw_bye)
                 + alt_edge
+                + 40.0 * w34_diff
             )
             mkt_implied_edge = g.expected_home_margin_mkt
             orth_resid = epa_edge_pts - 0.55 * mkt_implied_edge

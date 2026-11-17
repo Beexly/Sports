@@ -1,6 +1,6 @@
 {
   "schema": "wave32_unified_engine_benchmark_v2",
-  "generated_utc": "2026-11-17T18:37:01.635755+00:00",
+  "generated_utc": "2026-11-17T19:48:20.562921+00:00",
   "real_money_stake_cleared": false,
   "live_stake_fraction": 0.0,
   "max_nfl_week_simulated": 10,
@@ -38,6 +38,11 @@
     },
     "nov15_all44_csvs_indexed": 44,
     "nov15_total_csv_rows_parsed": 755,
+    "nov16_csvs_indexed": 17,
+    "nov17_csvs_indexed": 43,
+    "nov15_to_nov17_total_csvs_indexed": 104,
+    "nov15_to_nov17_total_csv_rows_parsed": 1984,
+    "nov16_17_post_wk10_gated": true,
     "teams_indexed": 32,
     "causal_pre_asof_counts": {
       "qbr_pre_asof_rows": 10867,
@@ -258,7 +263,7 @@
     "games_simulated": 10,
     "n_worlds_per_game": 10000,
     "total_snaps_simulated": 17500000,
-    "mean_sim_crps": 8.9324,
+    "mean_sim_crps": 8.9229,
     "games": [
       {
         "game_id": "2026_01_ARI_LAC",
@@ -267,14 +272,14 @@
         "n_worlds": 10000,
         "snaps_per_world": 175,
         "total_snaps_simulated": 1750000,
-        "sim_mean_home_margin": 7.181,
-        "sim_std_margin": 13.516,
+        "sim_mean_home_margin": 7.196,
+        "sim_std_margin": 13.465,
         "mkt_expected_home_margin": 8.5,
-        "sim_mean_total": 47.536,
+        "sim_mean_total": 47.551,
         "actual_margin": -12.0,
-        "sim_abs_err": 19.1809,
+        "sim_abs_err": 19.1956,
         "mkt_abs_err": 20.5,
-        "sim_gaussian_crps": 12.5054,
+        "sim_gaussian_crps": 12.532,
         "mkt_gaussian_crps": 13.6734,
         "corpus_conditioner_applied": true
       },
@@ -285,14 +290,14 @@
         "n_worlds": 10000,
         "snaps_per_world": 175,
         "total_snaps_simulated": 1750000,
-        "sim_mean_home_margin": -2.284,
-        "sim_std_margin": 13.376,
+        "sim_mean_home_margin": -2.368,
+        "sim_std_margin": 13.299,
         "mkt_expected_home_margin": -2.5,
-        "sim_mean_total": 42.904,
+        "sim_mean_total": 42.906,
         "actual_margin": -31.0,
-        "sim_abs_err": 28.7157,
+        "sim_abs_err": 28.6316,
         "mkt_abs_err": 28.5,
-        "sim_gaussian_crps": 21.3212,
+        "sim_gaussian_crps": 21.2769,
         "mkt_gaussian_crps": 21.1008,
         "corpus_conditioner_applied": true
       },
@@ -303,14 +308,14 @@
         "n_worlds": 10000,
         "snaps_per_world": 175,
         "total_snaps_simulated": 1750000,
-        "sim_mean_home_margin": 7.837,
-        "sim_std_margin": 13.414,
+        "sim_mean_home_margin": 7.869,
+        "sim_std_margin": 13.329,
         "mkt_expected_home_margin": 7.5,
-        "sim_mean_total": 50.023,
+        "sim_mean_total": 50.092,
         "actual_margin": 6.0,
-        "sim_abs_err": 1.8368,
+        "sim_abs_err": 1.8694,
         "mkt_abs_err": 1.5,
-        "sim_gaussian_crps": 3.2351,
+        "sim_gaussian_crps": 3.2194,
         "mkt_gaussian_crps": 3.1984,
         "corpus_conditioner_applied": true
       },
@@ -321,14 +326,14 @@
         "n_worlds": 10000,
         "snaps_per_world": 175,
         "total_snaps_simulated": 1750000,
-        "sim_mean_home_margin": -2.995,
-        "sim_std_margin": 13.497,
+        "sim_mean_home_margin": -2.986,
+        "sim_std_margin": 13.489,
         "mkt_expected_home_margin": -2.5,
-        "sim_mean_total": 43.94,
+        "sim_mean_total": 43.95,
         "actual_margin": 12.0,
-        "sim_abs_err": 14.9955,
+        "sim_abs_err": 14.9855,
         "mkt_abs_err": 14.5,
-        "sim_gaussian_crps": 9.1929,
+        "sim_gaussian_crps": 9.1867,
         "mkt_gaussian_crps": 8.8449,
         "corpus_conditioner_applied": true
       },
@@ -339,14 +344,14 @@
         "n_worlds": 10000,
         "snaps_per_world": 175,
         "total_snaps_simulated": 1750000,
-        "sim_mean_home_margin": 1.499,
-        "sim_std_margin": 13.495,
+        "sim_mean_home_margin": 1.515,
+        "sim_std_margin": 13.372,
         "mkt_expected_home_margin": 3.5,
-        "sim_mean_total": 46.429,
+        "sim_mean_total": 46.399,
         "actual_margin": -7.0,
-        "sim_abs_err": 8.4993,
+        "sim_abs_err": 8.5145,
         "mkt_abs_err": 10.5,
-        "sim_gaussian_crps": 5.2213,
+        "sim_gaussian_crps": 5.2176,
         "mkt_gaussian_crps": 6.2557,
         "corpus_conditioner_applied": true
       },
@@ -357,14 +362,14 @@
         "n_worlds": 10000,
         "snaps_per_world": 175,
         "total_snaps_simulated": 1750000,
-        "sim_mean_home_margin": 11.54,
-        "sim_std_margin": 13.555,
+        "sim_mean_home_margin": 11.556,
+        "sim_std_margin": 13.499,
         "mkt_expected_home_margin": 12.5,
-        "sim_mean_total": 51.36,
+        "sim_mean_total": 51.37,
         "actual_margin": -2.0,
-        "sim_abs_err": 13.5404,
+        "sim_abs_err": 13.5564,
         "mkt_abs_err": 14.5,
-        "sim_gaussian_crps": 8.1561,
+        "sim_gaussian_crps": 8.1716,
         "mkt_gaussian_crps": 8.8449,
         "corpus_conditioner_applied": true
       },
@@ -375,14 +380,14 @@
         "n_worlds": 10000,
         "snaps_per_world": 175,
         "total_snaps_simulated": 1750000,
-        "sim_mean_home_margin": -1.814,
-        "sim_std_margin": 13.324,
+        "sim_mean_home_margin": -1.842,
+        "sim_std_margin": 13.314,
         "mkt_expected_home_margin": -3.0,
-        "sim_mean_total": 48.967,
+        "sim_mean_total": 48.964,
         "actual_margin": -22.0,
-        "sim_abs_err": 20.1861,
+        "sim_abs_err": 20.158,
         "mkt_abs_err": 19.0,
-        "sim_gaussian_crps": 13.4235,
+        "sim_gaussian_crps": 13.4021,
         "mkt_gaussian_crps": 12.3844,
         "corpus_conditioner_applied": true
       },
@@ -393,14 +398,14 @@
         "n_worlds": 10000,
         "snaps_per_world": 175,
         "total_snaps_simulated": 1750000,
-        "sim_mean_home_margin": 6.332,
-        "sim_std_margin": 13.323,
+        "sim_mean_home_margin": 6.308,
+        "sim_std_margin": 13.395,
         "mkt_expected_home_margin": 7.0,
-        "sim_mean_total": 53.224,
+        "sim_mean_total": 53.294,
         "actual_margin": -3.0,
-        "sim_abs_err": 9.3323,
+        "sim_abs_err": 9.3081,
         "mkt_abs_err": 10.0,
-        "sim_gaussian_crps": 5.6198,
+        "sim_gaussian_crps": 5.6117,
         "mkt_gaussian_crps": 5.9779,
         "corpus_conditioner_applied": true
       },
@@ -411,14 +416,14 @@
         "n_worlds": 10000,
         "snaps_per_world": 175,
         "total_snaps_simulated": 1750000,
-        "sim_mean_home_margin": 7.209,
-        "sim_std_margin": 13.401,
+        "sim_mean_home_margin": 7.278,
+        "sim_std_margin": 13.32,
         "mkt_expected_home_margin": 8.5,
-        "sim_mean_total": 40.571,
+        "sim_mean_total": 40.694,
         "actual_margin": 14.0,
-        "sim_abs_err": 6.791,
+        "sim_abs_err": 6.7218,
         "mkt_abs_err": 5.5,
-        "sim_gaussian_crps": 4.476,
+        "sim_gaussian_crps": 4.438,
         "mkt_gaussian_crps": 4.0197,
         "corpus_conditioner_applied": true
       },
@@ -429,14 +434,14 @@
         "n_worlds": 10000,
         "snaps_per_world": 175,
         "total_snaps_simulated": 1750000,
-        "sim_mean_home_margin": -8.649,
-        "sim_std_margin": 13.446,
+        "sim_mean_home_margin": -8.652,
+        "sim_std_margin": 13.512,
         "mkt_expected_home_margin": -8.5,
-        "sim_mean_total": 51.826,
+        "sim_mean_total": 51.827,
         "actual_margin": -19.0,
-        "sim_abs_err": 10.3505,
+        "sim_abs_err": 10.348,
         "mkt_abs_err": 10.5,
-        "sim_gaussian_crps": 6.1727,
+        "sim_gaussian_crps": 6.1733,
         "mkt_gaussian_crps": 6.2557,
         "corpus_conditioner_applied": true
       }
@@ -461,10 +466,10 @@
       9,
       10
     ],
-    "mean_sim_crps": 6.9904,
+    "mean_sim_crps": 6.9889,
     "mean_mkt_crps": 7.0108,
-    "sim_vs_close_crps_delta": -0.0204,
-    "mean_sim_margin_mae": 9.7902,
+    "sim_vs_close_crps_delta": -0.0219,
+    "mean_sim_margin_mae": 9.7862,
     "mean_mkt_margin_mae": 9.7687,
     "beats_close_crps": true,
     "beats_close_mae": false,
@@ -472,7 +477,7 @@
       "1": {
         "games_simulated": 16,
         "total_snaps_simulated": 2800000,
-        "mean_sim_crps": 7.6777,
+        "mean_sim_crps": 7.6894,
         "mean_mkt_crps": 7.8482
       },
       "2": {
@@ -484,66 +489,66 @@
       "3": {
         "games_simulated": 16,
         "total_snaps_simulated": 2800000,
-        "mean_sim_crps": 6.5821,
+        "mean_sim_crps": 6.5604,
         "mean_mkt_crps": 6.5731
       },
       "4": {
         "games_simulated": 16,
         "total_snaps_simulated": 2800000,
-        "mean_sim_crps": 5.5195,
+        "mean_sim_crps": 5.5274,
         "mean_mkt_crps": 5.4474
       },
       "5": {
         "games_simulated": 14,
         "total_snaps_simulated": 2450000,
-        "mean_sim_crps": 7.4351,
+        "mean_sim_crps": 7.4556,
         "mean_mkt_crps": 7.7001
       },
       "6": {
         "games_simulated": 14,
         "total_snaps_simulated": 2450000,
-        "mean_sim_crps": 4.8921,
+        "mean_sim_crps": 4.8928,
         "mean_mkt_crps": 4.8108
       },
       "7": {
         "games_simulated": 14,
         "total_snaps_simulated": 2450000,
-        "mean_sim_crps": 7.5778,
+        "mean_sim_crps": 7.575,
         "mean_mkt_crps": 7.3755
       },
       "8": {
         "games_simulated": 13,
         "total_snaps_simulated": 2275000,
-        "mean_sim_crps": 8.597,
+        "mean_sim_crps": 8.5903,
         "mean_mkt_crps": 8.8171
       },
       "9": {
         "games_simulated": 15,
         "total_snaps_simulated": 2625000,
-        "mean_sim_crps": 6.2708,
+        "mean_sim_crps": 6.2626,
         "mean_mkt_crps": 6.1406
       },
       "10": {
         "games_simulated": 13,
         "total_snaps_simulated": 2275000,
-        "mean_sim_crps": 7.4652,
+        "mean_sim_crps": 7.4474,
         "mean_mkt_crps": 7.5736
       }
     }
   },
   "nfl_weeks1_to_10_walk_forward_ablation": {
     "completed_games_evaluated": 147,
-    "oos_normalized_crps": 7.0897,
+    "oos_normalized_crps": 7.0889,
     "raw_closing_market_crps": 7.0108,
-    "raw_gse_v41_margin_crps": 6.9915,
+    "raw_gse_v41_margin_crps": 6.9907,
     "closing_market_margin_mae": 9.7687,
-    "gse_v41_margin_mae": 9.761,
+    "gse_v41_margin_mae": 9.7612,
     "closing_market_brier": 0.21988,
-    "gse_v41_brier": 0.21976,
+    "gse_v41_brier": 0.21975,
     "closing_market_overall_ece": 0.07171,
-    "overall_ece": 0.07102,
-    "fwl_partial_slope": 1.398187,
-    "rliable_iqm": 0.731646,
+    "overall_ece": 0.06419,
+    "fwl_partial_slope": 1.40949,
+    "rliable_iqm": 0.731641,
     "monotone_ratchet_promote": true,
     "live_weight_multiplier": 1.0,
     "all_floors_held": true
@@ -577,6 +582,18 @@
       "soccer_pitch_control_attack": 0.516295,
       "fpl_captain_id": "fpl_00",
       "fpl_expected_points": 181.47216,
+      "wave34_cross_sport_transfers": {
+        "schema": "wave34_cross_sport_4transfers_v1",
+        "transfers_count": 4,
+        "mlb_ballistic_spiral_stability": 1.04439,
+        "mlb_to_nfl_accuracy_edge": 0.001554,
+        "soccer_voronoi_wr_space_share": 0.5165,
+        "soccer_to_nfl_separation_edge": 0.00066,
+        "nhl_rotation_freshness_index": 0.72482,
+        "nhl_to_nfl_pass_rush_freshness_edge": 0.000154,
+        "nba_spacing_gravity_to_nfl_epa_edge": 0.00075,
+        "cross_sport_composite_edge": 0.003118
+      },
       "all_finite": true
     },
     "results": [
@@ -718,5 +735,613 @@
       }
     ]
   },
-  "benchmark_sha256": "84f37d8720bcf951b73a0b11c0643ee1fac65f44148638f25fd00ff5643bab39"
+  "wave34_holistic_biometrics_all32": {
+    "schema": "wave34_holistic_biometrics_all32_benchmark_v1",
+    "generated_utc": "2026-11-17T19:48:20.563260+00:00",
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "empirical_age_curves": {
+      "schema": "wave34_empirical_position_age_curves_v1",
+      "clean_checkout_fallback": false,
+      "rb_samples_n": 798,
+      "rb_yac_att_age22": 1.9588,
+      "rb_yac_att_age28": 1.7577,
+      "rb_burst_declines_with_age": true,
+      "dl_front_samples_n": 1469,
+      "dl_press_per_g_age22": 0.5699,
+      "dl_press_per_g_age28_32": 0.7251,
+      "dl_strength_peaks_older_than_rb": true,
+      "dl_combine_bench_vs_pressure_corr": 0.1071,
+      "dl_combine_cone_vs_pressure_corr": -0.1345,
+      "qb_seasons_n": 337,
+      "qb_rookie_bad_throw_rate": 0.1874,
+      "qb_prime_bad_throw_rate": 0.1576,
+      "qb_rookie_ontgt_rate": 0.7291,
+      "qb_prime_ontgt_rate": 0.7592,
+      "qb_cognition_improves_with_tenure": true,
+      "rec_seasons_n": 4476
+    },
+    "trench_all32_summary": {
+      "schema": "wave34_all32_combine_trench_report_v1",
+      "combine_rows_indexed": 8968,
+      "anthropometric_sample_rows_indexed": 510,
+      "anthropometric_mean_arm_length_in": 32.41,
+      "anthropometric_mean_wingspan_in": 78.47,
+      "rosters_loaded": 32,
+      "total_active_athletes_scanned": 2553,
+      "combine_matched_athletes": 1716,
+      "ol_strength_ranking_top5": [
+        "CLE",
+        "CHI",
+        "HOU",
+        "CAR",
+        "DET"
+      ],
+      "ol_agility_ranking_top5": [
+        "PHI",
+        "JAX",
+        "KC",
+        "PIT",
+        "IND"
+      ],
+      "dl_strength_ranking_top5": [
+        "LAR",
+        "IND",
+        "CIN",
+        "GB",
+        "SF"
+      ],
+      "dl_bend_ranking_top5": [
+        "DET",
+        "LV",
+        "NYJ",
+        "PHI",
+        "NE"
+      ]
+    },
+    "top_10_ol_strength": [
+      {
+        "rank": 1,
+        "team": "CLE",
+        "ol_strength_harmonic": 1.07382,
+        "ol_lateral_agility": 0.96083,
+        "weakest_link": "Tytus Howard"
+      },
+      {
+        "rank": 2,
+        "team": "CHI",
+        "ol_strength_harmonic": 1.06025,
+        "ol_lateral_agility": 0.91356,
+        "weakest_link": "Joe Thuney"
+      },
+      {
+        "rank": 3,
+        "team": "HOU",
+        "ol_strength_harmonic": 1.01033,
+        "ol_lateral_agility": 0.95651,
+        "weakest_link": "Blake Fisher"
+      },
+      {
+        "rank": 4,
+        "team": "CAR",
+        "ol_strength_harmonic": 0.99076,
+        "ol_lateral_agility": 0.93326,
+        "weakest_link": "Taylor Moton"
+      },
+      {
+        "rank": 5,
+        "team": "DET",
+        "ol_strength_harmonic": 0.99024,
+        "ol_lateral_agility": 0.98915,
+        "weakest_link": "Juice Scruggs"
+      }
+    ],
+    "top_10_dl_strength": [
+      {
+        "rank": 1,
+        "team": "LAR",
+        "dl_strength_index": 1.19692,
+        "dl_lateral_bend": 0.9246,
+        "alpha_rusher": "Tyler Davis"
+      },
+      {
+        "rank": 2,
+        "team": "IND",
+        "dl_strength_index": 1.18548,
+        "dl_lateral_bend": 0.94847,
+        "alpha_rusher": "Micheal Clemons"
+      },
+      {
+        "rank": 3,
+        "team": "CIN",
+        "dl_strength_index": 1.13753,
+        "dl_lateral_bend": 0.96288,
+        "alpha_rusher": "Boye Mafe"
+      },
+      {
+        "rank": 4,
+        "team": "GB",
+        "dl_strength_index": 1.12326,
+        "dl_lateral_bend": 0.96575,
+        "alpha_rusher": "Mazi Smith"
+      },
+      {
+        "rank": 5,
+        "team": "SF",
+        "dl_strength_index": 1.09922,
+        "dl_lateral_bend": 0.98718,
+        "alpha_rusher": "Nick Bosa"
+      }
+    ],
+    "sample_matchups": {
+      "KC_AT_DEN": {
+        "schema": "wave34_holistic_combine_cognition_bioenergetics_crosssport_v1",
+        "wired": true,
+        "matchup": "KC @ DEN",
+        "as_of_week": 10,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0,
+        "empirical_age_curves": {
+          "schema": "wave34_empirical_position_age_curves_v1",
+          "clean_checkout_fallback": false,
+          "rb_samples_n": 798,
+          "rb_yac_att_age22": 1.9588,
+          "rb_yac_att_age28": 1.7577,
+          "rb_burst_declines_with_age": true,
+          "dl_front_samples_n": 1469,
+          "dl_press_per_g_age22": 0.5699,
+          "dl_press_per_g_age28_32": 0.7251,
+          "dl_strength_peaks_older_than_rb": true,
+          "dl_combine_bench_vs_pressure_corr": 0.1071,
+          "dl_combine_cone_vs_pressure_corr": -0.1345,
+          "qb_seasons_n": 337,
+          "qb_rookie_bad_throw_rate": 0.1874,
+          "qb_prime_bad_throw_rate": 0.1576,
+          "qb_rookie_ontgt_rate": 0.7291,
+          "qb_prime_ontgt_rate": 0.7592,
+          "qb_cognition_improves_with_tenure": true,
+          "rec_seasons_n": 4476
+        },
+        "trench_matchup": {
+          "away_ol_strength_rank": 6,
+          "home_dl_strength_rank": 27,
+          "away_ol_vs_home_dl_power_diff": 0.05821,
+          "home_ol_vs_away_dl_power_diff": 0.03994,
+          "away_ol_vs_home_dl_agility_diff": 0.0312,
+          "home_ol_vs_away_dl_agility_diff": -0.02765,
+          "away_ol_weakest_link": "Kingsley Suamataia",
+          "home_ol_weakest_link": "Michael Deiter",
+          "away_am_gm_ineq_ok": true,
+          "home_am_gm_ineq_ok": true,
+          "rosters_32_active_athletes": 2553,
+          "combine_matched_athletes": 1716
+        },
+        "qb_neuro_cognition": {
+          "away": {
+            "schema": "wave34_qb_neuro_cognition_v1",
+            "team": "KC",
+            "opp_team": "DEN",
+            "qb_name": "Patrick Mahomes",
+            "qb_age": 31.0,
+            "qb_exp_years": 10.0,
+            "ftn_causal_snaps": 18019,
+            "hick_hyman_read_latency_ms": 395.03,
+            "visual_cognitive_load_index": 0.1578,
+            "cognitive_age_mult": 1.02818,
+            "hot_route_answer_edge": 0.050281,
+            "cognitive_processing_index": 1.10056
+          },
+          "home": {
+            "schema": "wave34_qb_neuro_cognition_v1",
+            "team": "DEN",
+            "opp_team": "KC",
+            "qb_name": "Bo Nix",
+            "qb_age": 26.0,
+            "qb_exp_years": 3.0,
+            "ftn_causal_snaps": 18019,
+            "hick_hyman_read_latency_ms": 488.04,
+            "visual_cognitive_load_index": 0.1513,
+            "cognitive_age_mult": 1.00319,
+            "hot_route_answer_edge": -0.021419,
+            "cognitive_processing_index": 0.95716
+          }
+        },
+        "bioenergetics_and_environment": {
+          "schema": "wave34_bioenergetics_altitude_acoustics_v1",
+          "away_team": "KC",
+          "home_team": "DEN",
+          "venue_altitude_ft": 5280.0,
+          "venue_indoor": false,
+          "venue_po2_ratio": 0.82588,
+          "altitude_carry_boost_yds": 4.266,
+          "venue_acoustic_db": 103.5,
+          "away_silent_count_ol_delay_ms": 28.5,
+          "away_silent_count_pressure_lift": 0.00513,
+          "away_glycogen_fraction": 0.87765,
+          "home_glycogen_fraction": 0.98373,
+          "away_q4_bioenergetic_decay": -0.013459,
+          "home_q4_bioenergetic_decay": -0.00179,
+          "effective_wind_mph": 3.0
+        },
+        "cross_sport_transfers": {
+          "away": {
+            "schema": "wave34_cross_sport_4transfers_v1",
+            "transfers_count": 4,
+            "mlb_ballistic_spiral_stability": 1.04439,
+            "mlb_to_nfl_accuracy_edge": 0.001554,
+            "soccer_voronoi_wr_space_share": 0.51723,
+            "soccer_to_nfl_separation_edge": 0.000689,
+            "nhl_rotation_freshness_index": 0.83038,
+            "nhl_to_nfl_pass_rush_freshness_edge": 0.003532,
+            "nba_spacing_gravity_to_nfl_epa_edge": -0.01125,
+            "cross_sport_composite_edge": -0.005475
+          },
+          "home": {
+            "schema": "wave34_cross_sport_4transfers_v1",
+            "transfers_count": 4,
+            "mlb_ballistic_spiral_stability": 1.04439,
+            "mlb_to_nfl_accuracy_edge": 0.001554,
+            "soccer_voronoi_wr_space_share": 0.51577,
+            "soccer_to_nfl_separation_edge": 0.000631,
+            "nhl_rotation_freshness_index": 0.80069,
+            "nhl_to_nfl_pass_rush_freshness_edge": 0.002582,
+            "nba_spacing_gravity_to_nfl_epa_edge": 0.00075,
+            "cross_sport_composite_edge": 0.005517
+          }
+        },
+        "books_and_equations_chain": {
+          "schema": "wave34_books_and_equations_projection_chain_v1",
+          "prior_gap_honest_diagnosis": "Before Wave 34, 503 books and 109,602 parsed ASTs fed mainly coarse team/game rules and scalar RRF coherence; athlete-level Combine isometric strength, lateral bend, distinct position age curves, FTN QB cognition, glycogen/dB physics, and 4 cross-sport physical transfers were not yet wired per active starter.",
+          "total_complete_books_mapped": 503,
+          "total_compiled_metrics": 92,
+          "total_equations_audited": 645864,
+          "parsed_valid_asts_executable_ceiling": 109602,
+          "domain_probe_executable_equations": 87582,
+          "legacy_template_equations_quarantined": 21419,
+          "all_six_domains_load_bearing": true,
+          "projection_lever_crosswalk": [
+            {
+              "book_domain": "D1_BIOMECHANICS_KINEMATICS_AND_RIGID_BODY_PHYSICS",
+              "books_count": 142,
+              "wave34_projection_lever": "OL/DL Jaric m^(2/3) Bench Strength + 3-Cone Agility + pO2 Drag",
+              "direct_projection_targets": [
+                "sack_prob_adj",
+                "rush_ypc_adj_delta",
+                "q4_fatigue_decay"
+              ]
+            },
+            {
+              "book_domain": "D2_COMPUTATIONAL_GEOMETRY_VORONOI_AND_CONTINUUM_MECHANICS",
+              "books_count": 73,
+              "wave34_projection_lever": "Soccer<->NFL Voronoi Separation + NBA Box-Spacing Gravity",
+              "direct_projection_targets": [
+                "comp_rate_corpus_delta",
+                "ypa_adj_delta"
+              ]
+            },
+            {
+              "book_domain": "D3_SURVIVAL_ANALYSIS_POINT_PROCESSES_AND_HAZARD_RATES",
+              "books_count": 73,
+              "wave34_projection_lever": "Position Age Curves + Eager Weak-Link OL Survival + Glycogen ODE",
+              "direct_projection_targets": [
+                "sack_prob_adj",
+                "q4_fatigue_decay",
+                "player_multipliers"
+              ]
+            },
+            {
+              "book_domain": "D4_OPTIMAL_TRANSPORT_MEASURE_THEORY_AND_QUANTILE_REGRESSION",
+              "books_count": 71,
+              "wave34_projection_lever": "All-Sports Quantile Calibration + NHL Shift Fatigue Redistribution",
+              "direct_projection_targets": [
+                "cqr_interval_width",
+                "multisport_worlds"
+              ]
+            },
+            {
+              "book_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
+              "books_count": 72,
+              "wave34_projection_lever": "EB Combine Missing-Data Shrinkage + FWL Close-Line Residuals",
+              "direct_projection_targets": [
+                "epa_corpus_delta",
+                "walk_forward_margin_shift"
+              ]
+            },
+            {
+              "book_domain": "D6_INFORMATION_THEORY_GAME_THEORY_AND_HJB_STOCHASTIC_CONTROL",
+              "books_count": 72,
+              "wave34_projection_lever": "Hick-Hyman QB Read Latency + Acoustic Silent-Count Hot-Routes",
+              "direct_projection_targets": [
+                "comp_rate_corpus_delta",
+                "sack_prob_adj",
+                "pass_rate_delta"
+              ]
+            }
+          ]
+        },
+        "stage2_deltas": {
+          "away_epa_delta": -0.000505,
+          "home_epa_delta": 0.000607,
+          "away_comp_delta": 0.003278,
+          "home_comp_delta": -0.000887,
+          "away_sack_prob_delta": -0.002994,
+          "home_sack_prob_delta": 0.001304,
+          "away_rush_ypc_delta": 0.01048,
+          "home_rush_ypc_delta": 0.00719,
+          "away_q4_fatigue_delta": -0.003365,
+          "home_q4_fatigue_delta": -0.000447
+        }
+      },
+      "SF_AT_SEA": {
+        "schema": "wave34_holistic_combine_cognition_bioenergetics_crosssport_v1",
+        "wired": true,
+        "matchup": "SF @ SEA",
+        "as_of_week": 10,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0,
+        "empirical_age_curves": {
+          "schema": "wave34_empirical_position_age_curves_v1",
+          "clean_checkout_fallback": false,
+          "rb_samples_n": 798,
+          "rb_yac_att_age22": 1.9588,
+          "rb_yac_att_age28": 1.7577,
+          "rb_burst_declines_with_age": true,
+          "dl_front_samples_n": 1469,
+          "dl_press_per_g_age22": 0.5699,
+          "dl_press_per_g_age28_32": 0.7251,
+          "dl_strength_peaks_older_than_rb": true,
+          "dl_combine_bench_vs_pressure_corr": 0.1071,
+          "dl_combine_cone_vs_pressure_corr": -0.1345,
+          "qb_seasons_n": 337,
+          "qb_rookie_bad_throw_rate": 0.1874,
+          "qb_prime_bad_throw_rate": 0.1576,
+          "qb_rookie_ontgt_rate": 0.7291,
+          "qb_prime_ontgt_rate": 0.7592,
+          "qb_cognition_improves_with_tenure": true,
+          "rec_seasons_n": 4476
+        },
+        "trench_matchup": {
+          "away_ol_strength_rank": 31,
+          "home_dl_strength_rank": 22,
+          "away_ol_vs_home_dl_power_diff": -0.10499,
+          "home_ol_vs_away_dl_power_diff": -0.19748,
+          "away_ol_vs_home_dl_agility_diff": -0.10665,
+          "home_ol_vs_away_dl_agility_diff": -0.02532,
+          "away_ol_weakest_link": "Trent Williams",
+          "home_ol_weakest_link": "Bobby Hart",
+          "away_am_gm_ineq_ok": true,
+          "home_am_gm_ineq_ok": true,
+          "rosters_32_active_athletes": 2553,
+          "combine_matched_athletes": 1716
+        },
+        "qb_neuro_cognition": {
+          "away": {
+            "schema": "wave34_qb_neuro_cognition_v1",
+            "team": "SF",
+            "opp_team": "SEA",
+            "qb_name": "Brock Purdy",
+            "qb_age": 26.0,
+            "qb_exp_years": 5.0,
+            "ftn_causal_snaps": 18019,
+            "hick_hyman_read_latency_ms": 438.0,
+            "visual_cognitive_load_index": 0.1484,
+            "cognitive_age_mult": 1.01758,
+            "hot_route_answer_edge": 0.02699,
+            "cognitive_processing_index": 1.05398
+          },
+          "home": {
+            "schema": "wave34_qb_neuro_cognition_v1",
+            "team": "SEA",
+            "opp_team": "SF",
+            "qb_name": "Sam Darnold",
+            "qb_age": 29.0,
+            "qb_exp_years": 9.0,
+            "ftn_causal_snaps": 18019,
+            "hick_hyman_read_latency_ms": 393.25,
+            "visual_cognitive_load_index": 0.1541,
+            "cognitive_age_mult": 1.02733,
+            "hot_route_answer_edge": 0.042437,
+            "cognitive_processing_index": 1.08487
+          }
+        },
+        "bioenergetics_and_environment": {
+          "schema": "wave34_bioenergetics_altitude_acoustics_v1",
+          "away_team": "SF",
+          "home_team": "SEA",
+          "venue_altitude_ft": 15.0,
+          "venue_indoor": false,
+          "venue_po2_ratio": 0.99946,
+          "altitude_carry_boost_yds": 0.013,
+          "venue_acoustic_db": 110.5,
+          "away_silent_count_ol_delay_ms": 55.1,
+          "away_silent_count_pressure_lift": 0.009918,
+          "away_glycogen_fraction": 0.98373,
+          "home_glycogen_fraction": 0.98373,
+          "away_q4_bioenergetic_decay": -0.00179,
+          "home_q4_bioenergetic_decay": -0.00179,
+          "effective_wind_mph": 0.0
+        },
+        "cross_sport_transfers": {
+          "away": {
+            "schema": "wave34_cross_sport_4transfers_v1",
+            "transfers_count": 4,
+            "mlb_ballistic_spiral_stability": 1.04439,
+            "mlb_to_nfl_accuracy_edge": 0.001554,
+            "soccer_voronoi_wr_space_share": 0.51473,
+            "soccer_to_nfl_separation_edge": 0.000589,
+            "nhl_rotation_freshness_index": 0.67665,
+            "nhl_to_nfl_pass_rush_freshness_edge": -0.001387,
+            "nba_spacing_gravity_to_nfl_epa_edge": 0.00075,
+            "cross_sport_composite_edge": 0.001506
+          },
+          "home": {
+            "schema": "wave34_cross_sport_4transfers_v1",
+            "transfers_count": 4,
+            "mlb_ballistic_spiral_stability": 1.04439,
+            "mlb_to_nfl_accuracy_edge": 0.001554,
+            "soccer_voronoi_wr_space_share": 0.51827,
+            "soccer_to_nfl_separation_edge": 0.000731,
+            "nhl_rotation_freshness_index": 0.83038,
+            "nhl_to_nfl_pass_rush_freshness_edge": 0.003532,
+            "nba_spacing_gravity_to_nfl_epa_edge": 0.00075,
+            "cross_sport_composite_edge": 0.006567
+          }
+        },
+        "books_and_equations_chain": {
+          "schema": "wave34_books_and_equations_projection_chain_v1",
+          "prior_gap_honest_diagnosis": "Before Wave 34, 503 books and 109,602 parsed ASTs fed mainly coarse team/game rules and scalar RRF coherence; athlete-level Combine isometric strength, lateral bend, distinct position age curves, FTN QB cognition, glycogen/dB physics, and 4 cross-sport physical transfers were not yet wired per active starter.",
+          "total_complete_books_mapped": 503,
+          "total_compiled_metrics": 92,
+          "total_equations_audited": 645864,
+          "parsed_valid_asts_executable_ceiling": 109602,
+          "domain_probe_executable_equations": 87582,
+          "legacy_template_equations_quarantined": 21419,
+          "all_six_domains_load_bearing": true,
+          "projection_lever_crosswalk": [
+            {
+              "book_domain": "D1_BIOMECHANICS_KINEMATICS_AND_RIGID_BODY_PHYSICS",
+              "books_count": 142,
+              "wave34_projection_lever": "OL/DL Jaric m^(2/3) Bench Strength + 3-Cone Agility + pO2 Drag",
+              "direct_projection_targets": [
+                "sack_prob_adj",
+                "rush_ypc_adj_delta",
+                "q4_fatigue_decay"
+              ]
+            },
+            {
+              "book_domain": "D2_COMPUTATIONAL_GEOMETRY_VORONOI_AND_CONTINUUM_MECHANICS",
+              "books_count": 73,
+              "wave34_projection_lever": "Soccer<->NFL Voronoi Separation + NBA Box-Spacing Gravity",
+              "direct_projection_targets": [
+                "comp_rate_corpus_delta",
+                "ypa_adj_delta"
+              ]
+            },
+            {
+              "book_domain": "D3_SURVIVAL_ANALYSIS_POINT_PROCESSES_AND_HAZARD_RATES",
+              "books_count": 73,
+              "wave34_projection_lever": "Position Age Curves + Eager Weak-Link OL Survival + Glycogen ODE",
+              "direct_projection_targets": [
+                "sack_prob_adj",
+                "q4_fatigue_decay",
+                "player_multipliers"
+              ]
+            },
+            {
+              "book_domain": "D4_OPTIMAL_TRANSPORT_MEASURE_THEORY_AND_QUANTILE_REGRESSION",
+              "books_count": 71,
+              "wave34_projection_lever": "All-Sports Quantile Calibration + NHL Shift Fatigue Redistribution",
+              "direct_projection_targets": [
+                "cqr_interval_width",
+                "multisport_worlds"
+              ]
+            },
+            {
+              "book_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
+              "books_count": 72,
+              "wave34_projection_lever": "EB Combine Missing-Data Shrinkage + FWL Close-Line Residuals",
+              "direct_projection_targets": [
+                "epa_corpus_delta",
+                "walk_forward_margin_shift"
+              ]
+            },
+            {
+              "book_domain": "D6_INFORMATION_THEORY_GAME_THEORY_AND_HJB_STOCHASTIC_CONTROL",
+              "books_count": 72,
+              "wave34_projection_lever": "Hick-Hyman QB Read Latency + Acoustic Silent-Count Hot-Routes",
+              "direct_projection_targets": [
+                "comp_rate_corpus_delta",
+                "sack_prob_adj",
+                "pass_rate_delta"
+              ]
+            }
+          ]
+        },
+        "stage2_deltas": {
+          "away_epa_delta": -0.0045,
+          "home_epa_delta": 0.000802,
+          "away_comp_delta": 0.000403,
+          "home_comp_delta": 0.00453,
+          "away_sack_prob_delta": 0.00404,
+          "home_sack_prob_delta": 0.000279,
+          "away_rush_ypc_delta": -0.0189,
+          "home_rush_ypc_delta": -0.03555,
+          "away_q4_fatigue_delta": -0.000447,
+          "home_q4_fatigue_delta": -0.000447
+        }
+      }
+    },
+    "books_and_equations_chain": {
+      "schema": "wave34_books_and_equations_projection_chain_v1",
+      "prior_gap_honest_diagnosis": "Before Wave 34, 503 books and 109,602 parsed ASTs fed mainly coarse team/game rules and scalar RRF coherence; athlete-level Combine isometric strength, lateral bend, distinct position age curves, FTN QB cognition, glycogen/dB physics, and 4 cross-sport physical transfers were not yet wired per active starter.",
+      "total_complete_books_mapped": 503,
+      "total_compiled_metrics": 92,
+      "total_equations_audited": 645864,
+      "parsed_valid_asts_executable_ceiling": 109602,
+      "domain_probe_executable_equations": 87582,
+      "legacy_template_equations_quarantined": 21419,
+      "all_six_domains_load_bearing": true,
+      "projection_lever_crosswalk": [
+        {
+          "book_domain": "D1_BIOMECHANICS_KINEMATICS_AND_RIGID_BODY_PHYSICS",
+          "books_count": 142,
+          "wave34_projection_lever": "OL/DL Jaric m^(2/3) Bench Strength + 3-Cone Agility + pO2 Drag",
+          "direct_projection_targets": [
+            "sack_prob_adj",
+            "rush_ypc_adj_delta",
+            "q4_fatigue_decay"
+          ]
+        },
+        {
+          "book_domain": "D2_COMPUTATIONAL_GEOMETRY_VORONOI_AND_CONTINUUM_MECHANICS",
+          "books_count": 73,
+          "wave34_projection_lever": "Soccer<->NFL Voronoi Separation + NBA Box-Spacing Gravity",
+          "direct_projection_targets": [
+            "comp_rate_corpus_delta",
+            "ypa_adj_delta"
+          ]
+        },
+        {
+          "book_domain": "D3_SURVIVAL_ANALYSIS_POINT_PROCESSES_AND_HAZARD_RATES",
+          "books_count": 73,
+          "wave34_projection_lever": "Position Age Curves + Eager Weak-Link OL Survival + Glycogen ODE",
+          "direct_projection_targets": [
+            "sack_prob_adj",
+            "q4_fatigue_decay",
+            "player_multipliers"
+          ]
+        },
+        {
+          "book_domain": "D4_OPTIMAL_TRANSPORT_MEASURE_THEORY_AND_QUANTILE_REGRESSION",
+          "books_count": 71,
+          "wave34_projection_lever": "All-Sports Quantile Calibration + NHL Shift Fatigue Redistribution",
+          "direct_projection_targets": [
+            "cqr_interval_width",
+            "multisport_worlds"
+          ]
+        },
+        {
+          "book_domain": "D5_BAYESIAN_SHRINKAGE_FWL_ORTHOGONALIZATION_AND_CAUSAL_AIPW",
+          "books_count": 72,
+          "wave34_projection_lever": "EB Combine Missing-Data Shrinkage + FWL Close-Line Residuals",
+          "direct_projection_targets": [
+            "epa_corpus_delta",
+            "walk_forward_margin_shift"
+          ]
+        },
+        {
+          "book_domain": "D6_INFORMATION_THEORY_GAME_THEORY_AND_HJB_STOCHASTIC_CONTROL",
+          "books_count": 72,
+          "wave34_projection_lever": "Hick-Hyman QB Read Latency + Acoustic Silent-Count Hot-Routes",
+          "direct_projection_targets": [
+            "comp_rate_corpus_delta",
+            "sack_prob_adj",
+            "pass_rate_delta"
+          ]
+        }
+      ]
+    },
+    "benchmark_sha256": "7c17d3e613c9d2baa88f503bd66bd7f4a7e058962a20a6868e32fa4179343db3"
+  },
+  "benchmark_sha256": "8318eaee208050ddc2605450c8b5f199d99da1623d6a2f703a5d0f4fe85fdefc"
 }

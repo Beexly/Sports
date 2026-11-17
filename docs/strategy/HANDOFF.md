@@ -3,6 +3,23 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-17 (2026-11-17 CT) -- Wave 34 Holistic Combine Trenches, Age Curves, QB Neuro-Cognition, Bio-Energetics & Cross-Sport Transfers (`242+24` RLVR)
+
+- **What changed**:
+  - **Hydrated Combine + All-32 Active Roster Trenches (`src/gse_engine/biometrics/wave34_holistic_combine_cognition_bioenergetics_crosssport_engine.py`, `data/nflverse/combine_2000_2026.parquet`)**:
+    - Hydrated official CC-BY-4.0 `2000-2026` NFL Combine (`8,968` profiles) + `510`-row anthropometric sample (`32.41"` arm length, `78.47"` wingspan) and matched `1,716/2,553` active athletes across all `32` `wk10` rosters (`CLE/CHI/HOU/CAR/DET` OL strength, `PHI/JAX/KC/PIT/IND` OL agility, `LAR/IND/CIN/GB/SF` DL power, `DET/LV/NYJ/PHI/NE` DL 3-cone bend), applying Jaric `m^(2/3)` bench allometry, 3-cone bend, and Eager AM-GM harmonic weak-link theorem (`H_OL <= A_OL`).
+    - Fit divergent position age curves from `nflverse` advstats: RB `yac_att` decays `1.9588` (age `<=23`) -> `1.7577` (age `28-30`), DL pressures/g rises `0.5699 -> 0.7251` with `bench r=+0.1071` and `3-cone r=-0.1345`, and QB bad-throw improves `0.1874 -> 0.1576` (`on_tgt 0.7291 -> 0.7592`) across `337` qualified QB seasons.
+  - **Causal QB Neuro-Cognition, Bio-Energetics & 4 Cross-Sport Transfers**:
+    - Built causal FTN (`18,019` snaps) + `pennydata` starter identification (`KC Patrick Mahomes 395.03 ms` vs `DEN Bo Nix 488.04 ms`), coupled glycogen ODE + Denver `5,280 ft pO2=0.82588` + acoustic silent-count OL lag (`>96 dB`), 4 cross-sport transfers (`MLB<->NFL`, `SOCCER<->NFL/NBA`, `NHL<->NFL/NBA`, `NBA<->NFL/SOCCER`), and full `D1..D6` `503`-book / `109,602`-AST projection chain audit (`21,419` legacy templates quarantined).
+  - **End-to-End Pipeline & RLVR Expansion (`LL-2026-11-17-054`)**:
+    - Wired into `wave32_unified_sports_situational_live_fusion.py`, `corpus_situational_integrator.py`, `walk_forward_ablation.py`, `daily_multisport_slate_engine.py`, `gse_coach_mind_simulator.py`, and `pre_sim_total_intelligence_gate.py`; added `+6` pure-ASCII zero-odds RLVR records (`236 -> 242` + `24` = `266` trajectories).
+- **What was proven**:
+  - `147`-game OOS ablation improved to `CRPS 7.0889 <= 7.0944`, `MAE 9.7612 < 9.7687`, `Brier 0.21975 < 0.21988`, `ECE 0.06419 < 0.07171`, `FWL slope 1.40949` (`t=21.42`); `43.225M`-snap PBP simulation CRPS improved to `6.9889` (`8.9229` on 10 flagship games x `10k`); `80,000` 8-sport worlds conserved (`4` cross-sport transfers active); `ruff`, `mypy --strict src/gse_engine`, `pre_sim_total_intelligence_gate.py --self-test` (`PASS`), guardrails, and all `pytest` suites pass.
+- **What was not proven**:
+  - NFL Week `11+` simulations remain gated under `OPERATOR_SIM_HOLD`, `real_money_stake_cleared` remains `False` (`0.0` live stake), ADR-0003 K14/Pose2Sim stays rule-in-only, clinical RUO weights remain `0.0`, and `brain/mind.jsonl` remains single-writer untouched.
+
+---
+
 ## 2026-11-17 (2026-11-17 CT) -- Wave 32/33 Unified Omni-Vault (`24` Vaults, `551,577` Rows), `43.225M` PBP Snaps, `80k` 8-Sport Worlds & `236+24` RLVR
 
 - **What changed**:

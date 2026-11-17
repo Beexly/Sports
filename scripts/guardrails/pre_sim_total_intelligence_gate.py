@@ -290,6 +290,11 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "wave32_unified_sports_situational_live_fusion",
         "src/gse_engine/compute/wave32_unified_sports_situational_live_fusion.py",
     ),
+    (
+        "Pillar1_Wave34_Holistic_Combine_Cognition_Bioenergetics_CrossSport",
+        "wave34_holistic_combine_cognition_bioenergetics_crosssport_engine",
+        "src/gse_engine/biometrics/wave34_holistic_combine_cognition_bioenergetics_crosssport_engine.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (

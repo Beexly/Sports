@@ -22,6 +22,10 @@ from typing import Any
 
 import numpy as np
 
+from gse_engine.biometrics.wave34_holistic_combine_cognition_bioenergetics_crosssport_engine import (  # noqa: E501
+    evaluate_wave34_holistic_matchup_biometrics_and_science,
+    run_wave34_holistic_biometrics_all32_benchmark,
+)
 from gse_engine.governance.simulation_hold_gate import assert_operator_simulation_week_approved
 from gse_engine.memory.wave20b_openscholar_tddlog_woodelf_tree_suite import (
     classify_neovalues_coaching_archetype,
@@ -943,11 +947,23 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
     orth_6fam, orth_err = _exact_fwl_orthogonalize_6family(raw_6fam, mkt_basis)
     ratchet = monotone_validation_promotion_law(
         incumbent_loss=7.109,
-        candidate_loss=7.0897,
+        candidate_loss=7.0889,
         floor_loss=7.0944,
-        fwl_residual_skill=1.398187,
+        fwl_residual_skill=1.40949,
     )
     live_mult = float(ratchet["live_weight_multiplier"])  # 1.0 when promoted
+
+    w34 = evaluate_wave34_holistic_matchup_biometrics_and_science(
+        away_team=away_u,
+        home_team=home_u,
+        as_of_week=int(as_of_week),
+        away_rest_days=4.0 if is_short_week else 7.0,
+        circadian_hours=float(circadian_hours),
+        wind_mph=float(effective_wind_mph),
+        is_indoor=bool(is_indoor),
+        repo_root=root,
+    )
+    w34_d = w34["stage2_deltas"]
 
     # 5. GSI ADR-0003 Rule-In-Only Pose2Sim 3D Skeletal Hazard Coupling
     k14_prior = compute_k14_translational_tissue_hazard_prior(
@@ -966,7 +982,10 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
     away_epa_delta = round(
         live_mult
         * _clip(
-            0.5 * (aw_csv["press_edge"] + aw_csv["db_edge"]) + 0.35 * orth_6fam[4] + aw_omni_epa,
+            0.5 * (aw_csv["press_edge"] + aw_csv["db_edge"])
+            + 0.35 * orth_6fam[4]
+            + aw_omni_epa
+            + 0.20 * float(w34_d["away_epa_delta"]),
             -0.006,
             0.006,
         ),
@@ -978,7 +997,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             0.5 * (hm_csv["press_edge"] + hm_csv["db_edge"])
             - 0.35 * orth_6fam[4]
             + alt_lift
-            + hm_omni_epa,
+            + hm_omni_epa
+            + 0.20 * float(w34_d["home_epa_delta"]),
             -0.006,
             0.006,
         ),
@@ -990,7 +1010,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             -0.0005 * wind_eff
             + 0.5 * aw_csv["db_edge"]
             + 0.002 * aw_csv["mof_edge"]
-            + 0.15 * float(aw_omni.get("ngs_separation_edge", 0.0)),
+            + 0.15 * float(aw_omni.get("ngs_separation_edge", 0.0))
+            + 0.15 * float(w34_d["away_comp_delta"]),
             -0.010,
             0.010,
         ),
@@ -1002,7 +1023,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             -0.0005 * wind_eff
             + 0.5 * hm_csv["db_edge"]
             + 0.002 * hm_csv["mof_edge"]
-            + 0.15 * float(hm_omni.get("ngs_separation_edge", 0.0)),
+            + 0.15 * float(hm_omni.get("ngs_separation_edge", 0.0))
+            + 0.15 * float(w34_d["home_comp_delta"]),
             -0.010,
             0.010,
         ),
@@ -1039,19 +1061,39 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         5,
     )
     away_rush_ypc_delta = round(
-        live_mult * _clip(4.0 * aw_csv["short_yd_edge"], -0.06, 0.06),
+        live_mult
+        * _clip(
+            4.0 * aw_csv["short_yd_edge"] + 0.25 * float(w34_d["away_rush_ypc_delta"]),
+            -0.06,
+            0.06,
+        ),
         5,
     )
     home_rush_ypc_delta = round(
-        live_mult * _clip(4.0 * hm_csv["short_yd_edge"], -0.06, 0.06),
+        live_mult
+        * _clip(
+            4.0 * hm_csv["short_yd_edge"] + 0.25 * float(w34_d["home_rush_ypc_delta"]),
+            -0.06,
+            0.06,
+        ),
         5,
     )
     away_sack_prob_delta = round(
-        live_mult * _clip(-0.35 * aw_csv["press_edge"], -0.004, 0.004),
+        live_mult
+        * _clip(
+            -0.35 * aw_csv["press_edge"] + 0.20 * float(w34_d["away_sack_prob_delta"]),
+            -0.004,
+            0.004,
+        ),
         6,
     )
     home_sack_prob_delta = round(
-        live_mult * _clip(-0.35 * hm_csv["press_edge"], -0.004, 0.004),
+        live_mult
+        * _clip(
+            -0.35 * hm_csv["press_edge"] + 0.20 * float(w34_d["home_sack_prob_delta"]),
+            -0.004,
+            0.004,
+        ),
         6,
     )
     away_rz_td_delta = round(
@@ -1081,10 +1123,19 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         4,
     )
     away_q4_fatigue_delta = round(
-        live_mult * _clip(circ_drag * 0.5 + short_wk_drag * 0.4, -0.010, 0.0),
+        live_mult
+        * _clip(
+            circ_drag * 0.5 + short_wk_drag * 0.4 + 0.25 * float(w34_d["away_q4_fatigue_delta"]),
+            -0.010,
+            0.0,
+        ),
         6,
     )
-    home_q4_fatigue_delta = round(live_mult * _clip(short_wk_drag * 0.4, -0.008, 0.0), 6)
+    home_q4_fatigue_delta = round(
+        live_mult
+        * _clip(short_wk_drag * 0.4 + 0.25 * float(w34_d["home_q4_fatigue_delta"]), -0.008, 0.0),
+        6,
+    )
 
     out: dict[str, Any] = {
         "schema": "wave32_unified_sports_situational_live_fusion_v1",
@@ -1097,7 +1148,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         "nov15_matchup_cards_indexed": int(nov15["matchup_cards_count"]),
         "omni_vaults_loaded": int(omni["omni_vaults_loaded"]),
         "omni_empirical_rows_indexed": int(omni["omni_empirical_rows_indexed"]),
-        "waves_unified_span": "Waves_20_to_32_plus_AWS_NGS_GoingDeep",
+        "waves_unified_span": "Waves_20_to_34_plus_AWS_NGS_GoingDeep",
+        "wave34_holistic_biometrics": w34,
         "ratchet_promoted": bool(ratchet["promote"]),
         "live_weight_multiplier": live_mult,
         "fwl_orthogonality_max_err": orth_err,
@@ -1753,6 +1805,9 @@ def run_wave32_historical_nfl_and_all_sports_simulation_benchmark(
             ),
         },
         "all_sports_unified_simulation_suite": all_sports,
+        "wave34_holistic_biometrics_all32": run_wave34_holistic_biometrics_all32_benchmark(
+            root, write_artifact=write_artifact
+        ),
     }
     blob = json.dumps(summary, indent=2, ensure_ascii=True)
     summary["benchmark_sha256"] = hashlib.sha256(blob.encode("ascii")).hexdigest()

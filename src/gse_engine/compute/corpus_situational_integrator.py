@@ -34,6 +34,9 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from gse_engine.biometrics.wave34_holistic_combine_cognition_bioenergetics_crosssport_engine import (  # noqa: E501
+    evaluate_wave34_holistic_matchup_biometrics_and_science,
+)
 from gse_engine.compute.market_surface_and_filtration import (
     devig_shin_or_power,
     evaluate_non_commutative_filtration_bridge,
@@ -2576,6 +2579,16 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "gsi_and_compound_fabric_pillar": gsi_and_compound_fabric_pillar,
         "v4_unified_kernels_pillar": v4_unified_kernels_pillar,
         "wave32_unified_live_fusion_pillar": wave32_res,
+        "wave34_holistic_biometrics_pillar": wave32_res.get(
+            "wave34_holistic_biometrics",
+            evaluate_wave34_holistic_matchup_biometrics_and_science(
+                away_team=away_u,
+                home_team=home_u,
+                as_of_week=int(week),
+                is_indoor=bool(is_indoor),
+                repo_root=REPO_ROOT,
+            ),
+        ),
         "nvidia_hermes_capability_routes": nvidia_hermes_routes,
         "away_epa_corpus_delta": round(away_epa_corpus_delta, 5),
         "home_epa_corpus_delta": round(home_epa_corpus_delta, 5),
@@ -3094,6 +3107,18 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         else:
             w32_wired = True
 
+    w34_blk = priors.get("wave34_holistic_biometrics_pillar")
+    w34_wired = False
+    if w34_blk is not None:
+        if (
+            not isinstance(w34_blk, Mapping)
+            or w34_blk.get("wired") is not True
+            or w34_blk.get("real_money_stake_cleared") is not False
+        ):
+            missing_or_unwired.append("wave34_holistic_biometrics_pillar")
+        else:
+            w34_wired = True
+
     required_scalars = (
         "away_epa_corpus_delta",
         "home_epa_corpus_delta",
@@ -3145,6 +3170,7 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         "gsi_and_compound_fabric_wired": gsi_wired,
         "v4_unified_kernels_wired": v4_wired,
         "wave32_unified_live_fusion_wired": w32_wired,
+        "wave34_holistic_biometrics_wired": w34_wired,
         "pillars_verified": list(required_pillars),
         "scalars_verified_count": len(required_scalars),
         "player_multipliers_count": len(priors.get("player_target_and_carry_multipliers") or {}),
