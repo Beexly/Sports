@@ -347,3 +347,25 @@ collisions, 162,462 bytes appended. Reconciliation: 79 unique NEW with
 IDs = 51 dossier + 28 inventoried; 76 NO-ID feed lines = 69 slug records
 + 6 collision skips + 1 trading-skip excluded; 15 ad rows excluded.
 X feed now 6,221 records. Running feed total: 11,349 records.
+
+## Delta 2026-11-16 + 2026-11-17 X analytics catch-up (landed 2026-11-17)
+
+Source: x-intel-2026-11-17-09.md (the 48-hour catch-up run that resolved
+the incomplete 2026-11-16 sweep) plus its staged section-16.md and
+section-17.md, used to assign each item to its sweep day and recover
+status IDs. 170 records (55 dated 2026-11-16, 115 dated 2026-11-17),
+118 keyed by X status ID, 52 slug-keyed, 0 duplicates, 0 collisions,
+168,647 bytes appended to x-analytics-feed.jsonl (now 1,785 records).
+Two items excluded under the zero sportsbook rule (a Kalshi season-odds
+table and a matchup card whose printed header is betting lines; the
+same matchup's stat-only recap cards were included). Verdict
+INVENTORIED throughout, per the neutral inventory standard. Running
+feed total: 11,519 records.
+
+Path note (found 2026-11-17, no data lost): the base x-analytics feed
+lives at the pre-rebucket path docs/research/2026-11-14/sweep-ingestion/
+x-analytics-feed.jsonl (1,161,563 bytes before this append, byte match
+with the local base), while the IG and X feeds and this MANIFEST live
+under docs/data-sources/research/2026-11-14/sweep-ingestion/. The
+2026-11-14 and 2026-11-15 analytics deltas remain standalone files in
+the new-path directory; their records are part of the corpus totals.
