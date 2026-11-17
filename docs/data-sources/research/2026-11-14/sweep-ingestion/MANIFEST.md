@@ -301,3 +301,26 @@ ig-for-you-feed.jsonl (now 2,855 records, 2,032,120 bytes).
 Running feed total: 10,994 records. Still pending: 2026-11-15 X
 analytics PM delta and the 2026-11-16 analytics AM section (Lane A
 only at last check).
+
+## 2026-11-16 PM delta (X For You lane)
+
+X For You PM delta: `delta-2026-11-16-x-pm.jsonl`, 158 records
+(60 dossier posts with verified status IDs across 20 dossiers, 30
+inventoried with verified status IDs, 68 NO-ID slug-keyed; 0
+duplicates, 0 collisions) from
+~/workspace/x-for-you-sweep/reports/2026-11-16-PM.md. The run found
+90 unique NEW with verified IDs (79 watchlist + 11 feed); 70 NO-ID
+feed rows reconcile as the 68 slug records plus 2 trading-skip rows
+excluded by convention, and 19 ad rows were excluded. One report
+typo noted: the gap audit says 31 inventoried-only with IDs, but the
+count proof and Appendix A both list 30, and 60 + 30 = the verified
+90 NEW total. Strongest finds: MVP zone screen thresholds (TEST),
+PattonAnalytics target concentration and XPass volatility (TEST),
+the sfdata9ers bundle (TEST). Motif-verified: every line parses,
+16-key schema exact, 0 collisions against the feed, no em/en dashes,
+164,992 bytes. Appended to x-for-you-feed.jsonl (now 6,073 records,
+4,483,997 bytes).
+
+Running feed total: 11,152 records. Still pending: 2026-11-15 X
+analytics PM delta and the 2026-11-16 analytics AM section (Lane A
+only at last check).
