@@ -93,6 +93,9 @@ from gse_engine.memory.wave25_situational_tracking_biomech_fwl_suite import (
 from gse_engine.memory.wave28_loboost_gepa_llmd_and_world_attention_suite import (
     evaluate_wave28_deep_research_bridge,
 )
+from gse_engine.memory.wave29_neuro_symbolic_chronofy_venra_and_argumentation_suite import (
+    evaluate_wave29_neuro_symbolic_corpus_bridge,
+)
 from gse_engine.multisport.daily_multisport_slate_engine import (
     BcAciState,
     predict_bc_aci_band,
@@ -1796,6 +1799,12 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         effective_wind_mph=eff_wind,
         is_short_week=is_short_week,
     )
+    wave29_res = evaluate_wave29_neuro_symbolic_corpus_bridge(
+        away_clean_epa=aw_sig.clean_epa,
+        home_clean_epa=hm_sig.clean_epa,
+        effective_wind_mph=eff_wind,
+        is_short_week=is_short_week,
+    )
     corpus_total_artifacts_indexed = (
         int(manifest_877.get("total_pdfs", 0))
         + int(_FOUNDRY_SWEPT_FILES_CACHE)
@@ -1855,6 +1864,13 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "wave28_harness2_weights_frozen": bool(wave28_res["harness2_weights_frozen"]),
         "wave28_google_health_ruo_weight": float(wave28_res["google_health_ruo_weight"]),
         "wave28_live_stage2_weight": float(wave28_res["live_stage2_weight"]),
+        "wave29_neuro_symbolic_wired": bool(wave29_res["wave29_wired"]),
+        "wave29_arxiv_entries_count": int(wave29_res["arxiv_entries_count"]),
+        "wave29_scalars_verified_count": int(wave29_res["scalars_verified_count"]),
+        "wave29_clinical_ruo_sports_weight": float(
+            wave29_res["clinical_ruo_sports_weight"]
+        ),
+        "wave29_live_stage2_weight": float(wave29_res["live_stage2_weight"]),
         "monorepo_vaults_verified": int(omnibus_res["vaults_verified"]),
         "all_46_data_subdirs_verified": int(omnibus_res["data_subdirs_verified_count"]) == 46,
         "complete_503_books_verified": int(omnibus_res["complete_corpus_books"]) >= 503,

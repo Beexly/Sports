@@ -1,0 +1,26 @@
+{
+  "schema": "gse_agent_bus_note_v1",
+  "timestamp_utc": "2026-11-17T16:15:00Z",
+  "timestamp_ct": "2026-11-17T10:15:00-06:00",
+  "branch": "feat/pregame-engine-dfs-harmony-2026-11-15",
+  "pr": 1291,
+  "wave": 29,
+  "ledger_id": "LL-2026-11-17-050",
+  "summary": "Ingested all 39 unique neuro-symbolic arXiv manuscripts (from 43 submitted URLs) into docs/arxiv-program/research/2026-11-17/, implemented Wave 29 Stage-2/RLVR kernels (Chronofy TLDA, VeNRA Double-Lock, NARS/ACAL bipolar argumentation, NeSy-RAG gap detection, SymRAG/RetoMaton routing, PoTRE/ReaComp solver, LeanCat functor laws, ProtoMedAgent privacy/SAT RUO gate), expanded oss-corpus-registry.json to 265/265 WIRED_V3 (289 submitted URLs) and RLVR feeds to 196 records, and eliminated the last PR #1291 CodeQL clear-text logging alert.",
+  "holds_verified": {
+    "operator_sim_hold_week11_plus": true,
+    "polymarket_compliance_cleared": false,
+    "real_money_stake_cleared": false,
+    "live_stage2_weight": 0.0,
+    "clinical_ruo_sports_weight": 0.0
+  },
+  "artifacts": [
+    "docs/arxiv-program/research/2026-11-17/wave29-39-arxiv-neuro-symbolic-rag-argumentation-and-ledgers.md",
+    "src/gse_engine/memory/wave29_neuro_symbolic_chronofy_venra_and_argumentation_suite.py",
+    "tests/unit/test_wave29_neuro_symbolic_chronofy_venra_and_argumentation.py",
+    "docs/data-sources/research/2026-11-15/oss-corpus-registry.json",
+    "scripts/ops/provision_gse_whop_end_to_end.mjs",
+    "brain/feeds/2026-11-16/gse_to_gsi_verifiable_reasoning_rlvr_feed.jsonl",
+    "brain/feeds/2026-11-17/gse_to_gsi_overnight_rlvr_feed.jsonl"
+  ]
+}

@@ -169,9 +169,9 @@ def test_wave28_bridge_registry_226_and_rlvr_182() -> None:
         / "oss-corpus-registry.json"
     )
     reg = json.loads(reg_path.read_text(encoding="utf-8"))
-    assert reg["total_entries"] == 226
-    assert reg["total_unique_entries"] == 226
-    assert len(reg["entries"]) == 226
+    assert reg["total_entries"] >= 226
+    assert reg["total_unique_entries"] >= 226
+    assert len(reg["entries"]) == reg["total_entries"]
     assert len(WAVE28_NEW_OSS_ENTRIES) == 5
 
     rlvr = compile_gse_to_gsi_rlvr_training_batch(REPO_ROOT)

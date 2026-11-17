@@ -3,6 +3,17 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-17 (2026-11-17 CT) -- Wave 29 39-Paper Neuro-Symbolic arXiv Ingestion, 265/265 WIRED_V3, 196 RLVR & Final CodeQL Fix
+
+- **What changed**:
+  - **Wave 29 39-Paper Dossier (`docs/arxiv-program/research/2026-11-17/wave29-39-arxiv-neuro-symbolic-rag-argumentation-and-ledgers.md`)**:
+    - Resolved and synthesized all `39` unique arXiv manuscripts (`43` submitted URLs; zero skipped) covering `Chronofy` TLDA decay (`arXiv:2607.20560`), `VeNRA` Double-Lock UFL ledgers (`arXiv:2603.04663`), `CircuitSynth` PSDDs (`arXiv:2604.10114`), `NARS`/`ACAL` bipolar argumentation (`arXiv:2610.15091`, `arXiv:2602.18916`), `NeSy-RAG` missing-fact sensitivity (`arXiv:2608.06292`), `SymRAG` + `Local RetoMaton` routing (`arXiv:2506.12981`, `arXiv:2508.19271`), `PoTRE` + `ReaComp` trace-compiled solvers (`arXiv:2607.20268`, `arXiv:2605.05485`), `LeanCat` functor compositionality (`arXiv:2512.24796`), and clinical `k`-anonymity/`l`-diversity + SAT comorbidity gates (`arXiv:2605.14113`, `arXiv:2604.17340`).
+  - **Wave 29 Kernel Suite & Stage-2 / RLVR Wiring (`LL-2026-11-17-050`)**:
+    - Implemented `src/gse_engine/memory/wave29_neuro_symbolic_chronofy_venra_and_argumentation_suite.py` and wired into `src/gse_engine/memory/__init__.py`, `corpus_situational_integrator.py` (`live_stage2_weight=0.0`, `clinical_ruo_sports_weight=0.0`), and `scripts/guardrails/pre_sim_total_intelligence_gate.py` (`OSS_Ecosystem_Registry` floor raised to `265`).
+    - Expanded `docs/data-sources/research/2026-11-15/oss-corpus-registry.json` to **`265/265` `WIRED_V3` (`289` submitted URLs)** and regenerated `196` deduped RLVR trajectories in `brain/feeds/2026-11-16/` and `brain/feeds/2026-11-17/`.
+  - **PR #1291 Final CodeQL Fix**:
+    - Replaced `result.accountId` / `wired` object logging in `scripts/ops/provision_gse_whop_end_to_end.mjs` (`--live` CLI output) with sanitized boolean/count summary fields, eliminating the final `Clear-text logging of sensitive information` alert.
+
 ## 2026-11-17 (2026-11-17 CT) -- Wave 28 Deep Research Synthesis, 226/226 WIRED_V3, 182 RLVR & PR #1291 CodeQL Zero-Alert Remediation
 
 - **What changed**:

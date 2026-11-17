@@ -1646,6 +1646,307 @@ def compile_gse_to_gsi_rlvr_training_batch(
             )
         )
 
+    # 3E. Wave 29 39-arXiv Neuro-Symbolic suite (Chronofy, VeNRA, NARS, SymRAG, PoTRE, LeanCat)
+    from gse_engine.memory.wave29_neuro_symbolic_chronofy_venra_and_argumentation_suite import (
+        aggregate_potre_heterogeneous_ensemble_and_compile_solver,
+        compute_chronofy_temporal_logical_decay,
+        detect_nesy_rag_symbolic_knowledge_gaps,
+        enforce_protomed_k_anonymity_l_diversity_and_sat_conflict_gate,
+        propagate_bipolar_gradual_argumentation,
+        route_symrag_adaptive_query_pathway,
+        verify_leancat_functor_compositionality,
+        verify_venra_double_lock_fact_ledger,
+    )
+
+    for idx in range(2):
+        age_h = 2.0 + 18.0 * idx
+        chr_out = compute_chronofy_temporal_logical_decay(
+            [
+                {
+                    "fact_id": f"obs_chronofy_{idx}",
+                    "reliability": 0.95,
+                    "kappa": 0.04,
+                    "age_hours": age_h,
+                    "max_valid_age_hours": 12.0,
+                }
+            ]
+        )
+        gt_chr = {
+            "chronofy_idx": idx,
+            "weakest_link_validity": float(chr_out["weakest_link_validity"]),
+            "stl_min_robustness": float(chr_out["stl_min_robustness"]),
+            "reacquisition_triggered": bool(chr_out["reacquisition_triggered"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w29_chronofy_tlda_{idx:02d}",
+                domain="chronofy_temporal_logical_decay",
+                prompt=(
+                    f"Evaluate Chronofy TLDA exp(-2*kappa*age) validity and STL robustness at "
+                    f"age_hours={age_h} with max_valid_age=12.0 for trace #{idx}. Return JSON "
+                    "with chronofy_idx, weakest_link_validity, stl_min_robustness, "
+                    "reacquisition_triggered."
+                ),
+                think=(
+                    f"Check STL robustness={gt_chr['stl_min_robustness']} and weakest-link "
+                    f"decay={gt_chr['weakest_link_validity']} triggering="
+                    f"{gt_chr['reacquisition_triggered']}."
+                ),
+                ground_truth=gt_chr,
+                verifier_src=_formula_exact_verifier_src(gt_chr),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    for idx in range(2):
+        a_val = 0.14 + 0.03 * idx
+        b_val = 0.05
+        claimed = round(a_val - b_val + (0.25 if idx == 1 else 0.0), 6)
+        ven_out = verify_venra_double_lock_fact_ledger(
+            {("T1", "net_epa", "W10"): a_val, ("T2", "net_epa", "W10"): b_val},
+            [("T1", "net_epa", "W10"), ("T2", "net_epa", "W10")],
+            "diff",
+            claimed,
+        )
+        gt_ven = {
+            "venra_idx": idx,
+            "double_lock_passed": bool(ven_out["double_lock_passed"]),
+            "hallucination_detected": bool(ven_out["hallucination_detected"]),
+            "exact_value": float(ven_out["exact_value"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w29_venra_double_lock_{idx:02d}",
+                domain="venra_deterministic_fact_ledger",
+                prompt=(
+                    f"Audit VeNRA Double-Lock Universal Fact Ledger diff operation with "
+                    f"claimed_value={claimed} on record group #{idx}. Output JSON with "
+                    "venra_idx, double_lock_passed, hallucination_detected, exact_value."
+                ),
+                think=(
+                    f"Verify UFL key provenance and exact arithmetic={gt_ven['exact_value']}, "
+                    f"hallucination={gt_ven['hallucination_detected']}."
+                ),
+                ground_truth=gt_ven,
+                verifier_src=_formula_exact_verifier_src(gt_ven),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    for idx in range(2):
+        arg_out = propagate_bipolar_gradual_argumentation(
+            {"src_s": 0.72 + 0.1 * idx, "src_a": 0.65, "hyp_node": 0.50},
+            [("src_s", "hyp_node", 0.60)],
+            [("src_a", "hyp_node", 0.58 - 0.30 * idx)],
+            target_node="hyp_node",
+        )
+        gt_arg = {
+            "arg_idx": idx,
+            "target_score": float(arg_out["target_score"]),
+            "clash_detected": bool(arg_out["clash_detected"]),
+            "escalate_hitl": bool(arg_out["escalate_hitl"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w29_nars_bipolar_{idx:02d}",
+                domain="nars_acal_bipolar_argumentation",
+                prompt=(
+                    f"Propagate damped NARS/ACAL bipolar support and attack graph strengths to "
+                    f"hyp_node under case #{idx}. Output JSON with arg_idx, target_score, "
+                    "clash_detected, escalate_hitl."
+                ),
+                think=(
+                    f"Fixed-point logit propagation yields target_score={gt_arg['target_score']} "
+                    f"with HITL escalation={gt_arg['escalate_hitl']}."
+                ),
+                ground_truth=gt_arg,
+                verifier_src=_formula_exact_verifier_src(gt_arg),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    for idx in range(2):
+        known = {"f1": True, "f2": True} if idx == 0 else {"f1": True}
+        gap_out = detect_nesy_rag_symbolic_knowledge_gaps(
+            [{"requires": {"f1": True, "f2": True}, "conclusion": True}],
+            known,
+            ["f2", "f_aux"],
+        )
+        gt_gap = {
+            "gap_idx": idx,
+            "determined_without_gaps": bool(gap_out["determined_without_gaps"]),
+            "pivotal_count": len(gap_out["pivotal_unknowns"]),
+            "assignments_checked": int(gap_out["assignments_checked"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w29_nesy_rag_gaps_{idx:02d}",
+                domain="nesy_rag_knowledge_gap_prolog",
+                prompt=(
+                    f"Run NeSy-RAG symbolic sensitivity check over unknown Boolean predicates "
+                    f"for clause assignment #{idx}. Return JSON with gap_idx, "
+                    "determined_without_gaps, pivotal_count, assignments_checked."
+                ),
+                think=(
+                    f"Enumerate unknown Boolean combinations checking outcome flips: "
+                    f"pivotal_count={gt_gap['pivotal_count']}."
+                ),
+                ground_truth=gt_gap,
+                verifier_src=_formula_exact_verifier_src(gt_gap),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    for idx in range(2):
+        sym_out = route_symrag_adaptive_query_pathway(
+            hop_count=1 if idx == 0 else 3,
+            has_symbolic_aggregation=(idx == 1),
+            constraint_count=1 if idx == 0 else 4,
+            system_load=0.25 + 0.15 * idx,
+            wfa_raw_transitions=[[3.0, 1.0 + idx], [2.0, 6.0]],
+        )
+        gt_sym = {
+            "symrag_idx": idx,
+            "selected_pathway": str(sym_out["selected_pathway"]),
+            "complexity_score": float(sym_out["complexity_score"]),
+            "row_stochastic_verified": bool(sym_out["row_stochastic_verified"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w29_symrag_retomaton_{idx:02d}",
+                domain="symrag_wfa_adaptive_routing",
+                prompt=(
+                    f"Select SymRAG pathway and normalize Local RetoMaton WFA matrix for "
+                    f"routing case #{idx}. Return JSON with symrag_idx, selected_pathway, "
+                    "complexity_score, row_stochastic_verified."
+                ),
+                think=(
+                    f"Adaptive route={gt_sym['selected_pathway']} at complexity="
+                    f"{gt_sym['complexity_score']} with stochastic WFA rows."
+                ),
+                ground_truth=gt_sym,
+                verifier_src=_formula_exact_verifier_src(gt_sym),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    for idx in range(2):
+        pot_out = aggregate_potre_heterogeneous_ensemble_and_compile_solver(
+            [
+                {
+                    "agent_id": "a1",
+                    "topology": "adversarial",
+                    "prob": 0.62,
+                    "symbolically_verified": True,
+                },
+                {
+                    "agent_id": "a2",
+                    "topology": "spectrum",
+                    "prob": 0.68 + 0.04 * idx,
+                    "symbolically_verified": True,
+                },
+                {
+                    "agent_id": "a3",
+                    "topology": "direct",
+                    "prob": 0.12,
+                    "symbolically_verified": False,
+                },
+            ],
+            [
+                {"rule_id": "rl_valid", "pass_rate": 0.91},
+                {"rule_id": "rl_drop", "pass_rate": 0.55},
+            ],
+            min_pass_rate=0.85,
+        )
+        gt_pot = {
+            "potre_idx": idx,
+            "verified_consensus_prob": float(pot_out["verified_consensus_prob"]),
+            "accepted_count": int(pot_out["accepted_count"]),
+            "compiled_rule_count": int(pot_out["compiled_rule_count"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w29_potre_reacomp_{idx:02d}",
+                domain="potre_ensemble_reacomp_solver",
+                prompt=(
+                    f"Filter unverified PoTRE agent branches, pool logit consensus, and compile "
+                    f"ReaComp trace rules above 0.85 pass_rate for sample #{idx}. Return JSON with "
+                    "potre_idx, verified_consensus_prob, accepted_count, compiled_rule_count."
+                ),
+                think=(
+                    f"Reject unverified proposal leaving accepted_count={gt_pot['accepted_count']} "
+                    f"and consensus={gt_pot['verified_consensus_prob']}."
+                ),
+                ground_truth=gt_pot,
+                verifier_src=_formula_exact_verifier_src(gt_pot),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    lc_out = verify_leancat_functor_compositionality(
+        objects=["A", "B"],
+        morphisms={"id_A": ("A", "A"), "id_B": ("B", "B"), "f": ("A", "B")},
+        composition_table={("f", "id_A"): "f", ("id_B", "f"): "f"},
+        functor_obj_map={"A": "X", "B": "Y"},
+        functor_morph_map={"id_A": "id_X", "id_B": "id_Y", "f": "g"},
+        target_identities={"X": "id_X", "Y": "id_Y"},
+        target_composition_table={("g", "id_X"): "g", ("id_Y", "g"): "g"},
+    )
+    gt_lc = {
+        "functor_valid": bool(lc_out["functor_valid"]),
+        "identities_checked": int(lc_out["identities_checked"]),
+        "compositions_checked": int(lc_out["compositions_checked"]),
+    }
+    records.append(
+        _build_rlvr_record(
+            record_id="w29_leancat_functor_00",
+            domain="leancat_category_compositionality",
+            prompt=(
+                "Verify LeanCat 1-category functor identity and morphism compositionality laws "
+                "across Stage1->Stage2 objects. Return JSON with functor_valid, "
+                "identities_checked, compositions_checked."
+            ),
+            think=(
+                f"Checked {gt_lc['identities_checked']} identities and "
+                f"{gt_lc['compositions_checked']} compositions -> valid={gt_lc['functor_valid']}."
+            ),
+            ground_truth=gt_lc,
+            verifier_src=_formula_exact_verifier_src(gt_lc),
+            curriculum_tier="TIER_3_BEHEMOTH",
+        )
+    )
+
+    pm_out = enforce_protomed_k_anonymity_l_diversity_and_sat_conflict_gate(
+        [{"class_id": "ec0", "records_count": 5, "sensitive_values": ["s1", "s2", "s3"]}],
+        [
+            {"rule_id": "r1", "conditions": ["c1"], "target_action": "act", "polarity": 1},
+            {"rule_id": "r2", "conditions": ["c2"], "target_action": "act", "polarity": -1},
+        ],
+    )
+    gt_pm = {
+        "privacy_gate_passed": bool(pm_out["privacy_gate_passed"]),
+        "sat_conflict_count": int(pm_out["sat_conflict_count"]),
+        "clinical_ruo_sports_weight": float(pm_out["clinical_ruo_sports_weight"]),
+    }
+    records.append(
+        _build_rlvr_record(
+            record_id="w29_protomed_ruo_sat_00",
+            domain="protomed_privacy_and_sat_quarantine",
+            prompt=(
+                "Evaluate ProtoMedAgent k-anonymity/l-diversity gate, SAT comorbidity conflict "
+                "count, and zero sports weight lock. Return JSON with privacy_gate_passed, "
+                "sat_conflict_count, clinical_ruo_sports_weight."
+            ),
+            think=(
+                f"Privacy passed={gt_pm['privacy_gate_passed']}, SAT local conflicts="
+                f"{gt_pm['sat_conflict_count']}, RUO sports_weight=0.0."
+            ),
+            ground_truth=gt_pm,
+            verifier_src=_formula_exact_verifier_src(gt_pm),
+            curriculum_tier="TIER_3_BEHEMOTH",
+        )
+    )
+
     # Substring dedup + monotone tier curriculum sort (TIER_1 -> TIER_2 -> TIER_3)
     corpus_texts = [f"{r['domain']}::{r['prompt']}::{r['think']}" for r in records]
     kept_idxs = exact_substring_dedup(corpus_texts, k=16, w=16)

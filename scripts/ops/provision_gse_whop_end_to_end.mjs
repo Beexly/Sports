@@ -1220,17 +1220,12 @@ async function runCli() {
       JSON.stringify(
         {
           mode: isSandbox ? "sandbox_live" : "production_live",
-          accountId: result.accountId,
-          storefrontUrl: result.storefrontUrl,
-          products: result.products,
-          promoCodes: result.promoCodes,
-          webhook: {
-            id: result.webhook.id,
-            url: result.webhook.url,
-            testPingStatus: result.webhook.testPingStatus,
-            credentialFilePersisted: Boolean(result.webhook.secretReturnedOnce),
-          },
-          repoWired: wired,
+          accountProvisioned: Boolean(result.accountId),
+          productsCount: result.products.length,
+          promoCodesCount: result.promoCodes.length,
+          webhookRegistered: Boolean(result.webhook.id),
+          credentialFilePersisted: Boolean(result.webhook.secretReturnedOnce),
+          repoWiredCount: wired ? wired.written.length : 0,
         },
         null,
         2,
