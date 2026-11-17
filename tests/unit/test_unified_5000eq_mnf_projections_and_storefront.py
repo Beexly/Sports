@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import inspect
 import json
+import re
 import subprocess
 import sys
 import unittest
@@ -449,31 +450,48 @@ class TestTier1FeatureCoverage(unittest.TestCase):
             / "MNF-BUF-MIN-FOUNDER-COMMAND-AND-MONETIZATION-PACKET.md"
         )
 
-        # 1. coach-writeup-engine.ts MNF block check
+        # 1. coach-writeup-engine.ts must carry a Monday Night Football writeup.
+        #    Discovered from the engine (never typed to a settled week's gameId) so the
+        #    check survives the weekly slate refresh instead of pinning Week-9 BUF @ MIN.
         writeup_text = writeup_path.read_text(encoding="utf-8")
-        mnf_idx = writeup_text.find('"id": "writeup-mnf-401873051"')
-        self.assertNotEqual(mnf_idx, -1, "Missing writeup-mnf-401873051 in coach-writeup-engine.ts")
-        mnf_block = writeup_text[mnf_idx : mnf_idx + 5500]
-        self.assertIn("Buffalo Bills -3.5", mnf_block)
-        self.assertIn("72/100", mnf_block)
-        self.assertIn("55.5", mnf_block)
-        self.assertIn("48.5", mnf_block)
-        self.assertIn("Josh Allen", mnf_block)
+        mnf_ids = re.findall(r'"id": "(writeup-mnf-\d+)"', writeup_text)
+        self.assertGreaterEqual(
+            len(mnf_ids), 1, "coach-writeup-engine.ts must carry a writeup-mnf-<gameId> writeup"
+        )
+        mnf_idx = writeup_text.find(f'"id": "{mnf_ids[-1]}"')
+        mnf_block = writeup_text[mnf_idx : mnf_idx + 6000]
+        matchup_m = re.search(r'"matchup": "([^"]+ @ [^"]+)"', mnf_block)
+        self.assertIsNotNone(matchup_m, "MNF writeup must name its matchup")
+        self.assertIn('"windowSlot": "MNF"', mnf_block)
+        self.assertRegex(mnf_block, r'"sideConfidence": "\d{1,3}/100"')
         self.assertNotIn("Justin Jefferson OVER 82.5", mnf_block)
 
-        # 2. engine-live-bridge.ts MNF SGP & Showdown Captain check
+        # 2. engine-live-bridge.ts must serve the current primetime MNF matchup
         bridge_text = bridge_path.read_text(encoding="utf-8")
-        self.assertIn("BUF @ MIN", bridge_text)
-        self.assertIn("Josh Allen", bridge_text)
+        self.assertIn("Monday Night Football", bridge_text)
+        self.assertRegex(
+            bridge_text,
+            r"Monday Night Football \([A-Z]{2,3} @ [A-Z]{2,3}\)",
+            "engine-live-bridge.ts must name a primetime MNF matchup",
+        )
         self.assertNotIn("Justin Jefferson 80+ Rec Yds", bridge_text)
 
-        # 3. redline-world.tsx MNF & Week 9 Sunday 7-4-0 proof check
+        # 3. redline-world.tsx must DERIVE the standing record from the catalog (single source),
+        #    never hand-type a W-L-T (the C12 ledger-single-source doctrine).
         redline_text = redline_path.read_text(encoding="utf-8")
-        self.assertIn("36-13-1", redline_text)
-        self.assertIn("47-19-1", redline_text)
+        self.assertIn(
+            "seasonLedgerOfRecord",
+            redline_text,
+            "redline-world.tsx must read the standing record from the catalog",
+        )
+        self.assertNotIn(
+            "36-13-1",
+            redline_text,
+            "redline-world.tsx must not hand-type a W-L-T record",
+        )
         self.assertTrue(
-            "7-4-0" in redline_text or "Buffalo Bills @ Minnesota Vikings" in redline_text,
-            "Expected Week 9 7-4-0 proof or MNF BUF @ MIN preview in redline-world.tsx",
+            "MNF" in redline_text or "Monday Night Football" in redline_text,
+            "Expected an MNF preview on redline-world.tsx",
         )
 
         # 4. pricing/page.tsx conversion link check
