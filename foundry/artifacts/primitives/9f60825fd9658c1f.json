@@ -1,0 +1,753 @@
+{
+ "book_id": "9f60825fd9658c1f",
+ "source_status": "COMPLETE",
+ "source_note": "Mancur Olson, The Logic of Collective Action: Public Goods and the Theory of Groups, Harvard University Press, Harvard Economic Studies Volume CXXIV; copyright 1965 and 1971. The local file is the 2002 twentieth printing (ISBN 0-674-53751-3) of the 1965 work, including the 1971 Preface and the Appendix (Appendix begins at printed p. 169). PDF size 10236367 bytes; full sha256 over (str(size) encoded + full file bytes) is 9f60825fd9658c1ff56f700ba68972de9ca8649867d66d8bf91fcf522294c70c; book_id is the first 16 hex characters. Extracted text is 523001 characters of usable OCR with scattered character errors; every verbatim quote in this artifact was chosen from a clean passage and verified as a contiguous substring of the extracted text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "organization_purpose_common_interests",
+   "name": "Organizations exist primarily to advance the common interests of a group of individuals",
+   "verbatim_quote": "their characteristic and primary function is to advance the common interests of groups of individuals.",
+   "page": "Chapter I, section A, printed p. 7; text lines 367-372",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Members of the group share at least one common interest or objective",
+    "Purely individual interests can usually be advanced by unorganized individual action"
+   ],
+   "breakdown_regime": "Organizations also serve individual interests and contain factions; the claim describes the characteristic function, not the only function.",
+   "domain": "organization theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Treats any coordinated signal producing effort in the engine as an organization whose reason to exist is a shared objective, so shared objectives are modeled as first class objects rather than as sums of private preferences.",
+    "source_operator": "organization_purpose_common_interests",
+    "telemetry": "Rosters of agents or contributors grouped by shared objective, with the objective each group is organized around."
+   }
+  },
+  {
+   "primitive_id": "collective_good_nonexcludability",
+   "name": "A collective or public good cannot feasibly be withheld from members of the group who did not pay for it",
+   "verbatim_quote": "those who do not purchase or pay for any of the public or collective good cannot be excluded or kept from sharing in the consumption of the good, as they can where noncollective goods are concerned.",
+   "page": "Chapter I, section B, printed p. 15; text lines 718-722",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Exclusion of nonpayers is infeasible or uneconomic for the good in question",
+    "The relevant group for the good has been defined"
+   ],
+   "breakdown_regime": "Breaks down for goods where exclusion is cheap and enforceable; those behave as private or club goods rather than collective goods in this sense.",
+   "domain": "public goods economics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Classifies engine outputs and shared resources by excludability: a projection, dataset, or model improvement that every downstream consumer receives whether or not it contributed cost is a collective good and inherits the free rider problem.",
+    "source_operator": "collective_good_nonexcludability",
+    "telemetry": "Access logs and contribution records showing who consumed a shared output and who bore cost to produce it."
+   }
+  },
+  {
+   "primitive_id": "collective_good_provision_is_fundamental_function",
+   "name": "The provision of public or collective goods is the fundamental function of organizations generally",
+   "verbatim_quote": "It follows that the provision of public or collective goods is the fundamental function of organizations generally.",
+   "page": "Chapter I, section B, printed p. 15; text lines 724-726",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Achievement of a common goal benefits every member of the group",
+    "No member is excluded from the benefit brought about by achieving the common goal"
+   ],
+   "breakdown_regime": "Philanthropic and religious organizations may pursue purposes beyond member benefit, and the theory is less useful for them.",
+   "domain": "public goods economics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Frames the reasoning engine itself as a collective good provider for its consumers, which predicts chronic underinvestment in shared infrastructure unless a separate funding or compulsion mechanism exists.",
+    "source_operator": "collective_good_provision_is_fundamental_function",
+    "telemetry": "Usage and benefit records for shared engine infrastructure compared with the funding or effort assigned to it."
+   }
+  },
+  {
+   "primitive_id": "state_taxation_as_compulsion",
+   "name": "Even the state, with patriotism and ideology behind it, cannot finance its basic services through voluntary contributions, so taxation is necessary",
+   "verbatim_quote": "no major state in modern history has been able to support itself through voluntary dues or contributions.",
+   "page": "Chapter I, section B, printed p. 13; text lines 640-643",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The services financed are basic collective goods such as law and order and defense",
+    "Emotional and ideological motives for allegiance are already at their strongest in the state case"
+   ],
+   "breakdown_regime": "Small states or communities with strong selective incentives are not the case considered; the claim concerns major states and their most basic services.",
+   "domain": "public finance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sets the limiting case for voluntary funding of shared systems: if the strongest allegiance case still requires compulsion, a voluntary contribution scheme for a shared engine resource should be presumed insufficient until evidence shows otherwise.",
+    "source_operator": "state_taxation_as_compulsion",
+    "telemetry": "Historical and internal records of voluntary versus compelled funding for shared services and infrastructure."
+   }
+  },
+  {
+   "primitive_id": "market_free_rider_analogy",
+   "name": "Each firm wants the other firms to bear the cost of obtaining the higher price that all firms want",
+   "verbatim_quote": "it is in the interest of each firm that the other firms pay the cost-in terms of the necessary reduction in output-needed to obtain a higher price.",
+   "page": "Chapter I, section B, printed p. 10; text lines 486-489",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "All firms share an interest in the higher price",
+    "The cost of obtaining it falls on whoever restricts output"
+   ],
+   "breakdown_regime": "In small oligopolies each firm is large enough that its own restraint visibly affects price, so the analogy weakens and strategic interaction takes over.",
+   "domain": "industrial organization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Supplies the template for recognizing free riding inside any multi agent system: when a benefit is uniform across participants and the cost is borne by whoever acts, each participant rationally prefers that others act first.",
+    "source_operator": "market_free_rider_analogy",
+    "telemetry": "Per participant cost and benefit records in shared markets, data pools, or compute pools."
+   }
+  },
+  {
+   "primitive_id": "large_group_lobby_gets_no_voluntary_support",
+   "name": "A lobbying organization working for a large group gets no assistance from rational, self-interested individuals in that group",
+   "verbatim_quote": "A lobbying organization, or indeed a labor union or any other organization, working in the interest of a large group of firms or workers in some industry, would get no assistance from the rational, self-interested individuals in that industry.",
+   "page": "Chapter I, section B, printed p. 11; text lines 535-541",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The group is large enough that one contribution is not noticeable",
+    "Individuals are rational and self-interested",
+    "No coercion or separate incentive is present"
+   ],
+   "breakdown_regime": "Fails where selective incentives, coercion, or a privileged subgroup exists; those exceptions are treated by later primitives in this artifact.",
+   "domain": "collective action theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Predicts that appeals to shared interest alone will not fund or staff large shared efforts in the engine program; any plan that relies on voluntary large group support without selective incentives should be flagged as structurally unsound.",
+    "source_operator": "large_group_lobby_gets_no_voluntary_support",
+    "telemetry": "Membership, dues, and contribution rates for large voluntary organizations relative to the size of the benefited group."
+   }
+  },
+  {
+   "primitive_id": "traditional_group_theory_degree_only",
+   "name": "The traditional theory of groups wrongly assumes small and large groups differ only in degree, not in kind",
+   "verbatim_quote": "It assumes that small and large groups differ in degree, but not in kind.",
+   "page": "Chapter I, section C, printed p. 20; text lines 945-947",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The traditional theory in both its casual and formal variants is the target",
+    "Participation in voluntary associations is treated by that theory as nearly universal"
+   ],
+   "breakdown_regime": "The correction does not deny that some functions are best served by large associations; it denies that large associations attract members the way small groups do.",
+   "domain": "group theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Vetoes any engine or organizational design that scales a small group mechanism up to a large group unchanged; size is a qualitative variable that changes which mechanisms can work.",
+    "source_operator": "traditional_group_theory_degree_only",
+    "telemetry": "Comparative success rates of the same coordination mechanism run at small and large group sizes."
+   }
+  },
+  {
+   "primitive_id": "cost_function_and_first_unit_cost",
+   "name": "The cost of a collective good is a rising function of its level, and the first unit is disproportionately expensive",
+   "verbatim_quote": "Sometimes a group must set up a formal organization before it can obtain a collective good, and the cost of establishing an organization entails that the first unit of a collective good obtained will be relatively expensive.",
+   "page": "Chapter I, section D, printed p. 22; text lines 1013-1018",
+   "latex": "C = f(T)",
+   "symbol_and_unit_ledger": {
+    "C": "total cost of obtaining the collective good, in currency units",
+    "T": "rate or level at which the collective good is obtained, in units of the good",
+    "f": "the group specific cost function, rising in T with a conventional U shaped average cost"
+   },
+   "assumptions": [
+    "Total cost rises with the level of provision",
+    "Significant initial or fixed costs exist, often including the cost of setting up an organization",
+    "Average cost curves have the conventional U shape"
+   ],
+   "breakdown_regime": "The exact shape is group specific; the claim fixes only the rising total cost, the high first unit cost, and the U shaped average cost.",
+   "domain": "public goods economics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Gives the engine a cost prior for any shared capability: expect a large fixed setup cost before the first usable unit, then falling average cost, then rising marginal cost as demands become excessive.",
+    "source_operator": "cost_function_and_first_unit_cost",
+    "telemetry": "Setup costs, marginal costs, and average costs recorded per shared capability or dataset as provision levels change."
+   }
+  },
+  {
+   "primitive_id": "group_gain_formula",
+   "name": "Group gain equals group size times the level of the collective good",
+   "verbatim_quote": "The total gain to the group will depend upon the rate or level at which the collective good is obtained (T), and the \"size\" of the group (Sg)",
+   "page": "Chapter I, section D, printed p. 23; text lines 1046-1050",
+   "latex": "V_g = S_g T",
+   "symbol_and_unit_ledger": {
+    "V_g": "total gain or value of the collective good to the group, in currency or value units",
+    "S_g": "size of the group, the value of a unit of the collective good summed over members, in value units per unit of T",
+    "T": "rate or level of provision of the collective good, in units of the good"
+   },
+   "assumptions": [
+    "Group size reflects both the number of members and the value of a unit of the good to each member",
+    "S_g is treated as constant for the basic derivation"
+   ],
+   "breakdown_regime": "When S_g varies with T, the simple product form needs the fuller derivative treatment the text gives in its footnote on nonconstant shares.",
+   "domain": "public goods economics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Provides the engine with a first order valuation identity for shared goods: total value scales with both provision level and the aggregate stake of the benefited population, so either term can be estimated from observables.",
+    "source_operator": "group_gain_formula",
+    "telemetry": "Beneficiary counts weighted by per beneficiary value, and provision levels, for shared outputs."
+   }
+  },
+  {
+   "primitive_id": "individual_advantage_formula",
+   "name": "An individual's advantage from a collective good is his gain from it minus its cost",
+   "verbatim_quote": "The advantage (A,) that any individual i would get from obtaining any amount of the collective or group good would be the gain to the individual (V,) minus the cost (C).",
+   "page": "Chapter I, section D, printed p. 23; text lines 1058-1062",
+   "latex": "A_i = V_i - C",
+   "symbol_and_unit_ledger": {
+    "A_i": "net advantage to individual i, in currency or value units",
+    "V_i": "gain to individual i from the collective good, equal to F_i times V_g, in the same units",
+    "C": "total cost of the amount of the collective good obtained, in the same units",
+    "F_i": "fraction of the total group gain received by individual i, dimensionless"
+   },
+   "assumptions": [
+    "The individual compares his own gain with the full cost he would bear if he provided the good himself",
+    "V_i is the individual's fraction F_i of the group gain V_g"
+   ],
+   "breakdown_regime": "Money cost and money return are the simple case; where the good is not sold, utility comparisons and income effects complicate the calculation, as the text notes.",
+   "domain": "public goods economics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Defines the participation test the engine applies to any contributor: a rational actor provides a shared good alone only when his own share of the gain covers the whole cost, not merely his share of it.",
+    "source_operator": "individual_advantage_formula",
+    "telemetry": "Per actor benefit shares and full provision costs for candidate shared goods."
+   }
+  },
+  {
+   "primitive_id": "individual_optimum_condition",
+   "name": "An individual acting independently provides up to the point where his fraction of the group marginal gain equals marginal cost",
+   "verbatim_quote": "the optimal amount of a collective good for an individual to obtain, if he should obtain any, is found when the rate of gain to the group, multiplied by the fraction of the group gain the individual gets, equals the rate of increase of the total cost of the collective good.",
+   "page": "Chapter I, section D, printed p. 24; text lines 1085-1090",
+   "latex": "F_i \\left(\\frac{dV_g}{dT}\\right) = \\frac{dC}{dT}",
+   "symbol_and_unit_ledger": {
+    "F_i": "fraction of the group gain received by individual i, dimensionless",
+    "V_g": "total gain to the group, in value units",
+    "T": "level of provision of the collective good, in units of the good",
+    "C": "total cost, in value units",
+    "dV_g/dT": "marginal group gain per unit of provision",
+    "dC/dT": "marginal cost per unit of provision"
+   },
+   "assumptions": [
+    "F_i and S_g are assumed constant in the basic derivation",
+    "Second order conditions for a maximum are satisfied"
+   ],
+   "breakdown_regime": "With nonconstant F_i or S_g the condition gains extra terms, which the text supplies; the constant share version is the benchmark case.",
+   "domain": "public goods economics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Gives the engine a stopping rule for unilateral provision: a single actor stops far short of the group optimum because he internalizes only his fraction of each marginal unit of benefit.",
+    "source_operator": "individual_optimum_condition",
+    "telemetry": "Marginal benefit and marginal cost curves per shared good, with each actor's benefit share."
+   }
+  },
+  {
+   "primitive_id": "provision_presumption",
+   "name": "A collective good will presumably be provided when the group gain exceeds total cost by more than it exceeds some individual's gain",
+   "verbatim_quote": "if at any level of purchase of the collective good, the gain to the group exceeds the total cost by more than it exceeds the gain to any individual, then there is a presumption that the collective good will be provided",
+   "page": "Chapter I, section D, printed p. 33; text lines 1445-1450",
+   "latex": "F_i > \\frac{C}{V_g}",
+   "symbol_and_unit_ledger": {
+    "F_i": "fraction of the group gain received by the individual most likely to provide the good, dimensionless",
+    "C": "total cost of the collective good at the individual's optimum, in value units",
+    "V_g": "total gain to the group, in value units"
+   },
+   "assumptions": [
+    "The test is applied at the optimal point for the individual in question",
+    "Equivalently the individual's gain V_i exceeds the total cost C"
+   ],
+   "breakdown_regime": "It is a presumption, not a guarantee; bargaining failure inside a privileged group can still block provision, as the text notes.",
+   "domain": "public goods economics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A screening test for whether a shared capability will appear without coordination: if no single beneficiary's share passes the test, the engine should expect non provision and plan an incentive or compulsion mechanism.",
+    "source_operator": "provision_presumption",
+    "telemetry": "Largest beneficiary share, total cost, and total value estimates for candidate shared goods."
+   }
+  },
+  {
+   "primitive_id": "cournot_special_case",
+   "name": "A firm restricts output only when the demand elasticity is no greater than its share of industry output, the Cournot case of the general rule",
+   "verbatim_quote": "Only when the elasticity of demand for the industry is less than or equal to the fraction of the industry's output supplied by a particular firm will that firm have any incentive to restrict its output.",
+   "page": "Chapter I, section D, printed p. 26; text lines 1160-1164",
+   "latex": "E \\le F_i",
+   "symbol_and_unit_ledger": {
+    "E": "elasticity of demand for the industry's product, dimensionless",
+    "F_i": "fraction of total industry output supplied by firm i, dimensionless"
+   },
+   "assumptions": [
+    "Firms independently seek to maximize profits",
+    "Marginal costs of production are assumed zero in the simplified derivation",
+    "The firm expects no reaction from other firms"
+   ],
+   "breakdown_regime": "With reaction expectations or rising marginal costs the threshold shifts; the result is the independent action benchmark.",
+   "domain": "industrial organization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Shows the engine that the collective action rule and the classic oligopoly rule are one rule, so market structure diagnostics and group provision diagnostics can share one operator keyed on actor share versus responsiveness.",
+    "source_operator": "cournot_special_case",
+    "telemetry": "Actor market shares and demand elasticity estimates for industries or data markets under study."
+   }
+  },
+  {
+   "primitive_id": "suboptimal_provision_tendency",
+   "name": "Small groups tend toward suboptimal provision of collective goods, just as large groups tend toward providing none at all",
+   "verbatim_quote": "just as there is a tendency for large groups to fail to provide themselves with any collective good at all, so there is a tendency in small groups toward a suboptimal provision of collective goods.",
+   "page": "Chapter I, section D, printed p. 28; text lines 1235-1238",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Provision is voluntary and independent",
+    "Each provider cannot exclude others from the amount he provides"
+   ],
+   "breakdown_regime": "Special institutional arrangements, especially proportional marginal cost sharing, can remove the suboptimality; the tendency is the default, not a law.",
+   "domain": "collective action theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sets the engine's default expectation for any voluntarily provided shared good: some provision, below the group optimal level, with the shortfall growing as the largest actor's share shrinks.",
+    "source_operator": "suboptimal_provision_tendency",
+    "telemetry": "Observed provision levels for shared goods compared with estimated group optimal levels."
+   }
+  },
+  {
+   "primitive_id": "exploitation_of_great_by_small",
+   "name": "The largest member of a small group bears a disproportionate share of the burden of providing the collective good",
+   "verbatim_quote": "The largest member, the member who would on his own provide the largest amount of the collective good, bears a disproportionate share of the burden of providing the collective good.",
+   "page": "Chapter I, section D nontechnical summary, printed p. 35; text lines 1505-1508",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Members differ in size or in their stake in the collective good",
+    "Smaller members receive the amount the largest member provides without paying for more"
+   ],
+   "breakdown_regime": "Income effects and bargaining can soften the disproportionality, and the text warns the simple case overstates how much of the burden the largest member ends up bearing.",
+   "domain": "collective action theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Predicts load concentration in any shared system: the biggest stakeholder will fund and maintain shared infrastructure out of proportion to its share of total benefit, and smaller stakeholders will rationally ride on that provision.",
+    "source_operator": "exploitation_of_great_by_small",
+    "telemetry": "Contribution shares versus benefit shares for the largest and smallest members of shared systems."
+   }
+  },
+  {
+   "primitive_id": "optimal_cost_sharing_rule",
+   "name": "Optimal voluntary provision requires marginal cost to be shared in exactly the same proportion as marginal benefits",
+   "verbatim_quote": "The marginal cost of additional units of the collective good must be shared in exactly the same proportion as the additional benefits.",
+   "page": "Chapter I, section D, printed p. 30; text lines 1360-1362",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Participation is voluntary, so any member whose marginal cost share exceeds his marginal benefit share stops contributing",
+    "The rule is stated for marginal, not average, costs and benefits"
+   ],
+   "breakdown_regime": "It is the unique non suboptimal arrangement under voluntary participation; any other sharing rule yields suboptimal provision, never supraoptimal provision.",
+   "domain": "public goods economics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A design rule for cost sharing in engine infrastructure: allocate marginal costs in proportion to marginal benefits received, or accept a predictable shortfall in provision.",
+    "source_operator": "optimal_cost_sharing_rule",
+    "telemetry": "Marginal cost allocations and marginal benefit estimates per participant in shared systems."
+   }
+  },
+  {
+   "primitive_id": "exclusive_collective_good",
+   "name": "An exclusive collective good, such as a supracompetitive price, is fixed in supply, so what one member takes another loses",
+   "verbatim_quote": "in a market situation the \"collective good\"-the higher price-is such that if one firm sells more at that price, other firms must sell less, so that the benefit it provides is fixed in supply",
+   "page": "Chapter I, section E, printed p. 37; text lines 1590-1594",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Exclusion from the benefit is infeasible inside the group",
+    "There is no jointness of supply: total benefit at the given price is fixed"
+   ],
+   "breakdown_regime": "The classification depends on the objective sought, not on the membership; the same firms are exclusive for price and inclusive for a tariff.",
+   "domain": "industrial organization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Tells the engine to classify shared goods by supply structure before predicting group behavior: fixed supply goods generate rivalry and exclusion pressure, expandable goods generate recruitment pressure.",
+    "source_operator": "exclusive_collective_good",
+    "telemetry": "Supply response of a shared benefit to added consumers, and rivalry indicators among group members."
+   }
+  },
+  {
+   "primitive_id": "inclusive_collective_good",
+   "name": "An inclusive collective good automatically expands in supply when the group expands, so added members do not reduce the benefit of existing members",
+   "verbatim_quote": "Because the supply of collective goods in nonmarket situations, by contrast, automatically expands when the group expands, this sort of public good should be called an \"inclusive collective good.\"",
+   "page": "Chapter I, section E, printed p. 38; text lines 1618-1621",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Exclusion is infeasible inside the group",
+    "There is a considerable degree of jointness in supply"
+   ],
+   "breakdown_regime": "If added consumption eventually congests the good, jointness fades and the group's inclusiveness weakens; dues at least equal to the congestion cost are then required.",
+   "domain": "public goods economics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Identifies which shared engine assets scale benignly: models, taxonomies, and reference datasets are inclusive goods, so widening their user base raises total value without diluting existing users.",
+    "source_operator": "inclusive_collective_good",
+    "telemetry": "Per user benefit measurements as the user base of a shared asset grows."
+   }
+  },
+  {
+   "primitive_id": "exclusive_group_holdout_power",
+   "name": "Exclusive groups need near total participation, which gives any single holdout extraordinary bargaining power",
+   "verbatim_quote": "Whenever unanimous participation is required, any single holdout has extraordinary bargaining power; he may be able to demand for himself most of the gain that would come from any group-oriented action.",
+   "page": "Chapter I, section E, printed p. 41; text lines 1833-1836",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The benefit of the group action is fixed in amount, so a nonparticipant can capture it at the participants' expense",
+    "Participation of essentially every member is required for the action to work"
+   ],
+   "breakdown_regime": "If a holdout's marginal costs rise steeply with output, a single holdout need not be fatal, though he still gains at the colluding members' expense.",
+   "domain": "bargaining theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Warns the engine that unanimity gated designs hand veto rents to the least cooperative participant; coordination schemes should be scored by how much holdout power their participation threshold creates.",
+    "source_operator": "exclusive_group_holdout_power",
+    "telemetry": "Participation thresholds, holdout frequency, and side payments in coordinated group actions."
+   }
+  },
+  {
+   "primitive_id": "inclusive_group_low_strategic_interaction",
+   "name": "Bargaining and strategic interaction are much less common and important in inclusive groups than in exclusive groups",
+   "verbatim_quote": "It is not however generally understood that in inclusive groups, even small ones, on the other hand, bargaining or strategic interaction is evidently much less common and important.",
+   "page": "Chapter I, section E, printed p. 42; text lines 1898-1901",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "No member wants to eliminate anyone from the group",
+    "Nothing like unanimous participation is normally required, so holdout attempts are rare"
+   ],
+   "breakdown_regime": "In the intermediate size range strategic interaction returns and outcomes become indeterminate, as the taxonomy section shows.",
+   "domain": "bargaining theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Lets the engine use the simpler independent behavior model for inclusive group settings instead of a full game theoretic model, reserving strategic modeling for exclusive or intermediate settings.",
+    "source_operator": "inclusive_group_low_strategic_interaction",
+    "telemetry": "Observed bargaining frequency and reaction sensitivity in inclusive versus exclusive group settings."
+   }
+  },
+  {
+   "primitive_id": "noticeability_standard",
+   "name": "Whether a group can act without coercion depends on whether individual actions are noticeable to other members",
+   "verbatim_quote": "it depends on whether the individual actions of any one or more members in a group are noticeable to any other individuals in the group",
+   "page": "Chapter I, section F, printed p. 45; text lines 1995-1998",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Noticeability is judged under the information and institutional arrangements that actually exist in the group",
+    "It is mainly, but not only, a function of the number in the group"
+   ],
+   "breakdown_regime": "Unequal stakes or an extremely valuable good can make a group actable at larger sizes than the headcount alone would suggest.",
+   "domain": "collective action theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Gives the engine a measurable gate for collective action feasibility: if contributions are not observable to peers, voluntary provision should be predicted to fail regardless of stated enthusiasm.",
+    "source_operator": "noticeability_standard",
+    "telemetry": "Contribution observability, attribution records, and peer reaction rates inside groups and platforms."
+   }
+  },
+  {
+   "primitive_id": "organization_costs_minimum",
+   "name": "Any group that must organize faces a minimum organization cost that must be met however little of the collective good it obtains",
+   "verbatim_quote": "Any group that must organize to obtain a collective good, then, will find that it has a certain minimum organization cost that must be met, however little of the collective good it obtains.",
+   "page": "Chapter I, section F, printed p. 47; text lines 2095-2098",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Organization costs cover communication, bargaining, and creating, staffing, and maintaining a formal organization",
+    "These costs are distinct from the direct resource costs of the good itself",
+    "The minimum grows with the number in the group"
+   ],
+   "breakdown_regime": "A group already organized for another purpose has these costs already met, which is the opening for the by-product theory.",
+   "domain": "organization theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Adds a fixed coordination overhead term to any engine plan that requires a new group to form: the overhead is owed before the first unit of value and grows with group size.",
+    "source_operator": "organization_costs_minimum",
+    "telemetry": "Measured setup and maintenance costs of organizations and coordination layers by group size."
+   }
+  },
+  {
+   "primitive_id": "three_cumulative_factors_against_large_groups",
+   "name": "Three cumulative factors, shrinking individual share, shrinking chance any subset can provide the good, and rising organization costs, keep large groups from furthering their interests",
+   "verbatim_quote": "For these reasons, the larger the group the farther it will fall short of providing an optimal supply of a collective good, and very large groups normally will not, in the absence of coercion or separate, outside incentives, provide themselves with even minimal amounts of a collective good.",
+   "page": "Chapter I, section F, printed p. 48; text lines 2130-2135",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The three factors operate cumulatively, not as alternatives",
+    "No coercion or separate, outside incentives are present"
+   ],
+   "breakdown_regime": "A logically possible exception, a nearly costless good whose cost stays fixed as millions join, is treated by the text as empirically trivial and still grossly suboptimal.",
+   "domain": "collective action theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A compact failure model the engine can score for any large group proposal: estimate benefit share dilution, subset provision probability, and organization cost, and require all three to pass before predicting voluntary action.",
+    "source_operator": "three_cumulative_factors_against_large_groups",
+    "telemetry": "Group size, benefit share distribution, subset provision history, and organization cost estimates."
+   }
+  },
+  {
+   "primitive_id": "group_taxonomy_privileged_intermediate_latent",
+   "name": "Groups divide into privileged, intermediate, and latent types, with the intermediate group defined by noticeable contributions but no member able to provide the good alone",
+   "verbatim_quote": "An \"intermediate\" group is a group in which no single member gets a share of the benefit sufficient to give him an incentive to provide the good himself, but which does not have so many members that no one member will notice whether any other member is or is not helping to provide the collective good.",
+   "page": "Chapter I, section F, printed p. 50; text lines 2195-2200",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A privileged group has at least one member whose share justifies providing the good even at full cost",
+    "A latent group is so large that no member's contribution significantly affects any other member"
+   ],
+   "breakdown_regime": "Intermediate group outcomes are indeterminate: a collective good may or may not be obtained, and never without coordination or organization.",
+   "domain": "collective action theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's master classifier for group settings: label the group privileged, intermediate, or latent first, because the label determines which provision mechanisms are even candidates.",
+    "source_operator": "group_taxonomy_privileged_intermediate_latent",
+    "telemetry": "Group size, largest member benefit share, and contribution noticeability for any group under analysis."
+   }
+  },
+  {
+   "primitive_id": "selective_incentives_definition",
+   "name": "Selective incentives are separate rewards or punishments applied to individuals, not to the group as a whole, conditional on contributing",
+   "verbatim_quote": "These \"selective incentives\" can be either negative or positive, in that they can either coerce by punishing those who fail to bear an allocated share of the costs of the group action, or they can be positive inducements offered to those who act in the group interest.",
+   "page": "Chapter I, section F, printed p. 51; text lines 2245-2250",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The incentive operates selectively toward individuals rather than indiscriminately on the group",
+    "To mobilize a latent group the incentive must exceed the individual's share of the cost of the collective good"
+   ],
+   "breakdown_regime": "Incentives smaller than the individual's cost share will not mobilize a latent group, however well designed they otherwise are.",
+   "domain": "collective action theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's core lever for large group problems: change the individual payoff with a contributor only reward or a noncontributor penalty instead of exhorting the group about the shared benefit.",
+    "source_operator": "selective_incentives_definition",
+    "telemetry": "Incentive values offered per contributor compared with per contributor cost shares."
+   }
+  },
+  {
+   "primitive_id": "mobilized_latent_group",
+   "name": "A latent group led to act by coercion or by positive rewards to individuals is a mobilized latent group",
+   "verbatim_quote": "A latent group that has been led to act in its group interest, either because of coercion of the individuals in the group or because of positive rewards to those individuals, will here be called a \"mobilized\" latent group.",
+   "page": "Chapter I, section F, printed p. 51; text lines 2250-2254",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Latent groups have a latent capacity for action that is not realized without selective incentives",
+    "Mobilization requires the incentive mechanism, not merely a change in opinion"
+   ],
+   "breakdown_regime": "Mobilization explains capacity, not wisdom: a mobilized group can still pursue inefficient or inequitable goals.",
+   "domain": "collective action theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Names the target state for any large group initiative in the engine: the design question is always which selective incentive performs the mobilization, and the state is verifiable by contribution behavior.",
+    "source_operator": "mobilized_latent_group",
+    "telemetry": "Contribution and participation rates in large groups before and after an incentive mechanism is introduced."
+   }
+  },
+  {
+   "primitive_id": "consensus_does_not_suffice",
+   "name": "Perfect agreement about the common good and the methods of achieving it does not make a large group act",
+   "verbatim_quote": "These points hold true even when there is unanimous agreement in a group about the common good and the methods of achieving it.",
+   "page": "Introduction, printed p. 2; text lines 221-223",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The failure is an incentive failure, distinct from any failure of consensus",
+    "The argument is made under the strong assumption of perfect consensus, so it holds a fortiori when consensus is incomplete"
+   ],
+   "breakdown_regime": "Lack of consensus is still inimical to group action; the claim is that consensus is not sufficient, not that it is irrelevant.",
+   "domain": "collective action theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Vetoes consensus based diagnostics in the engine: unanimous stated support for a shared goal is not evidence that the goal will be resourced, and agreement metrics must not be used as provision forecasts.",
+    "source_operator": "consensus_does_not_suffice",
+    "telemetry": "Stated agreement levels versus actual contribution levels in groups pursuing shared goals."
+   }
+  },
+  {
+   "primitive_id": "social_incentives_and_federation",
+   "name": "Social incentives are selective incentives that work mainly in small face to face groups and reach large groups only through federations of small groups",
+   "verbatim_quote": "Thus, organizations that use selective social incentives to mobilize a latent group interested in a collective good must be federations of smaller groups.",
+   "page": "Chapter II, section C, printed p. 63; text lines 2718-2725",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Social rewards and sanctions can distinguish among individuals, which is what makes them selective incentives",
+    "Members of the small constituent groups know each other and can apply social pressure"
+   ],
+   "breakdown_regime": "Mass media propaganda can imitate social pressure weakly, but a group usually cannot finance it before it is organized, so it is rarely an independent solution.",
+   "domain": "organization theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Directs the engine toward federated designs for reputation based coordination: keep the reputation bearing unit small and face to face, then federate, rather than applying social pressure across an anonymous mass.",
+    "source_operator": "social_incentives_and_federation",
+    "telemetry": "Participation rates in federated versus unitary large organizations using social incentives."
+   }
+  },
+  {
+   "primitive_id": "rationality_not_selfishness_requirement",
+   "name": "The latent group argument needs only rationality, not selfishness: even a wholly unselfish member will not make an imperceptible sacrifice",
+   "verbatim_quote": "Even if the member of a large group were to neglect his own interests entirely, he still would not rationally contribute toward the provision of any collective or public good, since his own contribution would not be perceptible.",
+   "page": "Chapter II, section C, printed p. 64; text lines 2770-2774",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Objectives may be selfish or unselfish; they must be pursued by efficient and effective means",
+    "The individual's contribution has no perceptible effect on anyone"
+   ],
+   "breakdown_regime": "Irrational or purely expressive behavior escapes the argument, which is why lost cause and mass movement groups are treated as outside its useful range.",
+   "domain": "collective action theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Hardens the engine against a common rebuttal: goodwill and altruism in a population do not rescue a large group design, because the binding constraint is perceptibility of effect, not motive.",
+    "source_operator": "rationality_not_selfishness_requirement",
+    "telemetry": "Contribution behavior of altruistically motivated members in large versus small groups."
+   }
+  },
+  {
+   "primitive_id": "union_compulsory_membership",
+   "name": "Large, durable national labor unions could not exist without some type of compulsory membership",
+   "verbatim_quote": "But it does not seem to be the case that large, national labor unions with the strength and durability of those that now exist in this country could exist without some type of compulsory membership.",
+   "page": "Chapter III, section B, printed p. 87; text lines 3735-3740",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Union achievements are collective goods received by members and nonmembers alike",
+    "Small local unions in very small workplaces are an exception",
+    "Attractive insurance or other noncollective benefits can occasionally substitute"
+   ],
+   "breakdown_regime": "Brief survivals driven by intense emotion are possible; the claim concerns strength and durability at national scale.",
+   "domain": "labor economics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The canonical case study the engine uses to calibrate the latent group model: a real large group whose survival mechanism is exactly the predicted compulsion, which validates using the model prospectively on other large groups.",
+    "source_operator": "union_compulsory_membership",
+    "telemetry": "Union density and survival under compulsory versus voluntary membership regimes."
+   }
+  },
+  {
+   "primitive_id": "coercion_turns_on_good_type_not_provider",
+   "name": "Whether coercion is necessary is determined by whether the good provided is collective, not by whether the provider is public or private",
+   "verbatim_quote": "it is the provision of collective goods and services, not the public or private nature or other characteristics of the institutions that provide these services, that largely determines whether economic freedom must be curtailed.",
+   "page": "Chapter III, section D, printed p. 96; text lines 4155-4159",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Collective goods must be paid for by everyone if they are to be provided at all",
+    "Noncollective goods can be sold on a market by public or private providers without compulsion"
+   ],
+   "breakdown_regime": "Governments hold a monopoly on major means of violence and can restrict freedom in other ways; the claim is about what the provision of the good itself necessitates.",
+   "domain": "political economy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A classification rule for the engine's policy reasoning: predict compulsion from the good's excludability structure, never from the legal form of the organization providing it.",
+    "source_operator": "coercion_turns_on_good_type_not_provider",
+    "telemetry": "Compulsion requirements observed across public and private providers of collective versus noncollective goods."
+   }
+  },
+  {
+   "primitive_id": "marxian_class_action_as_latent_group",
+   "name": "Marxian class action is an attempt to achieve the collective goals of a large, latent group, and fails under its own premise of rational self-interest",
+   "verbatim_quote": "Marxian class action then takes on the character of any endeavor to achieve the collective goals of a large, latent group.",
+   "page": "Chapter IV, section C, printed p. 106; text lines 4520-4522",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A class is a large group with a common interest arising from ownership or nonownership of productive property",
+    "Marx's premise is the rational, selfish pursuit of individual interests",
+    "Class legislation benefits the class as a whole and so offers no individual incentive for class action"
+   ],
+   "breakdown_regime": "A theory of class action built on irrational or emotional behavior would be consistent but is not the theory Marx offered; historically, revolutions were carried out by small disciplined elites.",
+   "domain": "political economy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A worked refutation the engine can reuse: any theory that predicts mass coordinated action from shared interest alone, without an incentive mechanism, inherits the same inconsistency.",
+    "source_operator": "marxian_class_action_as_latent_group",
+    "telemetry": "Participation rates in class based movements relative to class size, and the organizational mechanisms actually used."
+   }
+  },
+  {
+   "primitive_id": "orthodox_group_theory_asymmetry",
+   "name": "Pluralist group theory is inconsistent for large groups, so political outcomes are asymmetric: organized small groups defeat unorganized large ones",
+   "verbatim_quote": "Since relatively small groups will frequently be able voluntarily to organize and act in support of their common interests, and since large groups normally will not be able to do so, the outcome of the political struggle among the various groups in society will not be symmetrical.",
+   "page": "Chapter V, section D, printed p. 127; text lines 5415-5420",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The group theorists assume self-interested individuals and also assume groups act on group interest",
+    "The alleged counterweight of potential groups requires those groups to organize when threatened, which latent groups cannot do voluntarily"
+   ],
+   "breakdown_regime": "Overlapping memberships can still moderate some demands; the asymmetry claim concerns the systematic tilt, not every individual contest.",
+   "domain": "political science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Tells the engine to weight organized and unorganized interests differently in any political or market forecast: headcount is not power, and an unorganized majority should not be modeled as a latent counterweight that will appear on cue.",
+    "source_operator": "orthodox_group_theory_asymmetry",
+    "telemetry": "Policy outcomes in contests between small organized interests and large unorganized interests."
+   }
+  },
+  {
+   "primitive_id": "by_product_theory",
+   "name": "Large group lobbies are by-products of organizations that get strength and support from performing some function in addition to lobbying",
+   "verbatim_quote": "The large and powerful economic lobbies are in fact the by-products of organizations that obtain their strength and support because they perform some function in addition to lobbying for collective goods.",
+   "page": "Chapter VI, section A, printed p. 132; text lines 5605-5608",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The host organization either can coerce membership for a nonpolitical reason or sells private or noncollective benefits",
+    "The joint offering works only if the noncollective benefit exceeds its cost by more than the dues owed to the lobbying branch"
+   ],
+   "breakdown_regime": "The theory is needed only for large or latent groups; privileged and intermediate groups can often lobby without selective incentives.",
+   "domain": "pressure group theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's standard explanation and design pattern for durable large group organizations: attach the collective effort to a host function that supplies coercion capacity or a sellable private benefit, as a tied sale.",
+    "source_operator": "by_product_theory",
+    "telemetry": "Membership and revenue sources of large lobbying organizations, split between lobbying appeal and nonlobbying functions."
+   }
+  },
+  {
+   "primitive_id": "political_entrepreneur_selective_incentive_innovator",
+   "name": "In the large group case the successful political entrepreneur is above all an innovator with selective incentives",
+   "verbatim_quote": "The successful entrepreneur in the large group case, then, is above all an innovator with selective incentives.",
+   "page": "Appendix, printed p. 177; text lines 7424-7426",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "In small groups an entrepreneur can also earn a return by cutting bargaining costs and proposing efficient cost sharing",
+    "In a latent group no voluntary bargain can supply the good, so coercion or a contributor only reward is required"
+   ],
+   "breakdown_regime": "There is no presumption an entrepreneur will succeed; the difficulty and expense of the needed bargains are often too great, and many entrepreneurial efforts come to naught.",
+   "domain": "political economy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Defines the leadership role the engine should look for in stalled collective efforts: not a better spokesman for the shared goal, but an actor who invents a new selective incentive and captures part of the efficiency gain for doing so.",
+    "source_operator": "political_entrepreneur_selective_incentive_innovator",
+    "telemetry": "Founding mechanisms of successful large organizations, coded by whether the founder introduced a coercion device or a contributor only benefit."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "9f60825fd9658c1f-t1",
+   "think": "Olson's book begins from a premise almost everyone in the social sciences had accepted without noticing it: individuals are rational and self-interested, therefore groups of individuals with a common interest will act to further that interest. The whole work is the demonstration that the second half does not follow from the first half, and the demonstration is constructive rather than rhetorical, because Olson builds a small formal model in which the failure can be computed. The model starts with the definition of a collective good: a good such that, once it is provided to anyone in a group, it cannot feasibly be withheld from the others. That single property drives everything. Because the benefit cannot be withheld, each member's decision problem separates into his own gain and the full cost, and the two scale differently as the group grows. Olson writes the group gain as the product of group size and the level of provision, the individual's gain as his fraction of that group gain, and his advantage as his gain minus the cost. From those three lines the central results fall out mechanically. An individual acting alone stops where his fraction of the marginal group gain equals marginal cost, which is short of the group optimum by exactly the factor of his fraction. He provides anything at all only when his fraction of the group gain exceeds the cost ratio, which is why a member with a very large stake may provide the good for everyone while everyone else rides free. That asymmetry produces the book's most quoted result, the exploitation of the great by the small: in a small group the largest member bears a disproportionate share of the burden, not because of generosity or coercion but because his private calculus makes him the only one for whom provision pays. It also produces the suboptimality theorem, since the only cost sharing arrangement that escapes it is the one in which marginal costs are shared in exactly the same proportion as marginal benefits, an arrangement voluntary actors have no independent reason to reach. Group size then stops being a quantity and becomes a classification. Olson divides groups by two tests: whether some member's share is large enough to justify solo provision, and whether a member's contribution is noticeable to the others. The privileged group passes the first test and will usually obtain its good with no organization at all. The intermediate group fails the first test but passes the second, so its outcome is genuinely indeterminate and depends on coordination, bargaining, and organization. The latent group fails both tests, and for it the conclusion is not probabilistic but structural: voluntary action will not provide the good, full stop. Three cumulative factors enforce this, the dilution of each member's share of the benefit, the vanishing chance that any small subset gains enough to provide the good itself, and organization costs that rise with numbers and include a fixed minimum that must be paid before the first unit exists. For latent groups the only exits are the two forms of selective incentive: negative coercion that punishes noncontributors, or positive inducements that only contributors receive. This is where the book turns from logic to explanation. Labor unions survive at national scale because compulsory membership supplies the negative incentive. The large farm and professional lobbies survive because their host organizations sell insurance, cooperatives, journals, and services, so lobbying rides as a by-product of a tied sale. Social incentives turn out to be selective incentives too, which is why they work in small face to face groups and reach large groups only when the large group is a federation of small ones. Even the state fits the frame: it is the organization whose basic goods are collective, which is why it finances itself by taxation rather than by voluntary dues, and why the need for coercion tracks the type of good rather than the public or private character of the provider. The same machinery is then used as a refutation engine. Marxian class action assumes rational self-interested individuals and predicts coordinated action by an enormous latent group, so it contradicts its own premise; the absence of the predicted class action is evidence of rationality, not of its absence. Orthodox group theory in political science makes the identical error when it relies on potential groups organizing whenever their interests are threatened, and the correction explains the observed asymmetry of politics, in which small organized special interests routinely defeat large unorganized majorities. For a reasoning engine this book contributes a compact, falsifiable calculus of collective provision. Given any proposed shared effort, the engine can ask for the excludability of the good, the distribution of benefit shares, the largest single share, the noticeability of contributions, the fixed organization cost, and the selective incentive on offer, and from those inputs produce a provision forecast with named failure modes instead of an appeal to enthusiasm or consensus. Its limits are equally clear and Olson states most of them himself: the model assumes behavior that is rational in the means to whatever ends, so expressive, philanthropic, and lost cause behavior fall outside its useful range; intermediate groups are indeterminate by design; and the formal results are cleanest for money valued goods, with utility and income effects complicating the general case. Within those limits, the book converts a vague intuition about free riding into a set of tests that can be run on any organization, market, or multi agent system before resources are committed.",
+   "retrocausal_genealogy": "The lineage runs through the classical theory of public goods in public finance, from the continental writers on taxation through Musgrave and Samuelson, whose definition of the public good Olson deliberately loosens by dropping jointness of supply and keeping only the infeasibility of exclusion. The market half of the argument descends from Cournot, whose analysis of output restriction Olson shows to be a special case of the general group problem, and from the theory of the firm in perfect competition, where the divergence between individual and industry interest was already accepted. The group half descends from Bentley and Truman in political science and from the sociological theory of voluntary associations, both of which Olson treats as the orthodoxy to be corrected. His later appendix work extends the line forward to fiscal equivalence, alliance theory with Zeckhauser, and the political entrepreneur literature of Wagner, Salisbury, Frohlich, and Oppenheimer.",
+   "theory_of_mind": "Olson models his reader as someone who already accepts rational self-interested behavior in markets and has failed to notice that the same assumption, applied consistently, destroys the standard picture of group behavior. His model of the domain is austere: actors compare their own gain with the costs they would bear, effects too small to perceive do not motivate anyone, and motives such as altruism do not rescue a design because an unselfish actor still refuses a sacrifice that benefits nobody perceptibly. He assumes the reader respects a proof more than an anecdote, so he establishes the logic under the strongest possible assumptions, including perfect consensus, and only then spends the empirical chapters showing that unions, farm organizations, professional associations, and the state behave as the logic predicts.",
+   "cross_layer_veto": "This work vetoes several moves that other layers of a reasoning system are tempted to make. It vetoes inferring action from agreement, since perfect consensus is assumed and still produces inaction in latent groups. It vetoes inferring power from numbers, since the larger side of a contest is usually the unorganized side. It vetoes scaling a mechanism that works in a small group up to a large group without re-deriving it, because the two cases differ in kind. It vetoes counting stated support, membership on paper, or the existence of a potential group as evidence of capacity. And it vetoes any plan for a shared good that names no selective incentive, no privileged provider, and no coercion device, because the model predicts its outcome in advance."
+  }
+ ],
+ "universal_lens": "Read generally, the book is a template for analyzing any system in which a benefit is shared by many and the cost of producing it falls on whoever volunteers. Its method is to define the benefit by its excludability, write down who gains what fraction, and then let arithmetic rather than intention decide what will happen. The template travels far beyond pressure groups: open source software, alliance defense burdens, climate mitigation, shared data infrastructure, and multi agent systems all present the same structure of a nonexcludable benefit, a diluted individual share, and a fixed cost of organizing. Wherever those three features appear together, the book predicts underprovision, burden concentration on the largest stakeholder, and survival only where a selective incentive or a by-product host exists.",
+ "gsi_mapping": "For the Galaxy Sports Institute the book supplies the organizational economics of research itself. Shared corpora, cleaned datasets, and validated methods are collective goods for every researcher who can use them, so the Institute should expect them to be underprovided by voluntary effort and should design for that fact: federate work into small groups where contributions are noticeable, attach contributor only benefits such as early access and attribution to shared infrastructure, and never forecast the output of a large research collective from the enthusiasm of its members. It also gives the Institute a teaching object, a complete worked example of a social science theory that is formal, falsifiable, and honest about the cases, philanthropy, religion, and lost causes, where its own machinery stops being useful.",
+ "gse_mapping": "For the Galaxy Sports Edge engine the book contributes a provision and power calculus that sits beside the prediction machinery. Any shared input the engine depends on, from data feeds to labeled corpora to maintained scrapers, can be scored with the Olson tests: how excludable it is, how benefits are shared among its users, whether any single user gains enough to maintain it alone, whether contributions are noticeable, and what selective incentive keeps it funded. The same calculus disciplines competitive and political forecasts, because organized small interests should be weighted above unorganized large ones, and announced consensus should be given no weight as evidence that a group will act. The engine gains a named set of failure modes, free riding, holdout rents under unanimity rules, and fixed organization costs, that it can test for explicitly instead of discovering them after a shared resource collapses."
+}

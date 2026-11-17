@@ -1,0 +1,756 @@
+{
+ "book_id": "6e242c689b7979a1",
+ "slug": "pavlov-1927-conditioned-reflexes",
+ "title": "Conditioned Reflexes: An Investigation of the Physiological Activity of the Cerebral Cortex",
+ "author": "Ivan P. Pavlov",
+ "primitives": [
+  {
+   "primitive_id": "reflex_arc_doctrine",
+   "name": "A reflex is a necessary, law-bound connection between a stimulus and a response through a definite nervous path",
+   "verbatim_quote": "An external or internal stimulus falls on some one or other nervous receptor and gives rise to a nervous impulse ; this nervous impulse is transmitted along nerve fibres to the central nervous system, and here, on account of existing nervous connections, it gives rise to a fresh impulse which passes along outgoing nerve fibres to the active organ, where it excites a special activity of the cellular structures. Thus a stimulus appears to be connected of necessity with a definite response, as cause with effect.",
+   "page": "Lecture I, printed p. 7; text lines 638-647",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A definite nervous path connects the receptor to the effector organ",
+    "The connection is necessary, not contingent: same stimulus under same conditions gives same response",
+    "The scheme extends from spinal reflexes up to the cerebral hemispheres"
+   ],
+   "breakdown_regime": "The arc scheme is a first approximation: it does not by itself explain acquired connections, irradiation, or the interaction of antagonistic processes, which the later lectures add. No equations are given anywhere in the work; all laws are stated qualitatively from measured secretion. no_equation_domain",
+   "domain": "neurophysiology foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine treats every signal as an arc: an input event routed through an existing connection to a definite output, with the routing table itself as the object of study. A pick or projection is never a free-floating judgment; it is the terminal of a traceable stimulus path, and auditing a prediction means walking the arc back to the receptor event that started it.",
+    "source_operator": "reflex_arc_doctrine",
+    "telemetry": " timestamped input events (plays, injuries, lineup changes) and the output projections they terminate in"
+   }
+  },
+  {
+   "primitive_id": "instinct_as_reflex",
+   "name": "Instincts are not a separate category from reflexes; both are inevitable inborn responses to stimuli",
+   "verbatim_quote": "It follows from all this that instincts and reflexes are alike the inevitable responses of the organism to internal and external stimuli, and therefore we have no need to call them by two different terms.",
+   "page": "Lecture I, printed p. 11; text lines ~795-800",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Transitional stages exist between the simplest reflex and the most complex instinct, with no line of demarcation",
+    "Dependence on internal state (hunger, hormones, season) is shared by plain reflexes, so it cannot distinguish instincts",
+    "Chain reflexes, where one reflex initiates the next, account for long instinctive sequences"
+   ],
+   "breakdown_regime": "The identification is programmatic: Pavlov concedes the individual inborn reflexes lumped under headings like alimentary or sexual are still largely unidentified and confused, so the catalogue the doctrine calls for does not yet exist. no_equation_domain",
+   "domain": "neurophysiology foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "In the engine, so-called situational instincts (a team playing harder in a rivalry spot, a veteran rising in a big game) are not a separate mystical layer; they are chained, state-dependent reflexes of the same machinery, driven by internal state variables. They must be decomposed into stimulus, internal state, and response before they are allowed to move a number.",
+    "source_operator": "instinct_as_reflex",
+    "telemetry": "internal-state features (rest, motivation proxies, roster morale signals) joined to stimulus-response records"
+   }
+  },
+  {
+   "primitive_id": "investigatory_reflex",
+   "name": "The investigatory (what-is-it) reflex: any change in the environment triggers immediate orientation of the receptors toward the change",
+   "verbatim_quote": "It is this reflex which brings about the immediate response in man and animals to the slightest changes in the world around them, so that they immediately orientate their appropriate receptor organ in accordance with the perceptible quality in the agent bringing about the change",
+   "page": "Lecture I, printed p. 12; text lines 837-845",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The reflex is inborn and fires on change itself, not on the biological significance of the change",
+    "It habituates: repeated neutral changes weaken it spontaneously",
+    "It competes with conditioned reflexes and inhibits them while it is active"
+   ],
+   "breakdown_regime": "Because it fires on any novelty, it is a standing source of noise in every experiment; in the laboratory it had to be waited out or designed around. Its human highest form, inquisitiveness, is asserted rather than measured. no_equation_domain",
+   "domain": "orienting response",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine needs an explicit novelty channel: any abrupt change in the input environment (a new data source, a sudden line move, a surprise inactive) triggers an orienting pass that suspends routine outputs until the change is classified. Novelty is treated as a first-class event with its own reflex, not as an error term.",
+    "source_operator": "investigatory_reflex",
+    "telemetry": "change-point detectors on every input feed; flags for first-time-seen conditions"
+   }
+  },
+  {
+   "primitive_id": "signal_function_of_hemispheres",
+   "name": "The fundamental function of the cerebral hemispheres is reacting to signals: stimuli of interchangeable signification that announce vital agencies",
+   "verbatim_quote": "Thus we see that the fundamental and the most general function of the hemispheres is that of reacting to signals",
+   "page": "Lecture I, printed p. 17; text lines 950-956",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Signals act at a distance through the finely discriminating receptors, unlike the elemental contact reflexes",
+    "The same stimulus may signal different agencies under different conditions, and the same agency may be signalled by different stimuli",
+    "Removing the hemispheres abolishes signal reactions while leaving contact reflexes intact"
+   ],
+   "breakdown_regime": "Interchangeability is also the weakness: a signal's meaning is only as good as its current correlation with the environment, and the hemispheres must constantly correct or annul signals whose correlations lapse. no_equation_domain",
+   "domain": "cortical function",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the charter of the whole reasoning engine: the cortex is a signal-interpretation layer sitting on top of elemental data. Raw box-score events are the contact reflexes; the engine's job is the interchangeable signal layer above them, where the same surface stat can announce different underlying states depending on context, and must be re-validated as correlations shift.",
+    "source_operator": "signal_function_of_hemispheres",
+    "telemetry": "signal-to-outcome correlation audits refreshed on a rolling window; context tags on every feature"
+   }
+  },
+  {
+   "primitive_id": "salivary_fistula_measurement_method",
+   "name": "Objective measurement method: exteriorize the salivary duct through a chronic fistula so secretion can be counted in drops outside the mouth",
+   "verbatim_quote": "the saliva now flows to the outside, on to the cheek or chin of the animal, instead of into the mouth, so that the measurement of the secretory activity of the gland is greatly facilitated",
+   "page": "Lecture II, printed p. 18; text lines ~975-985",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The secretory component is preferred to the motor component because it admits far more precise measurement",
+    "The animal recovers from the minor operation and is studied chronically, not acutely",
+    "Secretion is registered in drops, or by displacement in a graduated tube, converted to drops for uniformity"
+   ],
+   "breakdown_regime": "The method measures one gland's secretion as a proxy for the whole alimentary reflex; motor components are observed but not quantified, and the preparation excludes any reflex whose readout is not secretory. no_equation_domain",
+   "domain": "experimental method",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A reasoning engine is only as good as its fistula: one clean, countable, continuously readable output channel through which an internal process becomes a number. The design lesson is to pick the measurable secretion of the system (a projection, a probability) and build the chronic readout first, before theorizing about the process behind it.",
+    "source_operator": "salivary_fistula_measurement_method",
+    "telemetry": "the engine's published projection stream, logged with timestamps for later scoring against outcomes"
+   }
+  },
+  {
+   "primitive_id": "conditioned_vs_unconditioned_reflexes",
+   "name": "Conditioned reflexes are a new group of reflexes built up in individual life, distinct from inborn unconditioned reflexes only in mode of formation",
+   "verbatim_quote": "I have termed this new group of reflexes conditioned reflexes to distinguish them from the inborn or unconditioned reflexes.",
+   "page": "Lecture II, printed p. 25; text lines ~1280-1290",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The response character is the same in both groups; only the completeness of the nervous path at birth differs",
+    "Conditioned reflexes depend on many conditions in formation and maintenance, hence the name",
+    "Equivalent names considered: acquired vs inborn, individual vs species, connection vs conduction reflexes"
+   ],
+   "breakdown_regime": "The distinction is one of origin, not of kind; treating conditioned responses as a lesser class of phenomenon is the error Pavlov is arguing against. The path of the new reflex still has to be completed in the higher centres, and its exact site (cortex alone, or cortex to subcortex) is left open. no_equation_domain",
+   "domain": "learning theory foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's learned associations are not second-class outputs next to its hard-coded priors. Priors are the unconditioned layer (structural, present from build); learned signal connections are the conditioned layer, equal in authority once established, differing only in that they were formed from experience and can be extinguished when the world stops reinforcing them.",
+    "source_operator": "conditioned_vs_unconditioned_reflexes",
+    "telemetry": "feature store split into structural priors and learned associations, each with formation provenance"
+   }
+  },
+  {
+   "primitive_id": "temporal_overlap_requisite",
+   "name": "Fundamental requisite of conditioning: the would-be signal must overlap in time with the action of an unconditioned stimulus",
+   "verbatim_quote": "The fundamental requisite is that any external stimulus which is to become the signal in a conditioned reflex must overlap in point of time with the action of an unconditioned stimulus.",
+   "page": "Lecture II, printed p. 26; text lines ~1330-1340",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The neutral stimulus must have been previously unrelated to the unconditioned response",
+    "Several repetitions of the combined stimulation are normally required",
+    "The unconditioned stimulus used here is food or acid in the mouth, evoking an inborn reflex"
+   ],
+   "breakdown_regime": "Overlap alone is not sufficient: order matters (precedence rule), the cortex must be alert and undisturbed, and a minimum stimulus strength is required. Backward pairings fail entirely even after hundreds of repetitions. no_equation_domain",
+   "domain": "associative learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Association in the engine is formed only from genuine temporal co-occurrence of a candidate signal with a real outcome event. Features that never actually overlap an outcome window cannot acquire predictive connection, no matter how plausible the story; the training pipeline enforces overlap as a hard gate on connection formation.",
+    "source_operator": "temporal_overlap_requisite",
+    "telemetry": "event-aligned training pairs with verified timestamps for signal and outcome"
+   }
+  },
+  {
+   "primitive_id": "precedence_rule_no_backward_conditioning",
+   "name": "The conditioned stimulus must begin before the unconditioned stimulus; reversed order establishes nothing, even after hundreds of pairings",
+   "verbatim_quote": "it is also and equally necessary that the conditioned stimulus should begin to operate before the unconditioned stimulus comes into action.",
+   "page": "Lecture II, printed p. 27; text lines 1351-1355",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tested by Krestovnikov on five dogs with intervals of 1, 5 and 10 seconds, always negative",
+    "427 backward pairings of vanillin with acid produced nothing; 20 forward pairings of amyl acetate succeeded",
+    "Both secretory and motor components were observed and agreed"
+   ],
+   "breakdown_regime": "The rule is stated for the salivary preparation; trace and delayed arrangements complicate what counts as beginning before, since a stimulus trace can precede the unconditioned stimulus after the stimulus itself has ended. no_equation_domain",
+   "domain": "associative learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Direction of time is a hard constraint on causal features: a variable that only becomes known after the outcome cannot be a predictor, and no amount of repetition fixes the leak. The engine's feature audit is Krestovnikov's experiment run in reverse: any feature whose timestamp follows the event it claims to predict is discarded, however strong its correlation.",
+    "source_operator": "precedence_rule_no_backward_conditioning",
+    "telemetry": "feature timestamp lineage; leakage scans comparing feature availability time to event time"
+   }
+  },
+  {
+   "primitive_id": "alert_state_requirement",
+   "name": "Formation of a new conditioned reflex requires an alert cortex free from competing nervous activity and a healthy animal",
+   "verbatim_quote": "As regards the condition of the hemispheres themselves, an alert state of the nervous system is absolutely essential for the formation of a new conditioned reflex.",
+   "page": "Lecture II, printed p. 28; text lines ~1400-1410",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Drowsiness makes formation slow or impossible",
+    "Foreign stimuli causing other reactions must be excluded during formation",
+    "The first conditioned reflex in an animal is usually the hardest to establish; extraneous reflexes weaken with time if the environment is stable"
+   ],
+   "breakdown_regime": "The condition is about formation, not performance: established reflexes tolerate more disturbance, though strong novelty still inhibits them through external inhibition. no_equation_domain",
+   "domain": "associative learning conditions",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Learning windows matter: the engine should form new associations only from clean, undisturbed stretches of data. Games played under chaotic, interrupted, or anomalous conditions are the drowsy-cortex trials of sports data; connections formed from them are suspect and should carry a formation-quality flag.",
+    "source_operator": "alert_state_requirement",
+    "telemetry": "data-quality and continuity flags on training windows; exclusion of disrupted or anomalous games from association learning"
+   }
+  },
+  {
+   "primitive_id": "relative_strength_transformation_rule",
+   "name": "A stimulus belonging to one reflex can be converted into a conditioned stimulus for another reflex only if its own reflex is physiologically weaker and biologically less important",
+   "verbatim_quote": "Successful transformation of the unconditioned stimulus for one reflex into the conditioned stimulus for another reflex can be brought about only when the former reflex is physiologically weaker and biologically of less importance than the latter.",
+   "page": "Lecture II, printed p. 31; text lines ~1500-1510",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Demonstrated by Eroféeva: strong electric shock to skin became an alimentary signal with no trace of defence reaction",
+    "The alimentary reflex outranks the cutaneous defence reflex in the hierarchy",
+    "There is a limit: shock over bone, signalling far greater danger, could not be transformed"
+   ],
+   "breakdown_regime": "The hierarchy is empirical and has exceptions at its top end (self-preservation); the rule predicts failure, not just success, and the failure boundary is found only by experiment. no_equation_domain",
+   "domain": "reflex hierarchy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Signals can be re-purposed across domains only down a dominance gradient: a stronger, more decision-relevant process can absorb a weaker signal as its predictor, but a weak analytic layer cannot override a dominant one. In engine terms, market and availability signals can be subordinated to the matchup core; the reverse wiring fails exactly where Pavlov's bone-shock failed.",
+    "source_operator": "relative_strength_transformation_rule",
+    "telemetry": "dominance ordering of signal families, verified by ablation tests of which layer can absorb which"
+   }
+  },
+  {
+   "primitive_id": "connection_formation_foci",
+   "name": "Mechanism of new connections: predominantly excited cortical cells become foci that attract impulses from new stimuli, and repetition fixes the path",
+   "verbatim_quote": "the cells predominantly excited at a given time become foci attracting to themselves the nervous impulses aroused by new stimuli-impulses which on repetition tend to follow the same path and so to establish conditioned reflexes.",
+   "page": "Lecture III, printed p. 38; text lines ~1760-1770",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Any unconditioned or firmly established conditioned stimulus evokes activity in a definite centre",
+    "Simultaneous excitation of two points is what allows a path to be established between them",
+    "Pavlov leaves open whether the connection is purely cortical or cortico-subcortical, favouring cortical representation of the organ's activity"
+   ],
+   "breakdown_regime": "This is an interpretation, explicitly offered as the only one fitting the facts, not a direct observation; the anatomical site of the new connection was not demonstrated. no_equation_domain",
+   "domain": "mechanism of learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Attention is the engine's connection-forming mechanism: whichever representation is most strongly activated when an outcome lands is the one new signals bind to. Salience at the moment of the outcome, not mere co-occurrence in a database, decides what gets wired to what; training should therefore weight pairings by the activation state of the receiving representation.",
+    "source_operator": "connection_formation_foci",
+    "telemetry": "activation or attention weights logged at outcome time for every candidate pairing"
+   }
+  },
+  {
+   "primitive_id": "second_order_reflexes_and_ceiling",
+   "name": "Conditioned reflexes can be built on other conditioned reflexes (second order), but the chain has a hard ceiling: no third order for alimentary reflexes, third order at most for defence",
+   "verbatim_quote": "It was found impossible in the case of alimentary reflexes to press the secondary conditioned stimulus into our service to help us in the establishment of a new conditioned stimulus of the third order.",
+   "page": "Lecture III, printed p. 34; text lines ~1650-1658",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The first-order reflex must be firmly established before it can support a second order",
+    "Latent period increases and strength decreases with each order",
+    "Defence reflexes (Foursikov) reached the third order and no further, maintained over a year with reinforcement"
+   ],
+   "breakdown_regime": "The ceiling is empirical for the dog salivary preparation; it marks where the signal's connection to any real unconditioned foundation becomes too remote to sustain. no_equation_domain",
+   "domain": "associative learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived signals have a compounding-distance limit: a feature built on a feature built on an outcome is near the edge of usefulness, and a third level of derivation carries no reliable connection to reality. The engine caps derivation depth for any input to a projection, and requires every derived signal to name its chain back to a ground outcome.",
+    "source_operator": "second_order_reflexes_and_ceiling",
+    "telemetry": "derivation-depth metadata on every engineered feature; chain-to-ground-outcome lineage"
+   }
+  },
+  {
+   "primitive_id": "trace_conditioned_reflex",
+   "name": "A trace reflex is conditioned on the after-effect of a stimulus that has already ended, the stimulus itself never overlapping the unconditioned stimulus",
+   "verbatim_quote": "The type described in this paragraph is termed a trace conditioned reflex.",
+   "page": "Lecture III, printed p. 40; text lines ~1878-1885",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Intervals of 30 seconds to 2 minutes between stimulus end and unconditioned stimulus still condition successfully",
+    "The conditioned response waits out an interval corresponding to the formation interval before appearing",
+    "Short traces behave like ordinary delayed reflexes; long traces (2-3 minutes) develop a two-phase response with an inhibitory first phase"
+   ],
+   "breakdown_regime": "The trace is a physiological after-effect, not a representation; beyond a few minutes the trace fades below conditioning strength. The defining sentence quoted here is short by design: it is the book's own naming act for the phenomenon, and the surrounding experiments (Belitz, Grossman, Feofanova) supply the content. no_equation_domain",
+   "domain": "associative learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine can learn from the after-effect of an event, not only from the event: a lineup announcement, an injury report, a weather shift leaves a decaying trace that still conditions later behaviour. Trace features must carry their age, because the same stale signal that still works at two minutes is dead at twenty.",
+    "source_operator": "trace_conditioned_reflex",
+    "telemetry": "time-since-event features with fitted decay; trace-age recorded for every delayed signal"
+   }
+  },
+  {
+   "primitive_id": "external_inhibition",
+   "name": "External inhibition: any extra excitation in the central nervous system immediately diminishes or abolishes conditioned reflexes, but only while the disturbing stimulus or its after-effect lasts",
+   "verbatim_quote": "No sooner does any extra nervous excitation occur in the central nervous system than it immediately makes its presence felt in diminishing or abolishing conditioned reflexes, but temporarily only, as long as the causative stimulus or its after-effect is present.",
+   "page": "Lecture III, printed p. 47; text lines ~2190-2205",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The disturbing agents are stimuli falling on any receptor, evoking their own reflexes",
+    "Novelty (investigatory reflex) is the most common disturbing agent in the laboratory",
+    "The inhibition is passive and transient; it leaves no lasting change in the conditioned connection"
+   ],
+   "breakdown_regime": "External inhibition must be distinguished from internal inhibition, which is an active process developing in the cortical cells of the conditioned stimulus itself; confusing the two corrupts every measurement of reflex strength. no_equation_domain",
+   "domain": "inhibition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A sudden drop in a learned signal's strength during a disturbed window is not evidence the signal died; it may be external inhibition from a competing event. The engine separates transient suppression (a distraction event is present) from genuine weakening of a connection, and never retrains on readings taken while a known disturber is active.",
+    "source_operator": "external_inhibition",
+    "telemetry": "disturbance-event flags (breaking news, venue anomalies, schedule chaos) attached to evaluation windows"
+   }
+  },
+  {
+   "primitive_id": "internal_inhibition",
+   "name": "Internal inhibition: under definite conditions the positive conditioned stimulus itself becomes negative, evoking inhibition in its own cortical cells instead of excitation",
+   "verbatim_quote": "In the second type of inhibition, which may be termed internal inhibition, the positive conditioned. stimulus itself becomes, under definite conditions, negative or inhibitory",
+   "page": "Lecture IV, printed p. 48; text lines ~2230-2240",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Internal inhibition is an active process, not fatigue or exhaustion of the cells",
+    "It develops gradually and is specific to the stimulus and condition that produced it",
+    "Its forms are extinction, conditioned inhibition, delay, and differential inhibition"
+   ],
+   "breakdown_regime": "The quote is cut before the sentence's completion, which the OCR garbles (a broken word and a second stray period), and it reproduces one stray period after the word conditioned exactly as printed; the phenomenon itself is demonstrated across Lectures IV to VI, not in this sentence alone. no_equation_domain",
+   "domain": "inhibition",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Suppression in the engine is an active, learned state attached to the signal itself, not the absence of a signal. A feature that has been trained down must be represented as an inhibitory connection with its own strength and history, because it behaves differently from a feature that was never learned: it can be disinhibited, it recovers, and it generalizes to neighbours.",
+    "source_operator": "internal_inhibition",
+    "telemetry": "explicit negative-weight connections with formation history, stored separately from absent features"
+   }
+  },
+  {
+   "primitive_id": "extinction_of_conditioned_reflexes",
+   "name": "Extinction: repeating a conditioned stimulus without reinforcement weakens the reflex rapidly and smoothly toward zero",
+   "verbatim_quote": "This phenomenon of a rapid and more or less smoothly progressive weakening of the reflex to a conditioned stimulus which is repeated a number of times without reinforcement",
+   "page": "Lecture IV, printed p. 49; text lines ~2270-2285",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rate of extinction depends on the interval between unreinforced repetitions and on the strength of the reflex",
+    "Extinction proceeds in waves: the reflex may vanish and reappear before settling at zero",
+    "Reinforcement restores the reflex, and one reinforcement after complete extinction restores it almost to full strength"
+   ],
+   "breakdown_regime": "Extinction is not forgetting and not damage: the connection survives intact underneath, which is proven by spontaneous recovery and by disinhibition. Treating an extinguished reflex as deleted is the cardinal misreading Pavlov spends the lecture refuting. no_equation_domain",
+   "domain": "inhibition: extinction",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When a signal stops being reinforced by outcomes, the engine weakens its weight smoothly toward zero but never deletes the connection. The record of the association, with its extinction state, stays in the store: that is exactly the ingest-everything doctrine, where a refused or decayed signal keeps its status inside the system instead of being erased.",
+    "source_operator": "extinction_of_conditioned_reflexes",
+    "telemetry": "per-signal reinforcement history and current extinction level; weights decayed, never hard-deleted"
+   }
+  },
+  {
+   "primitive_id": "extinction_is_inhibition_not_destruction",
+   "name": "Extinction cannot be destruction of the connection, because extinguished reflexes spontaneously regenerate with time",
+   "verbatim_quote": "That it cannot be regarded as an irreparable destruction of the conditioned reflex, due to disruption of the respective nervous connections, is evidenced by the fact that the extinguished reflexes spontaneously regenerate in course of time.",
+   "page": "Lecture IV, printed p. 60; text lines ~2760-2775",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Spontaneous recovery after a pause is the decisive evidence",
+    "A single reinforcement restores an extinguished reflex far faster than original formation",
+    "The alternative explanations (fatigue, destruction of the unconditioned centre, chance disturbance) are each excluded experimentally"
+   ],
+   "breakdown_regime": "The argument is eliminative: Pavlov reaches inhibition by excluding every rival, and he is explicit that the positive nature of the inhibitory process is inferred from its behaviour, not observed directly. no_equation_domain",
+   "domain": "inhibition: extinction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A signal that has gone quiet and then returns on its own was suppressed, not absent. The engine distinguishes three states that naive pipelines merge: never learned, learned and active, learned and currently inhibited. Only the third state predicts spontaneous recovery, and misclassifying it leads to re-learning from scratch what was already known.",
+    "source_operator": "extinction_is_inhibition_not_destruction",
+    "telemetry": "three-state signal registry (unlearned / active / inhibited) with recovery probes after quiet periods"
+   }
+  },
+  {
+   "primitive_id": "disinhibition",
+   "name": "Disinhibition: an extraneous reflex can suddenly strip away internal inhibition and restore an extinguished reflex at full strength",
+   "verbatim_quote": "we can designate this observation from a purely matter of fact point of view as consisting of a sudden removal by an extraneous reflex of the inhibitory process set up by experimental extinction.",
+   "page": "Lecture IV, printed p. 62; text lines ~2845-2865",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The extraneous stimulus acts on the inhibitory process, not on the excitatory connection",
+    "The restored reflex returns to approximately its pre-extinction magnitude",
+    "Disinhibition works on delay and on conditioned inhibition as well as on extinction"
+   ],
+   "breakdown_regime": "Pavlov deliberately gives a matter-of-fact description and postpones mechanism; the effect depends on the strength of the inhibition, deep inhibition resisting disinhibition. no_equation_domain",
+   "domain": "inhibition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Suppressed signals can be released by an unrelated shock: in engine terms, a regime disturbance can suddenly unmask associations that looked dead, producing behaviour that seems to come from nowhere. Stress-testing should include disinhibition probes: apply a disturbance and watch which dormant signals reappear at full strength.",
+    "source_operator": "disinhibition",
+    "telemetry": "dormant-signal inventories re-tested under disturbance scenarios; surprise-reactivation alerts"
+   }
+  },
+  {
+   "primitive_id": "conditioned_inhibition",
+   "name": "Conditioned inhibition: a stimulus repeatedly added to a positive signal without reinforcement becomes an active inhibitor that suppresses the reflex whenever it is present",
+   "verbatim_quote": "A positive conditioned stimulus is firmly established in a dog by means of the usual repetitions with reinforcement. A new stimulus is now occasionally added, and whenever the combination is applied, which may be at intervals sometimes extending to hours or days, it is never accompanied by the unconditioned stimulus. In this way the combination is gradually rendered ineffective, so that the conditioned stimulus when applied in combination with the additional stimulus loses its positive effect, although when applied singly and with constant reinforcement it retains its full powers.",
+   "page": "Lecture V, printed p. 68; text lines ~3125-3150",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The added stimulus must never itself be reinforced in the combination",
+    "The inhibitor's power is proven by the summation test: it suppresses other positive reflexes too",
+    "Conditioned inhibition develops slowly and is easily disturbed early on"
+   ],
+   "breakdown_regime": "An inhibitor is not a neutral stimulus: it has acquired an active negative function, shown by its transfer to other reflexes. Early in training the combination is merely weak; only the summation test certifies true conditioned inhibition. no_equation_domain",
+   "domain": "inhibition: conditioned inhibition",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Context can be trained as an active veto: a condition that repeatedly accompanies a signal without the outcome becomes a suppressor that travels with the signal and switches it off in that context. The engine represents such contexts as inhibitory features with transfer power, not as missing data or as a weaker version of the signal.",
+    "source_operator": "conditioned_inhibition",
+    "telemetry": "context-veto features validated by transfer tests against unrelated signals in the same context"
+   }
+  },
+  {
+   "primitive_id": "inhibition_of_delay",
+   "name": "Inhibition of delay: when the unconditioned stimulus is postponed, the early phase of the conditioned stimulus becomes inhibitory and the response is held back in proportion to the interval",
+   "verbatim_quote": "On the other hand, in reflexes which have been established with a longer interval between the two stimuli the onset of the salivary response is delayed, and this delay is proportional to the length of the interval between the two stimuli and may even extend to several minutes.",
+   "page": "Lecture VI, printed p. 88; text lines ~4020-4040",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "With a 30-second interval the response begins almost immediately; with 1-3 minutes it is postponed correspondingly",
+    "During the early inactive phase the stimulus is genuinely inhibitory: it suppresses other reflexes by summation",
+    "Disinhibitors release secretion specifically during the early phase, proving the inhibition is present and active"
+   ],
+   "breakdown_regime": "Delay is not slowness of the excitatory process; the two phases (inhibitory then excitatory) coexist in one stimulus period, and any account that treats the latency as mere weakness misreads the summation evidence. no_equation_domain",
+   "domain": "inhibition: delay",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A signal whose payoff is systematically late develops a suppressed early window: the engine should model time-to-effect as a two-phase profile, inactive then active, rather than as a single lagged correlation. Averaging over the whole window dilutes the real effect and can make a strong delayed signal look like noise.",
+    "source_operator": "inhibition_of_delay",
+    "telemetry": "phase-resolved effect profiles (early window vs late window) for every time-lagged signal"
+   }
+  },
+  {
+   "primitive_id": "analyser_structure",
+   "name": "Each analyser consists of a peripheral receptor with its afferent nerves and the cortical nerve cells at the central termination of those fibres",
+   "verbatim_quote": "With regard to the structure of the analysers, each includes, on the one hand, the peripheral receptor with all its afferent nerves, and, on the other hand, the nerve cells which lie at the central termination of the nerve fibres.",
+   "page": "Lecture VII, printed p. 110; text lines ~5025-5045",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Analysers are the nervous apparatus for decomposing the complexity of the external world into separate elements",
+    "Each sense modality has its own analyser with a cortical end",
+    "Destruction of the cortical end degrades analysis progressively, from fine discrimination down to bare detection"
+   ],
+   "breakdown_regime": "The analyser is a functional unit, not a single anatomical centre; Pavlov stresses the cortical end is spatially dispersed, which is why partial lesions degrade rather than abolish analysis. no_equation_domain",
+   "domain": "sensory analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every input channel in the engine is an analyser: a receptor surface, a transmission path, and a central decomposition stage that splits a complex situation into elements. Damage or noise at the central stage does not remove the channel; it coarsens it, so degraded inputs should lower the resolution of conclusions rather than silently dropping the channel.",
+    "source_operator": "analyser_structure",
+    "telemetry": "per-channel resolution metadata; conclusions tagged with the finest discrimination their inputs support"
+   }
+  },
+  {
+   "primitive_id": "generalization_gradient",
+   "name": "A newly formed conditioned reflex generalizes: neighbouring stimuli acquire similar properties, diminishing in proportion to their distance from the trained stimulus",
+   "verbatim_quote": "For instance, if a tone of 1000 d.v. is established as a conditioned stimulus, many other tones spontaneously acquire similar properties, such properties diminishing proportionally to the intervals of these tones from the one of 1000 d.v.",
+   "page": "Lecture VII, printed p. 113; text lines ~5135-5155",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Generalization is strongest immediately after formation, before differentiation sharpens the reflex",
+    "The gradient is orderly: effect falls off with stimulus distance in either direction",
+    "The same law holds across modalities (tones, tactile places, visual figures)"
+   ],
+   "breakdown_regime": "Generalization is the primitive state, not an error: precision is the later achievement of differentiation. A reflex measured before differentiation will always look broader than the trained stimulus warrants. no_equation_domain",
+   "domain": "stimulus generalization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A learned association automatically bleeds to similar situations with strength falling off in similarity distance. The engine models this as an explicit similarity kernel around every learned case: a projection for a new matchup borrows from neighbouring historical cases in proportion to their distance, instead of pretending each case is learned from zero or from everything equally.",
+    "source_operator": "generalization_gradient",
+    "telemetry": "case-similarity distances for every projection; kernel weights logged per contributing case"
+   }
+  },
+  {
+   "primitive_id": "differentiation_by_contrast",
+   "name": "Differentiation is produced by contrast: the target stimulus is always reinforced while the nearest neighbour is always left unreinforced, until the neighbour is exactly distinguished",
+   "verbatim_quote": "By repeated reinforcement this particular stimulus is strengthened in its new properties, while the stimulus nearest to it in intensity, position or quality is always contrasted by being left without reinforcement, with the result that it becomes readily and exactly differentiated from the established positive conditioned stimulus.",
+   "page": "Lecture VII, printed p. 112; text lines ~5165-5185",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The unreinforced neighbour acquires an inhibitory function, not mere neutrality",
+    "Differentiation is fastest when begun with distant stimuli and approached gradually to fine contrasts",
+    "Pushing a differentiation beyond the analyser's limit breaks the whole discriminative apparatus (experimental neurosis)"
+   ],
+   "breakdown_regime": "The method has a hard floor set by the resolving power of the analyser; demanding finer distinctions than the apparatus supports does not yield precision, it yields collapse. no_equation_domain",
+   "domain": "stimulus differentiation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Fine distinctions are trained by contrast against the nearest confusable neighbour, not by more examples of the target alone. The engine's classification boundaries (starter vs backup, dome vs outdoor, playoff vs regular season) should be sharpened with paired near-neighbour contrasts, and each boundary carries a known resolution limit beyond which the classifier must abstain rather than guess.",
+    "source_operator": "differentiation_by_contrast",
+    "telemetry": "near-neighbour contrast sets for every classification boundary; abstention thresholds at resolution limits"
+   }
+  },
+  {
+   "primitive_id": "overshadowing_in_compounds",
+   "name": "In a compound stimulus the stronger component dominates: the compound's effect equals the stronger component alone, and the weaker is overshadowed",
+   "verbatim_quote": "The effect of the compound stimulus is found nearly always to be equal to that of the stronger component used singly, the weaker stimulus appearing therefore to be completely overshadowed by the stronger one.",
+   "page": "Lecture VIII, printed p. 143; text lines ~6435-6455",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Component strengths are measured by testing each element singly after compound training",
+    "Relative, not absolute, strength decides which component dominates",
+    "The overshadowed component may show no effect at all despite having been present at every reinforced trial"
+   ],
+   "breakdown_regime": "Overshadowing is a property of the compound training, not of the weak stimulus: the same weak stimulus conditions perfectly well when trained alone. Presence during reinforced trials is therefore no proof that a component was learned. no_equation_domain",
+   "domain": "compound stimuli",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "In any multi-factor model, the dominant factor can completely mask a weaker real factor that was present in every training case. The engine tests compound-trained factors individually before crediting them; a factor that never moves the output alone is treated as unlearned, not as a small contributor.",
+    "source_operator": "overshadowing_in_compounds",
+    "telemetry": "single-factor ablation readouts for every factor trained inside a compound model"
+   }
+  },
+  {
+   "primitive_id": "successive_compound_order",
+   "name": "In successive compounds, the order of the stimuli and the pauses between them determine the final result of the stimulation",
+   "verbatim_quote": "In this way it is seen that the order in which a given group of stimuli taking part in a stimulatory compound are arranged, and the pauses between them are the factors which determine the final result of the stimulation",
+   "page": "Lecture VIII, printed p. 148; text lines ~6600-6615",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same set of stimuli in different orders produces different, even opposite, effects",
+    "A stimulus arriving during another's inhibitory phase is itself suppressed",
+    "The compound functions as a temporal unit, not as a sum of simultaneous elements"
+   ],
+   "breakdown_regime": "Order effects make compound stimuli non-commutative: results cannot be predicted from the components' individual strengths alone, and Pavlov treats the temporal pattern itself as the real stimulus. no_equation_domain",
+   "domain": "compound stimuli",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sequence is signal: the same events in a different order are a different input. The engine encodes event order and inter-event gaps as features in their own right (drive sequence, injury-then-trade vs trade-then-injury), because the compound's effect is determined by arrangement and pauses, not by the unordered set of events.",
+    "source_operator": "successive_compound_order",
+    "telemetry": "ordered event sequences with inter-event intervals as first-class features"
+   }
+  },
+  {
+   "primitive_id": "irradiation_of_inhibition",
+   "name": "Irradiation: an inhibitory process starting at one cortical point spreads into the surrounding region, weakening with distance from the point of origin",
+   "verbatim_quote": "the inhibitory process initiated in a definite point of the cortex by the tactile stimulation of the inhibitory place irradiates into the surrounding region, giving a smaller inhibitory effect with increase of distance from the inhibitory point and becoming indistinguishable at the more distant points.",
+   "page": "Lecture IX, printed p. 154; text lines ~6895-6915",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Demonstrated by Krasnogorsky's five equidistant skin places: inhibition at one place depresses reflexes at the others in distance order",
+    "Irradiation is the initial phase; concentration follows as the process recedes",
+    "The spread is functional, across the cortical representation, not a physical diffusion"
+   ],
+   "breakdown_regime": "Irradiation and concentration are phases of one movement; measuring at a single moment confuses the two. The speed and extent vary with the strength of the initiating process and the state of the cortex. no_equation_domain",
+   "domain": "cortical dynamics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Suppression spreads: when the engine inhibits a signal, neighbouring signals in representation space are depressed too, in proportion to their closeness. A veto applied to one matchup pattern must therefore be expected to bleed onto adjacent patterns, and the bleed radius is a measurable property of the veto, not an accident.",
+    "source_operator": "irradiation_of_inhibition",
+    "telemetry": "neighbour-effect measurements after any signal suppression; bleed radius recorded per veto"
+   }
+  },
+  {
+   "primitive_id": "concentration_of_inhibition",
+   "name": "Concentration: after irradiating, inhibition recedes, freeing first the remote areas and then those nearer its point of origin",
+   "verbatim_quote": "the initially widely irradiated inhibition gradually frees from its after-effect first the remoter areas, and subsequently those areas nearer to the cortical point in which the inhibition arose primarily.",
+   "page": "Lecture IX, printed p. 155; text lines ~6940-6960",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Recovery order is the reverse of the spread order: distance from origin decides who recovers first",
+    "The full movement (irradiation then concentration) can occupy minutes to hours",
+    "Excitation shows the same two-phase movement, irradiating then concentrating"
+   ],
+   "breakdown_regime": "Because concentration takes time, a recently inhibited system is not at baseline even when the target reflex has recovered; the surrounding region is still clearing. Single time-point tests systematically misjudge the state. no_equation_domain",
+   "domain": "cortical dynamics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Recovery from a suppression is ordered, not uniform: peripheral, weakly related signals clear first and the core of the suppressed pattern clears last. After the engine lifts a veto or a signal recovers, reactivation should be staged in that order, and evaluations made during the clearing window will understate the pattern nearest the original suppression.",
+    "source_operator": "concentration_of_inhibition",
+    "telemetry": "staged reactivation schedules after suppression events; recovery-order logs per signal family"
+   }
+  },
+  {
+   "primitive_id": "mutual_induction",
+   "name": "Induction is reciprocal: excitation at a point heightens inhibition around it and in its own after-phase, and inhibition heightens excitation",
+   "verbatim_quote": "Induction is mutual, or reciprocal, excitation leading to increased inhibition and inhibition leading to increased excitation.",
+   "page": "Lecture XI, printed p. 188; text lines ~8395-8412",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Positive induction: a focus of inhibition raises the excitability of surrounding or succeeding points",
+    "Negative induction: a focus of excitation deepens inhibition around it",
+    "Induction explains contrast phenomena that irradiation alone cannot, including simultaneous and successive contrast"
+   ],
+   "breakdown_regime": "Induction and irradiation overlap in their visible effects and Pavlov separates them by time course and by the sign of the change at the focus versus the surround; in weak or pathological cortices induction fails first. no_equation_domain",
+   "domain": "cortical dynamics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Contrast is a mechanism, not a metaphor: suppressing one pattern actively boosts its rivals, and exciting one pattern actively suppresses its neighbours. When the engine downweights a hypothesis, probability mass does not just redistribute passively; the architecture should model the active boost to alternatives that induction predicts, especially in either-or matchup reads.",
+    "source_operator": "mutual_induction",
+    "telemetry": "rival-hypothesis boost measurements after downweighting events; contrast terms in pairwise comparisons"
+   }
+  },
+  {
+   "primitive_id": "cortical_mosaic_switchboard",
+   "name": "The cortex is a mosaic and switchboard: a vast array of points in continual flux between excitation and inhibition, routing signals",
+   "verbatim_quote": "The cerebral cortex can accordingly be represented as an exceedingly rich mosaic, or as an extremely complicated",
+   "page": "Lecture XIII, printed p. 219; text lines ~9725-9745",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "At any moment the mosaic's pattern of excited and inhibited points is unique to the current stimulus situation",
+    "Points can change functional sign as connections are formed and extinguished",
+    "The switchboard metaphor stresses routing: the same input reaches different outputs depending on the mosaic's state"
+   ],
+   "breakdown_regime": "The mosaic is inferred from the totality of the reflex experiments, not from anatomy; its grain (how many functionally distinct points) is unknown, and the metaphor should not be pressed into a claim about discrete cortical modules. no_equation_domain",
+   "domain": "cortical organization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's state at any moment is a mosaic: a pattern of active and inhibited signal points that routes the same input to different conclusions depending on configuration. Two identical matchup inputs on different weeks are different stimuli because the mosaic differs. State must therefore be versioned and reported with every projection, so a conclusion can be traced to the configuration that produced it.",
+    "source_operator": "cortical_mosaic_switchboard",
+    "telemetry": "full signal-state snapshots versioned with every projection run"
+   }
+  },
+  {
+   "primitive_id": "cortical_cells_inhibition_tendency",
+   "name": "Cortical cells under a conditioned stimulus always tend to pass into inhibition; the unconditioned reinforcement merely retards that development",
+   "verbatim_quote": "The cortical cells under the influence of the conditioned stimulus always tend to pass, though sometimes very slowly, into a state of inhibition. The function performed by the unconditioned reflex after the conditioned reflex has become established is merely to retard the development of inhibition.",
+   "page": "Lecture XIV, printed p. 234; text lines ~10395-10415",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Every conditioned stimulus left unreinforced drifts toward inhibition; reinforcement postpones, never abolishes, the drift",
+    "The speed of the drift varies with stimulus strength and the individual animal",
+    "This tendency is the root of extinction, delay, and the eventual need for sleep"
+   ],
+   "breakdown_regime": "The claim reverses the naive picture in which reinforcement builds and its absence merely neglects; here inhibition is the default direction of cortical life and excitation is what must be continually re-earned. no_equation_domain",
+   "domain": "inhibition: cortical tendency",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every learned signal in the engine carries a standing decay pressure toward inhibition; reinforcement events retard the decay but do not remove it. Signal maintenance is therefore a scheduled activity: each association has a reinforcement cadence, and an association that stops being re-earned by fresh outcomes is expected to fade even if nothing actively contradicts it.",
+    "source_operator": "cortical_cells_inhibition_tendency",
+    "telemetry": "per-signal last-reinforcement timestamps; decay-pressure curves audited against outcome streams"
+   }
+  },
+  {
+   "primitive_id": "sleep_as_irradiated_inhibition",
+   "name": "Sleep is internal inhibition widely irradiated over the whole hemispheres; waking inhibition is the same process confined to separate cell groups",
+   "verbatim_quote": "Internal inhibition during the alert state is nothing but a scattered sleep, sleep of separate groups of cellular structures ; and sleep itself is nothing but internal inhibition which is widely irradiated, extending over the whole mass of the hemispheres and involving the lower centres of the brain as well.",
+   "page": "Lecture XV, printed p. 253; text lines ~11175-11195",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The identity is functional: the same inhibitory process, differing only in extent",
+    "Monotonous stimulation accelerates sleep because it concentrates inhibition until it irradiates",
+    "Hypnotic states are intermediate stages of the same spread"
+   ],
+   "breakdown_regime": "The identity claim is the boldest in the book and rests on behavioural continuity (all intermediate stages observable), not on direct measurement of the inhibitory process; Pavlov presents it as the only account covering sleep, hypnosis, and waking inhibition together. no_equation_domain",
+   "domain": "sleep and inhibition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Local suppression and global shutdown are the same operation at different scales. In the engine, a signal family inhibited in enough places should be expected to tip into a global state change (the whole read on a game goes quiet), and conversely a global quiet period is just inhibition that finished irradiating. Monitoring tracks both scales with one mechanism.",
+    "source_operator": "sleep_as_irradiated_inhibition",
+    "telemetry": "local vs global suppression ratios; tipping alerts when local inhibitions pass a coverage threshold"
+   }
+  },
+  {
+   "primitive_id": "paradoxical_phase",
+   "name": "In the paradoxical phase of a weakened cortex the response law inverts: strong stimuli fail while weak stimuli act more strongly than normal",
+   "verbatim_quote": "The experiment shows exactly the reverse of what was observed during the normal state of the animal. The strong stimuli have either no effect or only a very small one ; the weak stimuli have a greater effect than normal.",
+   "page": "Lecture XVI, printed p. 271; text lines ~11978-11992",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The phase appears in pathological and transitional (sleep-boundary) cortical states",
+    "Response magnitude is no longer a monotone function of stimulus strength",
+    "The phase is one of a sequence (equalization, paradoxical, ultraparadoxical) as cortical weakness deepens"
+   ],
+   "breakdown_regime": "Outside these states the inversion never appears; using it as a general principle of response would be a category error. It is a diagnostic sign of the cortex's condition, not a normal mode of operation. no_equation_domain",
+   "domain": "pathological cortical states",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Under degraded conditions, input-output laws can invert: the loudest signal stops working and faint signals dominate. When the engine is operating on damaged inputs (missing feeds, stale data, corrupted features), it should expect paradoxical behaviour from its own response curves and flag the state, rather than trusting that bigger signals still mean bigger effects.",
+    "source_operator": "paradoxical_phase",
+    "telemetry": "input-health state flags; response-curve monotonicity checks run whenever input quality degrades"
+   }
+  },
+  {
+   "primitive_id": "ultraparadoxical_phase",
+   "name": "In the ultraparadoxical phase, positive conditioned stimuli lose their effect and previously negative (inhibitory) stimuli become positive",
+   "verbatim_quote": "A similar conversion of negative stimuli into positive ones was also on several occasions observed in pathological conditions.",
+   "page": "Lecture XVI, printed p. 275; text lines ~12160-12172",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The conversion of sign is the defining mark: inhibitors act as exciters",
+    "Observed in transitional states and in pathological conditions of the hemispheres",
+    "The phase marks a deeper cortical disturbance than the paradoxical phase"
+   ],
+   "breakdown_regime": "The quoted sentence is Pavlov's summary of the pathological observations; the experimental form (in hypnotic and transitional states) is described in the same lecture. Sign conversion is a state marker, never a property of the stimulus itself. no_equation_domain",
+   "domain": "pathological cortical states",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The deepest failure mode of a signal system is sign conversion: known negative indicators start firing as positives. The engine treats any observed sign flip of an established indicator as a state alarm about the system or its data, not as a discovery that the indicator changed sides, until the state has been independently cleared.",
+    "source_operator": "ultraparadoxical_phase",
+    "telemetry": "sign-stability audits on established indicators; flip events routed to state diagnosis before model updates"
+   }
+  },
+  {
+   "primitive_id": "nervous_system_types",
+   "name": "Animals fall on a spectrum of nervous types bounded by two extremes: excitation predominant without limit, and inhibition predominant",
+   "verbatim_quote": "Both the above types are obviously extremes. In the first the excitatory process predominates in the extreme, and in the second the inhibitory.",
+   "page": "Lecture XVII, printed p. 287; text lines ~12660-12678",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Types are defined by the balance, strength, and mobility of the excitatory and inhibitory processes",
+    "Most animals are intermediate, balanced types; the extremes are limiting cases",
+    "Type determines which experimental demands an animal can bear and where it breaks down"
+   ],
+   "breakdown_regime": "The typology is built from laboratory behaviour under standard tests; Pavlov is careful that the extremes are rarely met in pure form, and that type is a property of the nervous system, not of intelligence or worth. no_equation_domain",
+   "domain": "individual differences",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Agents and models have nervous types too: some configurations are excitation-dominant (they fire on every signal and cannot hold a pass) and some are inhibition-dominant (they suppress everything and miss real edges). Characterizing each engine variant by its excitation-inhibition balance predicts in advance which demands will break it, and the balanced middle is a design target, not a default.",
+    "source_operator": "nervous_system_types",
+    "telemetry": "per-variant firing and suppression rates under a standard probe battery; balance scores tracked over versions"
+   }
+  },
+  {
+   "primitive_id": "experimental_neurosis_clash",
+   "name": "Pathological breakdown is produced by an acute clashing of the excitatory and inhibitory processes, or by strong and extraordinary stimuli",
+   "verbatim_quote": "In the dog two conditions were found to produce pathological disturbances by functional interference, namely, an unusually acute clashing of the excitatory and inhibitory processes, and the influence of strong and extraordinary stimuli.",
+   "page": "Lecture XXIII, printed p. 397; text lines ~17375-17390",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The clash is set up when a differentiation is demanded at or beyond the analyser's limit, or when excitation and inhibition are forced into direct collision",
+    "Breakdown can be acute (days) or chronic, and can generalize from one reflex system to all",
+    "Rest, bromide, and removal of the impossible demand are the effective treatments"
+   ],
+   "breakdown_regime": "The neurosis is functional, produced without any lesion: the same brain that broke under the clash recovers when the clash is removed. Susceptibility depends on nervous type, the inhibition-predominant and excitation-predominant extremes breaking in opposite directions. no_equation_domain",
+   "domain": "pathology of learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A reasoning system breaks when it is forced to hold two incompatible strong demands at once, or hit with inputs beyond its design strength. The engine's failure protocol follows Pavlov's treatment: remove the impossible demand, rest the affected subsystem (fall back to full abstention), and reintroduce the discrimination gradually from easy contrasts, instead of forcing the model to keep answering under clash.",
+    "source_operator": "experimental_neurosis_clash",
+    "telemetry": "conflict-load metrics on simultaneous strong opposing signals; automatic abstention and staged re-entry logs"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "pavlov-conditioned-reflexes-main-trace",
+   "think": "Pavlov's book is the record of a single methodological decision pursued for twenty five years: stop asking what the dog thinks and measure what the dog's glands do. Everything in the twenty three lectures follows from the fistula. Once secretion can be counted in drops, the mind's vocabulary (association, attention, forgetting, fatigue, sleep, character) becomes a set of laboratory operations, and each operation either survives as a measurable process or is discarded. The first thing a modern reader has to absorb is that the conditioned reflex is not a trick of training but a claim about what the cortex is for. The hemispheres exist to react to signals: stimuli that announce, at a distance and in advance, the agencies that matter for survival. The elemental reflexes handle contact; the cortex handles announcement. That is why the book keeps returning to interchangeability. A signal is not tied to its agency by nature, only by correlation, and the same stimulus can announce food in one arrangement and danger in another. The cortex is therefore a correlation-tracking organ whose connections are continually formed, tested, weakened, and annulled as the world's correlations change. Read this way, the laws of formation are a discipline for any learning system. The overlap requisite and the precedence rule are the temporal logic of credit assignment: a signal earns its connection only by arriving before and during the event it predicts, and backward pairings fail absolutely, hundreds of repetitions notwithstanding. That is a leakage theorem stated in 1924. The alert-state requirement adds that connections form properly only in a clean, undisturbed system, which is a data-hygiene law. The relative-strength rule adds a hierarchy: weaker processes can be re-purposed as signals for stronger ones, not the reverse, which is a statement about which layers of a system can be subordinated to which. Second-order conditioning shows that signals can be stacked, and the ceiling (no third order for alimentary reflexes) shows that stacking has a compounding cost that eventually severs the chain from any ground event. The deepest part of the book is the inhibitory half, because Pavlov insists inhibition is a process and not an absence. Extinction is the proof. A reflex weakened by unreinforced repetition is not erased: it recovers spontaneously, it is restored by one reinforcement, and it can be stripped bare in an instant by an extraneous stimulus (disinhibition). Three facts, one conclusion: something active is sitting on top of the connection, and the connection itself is intact underneath. From that single inference Pavlov builds conditioned inhibition, delay, differentiation, irradiation, concentration, and induction into a complete dynamics of cortical state, and then, in the boldest move of the book, identifies sleep as the same inhibitory process at maximal extent. The phases of the weakened cortex (equalization, paradoxical, ultraparadoxical) extend the dynamics into pathology: as the system degrades, its input-output law first flattens, then inverts, then flips sign entirely. Experimental neurosis completes the picture by showing the failure mode of the learning system itself: demand a discrimination finer than the analyser supports, or force excitation and inhibition into direct clash, and the whole apparatus breaks, functionally, without any lesion. What survives translation to any modern reasoning engine is the architecture: a signal layer over elemental processes; connections formed only under strict temporal and state conditions; suppression represented as an active, recoverable state rather than deletion; generalization and differentiation as the twin movements of every learned boundary; spatial spread and recession of effects across neighbouring representations; contrast effects (induction) between rivals; global states (sleep, pathology) as the same local processes at different extents; and individual type as a balance parameter that predicts where a given system will break. Pavlov had no equations and wanted none: the numbers in the book are drops of saliva and seconds of latency, and the laws are qualitative because the phenomena were not yet ripe for algebra. The honest limitation is the preparation itself: one species, one main readout, an inferred cortical physiology that later neuroscience revised in detail. But the operational skeleton, what must be true of any system that learns from signals in time, has never been refuted, only re-implemented. A second discipline runs through the lectures that is easy to miss: every phenomenon is required to survive a test that could have destroyed the preferred interpretation. Extinction could have been fatigue, so Pavlov varies the interval and shows the dependence runs the wrong way for fatigue. The inhibitor could have been a merely weak stimulus, so he applies the summation test and shows it suppresses reflexes it was never trained with. Delay could have been slowness, so he shows the early phase actively inhibits other reflexes. This is the working form of the cross-layer veto: a claim is only admitted when the strongest rival explanation has been given its chance and failed. The lectures also model intellectual patience about mechanism. The foci account of connection formation is offered as the only interpretation fitting the facts, with its anatomical uncertainty stated in plain words; the site of the new connection, cortical or cortico-subcortical, is left open for decades rather than closed by rhetoric. Finally there is the matter of scale, which is where the book speaks most directly to builders of reasoning systems. Pavlov moves without embarrassment between a single gland and the whole conduct of a human life, because the same operations recur at each level: habits are long chains of conditioned reflexes, education is differentiation training, character is the balance of the two great processes, and sleep is inhibition that finished spreading. The claim is not that a drop of saliva explains a person; it is that the bookkeeping operations discovered at the smallest measurable scale are the same operations any larger account must use, and that an account using different operations at different scales is probably two fictions instead of one theory. A modern engine that keeps one set of rules for its features, another for its models, and a third for its operators' judgments is in exactly the position Pavlov refused: the veto structure, the decay pressure, the abstention under clash, and the recovery after suppression must be the same machinery at every layer, or they are decoration.",
+   "retrocausal_genealogy": "Genealogically the book sits downstream of Descartes' reflex, Sechenov's Reflexes of the Brain (1863), and Pavlov's own digestive work that won the 1904 Nobel Prize, and it is the headwater of nearly everything after: Watson's behaviourism took the conditioned reflex as its unit, Hull formalized it, Rescorla and Wagner mathematized its formation rules in 1972, and modern reinforcement learning inherited its core loop of prediction, outcome, and update. Reading it backwards from the present, the striking thing is how many later formalisms are present here in prose: temporal precedence as the anti-leakage condition anticipates the causality constraints of time-series modelling; the extinction results anticipate the modern distinction between performance and learning; irradiation and concentration anticipate spatial smoothing and its relaxation; the phases anticipate gain changes and sign flips in degraded networks. The genealogy also runs forward into this extraction project itself: a corpus of books is being converted into primitives exactly as Pavlov converted behaviour into reflexes, by finding the smallest units that still carry the causal structure of the whole.",
+   "theory_of_mind": "Pavlov's theory of mind is an anti-theory: he holds that the experimenter's mind must model the dog's nervous system as a machine of connections and processes, and never as a little person with beliefs. Yet the lectures are full of second-order modelling of a different kind: the experimenter constantly predicts how the cortical mosaic will reconfigure under a new procedure, and the dog, in Pavlov's own account, is itself modelling the laboratory, forming expectations (the conditioned reflex is precisely an expectation made measurable) that the next trial confirms or violates. The recursive structure is there even though the vocabulary is refused: the animal's cortex tracks the experimenter's regularities, the experimenter tracks the animal's tracking, and the published law is what survives both levels. For an engine that reasons about opponents, coaches, and markets, the lesson is that expectation-formation can be fully mechanized without mentalistic language, and that the refusal of mentalistic language is itself a modelling discipline: every attributed intention must be cashable as a measurable connection or it does not enter the record.",
+   "cross_layer_veto": "The cross-layer vetoes in this system are explicit and repeated. The precedence rule vetoes any connection whose signal arrives after its outcome, regardless of correlation strength. The summation test vetoes the label conditioned inhibition for any merely weak combination: unless the suspected inhibitor suppresses an unrelated positive reflex, the claim fails. Spontaneous recovery vetoes the interpretation of extinction as erasure, and disinhibition vetoes it again from the other side. The analyser's resolution limit vetoes any differentiation demand finer than the apparatus supports, and the veto is enforced by breakdown when ignored. Nervous type vetoes universal protocols: a procedure safe for a balanced animal destroys an extreme type, so no result generalizes across types without a type check. Each veto is a lower layer (physiology, measurement, individual constitution) striking down a claim made at a higher layer (theory, method, generalization), which is exactly the direction a veto must run to keep a reasoning system honest."
+  }
+ ],
+ "universal_lens": "The universal lens of this book is that intelligence, wherever it is found, is a signal economy: a system survives by letting cheap, early, interchangeable stimuli stand for expensive, late, vital events, and by continuously auditing those substitutions. Formation, extinction, generalization, differentiation, inhibition, and breakdown are not dog facts; they are the necessary bookkeeping operations of any such economy, in neurons, in institutions, in markets, and in software. Pavlov's contribution is to have run the bookkeeping in public, with a counter attached, until the operations could no longer be confused with the metaphors they replaced.",
+ "gsi_mapping": "For the Galaxy Sports Institute the book supplies a founding physiology of learning that can be taught and built on: analysers as channel architecture, the mosaic as system state, inhibition as an active curriculum force rather than an absence, and nervous types as a principled account of why identical training breaks different learners differently. Its research value is the operational method: every theoretical term must be convertible into a procedure with a countable readout, and every claimed effect must survive a veto test (summation, recovery, disinhibition) before it is taught as fact. That standard is directly exportable to how the Institute evaluates training methods, analytics claims, and its own educational material.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine the mappings are architectural, not decorative. Precedence becomes the feature-leakage gate; overlap becomes the co-occurrence requirement for learned associations; extinction-without-deletion becomes the rule that decayed signals keep their status in the store and can recover; conditioned inhibition becomes context vetoes with transfer power; delay becomes phase-resolved timing profiles for signals whose effects arrive late; generalization and differentiation become the similarity kernel and the contrast training of every classification boundary; irradiation and concentration set the expected bleed and recovery order when a pattern is suppressed; induction supplies the active contrast term between rival reads; the paradoxical and ultraparadoxical phases become state alarms for degraded input conditions; nervous types become balance profiles for engine variants; and experimental neurosis becomes the abstention protocol when incompatible strong demands clash. The mappings are purely architectural: this is the learning physiology underneath any projection the engine publishes.",
+ "source_note": "Ivan Petrovich Pavlov, Conditioned Reflexes: An Investigation of the Physiological Activity of the Cerebral Cortex, translated and edited by G. V. Anrep, first English edition, Oxford University Press, 1927 (lectures delivered at the Military Medical Academy, Petrograd; the local file is the 1927 edition as reprinted photographically in 1928 and 1940). Local PDF: ~/workspace/full-library-2026-11-12/library/books-must-have/Pavlov-1927-ConditionedReflexes.pdf (25,204,826 bytes; sha256 6e242c689b7979a1c38809bd2f8858915be845da3d3cd84848f4bfe39d45dfc7). Extracted text: ~/workspace/full-library-2026-11-12/text/books-must-have/Pavlov-1927-ConditionedReflexes.pdf.txt (1,144,989 bytes, 156,065 words, 18,788 lines). Text quality: the OCR of the body lectures is clean and quotable, with ordinary scanned-book artifacts (page headers, hyphenation across line breaks, occasional garbled words in tables and front matter); every quote in this artifact was taken from a single page span of the body text and verified as a contiguous substring by the foundry verifier. This extraction was prepared from the local file named above; no other source was used."
+}
