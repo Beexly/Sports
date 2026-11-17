@@ -324,3 +324,16 @@ the sfdata9ers bundle (TEST). Motif-verified: every line parses,
 Running feed total: 11,152 records. Still pending: 2026-11-15 X
 analytics PM delta and the 2026-11-16 analytics AM section (Lane A
 only at last check).
+
+## Delta 2026-11-17 IG AM (landed 2026-11-17)
+
+Source: ~/workspace/ig-for-you-sweep/reports/2026-11-17-AM.md. 49 records
+(21 dossier + 28 inventoried), 0 duplicates skipped, 0 slug-keyed (all 49
+posts carried shortcodes), 41,772 bytes appended. One intra-report
+duplicate collapsed by the converter (Rescript Df2LhDgAB7R appeared in both
+the inventoried list and the spotlight dossier; kept as one dossier
+record). Verdicts as printed: 40 CONTEXT-ONLY, 8 LEARN-ONLY, 1 TEST
+(Rescript, wassgha/rescript, PolyForm Noncommercial 1.0.0 license trap
+noted in the dossier). Run counts: 63 feed positions = 14 ads excluded +
+49 organic, all NEW, 0 duplicates against the seen index. IG feed now
+2,904 records. Running feed total: 11,201 records.
