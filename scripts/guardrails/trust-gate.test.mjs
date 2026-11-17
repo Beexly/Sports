@@ -187,3 +187,35 @@ test("governance jargon list in AGENTS.md is exempt; public copy still hits", ()
   assert.equal(pub.code, 1, pub.out);
   assert.match(pub.out, /banned\.positioning\./);
 });
+
+test("the 2026-11-17 sweep's Lock digest shapes are verbatim data, not picks", () => {
+  // Reproduces the 7 hits on `f32243c3a` (the Nov 16/17 morning analytics
+  // sweep appended these to AGENTS.md). Six carry a numeric post ID — a
+  // provenance record of one specific third-party post — and the seventh is a
+  // quoted leaderboard roll-up whose only "Lock" shapes are stat-table forms.
+  const digestLines = [
+    "- SumerSports single-game player cards (@SumerSports, Nov 15): Burrow Pass Performance by Zone (ID 2122165077180825679); Lock vs LV card (ID 2122093375495295352).",
+    "- Post-window: @hawkblogger 2122715564934377851 (~9:36 AM Nov 17, Lock vs the same defenses), 2122718756149592431 (Lock comparison chart).",
+    "- Passing Efficiency grids (IDs 2122394374310965523, 2122394547338547621). Lock (vs LV): 14/17, 240 yds.",
+    "- Week 10 QB EPA per Play by Air Yards (ID 2122414695084601738, 1:41 PM Nov 16). Lock +0.61/+0.67/+1.16/+3.31; Purdy +0.65/+1.71.",
+    "- Leaderboards as reported: Highest passer rating Week 10 - Lock 158.0, Purdy 154.5; QB comparisons as printed: Lock (22 dropbacks, 17 att, 14 comp); Lock 8/11, 194 yds.",
+    "- @RoundtableSN: highest verified ID 2122701290493116533 (8:40 AM Nov 17, Darnold/Lock starter news + image).",
+    "- SumerSports percentile cards (@SumerSports, all Nov 16): Lock Down Corners by yards allowed; Drew Lock season card (ID 2122438680686284963).",
+  ];
+  for (const line of digestLines) {
+    const r = scan({ "AGENTS.md": line + "\n" });
+    assert.equal(r.code, 0, `${line}\n${r.out}`);
+  }
+  // The same ID-bearing line is NOT a root memory doc -> still refused.
+  const inCode = scan(clean(digestLines[0]));
+  assert.equal(inCode.code, 1, inCode.out);
+  assert.match(inCode.out, /banned\.lock/);
+});
+
+test("a residual standalone lock on a stat-table line still hits", () => {
+  // Blank-then-recheck: blanking the quoted surname shape must not let a real
+  // claim on the same AGENTS.md line through.
+  const r = scan({ "AGENTS.md": "Our model says Lock 2.77 and it is a lock for the day.\n" });
+  assert.equal(r.code, 1, r.out);
+  assert.match(r.out, /banned\.lock/);
+});

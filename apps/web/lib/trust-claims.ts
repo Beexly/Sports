@@ -635,9 +635,32 @@ const LOCK_SURNAME_PARENTHETICAL_AND_SLUG =
 const LOCK_SURNAME_DIGEST_SHAPES =
   /\bLock\s+\(Weeks?\s+\d+(?:\s*[-,]\s*\d+)*\s*:|\bLock\s+[+-]\d+\.\d+\s+EPA\b|\bLock\s+chart\b|\bLock's\b/g;
 
-/** Dated @handle social-digest lines (verbatim third-party data in memory docs). */
+// Mirror scripts/guardrails/trust-gate.mjs LOCK_STAT_TABLE_SAFE_CONTEXT: the
+// QUOTED-LEADERBOARD forms the x-intel sweeps paste verbatim into AGENTS.md
+// ("Lock +0.61/+0.67/…", "Lock (22 dropbacks…)", "Lock 8/11, 194 yds",
+// "Lock vs LV"). Applied ONLY when the caller scoped the scan to a root memory
+// doc (`lockDigestExempt`), because the reason trust-gate scopes its copy to
+// SCAN_FILES holds here too: tree-wide, `\bLock\s+\d+\.\d+` is a free pass for
+// "We locked in on that bet at Lock 2.77." on a marketing surface.
+const LOCK_STAT_TABLE_SAFE_CONTEXT =
+  /\bLock\s+[+-]?\d+\.\d+|\bLock\s+\d+\s+vs\b|\bLock\s+vs\b|\bLock\s*\(|\bLock\s+\d+\s*\/\s*\d+|\/\s?Lock\s?\/|\bLock\s+\d+\s+dropbacks\b|\bLock\s+\d+%|\bhawkblogger-lock-darnold-[a-z0-9-]+\.csv\b|\bLock\s+with\s+\d+\s+of\s+the\s+\d+\s+highest\s+Seahawks\b|\bLock\s+EPA\/play\s+\d+\.\d+/gi;
+
+/**
+ * Dated @handle social-digest lines (verbatim third-party data in memory docs).
+ *
+ * Mirror scripts/guardrails/trust-gate.mjs. A line carrying a numeric post ID
+ * (a 15+ digit snowflake) is a provenance record of one specific third-party
+ * post — the shape the x-intel sweeps write ("(ID 2122165077180825679)") — and
+ * never appears in marketing copy. Otherwise the original form: a dated @handle
+ * line, accepting the ISO date or the sweeps' spelled-out "Nov 15" form.
+ */
 export function isVerbatimSocialDigestLine(line: string): boolean {
-  return /@\w+/.test(line) && /\d{4}-\d{2}-\d{2}/.test(line);
+  if (/\b\d{15,}\b/.test(line)) return true;
+  if (!/@\w+/.test(line)) return false;
+  return (
+    /\d{4}-\d{2}-\d{2}/.test(line) ||
+    /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}\b/i.test(line)
+  );
 }
 
 /**
@@ -710,6 +733,9 @@ export function scanForBannedPhrases(
         subject = subject.replace(LOCK_SURNAME_TABLE_DATA, " ");
         subject = subject.replace(LOCK_SURNAME_PARENTHETICAL_AND_SLUG, " ");
         subject = subject.replace(LOCK_SURNAME_DIGEST_SHAPES, " ");
+        if (lockDigestExempt) {
+          subject = subject.replace(LOCK_STAT_TABLE_SAFE_CONTEXT, " ");
+        }
       }
       if (pattern.test(subject)) {
         hits.push({

@@ -500,7 +500,7 @@ const LOCK_PROPER_NOUN_SAFE_CONTEXT =
 // else's table, not a claim. It was unscoped before, which let a marketing
 // surface carry the surname list; it is now scoped with the other two.
 const LOCK_STAT_TABLE_SAFE_CONTEXT =
-  /\bLock\s+\d+\.\d+|\bLock\s+\d+\s+vs\b|\/\s?Lock\s?\/|\bLock\s+\d+\s+dropbacks\b|\bLock\s+\d+%|\bhawkblogger-lock-darnold-[a-z0-9-]+\.csv\b|\bLock\s+with\s+\d+\s+of\s+the\s+\d+\s+highest\s+Seahawks\b|\bLock\s+EPA\/play\s+\d+\.\d+/gi;
+  /\bLock\s+[+-]?\d+\.\d+|\bLock\s+\d+\s+vs\b|\bLock\s+vs\b|\bLock\s*\(|\bLock\s+\d+\s*\/\s*\d+|\/\s?Lock\s?\/|\bLock\s+\d+\s+dropbacks\b|\bLock\s+\d+%|\bhawkblogger-lock-darnold-[a-z0-9-]+\.csv\b|\bLock\s+with\s+\d+\s+of\s+the\s+\d+\s+highest\s+Seahawks\b|\bLock\s+EPA\/play\s+\d+\.\d+/gi;
 
 // THREE MORE DIGEST SHAPES, added 2026-11-16 (this gate red on `7305b780f`,
 // the 2026-11-15 morning analytics sweep digest appended to AGENTS.md). That
@@ -564,7 +564,19 @@ const GUARANTEED_CONTRACT_FIELD_SAFE_CONTEXT =
 // a marketing surface never legitimately carries a dated @handle digest line,
 // so this cannot be used to smuggle "lock" into public copy.
 function isVerbatimSocialDigestLine(line) {
-  return /@\w+/.test(line) && /\d{4}-\d{2}-\d{2}/.test(line);
+  // A line carrying a numeric post ID (a 15+ digit snowflake) is a provenance
+  // record of one specific third-party post — the exact shape the x-intel
+  // sweeps write ("... (ID 2122165077180825679)"). A marketing surface never
+  // carries a post ID, and the caller scopes this check to SCAN_FILES, so an
+  // ID-bearing line is a verbatim social digest, not a claim we make.
+  if (/\b\d{15,}\b/.test(line)) return true;
+  // Otherwise the original form: a dated @handle line. Accept both the ISO
+  // date ("2026-09-24") and the sweeps' spelled-out form ("Nov 15", "Nov 17").
+  if (!/@\w+/.test(line)) return false;
+  return (
+    /\d{4}-\d{2}-\d{2}/.test(line) ||
+    /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}\b/i.test(line)
+  );
 }
 
 const WHITELIST_PREFIXES = [
