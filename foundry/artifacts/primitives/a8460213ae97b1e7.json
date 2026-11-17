@@ -1,1 +1,706 @@
-{"book_id":"a8460213ae97b1e7","motif_lane":"MOTIF-TIERB-DRAIN-01","primitives":[],"reasoning_traces":[],"refusal_reason":"INSUFFICIENT_OCR: the shipped extracted text file is 495 bytes containing zero words (495 form-feed characters and nothing else), so no contiguous verbatim quote from Tolman's Purposive Behavior in Animals and Men can be sourced and no primitives can be extracted without fabrication. The PDF itself is an image-only scan: 495 pages, 12,123,241 bytes, produced by libtiff / tiff2pdf (a TIFF image scan converted to PDF) with no embedded text layer, which is why the extraction produced one form feed per page and no text. Closing this gap requires a full-book OCR pass over the PDF (the route used for Wiener, Knight, Dixon and Coles, and Halmos in this lane), after which this book should be re-queued for extraction.","source_note":"Edward C. Tolman, Purposive Behavior in Animals and Men (The Century Co., 1932). Local file is a scanned copy of the 1932 edition: 495 pages, 12,123,241 bytes, full sha256 a8460213ae97b1e7195fa97770ef2b890dde7e661016b2fab3551f3c5310b20d (scan digest over str(size) + file bytes; book_id is its first 16 hex chars). PDF producer is libtiff / tiff2pdf (20100615), i.e. a TIFF image scan wrapped as PDF, with no text layer. Text quality: unusable. The shipped extraction at text/books-must-have/Tolman-1932-PurposiveBehaviorInAnimalsAndMen.pdf.txt is 495 bytes, 0 words, consisting entirely of form-feed characters (one per page) with zero bytes of Tolman's text. No contiguous verbatim passage from the work exists in the shipped text to quote. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.","source_status":"INSUFFICIENT_OCR"}
+{
+  "book_id": "a8460213ae97b1e7",
+  "source_status": "COMPLETE",
+  "source_note": "Edward Chace Tolman, Purposive Behavior in Animals and Men (The Century Co., 1932). The local PDF is a scanned copy (MLSU Central Library stamp 60091CL) of the Appleton-Century-Crofts reprint of the 1932 text: its copyright pages record 1932 by The Century Co., 1960 by Edward Chace Tolman, and 1967 by Meredith Publishing Company, Library of Congress catalogue no. 67-20666; catalog records that call the file simply the 1932 edition are corrected accordingly, the reprint being a straight reissue of the 1932 work. PDF: 495 pages, 12,123,241 bytes, producer libtiff / tiff2pdf (a TIFF image scan with no text layer), full sha256 a8460213ae97b1e7195fa97770ef2b890dde7e661016b2fab3551f3c5310b20d (scan digest over str(size) + file bytes; book_id is its first 16 hex chars). The shipped extracted text was a 495-byte form-feed stub, so quotes are sourced instead from the Indra-lane full-book OCR of this same PDF (939,269 bytes, 151,769 words), copied to motif-foundry/work/tolman/tolman-full.txt and verified complete before use: it runs from the title page and editor's introduction through all twenty-five chapters, the Glossary, and both indexes, ending with the Index of Names at the book's final printed page 463 (Zeigarnik the last entry). OCR noise is present throughout that text; every verbatim quote below was machine-checked as an exact contiguous substring of it and is reproduced exactly as printed there, OCR artifacts included. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "molar_behavior_emergent",
+      "name": "Behavior taken as a molar whole has emergent descriptive properties (purpose and cognition) not reducible to its molecular physiological parts",
+      "verbatim_quote": "have, as “molar” wholes, certain emergent properties of their own",
+      "page": "Chapter I, section 4 (The Molar Definition); tolman-full.txt line 239",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Behavior-acts stand in one-to-one correspondence with underlying molecular facts of physics and physiology",
+        "Descriptive properties of the whole act are legitimate scientific data even before their molecular correlates are known"
+      ],
+      "breakdown_regime": "Breaks down as a description when an act is a rigid reflex or tropism with no molar organization to describe; the molar vocabulary then adds nothing over the molecular one",
+      "domain": "behavior theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine models competitors at the molar level of whole acts and sequences, with emergent descriptors (intent, plan, adjustment) carried as first class variables rather than derived from micro event counts alone",
+        "source_operator": "molar_behavior_emergent",
+        "telemetry": "Whole act sequences in event logs: possessions, drives, plays, and other molar units with their outcomes"
+      }
+    },
+    {
+      "primitive_id": "mental_processes_functional_variables",
+      "name": "Mental processes are to be conceived as dynamic aspects or determinants of behavior, functional variables in the causal equation between stimuli and overt behavior",
+      "verbatim_quote": "mental processes are most usefully to be conceived as but dynamic aspects, or determinants, of behavior",
+      "page": "Part I introduction (Behaviorism: Wherefore and What Sort); tolman-full.txt line 173",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Determinants are inferred from behavior, never observed directly",
+        "The concepts are pragmatic instruments, revisable as correlations demand"
+      ],
+      "breakdown_regime": "Fails if the inferred variables are reified into private inner substances; they earn their place only by mediating prediction between stimuli, states, and acts",
+      "domain": "behavior theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine state variables (form, intent, expectation strength) are treated as functional intervening variables justified only by the predictions they mediate, never as directly observed quantities",
+        "source_operator": "mental_processes_functional_variables",
+        "telemetry": "Paired records of situations, internal state proxies, and resulting actions across many contests"
+      }
+    },
+    {
+      "primitive_id": "purpose_as_docile_persistence",
+      "name": "Purpose is objectively defined by persistence through trial and error toward an end plus docility, the selection of more efficient routes to that end",
+      "verbatim_quote": "such a response expresses and defines something which, for convenence, we name as a purpose",
+      "page": "Chapter I, section 8 (The Objective Definition of Behavior Purposes); tolman-full.txt line 353",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The end relative to which docility is shown must be independently identifiable (a goal-object)",
+        "Persistence and route improvement are observable by an independent observer"
+      ],
+      "breakdown_regime": "Wherever a response shows no docility relative to any end, no purpose may be attributed; tropisms and fixed reflexes fall outside the definition",
+      "domain": "motivation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Objectives are attributed to a modeled agent only when its behavior persists toward an outcome and revises routes when blocked, giving the engine an operational objective function instead of an assumed one",
+        "source_operator": "purpose_as_docile_persistence",
+        "telemetry": "Repeated choice sequences showing persistence after failure and route shortening across trials"
+      }
+    },
+    {
+      "primitive_id": "cognition_as_contingency",
+      "name": "A cognition is present in behavior in so far as the behavior's continued going off is contingent on environmental entities proving to be so and so",
+      "verbatim_quote": "is present in a behavior in so far as the continued going-off of that behavior 1s contingent upon environmental entities",
+      "page": "Glossary, headword Cognition; tolman-full.txt line 5917",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The environmental entities in question are types of discriminanda, manipulanda, or means-end relations",
+        "Contingency is testable: change the entity and watch for disruption and learning"
+      ],
+      "breakdown_regime": "If no environmental change can disrupt the act, no cognition is immanent in it; the attribution is empty",
+      "domain": "cognition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Beliefs are attributed to a modeled agent exactly where its ongoing behavior is contingent on features of the situation, so the engine can enumerate what the agent is counting on by listing what would disrupt it",
+        "source_operator": "cognition_as_contingency",
+        "telemetry": "Behavior changes following controlled changes in situational features (availability, alignment, coverage)"
+      }
+    },
+    {
+      "primitive_id": "behavior_determinants_taxonomy",
+      "name": "The intervening variables (behavior determinants) subdivide into immanent purposive and cognitive determinants, capacities, and behavior-adjustments, all inferred back from behavior",
+      "verbatim_quote": "These intervening variables it defines as behavior-determinants And these behavior-determinants it subdivides further into (1) immanent purposive and cognitive determinants, (2) capacities and (3) behavior-adjustments",
+      "page": "Chapter XXV, section 1 (The Variables); tolman-full.txt line 5652",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "All three determinant types are precipitated out of empirical correlations between stimuli, physiological states, and acts",
+        "The taxonomy is a working partition, not a claim about separate mechanisms"
+      ],
+      "breakdown_regime": "The partition fails if a determinant cannot in principle be tied back to behavior experiments; untestable determinants are excluded by the system's own rule",
+      "domain": "behavior theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine partitions its latent state into intent variables, capacity variables, and deliberation variables, each required to be estimable from observed behavior rather than asserted",
+        "source_operator": "behavior_determinants_taxonomy",
+        "telemetry": "Longitudinal behavior records sufficient to separate stable capacities from situational intents and in the moment deliberation"
+      }
+    },
+    {
+      "primitive_id": "demand_hierarchy",
+      "name": "Demands form hierarchies: a superordinate demand makes the organism ready to demand subordinate goals and means-objects as routes to it",
+      "verbatim_quote": "the organism, when demanding given superordinate goal-objects, is ready to be responsive to, to try to have commerce with, and to demand such and such subordinate goals or means-objects",
+      "page": "Chapter VI, section 1 (Means-End-Readinesses and Means-End-Expectations); tolman-full.txt line 1300",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Subordinate demands hold only in so far as their objects prove to be routes to the superordinate goal",
+        "The hierarchy is released by an initiating physiological state acting through innate or acquired readinesses"
+      ],
+      "breakdown_regime": "A subordinate demand that persists after its route value is disproved is no longer part of the hierarchy; it has become a fixation",
+      "domain": "motivation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Goals in the engine are hierarchical: terminal objectives activate subgoals and valued intermediate states, and subgoal values are inherited from, and revised by, their contribution to the terminal objective",
+        "source_operator": "demand_hierarchy",
+        "telemetry": "Sequences in which intermediate targets are pursued, abandoned, or substituted as terminal outcomes change"
+      }
+    },
+    {
+      "primitive_id": "first_order_drives",
+      "name": "First order drives (appetites and aversions) aim not at the consummatory object itself but at the final physiological quiescence to be reached, or disturbance to be avoided, through it",
+      "verbatim_quote": "the final state of physiological quescence to be reached by commerce with the consummatory object",
+      "page": "Chapter XVIII, section 2 (Craig's Doctrine of Appetites and Aversions); tolman-full.txt line 3517",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Consummatory responses are themselves docile, not wholly blind reflexes",
+        "Avoidance likewise targets the threatened final disturbance, not the disturbing stimulus as such"
+      ],
+      "breakdown_regime": "If an organism keeps pursuing the consummatory object after the quiescence is otherwise achieved, or keeps avoiding a stimulus proven harmless, the drive analysis must be revised",
+      "domain": "motivation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Drive variables in the engine are defined by the terminal state they restore or avoid (energy balance, score state, qualification state), not by the surface reward event, so satiation and substitution effects are predicted correctly",
+        "source_operator": "first_order_drives",
+        "telemetry": "State variables tracking deficit and satiation (rest, workload, score differential, time remaining) against pursuit intensity"
+      }
+    },
+    {
+      "primitive_id": "goal_object",
+      "name": "A goal-object is a demanded to-be-got-to or to-be-got-from internal physiological condition or external environmental object",
+      "verbatim_quote": "A demanded (see demand) to be-got-to (or to-be-got-from) internal physiological condition or external environmental object",
+      "page": "Glossary, headword Goal-object; tolman-full.txt line 5967",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Goal-objects concatenate: subordinate goal-objects serve as means-objects for superordinate ones",
+        "A goal-object is defined relative to a demand; the same object is a goal only under an active demand"
+      ],
+      "breakdown_regime": "An object toward which no demand is active is not a goal-object for that organism at that moment, however desirable it appears to the observer",
+      "domain": "motivation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Target states in the engine are typed as to be reached or to be avoided and are only active under a live objective, preventing static value tables from firing out of context",
+        "source_operator": "goal_object",
+        "telemetry": "Outcome states and environmental objects referenced by observed pursuit and avoidance behavior"
+      }
+    },
+    {
+      "primitive_id": "means_end_readiness_as_judgment",
+      "name": "A means-end-readiness is equivalent to a judgment that a type of means-object has proved, and will continue to prove, a good route to the demanded goal",
+      "verbatim_quote": "equivalent to a judgment that the given type of food has proved in the past, and will continue to prove in the future, a “good” type of means-object route for getting on to satiation",
+      "page": "Chapter II, section 4 (Means-End-Readinesses); tolman-full.txt line 480",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Readinesses arise from innate endowment and previous experience",
+        "Readinesses are docile: they are revised when the route stops leading to the goal"
+      ],
+      "breakdown_regime": "A readiness that would not be revised by any outcome is not a judgment but a fixation, and the readiness concept no longer applies",
+      "domain": "cognition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Priors in the engine are readiness style judgments: standing evaluations of route types, carried between situations, and explicitly corrigible by realized outcomes",
+        "source_operator": "means_end_readiness_as_judgment",
+        "telemetry": "Historical success rates of strategy and route types, updated as new outcomes arrive"
+      }
+    },
+    {
+      "primitive_id": "means_end_fixation",
+      "name": "A readiness that fails to become docile to the facts is a means-end-fixation, not a true judgmental readiness",
+      "verbatim_quote": "it would have to be conceived, rather, as of the nature of what we might call a meansend-fixatton",
+      "page": "Chapter II, section 5 (The Docility of Means-End-Readinesses); tolman-full.txt line 494",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fixation is diagnosed only after sufficient experience that would have revised a docile readiness",
+        "Fixations can occur at fundamental drive levels and at superficial means-object levels"
+      ],
+      "breakdown_regime": "This is itself the breakdown category: it marks where the judgment model of readiness fails and a rigidity model must take over",
+      "domain": "cognition",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine flags fixations: route evaluations that stop updating despite repeated disconfirming outcomes, which are then modeled as rigidities rather than beliefs",
+        "source_operator": "means_end_readiness_as_judgment",
+        "telemetry": "Update histories showing evaluation stasis across repeated contrary outcomes"
+      }
+    },
+    {
+      "primitive_id": "means_end_expectation_selectivity",
+      "name": "A means-end-expectation is experimentally defined and evidenced by an animal's selectivity among actually presented means-objects",
+      "verbatim_quote": "The experimental definition and evidence of a means-endexpectation is to be found, in other words, in the fact of an animal’s selectivity among some array of actually presented means-objects",
+      "page": "Chapter VI, section 2 (Selectivity: the Evidence of Means-End-Expectations); tolman-full.txt line 1306",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Expectations are specifications of standing readinesses by the concrete stimuli presented",
+        "Selectivity reveals both the expected goal and the expected direction-distance relations to it"
+      ],
+      "breakdown_regime": "Where there is no array of alternatives, or no differential selection, no specific expectation can be identified",
+      "domain": "cognition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Choice among presented alternatives is the engine's primary observable for inferring expectations, so choice point telemetry is collected wherever an agent selects among routes",
+        "source_operator": "means_end_expectation_selectivity",
+        "telemetry": "Choice point logs: alternatives available, alternative chosen, and subsequent outcome"
+      }
+    },
+    {
+      "primitive_id": "sign_gestalt",
+      "name": "A sign-gestalt is a complex behavior-support consisting of a sign-object, a signified object, and a signified means-end relation (direction-distance correlation) between them",
+      "verbatim_quote": "Is a complex behavior-support (q.v.), consisting of a sign-object (q.v.) (i.e., means-object [q.v.]), a signified object (q.v.) (i.e., goal-object [q.v.]), and a signified means-endrelation (q.v.)",
+      "page": "Glossary, headword Sign-gestalt; tolman-full.txt line 6107",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The three parts function as one integrated unit once learning has fused them",
+        "The term properly names the environmental complex; the corresponding internal determinants are sign-gestalt-readinesses and sign-gestalt-expectations"
+      ],
+      "breakdown_regime": "Analysis into the three parts is a discourse device; in actual behavior the parts never occur in isolation from the whole",
+      "domain": "cognition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's unit of expectation is a triple: cue, expected outcome, and the relation (direction and cost) connecting them, stored and updated as one object rather than as independent associations",
+        "source_operator": "sign_gestalt",
+        "telemetry": "Cue outcome relation triples extracted from event streams with realized relation costs"
+      }
+    },
+    {
+      "primitive_id": "disruption_as_test",
+      "name": "If an environmental entity does not prove to be so and so, the behavior-act breaks down and shows disruption; disruption is thus the operational test of an immanent expectation",
+      "verbatim_quote": "For, if any one of these environmental entities does not prove to be so and so, the given behavior-act will break down and show disruption",
+      "page": "Chapter I, section 9 (The Objective Definition of Behavior Cognitions); tolman-full.txt line 361",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Disruption is followed by alteration of behavior (learning) on subsequent occasions",
+        "The range of substitutions that cause no disruption defines the expected entity's tolerance range"
+      ],
+      "breakdown_regime": "Disruption also occurs from drive changes and capacity limits, so it evidences an expectation only when the changed entity is identified and alternatives are controlled",
+      "domain": "method",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Surprise events are the engine's diagnostic signal: a breakdown in an agent's ongoing pattern identifies which expectation was load bearing and triggers model revision at exactly that node",
+        "source_operator": "cognition_as_contingency",
+        "telemetry": "Anomaly events: hesitation, searching, abandonment, or error bursts immediately following a situational change"
+      }
+    },
+    {
+      "primitive_id": "behavior_supports",
+      "name": "Behavior-acts are released by stimuli but demand and are sustained by later coming behavior-supports; behavior cannot go off in vacuo",
+      "verbatim_quote": "Behavior-acts and their immanent expectations are released by stimuli; but they demand and are sustained by later coming behavior-supports",
+      "page": "Chapter V, section 2 (Behavior Supports); tolman-full.txt line 1202",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The releasing stimulus and the verifying support are temporally and qualitatively two distinct events",
+        "Supports are environmental actualities (fulcra, media, planes), not further stimuli"
+      ],
+      "breakdown_regime": "An expectation whose supports never arrive cannot be verified; behavior released but unsupported collapses or is redirected",
+      "domain": "cognition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine distinguishes trigger features from enabling conditions: a forecast requires not only the cue that releases an expectation but the supporting conditions that let the expected sequence actually run",
+        "source_operator": "behavior_supports",
+        "telemetry": "Environmental condition records (surface, personnel, spacing, equipment) paired with released and completed action sequences"
+      }
+    },
+    {
+      "primitive_id": "discriminanda",
+      "name": "Supports whose expected features are possibilities of sensory affection (discriminations) are discriminanda",
+      "verbatim_quote": "In so far as the support features, which are demonstrated as expected and set-for, are the consistent possibilties of such and such sensory affections (discriminations), we shall designate such supports, discriminanda",
+      "page": "Chapter V, section 3 (Discriminanda and Manipulanda); tolman-full.txt line 1212",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "An expected discriminandum is finally defined by the range of sense characters substitutable without disruption, located on the species' sense polyhedron of intrinsic differentiability orders",
+        "The releasing stimulus must not be confused with the enduring discriminandum that supports the act"
+      ],
+      "breakdown_regime": "Below the organism's discriminanda-capacity, characters are not discriminanda for it at all; physical difference without possible discrimination does not enter the system",
+      "domain": "perception",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Perceptual features in the engine are defined by substitution ranges: the set of sensory variations an agent treats as equivalent, measured by which changes leave its behavior undisrupted",
+        "source_operator": "discriminanda",
+        "telemetry": "Feature variation studies: which perceptual changes (alignment, color, motion pattern) alter an agent's choices"
+      }
+    },
+    {
+      "primitive_id": "manipulanda",
+      "name": "Supports whose expected features are possibilities of motor activity (manipulations) are manipulanda",
+      "verbatim_quote": "an organism expects, and must have, motor supports such as a solid surface to walk on, an actual physical height to climb over, an unobstructed stretch to run through, a liquid to swim in",
+      "page": "Chapter V, section 5 (The Definition of Manipulanda); tolman-full.txt line 1242",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Manipulanda expectations accompany discriminanda expectations in every actual act; neither functions alone",
+        "Expected manipulanda are defined by substitution experiments parallel to those for discriminanda"
+      ],
+      "breakdown_regime": "Where the motor support is absent (no surface, no medium), the act cannot go off however strong the expectation",
+      "domain": "motor behavior",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Action affordances are modeled as expected motor supports with substitution ranges, so the engine can predict which actions remain available as physical conditions change",
+        "source_operator": "manipulanda",
+        "telemetry": "Physical condition and affordance records: surfaces, spaces, tools, and the actions they permit or block"
+      }
+    },
+    {
+      "primitive_id": "direction_relation",
+      "name": "Direction is any character in a means-object which distinguishes it for the organism from other alternative means-objects; spatial direction is only one sub-variety",
+      "verbatim_quote": "Direction is any character in a means-object (sign-object) which distinguishes it for the given organism, in the given situation from other alternative means-objects",
+      "page": "Glossary, headword Direction; tolman-full.txt line 5903",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Direction characters may be color, shape, gravitational properties, or any other distinguishing feature",
+        "A direction character carries an implication of relatively short or long distance to the goal"
+      ],
+      "breakdown_regime": "A character that does not distinguish alternatives for this organism in this situation is not a direction, whatever it is for the observer",
+      "domain": "cognition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Route identity in the engine is carried by distinguishing features of any modality, not by geometry alone, so non spatial cues (markings, personnel, timing) can serve as directions in the field graph",
+        "source_operator": "direction_relation",
+        "telemetry": "Feature sets that agents demonstrably use to tell alternative routes apart at choice points"
+      }
+    },
+    {
+      "primitive_id": "distance_relation",
+      "name": "Distance is that property of a means-object whereby it is selected or rejected against alternatives as a route to one and the same goal-object, according as it is accepted as correlated with a short or long way there",
+      "verbatim_quote": "Distance is that property of a means object whereby it will be selected (or rejected) in competition with other alternative means objects as a route to or from one and the same goal object",
+      "page": "Glossary, headword Distance; tolman-full.txt line 5953",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Distance is defined by selection behavior under competition, not by physical length alone",
+        "Direction and distance together are the two fundamental means-end relations"
+      ],
+      "breakdown_regime": "Without competition among alternatives to the same goal, distance in this sense is undefined; a sole route has no Tolmanian distance",
+      "domain": "cognition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Edge weights in the engine's field graph are behavioral distances: revealed selection preferences among competing routes to the same outcome, which need not track physical or temporal length",
+        "source_operator": "distance_relation",
+        "telemetry": "Head to head route choice frequencies with realized costs for each alternative"
+      }
+    },
+    {
+      "primitive_id": "shortest_route_principle",
+      "name": "Rats tend eventually to differentiate and select the spatially shortest route from a set of alternative, relatively undefined possibilities (the principle of least effort in route choice)",
+      "verbatim_quote": "there is a very strong tendency for rats eventually to differentiate and select the spatially shortest route from a set of alternative, relatively undefined possibilities",
+      "page": "Chapter VII, section 3 (Further Examples); tolman-full.txt line 1416",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Spatial and temporal shortness are confounded in most layouts and must be separated experimentally",
+        "Blind rats compromise between spatial shortness and safety, showing distance is evaluated, not merely geometric"
+      ],
+      "breakdown_regime": "The tendency is eventual, not immediate: early behavior explores longer routes, and the principle describes the asymptote of learning, not first choices",
+      "domain": "learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Route choice models in the engine include a learned least cost bias that strengthens with experience, rather than assuming optimal routing from the first exposure",
+        "source_operator": "shortest_route_principle",
+        "telemetry": "Route length distributions over repeated trials, from first exposure to asymptotic performance"
+      }
+    },
+    {
+      "primitive_id": "means_end_field",
+      "name": "A means-end-field is the total complex of successively selected and rejected means-objects and goal-objects, with their direction-distance and derivative relations, in so far as it determines a sequence of behavior-acts",
+      "verbatim_quote": "Any sequence of behavior-acts involves a sequence of commerces with selected pairs of means-objects and subordinate goal-objects in order to get to, or from, some relatively final goal-object",
+      "page": "Glossary, headword Means-end-field; tolman-full.txt line 6091",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fields are hierarchies of superordinate and subordinate goal-objects and means-objects",
+        "Successions take chain form or lever (tool) form"
+      ],
+      "breakdown_regime": "The field is defined only in so far as it can be shown to determine the behavior sequence; an observer's map that predicts nothing is not the organism's field",
+      "domain": "cognition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine maintains a field graph per agent and situation: nodes are means and goal objects, edges carry direction and behavioral distance, and plans are traversals of this graph",
+        "source_operator": "means_end_field",
+        "telemetry": "Full route graphs reconstructed from observed traversals, including rejected alternatives at each node"
+      }
+    },
+    {
+      "primitive_id": "mnemonization",
+      "name": "Mnemonization: stimuli corresponding to one feature of a previously enjoyed total commerce-with complex arouse an expectation for the whole complex",
+      "verbatim_quote": "The functioning of a mnemonization consists, therefore, in the action whereby the repetition of stimuli, corresponding to but one feature of a total Commerce-with complex, serves to arouse an expectation for the whole of that complex",
+      "page": "Chapter IX, section 2 (Mnemonizations); tolman-full.txt line 1912",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Requires prior joint enjoyment of sign, significate, and their direction-distance relations",
+        "Differs from memory proper, which additionally dates the significate as past in time; Tolman finds no evidence of true memory below man"
+      ],
+      "breakdown_regime": "Perception and mnemonization differ only in degree in practice; pure cases of either are rare outside the newborn",
+      "domain": "memory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Partial cue completion in the engine works as mnemonization: a single familiar cue reactivates the whole stored cue outcome relation complex, with strength set by past joint occurrences",
+        "source_operator": "mnemonization",
+        "telemetry": "Cue triggered recall events: single features followed by behavior appropriate to the full remembered complex"
+      }
+    },
+    {
+      "primitive_id": "inference_common_path",
+      "name": "Rats infer the state of an untraversed alternative from a shared segment: finding the common final section blocked via one path, they avoid a second path feeding into the same section (Tolman and Honzik)",
+      "verbatim_quote": "It is evident that by far the greater majority of rats, upon finding the block at B in the test runs, then took Path 3 instead of Path 2",
+      "page": "Chapter XI, section 3 (Inferential Expectation Based on Perception); tolman-full.txt line 2321",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Requires sufficient and widely distributed preliminary training over the alternative paths",
+        "The inference is an expectation, testable by the same disruption criteria as perception and mnemonization"
+      ],
+      "breakdown_regime": "With inadequate preliminary training the effect fails (as in the replication failures Tolman reports); inference is the most fragile mood of expectation",
+      "domain": "reasoning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine propagates state changes across shared graph segments: learning that a common downstream node is blocked immediately devalues every route through it, without requiring direct experience of each route",
+        "source_operator": "inference_common_path",
+        "telemetry": "Transfer tests: behavior on untried routes after a change localized to a shared downstream element"
+      }
+    },
+    {
+      "primitive_id": "formal_means_end_capacity",
+      "name": "Formal means-end-capacity is the capacity for the purely formal relations of direction and distance and their derivatives (sequence, similarity, reverse ends, multiple trackness, final common pathness, closure, hierarchicalness), as distinct from dimensional capacity for the media embodying them",
+      "verbatim_quote": "Any means-end-field (q.v.) involves a manifold of the formal relations of direction and distance and their derivatives",
+      "page": "Glossary, headword Means-end-capacity; tolman-full.txt line 6041",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Dimensional means-end-capacity concerns the specific media (space, time, number, words, society) in which formal relations are embodied",
+        "Formal and dimensional capacities rest in turn on discriminanda and manipulanda capacities"
+      ],
+      "breakdown_regime": "An organism may possess the formal capacity yet fail in a dimension it cannot discriminate or manipulate; capacity claims must specify the dimension",
+      "domain": "capacities",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine separates structural reasoning ability (graph relations an agent can exploit) from domain specific perceptual and motor capacities, so failures can be localized to structure or to medium",
+        "source_operator": "formal_means_end_capacity",
+        "telemetry": "Cross domain transfer performance: same relational structure presented in different media"
+      }
+    },
+    {
+      "primitive_id": "multiple_minor_capacities",
+      "name": "Capacities are not a few neat general factors but a multiplicity of very minor genetic and training units that add together in varying, overlapping ways on each occasion (Tryon's criticism, adopted)",
+      "verbatim_quote": "but rather with a multiplicity of very minor capacitues which may add together in all sorts of complicated, varying, and overlapping ways to produce the actual discrimination, manipulation, means-end-successes",
+      "page": "Chapter XXIV, section 10 (Criticism of the Capacity Doctrines); tolman-full.txt line 5609",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Named capacities (discriminanda, manipulanda, means-end, retentivity, ideation, creativity) survive only as immediate response requirements, roughly identified per occasion",
+        "Because different occasions tap different unit arrays, test retest correlations for one capacity fall below unity"
+      ],
+      "breakdown_regime": "This doctrine dissolves the capacity layer it qualifies: any small factor model of ability is, on this view, a convenient fiction with systematic error",
+      "domain": "capacities",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ability features in the engine are kept granular and overlapping rather than compressed into a few global ratings, and per occasion performance is allowed to sample different subsets of them",
+        "source_operator": "formal_means_end_capacity",
+        "telemetry": "Fine grained performance indicators across many task types, with their intercorrelation structure"
+      }
+    },
+    {
+      "primitive_id": "conscious_awareness_as_sampling",
+      "name": "Conscious awareness consists in a sampling or running-back-and-forth behavior whose function is to enhance and throw a spotlight on some section of the environmental field",
+      "verbatim_quote": "We herewith define conscious awareness as consisting in the performance of a “sampling,” or “running-back-and-forth,\" behavior The function and use of such a sampling or runningback and forth behavior, ie, of conscious awareness, will be to enhance, reinforce, throw a spot light upon, some section or area of an environmental field",
+      "page": "Chapter XIII, section 2 (Its Definition); tolman-full.txt line 2797",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Awareness, so defined, appears during the acquisition of new or more refined sign-gestalt-expectations",
+        "Tolman flags this chapter as speculative hypothesis, a guess offered lightly"
+      ],
+      "breakdown_regime": "Learning often proceeds smoothly with no sampling behavior at all; consciousness is an occasional interregnum in practical behavior, not its constant medium",
+      "domain": "consciousness",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Attention in the engine is modeled as sampling behavior at choice points: measurable hesitation and back and forth scanning that marks where expectations are being formed or revised",
+        "source_operator": "conscious_awareness_as_sampling",
+        "telemetry": "Choice point dwell times, gaze or orientation alternations, and reversals preceding committed actions"
+      }
+    },
+    {
+      "primitive_id": "behavior_adjustment_ideation",
+      "name": "A behavior-adjustment is the non-overtly observable surrogate for an actual running back and forth, occurring when the features to be sampled are not sensorially present; it constitutes ideation",
+      "verbatim_quote": "The non-overtly observable surrogate for an actual running back and forth It usually occurs when the environmental features to be “sampled” (to be run back-and-forth in front of) are not actually sensorially present",
+      "page": "Glossary, headword Behavior-adjustment; tolman-full.txt line 5885",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The physiological makeup of behavior-adjustments is unknown and, for the doctrine, irrelevant; their functional character is what matters",
+        "Whatever they are (subvocal speech, minimal gestures), they achieve the same sampling of alternatives that overt running back and forth would"
+      ],
+      "breakdown_regime": "Ideation is bounded by the field already grasped perceptually or mnemonically; adjustments cannot sample features the organism has no readiness for",
+      "domain": "ideation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Deliberation in the engine is covert traversal of the field graph: simulated runs over alternatives that substitute for physical trials when the situation cannot be acted out",
+        "source_operator": "behavior_adjustment_ideation",
+        "telemetry": "Pre action latency and its correlation with the number and structure of alternatives later acted on"
+      }
+    },
+    {
+      "primitive_id": "inventive_ideation",
+      "name": "Inventive ideation extrapolates new routes never actually experienced, by behavior-adjustments to already grasped portions of the field plus creative instability in the organism",
+      "verbatim_quote": "In inventive ideation these new routes are ideationally extrapolated Such extrapolation is to be conceived as brought about by behavior adjustments (g v) to those portions of the field which are already grasped perceptually or mnemonically plus the presence in the organism of a certain amount of creative instability",
+      "page": "Glossary, headword Inventive ideation; tolman-full.txt line 6055",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Creativity (creative instability) is itself a capacity due to heredity, past training, or both",
+        "The extrapolated routes are still sign-gestalts: they assert direction-distance relations that experience must verify"
+      ],
+      "breakdown_regime": "Extrapolated routes are unverified by construction; invention proposes, but only commerce with the actual field disposes",
+      "domain": "ideation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine generates novel candidate routes by extrapolating over the grasped portion of the field graph, then subjects them to the same verification discipline as experienced routes",
+        "source_operator": "behavior_adjustment_ideation",
+        "telemetry": "First use novel solutions: their frequency, structure, and success rate relative to practiced routes"
+      }
+    },
+    {
+      "primitive_id": "learning_as_sign_gestalt_refinement",
+      "name": "Learning is the refinement, integration, and invention of sign-gestalt-readinesses and expectations",
+      "verbatim_quote": "Learning was depicted there as a matter of the refinement, integration and invention of sign-gestalt-readinesses and -expectations",
+      "page": "Chapter XXI, section 1 (Theories of Learning); tolman-full.txt line 4187",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Docility (susceptibility to improvement) is the fundamental character of all molar behavior and the keystone of the system",
+        "The doctrine is presented as a subvariety of the Gestalt doctrine of learning"
+      ],
+      "breakdown_regime": "Non docile behavior does not learn in this sense; where no sign-gestalt change occurs, the system has nothing to say",
+      "domain": "learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Learning in the engine is tracked as change in stored expectation structures (formation, refinement, selection, invention), not as a scalar performance curve",
+        "source_operator": "learning_as_sign_gestalt_refinement",
+        "telemetry": "Longitudinal expectation estimates per agent, with change points aligned to experience events"
+      }
+    },
+    {
+      "primitive_id": "conditioning_as_expectation",
+      "name": "Conditioning is not the stamping in of a new stimulus response connection but the building up of a sign-gestalt-expectation",
+      "verbatim_quote": "the “conditioning of reflexes\" is not just the simple “stamping in” of a new S→R connection that it has been supposed to be",
+      "page": "Chapter XXIII, section 1 (Recapitulation); tolman-full.txt line 5035",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The conditioned stimulus functions as a sign-object whose significate is the coming goal-object",
+        "Conditioned behavior should therefore show the marks of expectation: disruption on substitution, docility, sensitivity to relation changes"
+      ],
+      "breakdown_regime": "The reinterpretation is a theoretical claim over agreed facts; the reflex facts themselves are not controverted, only their sufficiency as a mechanism of all learning",
+      "domain": "learning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Cue learning in the engine is stored as expectation formation (cue, expected outcome, relation), so conditioned responses inherit disruption and substitution behavior instead of firing as fixed bonds",
+        "source_operator": "sign_gestalt",
+        "telemetry": "Substitution and omission tests on learned cues: behavior when the expected outcome is changed or withheld"
+      }
+    },
+    {
+      "primitive_id": "latent_learning",
+      "name": "Differential effect (reward) is necessary for the performance of trial and error learning but not for its acquisition: learning proceeds latently without reward and appears when reward is introduced",
+      "verbatim_quote": "Or, to put it another way, differential effect is necessary for performance but not for learning",
+      "page": "Chapter XXII, section 3 (Facts of Latent Learning Which Contradict the Law of Effect); tolman-full.txt line 4668",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "During the latent period the animal acquires information about the alternatives, including their relative distances",
+        "The learning manifests in the size of the immediate performance drop once differential reward is introduced"
+      ],
+      "breakdown_regime": "Latent learning is invisible until a performance test with differential incentive; absence of performance improvement is not evidence of absence of learning",
+      "domain": "learning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine keeps acquisition state and performance state separate: knowledge estimates update from exposure alone, while output behavior is gated by current incentives, so silent learning is not mistaken for no learning",
+        "source_operator": "learning_as_sign_gestalt_refinement",
+        "telemetry": "Exposure histories without reward, followed by probe trials measuring immediate performance jumps"
+      }
+    },
+    {
+      "primitive_id": "behavior_equation",
+      "name": "Final behavior is a function of four ultimately independent causes: the stimulus situation, heredity, past training, and the momentary initiating physiological state",
+      "verbatim_quote": "the final behavior is a function, not only of S and of H and T, but also of the initiating physiological state, P, which may happen to be active at the moment",
+      "page": "Chapter XXIV, section 9 (Purposive Behaviorism: a Complete Psychology); tolman-full.txt line 5567",
+      "latex": "B = f(S, H, T, P)",
+      "symbol_and_unit_ledger": {
+        "B": "final molar behavior (the act to be explained)",
+        "S": "stimulus situation presented to the organism",
+        "H": "heredity (innate endowment)",
+        "T": "past training (previous experience)",
+        "P": "initiating physiological state active at the moment (drive state)"
+      },
+      "assumptions": [
+        "The four causes are independent inputs; behavior determinants (capacities, immanent determinants, behavior-adjustments) intervene between them and B",
+        "P is Tolman's addition beyond the S, H, T of rival systems: the same S releases different behavior under different active drive states"
+      ],
+      "breakdown_regime": "The function f is not specified quantitatively anywhere in the book; the equation is a causal partition, not a computable formula, and any numeric use must supply its own estimated form",
+      "domain": "behavior theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's outcome model is factored into situation features, stable endowment features, experience features, and momentary state features, with the state factor mandatory: omitting it reproduces the stimulus response error Tolman diagnoses",
+        "source_operator": "behavior_equation",
+        "telemetry": "Feature blocks per prediction: situation, agent history, agent endowment proxies, and current physiological or contextual state"
+      }
+    },
+    {
+      "primitive_id": "second_order_drives",
+      "name": "Second order drives (curiosity, gregariousness, imitativeness, self assertion, self abasement) are subsidiary and ancillary to the first order drives, with quiescences and disturbances of their own",
+      "verbatim_quote": "certain subsidiary, or secondorder, drives These second order drives are ancillary to the first-order ones",
+      "page": "Chapter XIX, section 1 (Human and Animal Complexities); tolman-full.txt line 3744",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Whether second order drives are cognitively subordinated to first order drives, or merely ancillary by evolutionary accident, is left open; Tolman guesses each holds in some measure",
+        "On top of both drive orders, humans develop acquired, enduring personality mechanisms (repression, fixation, sign magic)"
+      ],
+      "breakdown_regime": "In many individuals the second order drives appear undocile, exercised irrespective of consequences; there the ancillary doctrine fails descriptively",
+      "domain": "motivation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine carries a second tier of auxiliary objectives (exploration, social alignment, imitation) that normally serve primary objectives but can decouple and dominate, which must be detectable rather than assumed away",
+        "source_operator": "demand_hierarchy",
+        "telemetry": "Exploratory and social behavior rates measured against their payoff for primary objectives"
+      }
+    },
+    {
+      "primitive_id": "raw_feels_excluded",
+      "name": "Raw feels do not need to enter into, or affect, any merely psychological account of mind; the qualitative residue of experience is discharged from the causal system",
+      "verbatim_quote": "such raw feels do not need to enter into or affect any merely psychological account of mind",
+      "page": "Glossary, headword Raw feel; tolman-full.txt line 6125",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A consistent correlation between raw feels and immanent determinants may be assumed, but no inference runs from one individual's feels to another's beyond agreement of determinants",
+        "Raw feels remain subject matter for poetry, esthetics, ethics, and religion, not for science"
+      ],
+      "breakdown_regime": "This is a methodological exclusion, not a denial: the doctrine is silent on what raw feels are, and breaks if a purported determinant turns out to be only a raw feel in disguise",
+      "domain": "epistemology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine excludes unmeasurable qualitative variables from its causal layer: any feature that cannot in principle show up in discrimination or behavior is barred from explanations, however vivid it seems",
+        "source_operator": "mental_processes_functional_variables",
+        "telemetry": "Feature audit: every model variable traced to an observable discrimination or behavior difference"
+      }
+    },
+    {
+      "primitive_id": "map_knowledge_pragmatism",
+      "name": "Knowledge is map knowledge: that map is true which works, given the behavior-needs and behavior-capacities of the type of organism gathering it",
+      "verbatim_quote": "That “map\" knowledge is “true\" which “works,\" given the particular behavior-needs and the particular behaviorcapacities of the type of organism gathering such knowledge",
+      "page": "Chapter XXV, section 12 (What Is the Metaphysical Status of Outside Reality?); tolman-full.txt line 5824",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Even physics is, in the last analysis, an abstracted behavioral map conditioned by human needs and capacities",
+        "Idea and object are two (epistemological dualism), but verification fuses them when the expectation meets its support"
+      ],
+      "breakdown_regime": "What outside reality is in itself, abstracted from all behavioral needs and capacities, we do not, cannot, and need not know; the doctrine offers no view from nowhere",
+      "domain": "epistemology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Model quality in the engine is judged pragmatically against the decisions the model must support, with different map resolutions (gross behavioral, fine statistical) maintained for different uses rather than a single canonical representation",
+        "source_operator": "map_knowledge_pragmatism",
+        "telemetry": "Decision outcome tracking per model resolution: forecast value realized under the actual choices each map informs"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a8460213ae97b1e7-t1",
+      "think": "This book is Edward Chace Tolman's 1932 system statement, Purposive Behavior in Animals and Men, and its central move is to relocate the subject matter of psychology. Behavior, taken as a molar whole rather than as a sum of muscle twitches and gland secretions, displays two immanent characters that no molecular inventory can state: it is purposive and it is cognitive. Purpose is not a ghostly push from inside. It is the objective, observer visible fact that an act persists through trial and error toward an end and shows docility, a readiness to select shorter and more efficient routes to that end when the environment changes. Cognition is the companion fact that the continued going off of an act is contingent on environmental entities proving to be so and so: change the goal, block the path, or alter the alley, and the act breaks down in disruption, then relearns. Everything else in the system is machinery for making those two facts precise, measurable, and predictive. The machinery has three tiers. At the bottom sit four independent variables: the stimulus situation S, heredity H, past training T, and the momentary initiating physiological state P. Final behavior is a function of all four, and the addition of P is Tolman's signature correction to stimulus response psychology, because the same stimulus releases different behavior depending on which drive state is active. Between these causes and the overt act sit the behavior determinants. First come capacities, the funded endowments an organism brings to a problem, which Tolman first lists as discriminanda capacity, manipulanda capacity, means end capacity, retentivity, consciousness and ideation ability, and creativity, and then, under Tryon's criticism, dissolves into a multiplicity of minor genetic and training units that combine differently on every occasion. Second come the immanent determinants proper: demands, which are hierarchies running from first order appetites and aversions aimed at physiological quiescence or away from disturbance, down through subordinate demands for foods, alleys, and openings; and cognitions, which split into means end readinesses, the standing judgments an organism carries into a situation, and expectations, the specific sign gestalt expectations released by present stimuli. Third come behavior adjustments, the covert samplings that substitute for overt running back and forth when the field cannot be traversed in fact. The unit of cognition is the sign gestalt: a sign object, a signified object, and a signified means end relation of direction and distance holding between them. Expectations are forward pointing; stimuli release them, but only later commerce with behavior supports, discriminanda to be sensed and manipulanda to be acted on, verifies or falsifies them. Disruption is therefore the experimentalist's instrument: it reveals which expectation was immanent by breaking it. Expectations come in three moods. Perception is released by stimuli from all parts of the complex at once. Mnemonization is released by stimuli from the sign alone, on the basis of past joint enjoyment of the whole complex. Inference extrapolates beyond anything perceived or remembered, as when rats who found a block in a shared final segment avoided a second path that fed into the same segment without ever finding it blocked. Learning, in all its forms, is the formation, refinement, selection, or invention of sign gestalts. Conditioning is not the stamping in of a stimulus response bond but the building of an expectation. Trial and error is selection among alternative expectations. Latent learning proves that expectations can be acquired with no differential reward at all; reward governs performance, not acquisition. And the law of effect is demoted in favor of emphasis, togetherness, and fusibility in the material itself. For a reasoning engine, the value of this system is that it is a complete, disciplined architecture for goal directed inference under uncertainty, stated decades before the field had the vocabulary of latent variables and world models. Demands are objective functions defined by persistence and docility rather than by introspected desire. Readinesses are priors that are themselves corrigible by outcomes. Expectations are falsifiable predictions whose failure mode, disruption, is observable and diagnostic. The means end field is a hierarchical graph of routes annotated with direction and distance, in which inference over shared segments is native rather than bolted on. Capacities warn against any small set of neat global factors: performance draws on many minor, overlapping units, so factor models of ability will systematically mislead. The system's limits are equally instructive. It applies only to docile behavior; rigid reflex arcs fall outside it. Its physiological tier is programmatic, a set of placeholders for quiescences and disturbances that the physiology of 1932 could not cash out. Its treatment of consciousness as sampling behavior is frankly speculative, and Tolman says so. But as a template, an agent that maintains demands, readinesses, and sign gestalt expectations over a means end field, that treats surprise as information about which expectation was wrong, and that separates what it has learned from what current incentives make it perform, is an agent built on Tolman's plan. The epistemology is of a piece with the psychology. Ideas and their objects are two, not one: a readiness or expectation asserts a possible enjoyment that may or may not arrive, and verification is the moment the expectation fuses with, or fails against, its support. Knowledge itself is map knowledge, true in so far as it works for an organism with given needs and capacities, which is why the same territory supports both the gross map of ordinary behavior and the abstract map of physics. Raw feels, the qualitative residue that no discrimination or relation can convey, are explicitly discharged from the causal account: they may correlate with determinants, but they explain nothing and are explained by nothing in the system. A science of behavior, on this view, is complete when its intervening variables let it predict and control the molar act, and it neither needs nor permits an appeal to private immediacy.",
+      "retrocausal_genealogy": "The system's ancestry is explicit in the text. From R. B. Perry's 1918 papers Tolman takes the founding move, docility as the objective definition of purposiveness. From McDougall he takes the insistence that behavior acts have emergent descriptive properties, while refusing McDougall's mentalistic hormic drives. From Wallace Craig he takes appetites and aversions almost entire, redefining their goals as physiological quiescences and disturbances. From Watson he inherits the demand for objective definition, and from the Gestalt psychologists the insistence that learned products are organized wholes. Pavlov's conditioning facts and Thorndike's trial and error facts are retained but reinterpreted, and Spearman's factor psychology supplies the foil for the final chapter's theory of capacities.",
+      "theory_of_mind": "Tolman writes for a reader he expects to resist him: the tough minded behaviorist who hears purpose and cognition as smuggled mentalism. His model of that reader drives the book's method. Every mentalistic term is therefore issued with an objective definition tied to an experiment, usually a rat in a maze, a discrimination box, or a problem box, and every definition is cashed out in terms of what an independent observer can watch: persistence, docility, selectivity, disruption. He assumes the reader will grant that molar behavior is the datum and that inferred functional variables are legitimate scientific currency, exactly as electrons are in physics, provided they are precipitated out of empirical correlations and revised as those correlations demand.",
+      "cross_layer_veto": "Several vetoes run across the system's layers. The docility condition vetoes the whole purposive and cognitive vocabulary wherever behavior is rigid: a fixed reflex arc admits no demands, no expectations, and no learning, and describing it in those terms is declared silly and meaningless. Disruption vetoes any expectation attribution that cannot be broken by the right environmental change; an expectation that no substitution could disturb is not an expectation at all. The raw feels doctrine vetoes qualitative immediacy as an explanatory layer, however real it may be. And the multiple factor criticism vetoes any tidy capacity layer: no small set of general factors may stand between heredity, training, and performance, because the underlying units are many, minor, and differently combined on each occasion."
+    }
+  ],
+  "universal_lens": "Tolman's treatise is a general template for describing any goal directed system without recourse to inner substances. Define the system's ends by what it persists toward and how readily it revises its routes. Define its knowledge by the contingencies that would disrupt it. Represent its world as a field of signs, significates, and direction distance relations, and its learning as the formation and correction of expectations over that field. Separate what the system has acquired from what its current drive state makes it perform. The template applies wherever an observer must infer objectives and beliefs from behavior alone: animal cognition, human factors, organizational analysis, and the design of artificial agents that plan.",
+  "gsi_mapping": "For the Galaxy Sports Institute, the book supplies a foundational vocabulary for studying skilled performance as purposive behavior. Athletes and teams can be modeled as carriers of demands, readinesses, and expectations whose presence is proven by disruption when conditions change, not by self report. Training research gains the latent learning distinction: acquisition can proceed without differential reward, so practice design and incentive design are separate problems. The capacity chapters caution against reducing athletic ability to a few global traits, since performance draws on many minor, overlapping units. Consciousness as sampling gives a behavioral handle on attention: the visible hesitation and scanning at choice points where expectations are being revised.",
+  "gse_mapping": "For the Galaxy Sports Edge reasoning engine, Tolman supplies the agent architecture in embryo. A competitor is to be represented by immanent determinants inferred from observed behavior: demands ranked in hierarchies, readinesses that act as corrigible priors, and sign gestalt expectations over a means end field of routes to valued outcomes. Disruption becomes the engine's key diagnostic event, the moment an expectation fails and the underlying model can be identified and updated. The four variable behavior function, behavior as a function of situation, heredity, training, and momentary physiological state, disciplines feature design, and the latent learning result warns the engine never to read current performance as the limit of what has been learned."
+}

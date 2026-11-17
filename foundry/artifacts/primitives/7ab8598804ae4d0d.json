@@ -1,0 +1,720 @@
+{
+ "book_id": "7ab8598804ae4d0d",
+ "source_status": "COMPLETE",
+ "source_note": "Spalding's Official Foot Ball Guide for 1922, the National Collegiate Athletic Association's official guide, edited by Walter Camp and published by the American Sports Publishing Co. (Spalding's Athletic Library), price 25 cents. Four parts: collegiate and scholastic reviews of the 1921 season, a record section printing 1921 scores and historical record tables (field goals and famous runs, 1873-1922), and the official playing rules for 1922 in detachable form. Local file is a scanned copy of the complete guide; PDF size 36299840 bytes, sha256 7ab8598804ae4d0d6ebbf57e4583c2585ad20e56fd7ea7addf0e47b15a118310. Extracted text (1,763,302 bytes) is OCR of the scan: body text is generally clean, but running heads and margin notes interleave into some rule passages and rotated record tables OCR poorly; all verbatim quotes were chosen from clean passages and verified as contiguous substrings of the extracted text after whitespace normalization. The catalog title adds 'NCAA' and 'Record Book'; the book's own title is Spalding's Official Foot Ball Guide. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "field_dimensions_and_end_zones",
+   "name": "The playing field is a 360 by 160 foot rectangle, with goal lines set ten yards inside the end lines, creating ten yard end zones.",
+   "verbatim_quote": "The game shall be played upon a rectangular field, 360 feet in length and 160 leet in width.",
+   "page": "Part IV, Official Playing Rules, Rule I, Section 1 (Rules p. 7; text lines 21549-21576)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The field is rectangular and uniformly marked at five yard intervals.",
+    "Goal lines are parallel to the end lines and ten yards inside them."
+   ],
+   "breakdown_regime": "no_equation_domain: the dimensions are legislated constants, not derived quantities; they fail only when the rules committee amends them, as later eras did with narrower hash marks and moved goal posts.",
+   "domain": "rules_geometry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats the field as a fixed coordinate frame: every play state is a position inside a bounded rectangle with two ten yard scoring zones appended. Yard line features, red zone flags, and field position value all inherit this geometry, so a change in field dimensions would rescale every spatial feature rather than alter one rule.",
+    "source_operator": "field_dimensions_and_end_zones",
+    "telemetry": "Play by play field position, yard line of scrimmage, and distance to the goal line for every snap."
+   }
+  },
+  {
+   "primitive_id": "goal_post_geometry",
+   "name": "Goal posts stand on the goal line, 18 feet 6 inches apart, with a crossbar 10 feet above the ground and uprights exceeding 20 feet.",
+   "verbatim_quote": "be placed 18 feet 6 inches apart with a horizontal cross-bar 10 feet from the ground",
+   "page": "Part IV, Official Playing Rules, Rule I, Section 3 (Rules p. 7; text lines 21570-21576)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Posts are centered on the goal line in the middle of the field width.",
+    "A kick striking a post or the crossbar can still score if it then passes over."
+   ],
+   "breakdown_regime": "Breaks as a model of the modern game: the posts later moved to the end line and narrowed, so distances and success rates from this geometry do not transfer without a geometry correction.",
+   "domain": "rules_geometry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Kicking outcomes are adjudicated against a fixed target window. The engine models a field goal attempt as a trajectory that must pass inside an 18 foot 6 inch horizontal window above a 10 foot bar; post placement on the goal line means the kick distance is measured to the line, not ten yards beyond it as in the modern game.",
+    "source_operator": "goal_post_geometry",
+    "telemetry": "Kick distance, kick result, and hash position for every field goal and try attempt."
+   }
+  },
+  {
+   "primitive_id": "ball_specification",
+   "name": "The ball is a leather prolate spheroid of fixed size and weight: long axis circumference 28 to 28.5 inches, short axis 22.5 to 23 inches, weight 14 to 15 ounces.",
+   "verbatim_quote": "Circumference, long axis, from 28 inches to 28% inches; short axis, from 22% inches to 23 inches; Weight, from 14 ounces to 15 ounces.",
+   "page": "Part IV, Official Playing Rules, Rule II, Section 1 (Rules p. 7; text lines 21577-21587)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The ball is tightly inflated and encloses a rubber bladder.",
+    "A wet field permits a ball change at the end of the second period at the Referee's discretion."
+   ],
+   "breakdown_regime": "The tolerances are wide enough that two legal balls differ measurably in flight; the spec bounds but does not eliminate equipment variance.",
+   "domain": "rules_equipment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Equipment standardization is an input control: by fixing ball size and weight within tight tolerances, the rules remove a hidden variable from passing and kicking outcomes. The engine analogue is a data contract on inputs; measurements taken with non conforming equipment are flagged rather than pooled.",
+    "source_operator": "ball_specification",
+    "telemetry": "Ball specification records and any equipment related rulings; in modern data, ball and weather condition flags on kicks and passes."
+   }
+  },
+  {
+   "primitive_id": "scoring_values",
+   "name": "Scoring is a fixed point algebra: touchdown 6, successful try 1, goal from the field 3, safety 2, and a forfeited game is scored 1 to 0.",
+   "verbatim_quote": "Touchdown 6 points. Successful \"try\" after touchdown... 1 point. Goal from the field 3 points. Safety by opponents 2 points.",
+   "page": "Part IV, Official Playing Rules, Rule V (Rules p. 11; text lines 21736-21748)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The game is decided by the final score at the end of the four periods.",
+    "The try is a single additional play, defined by Rule X."
+   ],
+   "breakdown_regime": "no_equation_domain: the values are legislated, not estimated; they cannot be validated against data, only checked for consistent application. Cross era comparisons fail if the value table is not era matched.",
+   "domain": "rules_scoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every downstream quantity in the engine, expected points, win probability, and score differential, is built on this value table. Because the try is worth 1 and the field goal 3, the 1922 decision tree after a touchdown differs from later eras; the engine must version its scoring algebra by rule era before comparing teams across time.",
+    "source_operator": "scoring_values",
+    "telemetry": "Score by play type for every scoring event, including safeties and forfeits."
+   }
+  },
+  {
+   "primitive_id": "game_length_four_periods",
+   "name": "The game lasts 60 minutes in four 15 minute periods, with time taken out excluded, a one minute break between the first and second and third and fourth periods, and fifteen minutes at half time.",
+   "verbatim_quote": "divided into four periods of 15 minutes each exclusive of time taken out",
+   "page": "Part IV, Official Playing Rules, Rule IV, Section 1 (Rules p. 9; text lines 21671-21678)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Shorter games are permitted only by mutual agreement between the teams' representatives.",
+    "The Referee may shorten periods when darkness threatens completion."
+   ],
+   "breakdown_regime": "Time taken out is excluded but not metered by a public play clock in this code, so possession duration cannot be reconstructed precisely from this source alone.",
+   "domain": "rules_play_structure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The period structure defines the engine's clock states: four quarters with a long half time reset and short inter period breaks. End of period situations, time remaining features, and pace calculations all key off this partition of the game into four equal periods.",
+    "source_operator": "game_length_four_periods",
+    "telemetry": "Game clock, period, and time remaining at each play; final scores by period where recorded."
+   }
+  },
+  {
+   "primitive_id": "kickoff_choice_protocol",
+   "name": "The toss winner chooses goal or kick-off, the choice is irrevocable, and the privileges reverse at the start of the third period.",
+   "verbatim_quote": "The winner of the toss shall have the choice of goal or kick-off, which choice shall not be revokable.",
+   "page": "Part IV, Official Playing Rules, Rule VII, Section 1(a) (Rules p. 18; text lines 22057-22095)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The captains are present at the toss and the Referee designates which captain calls.",
+    "After a score, the side scored upon chooses whether to kick off or receive."
+   ],
+   "breakdown_regime": "The protocol gives no data on why captains chose as they did; choice value must be inferred from outcomes, not from stated reasoning.",
+   "domain": "rules_play_structure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is a small game theoretic protocol: one binary choice with a mirrored second half reversal. The engine models opening possession and second half possession as a linked pair set by a single decision, which matters for any analysis of deferral value and first possession scoring.",
+    "source_operator": "kickoff_choice_protocol",
+    "telemetry": "Coin toss result, choice made, and opening kickoff receiver for each game and each half."
+   }
+  },
+  {
+   "primitive_id": "scrimmage_definition",
+   "name": "A scrimmage begins when the holder places the ball flat on the ground, long axis at right angles to the line of scrimmage, and snaps it back; the scrimmage does not end until the ball is dead.",
+   "verbatim_quote": "A Scrimmage takes place when the holder of the ball places it flat upon the ground, with its long axis at right angles to the line of scrimmage, and puts it in play by snapping it back.",
+   "page": "Part IV, Official Playing Rules, Rule VI, Section 3 (Rules p. 12; text lines 21767-21876)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The ball's long axis must be at right angles to the line of scrimmage when placed.",
+    "If the snapper-back does not hold the axis as specified, the ball is put in play over again."
+   ],
+   "breakdown_regime": "The definition is binary and procedural; it says nothing about play quality, and pre snap events such as shifts are governed by separate rules.",
+   "domain": "rules_play_structure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's atomic event definition: a play is a state transition that starts at the snap and ends when the ball is dead. Every play level feature the engine computes is segmented by exactly this boundary, so the definition fixes what counts as one observation.",
+    "source_operator": "scrimmage_definition",
+    "telemetry": "Snap and ball dead events delimiting each play in play by play data."
+   }
+  },
+  {
+   "primitive_id": "neutral_zone",
+   "name": "The two lines of scrimmage are separated by a neutral zone exactly the length of the ball, which no player may encroach upon until the ball is put in play.",
+   "verbatim_quote": "This space is known as the neutral zone and may not be encroached upon until the ball is put in play.",
+   "page": "Part IV, Official Playing Rules, Rule VI, Section 3 (Rules p. 12; text lines 21790-21810)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each side has its own line of scrimmage through the point of the ball nearest its own goal.",
+    "The zone's width is set by the ball's length, so it inherits the ball specification."
+   ],
+   "breakdown_regime": "At this width the zone is too small to observe reliably from summary data; it matters for officiating, not for statistical aggregates.",
+   "domain": "rules_play_structure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The neutral zone is a buffer state between the two sides: an eleven inch no man's land whose violation is an offside foul. The engine treats line of scrimmage geometry as two parallel lines with a dead band between them, which is the spatial basis for offside, encroachment, and false start style infractions in every era.",
+    "source_operator": "neutral_zone",
+    "telemetry": "Pre snap alignment data and offside or encroachment penalty calls."
+   }
+  },
+  {
+   "primitive_id": "seven_man_line_requirement",
+   "name": "At the snap, at least seven players of the side holding the ball must be on the line of scrimmage; a man leaving the line must be replaced by another player.",
+   "verbatim_quote": "another player must take his place on the line of scrimmage, as seven men must be on this line when the ball is put in play.",
+   "page": "Part IV, Official Playing Rules, Rule IX, Section 5 (Rules p. 21; text lines 22180-22230)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A backfield man who comes up to the line must conform to the line position rules or be at least one yard back.",
+    "The man who first receives the snap need not be one yard back, but then cannot receive a forward pass."
+   ],
+   "breakdown_regime": "The rule constrains the offense only; the defense may place its men as its captain wishes, so formation data is asymmetric by design.",
+   "domain": "rules_formation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Formation legality is a counting constraint on the offense's alignment state. The engine encodes formations as assignments of players to line and backfield roles and validates them against the seven man minimum before any play tendency is computed; illegal formations are excluded states, not unlikely ones.",
+    "source_operator": "seven_man_line_requirement",
+    "telemetry": "Formation descriptions, personnel groupings, and illegal formation penalty calls."
+   }
+  },
+  {
+   "primitive_id": "shift_motion_restriction",
+   "name": "At the snap no player of the side with the ball may be in motion, except one man who may move directly or obliquely toward his own goal line.",
+   "verbatim_quote": "except that one man of the side having the ball may be in motion either directly or obliquely towards his own goal line or line extended.",
+   "page": "Part IV, Official Playing Rules, Rule IX, Section 5 (Rules p. 21; text lines 22200-22240)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A player with both feet stationary on the ground is not ruled to be in motion.",
+    "On kick-off and free kicks, players may be in motion in any direction if on-side when the ball is kicked."
+   ],
+   "breakdown_regime": "The rule predates the modern forward motion and jet sweep game; mapping it forward requires era translation, because later codes legalized one man in forward motion.",
+   "domain": "rules_formation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Motion is a controlled exception in the alignment state: exactly one player may be moving, and only away from the opponents' goal. The engine treats pre snap motion as a labeled feature with a legality boundary; motion toward the opponent is not a different play, it is a foul state that ends the observation.",
+    "source_operator": "shift_motion_restriction",
+    "telemetry": "Pre snap motion flags, shift descriptions, and illegal motion penalty calls."
+   }
+  },
+  {
+   "primitive_id": "shift_five_yard_set_rule",
+   "name": "A player moving from the line toward his own goal must be at least five yards behind the line of scrimmage at the instant the ball is put in play, and shift plays require a full stop before the snap.",
+   "verbatim_quote": "If a player is moving from the line of scrimmage towards his own goal line, he must, at the instant the ball is put in play, be at least five yards back of the line of scrimmage.",
+   "page": "Part IV, Official Playing Rules, Rule IX, Section 5 (Rules p. 21; text lines 22210-22250)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The rule's stated intent is that a shifted man comes to a full stop, loses all momentum, and starts again from rest.",
+    "Officials must be able to see the pause for the play to be legal."
+   ],
+   "breakdown_regime": "Enforcement depends on officials' judgment of a momentary pause, so the boundary between legal and illegal shifts is observational, not measurable from the text.",
+   "domain": "rules_formation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the 1922 anti deception constraint on shifts: a shifted player must either be fully reset at rest or clearly removed five yards from the line. The engine reads it as a state validity check on shift plays, separating a legal repositioning from a running start; it is also the historical root of the modern requirement that all players be set for a full second.",
+    "source_operator": "shift_five_yard_set_rule",
+    "telemetry": "Shift play descriptions, penalty calls for illegal shifts, and formation before and after the shift."
+   }
+  },
+  {
+   "primitive_id": "downs_system",
+   "name": "A team has four consecutive downs to advance the ball ten yards; failure turns the ball over to the opponents on the spot of the fifth down.",
+   "verbatim_quote": "shall not have advanced the ball 10 yards, it shall go to the opponents on the spot of the fifth down, except as provided in Section 2.",
+   "page": "Part IV, Official Playing Rules, Rule XIX, Section 1 (Rules p. 36; text lines 22998-23025)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Possession must be continuous; an opponent's recovery or a kick giving the opponents a fair chance breaks the series.",
+    "The forward point of the ball when declared dead is the measuring point."
+   ],
+   "breakdown_regime": "no_equation_domain: the ten yard requirement is a legislated constant. The system describes renewal but contains no probabilities; success rates must be measured from play data the Guide does not supply.",
+   "domain": "rules_play_structure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The down and distance system is the engine's core Markov structure: every play is a state of down, distance, and field position, and ten yards in four tries is the renewal rule that generates first downs. All expected points and success rate machinery is a descendant of this single paragraph.",
+    "source_operator": "downs_system",
+    "telemetry": "Down, distance, and result for every play; first down and turnover on downs events."
+   }
+  },
+  {
+   "primitive_id": "forward_pass_launch_depth",
+   "name": "A forward pass must be thrown from at least five yards behind the line of scrimmage, and only one forward pass may be made in each scrimmage.",
+   "verbatim_quote": "The pass must be made from a point at least 5 yards back of the scrimmage line.",
+   "page": "Part IV, Official Playing Rules, Rule XVII, Section 3(a) (Rules p. 32; text lines 22764-22814)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Only the side that put the ball in play from scrimmage may pass forward.",
+    "A violation before fourth down counts as a down at the preceding spot; on fourth down the ball goes to the opponents."
+   ],
+   "breakdown_regime": "The five yard floor was later abolished, so the constraint is era bound; it explains, but does not predict, modern passing geometry.",
+   "domain": "rules_passing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The launch depth constraint shapes the entire 1922 passing game: the passer must retreat at least five yards, which lengthens time to throw and changes protection geometry. The engine models era passing with this constraint as a structural parameter; dropback depth distributions from this era are not comparable to shotgun era data without it.",
+    "source_operator": "forward_pass_launch_depth",
+    "telemetry": "Passer position at throw, sack and pressure outcomes, and pass play descriptions."
+   }
+  },
+  {
+   "primitive_id": "pass_receiver_eligibility",
+   "name": "Eligible receivers are the two ends and the backs who were at least one yard behind the line of scrimmage when the ball was put in play; interior linemen are ineligible.",
+   "verbatim_quote": "Such player must, however, be one yard back in order to be eligible to receive a forward pass.",
+   "page": "Part IV, Official Playing Rules, Rule IX, Section 1 with Rule XVII, Section 7 (Rules pp. 19-20 and 33; text lines 22130-22180 and 22864-22915)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A player more than one foot back but less than one yard back is in a dead band: neither on the line nor eligible as a back.",
+    "If an ineligible player of the passer's side touches the ball, it goes to the opponents at the preceding spot."
+   ],
+   "breakdown_regime": "Eligibility is fixed at the snap; the rule does not contemplate eligible receivers declaring themselves to officials, a later refinement.",
+   "domain": "rules_passing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Eligibility is a typing rule on players: each offensive player carries a type, eligible or ineligible, fixed by his position at the snap. The engine uses the same device when it separates targets from blockers in route and coverage data; a reception by an ineligible type is not an unlikely event but a rules violation that voids the play.",
+    "source_operator": "pass_receiver_eligibility",
+    "telemetry": "Target and reception data by player position; ineligible receiver penalty calls."
+   }
+  },
+  {
+   "primitive_id": "pass_incompletion_rule",
+   "name": "A forward pass that strikes the ground in the field of play, before or after being touched by an eligible player of either side, is not completed, and the incompletion costs a down.",
+   "verbatim_quote": "within the field of play, either before or after having been touched by an eligible player of either side, the pass shall not be considered as completed.",
+   "page": "Part IV, Official Playing Rules, Rule XVII, Section 4 (Rules p. 33; text lines 22814-22864)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A pass touched by an eligible player and then dropped is still incomplete when it strikes the ground.",
+    "The penalty for an incompleted pass mirrors the illegal pass penalty of Section 3(a)."
+   ],
+   "breakdown_regime": "The rule makes no distinction between a drop and a throwaway; both are the same state, so receiver error and passer error cannot be separated from outcome data alone.",
+   "domain": "rules_passing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This defines the failure state of a pass play: ground contact ends the attempt with no advance and a down consumed. The engine's completion probability and yards after catch models both rest on this binary completion definition; in 1922 the cost of failure was higher because an incompletion also carried the Section 3(a) penalty structure.",
+    "source_operator": "pass_incompletion_rule",
+    "telemetry": "Pass attempt outcomes: completions, incompletions, and interceptions by down and field position."
+   }
+  },
+  {
+   "primitive_id": "pass_end_zone_touchback",
+   "name": "A forward pass that crosses the end line or side line extended, strikes the goal posts or crossbar, or touches the ground in the end zone is dead and counts as a touchback to the defenders.",
+   "verbatim_quote": "or if it crosses the end line or side line extended before touching the ground, it becomes dead and shall count as a touchback to the defenders of the goal.",
+   "page": "Part IV, Official Playing Rules, Rule XVII, Section 5 (Rules pp. 32-33; text lines 22814-22864)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The rule applies whether or not an eligible player touched the ball first.",
+    "A pass striking the posts or crossbar before touching the ground is equally dead."
+   ],
+   "breakdown_regime": "This is one of the most era bound rules in the book; modern codes treat the same event as a simple incompletion, so cross era red zone comparisons fail without it.",
+   "domain": "rules_passing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "End zone incompletions are not neutral failures in this code: they transfer possession as a touchback. The engine must therefore price a failed end zone pass far below a failed pass at midfield in this era, a strong era specific adjustment to red zone pass value that later codes removed.",
+    "source_operator": "pass_end_zone_touchback",
+    "telemetry": "Pass outcomes by field zone, especially attempts into the end zone and resulting touchbacks."
+   }
+  },
+  {
+   "primitive_id": "end_zone_feet_rule",
+   "name": "In the end zone, the position of the receiver's feet, not the position of the ball, determines whether a forward pass is properly completed; a foot on or outside the side or end line makes it a touchback.",
+   "verbatim_quote": "shall determine whether it is a properly completed forward pass within the end zone",
+   "page": "Part IV, Official Playing Rules, Rule XVII, Section 6 (Rules p. 33; text lines 22864-22915)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The receiver must be a legal player receiving the ball in the end zone.",
+    "A foot or part of a foot on or outside the line converts the play to a touchback."
+   ],
+   "breakdown_regime": "The rule covers the end zone only; boundary catches in the field of play are left to the general provisions, so the observable standard is not uniform across the field.",
+   "domain": "rules_passing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is an adjudication rule that picks the observable that decides a boundary case: feet, not ball. The engine analogue is choosing the measurement that defines an event when two candidate measurements disagree, the same problem as defining a catch, a first down, or a score in tracking data; the rule teaches that the definition must name its observable in advance.",
+    "source_operator": "end_zone_feet_rule",
+    "telemetry": "Catch adjudications at boundaries; in modern data, foot position from player tracking at the moment of possession."
+   }
+  },
+  {
+   "primitive_id": "pass_live_ball_rights",
+   "name": "Once a legally thrown forward pass has been touched by a player of the side not making the pass, any player of either side may attempt to secure possession until the ball touches the ground.",
+   "verbatim_quote": "When the ball has been legally passed forward and has been touched by any player of the side not making the pass, any player of either side has the right to attempt to secure possession of the ball until it has touched the ground.",
+   "page": "Part IV, Official Playing Rules, Rule XVII, Section 7(c) (Rules p. 34; text lines 22864-22915)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Before any defensive touch, only the first eligible offensive player to touch the ball may secure it for the passer's side.",
+    "A simultaneous catch by an eligible receiver and an opponent belongs to the side that put the ball in play."
+   ],
+   "breakdown_regime": "The rule says who may recover, not how likely recovery is; the value of the state must be measured from play data.",
+   "domain": "rules_passing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A defensive touch changes the state of the ball from restricted to free: recovery rights open to both sides. The engine models tipped passes as a distinct state with its own recovery distribution, rather than folding them into completions and interceptions; the rule identifies exactly the event that triggers the state change.",
+    "source_operator": "pass_live_ball_rights",
+    "telemetry": "Tipped or deflected pass outcomes, fumble style recoveries of passes, and interception returns."
+   }
+  },
+  {
+   "primitive_id": "intentional_grounding_cost",
+   "name": "Intentionally throwing the ball to the ground to manufacture an incompletion is penalized by putting the ball in play ten yards back of the preceding down, with the play counting as a down, and loss of the ball on fourth down.",
+   "verbatim_quote": "the offending side shall\n      put the ball in play at a spot 10 yards back of the pre-\n      ceding down and the play shall count as a down.",
+   "page": "Part IV, Official Playing Rules, Rule XVII, Section 9 (Rules p. 35; text lines 22915-22945)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The foul requires intent to make an incompleted forward pass by throwing the ball to the ground in front of the passer.",
+    "After a fourth down has been declared, the ball goes to the opponents ten yards back of the preceding down."
+   ],
+   "breakdown_regime": "Intent is judged by officials, so the foul's application is not recoverable from the rule text; frequency data would be needed to price its real deterrent effect.",
+   "domain": "rules_passing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The code prices a deliberate incompletion as a ten yard loss plus a down, which makes the passer's escape option expensive. The engine treats grounding as a decision with a known cost schedule, the ancestor of the modern intentional grounding foul; comparing sack avoidance across eras requires this price, because a 1922 passer could not cheaply throw the ball away.",
+    "source_operator": "intentional_grounding_cost",
+    "telemetry": "Sacks, throwaways, and grounding penalty calls; passer outcomes under pressure."
+   }
+  },
+  {
+   "primitive_id": "try_for_point_open_play",
+   "name": "New for 1922: after a touchdown, the scoring side may add one point by a single scrimmage play from on or outside the five yard line, scoring by a place-kick, drop-kick, run, or forward pass.",
+   "verbatim_quote": "A team which has made a touchdown may add one additional point to its score by putting the ball in play by a scrimmage from any point on or outside the five-yard line",
+   "page": "Part IV, Official Playing Rules, Rule X (Rules p. 22; text lines 22250-22304) and Changes in the Rules for 1922",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The scoring side may bring the ball out to any greater distance it chooses, not only the minimum five yards.",
+    "Immediately the ball becomes dead without a score, the try ends and the ball returns for a kick-off."
+   ],
+   "breakdown_regime": "One season of a brand new rule gives almost no base rate data; the Guide prints the rule before any meaningful sample of choices exists, so optimal play cannot be read off this source.",
+   "domain": "rules_scoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The try is a one play subgame with a free choice of play type and spot, worth exactly one point by any scoring method. The engine models it as a discrete choice problem: the offense picks kick, run, or pass from its chosen distance, and the defense foul option is priced separately. It is the direct ancestor of the modern two point conversion decision, with the value set to one point.",
+    "source_operator": "try_for_point_open_play",
+    "telemetry": "Try attempts by method chosen, spot chosen, and success, following every touchdown."
+   }
+  },
+  {
+   "primitive_id": "try_defensive_foul_award",
+   "name": "If the defense fouls during the try, the additional point is awarded to the scoring side without further play, whether or not the try itself succeeded.",
+   "verbatim_quote": "If a foul is committed by the side on defense, the additional point shall be awarded to the team making the \"try\" without further play",
+   "page": "Part IV, Official Playing Rules, Rule X (Rules p. 22; text lines 22250-22304)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A foul or illegal play by the attacking side forfeits the opportunity to score the point.",
+    "Fouls by both sides on the play cause the try to be played over."
+   ],
+   "breakdown_regime": "The award is automatic and does not depend on the foul's severity, so the rule cannot distinguish a trivial foul from a flagrant one inside the try state.",
+   "domain": "rules_scoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is an asymmetric incentive built into the subgame: defensive fouls are strictly dominated, because they concede the point outright. The engine encodes it as a hard constraint on defensive behavior in the try state; any model of try defense that allows foul risk without this automatic award misprices the play.",
+    "source_operator": "try_defensive_foul_award",
+    "telemetry": "Defensive fouls on try plays and points awarded without a successful play."
+   }
+  },
+  {
+   "primitive_id": "touchback_impetus_rule",
+   "name": "A touchback is declared when a ball dead behind a team's own goal line got there by impetus from an opponent; the touchback turns on who sent the ball across, not merely where it died.",
+   "verbatim_quote": "the ball in possession or a player guarding his own goal is declared dead by the Referee, any part of it being on, above, or behind the goal line, provided the impetus which sent it to or across the line was given by an opponent.",
+   "page": "Part IV, Official Playing Rules, Rule VI, Section 15 (Rules pp. 16-17; text lines 21950-22056)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A kicked ball going over the goal line untouched is a touchback.",
+    "A ball striking the goal posts or crossbar before being touched, if it does not score, is a touchback."
+   ],
+   "breakdown_regime": "Impetus can be genuinely ambiguous on deflections; the rule assigns cases by enumerated examples, and unlisted cases fall to officials' judgment.",
+   "domain": "rules_scoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Impetus is a causal attribution variable: the same physical outcome, a dead ball behind the goal line, is classified by which side caused it. The engine uses the identical device when it assigns responsibility for safeties, touchbacks, and fumbles through the end zone; the classification function takes the cause as an input, not just the terminal position.",
+    "source_operator": "touchback_impetus_rule",
+    "telemetry": "Kick and punt results into the end zone, fumbles across the goal line, and touchback versus safety rulings."
+   }
+  },
+  {
+   "primitive_id": "safety_impetus_rule",
+   "name": "A safety is the mirror image of the touchback: the ball dead behind a team's goal line counts two points for the opponents when the impetus came from the defending side itself, by its own kick, pass, snap-back, or fumble.",
+   "verbatim_quote": "provided the impetus which caused it to pass from outside the goal line to or behind the goal line was given by the side defending the goal.",
+   "page": "Part IV, Official Playing Rules, Rule VI, Section 16 (Rules p. 17; text lines 22000-22056)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An incompleted forward pass behind the passer's own goal line is also a safety.",
+    "A foul whose penalty would leave the ball behind the offender's own goal line is a safety."
+   ],
+   "breakdown_regime": "The classifier is complete only over its enumerated causes; novel mechanisms, such as a ball blown by wind, are outside the text.",
+   "domain": "rules_scoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Paired with the touchback rule, impetus forms a complete causal classifier for balls dead behind the goal line: opponent impetus yields a touchback, own impetus yields a safety. The engine adopts this as the template for any outcome whose value depends on responsibility, training its labeling functions to record the causing side as a first class field.",
+    "source_operator": "safety_impetus_rule",
+    "telemetry": "Safeties by cause: sack in the end zone, fumbled snap, blocked kick, or foul, with the causing side recorded."
+   }
+  },
+  {
+   "primitive_id": "fair_catch_rule",
+   "name": "A fair catch is a catch of an opponent's kick before it touches the ground, signaled in advance by raising a hand clearly above the head, with no more than two steps taken after the catch; it earns a free kick from the mark of the catch.",
+   "verbatim_quote": "the ball after it has been kicked by one of\nthe opponents and before it touches the ground, provided\nthe player, prior to an attempt to catch the ball, signals\nhis intention of making a fair catch by raising his hand",
+   "page": "Part IV, Official Playing Rules, Rule VI, Section 5 (Rules pp. 12-13; text lines 21810-21876)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The signal must precede the attempt to catch and the hand must be clearly above the head.",
+    "If another of the catcher's side touches the ball after the kick, it is not a fair catch."
+   ],
+   "breakdown_regime": "The two step allowance is a judgment call at game speed; the rule gives no measurement standard for the steps.",
+   "domain": "rules_kicking",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The fair catch is a declared intent protocol: the receiver trades the right to advance for protection and a free kick, and must signal the trade before the catch. The engine models it as an option exercise with an observable signal, the ancestor of the modern fair catch and of declared fair catch free kick strategy that still survives in the rulebook.",
+    "source_operator": "fair_catch_rule",
+    "telemetry": "Fair catch signals, catches, and free kicks taken from the mark of the catch."
+   }
+  },
+  {
+   "primitive_id": "kick_taxonomy_dropkick",
+   "name": "The code distinguishes kicks by their mechanics: a drop-kick is made by dropping the ball and kicking it the instant it rises from the ground, distinct from the punt, kicked before it touches the ground, and the place-kick, kicked from its position resting on the ground.",
+   "verbatim_quote": "from the hand or hands and kicking it the instant it rises from the ground.",
+   "page": "Part IV, Official Playing Rules, Rule VI, Section 1 (Rules p. 11; text lines 21749-21767)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "No artificial tees are permitted for a place-kick, though scraping up the earth is allowed.",
+    "A goal cannot be scored by a kick-off, only by a drop-kick or place-kick from the field of play."
+   ],
+   "breakdown_regime": "The drop-kick later vanished from the game, so its distribution cannot be estimated from modern data; the taxonomy survives even where one category empties.",
+   "domain": "rules_kicking",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Kick type is a categorical variable defined by ball contact timing: before ground contact, at first rise, or from rest. The engine keeps the same taxonomy discipline in its event data, because drop-kick, punt, and place-kick have different accuracy and distance distributions and pooling them corrupts any kicking model.",
+    "source_operator": "kick_taxonomy_dropkick",
+    "telemetry": "Every kick event labeled by type: punt, drop-kick, place-kick, kick-off, or free kick."
+   }
+  },
+  {
+   "primitive_id": "onside_kick_ten_yard_rule",
+   "name": "A kick-off or free kick must travel at least ten yards toward the opponents' goal, unless touched by an opponent; a kick that has not gone ten yards is a loose ball.",
+   "verbatim_quote": "A kick-off or free kick which has not gone 10 yards is to be considered a loose ball.",
+   "page": "Part IV, Official Playing Rules, Rule XX, Section 1 (Rules p. 37; text lines 23025-23060)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An opponent's touch before ten yards puts the ball in play.",
+    "A loose ball in neither side's possession may not be kicked or kicked at."
+   ],
+   "breakdown_regime": "The rule sets the threshold but not the optimal strategy; recovery probabilities must come from play data, and surprise onside rates are not in this source.",
+   "domain": "rules_kicking",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The ten yard threshold converts a short kick into a contested loose ball, which is the mechanical basis of the onside kick. The engine models kick recovery as a function of distance traveled with a regime change at ten yards: before it, the kicking team may not legally recover untouched; after it, recovery is live for both sides.",
+    "source_operator": "onside_kick_ten_yard_rule",
+    "telemetry": "Kick-off distances, onside attempts, and recovery outcomes by distance band."
+   }
+  },
+  {
+   "primitive_id": "goal_from_field_definition",
+   "name": "A goal from the field is scored by a drop-kick or place-kick from the field of play over the opponents' crossbar; a goal cannot be scored by a kick-off, and a kick that touches the ground after leaving the kicker's foot before passing over cannot count.",
+   "verbatim_quote": "by kicking the ball from the field of play either by a drop-kick or a place-kick over the cross-bar of the opponents' goal. A goal cannot be scored by a kick-off.",
+   "page": "Part IV, Official Playing Rules, Rule VI, Section 7 (Rules p. 13; text lines 21848-21876)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "If the ball passes directly over a post, or strikes an opponent and then passes over, it counts a goal.",
+    "The posts stand on the goal line in this era, shortening every attempt by ten yards relative to the modern placement."
+   ],
+   "breakdown_regime": "Narrative sources often omit kick method, so many historical attempts cannot be typed with certainty from the Guide's own game accounts.",
+   "domain": "rules_kicking",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The field goal is defined by method and trajectory, not by intent: any qualifying kick from scrimmage play that passes over the bar scores three points. The engine's kicking model inherits the validity conditions, including the ground contact disqualifier, when it labels historical kicks from narrative accounts.",
+    "source_operator": "goal_from_field_definition",
+    "telemetry": "Field goal attempts and results, including kicks described as drop-kicks in game accounts."
+   }
+  },
+  {
+   "primitive_id": "substitution_return_rule",
+   "name": "Substitution is free in timing but bounded in return: a player withdrawn during the first half may return at any time during the second half, while a player withdrawn during the second half may not return at all.",
+   "verbatim_quote": "A player who has been withdrawn from the game during the first half may return at any time during the second half.",
+   "page": "Part IV, Official Playing Rules, Rule III, Section 2 (Rules pp. 8-9; text lines 21588-21671)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A substitute must report to the Referee or Umpire before engaging in play.",
+    "An incoming substitute may not communicate with players on the field until after the ball has been put in play."
+   ],
+   "breakdown_regime": "The rule was liberalized over time toward free substitution; the 1922 constraint reflects an iron man era and cannot be projected onto modern personnel usage.",
+   "domain": "rules_play_structure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is a resource constraint on personnel: the roster is not a free substitution pool but a stateful one, where a second half withdrawal is permanent. The engine models player availability with the same state machine logic when it handles modern disqualification, injury removal, and targeting ejection states; who is available is a function of the path taken, not just the roster list.",
+    "source_operator": "substitution_return_rule",
+    "telemetry": "Substitution events with half and return status; players withdrawn and returned by game."
+   }
+  },
+  {
+   "primitive_id": "conduct_heel_of_hand_ban",
+   "name": "Striking is banned in detail: no striking with fist or elbows, kneeing, kicking, or striking with locked hands, and a defender may not strike an opponent in the face with the heel of the hand; violation means disqualification and half the distance to the goal.",
+   "verbatim_quote": "nor shall a player on defense strike an opponent in the face with the heel of the hand.",
+   "page": "Part IV, Official Playing Rules, Rule XXI, Section 1 (Rules p. 37; text lines 23045-23145)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The ban covers both sides, with the heel of hand clause addressed to the defense.",
+    "Penalty for a Section 1 violation is disqualification plus half the distance to the offender's goal line."
+   ],
+   "breakdown_regime": "The list is enumerative; acts not listed fall under the separate unnecessary roughness section, so the taxonomy has a deliberate catch all boundary.",
+   "domain": "rules_conduct",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The conduct rules enumerate prohibited actions with a fixed sanction schedule, which the engine treats as a foul taxonomy: each foul type carries its own penalty distance and disqualification flag. Keeping foul types distinct, rather than pooling all personal fouls, is what lets penalty impact be priced by type.",
+    "source_operator": "conduct_heel_of_hand_ban",
+    "telemetry": "Penalty calls by foul type, yardage enforced, and disqualifications."
+   }
+  },
+  {
+   "primitive_id": "passer_protection_roughing",
+   "name": "Running or diving into a player obviously out of the play, or roughing the player who has made a forward pass, is unnecessary roughness, penalized fifteen yards from the spot where the ball was put in play.",
+   "verbatim_quote": "before or after the ball has been declared dead, or roughing the player who has made a forward pass.",
+   "page": "Part IV, Official Playing Rules, Rule XXI, Section 5(b) (Rules p. 38; text lines 23100-23145)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same section prices running into the kicker at five yards and roughing the kicker at fifteen yards plus disqualification.",
+    "Officials may designate other acts as unnecessary roughness beyond those specified."
+   ],
+   "breakdown_regime": "Protection extends only to contact after the throw and to players obviously out of the play; it does not create the modern passer pocket protections.",
+   "domain": "rules_conduct",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Passer protection exists in embryo in 1922: once the pass is thrown, the passer becomes a protected player and contact with him is priced at fifteen yards. The engine tracks this as the origin of the roughing the passer family of rules, a reminder that protection rules change passer behavior and sack rates, so era sack data embeds the protection regime in force.",
+    "source_operator": "passer_protection_roughing",
+    "telemetry": "Roughing the passer calls and late hit penalties; sack and hit rates by era."
+   }
+  },
+  {
+   "primitive_id": "three_factor_attack",
+   "name": "Camp's annual review identifies the 1921 advance as the first full combination of three attacking factors: the shift, the forward pass, and the run from kick formation.",
+   "verbatim_quote": "We now see a far better rounded-out attack through the combination of three factors, namely, the shift, the forward pass, and the run from kick formation, than we have ever seen before.",
+   "page": "Part I, Annual Review of the Season, by Walter Camp (Guide pp. 9-11; text lines 624-700)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The claim rests on Camp's observation of the 1921 season across sections, not on tabulated play data.",
+    "The three factors are presented as a combination, not as independent improvements."
+   ],
+   "breakdown_regime": "The review names no counts or rates; the combination claim is expert judgment, and the Guide's record section does not tabulate plays by type to test it.",
+   "domain": "game_analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Camp is describing a portfolio effect: three play families, each stretching the defense differently, produce more together than the sum of their separate values because the defense must honor all three. The engine builds its play calling features the same way, valuing a play family partly by the constraint it imposes on defensive preparation for the other families.",
+    "source_operator": "three_factor_attack",
+    "telemetry": "Play type frequencies and success by family: shift based runs, passes, and runs from punt or kick formation, by team and season."
+   }
+  },
+  {
+   "primitive_id": "ranking_impossibility_principle",
+   "name": "Camp refuses to rank the nation's teams or pick a foremost eleven, holding that on the era's partial, sectional schedules a final ranking is impossible.",
+   "verbatim_quote": "On present schedules, a final ranking of teams is impossible, and no attempt will be made to select the country's foremost eleven.",
+   "page": "Part I, Annual Review of the Season, by Walter Camp (Guide p. 13; text lines 730-760)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Sectional champions are discussed on their own laurels instead of being forced into one order.",
+    "The claim is about the 1921 schedule structure, not about ranking in principle."
+   ],
+   "breakdown_regime": "The principle weakens as intersectional schedules densify; it is a property of the data graph, not a permanent ban on ratings, and later seasons must be rechecked.",
+   "domain": "editorial_epistemics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is an identifiability warning from the game's leading authority: with few intersectional games, the schedule graph is nearly disconnected, so no ranking method can compare champions across sections from results alone. The engine keeps this as a standing check on its own ratings; where the schedule graph is sparse, it reports sectional strength separately instead of manufacturing a single national order.",
+    "source_operator": "ranking_impossibility_principle",
+    "telemetry": "Schedule connectivity: intersectional games per team and shared opponents across sections, per season."
+   }
+  },
+  {
+   "primitive_id": "all_team_omission_policy",
+   "name": "The Guide omits its compilation of All America and All conference selections for 1922, because printing them in the official Guide lent them an authority they had not earned and exposed the selections to charges of partisanship.",
+   "verbatim_quote": "the inclusion in the Guide of the hundreds of selections of so-called \"All\" teams put a stamp of authority on those selections, it was decided to omit the compilation from this year's number.",
+   "page": "Part I, Omission of \"All\" Team Selections (Guide p. 17; text lines 809-830)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The omission is a policy of the Guide as final word on the season's history, not a judgment that the selected players were poor.",
+    "A Roll of Honor of alumni achievement replaces the selections in this number."
+   ],
+   "breakdown_regime": "The policy governs one publication's authority; it does not stop other outlets from selecting teams, so the selections still exist outside the official record.",
+   "domain": "editorial_epistemics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An official publisher declining to print a popular feature because its imprimatur would certify judgments it cannot verify is a provenance rule: authority must track verification. The engine applies the same rule to its published outputs, separating what it has measured from what it merely repeats, and refusing to let placement in an official surface upgrade an unverified claim.",
+    "source_operator": "all_team_omission_policy",
+    "telemetry": "Provenance labels on every published figure: measured, derived, or reported, with the verifying source named."
+   }
+  },
+  {
+   "primitive_id": "rules_stability_doctrine",
+   "name": "The Rules Committee reports that the modern open game is now established, that no fundamental changes are needed, and that its legislative work will be confined largely to detail and clarification.",
+   "verbatim_quote": "it seems likely that the work of the Foot Ball Rules Committee as a legislative body will, in the immediate future at least, be restricted to the consideration of relatively minor questions",
+   "page": "Report of the American Intercollegiate Foot Ball Rules Committee to the NCAA, printed at the front of Part IV (text lines 21276-21310)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The judgment rests on the completed transition from the old mass play game to the open game.",
+    "The committee still expects tendencies in the open game to require occasional checks."
+   ],
+   "breakdown_regime": "The doctrine is a forecast, not a fact; later decades did bring fundamental change, so the stability claim must be retested era by era rather than assumed.",
+   "domain": "governance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A mature rule system shifts from redesign to maintenance: the committee explicitly forecasts incremental amendment, which makes the code a stable platform for strategy development. The engine mirrors this in its own governance, versioning rule eras and treating most change as clarification, so that longitudinal comparisons are broken only at declared era boundaries.",
+    "source_operator": "rules_stability_doctrine",
+    "telemetry": "Rule change logs by year, classified as fundamental or clarifying, with era boundaries for the engine's features."
+   }
+  },
+  {
+   "primitive_id": "central_board_officials_system",
+   "name": "The Central Board on Officials, a subcommittee of the Rules Committee, advises on the rules, publishes public interpretations, supervises sectional boards, publishes lists of accredited officials, and arranges interpretation meetings to secure unanimous rulings.",
+   "verbatim_quote": "That the function of the Central Board, appointed by the Rules Committee, should be (a) to advise, rendering assistance as indicated ; (b) to assist by public interpretation of the foot ball rules; (c) to maintain a certain control over sectional boards in the management of executive details",
+   "page": "Part III, The Work of the Central Board on Officials (text lines 15021-15080)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The Rules Committee fully endorses the Board and urges colleges to accept its neutral appointments for major games.",
+    "Appointments for major games are to be secured on or before October 1 of each year."
+   ],
+   "breakdown_regime": "Accreditation standardizes interpretation, not eyesight; judgment calls still vary by crew, and the Board's machinery cannot remove that variance.",
+   "domain": "governance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Uniform enforcement is treated as infrastructure: a central body accredits the officials, publishes interpretations, and holds meetings whose purpose is unanimous rulings across sections. The engine takes the same lesson for its own adjudication layer; a rule whose interpretation varies by section is a source of label noise, so interpretations are published centrally and versioned like the rules themselves.",
+    "source_operator": "central_board_officials_system",
+    "telemetry": "Accredited official lists, published interpretations, and interpretation meeting records by season."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "7ab8598804ae4d0d-t1",
+   "think": "This book is three works bound as one annual: a set of narrative reviews of the 1921 season written by Walter Camp and dozens of regional contributors, a record section that prints the final score of effectively every college and high school game of the season together with historical record tables running back to 1873, and the complete official playing rules of the National Collegiate Athletic Association for 1922, issued in a detachable form for coaches and officials. The extraction therefore treats it as a layered source. The rules are the sovereign layer, because they define the game as a formal system: a bounded field with legislated geometry, a standardized ball, a fixed table of scoring values, a four period clock, and a down and distance renewal rule that turns possession into a sequence of discrete trials. Read as a system, the code is a state machine. A scrimmage is the atomic transition, beginning at the snap and ending when the ball is dead. Formation rules constrain the states that may start a transition, requiring seven men on the line and restricting motion to one man moving away from the opponents' goal. The forward pass rules then define a special transition with its own entry conditions, a throw from at least five yards behind the line, its own typing of who may receive it, and its own failure modes, including the severe 1922 provision that a pass failing in the end zone is a touchback rather than a mere incompletion. The most intellectually distinctive device in the code is impetus. When a ball dies behind a goal line, the outcome is not read off the terminal position; it is classified by which side caused the ball to cross. Opponent impetus yields a touchback, own impetus yields a safety. That is causal attribution written into law, and it is the same move a modern reasoning engine makes when it refuses to label an outcome from the final state alone. The try for point, new in 1922, is a second such device: a one play subgame in which the scoring side chooses the spot and the method, while a defensive foul concedes the point automatically, an incentive design that makes one class of defensive behavior strictly losing. Above the rules sits Camp's analytical layer, and it is more cautious than the rulebook. Camp identifies the season's real advance as the combination of three attacking factors, the shift, the forward pass, and the run from kick formation, an early statement that play families gain value from the defensive attention they collectively consume. Yet in the same review he refuses to name a national champion or a foremost eleven, on the stated ground that present schedules make a final ranking impossible. The Guide's editors act on the same principle when they drop the compilation of All America selections, because the official book's authority would certify judgments nobody had verified. A third layer is governance. The Rules Committee announces that the open game is established and that its future work is detail and clarification, while the Central Board on Officials accredits officials, publishes interpretations, and convenes meetings to make rulings unanimous across sections. For a reasoning engine, the transferable content is therefore not a set of plays but a set of disciplines: define the event before measuring it, classify outcomes by their causes, price decisions inside explicitly bounded subgames, refuse rankings the schedule graph cannot support, and keep the interpretation of the rules as carefully versioned as the rules themselves. The limits are equally clear. The Guide contains almost no play level data, its record tables are scores rather than plays, and its strategic claims are expert observation without counts. Its rules are also frozen in a specific era: goal posts on the goal line, a five yard launch depth for passes, restricted substitution, and the end zone touchback all separate 1922 football from the modern game, so every primitive extracted here is era stamped and must be translated, not transplanted, before it informs a modern model. The record section deserves separate notice, because it is the era's data infrastructure. It prints the score of game after game for hundreds of colleges and high schools, arranged so that any team's season can be reconstructed line by line, and it reaches backward with record tables of field goals and famous runs spanning 1873 to 1922. That half century depth is what makes longitudinal questions askable at all: whether scoring is rising, whether kicking is improving, whether the open game is spreading from the sections that invented it. Camp's own High Lights essay supplies the scale figures that frame the archive, nearly ten thousand players in uniform on a single day in games important enough to be listed, and grandstands filled by a quarter of a million people across a season. A record system built for a pastime had become the ledger of a mass institution, and the Guide knew it. The kicking rules show the same definitional care at a smaller scale. Kicks are typed by the instant of contact: the punt leaves the foot before the ball touches the ground, the drop-kick at the instant it rises, the place-kick from rest on the ground. The fair catch is a declared intent protocol in which the receiver signals in advance, surrenders the right to advance, and receives protection plus a free kick from the mark. Even personnel are stateful: a man withdrawn in the second half cannot return, so a roster is a path dependent resource rather than a pool. Each of these is a small, complete mechanism, specified tightly enough that two officials in different states, reading the same page, would rule the same way on the same play. That reproducibility, pursued through accredited officials, published interpretations, and unanimity meetings, is the book's deepest lesson: a measurement system is only as good as the agreement among the people applying it, and agreement is an institutional achievement, not a natural one.",
+   "retrocausal_genealogy": "The lineage runs from the rugby derived American game of the 1870s through Walter Camp's own reforms: the scrimmage, the down and distance system, and the numerical scoring table were all Camp era constructions. The forward pass, legalized in 1906 after the brutality crisis that also produced the NCAA itself, had by 1922 matured from an emergency device into one of Camp's three factors of attack. The 1922 try for point replaced the old kick only try, and the shift restrictions answered a decade of deception based offenses. Each rule in this book is therefore a dated sediment of an earlier controversy, and the genealogy matters because it shows which problems each constraint was built to solve.",
+   "theory_of_mind": "Camp and the committee write as custodians rather than innovators. Their model of the reader is a coach, captain, or official who needs rulings that can be applied identically in every section of the country, and a public whose understanding of the game they are deliberately educating. Their model of the domain is that football is now a finished framework: the open game works, spectators comprehend it, and the remaining task is disciplined maintenance. That confidence explains both the refusal to redesign and the willingness to publish an enormous record archive, since a stable game makes its history cumulative and comparable.",
+   "cross_layer_veto": "Several findings in this book veto habits a modern engine might otherwise keep. The ranking impossibility statement vetoes any single national ordering built on a disconnected schedule graph. The end zone touchback and the five yard launch depth veto the direct transfer of modern passing value into this era, and the goal post placement vetoes raw comparison of kicking distances across eras. The impetus rules veto outcome only labeling wherever a causal classification exists. Finally, the omission of the All team compilation vetoes publishing unverified judgments under an official surface, a constraint on the engine's own outputs, not only on its inputs."
+  }
+ ],
+ "universal_lens": "Any competitive domain can be read the way this Guide reads football: a formal layer that defines legal states and transitions, a record layer that preserves what actually happened at the finest available grain, an analytical layer that says what the season meant, and a governance layer that keeps interpretation uniform. The template generalizes because the failure modes generalize too. Wherever the layers are confused, wherever outcomes are labeled without causes, or wherever authority outruns verification, the same errors appear in science, business, and policy that Camp and his committee were already refusing to make in 1922.",
+ "gsi_mapping": "The Institute takes from this book a curriculum in how a sport governs itself into intelligibility: legislated definitions before measurement, published interpretations before argument, and a public record archive that lets any claim about the past be checked. Its 1922 doctrines, that rankings require connected schedules and that official surfaces must not certify unverified selections, are research ethics as much as football rules, and they belong in the training of anyone who will publish analysis under the Institute's name.",
+ "gse_mapping": "The engine takes the rulebook as its model of a well formed state space: atomic plays bounded by snap and dead ball, formations validated by counting constraints, receivers typed by eligibility, outcomes classified by impetus rather than terminal position, and decisions like the try priced inside a bounded one play subgame. It also takes Camp's two cautions as operating rules: value play families by the defensive attention they jointly consume, and never publish a ranking the underlying schedule graph cannot identify."
+}

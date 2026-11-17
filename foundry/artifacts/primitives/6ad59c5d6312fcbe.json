@@ -1,0 +1,720 @@
+{
+  "book_id": "6ad59c5d6312fcbe",
+  "source_status": "COMPLETE",
+  "source_note": "William H. Edwards, Football Days: Memories of the Game and of the Men Behind the Ball, introduction by Walter Camp, Moffat, Yard and Company, New York, 1916 (published November 1916). The local file is a public-domain Google Books scan of that edition: PDF 19,878,290 bytes, sha256 6ad59c5d6312fcbe6620f3bf4a05410e88d036665a77f61bd658808b91d67e59, with an extracted text layer of 610,910 bytes and about 104,236 words. Text quality is serviceable OCR with period artifacts: words split at line breaks, occasional character errors, and Google Books notice pages in the front matter; every quoted span was verified as a contiguous substring of the extracted text under the foundry normalization. The work contains no equations; it is a testimony memoir, so every primitive carries an empty latex field and its breakdown regime records the no_equation_domain status. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "scout_report_with_physical_model",
+      "name": "Opponent scouting delivered as a physical simulation: the scout watches the opponent, then demonstrates every man's action on every play with checkers on a board",
+      "verbatim_quote": "He also demonstrated with checkers what each man did in every play",
+      "page": "Chapter I, printed p. 10",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The scout personally observed the opponent's most recent game before reporting",
+        "A spatial token model can carry per-player assignments faithfully enough for a team to drill against"
+      ],
+      "breakdown_regime": "Fails when the scout misreads the opponent or the opponent changes its scheme after being scouted; the model is one game deep. The source offers no quantitative form; no_equation_domain.",
+      "domain": "opponent modeling",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's opponent model should be a runnable structure, not a prose summary: each opposing player's role per play stored as an assignment that downstream matchup reasoning can execute against, the way the checker board let eleven men rehearse against eleven represented men.",
+        "source_operator": "scout_report_with_physical_model",
+        "telemetry": "Opponent play-by-play charting, formation and personnel logs, per-player assignment tags from game film"
+      }
+    },
+    {
+      "primitive_id": "dominant_opponent_double_assignment",
+      "name": "When one opposing player is individually dominant, the scouting verdict is a standing resource allocation: two men assigned to stop him on every play",
+      "verbatim_quote": "it will require two Lawrenceville men to stop him on every play",
+      "page": "Chapter I, printed p. 10",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The dominance was observed, not reputational: the scout saw Holt play the week before",
+        "Doubling one man is worth the hole it opens elsewhere on the field"
+      ],
+      "breakdown_regime": "Fails when the doubled player is used as a decoy, or when the vacated assignment is the actual point of attack; the cost is paid somewhere on every snap. No quantitative form in the source; no_equation_domain.",
+      "domain": "resource allocation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A matchup kernel: when a single opponent's measured impact crosses a dominance threshold, the engine should price in a permanent double assignment and re-solve the remaining ten assignments under that constraint, rather than treating the dominant player as an ordinary one-on-one matchup.",
+        "source_operator": "dominant_opponent_double_assignment",
+        "telemetry": "Individual player impact ratings, double-team rates, production allowed with and without a second assigned defender"
+      }
+    },
+    {
+      "primitive_id": "falling_on_the_ball_fundamental",
+      "name": "Loose-ball recovery is the ground work of the game: falling on the ball is the first fundamental every player must learn, and the expert's edge is the judgment of when to fall on it and when to pick it up",
+      "verbatim_quote": "Falling on the ball is one of the fundamentals in football. It is the ground work that every player must learn.",
+      "page": "Chapter III, printed p. 31",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Loose balls occur often enough that recovery skill is a repeatable edge, not luck",
+        "The secure action (fall on it) is the default; the advance action (pick it up) is a judgment exception"
+      ],
+      "breakdown_regime": "Breaks when the ball must be advanced to matter, late in a game with the team behind; a pure security default then concedes the only chance. No quantitative form in the source; no_equation_domain.",
+      "domain": "fundamentals",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Possession events in the engine should be modeled as a two-branch decision with an asymmetric default: secure the ball first, advance only when field position, score, and time raise the value of the risky branch, exactly the judgment Edwards credits to Hinkey at end.",
+        "source_operator": "falling_on_the_ball_fundamental",
+        "telemetry": "Fumble recovery outcomes, scoop-and-score attempts and their failure rate, game state at each loose ball"
+      }
+    },
+    {
+      "primitive_id": "great_scrub_makes_great_varsity",
+      "name": "The quality of the practice opposition sets the ceiling of the team: it is a great scrub that makes a great varsity, and the scrub's reward is the varsity's victories",
+      "verbatim_quote": "every man knows that it is a great scrub that makes a great varsity",
+      "page": "Chapter III, closing passage, printed pp. 39-40",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Practice repetitions against weak opposition do not transfer to games against strong opposition",
+        "The second team can be motivated by contribution rather than by playing time"
+      ],
+      "breakdown_regime": "Fails when the scrub is so overmatched that the varsity rehearses plays that will never work against real defenses, or when scrub intensity injures starters. No quantitative form in the source; no_equation_domain.",
+      "domain": "training design",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A training-data kernel for the reasoning engine: the difficulty distribution of rehearsal opposition is a causal input to performance, so any evaluation of a team's preparation should weight the strength of what it practiced against, and any simulation should train against the strongest available opposition distribution.",
+        "source_operator": "great_scrub_makes_great_varsity",
+        "telemetry": "Practice opponent strength, scout-team quality ratings, starters' practice snap counts by opposition tier"
+      }
+    },
+    {
+      "primitive_id": "mistake_taxonomy_signal_error",
+      "name": "Defeats decompose into named, preventable mistakes: the muffed punt, the fumble, the missed tackle, the blocked kick, and above all the mistaken signal, which can cost a first down or the game",
+      "verbatim_quote": "a mistaken signal in the game caused the loss of a first down, maybe defeat",
+      "page": "Chapter IV, printed p. 43",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Most decisive errors are communication and execution failures, not deficits of talent",
+        "Errors are enumerable after the fact and therefore trainable before the fact"
+      ],
+      "breakdown_regime": "The taxonomy is backward-looking and can overfit to the last defeat; some losses are simply superiority of the opponent, which no error audit removes. No quantitative form in the source; no_equation_domain.",
+      "domain": "error analysis",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's post-game and pre-game reasoning should classify projected risk by failure channel, with communication errors (wrong play, wrong assignment, late change) as a first-class channel beside physical mismatches, since Edwards' catalogue shows the signal error deciding games between equal teams.",
+        "source_operator": "mistake_taxonomy_signal_error",
+        "telemetry": "Turnover and penalty logs tagged by cause, wrong-route and wrong-play incidence, timeout and delay events from miscommunication"
+      }
+    },
+    {
+      "primitive_id": "one_day_to_make_good",
+      "name": "Performance is irreversible at the event: there is only one day to make good, the day of the game, and preparation cannot be retrofitted after it",
+      "verbatim_quote": "There is only one day to make good and that is the day of the game. The next day is too late.",
+      "page": "Chapter IV, printed p. 43",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The contest is a single sampled performance, not an average over attempts",
+        "Regret after the event has no corrective channel back into the event"
+      ],
+      "breakdown_regime": "In season-long competition the claim softens: there is a next week, and Edwards' own teams converted defeats into later corrections. The irreversibility binds within the single game and within a career's finite chances. No quantitative form in the source; no_equation_domain.",
+      "domain": "performance timing",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine should treat each game as a one-shot draw from a prepared distribution: all variance reduction must happen before kickoff, so pre-game reasoning gets the full weight and in-game reasoning is limited to the decisions still open, never to re-litigating preparation.",
+        "source_operator": "one_day_to_make_good",
+        "telemetry": "Pre-game preparation completeness, same-week correction logs, performance variance between first meetings and rematches"
+      }
+    },
+    {
+      "primitive_id": "temperament_scouting_backfire",
+      "name": "A provocation plan built on a study of an opponent's temperament can invert: attacking Chadwick's temper did not weaken him, it nerved him, and he became nearly impossible to gain through",
+      "verbatim_quote": "my attack seemed to nerve him. He played a very wide, defensive guard and it was almost impossible to gain through him.",
+      "page": "Chapter IV, printed p. 46",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The coaches believed temperament was a lever that could be pulled from outside",
+        "The response of a proud player to insult is effort, not collapse, when his identity is staked on the contest"
+      ],
+      "breakdown_regime": "Provocation does work on some players, the ones who retaliate and are ruled out; the failure is treating one temperament model as universal. The source gives one case each way, no base rate. No quantitative form in the source; no_equation_domain.",
+      "domain": "opponent psychology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A psychology kernel with a sign check: any plan that assumes an opponent degrades under pressure or provocation must carry the alternative branch in which he sharpens, and the engine should require evidence about this specific player before assigning either sign.",
+        "source_operator": "temperament_scouting_backfire",
+        "telemetry": "Player performance splits under adversity, penalty and ejection history, performance after personal fouls or public criticism"
+      }
+    },
+    {
+      "primitive_id": "coach_engineered_hunger",
+      "name": "A coach can manufacture a temperamental player's peak by deliberate deprivation: Sanford annoyed Chadwick constantly, kept him out of the announced lineup, and staged the crowd's demand for him, so the player entered the game desperate to prove himself",
+      "verbatim_quote": "I started out purposely annoying Chadwick in every possible way, going with him wherever he went.",
+      "page": "Chapter XIX, printed pp. 363-364 (Foster Sanford's account)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The player's ability was never in doubt; only his motivation and the staff's trust were missing",
+        "Withheld recognition converts into effort when the player believes the chance will come"
+      ],
+      "breakdown_regime": "The method is manipulation and can curdle into resentment or a broken player; it also required the captain's secret consent and a cooperative crowd. It is a single case, told by its author. No quantitative form in the source; no_equation_domain.",
+      "domain": "player psychology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Motivation is a manipulable state variable, not a fixed trait: the engine's player model should include a hunger or proof-pressure term that responds to benching, public doubt, and staged opportunity, and that can raise a volatile player's expected output for one specific game.",
+        "source_operator": "coach_engineered_hunger",
+        "telemetry": "Performance after benching or public criticism, contract-year and prove-it situations, snap-count grievances reported before games"
+      }
+    },
+    {
+      "primitive_id": "injury_information_concealment",
+      "name": "Injury information is contested information: Cochran, his right shoulder broken, had the left shoulder bandaged so Yale could not learn where he was actually hurt",
+      "verbatim_quote": "To conceal the true location of his injury from the Yale players, Cochran had his left shoulder bandaged",
+      "page": "Chapter IV, printed p. 47",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Opponents aim at known weaknesses, so the location of an injury is actionable intelligence",
+        "A visible bandage is believed; the deception costs nothing but a wrap on the sound side"
+      ],
+      "breakdown_regime": "Concealment fails against inside information and modern injury reporting, and a decoy can mislead the player's own medical care if the staff plays along too far. No quantitative form in the source; no_equation_domain.",
+      "domain": "information control",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine should treat all public injury signals as potentially strategic: reported limitation sites and practice appearances are evidence with an adversarial filter, and the model should hold a probability that the true limitation is elsewhere or overstated.",
+        "source_operator": "injury_information_concealment",
+        "telemetry": "Injury report histories versus actual snap limitations, practice participation versus game usage, beat-writer reports contradicted by game film"
+      }
+    },
+    {
+      "primitive_id": "late_signal_change_coordination_collapse",
+      "name": "Changing the team's signals in the week of a game destroys coordination: Princeton changed its signals that week before Cornell in 1899 and did not play together, and lost 5 to 0",
+      "verbatim_quote": "we had changed our signals that week and we did not play together",
+      "page": "Chapter IV, printed pp. 51-52",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Coordination runs on rehearsed, automatic responses; a new code taxes every man's attention at the snap",
+        "The secrecy gained by new signals was worth less than the fluency lost"
+      ],
+      "breakdown_regime": "A change forced by a genuinely compromised code can still be net positive, and small veteran units absorb changes faster than young ones. One case, no controlled comparison. No quantitative form in the source; no_equation_domain.",
+      "domain": "coordination",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A coordination kernel: any late change to a shared code, terminology, or scheme carries a fluency tax proportional to how much of the unit must execute it under time pressure, and the engine should discount a team's expected execution in the first game after such a change.",
+        "source_operator": "late_signal_change_coordination_collapse",
+        "telemetry": "Scheme and coordinator changes with short preparation windows, first-game execution errors after playbook changes, communication penalties by week since change"
+      }
+    },
+    {
+      "primitive_id": "rehearsed_signature_play",
+      "name": "A season of drilling one signature play makes it the game's decisive weapon: the long end run, Lea's pet play, was scored within seven minutes of the 1899 Yale game",
+      "verbatim_quote": "that we had had drilled into us, a play which we had hoped might win the game, it was the long end run. It was Lea's pet play.",
+      "page": "Chapter V, printed p. 58",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Extreme repetition of one play builds timing that survives game pressure",
+        "The play was kept for the opponent and moment that mattered most"
+      ],
+      "breakdown_regime": "A signature play scouted and expected loses its edge; over-drilling one play also narrows the offense if the game goes elsewhere. No quantitative form in the source; no_equation_domain.",
+      "domain": "play design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine should model a small set of high-repetition plays per team as carrying an execution premium distinct from the same plays run occasionally: frequency of rehearsal is a feature of the play, not just of the playbook.",
+        "source_operator": "rehearsed_signature_play",
+        "telemetry": "Play-call frequency by concept, success rate of a team's most-called plays versus its rare plays, scripted opening drive performance"
+      }
+    },
+    {
+      "primitive_id": "discipline_credibility_camp",
+      "name": "A leader's discipline is credible only if he pays for it himself: Camp, rather than excuse his best runner's broken training rule, handed in his own resignation as captain, and the runner quit the team instead",
+      "verbatim_quote": "Imagine our surprise, therefore, when Camp, who had left us for a moment, returned to the room and handed in his resignation as captain of the team.",
+      "page": "Chapter VI, printed pp. 73-74 (F. R. Vernon's account)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The rule was collective and known in advance: in bed by eleven for the week before Princeton",
+        "Exempting the star would have destroyed the rule for everyone else"
+      ],
+      "breakdown_regime": "The gambit depended on the offender valuing the captain more than his place; against a player willing to call the bluff it costs the team its captain. No quantitative form in the source; no_equation_domain.",
+      "domain": "leadership",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In the engine's model of team governance, enforcement consistency is a state variable: a standard applied to the weakest player and waived for the strongest should be scored as no standard at all, and teams with credible enforcement get a preparation-quality premium.",
+        "source_operator": "discipline_credibility_camp",
+        "telemetry": "Disciplinary actions by player status, curfew and rules incidents, performance in the games immediately following public discipline"
+      }
+    },
+    {
+      "primitive_id": "practiced_pair_coordination_capital",
+      "name": "Coordination between two specific players is accumulated capital that a substitute cannot inherit: Vernon could not fill Eaton's place because Eaton and Camp had practiced their sideline exchange play all the fall",
+      "verbatim_quote": "for he and Camp had practiced their beautiful side line play all the fall",
+      "page": "Chapter VI, printed pp. 74-75",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The play's value lived in the pair's shared timing, not in the diagram",
+        "A full season of joint repetitions is the unit of accumulation"
+      ],
+      "breakdown_regime": "Simple plays transfer easily; the effect is largest for timing-based, option-like plays. The source gives the mechanism anecdotally, without rates. No quantitative form in the source; no_equation_domain.",
+      "domain": "coordination",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine should price continuity at the level of pairs and units, not only individuals: replacing one member of a rehearsed pair degrades the pair's joint plays toward the level of a new pairing, and snap-weighted shared history is the measure of the capital.",
+        "source_operator": "practiced_pair_coordination_capital",
+        "telemetry": "Shared snap counts by pair and unit, performance of plays by continuity of the involved players, injury replacement performance deltas"
+      }
+    },
+    {
+      "primitive_id": "signal_channel_spoofing",
+      "name": "An unauthenticated signal channel can be triggered by the opponent: the snap signal was finger pressure on the center's hips, and Princeton's Long Tommy reached over and pinched Yale's center, who snapped the ball while his backs were unprepared",
+      "verbatim_quote": "Hanson immediately put the ball in play and as a result Janeway broke through and fell on the ball for a ten yards gain and first down for Princeton.",
+      "page": "Chapter VIII, printed pp. 102-103",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The center acted on the tactile signal alone, with no confirmation of its source",
+        "The opponent was physically within reach of the channel at the line of scrimmage"
+      ],
+      "breakdown_regime": "The exploit is one-shot: once revealed it can never be used again, and modern cadence and silent counts authenticate the snap differently. The gain also required the defense to be ready to fall on the ball. No quantitative form in the source; no_equation_domain.",
+      "domain": "signals security",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A channel-integrity kernel: any communication channel the engine models, snap counts, audibles, sideline signals, must be scored for who else can inject into it, and plays triggered through unauthenticated channels carry a spoofing risk term.",
+        "source_operator": "signal_channel_spoofing",
+        "telemetry": "Snap infraction and false-start patterns, stolen-sign incidents, cadence variation by team, delay and confusion events at the line"
+      }
+    },
+    {
+      "primitive_id": "phrase_signal_semantics",
+      "name": "Before numerals (adopted 1889), plays were called by coded phrases with shared semantics: an odd number of yards named in the captain's appeal meant Cowan runs, an even number meant Irvine, and any question meant a kick",
+      "verbatim_quote": "\"Let's gain three, five or seven yards,\" would indicate to the team that Cowan was to take the ball",
+      "page": "Chapter VIII, printed p. 104",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The code hides inside ordinary speech, so the channel looks like talk, not signals",
+        "Every man must hold the same phrase-to-play table or the system collapses into noise"
+      ],
+      "breakdown_regime": "Semantic codes are low-bandwidth and leak: once an opponent learns that odd means Cowan, the code is worse than none, which is why numerals replaced phrases within a year. No quantitative form in the source; no_equation_domain.",
+      "domain": "signals design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Play-calling systems should be evaluated as codes with three properties the engine can score: bandwidth, shared-table reliability across all eleven men, and leakage cost once decoded, because the 1889 replacement of phrases by numbers was driven by exactly those properties.",
+        "source_operator": "phrase_signal_semantics",
+        "telemetry": "Audible and check systems by team, play diversity after audibles, opponent jump rates on cadence, miscommunication play outcomes"
+      }
+    },
+    {
+      "primitive_id": "covert_signaling_under_observation",
+      "name": "A signal system can be hidden inside ordinary body movement while decoy talk continues: Corbin's cap-visor pull meant kick, and his left hand touching his uniform from collar to shoe lace called plays to the left side, while word signals seemed to be in use",
+      "verbatim_quote": "The pulling of the visor of my cap was a kick signal.",
+      "page": "Chapter VIII, printed p. 112",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The opponents watch the obvious channel (speech) and ignore the covert one (gesture)",
+        "The center, who touches the ball, is the ideal covert sender because all eyes discount his movements"
+      ],
+      "breakdown_regime": "Covert channels are fragile: one observant opponent or one stolen cap (Princeton tried to steal Corbin's) ends them, and the system worked for a single game before numbers replaced it. No quantitative form in the source; no_equation_domain.",
+      "domain": "signals design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "When the engine assesses a team's communication, it should separate the declared channel from the effective channel: what opponents prepare for is the declared one, and any mismatch between the two is a temporary informational edge with a short half-life.",
+        "source_operator": "covert_signaling_under_observation",
+        "telemetry": "Signal-system changes by team, opponent statements about decoded tendencies, effectiveness decay of new wrinkles by weeks since introduction"
+      }
+    },
+    {
+      "primitive_id": "dedicated_observation_pipeline",
+      "name": "Systematic observation beats memory: Mrs. Camp attended Yale practice every day, noted plays, players, and each man's weakness and strength, and reported in detail each night, so the head coach arrived already knowing that day's practice",
+      "verbatim_quote": "anything that should be observed in connection with the style of play and the individual weakness or strength. She gave her observations in detail to her husband at supper every night",
+      "page": "Chapter VIII, printed pp. 110-111 (Pa Corbin's account)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The observer had no other duty during practice than to observe and record",
+        "The report cadence was daily, so corrections entered the next day's plan"
+      ],
+      "breakdown_regime": "One observer sees one practice at a time and her categories were one coach's categories; the pipeline scales only by adding observers with shared definitions. No quantitative form in the source; no_equation_domain.",
+      "domain": "observation systems",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "An observation kernel: separate the sensing role from the deciding role, fix the observation categories in advance (plays, players, individual weakness and strength), and run the loop daily; the engine's own data collection should be judged by whether each of those three design choices is present.",
+        "source_operator": "dedicated_observation_pipeline",
+        "telemetry": "Practice reports, player evaluation grades over time, staff roles dedicated to charting, correction latency between observed weakness and drilled fix"
+      }
+    },
+    {
+      "primitive_id": "compounding_improvement_opponent_mastery",
+      "name": "Corbin's formula for the 1888 champions: traditions handed down year to year, the necessity of advancing each year beyond the point attained the year before, and mastering the play of the opponents and planning the game to meet it",
+      "verbatim_quote": "the necessity of advancing each year beyond the point attained the year before ; the mastering of the play of our opponents",
+      "page": "Chapter VIII, printed pp. 108-109 (Corbin's banquet speech)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Improvement is measured against the program's own prior peak, not against the field",
+        "Opponent mastery is a study discipline, pursued before the game plan exists"
+      ],
+      "breakdown_regime": "Compounding stalls when the prior peak was set by graduated players, and tradition can harden into refusal to change; Yale's own later history supplies the counterweight. No quantitative form in the source; no_equation_domain.",
+      "domain": "program building",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Program strength in the engine should be modeled as a stock that compounds: retained knowledge (traditions, returning players, stable staff) plus a yearly improvement increment plus opponent-specific preparation, rather than as a fresh rating drawn each season from recruiting alone.",
+        "source_operator": "compounding_improvement_opponent_mastery",
+        "telemetry": "Returning production, staff tenure, year-over-year performance deltas by program, preparation time allocated per opponent"
+      }
+    },
+    {
+      "primitive_id": "mass_momentum_wedge",
+      "name": "The wedge concentrated the whole team's mass into one moving formation: Yale put all guards, tackles, and ends back into a big V with the ball carrier at its center, and the counter was a single great center who could hold the whole wedge and knock its sides in",
+      "verbatim_quote": "Yale would put all their guards and tackles and ends back, forming a big V with the man with the ball in the center.",
+      "page": "Chapter VIII, printed p. 116",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Rules placed no restriction on how the line could be formed or on momentum before the snap",
+        "Mass times coordinated movement beats distributed individual blocking at one point"
+      ],
+      "breakdown_regime": "The formation was legislated away: rules against mass momentum and flying wedges removed the regime entirely, which is the standing lesson that a dominant tactic invites its own prohibition. No quantitative form in the source; no_equation_domain.",
+      "domain": "play design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine should flag tactics whose edge comes from a rules loophole rather than from execution: their expected value must be discounted by prohibition risk and by the counter-adaptation of a single point of resistance, the way George the center broke the wedge by holding its apex.",
+        "source_operator": "mass_momentum_wedge",
+        "telemetry": "Formation usage rates, rules-committee agendas, tactic success decay after exposure, penalty trends by formation"
+      }
+    },
+    {
+      "primitive_id": "rule_change_induces_technique_innovation",
+      "name": "When the 1888 rules forbade blocking with hands or arms and allowed only the body, Sam Hodge answered the constraint by inventing boxing the tackle, a body technique that knocked the opposing tackle clear out of the play",
+      "verbatim_quote": "It was Sam Hodge, who played end and worked out what is known to-day as boxing the tackle.",
+      "page": "Chapter VIII, printed p. 117",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The constraint was uniform: every team lost hand blocking at once",
+        "The first workable replacement technique confers an advantage until it is copied"
+      ],
+      "breakdown_regime": "Innovation under constraint is not automatic; most players simply got worse, and the technique spread only because it was visible in big games. The source names the inventor but gives no adoption curve. No quantitative form in the source; no_equation_domain.",
+      "domain": "adaptation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "An adaptation kernel: after any rule change, the engine should expect a technique-innovation window in which early inventors and early adopters outperform, and should re-estimate player and team values under the new constraint rather than extrapolating pre-change performance.",
+        "source_operator": "rule_change_induces_technique_innovation",
+        "telemetry": "Rule changes by season, technique adoption timelines, performance discontinuities for players across rule regimes"
+      }
+    },
+    {
+      "primitive_id": "adjudicator_attention_allocation",
+      "name": "Officiating roles fail by attention, not by honesty: Cowan, a great player, was useless as an umpire because he could not keep his eyes off the ball and so did not see the fouls he existed to watch",
+      "verbatim_quote": "I was good for nothing as an umpire. I could not keep my eyes off the ball, so did not see the fouls as much as I should.",
+      "page": "Chapter VIII, printed p. 118",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The referee's object (the ball) and the umpire's object (conduct away from the ball) are different targets",
+        "Playing instinct pulls attention to the ball; the umpire's skill is overriding that instinct"
+      ],
+      "breakdown_regime": "Edwards adds that officials should not interchange referee and umpire roles, since each requires a different kind of experience; a ball-watching umpire is a training failure, not a character failure. No quantitative form in the source; no_equation_domain.",
+      "domain": "officiating",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A monitoring kernel for any layered system: assign each watcher a distinct object and audit watchers by what their object requires, not by general competence, because excellence at the ball-watching role predicts failure at the conduct-watching role.",
+        "source_operator": "adjudicator_attention_allocation",
+        "telemetry": "Penalty detection rates by official and position, foul types missed by crew role, replay overturn patterns by call type"
+      }
+    },
+    {
+      "primitive_id": "irreplaceable_man_single_point_of_failure",
+      "name": "Princeton lost in 1887 because Cowan was disqualified and no substitute existed: he had always been in his place and no one ever thought he would not be there",
+      "verbatim_quote": "we did not have any one to take my place. I had always been in my place and no one ever thought that I would not be there.",
+      "page": "Chapter VIII, printed pp. 118-119",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Reliability itself caused the fragility: a man who never misses gives no occasion to prepare his replacement",
+        "Disqualification, not only injury, is an availability risk for aggressive players"
+      ],
+      "breakdown_regime": "Depth costs practice repetitions and can dilute the first team's preparation; the failure is specific to players whose absence is both plausible (foul risk) and catastrophic (no trained backup). No quantitative form in the source; no_equation_domain.",
+      "domain": "roster risk",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A fragility kernel: the engine should compute, for each key player, an absence-exposure score combining the probability of sudden removal (injury, ejection) with the performance cliff to the actual prepared replacement, and treat a never-absent star with an unprepared backup as a hidden tail risk.",
+        "source_operator": "irreplaceable_man_single_point_of_failure",
+        "telemetry": "Backup snap counts in meaningful minutes, performance deltas after mid-game removals, ejection and injury rates by player"
+      }
+    },
+    {
+      "primitive_id": "role_conditioning_negative_transfer",
+      "name": "Training in one role can fire in the wrong role: a scrub promoted to the varsity for the first time seized a fumble and ran toward his own goal, because long service on the scrub had taught him the varsity men were his opponents",
+      "verbatim_quote": "In the excitement of the play he became confused, when lo ! he leaped into flight toward the wrong goal.",
+      "page": "Chapter IX, printed pp. 127-128 (Parke Davis's account)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Under excitement, rehearsed orientation beats conscious intention",
+        "The scrub's whole training history defined the varsity as the enemy"
+      ],
+      "breakdown_regime": "The effect is a first-appearance phenomenon; a few varsity repetitions overwrite it, and the player in the story became famous. It warns about role switches generally, not about this player. No quantitative form in the source; no_equation_domain.",
+      "domain": "training transfer",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A transfer kernel: when a player changes role, side, position, or team, the engine should apply a short-window execution discount proportional to how deeply the old role was rehearsed, because under pressure the old orientation, not the new instruction, is what fires.",
+        "source_operator": "role_conditioning_negative_transfer",
+        "telemetry": "Position-change and team-change performance in first appearances, wrong-way and own-goal class errors, first-game error rates for converted players"
+      }
+    },
+    {
+      "primitive_id": "wear_down_then_exploit",
+      "name": "Attack a strong defender patiently and convert at the moment he breaks: Captain Rodgers told Gordon Brown to play Bouvé the game of his life and report when he had him, and after sixty minutes Brown reported and Yale gained through that part of the line at will",
+      "verbatim_quote": "After about sixty minutes of play Gordon came to me and said, 'Jim, I've got him,' and he had him all right, for we were then successful in gaining through that part of the Harvard line.",
+      "page": "Chapter IX, printed pp. 138-139 (Jim Rodgers's account)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Defensive resistance is a depletable stock over a game's repeated collisions",
+        "The signal to redirect the attack must come from the man in the matchup, who can feel the break"
+      ],
+      "breakdown_regime": "Against deep rotations the stock refills; and an hour spent wearing one man down is an hour not spent scoring elsewhere, so the plan needs a clock check. No quantitative form in the source; no_equation_domain.",
+      "domain": "in-game strategy",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A depletion kernel: model individual defensive effectiveness as declining with accumulated high-effort snaps against a stronger opponent, and let the engine raise the value of attacking a specific matchup late in proportion to the load that man has carried.",
+        "source_operator": "wear_down_then_exploit",
+        "telemetry": "Defender performance by snap count and by quarter, rushing success by direction over game time, rotation depth by position"
+      }
+    },
+    {
+      "primitive_id": "secure_possession_over_speculative_gain",
+      "name": "On a loose ball with no one near, Rodgers refused the open-field return his captaincy daydream offered: the great chance to gain 20 to 80 yards never entered his head, because securing the ball was the play",
+      "verbatim_quote": "The great chance was there to pick it up and perhaps, even with my slow speed, gain 20 to 80 yards for Yale. No such thought, however, entered my head.",
+      "page": "Chapter IX, printed p. 138 (Jim Rodgers's account)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A fumble recovery is worth more as certain possession than as a lottery on return yardage",
+        "A slow lineman's return attempt risks losing the ball back in the ensuing tackle"
+      ],
+      "breakdown_regime": "The doctrine inverts when trailing late, when possession alone cannot change the result and the return is the only live branch; Rodgers' situation was a close championship game. No quantitative form in the source; no_equation_domain.",
+      "domain": "decision under uncertainty",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's loose-ball and turnover reasoning should default to the certain branch and require the game state (score, clock, field position, the recoverer's speed) to argue it out of security, never the reverse.",
+        "source_operator": "secure_possession_over_speculative_gain",
+        "telemetry": "Fumble recovery outcomes by action taken, return attempts by non-backs and their re-fumble rate, win probability added by securing versus advancing"
+      }
+    },
+    {
+      "primitive_id": "distributed_partial_signal_knowledge",
+      "name": "Signal knowledge in a unit is partial by design and by neglect: linemen typically know only the signals that call for an opening at their own position, and O'Neal failed on repeated calls simply because he did not know the signals",
+      "verbatim_quote": "O'Neal invariably failed because he didn't know the signals.",
+      "page": "Chapter IX, printed pp. 140-141 (Frank Hinkey's account)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Each man is taught the slice of the code his position needs",
+        "A captain cannot easily tell ignorance from disobedience in real time"
+      ],
+      "breakdown_regime": "Full-code knowledge for every man raises leak and confusion risks; the failure mode is specific to calls that suddenly route through a man outside his slice. Modern systems with wristbands and sideline boards change the mechanism, not the principle. No quantitative form in the source; no_equation_domain.",
+      "domain": "coordination",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine should model team knowledge as a distribution, not a binary: a play's execution probability is the product over the men it touches of their probability of knowing that call, and plays routed through a man's untaught slice are failure candidates.",
+        "source_operator": "distributed_partial_signal_knowledge",
+        "telemetry": "Assignment errors by player and play type, new-play installation error rates, performance of plays by how many positions they touch"
+      }
+    },
+    {
+      "primitive_id": "opponent_driven_skill_acquisition",
+      "name": "A beaten player can convert the opponent's weapon into his own by an off-season of deliberate practice: Mathewson, hurt by the Navy punter's spirals, spent a summer punting spirals until the technique was his",
+      "verbatim_quote": "So I just hung on for dear life, punting spirals all summer.",
+      "page": "Chapter IX, printed pp. 146-147 (Christy Mathewson's account)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The deficit was specific and named: one technique, the spiral punt, that he could not handle and did not own",
+        "The off-season supplied unstructured time in which a single skill could be isolated"
+      ],
+      "breakdown_regime": "Not every gap is one technique, and not every player gets a summer; the method works when the deficit is correctly diagnosed, which Mathewson did by watching George Brooke punt as well as by his own failure. No quantitative form in the source; no_equation_domain.",
+      "domain": "skill development",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's development model should include opponent-sourced learning: the skills that beat a player are a curriculum, and a player's off-season growth is best predicted by whether his specific observed deficit was isolated and drilled, not by generic training volume.",
+        "source_operator": "opponent_driven_skill_acquisition",
+        "telemetry": "Player skill trajectories after breakout opponent performances, off-season training reports, technique adoption across a league after a visible innovation"
+      }
+    },
+    {
+      "primitive_id": "instinct_recognition_in_raw_candidates",
+      "name": "Football instinct in an untrained candidate is readable before any teaching: it shows first in a natural aptitude for following the ball, then in how he handles himself at everything from falling on the ball to the straight arm",
+      "verbatim_quote": "it will be read first in a natural aptitude for following the ball",
+      "page": "Chapter XVI, printed p. 296",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Ball-tracking is the perceptual core of the game and precedes technique",
+        "Untaught correct movement (clutching the ball into the soft part of the body as he falls) signals the trait"
+      ],
+      "breakdown_regime": "Edwards admits the instinct is easy to discern and hard to define, and his sample is the men who became famous; raw athletes without it were also made into very good players by coaches, his own other class. No quantitative form in the source; no_equation_domain.",
+      "domain": "talent identification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "An identification kernel: in raw candidates, score perception first (does he find and follow the ball without instruction) and only then measurables, because Edwards' two-class taxonomy says the made player and the born player are both real, but they are found by different tests.",
+        "source_operator": "instinct_recognition_in_raw_candidates",
+        "telemetry": "Ball-tracking and play-diagnosis metrics for young players, combine measurables versus early on-field recognition tests, hit rates of each in predicting later performance"
+      }
+    },
+    {
+      "primitive_id": "condition_and_staleness_signature",
+      "name": "A team's physical state is legible in its symptoms: the stale team is reported overtrained, a team of cripples, easily winded, unable to endure, while the fit team's signature is eleven men used, no time taken out, not a man injured, able to play all day",
+      "verbatim_quote": "teams that were reported to be going stale - \"overtrained\" - \"a team of cripples\"",
+      "page": "Chapter XVII, printed p. 307",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Condition is a stock built or spent by training load across the season",
+        "The observable markers are substitutions needed, time taken out, and late-game endurance"
+      ],
+      "breakdown_regime": "The markers are confounded: a team can use eleven men because its bench is empty, not because its starters are fit. Edwards treats the signature as near-proof of victory, which overstates a correlation his anecdotes cannot quantify. No quantitative form in the source; no_equation_domain.",
+      "domain": "conditioning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine should carry a condition state per team with observable signatures on both sides: rising substitution need, injury time-outs, and second-half fade mark staleness; stable personnel and late-game pace mark fitness, and the state should modulate late-game expectations.",
+        "source_operator": "condition_and_staleness_signature",
+        "telemetry": "Substitution counts, second-half performance splits, injury time-outs, snap-load accumulation across a season"
+      }
+    },
+    {
+      "primitive_id": "longitudinal_tracking_without_records",
+      "name": "Elite tracking can live in a trained memory instead of a ledger: Mike Murphy did very little bookkeeping, but his mind was carefully pigeon-holed and was a perfect card index, and he never lost sight of one of thirty men on the field",
+      "verbatim_quote": "he seemed to do very little in the way of bookkeeping, but his mind was carefully pigeon holed and was a perfect card index.",
+      "page": "Chapter XVII, printed pp. 311-312 (Bob Torrey's account)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The trainer's categories were fixed in advance, which is what made the memory an index rather than an impression",
+        "Continuous presence at every practice and game kept every file current"
+      ],
+      "breakdown_regime": "A memory index dies with its holder and cannot be audited; Murphy also read condition by mental attitude, a channel no ledger of the day could hold. The modern lesson is the category discipline, not the medium. No quantitative form in the source; no_equation_domain.",
+      "domain": "athlete monitoring",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's athlete monitoring should be judged by Murphy's standard: fixed categories per man, updated every exposure, retrievable on demand; whether the store is a card index or a database matters less than that no man's file ever goes stale.",
+        "source_operator": "longitudinal_tracking_without_records",
+        "telemetry": "Per-player load and readiness records, update latency of monitoring data, staff ability to retrieve a player's full history on demand"
+      }
+    },
+    {
+      "primitive_id": "star_player_teacher_gap",
+      "name": "Playing greatness and teaching greatness are different stocks: it is not always the star player who makes the greatest coach, and the mediocre player often absorbed as much teaching ability and gets more out of his men",
+      "verbatim_quote": "It is not always the star player that makes the greatest coach. The mediocre man is quite likely to have absorbed as much football teaching ability as the star",
+      "page": "Chapter XIX, printed p. 351",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The star's skill is partly instinct, which he never had to decompose in order to use",
+        "The lesser player survived by study, which is the teachable form of the same knowledge"
+      ],
+      "breakdown_regime": "Edwards also insists personality counts in coaching and that good material is the real foundation of success, so the gap is one factor among several, not a law. No quantitative form in the source; no_equation_domain.",
+      "domain": "coaching selection",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "When the engine values a coaching hire or a staff, it should score demonstrated teaching (players developed, systems installed that outlast personnel) separately from playing pedigree, and expect the correlation between the two to be weak.",
+        "source_operator": "star_player_teacher_gap",
+        "telemetry": "Coach career outcomes by playing pedigree, player development deltas under each coach, system performance after star players graduate"
+      }
+    },
+    {
+      "primitive_id": "scouting_standardizes_the_examination",
+      "name": "Scouting is the principal means of standardizing the game: scout reports give every coaching corps a fixed objective, so teams arrive at the final game facing what amounts to a uniform examination, and the game develops steadily from the inside",
+      "verbatim_quote": "As to the value of scouting, volumes might be written, but suffice it to say that it is the principal means of standardizing the game.",
+      "page": "Chapter XIX, printed p. 372 (Jimmy Knox's account)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Scouting is open: Knox saw opponents only in public games",
+        "Shared knowledge of opponents converges systems toward the best current answers"
+      ],
+      "breakdown_regime": "Standardization has a cost Knox does not weigh: convergence can extinguish the variety that produces the next innovation, and the examination is uniform only among teams rich enough to scout. No quantitative form in the source; no_equation_domain.",
+      "domain": "competitive intelligence",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A league-dynamics kernel: the engine should treat opponent knowledge as a public good that compresses the spread of systems over a season, so early-season edges from a novel system should be projected to decay as scouting distributes them.",
+        "source_operator": "scouting_standardizes_the_examination",
+        "telemetry": "System novelty half-life, scheme adoption curves across a league, performance of novel systems by weeks since first public use"
+      }
+    },
+    {
+      "primitive_id": "scouting_is_inference_not_espionage",
+      "name": "The public imagines scouting is spying for signals and secret practices; the working scout's method is inference: he watches only public games and anticipates what opponents will do by applying common sense to their problem, based on the material and methods they command",
+      "verbatim_quote": "how I manage to get their signals, how I anticipate what they are going to do, what is the value of scouting anyway.",
+      "page": "Chapter XIX, printed pp. 371-372 (Jimmy Knox's account)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "An opponent's future calls are strongly constrained by his personnel and his installed methods",
+        "The questions quoted are the misconceptions Knox says he is constantly asked; his answer is that he never saw opponents except in public games"
+      ],
+      "breakdown_regime": "Inference from materials fails exactly when a coach breaks his own tendencies for the big game, which the best coaches do; the method prices the base case, not the ambush. No quantitative form in the source; no_equation_domain.",
+      "domain": "competitive intelligence",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's opponent projection should be built the scout's way: from public evidence and the opponent's constraints (who he has, what he has installed), reasoning forward to what he must do, rather than from any assumed access to his intentions.",
+        "source_operator": "scouting_is_inference_not_espionage",
+        "telemetry": "Tendency data from public games, personnel-driven play constraints, forecast accuracy of tendency-based projections versus actual big-game calls"
+      }
+    },
+    {
+      "primitive_id": "preannounced_strict_enforcement",
+      "name": "Announced, uniform strictness changes behavior before it must punish: Corbin, forced to referee and umpire one game alone, told both teams any move that seemed like roughness would be penalized to the full extent regardless of the man, and the result was one of the most decent, almost gentlemanly games he ever saw",
+      "verbatim_quote": "I told both teams that I would be so busy that I would have no time for arguments or even investigation and any move that seemed to me like roughness",
+      "page": "Chapter XX, printed pp. 400-401 (Pa Corbin's account)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The announcement was made to both teams equally, before play, in specific terms",
+        "Players calibrate to the expected penalty, not to the written rule"
+      ],
+      "breakdown_regime": "The deterrent depends on the official's credibility and on the announcement being believed; a strict official who cannot see the whole field alone invites fouls outside his sight. It also worked once, in a game already shadowed by the previous year's rough play. No quantitative form in the source; no_equation_domain.",
+      "domain": "officiating",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "An enforcement kernel: expected foul rates are a function of announced enforcement posture, so the engine should model each officiating crew's declared and demonstrated strictness as an input to penalty and roughness expectations, with the largest effect in the first game under a new posture.",
+        "source_operator": "preannounced_strict_enforcement",
+        "telemetry": "Crew penalty rates by game and by week, pre-game points of emphasis, foul rates after publicized enforcement campaigns"
+      }
+    },
+    {
+      "primitive_id": "incident_precedent_becomes_rule",
+      "name": "Rules grow from incidents: when Edwards let two fouling players stay by the two captains' mutual agreement in 1904, the dangerous precedent forced the Rules Committee the next year to write the rule that captains cannot by mutual agreement permit a player who ought to be removed to remain",
+      "verbatim_quote": "two captains of opposing teams could not by mutual agreement permit a player who ought to be removed",
+      "page": "Chapter XX, printed pp. 396-397 (Dan Hurley's account)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A single lenient ruling, however reasonable in the game, binds future officials as precedent",
+        "The loophole was consent: both sides agreed, so no one appealed, and only rule-makers could close it"
+      ],
+      "breakdown_regime": "Incident-driven rules can overshoot, banning the reasonable case with the abusive one; Edwards' ruling kept two admitted foulers in a game both captains wanted them in, and reasonable men defended it. No quantitative form in the source; no_equation_domain.",
+      "domain": "rules evolution",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine should treat its own exception handling the same way: any ad hoc override granted once becomes a precedent the system will be held to, so overrides need either a rule change or an explicit one-time stamp, and recurring overrides are a signal that the rule, not the case, is wrong.",
+        "source_operator": "incident_precedent_becomes_rule",
+        "telemetry": "Exception and override logs, rule-change histories by league, frequency of edge cases by rule in the seasons before each change"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6ad59c5d6312fcbe-t1",
+      "think": "Football Days is a testimony book, not a treatise, and its machinery has to be read out of the testimony. William H. Edwards played tackle at Princeton in the 1890s, captained nothing and won much, and then became the most trusted football official of his generation, the man other schools asked for by name. In 1916, with Walter Camp's introduction lending the book the establishment's seal, he assembled his own memories and the first-person accounts of the men who built the game between 1876 and 1916: captains, coaches, trainers, scouts, and officials, organized by theme rather than by year. The chapters move from the early days through playing days, the great scrub, mistakes, the old-time player, Yale's first great team, coaching, training, scouting, and officiating, and the arrangement is itself an argument: these are the working parts of the sport, in the order a practitioner meets them. What the testimony keeps returning to, across forty years of anecdotes, is that football at the top level is an information and coordination problem before it is a strength problem. The signal chapters make the point as an evolutionary sequence. First the snap is a touch, pressure of the quarterback's fingers on the center's hips, and an opponent within arm's reach spoofs it by pinching the center himself. Then plays are called in spoken phrases whose hidden semantics (odd yards for one back, even for another, a question for a kick) are safe only until an opponent listens long enough. Then Corbin hides the whole system in cap visors and touches down a uniform while word signals run as decoys, and Princeton answers by trying to steal the cap. Then, in 1889, numerals arrive, and the code becomes abstract, expandable, and changeable, at the price of a new failure mode Edwards documents precisely: change the numbers in the week of the game and the team, as Princeton found against Cornell in 1899, does not play together. Every layer of that sequence is a patch on the previous layer's leak, and the book lets a reader watch the patching happen. The coaching testimony runs on a parallel track: the coach as a manager of temperaments and information. Sanford engineers Chadwick's greatest game by annoying him, hiding him from the announced lineup, and letting the crowd demand him; the same Chadwick, scouted for his temper by an earlier staff, was nerved rather than rattled by provocation and played the game of his life against the men sent to provoke him. Cochran hides a broken right shoulder by bandaging the left. Camp stakes his own captaincy rather than exempt his best runner from a training rule, because the rule's credibility is the asset. None of these men describe what they do as psychology; they describe it as knowing their men, and the book is the record of that knowledge before it had a name. The officiating chapters complete the system from the third side. Edwards, who worked more than three hundred games, reduces officiating to attention and posture: the umpire who watches the ball sees no fouls, the roles of referee and umpire demand different eyes and should not be interchanged, a pre-announced strictness makes a rough game gentlemanly without a single extra penalty, and one lenient ruling by captains' consent in 1904 writes next year's rulebook. The adjudicator is not outside the game; his announced posture is one of its inputs, and his precedents are its future constraints. Underneath all of it sits the physical stock the trainers managed: condition built or spent across a season, legible in substitutions and time taken out, tracked by Mike Murphy in a memory organized like a card index, and expressed on the field as the difference between the team that plays all day with eleven men and the team reported overtrained and full of cripples. Read whole, the book's claim is that games between near-equal teams are decided in the channels around the play: whether the signal arrived intact and was known by the man it reached, whether the pair executing it had rehearsed it together all fall, whether the one irreplaceable man stayed on the field, whether the attack waited sixty minutes for a defender to break, whether the coach's information about injuries was the truth or a bandage on the wrong shoulder. The mechanisms are stated by practitioners who had no statistics, which fixes the book's evidentiary status: it is a catalogue of named mechanisms with named witnesses, a source of priors and of taxonomy, never of magnitudes. Its failures are the failures of its genre. The famous narrate; the forgotten scrub who ran the wrong way is remembered only because Parke Davis found him funny. Single cases carry laws. Nostalgia gilds the mass-momentum era even as Edwards records the injuries that ended it. And the game he describes, eleven men, no forward pass to speak of in the early chapters, unlimited substitution bans and all, is not the modern game, so every mechanism must be re-derived in the modern regime before it is used. What survives that discounting is still large: a checklist of the channels through which prepared teams actually differ, assembled by the generation that invented the channels. For a reasoning engine, that is the correct use of the book: not as data, but as the oldest available map of where the edges hide, drawn by the men who first fell into them.",
+      "retrocausal_genealogy": "The genealogy runs backward from each modern practice to the failure that created it. Numerals exist because phrase codes leaked to any listener who learned that odd meant Cowan. Phrase codes exist because the tactile snap could be spoofed by an opponent's pinch. Covert gesture exists because speech was overheard. Scouting departments exist because one man with checkers on a table beat unaided memory. Each layer is intelligible only as a patch on the layer beneath it, and the patch carries the scar: numerals solved leakage and created the coordination collapse of 1899. To understand a present system, find the failure it was built to close, because that failure returns the moment the patch is lifted.",
+      "theory_of_mind": "The book is a study in nested belief. The scout models the opponent's plays; the coach models the player's response to insult, benching, or a crowd's demand; the injured captain models the opponent's aim at his shoulder and bandages the other one; the official models both captains and prices their consent; the captain models the official's announced strictness and calms his own team. The deepest failure in the book is also a belief failure: Princeton never modeled the world in which Cowan was disqualified, because his presence was the premise of every plan, so no substitute existed. An engine reading this book should represent what each actor believes the others will do, and should specifically hunt for the premise nobody has questioned.",
+      "cross_layer_veto": "The layers veto each other throughout the testimony, and the vetoes are where the wisdom sits. A talent layer says exempt the star from the curfew; a discipline layer vetoes, and the captain offers his own resignation as the price of the veto. A secrecy layer says change the signals before Cornell; a coordination layer vetoes after the fact, in a 5 to 0 defeat. A rules layer permits the wedge; a safety layer, counting the injuries Edwards himself lists, abolishes it. A medical layer says treat the broken shoulder; an information layer bandages the sound one instead. Any model that lets a single layer decide alone, talent, secrecy, scheme, or sentiment, reproduces the exact failures this book catalogues, so the veto structure between layers is part of the model, not an afterthought."
+    }
+  ],
+  "universal_lens": "Any contest between rehearsed human teams under an adjudicator obeys this book's mechanics: codes leak and get patched, coordination between specific people is capital that substitutes cannot inherit, physical condition is a stock that depletes and can be read from outside, announced enforcement sets behavior before any punishment, injury and intention signals are strategic and may be decoys, and the most reliable component is the single point of failure precisely because its reliability suppresses preparation for its absence. The domain changes; the channels through which near-equal competitors actually differ do not.",
+  "gsi_mapping": "For a general sports intelligence institute, Football Days is primary-source evidence for the historical layer of the model: how signals, scouting, training, and officiating co-evolved between 1876 and 1916, documented by named practitioners rather than later historians. Its value is taxonomic and causal: it names the failure channels (signal error, coordination collapse, condition staleness, adjudicator attention, irreplaceable-man fragility) that modern data collection should code for, and it shows which mechanisms elite practitioners already understood a century ago, which disciplines any claim that a modern analytic finding is new.",
+  "gse_mapping": "For the prediction and reasoning engine, the primitives convert into pre-game reasoning checks and features: a fluency discount for teams that changed signals, terminology, or scheme on short preparation; pair and unit continuity capital priced from shared snaps; an absence-exposure score for irreplaceable players combining removal probability with the cliff to the prepared backup; a condition state read from substitution load, time-outs, and second-half fade; officiating crew enforcement posture as an input to penalty expectations; opponent projection built the scout's way, from public tendencies and personnel constraints; and a decay term on novel systems as scouting standardizes the examination. Each enters the published reasoning trail as something weighed, with its source in the testimony, never as an unexplained adjustment."
+}
