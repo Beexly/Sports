@@ -3,6 +3,21 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-17 (2026-11-17 CT) -- Wave 30 Deep Research (81 New URLs: DeepMind/Google/NGS), 346/346 WIRED_V3 & 210 RLVR
+
+- **What changed**:
+  - **Wave 30 Deep Research Synthesis (`docs/engine/research/2026-11-17/deep-research-wave30-deepmind-bayesnf-weatherbench-mctx-and-ngs.md`)**:
+    - Deduplicated all `141` submitted URL tokens into `134` unique URLs (`53` previously wired; `81` brand-new `#266-#346`), verified via GitHub REST metadata + multi-source web search (`arXiv:2609.32591` Fast-TD-MPC, `arXiv:2507.03704` Thinking-Speed steering, and Multi-Hop Graph Reasoning `arXiv:2604.12487` / `2603.13266` / `2601.01195` / `2511.19648`).
+  - **Wave 30 Kernel Suite, Stage-2 Bridge & Registry/RLVR Expansion (`LL-2026-11-17-051`)**:
+    - Created `src/gse_engine/memory/wave30_deepmind_mctx_bayesnf_weatherbench_and_ngs_suite.py` implementing Gumbel MuZero sequential halving (`mctx`), `open_spiel` CFR+ exploitability, `WeatherBench2`/`WeatherNext` Fair-CRPS + `BayesNF` Fourier norm, `lightweight_mmm` geometric Adstock + Hill saturation, `graph_nets` edge-node-global + multi-hop reachability, `elephant-goldfish-model` / `dnc` memory gating, `nflverse/ngs-data` CPOE/RYOE + `mujoco` kinematics, and strict RUO/compliance quarantines (`alphafold`/`alphafold3`/`alphagenome`/`ehr-predictions` at `ruo_sports_weight=0.0`; `google/arithmancer` held `cleared=False`).
+    - Wired into `src/gse_engine/memory/__init__.py`, `corpus_situational_integrator.py` (`live_stage2_weight=0.0`), and `pre_sim_total_intelligence_gate.py` (`OSS_Ecosystem_Registry` floor raised to `346`), updated `oss-corpus-registry.json` to **`346/346` `WIRED_V3` (`430` submitted URLs)**, and expanded `compile_gse_to_gsi_rlvr_training_batch` to **`210`** AP-06-clean RLVR trajectories (`brain/feeds/2026-11-16/` & `brain/feeds/2026-11-17/`).
+- **What was proven**:
+  - PR `#1291` `CodeQL` (`Analyze (javascript-typescript)`, run `44125445149`) completed with `conclusion: success` (`0` alerts); local `ruff`, `mypy --strict`, Wave 9/19/26-30 + continuity + orchestrator `pytest` suites, pre-sim gate (`346/346`), connected-workflow guard, `em-dash-scan.mjs`, and `trust-gate.mjs` all pass cleanly.
+- **What was not proven**:
+  - NFL Week `11+` simulations remain gated under `OPERATOR_SIM_HOLD`, prediction-market routing stays held (`cleared=False`), RUO biology/clinical models hold `0.0` sports weight, and live Stage-2 challenger weight stays `0.0` until promoted by Weeks `1..10` OOS CRPS + FWL residual checks.
+
+---
+
 ## 2026-11-17 (2026-11-17 CT) -- Wave 29 39-Paper Neuro-Symbolic arXiv Ingestion, 265/265 WIRED_V3, 196 RLVR & Final CodeQL Fix
 
 - **What changed**:

@@ -1947,6 +1947,300 @@ def compile_gse_to_gsi_rlvr_training_batch(
         )
     )
 
+    # 3F. Wave 30 DeepMind MCTX, OpenSpiel CFR+, WeatherBench/BayesNF, Graph Nets & NGS suite
+    from gse_engine.memory.wave30_deepmind_mctx_bayesnf_weatherbench_and_ngs_suite import (
+        compute_ngs_separation_and_ryoe_kinematics,
+        compute_weatherbench_fair_crps_and_spread_skill,
+        enforce_alphafold3_alphagenome_ehr_ruo_gate,
+        evaluate_hill_adstock_workload_saturation,
+        propagate_graph_nets_edge_node_global_step,
+        select_gumbel_muzero_sequential_halving_action,
+        solve_openspiel_cfr_plus_regret_matching,
+        update_elephant_goldfish_selective_memory_gate,
+    )
+
+    mctx_cases = (
+        ("peaked_early_down", [2.4, -0.5, -1.1, -1.6], [0.24, 0.04, -0.05, -0.12]),
+        ("diffuse_fourth_down", [0.12, 0.08, 0.04, 0.01], [0.05, 0.14, 0.11, -0.02]),
+    )
+    for m_idx, (m_label, p_logits, q_vals) in enumerate(mctx_cases):
+        mx_out = select_gumbel_muzero_sequential_halving_action(
+            p_logits,
+            q_vals,
+            visit_counts=[14, 9, 5, 2],
+        )
+        gt_mx = {
+            "mctx_case": m_label,
+            "selected_action": int(mx_out["selected_action"]),
+            "thinking_mode": str(mx_out["thinking_mode"]),
+            "kl_policy_improvement": float(mx_out["kl_policy_improvement"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w30_mctx_gumbel_{m_idx:02d}",
+                domain="mctx_gumbel_muzero_planning",
+                prompt=(
+                    f"Execute Gumbel MuZero sequential halving for {m_label} priors {p_logits} "
+                    f"and action values {q_vals}. Emit JSON with mctx_case, selected_action, "
+                    "thinking_mode, kl_policy_improvement."
+                ),
+                think=(
+                    f"Sequential halving picks action={gt_mx['selected_action']} under "
+                    f"{gt_mx['thinking_mode']} with KL={gt_mx['kl_policy_improvement']}."
+                ),
+                ground_truth=gt_mx,
+                verifier_src=_formula_exact_verifier_src(gt_mx),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    cfr_cases = (
+        ("zone_blitz_vs_pa", [[0.24, -0.09], [-0.05, 0.19]]),
+        ("nickel_shell_vs_inside_run", [[0.14, -0.06], [-0.08, 0.21]]),
+    )
+    for c_idx, (c_label, c_mat) in enumerate(cfr_cases):
+        cfr_out = solve_openspiel_cfr_plus_regret_matching(c_mat, iterations=48)
+        gt_cfr = {
+            "cfr_scenario": c_label,
+            "saddle_game_value": float(cfr_out["saddle_game_value"]),
+            "nash_exploitability": float(cfr_out["nash_exploitability"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w30_openspiel_cfr_{c_idx:02d}",
+                domain="openspiel_cfr_plus_equilibrium",
+                prompt=(
+                    f"Run 48 iterations of CFR+ positive-clipped regret matching on tactical "
+                    f"matrix {c_label}. Output JSON with cfr_scenario, saddle_game_value, "
+                    "nash_exploitability."
+                ),
+                think=(
+                    f"Linear-averaged CFR+ strategies yield value={gt_cfr['saddle_game_value']} "
+                    f"with exploitability={gt_cfr['nash_exploitability']}."
+                ),
+                ground_truth=gt_cfr,
+                verifier_src=_formula_exact_verifier_src(gt_cfr),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    wx_cases = (
+        ("calm_dome_wind", [4.2, 4.8, 5.1, 5.5], 5.0, (0.25, 0.40)),
+        ("blustery_open_stadium", [14.0, 16.5, 18.2, 20.1], 17.4, (0.62, 0.81)),
+    )
+    for w_idx, (w_label, members, obs_wind, coords) in enumerate(wx_cases):
+        wx_out = compute_weatherbench_fair_crps_and_spread_skill(
+            members,
+            obs_wind,
+            exceedance_threshold=15.0,
+            spatial_coords=coords,
+        )
+        gt_wx = {
+            "weather_regime": w_label,
+            "fair_crps": float(wx_out["fair_crps"]),
+            "exceedance_prob": float(wx_out["exceedance_prob"]),
+            "bayesnf_spatiotemporal_feature_norm": float(
+                wx_out["bayesnf_spatiotemporal_feature_norm"]
+            ),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w30_weatherbench_crps_{w_idx:02d}",
+                domain="weatherbench_fair_crps_bayesnf",
+                prompt=(
+                    f"Score meteorological ensemble {members} against {obs_wind} mph in regime "
+                    f"{w_label} with BayesNF Fourier norm. Return JSON with weather_regime, "
+                    "fair_crps, exceedance_prob, bayesnf_spatiotemporal_feature_norm."
+                ),
+                think=(
+                    f"Unbiased Fair-CRPS={gt_wx['fair_crps']} and 15+ mph exceedance prob="
+                    f"{gt_wx['exceedance_prob']}."
+                ),
+                ground_truth=gt_wx,
+                verifier_src=_formula_exact_verifier_src(gt_wx),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    hill_cases = (
+        ("short_week_compression", [24.0, 29.0, 34.0, 41.0], 0.68),
+        ("standard_rest_cadence", [18.0, 21.0, 22.0, 23.0], 0.55),
+    )
+    for h_idx, (h_label, load_seq, decay_val) in enumerate(hill_cases):
+        hl_out = evaluate_hill_adstock_workload_saturation(
+            load_seq,
+            adstock_decay=decay_val,
+            half_saturation_k=45.0,
+            hill_slope=1.8,
+        )
+        gt_hl = {
+            "workload_regime": h_label,
+            "adstock_state": float(hl_out["adstock_state"]),
+            "hill_saturation": float(hl_out["hill_saturation"]),
+            "efficiency_retention_mult": float(hl_out["efficiency_retention_mult"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w30_hill_adstock_{h_idx:02d}",
+                domain="lightweight_mmm_hill_adstock",
+                prompt=(
+                    f"Evaluate geometric Adstock carryover (decay={decay_val}) and Hill workload "
+                    f"saturation for {h_label} sequence {load_seq}. Return JSON with "
+                    "workload_regime, adstock_state, hill_saturation, efficiency_retention_mult."
+                ),
+                think=(
+                    f"Adstock accumulation reaches {gt_hl['adstock_state']} yielding Hill "
+                    f"saturation={gt_hl['hill_saturation']}."
+                ),
+                ground_truth=gt_hl,
+                verifier_src=_formula_exact_verifier_src(gt_hl),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    gn_cases = (
+        ("pocket_pressure_chain", [[0.25, 0.15], [0.10, -0.05], [0.04, 0.20]], 0.18),
+        ("secondary_bracket_chain", [[0.32, 0.08], [0.18, 0.12], [-0.04, 0.15]], -0.10),
+    )
+    for g_idx, (g_label, g_nodes, g_ctx) in enumerate(gn_cases):
+        gn_out = propagate_graph_nets_edge_node_global_step(
+            g_nodes,
+            [(0, 1, 0.65), (1, 2, 0.45), (0, 2, 0.20)],
+            global_context=g_ctx,
+            max_hops=2,
+        )
+        gt_gn = {
+            "graph_topology": g_label,
+            "updated_global_scalar": float(gn_out["updated_global_scalar"]),
+            "reachable_multi_hop_pairs": int(gn_out["reachable_multi_hop_pairs"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w30_graph_nets_{g_idx:02d}",
+                domain="graph_nets_multi_hop_reasoning",
+                prompt=(
+                    f"Propagate 2-hop Battaglia edge-node-global relational updates over "
+                    f"{g_label} with global={g_ctx}. Return JSON with graph_topology, "
+                    "updated_global_scalar, reachable_multi_hop_pairs."
+                ),
+                think=(
+                    "Two-hop message passing updates global state to "
+                    f"{gt_gn['updated_global_scalar']} across "
+                    f"{gt_gn['reachable_multi_hop_pairs']} pairs."
+                ),
+                ground_truth=gt_gn,
+                verifier_src=_formula_exact_verifier_src(gt_gn),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    egm_out = update_elephant_goldfish_selective_memory_gate(
+        [
+            {"claim_id": "trench_mismatch", "confidence": 0.86},
+            {"claim_id": "route_shift", "confidence": 0.78},
+            {"claim_id": "stale_narrative", "confidence": 0.35},
+        ],
+        [False, False, True],
+        prior_dnc_usage=0.40,
+        write_gate=0.60,
+        free_gate=0.25,
+    )
+    gt_egm = {
+        "surviving_claim_count": int(egm_out["surviving_claim_count"]),
+        "goldfish_veto_rate": float(egm_out["goldfish_veto_rate"]),
+        "verified_context_score": float(egm_out["verified_context_score"]),
+        "dnc_allocation_usage": float(egm_out["dnc_allocation_usage"]),
+    }
+    records.append(
+        _build_rlvr_record(
+            record_id="w30_egm_dnc_00",
+            domain="elephant_goldfish_dnc_memory",
+            prompt=(
+                "Audit three persistent Elephant claims under Goldfish defect flags [F,F,T] and "
+                "DNC allocation update. Return JSON with surviving_claim_count, "
+                "goldfish_veto_rate, verified_context_score, dnc_allocation_usage."
+            ),
+            think=(
+                f"Goldfish audit retains {gt_egm['surviving_claim_count']} claims with DNC "
+                f"allocation usage={gt_egm['dnc_allocation_usage']}."
+            ),
+            ground_truth=gt_egm,
+            verifier_src=_formula_exact_verifier_src(gt_egm),
+            curriculum_tier="TIER_3_BEHEMOTH",
+        )
+    )
+
+    ngs_cases = (
+        ("tight_window_intermediate", 4.8, 2.35, 11.5, 0.64, 4.10, 4.35, 8.6),
+        ("wide_cushion_explosive", 6.9, 3.45, 7.2, 0.73, 5.20, 4.45, 9.1),
+    )
+    for n_idx, (n_lbl, cush, sep, airy, comp, r_act, r_exp, spd) in enumerate(ngs_cases):
+        ngs_out = compute_ngs_separation_and_ryoe_kinematics(
+            avg_cushion_yds=cush,
+            avg_separation_yds=sep,
+            air_yards=airy,
+            actual_completion_rate=comp,
+            actual_rush_ypc=r_act,
+            expected_rush_ypc=r_exp,
+            carrier_speed_mps=spd,
+            carrier_mass_kg=98.0,
+        )
+        gt_ngs = {
+            "kinematic_profile": n_lbl,
+            "ngs_cpoe_delta": float(ngs_out["ngs_cpoe_delta"]),
+            "ngs_ryoe_ypc_delta": float(ngs_out["ngs_ryoe_ypc_delta"]),
+            "mujoco_contact_kinetic_index": float(ngs_out["mujoco_contact_kinetic_index"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w30_ngs_mujoco_{n_idx:02d}",
+                domain="ngs_separation_ryoe_kinematics",
+                prompt=(
+                    f"Evaluate NGS cushion/separation CPOE, RYOE delta, and MuJoCo contact kinetic "
+                    f"index for {n_lbl} tracking tuple. Return JSON with kinematic_profile, "
+                    "ngs_cpoe_delta, ngs_ryoe_ypc_delta, mujoco_contact_kinetic_index."
+                ),
+                think=(
+                    f"Tracking kinematics compute CPOE delta={gt_ngs['ngs_cpoe_delta']} and "
+                    f"contact index={gt_ngs['mujoco_contact_kinetic_index']}."
+                ),
+                ground_truth=gt_ngs,
+                verifier_src=_formula_exact_verifier_src(gt_ngs),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    ruo_out = enforce_alphafold3_alphagenome_ehr_ruo_gate(
+        ("google-deepmind/alphafold3", "google-deepmind/alphagenome", "google/ehr-predictions"),
+        sbom_licenses=("Apache-2.0", "MIT", "CC-BY-4.0"),
+        arithmancer_live_market_requested=False,
+    )
+    gt_ruo = {
+        "ruo_sports_weight": float(ruo_out["ruo_sports_weight"]),
+        "quarantined_source_count": int(ruo_out["quarantined_source_count"]),
+        "arithmancer_cleared": bool(ruo_out["arithmancer_cleared"]),
+        "permissive_sbom_count": int(ruo_out["permissive_sbom_count"]),
+    }
+    records.append(
+        _build_rlvr_record(
+            record_id="w30_ruo_compliance_00",
+            domain="ruo_sbom_and_lmsr_quarantine",
+            prompt=(
+                "Verify zero sports transfer weight on non-commercial structural biology and "
+                "clinical EHR models plus offline scoring-rule compliance state. Emit JSON "
+                "with ruo_sports_weight, quarantined_source_count, arithmancer_cleared, "
+                "permissive_sbom_count."
+            ),
+            think=(
+                f"Quarantined {gt_ruo['quarantined_source_count']} RUO sources at weight=0.0 "
+                f"with scoring-rule execution cleared={gt_ruo['arithmancer_cleared']}."
+            ),
+            ground_truth=gt_ruo,
+            verifier_src=_formula_exact_verifier_src(gt_ruo),
+            curriculum_tier="TIER_3_BEHEMOTH",
+        )
+    )
+
     # Substring dedup + monotone tier curriculum sort (TIER_1 -> TIER_2 -> TIER_3)
     corpus_texts = [f"{r['domain']}::{r['prompt']}::{r['think']}" for r in records]
     kept_idxs = exact_substring_dedup(corpus_texts, k=16, w=16)
