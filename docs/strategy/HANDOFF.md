@@ -3,6 +3,19 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-18 (2026-11-18 CT) -- Wave 44 28-Paper alphaXiv/arXiv DFL/CVaR-SPO+, Causal MS-PEM/PARR/RIM, Agent Integrity & BAITBENCH Anti-Shortcut NFL Engine (`352+24=376` RLVR)
+
+- **What changed**:
+  - Ingested `28` unique alphaXiv/arXiv preprints across 4 pillars (`9` DFL / CVaR-SPO+ / LPAS DRO / Shapley InfoDVA / Weighted PSR / Strategic DFL, `6` Causal Sports MS-PEM / DYNAMO / ATE-ATT / TMLE-PARR / RIM / Collider Guard, `10` Agent Integrity `C1-C3` / OverclaimBench / ReAgent / RIDAR / Fine-Grid / Union-Pool / BAITBENCH, `3` Social Survivorship / BetXplain / RG) into `data/arxiv_2026_11_alphaxiv/alphaxiv_28paper_dfl_causal_sports_integrity_and_rg_vault_2026.json` (`sha256 12f0742d678f574a`) alongside `.licenses/alphaxiv_arxiv_wave44_28papers_LICENSE.txt`.
+  - Built `src/gse_engine/science/wave44_alphaxiv_28paper_dfl_cvar_causal_mspem_integrity_and_rg_engine.py` (`CLINICAL_RUO_ALPHAXIV_W44_SPORTS_WEIGHT = 0.0`, `suite_sha256 = b8760480b908a2d3`) proving CVaR-SPO+ tail-regret reduction (`0.85763 -> 0.55232`), weighted PSR propriety (`1.198938 < 1.231819`), exact Shapley efficiency (`err = 0.0`), LPAS contextual DRO (`0.05133 > 0.04616`), MS-PEM IPTW survivor-bias reversal (`-0.06876 -> +0.01945`), DYNAMO kernel HFA (`0.8507 -> 0.24408` RMSE), TMLE kicker PARR reordering (`+0.152 > -0.06`), `50%` phantom `C3` rejection, OverclaimBench `1.0` recall, BAITBENCH masking (`0.0 -> 1.0` hidden OOD acc), and `5,467`-slip survivorship vs four negative staking ROIs.
+  - Built `src/gse_engine/tracking/wave44_dfl_rim_officiating_kicker_parr_dynamo_and_anti_shortcut_nfl_engine.py` (`<= W10` causal PBP/FTN, `7` margin signals + `3` game-total drivers + `5` quarantined metrics at `0.0`, `500`-draw Rademacher martingale placebo `p = 0.03593`, BAITBENCH `0.0` output perturbation under `999/-500` shortcut injection, `8/8 PARSED_EVALUATED` ASTs, fail-closed `OperatorSimulationHoldError` above W10) and wired all 6 spine/guardrail/RLVR layers (`Group U: 340 -> 352`, `+ 24 = 376`).
+- **What was proven**:
+  - `147`-game OOS walk-forward ablation improved monotonically (`alpha_margin = 0.16`, `alpha_total = 0.35`): normalized CRPS `7.0141 -> 7.0097` (`< 7.0108` close), raw CRPS `6.9159 -> 6.9115` (`< 7.0108` close), Margin MAE `9.6552 -> 9.6502` (`< 9.7687` close), Total MAE `10.3545 -> 10.3136` (`< 10.4116` close), Brier `0.21922 -> 0.21919`, ECE `0.07031 -> 0.07022`, `rliable_iqm = 0.733366`, `fwl_partial_slope = 1.492017`, `all_floors_held = true`.
+  - `43,225,000`-snap PBP simulation: spotlight CRPS `8.9392 -> 8.9352`, all-147 PBP CRPS `6.9994` (`< 7.0108` close; `MAIN_SHA = 27d908ecbdda0db7869dcb4d1f384b241e93b92e33025c0db0e37480c2ae5c35`, `W44_SHA = a4e60ddea7cf0899f7ff4c35da27459f146605b13610550434498bec4ec12ba4`).
+  - `352+24=376` RLVR zero-odds (`all_verifiers_passed = true`), `ruff check` & `mypy --strict` clean (`106` files), `pre_sim_total_intelligence_gate.py --self-test` `PASS` (`dead_leaf_unwired_pre_sim_modules = []`).
+- **What was not**: Live `>= W11` NFL week simulations stay held under `OperatorSimulationHoldError`, `real_money_stake_cleared = false`, `clinical_ruo_sports_weight = 0.0`, and `brain/mind.jsonl` remains untouched for the single-writer trainer.
+- **Next role must**: Keep clinical RUO and BAITBENCH shortcut-probe weights at `0.0`, verify `500`-draw martingale placebo significance plus `C1/C2` mechanical AST re-verification on any new PBP factor, and run `python tests/verify_out_of_sample_calibration.py --enforce-gate` before modifying any Stage-2/3 spine weight.
+
 ## 2026-11-18 (2026-11-18 CT) -- Wave 43 31-Paper alphaXiv/arXiv EBM, LF, iWSP/WSR, SLAM Dunk, Calibration Arithmetic Remediation & Deconfounded NFL Engine (`340+24=364` RLVR)
 
 - **What changed**:

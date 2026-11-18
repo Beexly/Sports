@@ -84,6 +84,10 @@ from gse_engine.science.wave43_alphaxiv_31paper_ebm_lf_wsp_calibration_arithmeti
     WAVE43_GSI_RLVR_TRAJECTORIES,
     evaluate_wave43_alphaxiv_31paper_frontier_suite,
 )
+from gse_engine.science.wave44_alphaxiv_28paper_dfl_cvar_causal_mspem_integrity_and_rg_engine import (  # noqa: E501
+    WAVE44_GSI_RLVR_TRAJECTORIES,
+    evaluate_wave44_alphaxiv_28paper_dfl_causal_integrity_suite,
+)
 from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine import (  # noqa: E501
     WAVE35_TRACKING_RLVR_TRAJECTORIES,
     evaluate_wave35_player_micro_matchup_suite,
@@ -119,6 +123,11 @@ from gse_engine.tracking.wave42_pfr_advstats_qbr_two_high_yac_and_total_pace_eng
 from gse_engine.tracking.wave43_ebm_composed_deconfounded_situational_nfl_engine import (  # noqa: E501
     WAVE43_TRACKING_RLVR_TRAJECTORIES,
     evaluate_wave43_ebm_deconfounded_nfl_and_alphaxiv_suite,
+)
+from gse_engine.tracking.wave44_dfl_rim_officiating_kicker_parr_dynamo_and_anti_shortcut_nfl_engine import (  # noqa: E501
+    WAVE44_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_w44_martingale_and_baitbench_shortcut_audit,
+    evaluate_wave44_dfl_rim_kicker_parr_and_integrity_suite,
 )
 
 _DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -4000,6 +4009,125 @@ def compile_gse_to_gsi_rlvr_training_batch(
                 think=str(spec_w43["think"]),
                 ground_truth=gt_w43,
                 verifier_src=_formula_exact_verifier_src(gt_w43),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    # Tier 3 Group U: Wave 44 28-Paper alphaXiv DFL, Causal MS-PEM/PARR & NFL (340 -> 352)
+    w44_sci = evaluate_wave44_alphaxiv_28paper_dfl_causal_integrity_suite(root)
+    w44_trk = evaluate_wave44_dfl_rim_kicker_parr_and_integrity_suite(
+        away_team="KC", home_team="DEN", as_of_week=10, is_indoor=False, repo_root=root
+    )
+    w44_pl = evaluate_w44_martingale_and_baitbench_shortcut_audit(root)
+    w44_dfl = w44_sci["dfl_predict_then_optimize"]
+    w44_cau = w44_sci["causal_sports_analytics"]
+    w44_agt = w44_sci["agent_integrity_and_reverification"]
+    w44_rg = w44_sci["social_survivorship_and_rg"]
+    w44_hm = w44_trk["home_w44_dfl_rim_profile"]
+    w44_tot = w44_trk["game_total_pace_air_shift"]
+    w44_quar = w44_trk["quarantined_metrics_weights"]
+    w44_ast = w44_trk["live_honest_ast"]
+    w44_gt_map: dict[str, dict[str, Any]] = {
+        "w44_dfl_cvar_spo_lpas_dro_and_solver_free_00": {
+            "cvar_spo_beats_mse": bool(w44_dfl["cvar_spo_beats_mse_tail_regret"]),
+            "lpas_beats_fixed_dro": bool(w44_dfl["lpas_beats_fixed_dro"]),
+            "zero_solver_calls": bool(
+                int(w44_dfl["solver_calls_per_grad_step"]) == 0
+                and bool(w44_dfl["dfl_ld_dual_gap_bounded"])
+            ),
+        },
+        "w44_weighted_proper_scoring_shapley_dva_and_strategic_dfl_00": {
+            "strict_propriety_ok": bool(w44_dfl["strict_propriety_verified"]),
+            "shapley_efficiency_ok": bool(
+                w44_dfl["shapley_efficiency_verified"]
+                and float(w44_dfl["shapley_efficiency_err"]) == 0.0
+            ),
+            "strategic_non_mono_ok": bool(w44_dfl["strategic_non_monotonicity_verified"]),
+        },
+        "w44_causal_mspem_iptw_collider_and_dynamo_crowd_shift_00": {
+            "paradox_sign_reversed": bool(w44_cau["paradox_sign_reversal_corrected"]),
+            "dynamo_kernel_beats_ols": bool(w44_cau["dynamo_crowd_shift_recovered"]),
+            "collider_bias_caught": bool(w44_cau["collider_bias_detected"]),
+        },
+        "w44_causal_ate_att_overlap_rim_and_tmle_kicker_parr_00": {
+            "overlap_div_verified": bool(w44_cau["overlap_divergence_verified"]),
+            "rim_clutch_gt_blowout": bool(w44_cau["rim_clutch_gt_blowout"]),
+            "parr_reorders_specialist": bool(w44_cau["parr_reorders_specialist_above_raw"]),
+        },
+        "w44_agent_integrity_c123_overclaim_reagent_ridar_baitbench_00": {
+            "phantom_pass_rejected": bool(w44_agt["phantom_pass_rejected"]),
+            "overclaim_and_fine_grid_ok": bool(
+                float(w44_agt["overclaim_recall"]) == 1.0
+                and bool(w44_agt["evidence_view_gaming_prevented"])
+            ),
+            "pool_and_shortcut_masked": bool(
+                w44_agt["union_pool_beats_single_pool"]
+                and float(w44_agt["baitbench_shortcut_weight"]) == 0.0
+            ),
+        },
+        "w44_tipster_survivorship_betxplain_and_rg_messaging_00": {
+            "all_four_rois_negative": bool(w44_rg["all_four_staking_rois_negative"]),
+            "persuasion_cues_filtered": bool(w44_rg["manipulative_flagged_and_clean_passed"]),
+            "normative_rg_mode_active": bool(
+                str(w44_rg["rg_message_mode"])
+                == "personalized_budget_reflection_with_normative_anchor"
+            ),
+        },
+        "w44_nfl_causal_pa_rpo_dfl_and_fumble_retention_00": {
+            "max_prior_week_lt10": bool(int(w44_trk["max_prior_week_used"]) < 10),
+            "pa_and_fumble_bounded": bool(
+                -1.0 <= float(w44_hm["pa_rpo_dfl_epa_norm"]) <= 1.0
+                and -1.0 <= float(w44_hm["own_fumble_retention_norm"]) <= 1.0
+            ),
+        },
+        "w44_nfl_rim_pen_wpa_reversion_and_dynamo_presnap_00": {
+            "rim_pen_bounded": bool(-1.0 <= float(w44_hm["rim_pen_wpa_reversion_norm"]) <= 1.0),
+            "dynamo_presnap_bounded": bool(
+                -1.0 <= float(w44_hm["dynamo_crowd_presnap_norm"]) <= 1.0
+            ),
+        },
+        "w44_nfl_kicker_parr_fgoe_chain_first_downs_and_2nd_read_00": {
+            "kicker_parr_bounded": bool(-1.0 <= float(w44_hm["kicker_parr_fgoe_norm"]) <= 1.0),
+            "chain_and_read2_bounded": bool(
+                -1.0 <= float(w44_hm["chain_first_downs_norm"]) <= 1.0
+                and -1.0 <= float(w44_hm["qb_second_read_prog_norm"]) <= 1.0
+            ),
+        },
+        "w44_game_total_anti_punt_pace_and_comp_air_wpa_shift_00": {
+            "total_shift_bounded": bool(-1.25 <= float(w44_tot["total_shift_pts"]) <= 1.25),
+        },
+        "w44_martingale_500_placebo_and_baitbench_shortcut_mask_00": {
+            "all_five_quarantined_zero": bool(
+                len(w44_quar) == 5 and all(float(v) == 0.0 for v in w44_quar.values())
+            ),
+            "placebo_and_mask_ok": bool(
+                w44_pl["beats_null_95pct"]
+                and w44_pl["shortcut_invariance_verified"]
+                and float(w44_pl["baitbench_max_output_perturbation"]) == 0.0
+            ),
+        },
+        "w44_honest_ast_8eq_hold_and_28paper_ruo_zero_00": {
+            "all_eight_evaluated": bool(
+                int(w44_ast["parsed_evaluated_count"]) == 8 and w44_ast["zero_fabricated_bindings"]
+            ),
+            "zero_stake_and_ruo": bool(
+                w44_trk["real_money_stake_cleared"] is False
+                and float(w44_trk["live_stake_fraction"]) == 0.0
+                and float(w44_trk["clinical_ruo_sports_weight"]) == 0.0
+            ),
+        },
+    }
+    for spec_w44 in (*WAVE44_GSI_RLVR_TRAJECTORIES, *WAVE44_TRACKING_RLVR_TRAJECTORIES):
+        rid_w44 = str(spec_w44["record_id"])
+        gt_w44 = w44_gt_map[rid_w44]
+        records.append(
+            _build_rlvr_record(
+                record_id=rid_w44,
+                domain=str(spec_w44["domain"]),
+                prompt=str(spec_w44["prompt"]),
+                think=str(spec_w44["think"]),
+                ground_truth=gt_w44,
+                verifier_src=_formula_exact_verifier_src(gt_w44),
                 curriculum_tier="TIER_3_BEHEMOTH",
             )
         )

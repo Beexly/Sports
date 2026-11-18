@@ -395,6 +395,16 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "wave43_ebm_composed_deconfounded_situational_nfl_engine",
         "src/gse_engine/tracking/wave43_ebm_composed_deconfounded_situational_nfl_engine.py",
     ),
+    (
+        "Pillar1_Wave44_AlphaXiv_28Paper_DFL_CVaR_Causal_Integrity_RG",
+        "wave44_alphaxiv_28paper_dfl_cvar_causal_mspem_integrity_and_rg_engine",
+        "src/gse_engine/science/wave44_alphaxiv_28paper_dfl_cvar_causal_mspem_integrity_and_rg_engine.py",
+    ),
+    (
+        "Pillar1_Wave44_GSE_DFL_RIM_Kicker_PARR_Dynamo_NFL",
+        "wave44_dfl_rim_officiating_kicker_parr_dynamo_and_anti_shortcut_nfl_engine",
+        "src/gse_engine/tracking/wave44_dfl_rim_officiating_kicker_parr_dynamo_and_anti_shortcut_nfl_engine.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (

@@ -83,6 +83,10 @@ from gse_engine.tracking.wave43_ebm_composed_deconfounded_situational_nfl_engine
     evaluate_wave43_ebm_deconfounded_nfl_and_alphaxiv_suite,
     run_wave43_alphaxiv_ebm_wsp_and_deconfounded_nfl_benchmark,
 )
+from gse_engine.tracking.wave44_dfl_rim_officiating_kicker_parr_dynamo_and_anti_shortcut_nfl_engine import (  # noqa: E501
+    evaluate_wave44_dfl_rim_kicker_parr_and_integrity_suite,
+    run_wave44_alphaxiv_28paper_dfl_causal_and_integrity_benchmark,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -1076,6 +1080,14 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         repo_root=root,
     )
     w43_d = w43["stage2_deltas"]
+    w44 = evaluate_wave44_dfl_rim_kicker_parr_and_integrity_suite(
+        away_team=away_u,
+        home_team=home_u,
+        as_of_week=int(as_of_week),
+        is_indoor=bool(is_indoor),
+        repo_root=root,
+    )
+    w44_d = w44["stage2_deltas"]
 
     # 5. GSI ADR-0003 Rule-In-Only Pose2Sim 3D Skeletal Hazard Coupling
     k14_prior = compute_k14_translational_tissue_hazard_prior(
@@ -1106,7 +1118,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.04 * float(w40_d["away_epa_delta"])
             + 0.03 * float(w41_d["away_epa_delta"])
             + 0.03 * float(w42_d["away_epa_delta"])
-            + 0.03 * float(w43_d["away_epa_delta"]),
+            + 0.03 * float(w43_d["away_epa_delta"])
+            + 0.03 * float(w44_d["away_epa_delta"]),
             -0.006,
             0.006,
         ),
@@ -1128,7 +1141,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.04 * float(w40_d["home_epa_delta"])
             + 0.03 * float(w41_d["home_epa_delta"])
             + 0.03 * float(w42_d["home_epa_delta"])
-            + 0.03 * float(w43_d["home_epa_delta"]),
+            + 0.03 * float(w43_d["home_epa_delta"])
+            + 0.03 * float(w44_d["home_epa_delta"]),
             -0.006,
             0.006,
         ),
@@ -1230,7 +1244,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.04 * float(w40_d["away_sack_prob_delta"])
             + 0.03 * float(w41_d["away_sack_prob_delta"])
             + 0.03 * float(w42_d["away_sack_prob_delta"])
-            + 0.03 * float(w43_d["away_sack_prob_delta"]),
+            + 0.03 * float(w43_d["away_sack_prob_delta"])
+            + 0.03 * float(w44_d["away_sack_prob_delta"]),
             -0.004,
             0.004,
         ),
@@ -1248,7 +1263,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.04 * float(w40_d["home_sack_prob_delta"])
             + 0.03 * float(w41_d["home_sack_prob_delta"])
             + 0.03 * float(w42_d["home_sack_prob_delta"])
-            + 0.03 * float(w43_d["home_sack_prob_delta"]),
+            + 0.03 * float(w43_d["home_sack_prob_delta"])
+            + 0.03 * float(w44_d["home_sack_prob_delta"]),
             -0.004,
             0.004,
         ),
@@ -1306,7 +1322,9 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         "nov15_matchup_cards_indexed": int(nov15["matchup_cards_count"]),
         "omni_vaults_loaded": int(omni["omni_vaults_loaded"]),
         "omni_empirical_rows_indexed": int(omni["omni_empirical_rows_indexed"]),
-        "waves_unified_span": "Waves_20_to_43_plus_18Sport_AlphaFold_and_AlphaXiv_31Paper_EBM",
+        "waves_unified_span": (
+            "Waves_20_to_44_plus_18Sport_AlphaFold_and_AlphaXiv_59Paper_EBM_DFL"
+        ),
         "wave34_holistic_biometrics": w34,
         "wave35_gsi_and_micro_matchups": w35,
         "wave36_360_board_matchups": w36,
@@ -1317,6 +1335,7 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         "wave41_pocket_security_and_14sport_matchups": w41,
         "wave42_pfr_qbr_and_18sport_matchups": w42,
         "wave43_alphaxiv_ebm_and_deconfounded_matchups": w43,
+        "wave44_dfl_rim_kicker_and_integrity_matchups": w44,
         "ratchet_promoted": bool(ratchet["promote"]),
         "live_weight_multiplier": live_mult,
         "fwl_orthogonality_max_err": orth_err,
@@ -2060,6 +2079,11 @@ def run_wave32_historical_nfl_and_all_sports_simulation_benchmark(
         ),
         "wave43_alphaxiv_ebm_wsp_benchmark": (
             run_wave43_alphaxiv_ebm_wsp_and_deconfounded_nfl_benchmark(
+                root, write_artifact=write_artifact
+            )
+        ),
+        "wave44_alphaxiv_28paper_dfl_integrity_benchmark": (
+            run_wave44_alphaxiv_28paper_dfl_causal_and_integrity_benchmark(
                 root, write_artifact=write_artifact
             )
         ),
