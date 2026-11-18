@@ -67,6 +67,10 @@ from gse_engine.tracking.wave39_pass_rush_disruption_drops_total_kickoff_and_3yr
     evaluate_wave39_disruption_total_and_3yr_ftn_suite,
     run_wave39_gsi_hpa_and_disruption_total_benchmark,
 )
+from gse_engine.tracking.wave40_ngs_separation_ryoe_cpoe_and_ftn_qb_fault_engine import (  # noqa: E501
+    evaluate_wave40_ngs_ftn_and_universal_metrics_suite,
+    run_wave40_ngs_and_universal_metrics_benchmark,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -1028,6 +1032,14 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         repo_root=root,
     )
     w39_d = w39["stage2_deltas"]
+    w40 = evaluate_wave40_ngs_ftn_and_universal_metrics_suite(
+        away_team=away_u,
+        home_team=home_u,
+        as_of_week=int(as_of_week),
+        is_indoor=bool(is_indoor),
+        repo_root=root,
+    )
+    w40_d = w40["stage2_deltas"]
 
     # 5. GSI ADR-0003 Rule-In-Only Pose2Sim 3D Skeletal Hazard Coupling
     k14_prior = compute_k14_translational_tissue_hazard_prior(
@@ -1054,7 +1066,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.10 * float(w36_d["away_epa_delta"])
             + 0.08 * float(w37_d["away_epa_delta"])
             + 0.06 * float(w38_d["away_epa_delta"])
-            + 0.05 * float(w39_d["away_epa_delta"]),
+            + 0.05 * float(w39_d["away_epa_delta"])
+            + 0.04 * float(w40_d["away_epa_delta"]),
             -0.006,
             0.006,
         ),
@@ -1072,7 +1085,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.10 * float(w36_d["home_epa_delta"])
             + 0.08 * float(w37_d["home_epa_delta"])
             + 0.06 * float(w38_d["home_epa_delta"])
-            + 0.05 * float(w39_d["home_epa_delta"]),
+            + 0.05 * float(w39_d["home_epa_delta"])
+            + 0.04 * float(w40_d["home_epa_delta"]),
             -0.006,
             0.006,
         ),
@@ -1087,7 +1101,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.15 * float(aw_omni.get("ngs_separation_edge", 0.0))
             + 0.15 * float(w34_d["away_comp_delta"])
             + 0.10 * float(w35_d["away_comp_delta"])
-            + 0.10 * float(w36_d["away_comp_delta"]),
+            + 0.10 * float(w36_d["away_comp_delta"])
+            + 0.05 * float(w40_d["away_comp_delta"]),
             -0.010,
             0.010,
         ),
@@ -1102,7 +1117,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.15 * float(hm_omni.get("ngs_separation_edge", 0.0))
             + 0.15 * float(w34_d["home_comp_delta"])
             + 0.10 * float(w35_d["home_comp_delta"])
-            + 0.10 * float(w36_d["home_comp_delta"]),
+            + 0.10 * float(w36_d["home_comp_delta"])
+            + 0.05 * float(w40_d["home_comp_delta"]),
             -0.010,
             0.010,
         ),
@@ -1168,7 +1184,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.10 * float(w36_d["away_sack_prob_delta"])
             + 0.08 * float(w37_d["away_sack_prob_delta"])
             + 0.06 * float(w38_d["away_sack_prob_delta"])
-            + 0.05 * float(w39_d["away_sack_prob_delta"]),
+            + 0.05 * float(w39_d["away_sack_prob_delta"])
+            + 0.04 * float(w40_d["away_sack_prob_delta"]),
             -0.004,
             0.004,
         ),
@@ -1182,7 +1199,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.10 * float(w36_d["home_sack_prob_delta"])
             + 0.08 * float(w37_d["home_sack_prob_delta"])
             + 0.06 * float(w38_d["home_sack_prob_delta"])
-            + 0.05 * float(w39_d["home_sack_prob_delta"]),
+            + 0.05 * float(w39_d["home_sack_prob_delta"])
+            + 0.04 * float(w40_d["home_sack_prob_delta"]),
             -0.004,
             0.004,
         ),
@@ -1240,13 +1258,14 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         "nov15_matchup_cards_indexed": int(nov15["matchup_cards_count"]),
         "omni_vaults_loaded": int(omni["omni_vaults_loaded"]),
         "omni_empirical_rows_indexed": int(omni["omni_empirical_rows_indexed"]),
-        "waves_unified_span": "Waves_20_to_39_plus_GSI_HPA_ChronicSOFA_and_TotalMAE",
+        "waves_unified_span": "Waves_20_to_40_plus_Universal_MultiSport_Metrics_and_NGS",
         "wave34_holistic_biometrics": w34,
         "wave35_gsi_and_micro_matchups": w35,
         "wave36_360_board_matchups": w36,
         "wave37_ol_continuity_matchups": w37,
         "wave38_presnap_sgp_copula_matchups": w38,
         "wave39_disruption_and_total_matchups": w39,
+        "wave40_ngs_and_universal_sports_matchups": w40,
         "ratchet_promoted": bool(ratchet["promote"]),
         "live_weight_multiplier": live_mult,
         "fwl_orthogonality_max_err": orth_err,
@@ -1978,6 +1997,9 @@ def run_wave32_historical_nfl_and_all_sports_simulation_benchmark(
         ),
         "wave39_gsi_hpa_and_disruption_total_benchmark": (
             run_wave39_gsi_hpa_and_disruption_total_benchmark(root, write_artifact=write_artifact)
+        ),
+        "wave40_ngs_and_universal_metrics_benchmark": (
+            run_wave40_ngs_and_universal_metrics_benchmark(root, write_artifact=write_artifact)
         ),
     }
     blob = json.dumps(summary, indent=2, ensure_ascii=True)

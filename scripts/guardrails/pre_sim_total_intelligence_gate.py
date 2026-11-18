@@ -345,6 +345,16 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "wave39_pass_rush_disruption_drops_total_kickoff_and_3yr_ftn_engine",
         "src/gse_engine/tracking/wave39_pass_rush_disruption_drops_total_kickoff_and_3yr_ftn_engine.py",
     ),
+    (
+        "Pillar1_Wave40_Universal_MultiSport_Metrics_And_Handicaps",
+        "wave40_universal_sports_metrics_encyclopedia_and_handicap_engine",
+        "src/gse_engine/multisport/wave40_universal_sports_metrics_encyclopedia_and_handicap_engine.py",
+    ),
+    (
+        "Pillar1_Wave40_GSE_NGS_Separation_Cushion_FTN_IntWorthy",
+        "wave40_ngs_separation_ryoe_cpoe_and_ftn_qb_fault_engine",
+        "src/gse_engine/tracking/wave40_ngs_separation_ryoe_cpoe_and_ftn_qb_fault_engine.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (

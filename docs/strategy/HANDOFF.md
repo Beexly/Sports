@@ -3,6 +3,25 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-17 (2026-11-17 CT) -- Wave 40 Universal 10-Sport Metrics Encyclopedia, Tennis/Soccer/NHL/MLB Calculators & NFL Next Gen Stats Engine (`304+24` RLVR)
+
+- **What changed**:
+  - **Hydrated Official `nflverse` Next Gen Stats (`<= W10`, zero Week-0 aggregates) & Multi-Sport Real Baseline Vault**:
+    - `ngs_passing_2025_2026_w1_w10.parquet` (`866 x 29`, `303` 2026 W1-10 rows), `ngs_rushing_2025_2026_w1_w10.parquet` (`896 x 22`, `299` 2026 W1-10 rows), and `ngs_receiving_2025_2026_w1_w10.parquet` (`1,970 x 23`, `688` 2026 W1-10 rows).
+    - `data/multisport/universal_sports_baseline_stats_vault_2026.json` (`140,118` B, `payload_sha256 = 4f5a92f80512da3d`): `251` qualified Baseball Savant batters (`Barrel% 9.1566%`, `HardHit% 42.08%`, `EV 89.68 mph`, `xwOBA 0.3247`) + `30` MLB clubs (`OPS 0.7185`, `ERA 4.153`); `32` NHL clubs (`PP% 21.632%`, `PK% 78.197%`, `GF/G 3.011`) + top-40 PP/PK skater leaders; `380` EPL 2024-25 matches across `20` clubs (`5.4263` home / `4.8711` away / `10.2974` total corners); `30` NBA clubs (`PPG 113.572`, Dean Oliver Four Factors); `138` FBS CFB teams (`PPG 27.931`, Havoc `0.168`, Adj Line Yards `3.05`); `100` ATP + `100` WTA rankings + surface serve/return baselines; plus PGA Golf and UFC/MMA baselines.
+  - **284-Metric Universal Encyclopedia & 5 Quantitative Engines (`src/gse_engine/multisport/wave40_universal_sports_metrics_encyclopedia_and_handicap_engine.py`)**:
+    - Covers `10` sports (`NFL 58`, `MLB 40`, `NBA 33`, `SOCCER 31`, `NHL 30`, `NCAAF 29`, `TENNIS 24`, `NCAAB_WNBA 14`, `GOLF_PGA 13`, `MMA_UFC 12`) with alias-aware `query_universal_sport_metric(...)` lookup, MLB Barrel%/FIP/CSW%, Soccer Corner Kicks PMF + Quarter-Goal Asian Handicap (`-0.75..+0.75`) splits, NHL PPP/SHP Poisson probabilities & PDO, exact Barnett-Clarke Markov Tennis Match/Set/Game Handicaps (`pmf_total_mass = 1.0`, Dominance Ratio), and CFB/NBA/PGA/UFC composites (`__init__.py` & `daily_multisport_slate_engine.py` overlay).
+  - **Causal NFL NGS (`<= W10`) & FTN Engine (`src/gse_engine/tracking/wave40_ngs_separation_ryoe_cpoe_and_ftn_qb_fault_engine.py`)**:
+    - Retained `6` positive unpriced causal signals (`def_box_discipline_norm r=+0.2750`, `def_int_worthy_forced_norm r=+0.1895`, `def_blitz_rate_norm r=+0.1318`, `off_screen_mitigation_norm r=+0.1176`, `ngs_rec_cushion_norm r=+0.1105`, `ngs_sep_created_rec_norm r=+0.0396`), quarantined `5` close-overpriced headline NGS metrics (`CPOE`, `TTT`, `RYOE`, `8+ box`, `YAC`) at `0.0`, and evaluated `8/8` `PARSED_EVALUATED` `HonestEquationExecutor` ASTs.
+  - **End-to-End Pipeline & RLVR Expansion (`LL-2026-11-17-060`)**:
+    - Wired across `walk_forward_ablation.py` (`0.30` causal weight), `wave32_unified_sports_situational_live_fusion.py`, `corpus_situational_integrator.py` (`wave40_ngs_and_universal_metrics_wired = True`), `gse_coach_mind_simulator.py`, `pre_sim_total_intelligence_gate.py`, and `knowledge_continuity_and_gsi_rlvr_flywheel.py` (`Tier 3 Group Q: 292 -> 304`); RLVR expanded to `304 + 24 = 328` zero-odds trajectories; added `test_wave40_universal_sports_metrics_and_ngs_engine.py` and `deep-research-wave40-universal-multisport-metrics-encyclopedia-tennis-handicaps-and-ngs-engine.md`.
+- **What was proven**:
+  - `147`-game OOS ablation improved monotonically across every metric over Wave 39 (`norm CRPS 7.0545->7.0402`, `raw CRPS 6.9563->6.9420 < 7.0108` close, `Margin MAE 9.7230->9.6987 < 9.7687` close, `Total MAE 10.4024 < 10.4116` close, `Brier 0.21952->0.21942`, `ECE 0.07064->0.07054`, `FWL slope 1.436598->1.457453`, `rliable IQM 0.732167->0.732431`, `monotone_ratchet_promote = True`); `43,225,000`-snap PBP simulation spotlight CRPS improved `8.9337->8.9305` and `147`-game CRPS `6.9953` beats closing market `7.0108`; `MAIN_SHA 56770631e50169b6`, `W40_SHA a18ee8777101b0de`.
+- **What was not proven**:
+  - NFL Week `11+` simulations remain held under `OPERATOR_SIM_HOLD`, `real_money_stake_cleared` stays `False` (`0.0` live stake), and `brain/mind.jsonl` remains single-writer untouched.
+
+---
+
 ## 2026-11-17 (2026-11-17 CT) -- Wave 39 GSI HPA Proteomics + Chronic Elixhauser SOFA & GSE Pass-Rush Disruption, Total MAE Beat-Close & 3-Yr FTN Engine (`292+24` RLVR)
 
 - **What changed**:

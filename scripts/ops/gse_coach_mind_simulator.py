@@ -1322,6 +1322,7 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     conditioners["wave37_gsi_sofa_and_ol_continuity_coupled"] = True
     conditioners["wave38_gsi_gtex_and_sgp_copula_coupled"] = True
     conditioners["wave39_gsi_hpa_and_disruption_total_coupled"] = True
+    conditioners["wave40_ngs_and_universal_metrics_coupled"] = True
 
     result = {
         "schema": "gse_pre_projection_universal_and_deep_non_stationary_priors_v1",
@@ -1349,6 +1350,9 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         "wave37_ol_continuity_matchups": wave32_fusion["wave37_ol_continuity_matchups"],
         "wave38_presnap_sgp_copula_matchups": wave32_fusion["wave38_presnap_sgp_copula_matchups"],
         "wave39_disruption_and_total_matchups": wave32_fusion["wave39_disruption_and_total_matchups"],
+        "wave40_ngs_and_universal_sports_matchups": (
+            wave32_fusion["wave40_ngs_and_universal_sports_matchups"]
+        ),
         "trajectory_conditioners": conditioners,
         "simulation_trajectory_conditioners": conditioners,
     }

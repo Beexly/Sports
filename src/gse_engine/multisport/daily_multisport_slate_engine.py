@@ -36,6 +36,9 @@ from gse_engine.memory.wave21_tracking_biomech_rlvr_and_market_hold_suite import
     compute_metrica_skillcorner_pitch_control,
     compute_multisport_pybaseball_hockeyr_and_vorp_metrics,
 )
+from gse_engine.multisport.wave40_universal_sports_metrics_encyclopedia_and_handicap_engine import (  # noqa: E501
+    evaluate_wave40_universal_multisport_metrics_suite,
+)
 
 ESPN_SCOREBOARD_ENDPOINTS: dict[str, str] = {
     "NBA": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
@@ -1535,6 +1538,7 @@ def evaluate_multisport_sabermetrics_and_pitch_control_overlay(
         float(fpl["net_horizon_expected_points"]),
     ]
     w34_xfer = evaluate_cross_sport_metric_transfers()
+    w40_ms = evaluate_wave40_universal_multisport_metrics_suite()
     return {
         "schema": "wave26_sabermetric_pitch_control_overlay_v1",
         "mlb_woba": float(saber["mlb_woba"]),
@@ -1546,6 +1550,7 @@ def evaluate_multisport_sabermetrics_and_pitch_control_overlay(
         "fpl_captain_id": str(fpl["captain_id"]),
         "fpl_expected_points": float(fpl["net_horizon_expected_points"]),
         "wave34_cross_sport_transfers": w34_xfer,
+        "wave40_universal_metrics_and_handicaps": w40_ms,
         "all_finite": all(math.isfinite(v) for v in vals),
     }
 

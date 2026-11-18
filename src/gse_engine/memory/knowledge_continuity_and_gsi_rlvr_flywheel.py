@@ -40,6 +40,10 @@ from gse_engine.memory.monorepo_omnibus_vault_indexer import (
     OmnibusVaultContinuityError,
     audit_all_25_monorepo_knowledge_vaults,
 )
+from gse_engine.multisport.wave40_universal_sports_metrics_encyclopedia_and_handicap_engine import (  # noqa: E501
+    WAVE40_MULTISPORT_RLVR_TRAJECTORIES,
+    evaluate_wave40_universal_multisport_metrics_suite,
+)
 from gse_engine.science.wave35_gsi_lifesaving_neuro_cardiac_and_tissue_phase_engine import (  # noqa: E501
     WAVE35_GSI_RLVR_TRAJECTORIES,
     evaluate_wave35_gsi_safety_and_skill_channels,
@@ -79,6 +83,10 @@ from gse_engine.tracking.wave38_presnap_scheme_def_continuity_sgp_copula_and_cir
 from gse_engine.tracking.wave39_pass_rush_disruption_drops_total_kickoff_and_3yr_ftn_engine import (  # noqa: E501
     WAVE39_TRACKING_RLVR_TRAJECTORIES,
     evaluate_wave39_disruption_total_and_3yr_ftn_suite,
+)
+from gse_engine.tracking.wave40_ngs_separation_ryoe_cpoe_and_ftn_qb_fault_engine import (  # noqa: E501
+    WAVE40_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_wave40_ngs_ftn_and_universal_metrics_suite,
 )
 
 _DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -3568,6 +3576,94 @@ def compile_gse_to_gsi_rlvr_training_batch(
                 think=str(spec_w39["think"]),
                 ground_truth=gt_w39,
                 verifier_src=_formula_exact_verifier_src(gt_w39),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    # Tier 3 Group Q: Wave 40 Universal 10-Sport Encyclopedia & NFL NGS/FTN Spine (292 -> 304)
+    w40_ms = evaluate_wave40_universal_multisport_metrics_suite(root)
+    w40_trk = evaluate_wave40_ngs_ftn_and_universal_metrics_suite(
+        away_team="CIN", home_team="BUF", as_of_week=10, is_indoor=False, repo_root=root
+    )
+    w40_hm = w40_trk["home_w40_ngs_ftn_profile"]
+    w40_quar = w40_trk["quarantined_ngs_weights"]
+    w40_mlb = w40_ms["mlb_statcast_summary"]
+    w40_soc = w40_ms["soccer_corners_asian_handicap"]
+    w40_nhl = w40_ms["nhl_special_teams_ppp_shp"]
+    w40_ten = w40_ms["tennis_markov_atp_hard"]
+    w40_cfb_nba = w40_ms["cfb_nba_golf_mma"]
+    w40_ast = w40_trk["live_honest_ast"]
+    w40_gt_map: dict[str, dict[str, Any]] = {
+        "w40_universal_284_metrics_10sports_encyclopedia_00": {
+            "total_metrics": int(w40_ms["total_canonical_metrics"]),
+            "sports_covered": int(w40_ms["sports_covered_count"]),
+            "all_probes_resolved": bool(len(w40_ms["founder_probe_resolutions"]) == 6),
+        },
+        "w40_mlb_statcast_barrel_xwoba_fip_arsenal_00": {
+            "qualified_batters": int(w40_mlb["qualified_batters_count"]),
+            "league_barrel_pct_mean": float(w40_mlb["league_barrel_pct_mean"]),
+        },
+        "w40_soccer_epl_corner_kicks_and_asian_handicap_00": {
+            "epl_matches": int(w40_soc["epl_matches_sample_n"]),
+            "expected_total_corners_pos": bool(float(w40_soc["expected_total_corners"]) > 0.0),
+        },
+        "w40_nhl_ppp_shorthanded_penalty_kill_5v5_00": {
+            "nhl_teams": int(w40_nhl["nhl_teams_count"]),
+            "ppp_prob_bounded": bool(0.0 < float(w40_nhl["skater_prob_1plus_ppp"]) < 1.0),
+        },
+        "w40_tennis_barnett_clarke_markov_game_set_handicaps_00": {
+            "pmf_mass_unit": bool(abs(float(w40_ten["pmf_total_mass"]) - 1.0) < 1e-6),
+            "atp_top100": int(w40_ten["atp_top100_count"]),
+            "wta_top100": int(w40_ten["wta_top100_count"]),
+        },
+        "w40_nfl_ngs_2025_2026_w1_w10_no_leakage_00": {
+            "zero_post_w10_leakage": bool(w40_trk["ngs_vault_audit"]["zero_post_w10_leakage"]),
+            "zero_week0_leakage": bool(
+                w40_trk["ngs_vault_audit"]["zero_week0_aggregate_leakage"]
+            ),
+        },
+        "w40_ftn_def_box_and_int_worthy_forced_margin_00": {
+            "box_bounded": bool(-1.0 <= float(w40_hm["def_box_discipline_norm"]) <= 1.0),
+            "int_worthy_bounded": bool(
+                -1.0 <= float(w40_hm["def_int_worthy_forced_norm"]) <= 1.0
+            ),
+        },
+        "w40_ftn_blitz_and_offensive_screen_mitigation_00": {
+            "blitz_bounded": bool(-1.0 <= float(w40_hm["def_blitz_rate_norm"]) <= 1.0),
+            "screen_bounded": bool(-1.0 <= float(w40_hm["off_screen_mitigation_norm"]) <= 1.0),
+        },
+        "w40_ngs_cushion_separation_and_created_rec_00": {
+            "cushion_bounded": bool(-1.0 <= float(w40_hm["ngs_rec_cushion_norm"]) <= 1.0),
+            "sep_bounded": bool(-1.0 <= float(w40_hm["ngs_sep_created_rec_norm"]) <= 1.0),
+        },
+        "w40_quarantine_headline_ngs_cpoe_ttt_ryoe_yac_00": {
+            "all_five_zero": bool(
+                len(w40_quar) == 5 and all(float(v) == 0.0 for v in w40_quar.values())
+            ),
+        },
+        "w40_cfb_nba_pga_ufc_baseline_vault_coverage_00": {
+            "cfb_teams": int(w40_cfb_nba["cfb_fbs_teams_count"]),
+            "nba_teams": int(w40_cfb_nba["nba_teams_count"]),
+        },
+        "w40_honest_ast_8eq_cross_sport_and_zero_hold_00": {
+            "all_eight_evaluated": bool(int(w40_ast["parsed_evaluated_count"]) == 8),
+            "zero_stake": bool(
+                w40_trk["real_money_stake_cleared"] is False
+                and float(w40_trk["live_stake_fraction"]) == 0.0
+            ),
+        },
+    }
+    for spec_w40 in (*WAVE40_MULTISPORT_RLVR_TRAJECTORIES, *WAVE40_TRACKING_RLVR_TRAJECTORIES):
+        rid_w40 = str(spec_w40["record_id"])
+        gt_w40 = w40_gt_map[rid_w40]
+        records.append(
+            _build_rlvr_record(
+                record_id=rid_w40,
+                domain=str(spec_w40["domain"]),
+                prompt=str(spec_w40["prompt"]),
+                think=str(spec_w40["think"]),
+                ground_truth=gt_w40,
+                verifier_src=_formula_exact_verifier_src(gt_w40),
                 curriculum_tier="TIER_3_BEHEMOTH",
             )
         )

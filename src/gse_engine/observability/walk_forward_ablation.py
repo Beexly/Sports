@@ -43,6 +43,9 @@ from gse_engine.tracking.wave39_pass_rush_disruption_drops_total_kickoff_and_3yr
     evaluate_causal_w39_game_total_environmental_shift,
     evaluate_wave39_disruption_total_and_3yr_ftn_suite,
 )
+from gse_engine.tracking.wave40_ngs_separation_ryoe_cpoe_and_ftn_qb_fault_engine import (  # noqa: E501
+    evaluate_wave40_ngs_ftn_and_universal_metrics_suite,
+)
 
 _TEAM_ALIAS: dict[str, str] = {"LA": "LAR", "WSH": "WAS", "JAC": "JAX"}
 
@@ -919,8 +922,16 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 repo_root=repo_root,
             )
             w39_sig = float(w39_g["w39_close_residual_signal"])
+            w40_g = evaluate_wave40_ngs_ftn_and_universal_metrics_suite(
+                away_team=g.away_team,
+                home_team=g.home_team,
+                as_of_week=int(wk),
+                is_indoor=bool(g.is_indoor),
+                repo_root=repo_root,
+            )
+            w40_sig = float(w40_g["w40_close_residual_signal"])
 
-            # Layer-1 market foundation + Wave 32/34/35/36/37/38/39 FWL-damped orthogonal shift
+            # Layer-1 market foundation + Wave 32-40 FWL-damped orthogonal shift
             epa_edge_pts = (
                 (hm_shrunk_net - aw_shrunk_net) * 18.0
                 + 0.10 * (hm_aux_sc - aw_aux_sc) * 14.0
@@ -932,6 +943,7 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 + 0.60 * w37_sig
                 + 0.60 * w38_sig
                 + 0.35 * w39_sig
+                + 0.30 * w40_sig
             )
             mkt_implied_edge = g.expected_home_margin_mkt
             orth_resid = epa_edge_pts - 0.55 * mkt_implied_edge

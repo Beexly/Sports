@@ -111,6 +111,9 @@ from gse_engine.multisport.daily_multisport_slate_engine import (
     predict_bc_aci_band,
     update_bc_aci_interval,
 )
+from gse_engine.multisport.wave40_universal_sports_metrics_encyclopedia_and_handicap_engine import (  # noqa: E501
+    evaluate_wave40_universal_multisport_metrics_suite,
+)
 from gse_engine.observability.kernel_registry_and_antipatterns import (
     run_all_antipattern_guards,
 )
@@ -154,6 +157,9 @@ from gse_engine.tracking.wave38_presnap_scheme_def_continuity_sgp_copula_and_cir
 )
 from gse_engine.tracking.wave39_pass_rush_disruption_drops_total_kickoff_and_3yr_ftn_engine import (  # noqa: E501
     evaluate_wave39_disruption_total_and_3yr_ftn_suite,
+)
+from gse_engine.tracking.wave40_ngs_separation_ryoe_cpoe_and_ftn_qb_fault_engine import (  # noqa: E501
+    evaluate_wave40_ngs_ftn_and_universal_metrics_suite,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -2759,6 +2765,19 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
                 repo_root=REPO_ROOT,
             )
         ),
+        "wave40_universal_multisport_pillar": evaluate_wave40_universal_multisport_metrics_suite(
+            REPO_ROOT
+        ),
+        "wave40_ngs_and_universal_metrics_pillar": (
+            wave32_res.get("wave40_ngs_and_universal_sports_matchups")
+            or evaluate_wave40_ngs_ftn_and_universal_metrics_suite(
+                away_team=away_u,
+                home_team=home_u,
+                as_of_week=int(week),
+                is_indoor=bool(is_indoor),
+                repo_root=REPO_ROOT,
+            )
+        ),
         "nvidia_hermes_capability_routes": nvidia_hermes_routes,
         "away_epa_corpus_delta": round(away_epa_corpus_delta, 5),
         "home_epa_corpus_delta": round(home_epa_corpus_delta, 5),
@@ -3349,6 +3368,18 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         else:
             w39_wired = True
 
+    w40_blk = priors.get("wave40_ngs_and_universal_metrics_pillar")
+    w40_wired = False
+    if w40_blk is not None:
+        if (
+            not isinstance(w40_blk, Mapping)
+            or w40_blk.get("wired") is not True
+            or w40_blk.get("real_money_stake_cleared") is not False
+        ):
+            missing_or_unwired.append("wave40_ngs_and_universal_metrics_pillar")
+        else:
+            w40_wired = True
+
     required_scalars = (
         "away_epa_corpus_delta",
         "home_epa_corpus_delta",
@@ -3406,6 +3437,7 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         "wave37_gsi_sofa_and_ol_continuity_wired": w37_wired,
         "wave38_gsi_gtex_and_sgp_copula_wired": w38_wired,
         "wave39_gsi_hpa_and_disruption_total_wired": w39_wired,
+        "wave40_ngs_and_universal_metrics_wired": w40_wired,
         "pillars_verified": list(required_pillars),
         "scalars_verified_count": len(required_scalars),
         "player_multipliers_count": len(priors.get("player_target_and_carry_multipliers") or {}),

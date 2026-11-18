@@ -78,6 +78,14 @@ from gse_engine.tracking.wave39_pass_rush_disruption_drops_total_kickoff_and_3yr
     evaluate_wave39_live_honest_ast_equations,
     run_wave39_gsi_hpa_and_disruption_total_benchmark,
 )
+from gse_engine.tracking.wave40_ngs_separation_ryoe_cpoe_and_ftn_qb_fault_engine import (  # noqa: E501
+    WAVE40_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_causal_w40_ngs_and_ftn_features,
+    evaluate_ngs_2025_2026_w1_w10_vaults,
+    evaluate_wave40_live_honest_ast_equations,
+    evaluate_wave40_ngs_ftn_and_universal_metrics_suite,
+    run_wave40_ngs_and_universal_metrics_benchmark,
+)
 
 __all__ = [
     "AWS_NGS_GOING_DEEP_SOURCES",
@@ -90,6 +98,7 @@ __all__ = [
     "WAVE37_TRACKING_RLVR_TRAJECTORIES",
     "WAVE38_TRACKING_RLVR_TRAJECTORIES",
     "WAVE39_TRACKING_RLVR_TRAJECTORIES",
+    "WAVE40_TRACKING_RLVR_TRAJECTORIES",
     "ChalkContaminationError",
     "ClusterScalingPlan",
     "DualEpauletKinematics",
@@ -122,9 +131,11 @@ __all__ = [
     "evaluate_causal_w38_heavy_box_clutch_and_front_continuity",
     "evaluate_causal_w39_disruption_drops_and_total_features",
     "evaluate_causal_w39_game_total_environmental_shift",
+    "evaluate_causal_w40_ngs_and_ftn_features",
     "evaluate_contract_year_5b_incentive_audit",
     "evaluate_dated_csv_and_live_ast_equations",
     "evaluate_longitudinal_3yr_ftn_and_2025_baseline_vaults",
+    "evaluate_ngs_2025_2026_w1_w10_vaults",
     "evaluate_presnap_run_concept_and_coverage_shell_matrix",
     "evaluate_qb_air_yards_and_catchable_accuracy",
     "evaluate_rb_speed_elusiveness_vs_lb_gap_fill",
@@ -139,11 +150,14 @@ __all__ = [
     "evaluate_wave38_presnap_sgp_copula_and_cir_suite",
     "evaluate_wave39_disruption_total_and_3yr_ftn_suite",
     "evaluate_wave39_live_honest_ast_equations",
+    "evaluate_wave40_live_honest_ast_equations",
+    "evaluate_wave40_ngs_ftn_and_universal_metrics_suite",
     "evaluate_wr_separation_vs_db_coverage",
     "run_wave35_gsi_and_micro_metrics_benchmark",
     "run_wave36_gsi_icu_and_360_board_benchmark",
     "run_wave37_gsi_sofa_and_ol_continuity_benchmark",
     "run_wave38_gsi_gtex_and_sgp_copula_cir_benchmark",
     "run_wave39_gsi_hpa_and_disruption_total_benchmark",
+    "run_wave40_ngs_and_universal_metrics_benchmark",
     "verify_nonzero_stage2_jacobians",
 ]
