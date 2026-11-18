@@ -385,6 +385,16 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "wave42_pfr_advstats_qbr_two_high_yac_and_total_pace_engine",
         "src/gse_engine/tracking/wave42_pfr_advstats_qbr_two_high_yac_and_total_pace_engine.py",
     ),
+    (
+        "Pillar1_Wave43_AlphaXiv_31Paper_EBM_LF_WSP_Arithmetic_SLAM",
+        "wave43_alphaxiv_31paper_ebm_lf_wsp_calibration_arithmetic_and_slam_engine",
+        "src/gse_engine/science/wave43_alphaxiv_31paper_ebm_lf_wsp_calibration_arithmetic_and_slam_engine.py",
+    ),
+    (
+        "Pillar1_Wave43_GSE_EBM_Deconfounded_Situational_NFL",
+        "wave43_ebm_composed_deconfounded_situational_nfl_engine",
+        "src/gse_engine/tracking/wave43_ebm_composed_deconfounded_situational_nfl_engine.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (

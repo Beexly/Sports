@@ -99,3 +99,9 @@ Departure from ideal circulation conservation across a fluid or hemodynamic loop
 
 **Comparator Challenge**:
 Formal specification verification test detecting whether a candidate mathematical policy is genuinely faithful or a trivial tautology.
+
+**Net Closing Line Value vs Break-Even Hit Rate**:
+Strict separation between standard-vig outcome win-rate break-even (`52.38%` at `-110` odds) and expected margin-free economic closing edge (`E[fair_close_prob * offered_decimal_odds - 1]`), preventing unadjusted beat-close hit frequencies from masquerading as positive expected value.
+
+**Isotonic Effective Degrees of Freedom**:
+The finite-sample complexity budget (`K` monotone steps) consumed by piecewise isotonic or centered-isotonic calibration mappings, governing small-sample optimism and parametric shrinkage requirements.

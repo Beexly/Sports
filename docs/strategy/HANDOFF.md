@@ -3,6 +3,20 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-18 (2026-11-18 CT) -- Wave 43 31-Paper alphaXiv/arXiv EBM, LF, iWSP/WSR, SLAM Dunk, Calibration Arithmetic Remediation & Deconfounded NFL Engine (`340+24=364` RLVR)
+
+- **What changed**:
+  - Ingested `31` unique alphaXiv/arXiv preprints (`6` Nov 2026 frontier preprints totaling `217` pp. + `25` calibration/FLB/Kelly/anti-overfit preprints) into `data/arxiv_2026_11_alphaxiv/alphaxiv_31paper_frontier_and_arithmetic_audit_vault_2026.json` (`sha256 a28d242a8bdd4566`) alongside `.licenses/alphaxiv_arxiv_nov2026_31papers_LICENSE.txt`.
+  - Remediated all `5` flagged repo arithmetic issues across `packages/prediction-engine/src/gse-pre-seal/devig-helper.ts` (added `continuousLogitPowerDevig` & `devigTotalToFairLineContinuous` while keeping `9/9` legacy tests intact -> `10/10` Vitest passing), `ENGINE_METHOD.md`, `docs/ops/CALIBRATION_PIPELINE.md`, and `GLOSSARY.md` (keeping frozen `CLAUDE.md`, `AGENTS.md`, `brain/mind.jsonl`, and `constants.ts` untouched).
+  - Built `src/gse_engine/science/wave43_alphaxiv_31paper_ebm_lf_wsp_calibration_arithmetic_and_slam_engine.py` (`CLINICAL_RUO_ALPHAXIV_W43_SPORTS_WEIGHT = 0.0`) verifying Eq. `(8)` Latent Feedback `778M` held-out predictions (`0.3338%` max rel error, `2.3318x` compute amp), Dai-Du Eq. `(162/163/167)` EBM composition & Fig. `12` reversal, zero-backprop iWSP confound separation (`r = 0.84014 -> 0.90291`), WSR RMSNorm exact invariance (`6.91e-13`, `0.0` inert false alarms), Unbundled Vision `-30.65%` TTFT, SLAM Dunk `0.77 -> 0.09 m/km` drift floor, Rossellini `df = K` CIR shrinkage (`OOS Brier 0.217558 -> 0.205956`), Fisher-z LCB, and Landolfi Student-t drawdown ratio (`1.2464x`).
+  - Built `src/gse_engine/tracking/wave43_ebm_composed_deconfounded_situational_nfl_engine.py` (`<= W10` causal PBP, `6` additive EBM margin potentials, `2` game-total drivers, `5` quarantined metrics at `0.0`, `200`-draw Rademacher martingale placebo `p = 0.03483`, `8/8 PARSED_EVALUATED` ASTs, fail-closed `OperatorSimulationHoldError` above W10) and wired all 6 spine/guardrail/RLVR layers (`Group T: 328 -> 340`, `+ 24 = 364`).
+- **What was proven**:
+  - `147`-game OOS walk-forward ablation improved monotonically (`alpha_margin = 0.28`, `alpha_total = 0.45`): normalized CRPS `7.0190 -> 7.0141`, raw CRPS `6.9208 -> 6.9159` (`< 7.0108` close), Margin MAE `9.6616 -> 9.6552` (`< 9.7687` close), Total MAE `10.3739 -> 10.3545` (`< 10.4116` close), Brier `0.21926 -> 0.21922`, ECE `0.07043 -> 0.07031`, `rliable_iqm = 0.733358`, `fwl_partial_slope = 1.486256`, `all_floors_held = true`.
+  - `43,225,000`-snap PBP simulation: spotlight CRPS `8.9508 -> 8.9392`, all-147 PBP CRPS `7.0004 -> 6.9906` (`< 7.0108` close; `MAIN_SHA = aad67e08630e7517a6b094b4afb915cc0b936a542bfbcd16e1784a6e290d3779`, `W43_SHA = efa8371e99985f58bf4d94c77ad050c84050cb4ec57d230ede4d0e4e1b109667`).
+  - `340+24=364` RLVR zero-odds (`all_verifiers_passed = true`, `multipack = 0.974395`), `10/10` Vitest, `ruff check` & `mypy --strict` clean (`104` files), `pre_sim_total_intelligence_gate.py --self-test` `PASS` (`dead_leaf_unwired_pre_sim_modules = []`).
+- **What was not**: Live `>= W11` NFL week simulations stay held under `OperatorSimulationHoldError`, `real_money_stake_cleared = false`, `clinical_ruo_sports_weight = 0.0`, and `brain/mind.jsonl` remains untouched for the single-writer trainer.
+- **Next role must**: Keep clinical RUO weights at `0.0`, use `continuousLogitPowerDevig` on near-even markets instead of fixed `0.0537` step subtraction, enforce out-of-loop martingale falsification on new PBP potentials, and run `python tests/verify_out_of_sample_calibration.py --enforce-gate` before modifying any Stage-2/3 spine weight.
+
 ## 2026-11-18 (2026-11-18 CT) -- Wave 42 GSI AlphaFold DB v6 / InterPro Proteolysis & ICU Trajectory + 18-Sport Darts/Cycling & NFL PFR/QBR Engine (`328+24` RLVR)
 
 - **What changed**:

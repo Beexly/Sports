@@ -156,3 +156,116 @@ export function devigTotalToFairLine(
 
   return Number((mu + sigma * normalInvCdf(1 - pOver)).toFixed(4));
 }
+
+export interface ContinuousDevigResult {
+  /** Raw implied probabilities from American odds. */
+  readonly implied: { readonly sideA: number; readonly sideB: number; readonly sum: number };
+  /** Continuous power de-vigged probabilities (q_A^k + q_B^k = 1). */
+  readonly powerFair: { readonly sideA: number; readonly sideB: number; readonly k: number };
+  /** Final calibrated probability pair after optional logit FLB exponent flbGamma. */
+  readonly fairA: number;
+  readonly fairB: number;
+  readonly flbGamma: number;
+}
+
+/**
+ * Continuous power + optional logit FLB de-vig (Goto et al. 2026 / Shin class).
+ *
+ * Eliminates the 10.74 percentage-point step discontinuity of constant additive
+ * FAVORITE_RESIDUAL shifts near 50/50 (-110 / -110 -> exact 0.5 / 0.5) while
+ * monotonically preserving side ordering (p_fav >= 0.5 >= p_dog) and exact
+ * unit mass conservation.
+ */
+export function continuousLogitPowerDevig(
+  sideAOdds: number,
+  sideBOdds: number,
+  flbGamma: number = 1.0,
+): ContinuousDevigResult {
+  if (!(Number.isFinite(flbGamma) && flbGamma > 0)) {
+    throw new RangeError(`flbGamma must be finite and > 0 (got ${flbGamma})`);
+  }
+  const qA = americanToImplied(sideAOdds);
+  const qB = americanToImplied(sideBOdds);
+  const booksum = qA + qB;
+
+  if (!(booksum > 0)) {
+    return {
+      implied: { sideA: 0.5, sideB: 0.5, sum: 0 },
+      powerFair: { sideA: 0.5, sideB: 0.5, k: 1 },
+      fairA: 0.5,
+      fairB: 0.5,
+      flbGamma,
+    };
+  }
+
+  let pPowA: number;
+  let k = 1;
+  if (Math.abs(booksum - 1) <= 1e-9) {
+    pPowA = qA / booksum;
+  } else {
+    const pSum = (expK: number): number => (qA > 0 ? qA ** expK : 0) + (qB > 0 ? qB ** expK : 0);
+    let lo = 1e-6;
+    let hi = 32;
+    if (booksum > 1) {
+      lo = 1;
+      while (pSum(hi) > 1 && hi < 256) hi *= 2;
+    } else {
+      hi = 1;
+      while (pSum(lo) < 1 && lo > 1e-8) lo /= 2;
+    }
+    for (let i = 0; i < 80; i++) {
+      k = 0.5 * (lo + hi);
+      if (pSum(k) > 1) lo = k;
+      else hi = k;
+    }
+    const aK = qA > 0 ? qA ** k : 0;
+    const bK = qB > 0 ? qB ** k : 0;
+    const tot = aK + bK;
+    pPowA = tot > 0 ? aK / tot : 0.5;
+  }
+
+  let fairA = pPowA;
+  if (flbGamma !== 1.0) {
+    const clamped = Math.min(1 - 1e-9, Math.max(1e-9, pPowA));
+    const logit = Math.log(clamped / (1 - clamped));
+    fairA = 1 / (1 + Math.exp(-flbGamma * logit));
+  }
+  const fairB = 1 - fairA;
+
+  return {
+    implied: {
+      sideA: Number(qA.toFixed(6)),
+      sideB: Number(qB.toFixed(6)),
+      sum: Number(booksum.toFixed(6)),
+    },
+    powerFair: {
+      sideA: Number(pPowA.toFixed(6)),
+      sideB: Number((1 - pPowA).toFixed(6)),
+      k: Number(k.toFixed(6)),
+    },
+    fairA: Number(fairA.toFixed(6)),
+    fairB: Number(fairB.toFixed(6)),
+    flbGamma,
+  };
+}
+
+/**
+ * Continuous normal-inverted fair total line without the -110/-110 step jump.
+ */
+export function devigTotalToFairLineContinuous(
+  overOdds: number,
+  underOdds: number,
+  p10: number | null | undefined,
+  p90: number | null | undefined,
+  rawTotal: number,
+  flbGamma: number = 1.0,
+): number {
+  const pOver = continuousLogitPowerDevig(overOdds, underOdds, flbGamma).fairA;
+  if (p10 == null || p90 == null || !(pOver > 0 && pOver < 1)) return rawTotal;
+
+  const mu = (p10 + p90) / 2;
+  const sigma = (p90 - p10) / (2 * 1.2816);
+  if (!(sigma > 0)) return rawTotal;
+
+  return Number((mu + sigma * normalInvCdf(1 - pOver)).toFixed(4));
+}

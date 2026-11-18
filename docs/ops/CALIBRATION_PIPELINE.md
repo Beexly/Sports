@@ -88,3 +88,12 @@ stakes[]  (0 until CLV floor)
 
 Import: `sizeAfterCalibration`, `portfolioKellyStakes` from `@sports/prediction-engine`.
 
+## Mathematical Guardrails & Arithmetic Audit (2026-11-18)
+
+1. **Hit-Rate Break-Even (`52.38%` at `-110`) vs Net Closing Line Value (`CLV`):** `110 / 210 = 52.381%` is the two-way break-even *outcome win rate* at standard `-110` vig, not expected `CLV` (`arXiv:2608.11505` Pitcan, `2609.06739` Dmochowski, `2303.06021` Walsh & Joshi, `2602.09982` Beuoy, `1710.02824` Kaunitz et al.). Beating a closing price by a smaller fraction than the bookmaker overround (`~4.55%`) can leave net EV negative even at a `>52.4%` beat-close rate; genuine economic edge requires margin-free net CLV `E[p_close_fair * d_offered - 1] > 0` and positive Kelly log-wealth Bayes factors.
+2. **Binary Isotonic / CIR Degrees of Freedom (`df = K` steps):** Maximizing `countDistinctPredictions` without complexity control increases binary isotonic effective degrees of freedom `K` and in-sample optimism `2 * K * p_bar * (1 - p_bar) / n` (`arXiv:2607.27301` Rossellini, Barber, Ren & Soloff; `2610.31258` Biegert et al.). Shrink CIR outputs toward a smooth parametric logistic/Beta curve when `K / n` is elevated.
+3. **Conformal Coverage Is Not Conditional Kelly Edge:** `1 - alpha` marginal conformal interval coverage does not establish positive conditional log-wealth growth (`arXiv:2608.01494` Ryan); size zero or shrink positions whenever calibrated mean excess edge over fair close does not clear execution and correlation drag.
+4. **Fisher-z LCB `clvDeflator`, Effective Sample Size & Non-Gaussian Drawdown:** At small sample sizes (`n = 25` implies binomial `SE = 10%`; `n = 50` implies Fisher-z `SE = 0.146`), raw `rhoClv` exhibits wide sampling noise (`arXiv:2607.27544` Ulrich, `2501.03938` Jacquier et al.). Production sizing must gate on the one-sided Fisher-z lower confidence bound (`tanh(atanh(rho) - z_alpha / sqrt(n - 3))`) and adjust drawdown limits for discrete non-Gaussian tail magnification above continuous Brownian bounds (`arXiv:2608.00127` Landolfi).
+5. **Out-of-Loop Search Deflation & Martingale Falsification:** Deflated Sharpe, MinervaScore, GT-Score, IS/WFA/OOS admission gates, and prior-anchored e-value tests must be applied strictly *out-of-loop* against martingale sign-flip placebos (`arXiv:2611.14539` Gencay, `2604.15531` Nikolopoulos, `2610.07701` Zheng, `2608.23808` Santoni et al., `2602.00080` Sheppert, `2603.09219` Pham et al., `2611.15456` Xu, Liu & Sutherland).
+
+

@@ -53,6 +53,10 @@ from gse_engine.tracking.wave42_pfr_advstats_qbr_two_high_yac_and_total_pace_eng
     evaluate_causal_w42_game_total_accuracy_adot_shift,
     evaluate_wave42_pfr_advstats_qbr_and_18sport_suite,
 )
+from gse_engine.tracking.wave43_ebm_composed_deconfounded_situational_nfl_engine import (  # noqa: E501
+    evaluate_causal_w43_game_total_deconfounded_shift,
+    evaluate_wave43_ebm_deconfounded_nfl_and_alphaxiv_suite,
+)
 
 _TEAM_ALIAS: dict[str, str] = {"LA": "LAR", "WSH": "WAS", "JAC": "JAX"}
 
@@ -953,8 +957,16 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 repo_root=repo_root,
             )
             w42_sig = float(w42_g["w42_close_residual_signal"])
+            w43_g = evaluate_wave43_ebm_deconfounded_nfl_and_alphaxiv_suite(
+                away_team=g.away_team,
+                home_team=g.home_team,
+                as_of_week=int(wk),
+                is_indoor=bool(g.is_indoor),
+                repo_root=repo_root,
+            )
+            w43_sig = float(w43_g["w43_close_residual_signal"])
 
-            # Layer-1 market foundation + Wave 32-42 FWL-damped orthogonal shift
+            # Layer-1 market foundation + Wave 32-43 FWL-damped orthogonal shift
             epa_edge_pts = (
                 (hm_shrunk_net - aw_shrunk_net) * 18.0
                 + 0.10 * (hm_aux_sc - aw_aux_sc) * 14.0
@@ -969,6 +981,7 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 + 0.30 * w40_sig
                 + 0.25 * w41_sig
                 + 0.28 * w42_sig
+                + 0.28 * w43_sig
             )
             mkt_implied_edge = g.expected_home_margin_mkt
             orth_resid = epa_edge_pts - 0.55 * mkt_implied_edge
@@ -988,7 +1001,22 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 is_indoor=bool(g.is_indoor),
                 repo_root=repo_root,
             )
-            tot_shift = max(-1.8, min(1.8, dome_tot_shift + float(w42_tot["total_shift_pts"])))
+            w43_tot = evaluate_causal_w43_game_total_deconfounded_shift(
+                away_team=g.away_team,
+                home_team=g.home_team,
+                as_of_week=int(wk),
+                is_indoor=bool(g.is_indoor),
+                repo_root=repo_root,
+            )
+            tot_shift = max(
+                -1.8,
+                min(
+                    1.8,
+                    dome_tot_shift
+                    + float(w42_tot["total_shift_pts"])
+                    + float(w43_tot["total_shift_pts"]),
+                ),
+            )
 
             mu_mkt = g.expected_home_margin_mkt
             sigma_mkt = 13.40

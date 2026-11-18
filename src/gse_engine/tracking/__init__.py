@@ -101,6 +101,15 @@ from gse_engine.tracking.wave42_pfr_advstats_qbr_two_high_yac_and_total_pace_eng
     evaluate_wave42_pfr_advstats_qbr_and_18sport_suite,
     run_wave42_gsi_alphafold_and_18sport_benchmark,
 )
+from gse_engine.tracking.wave43_ebm_composed_deconfounded_situational_nfl_engine import (  # noqa: E501
+    WAVE43_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_causal_w43_ebm_deconfounded_pbp_features,
+    evaluate_causal_w43_game_total_deconfounded_shift,
+    evaluate_w43_martingale_placebo_audit,
+    evaluate_wave43_ebm_deconfounded_nfl_and_alphaxiv_suite,
+    evaluate_wave43_live_honest_ast_equations,
+    run_wave43_alphaxiv_ebm_wsp_and_deconfounded_nfl_benchmark,
+)
 
 __all__ = [
     "AWS_NGS_GOING_DEEP_SOURCES",
@@ -116,6 +125,7 @@ __all__ = [
     "WAVE40_TRACKING_RLVR_TRAJECTORIES",
     "WAVE41_TRACKING_RLVR_TRAJECTORIES",
     "WAVE42_TRACKING_RLVR_TRAJECTORIES",
+    "WAVE43_TRACKING_RLVR_TRAJECTORIES",
     "ChalkContaminationError",
     "ClusterScalingPlan",
     "DualEpauletKinematics",
@@ -152,6 +162,8 @@ __all__ = [
     "evaluate_causal_w41_pocket_security_and_kr_features",
     "evaluate_causal_w42_game_total_accuracy_adot_shift",
     "evaluate_causal_w42_pfr_advstats_and_qbr_features",
+    "evaluate_causal_w43_ebm_deconfounded_pbp_features",
+    "evaluate_causal_w43_game_total_deconfounded_shift",
     "evaluate_contract_year_5b_incentive_audit",
     "evaluate_dated_csv_and_live_ast_equations",
     "evaluate_longitudinal_3yr_ftn_and_2025_baseline_vaults",
@@ -161,6 +173,7 @@ __all__ = [
     "evaluate_rb_speed_elusiveness_vs_lb_gap_fill",
     "evaluate_skewness_debiased_prop_tail_backtest",
     "evaluate_student_t_sgp_copula_and_cir_promotion_gate",
+    "evaluate_w43_martingale_placebo_audit",
     "evaluate_wave35_player_micro_matchup_suite",
     "evaluate_wave36_360_board_matchup_suite",
     "evaluate_wave36_live_honest_ast_equations",
@@ -176,6 +189,8 @@ __all__ = [
     "evaluate_wave41_pocket_security_kr_and_14sport_suite",
     "evaluate_wave42_live_honest_ast_equations",
     "evaluate_wave42_pfr_advstats_qbr_and_18sport_suite",
+    "evaluate_wave43_ebm_deconfounded_nfl_and_alphaxiv_suite",
+    "evaluate_wave43_live_honest_ast_equations",
     "evaluate_wr_separation_vs_db_coverage",
     "run_wave35_gsi_and_micro_metrics_benchmark",
     "run_wave36_gsi_icu_and_360_board_benchmark",
@@ -185,5 +200,6 @@ __all__ = [
     "run_wave40_ngs_and_universal_metrics_benchmark",
     "run_wave41_gsi_reactome_and_14sport_benchmark",
     "run_wave42_gsi_alphafold_and_18sport_benchmark",
+    "run_wave43_alphaxiv_ebm_wsp_and_deconfounded_nfl_benchmark",
     "verify_nonzero_stage2_jacobians",
 ]
