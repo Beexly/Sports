@@ -387,3 +387,19 @@ Reconciliation: 85 NEW with IDs = 34 dossier + 51 inventoried, minus
 Strongest finds: PattonAnalytics Substack game-script QB efficiency
 piece (TEST); WalrusQuant/sports-leader-mcp, MIT verified, 43 tools,
 30 leagues (TEST). Running feed total: 11,671 records.
+
+## Delta 2026-11-17 IG For You PM (landed 2026-11-18)
+
+Source: ~/workspace/ig-for-you-sweep/reports/2026-11-17-PM.md. Sweep:
+63 feed positions = 13 ads + 3 paid partnerships (both excluded) +
+47 organic, all 47 NEW with shortcodes, 0 duplicates, 0 NOCODE loss;
+20 dossiers + 27 inventoried-only. Delta: 47 records (20 dossier +
+27 inventoried), 0 duplicates, 0 collisions, 0 slug-keyed, 41,281
+bytes appended to ig-for-you-feed.jsonl (now 2,951 records). The
+run's three substance-carrying ads (Aikido Security free plan,
+Runway inside ChatGPT, Gemini 4 inside Antigravity) were dossiered
+in the report but stay out of the feed per the ads exclusion; the
+organic feed's tool/repo yield was zero for the second straight run,
+a pattern the report's synthesis names. Media gaps carried from the
+report: post-page video black on 24 of 47 posts; carousel slides
+unread at positions 44, 47, 51. Running feed total: 11,718 records.
