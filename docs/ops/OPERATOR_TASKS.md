@@ -21,7 +21,7 @@ off it.
 | BRANCH-PROTECT | Confirm branch protection on `main` | GitHub repo → Settings → Branches | No — GitHub repo-settings-level | Open |
 | SANDBOX-NET | Sandbox is enabled with a 20-domain allowlist; make it fail closed | On a machine with bubblewrap (Linux) or seatbelt (macOS): run one agent session and confirm `sandbox` reports active; then set `sandbox.failIfUnavailable: true` in `.claude/settings.json` (owner-only). Until then a machine without a sandbox runtime runs unsandboxed, which is why `npm run ops:tasks` reports this row UNVERIFIED (2026-09-02) | Partly (`npm run ops:tasks` verifies enabled + allowlist + failIfUnavailable) | Open — enabled in PR #684; fail-closed flip pending the owner's verification run |
 | NEXT-MAJOR | Plan the Next.js 14 → 15/16 major upgrade | Separate migration project; the two `dependency-audit` waivers (`next`, bundled `postcss`) are reviewed by 2027-01-15 | Partly (`node scripts/guardrails/dependency-audit.mjs` shows the waivers) | Open |
-| SENTRY-ROLLUP-CHAIN | Remove the picomatch ReDoS from the production build chain | Drop `@rollup/plugin-commonjs` from `@sentry/nextjs` (upstream pins `28.0.1` even in 11.14.0) or land a patched picomatch when published, then delete the five `dependency-audit` waivers added 2026-11-17 | Partly (`node scripts/guardrails/dependency-audit.mjs` shows the waivers) | Open |
+| SENTRY-ROLLUP-CHAIN | Remove the picomatch ReDoS from the production build chain | Drop `@rollup/plugin-commonjs` from `@sentry/nextjs` (upstream pins `28.0.1` even in 11.14.0) or land a patched picomatch when published, then delete the five `dependency-audit` waivers added 2026-11-17 | Closed 2026-11-18 — GitHub withdrew the advisory, the gate flagged all five waivers stale, and they were deleted | Closed |
 | HENRYGD-REG | Register (or reject) the henrygd NCAA API in the source-rights registry | Owner/legal read, then a row in `apps/web/lib/scraping/source-rights-registry.ts` | Partly (`checkClearance` denies it today; NCAA settlement runs single-source) | Open |
 | PRE-COMMIT-BRAND | Run the brand trust gate in the pre-commit hook, not only in CI | Replace `.githooks/pre-commit` with the text in "Pre-commit brand gate" below (`.githooks/**` is agent-denied; the bash guard refused the write on 2026-09-02, as designed) | No — hook files are owner-only | Open (hook text ready, 2026-09-02) |
 | STALE-PICKS | Unpublish the 20 stale published PENDING picks on unstarted NFL/NCAAF games before Week 1. Decision recorded 2026-09-05 (founder delegated): unpublish every row the tool selects; not void, not leave | Dry run: `npm run ops:stale-picks:unpublish` (writes nothing). Apply: `npm run ops:stale-picks:unpublish -- --execute` (one `updateMany`, `isPublished=false` only, then re-runs the selection and prints the remainder). Owner runs it with `DATABASE_URL` set; never a cron, never an agent | Partly (`npm run ops:stale-picks` lists read-only; the truth surface counts `stalePendingPicks`) | Open (2026-09-05; decision recorded, apply pending) |
@@ -212,17 +212,14 @@ off it.
   `reviewBy: 2027-01-15`; `dependency-audit` fails once that date passes without
   either the upgrade or a renewed, justified waiver. Not an agent change: it is a
   framework migration with its own test pass.
-- [ ] **SENTRY-ROLLUP-CHAIN** — Remove the picomatch ReDoS from the production tree.
-  `@sentry/nextjs` (a runtime dep of `apps/web`) pulls `@rollup/plugin-commonjs`
-  → `@rollup/pluginutils` / `fdir` → `picomatch`; GHSA-fc5q-39xc-vjpf /
-  CVE-2026-112366 (ReDoS via single-branch repeated extglobs) has NO patched
-  picomatch release — every version through the latest 4.0.7 is affected, and
-  Sentry's latest (11.14.0) still pins the same `@rollup/plugin-commonjs@28.0.1`,
-  so the major upgrade does not clear it. The five `dependency-audit` waivers
-  added 2026-11-17 (`reviewBy: 2027-01-15`) cover it until either upstream ships
-  a fix or Sentry drops the rollup chain; `dependency-audit` fails once that date
-  passes without one. Agent-changeable once a fix exists; not an agent change
-  today because there is nothing to bump to.
+- [x] **SENTRY-ROLLUP-CHAIN** — Resolved by withdrawal, 2026-11-18. GHSA-fc5q-39xc-vjpf /
+  CVE-2026-112366 was WITHDRAWN by GitHub on 2026-11-18T15:38Z, so `npm audit`
+  no longer reports it and the five `dependency-audit` waivers added 2026-11-17
+  became stale (the gate itself flagged them). The waivers were deleted in the
+  same commit; the picomatch 4.0.4 copies and Sentry's pinned
+  `@rollup/plugin-commonjs@28.0.1` are unchanged, so if the advisory is
+  re-published the task comes back and the entries should be restored from git
+  history rather than re-derived.
 
 ## Repo policy files (AGENTS.md law 2)
 

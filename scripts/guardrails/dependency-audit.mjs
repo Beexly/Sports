@@ -102,45 +102,15 @@ const ACCEPTED = [
     reason: "Only the copy bundled inside next/node_modules is affected; it is remediated by the same next@16 major upgrade. The top-level postcss is already patched.",
     maxSeverity: "high",
   },
-  // ── picomatch ReDoS (GHSA-fc5q-39xc-vjpf / CVE-2026-112366), 2026-11-17 ─────
-  // One advisory, five production packages. NVD lists NO patched version — every
-  // picomatch release through the latest 4.0.7 is affected, so no bump can clear
-  // it. In this tree picomatch is reached ONLY through @sentry/nextjs's build-time
-  // bundler chain (@rollup/plugin-commonjs -> @rollup/pluginutils / fdir), whose
-  // globs are developer-authored static config (Sentry source-map include/exclude),
-  // never attacker-supplied request data. Sentry's latest (11.14.0) still pins the
-  // same @rollup/plugin-commonjs@28.0.1, so the major upgrade does not help either.
-  // Re-review when upstream ships a fixed picomatch or Sentry drops the rollup chain.
-  {
-    package: "picomatch",
-    reviewBy: "2027-01-15",
-    reason: "GHSA-fc5q-39xc-vjpf / CVE-2026-112366: ReDoS via single-branch repeated extglobs (CWE-1333, CVSS 4.0 availability-only VA:H). No patched version exists — every release through the latest 4.0.7 is affected. Reached only via @sentry/nextjs's build-time bundler chain, on developer-authored static globs, never untrusted input.",
-    maxSeverity: "high",
-  },
-  {
-    package: "@rollup/plugin-commonjs",
-    reviewBy: "2027-01-15",
-    reason: "Waived 2026-11-17 with picomatch (GHSA-fc5q-39xc-vjpf, no patch exists). A build-time dependency of @sentry/nextjs (pinned 28.0.1 even in Sentry 11.14.0); its ONLY high advisory is the picomatch ReDoS it transitively bundles. Not on the runtime request path.",
-    maxSeverity: "high",
-  },
-  {
-    package: "@rollup/pluginutils",
-    reviewBy: "2027-01-15",
-    reason: "Waived 2026-11-17 with picomatch (GHSA-fc5q-39xc-vjpf, no patch exists). Build-time dependency of @rollup/plugin-commonjs; its ONLY high advisory is the picomatch ReDoS it transitively bundles. Not on the runtime request path.",
-    maxSeverity: "high",
-  },
-  {
-    package: "fdir",
-    reviewBy: "2027-01-15",
-    reason: "Waived 2026-11-17 with picomatch (GHSA-fc5q-39xc-vjpf, no patch exists). Build-time directory-globber pulled by @rollup/plugin-commonjs; its ONLY high advisory is the picomatch ReDoS it transitively bundles. Not on the runtime request path.",
-    maxSeverity: "high",
-  },
-  {
-    package: "@sentry/nextjs",
-    reviewBy: "2027-01-15",
-    reason: "Waived 2026-11-17. Its high advisory is purely transitive: @sentry/nextjs -> @rollup/plugin-commonjs -> picomatch (GHSA-fc5q-39xc-vjpf ReDoS; no patched picomatch exists and Sentry 11.14.0 still pins the same @rollup/plugin-commonjs@28.0.1, so upgrading the major does not clear it). The vulnerable code lives in the build-time bundler plugin, invoked on developer-authored globs only. Removal tracked in docs/ops/OPERATOR_TASKS.md.",
-    maxSeverity: "high",
-  },
+  // ── picomatch ReDoS waivers REMOVED 2026-11-18 ───────────────────────────
+  // Five entries (picomatch, @rollup/plugin-commonjs, @rollup/pluginutils, fdir,
+  // @sentry/nextjs) waived GHSA-fc5q-39xc-vjpf / CVE-2026-112366 from 2026-11-17.
+  // GitHub WITHDREW that advisory on 2026-11-18T15:38Z ("Withdrawn Advisory:
+  // picomatch vulnerable to ReDoS through single-branch repeated extglobs"), so
+  // `npm audit` no longer reports it and this gate correctly called all five
+  // waivers stale. Deleted rather than left as dead weight. If the advisory is
+  // re-published, re-add the entries from this block's git history rather than
+  // re-deriving them.
 ];
 
 const args = new Set(process.argv.slice(2));
