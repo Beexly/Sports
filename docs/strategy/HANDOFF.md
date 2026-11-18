@@ -3,6 +3,22 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-18 (Hermes autonomous cycle #6 — epistemic-gate tranche 2 finished and rebased onto `main`; the 758-skills wrapper method was the tranche's own gap)
+
+- **What changed** (branch `fix/epistemic-gate-tranche2-2026-11-17`, rebased onto `origin/main` `1203f18ae`):
+  - `tests/unit/test_all_installed_skills_execution.py` — the module-level `pytestmark` skip (which silenced the *infrastructure-manifest* suite that reads repo files and must run in CI) was narrowed to the two host-bound assertions, **and** the `TestAllInstalledSkillsExecution` wrapper method `test_all_758_skills_executed_and_verified` was given the same `@unittest.skipUnless(_SKILLS_INSTALL_PRESENT, …)` gate. The ephemeral tranche commit had gated only the module-level bare function; pytest collects BOTH the bare function and the unittest wrapper method, so the wrapper still ran `run_all_758_skills_execution_suite()` on a portable runner and failed (`assert 0 >= 758`). The infra-manifest suite is now ungated in CI.
+  - Rebased the tranche onto current `main` so it inherits the dependency-audit waivers (#1297): the stale `All guardrails` / `Dependency audit` failures on the old base were the pre-#1297 advisory red, not this tranche's.
+  - `.github/workflows/epistemic_gate.yml` (from the tranche) pins `ruff==0.17.4` in the pip step, so `_RUFF_PRESENT` is true in CI and `test_repo9_astral_ruff_native_linter_and_security_check` actually runs; verified locally with the same ruff that it passes.
+- **What was proven** (all locally, Python 3.13 + pytest for the skip logic; byte-for-byte on the rebased tree):
+  - `python -m pytest tests/unit/test_all_installed_skills_execution.py` with a **forced-empty `HOME`/`USERPROFILE`** (the CI-runner case) → `2 passed, 2 skipped, 0 failed` (was `1 failed` before the wrapper gate: the undecorated wrapper method hit `assert 0 >= 758`).
+  - The same file on the **dev box** (skills tree present) → `4 passed` — the gate is transparent where the install exists; nothing was weakened.
+  - `--collect-only` over all six tranche test files → clean (40 tests). The gated frontier/Mongo/native-kernel tests skip under the forced-empty environment exactly as intended; `test_dfs_5000…c11…` and `test_red_team…vector3…` run where the compiled native kernel is loaded (dev box) and skip where it is not (CI). `test_repo9` + the infra-manifest suite pass with the pinned ruff.
+  - `py_compile` clean on all six changed test files + the sandbox module.
+- **What was not proven / still red**: the epistemic gate stays red until the other three classes land — (B) roster/injury freshness, (C) stale value pins / artifact drift, (E) Bazel workspace config. No `main` `ci.yml` job was touched: that workflow is fully green on `1203f18ae` (33/33). The `feat/pregame-engine-dfs-harmony-2026-11-15` branch's CI is red, not `main`.
+- **What the next role must do**:
+  - Confirm the rebased tranche's PR CI: the `ci.yml` jobs (`All guardrails`, `Dependency audit`, `Test, type-check, lint, Prisma`) must be green; the `epistemic-gate` job should show a **lower failed count than 41** (the tranche moves the host-bound ~A class).
+  - Continue the gate with class B/C/E (triage doc `docs/ops/epistemic-gate-triage-2026-11-17.md`).
+
 ## 2026-11-17 (Hermes autonomous cycle #5 — the Week-9 canonical funnel artifact still projected an inactive player; regenerated, and the two remaining 7-gate reds named)
 
 - **What changed**:

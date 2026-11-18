@@ -279,6 +279,10 @@ def test_vector2_two_stage_19_equations_non_constant_and_strict_json() -> None:
 # ============================================================================
 
 
+@pytest.mark.skipif(
+    not is_native_kernel_loaded(),
+    reason="requires the compiled native kernel libgse_native_kernels (built from intelligence/native_kernels/src); absent on a portable CI runner",
+)
 def test_vector3_native_c11_cpp20_dll_adversarial_edge_cases() -> None:
     """Stress-test all 6 native C11/C++20 kernels with NaN, Inf, n=0, n=1, negative std, and huge IDs."""
     assert is_native_kernel_loaded(), "libgse_native_kernels.dll must be loaded!"
