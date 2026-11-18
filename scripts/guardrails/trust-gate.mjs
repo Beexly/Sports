@@ -579,6 +579,42 @@ function isVerbatimSocialDigestLine(line) {
   );
 }
 
+// DIGEST PROSE SHAPES for the QB surname, kept in lock-step with
+// apps/web/lib/trust-claims.ts LOCK_DIGEST_PROSE_SHAPES (2026-11-18). The
+// Nov 18 09:08 CT sweep's AGENTS.md digest restates its own Lock items in
+// running prose: a section clause ("Lock same-defense EPA comparisons") and a
+// back-reference to the GSE Lock LABEL ("the two Lock items above"). Both carry
+// a capital L; the betting-slang claim forms are lowercase ("a lock", "my lock
+// of the day", "bills/lock/chiefs") and still hit. Case-SENSITIVE on purpose
+// (no /i): under /i, "that lock's a sure thing" would be blanked. Applied only
+// for SCAN_FILES, like every other quoted-digest form.
+const LOCK_DIGEST_PROSE_SHAPES =
+  /\bLock\s+same[- ]defense\b|\bLock\s+items?\b/g;
+
+// A PROTECTED X PROFILE'S PADLOCK ICON, transcribed verbatim:
+// 'Profile: "Follow @FTNFantasy" with a lock, 1,276 posts, 1 Following, 2,540
+// Followers'. "with a lock" followed by a post/follower count is a UI glyph for
+// a protected account, not a pick claim. Anchored to that count so betting prose
+// — "priced with a lock, 2 units" — still hits.
+const LOCK_PADLOCK_PROFILE_SHAPE =
+  /\bwith a lock,?\s*\d[\d,]*\s+(?:posts?|followers?)\b/gi;
+
+// VERBATIM QUOTED THIRD-PARTY COPY. Root memory docs transcribe rivals' and
+// analysts' profiles and post text "as printed"; that copy carries wording this
+// platform would never ship — a pundit's bio ("AI-assisted content & analysis")
+// or a pundit calling a player "a lock" (Text note as printed: "Lamb looks like
+// a lock…"). It is their copy quoted, not a claim GSE makes.
+//
+// Deliberately narrow: the line must carry an explicit transcription marker AND
+// at least one double-quoted span. Whatever sits OUTSIDE the quotes on the same
+// line is still scanned, so an unattributed claim next to a quoted bio still
+// hits. Only applied for SCAN_FILES.
+function blankAttributedQuotedSpans(line) {
+  if (!/\b(?:as printed|quoted verbatim|verbatim transcription)\b/i.test(line)) return line;
+  if (!line.includes('"')) return line;
+  return line.replace(/"[^"]*"/g, " ");
+}
+
 const WHITELIST_PREFIXES = [
   "apps/web/lib/compliance-scanner/",
   "apps/web/lib/studio/templates/",
@@ -727,7 +763,9 @@ function scanText(text, relPath) {
         /@\w+/.test(rawLines[i]);
       const matched = !digestQuote && !attributedQuote && candidates.some((candidate) => {
         let subject = candidate;
+        const isMemoryDoc = SCAN_FILES.includes(relNorm);
         if (entry.claim === "banned.lock") {
+          if (isMemoryDoc) subject = blankAttributedQuotedSpans(subject);
           subject = subject
             .replace(LOCK_SAFE_CONTEXT, " ")
             .replace(LOCKFILE_SAFE_CONTEXT, " ")
@@ -742,8 +780,11 @@ function scanText(text, relPath) {
           // "We locked in on that bet at Lock 2.77." and pass. The
           // proper-noun forms above stay unscoped -- they are legitimate
           // anywhere.
-          if (SCAN_FILES.includes(relNorm)) {
-            subject = subject.replace(LOCK_STAT_TABLE_SAFE_CONTEXT, " ");
+          if (isMemoryDoc) {
+            subject = subject
+              .replace(LOCK_DIGEST_PROSE_SHAPES, " ")
+              .replace(LOCK_PADLOCK_PROFILE_SHAPE, " ")
+              .replace(LOCK_STAT_TABLE_SAFE_CONTEXT, " ");
           }
         } else if (
           entry.claim === "banned.guaranteed-outcome" &&
