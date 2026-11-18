@@ -335,6 +335,16 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "wave38_presnap_scheme_def_continuity_sgp_copula_and_cir_engine",
         "src/gse_engine/tracking/wave38_presnap_scheme_def_continuity_sgp_copula_and_cir_engine.py",
     ),
+    (
+        "Pillar1_Wave39_GSI_HPA_Proteomics_ChronicSOFA",
+        "wave39_gsi_hpa_proteomics_mrna_concordance_and_chronic_sofa_engine",
+        "src/gse_engine/science/wave39_gsi_hpa_proteomics_mrna_concordance_and_chronic_sofa_engine.py",
+    ),
+    (
+        "Pillar1_Wave39_GSE_PassRush_Drops_TotalMAE_3YrFTN",
+        "wave39_pass_rush_disruption_drops_total_kickoff_and_3yr_ftn_engine",
+        "src/gse_engine/tracking/wave39_pass_rush_disruption_drops_total_kickoff_and_3yr_ftn_engine.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (

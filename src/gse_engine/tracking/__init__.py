@@ -69,6 +69,15 @@ from gse_engine.tracking.wave38_presnap_scheme_def_continuity_sgp_copula_and_cir
     evaluate_wave38_presnap_sgp_copula_and_cir_suite,
     run_wave38_gsi_gtex_and_sgp_copula_cir_benchmark,
 )
+from gse_engine.tracking.wave39_pass_rush_disruption_drops_total_kickoff_and_3yr_ftn_engine import (  # noqa: E501
+    WAVE39_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_causal_w39_disruption_drops_and_total_features,
+    evaluate_causal_w39_game_total_environmental_shift,
+    evaluate_longitudinal_3yr_ftn_and_2025_baseline_vaults,
+    evaluate_wave39_disruption_total_and_3yr_ftn_suite,
+    evaluate_wave39_live_honest_ast_equations,
+    run_wave39_gsi_hpa_and_disruption_total_benchmark,
+)
 
 __all__ = [
     "AWS_NGS_GOING_DEEP_SOURCES",
@@ -80,6 +89,7 @@ __all__ = [
     "WAVE36_TRACKING_RLVR_TRAJECTORIES",
     "WAVE37_TRACKING_RLVR_TRAJECTORIES",
     "WAVE38_TRACKING_RLVR_TRAJECTORIES",
+    "WAVE39_TRACKING_RLVR_TRAJECTORIES",
     "ChalkContaminationError",
     "ClusterScalingPlan",
     "DualEpauletKinematics",
@@ -110,8 +120,11 @@ __all__ = [
     "evaluate_causal_w36_team_and_officials_features",
     "evaluate_causal_w37_ol_continuity_rest_and_trench_features",
     "evaluate_causal_w38_heavy_box_clutch_and_front_continuity",
+    "evaluate_causal_w39_disruption_drops_and_total_features",
+    "evaluate_causal_w39_game_total_environmental_shift",
     "evaluate_contract_year_5b_incentive_audit",
     "evaluate_dated_csv_and_live_ast_equations",
+    "evaluate_longitudinal_3yr_ftn_and_2025_baseline_vaults",
     "evaluate_presnap_run_concept_and_coverage_shell_matrix",
     "evaluate_qb_air_yards_and_catchable_accuracy",
     "evaluate_rb_speed_elusiveness_vs_lb_gap_fill",
@@ -124,10 +137,13 @@ __all__ = [
     "evaluate_wave37_ol_continuity_and_prop_tail_suite",
     "evaluate_wave38_live_honest_ast_equations",
     "evaluate_wave38_presnap_sgp_copula_and_cir_suite",
+    "evaluate_wave39_disruption_total_and_3yr_ftn_suite",
+    "evaluate_wave39_live_honest_ast_equations",
     "evaluate_wr_separation_vs_db_coverage",
     "run_wave35_gsi_and_micro_metrics_benchmark",
     "run_wave36_gsi_icu_and_360_board_benchmark",
     "run_wave37_gsi_sofa_and_ol_continuity_benchmark",
     "run_wave38_gsi_gtex_and_sgp_copula_cir_benchmark",
+    "run_wave39_gsi_hpa_and_disruption_total_benchmark",
     "verify_nonzero_stage2_jacobians",
 ]

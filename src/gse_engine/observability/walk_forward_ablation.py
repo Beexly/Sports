@@ -39,6 +39,10 @@ from gse_engine.tracking.wave37_ol_continuity_rest_stuff_pedigree_and_skew_props
 from gse_engine.tracking.wave38_presnap_scheme_def_continuity_sgp_copula_and_cir_engine import (  # noqa: E501
     evaluate_wave38_presnap_sgp_copula_and_cir_suite,
 )
+from gse_engine.tracking.wave39_pass_rush_disruption_drops_total_kickoff_and_3yr_ftn_engine import (  # noqa: E501
+    evaluate_causal_w39_game_total_environmental_shift,
+    evaluate_wave39_disruption_total_and_3yr_ftn_suite,
+)
 
 _TEAM_ALIAS: dict[str, str] = {"LA": "LAR", "WSH": "WAS", "JAC": "JAX"}
 
@@ -907,8 +911,16 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 repo_root=repo_root,
             )
             w38_sig = float(w38_g["w38_close_residual_signal"])
+            w39_g = evaluate_wave39_disruption_total_and_3yr_ftn_suite(
+                away_team=g.away_team,
+                home_team=g.home_team,
+                as_of_week=int(wk),
+                is_indoor=bool(g.is_indoor),
+                repo_root=repo_root,
+            )
+            w39_sig = float(w39_g["w39_close_residual_signal"])
 
-            # Layer-1 market foundation + Wave 32/34/35/36/37/38 FWL-damped orthogonal shift
+            # Layer-1 market foundation + Wave 32/34/35/36/37/38/39 FWL-damped orthogonal shift
             epa_edge_pts = (
                 (hm_shrunk_net - aw_shrunk_net) * 18.0
                 + 0.10 * (hm_aux_sc - aw_aux_sc) * 14.0
@@ -919,11 +931,19 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 + 0.25 * w36_sig
                 + 0.60 * w37_sig
                 + 0.60 * w38_sig
+                + 0.35 * w39_sig
             )
             mkt_implied_edge = g.expected_home_margin_mkt
             orth_resid = epa_edge_pts - 0.55 * mkt_implied_edge
             sit_shift = max(-1.75, min(1.75, 0.16 * orth_resid))
-            dome_tot_shift = 0.45 if g.is_indoor else -0.15
+            w39_tot = evaluate_causal_w39_game_total_environmental_shift(
+                away_team=g.away_team,
+                home_team=g.home_team,
+                as_of_week=int(wk),
+                is_indoor=bool(g.is_indoor),
+                repo_root=repo_root,
+            )
+            dome_tot_shift = float(w39_tot["total_shift_pts"])
 
             mu_mkt = g.expected_home_margin_mkt
             sigma_mkt = 13.40

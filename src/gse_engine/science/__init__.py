@@ -42,9 +42,17 @@ from gse_engine.science.wave38_gsi_gtex_transcriptomics_and_schrodinger_bridge_e
     evaluate_gsi_schrodinger_bridge_cellular_recovery,
     evaluate_wave38_gsi_gtex_and_schrodinger_suite,
 )
+from gse_engine.science.wave39_gsi_hpa_proteomics_mrna_concordance_and_chronic_sofa_engine import (
+    CLINICAL_RUO_HPA_SPORTS_WEIGHT,
+    WAVE39_GSI_RLVR_TRAJECTORIES,
+    evaluate_gsi_hpa_proteomics_and_gtex_concordance,
+    evaluate_gsi_mimic_iv_chronic_elixhauser_sofa_mortality,
+    evaluate_wave39_gsi_hpa_and_chronic_sofa_suite,
+)
 
 __all__ = [
     "CLINICAL_RUO_GTEX_SPORTS_WEIGHT",
+    "CLINICAL_RUO_HPA_SPORTS_WEIGHT",
     "CLINICAL_RUO_ICU_SPORTS_WEIGHT",
     "CLINICAL_RUO_SOFA_SPORTS_WEIGHT",
     "CLINICAL_RUO_SPORTS_WEIGHT",
@@ -52,6 +60,7 @@ __all__ = [
     "WAVE36_GSI_RLVR_TRAJECTORIES",
     "WAVE37_GSI_RLVR_TRAJECTORIES",
     "WAVE38_GSI_RLVR_TRAJECTORIES",
+    "WAVE39_GSI_RLVR_TRAJECTORIES",
     "BiomarkerStructuralProfile",
     "ClinicalTrialPortfolioSummary",
     "CongenericSarSummary",
@@ -61,9 +70,11 @@ __all__ = [
     "evaluate_gsi_cte_subconcussive_waveguide",
     "evaluate_gsi_glenohumeral_throwing_mechanics",
     "evaluate_gsi_gtex_v10_tissue_transcriptomic_partition",
+    "evaluate_gsi_hpa_proteomics_and_gtex_concordance",
     "evaluate_gsi_koopman_cardiac_and_wbgt_autonomic_safety",
     "evaluate_gsi_longitudinal_injury_and_tissue_mechanics",
     "evaluate_gsi_mimic_iv_6organ_sofa_and_mortality_network",
+    "evaluate_gsi_mimic_iv_chronic_elixhauser_sofa_mortality",
     "evaluate_gsi_mimic_iv_icu_critical_care_early_warning",
     "evaluate_gsi_mtu_collagen_surface_rest_mechanics",
     "evaluate_gsi_schrodinger_bridge_cellular_recovery",
@@ -72,6 +83,7 @@ __all__ = [
     "evaluate_wave36_gsi_icu_and_throwing_suite",
     "evaluate_wave37_gsi_sofa_and_mtu_suite",
     "evaluate_wave38_gsi_gtex_and_schrodinger_suite",
+    "evaluate_wave39_gsi_hpa_and_chronic_sofa_suite",
     "load_and_verify_wave16_telemetry",
     "validate_and_serialize_wave16_bundle",
 ]

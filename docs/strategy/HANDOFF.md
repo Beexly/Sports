@@ -3,6 +3,24 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-17 (2026-11-17 CT) -- Wave 39 GSI HPA Proteomics + Chronic Elixhauser SOFA & GSE Pass-Rush Disruption, Total MAE Beat-Close & 3-Yr FTN Engine (`292+24` RLVR)
+
+- **What changed**:
+  - **Hydrated 4 Longitudinal Official `nflverse` Datasets (`1.79 MB`) & Live HPA Proteomics (`35` IHC Stains)**:
+    - `ftn_charting_2024.parquet` (`48,031 x 29`, paired with `2025` `47,316` & `2026_w1_w10` `25,310` for **`120,657`** 3-yr FTN snaps showing motion climb `37.78% -> 42.03% -> 44.50%`), `stats_player_week_2025.parquet` (`19,422 x 150`), `stats_team_week_2025.parquet` (`570 x 138`), `snap_counts_2025.parquet` (`26,613 x 16`), and live Human Protein Atlas proteomics (`data/science/hpa_human_protein_subcellular_atlas_2026.json`, `9` GSI proteins via official `hpa_cli.py`).
+  - **GSI ADR-0003 HPA Proteomics, mRNA Discordance & Chronic Elixhauser SOFA (`src/gse_engine/science/wave39_gsi_hpa_proteomics_mrna_concordance_and_chronic_sofa_engine.py`)**:
+    - Verified `TNNI3` heart=`High`/skeletal=`Not detected`, `GFAP` cerebellum=`High`/cortex=`Medium`/muscle=`Not detected`, `COL1A1` stromal mRNA-protein discordance, first-order `CKM/TNNI3` leakage ODE (`74.2857x`), and strict `CLINICAL_RUO_HPA_SPORTS_WEIGHT = 0.0`; joined strictly pre-existing chronic Quan-Elixhauser comorbidities (`malignancy/cirrhosis/CKD/CHF/COPD/AFib`) with 6-organ `SOFA`, Sepsis-3 lactate & BUN azotemia across `140` MIMIC-IV stays (`20` deaths), improving ICU mortality **`AUROC` `0.7562 -> 0.7883`** and cutting **`Brier` `0.1142 -> 0.1036`**.
+  - **GSE Pass-Rush Disruption, Drops, Game-Total Environmental Shift & 3-Yr FTN (`src/gse_engine/tracking/wave39_pass_rush_disruption_drops_total_kickoff_and_3yr_ftn_engine.py`)**:
+    - Retained causal W1-10 `def_hurry_hit_per_game_norm` (`r=+0.1380`), `net_pressure_margin_norm` (`r=+0.0900`), `wr_drop_avoidance_norm` (`r=+0.0755`), `penalty_first_down_net` (`r=+0.0647`), and `short_yardage_power_conv_net` (`r=+0.0363`), while quarantining raw pass success (`r=-0.1095`), 2-minute EPA (`r=-0.0983`), 20+ yd explosive rate (`r=-0.0807`), and raw yds/tgt allowed (`r=-0.0499`) at `0.0`; replaced static total offsets with dynamic-kickoff outdoor/divisional/wind calibration flipping **`gse_v41_total_mae` `10.4187 -> 10.4024 < 10.4116` closing market**; and evaluated `6/6` live `HonestEquationExecutor` ASTs.
+  - **End-to-End Pipeline & RLVR Expansion (`LL-2026-11-17-059`)**:
+    - Wired into `walk_forward_ablation.py`, `wave32_unified_sports_situational_live_fusion.py`, `corpus_situational_integrator.py` (`wave39_gsi_hpa_and_disruption_total_wired = True`), `gse_coach_mind_simulator.py`, `pre_sim_total_intelligence_gate.py`, and `knowledge_continuity_and_gsi_rlvr_flywheel.py`; expanded RLVR to `292 + 24 = 316` zero-odds trajectories and added `test_wave39_gsi_hpa_and_disruption_total_engine.py` + `deep-research-wave39-gsi-hpa-proteomics-chronic-sofa-and-gse-disruption-total-mae-engine.md`.
+- **What was proven**:
+  - `147`-game OOS ablation improved monotonically across every single metric AND flipped Game Total MAE below closing lines (`norm CRPS 7.0586->7.0545`, `raw CRPS 6.9604->6.9563`, `Margin MAE 9.7236->9.7230 < 9.7687` close, `Total MAE 10.4187->10.4024 < 10.4116` close, `Brier 0.21954->0.21952`, `ECE 0.07067->0.07064`, `FWL slope 1.429187->1.436598`, `rliable IQM 0.732167`, `monotone_ratchet_promote = True`); `43,225,000`-snap PBP simulation spotlight CRPS improved `8.9410->8.9337` and `147`-game CRPS `6.9930` beats closing market `7.0108`; `MAIN_SHA 66742d360a078b7c`, `W39_SHA da27e5a3178ca68c`.
+- **What was not proven**:
+  - NFL Week `11+` simulations remain held under `OPERATOR_SIM_HOLD`, `real_money_stake_cleared` remains `False` (`0.0` live stake), ADR-0003 HPA/SOFA clinical RUO weight stays `0.0`, and `brain/mind.jsonl` remains single-writer untouched.
+
+---
+
 ## 2026-11-17 (2026-11-17 CT) -- Wave 38 GSI GTEx v10 + Schrodinger Bridge OT & GSE Pre-Snap Scheme, Front-5 Continuity, Student-t SGP Copula, Shrinkage-CIR & EB-LCB Engine (`282+24` RLVR)
 
 - **What changed**:

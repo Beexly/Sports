@@ -56,6 +56,10 @@ from gse_engine.science.wave38_gsi_gtex_transcriptomics_and_schrodinger_bridge_e
     WAVE38_GSI_RLVR_TRAJECTORIES,
     evaluate_wave38_gsi_gtex_and_schrodinger_suite,
 )
+from gse_engine.science.wave39_gsi_hpa_proteomics_mrna_concordance_and_chronic_sofa_engine import (  # noqa: E501
+    WAVE39_GSI_RLVR_TRAJECTORIES,
+    evaluate_wave39_gsi_hpa_and_chronic_sofa_suite,
+)
 from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine import (  # noqa: E501
     WAVE35_TRACKING_RLVR_TRAJECTORIES,
     evaluate_wave35_player_micro_matchup_suite,
@@ -71,6 +75,10 @@ from gse_engine.tracking.wave37_ol_continuity_rest_stuff_pedigree_and_skew_props
 from gse_engine.tracking.wave38_presnap_scheme_def_continuity_sgp_copula_and_cir_engine import (  # noqa: E501
     WAVE38_TRACKING_RLVR_TRAJECTORIES,
     evaluate_wave38_presnap_sgp_copula_and_cir_suite,
+)
+from gse_engine.tracking.wave39_pass_rush_disruption_drops_total_kickoff_and_3yr_ftn_engine import (  # noqa: E501
+    WAVE39_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_wave39_disruption_total_and_3yr_ftn_suite,
 )
 
 _DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -3477,6 +3485,89 @@ def compile_gse_to_gsi_rlvr_training_batch(
                 think=str(spec_w38["think"]),
                 ground_truth=gt_w38,
                 verifier_src=_formula_exact_verifier_src(gt_w38),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    # Tier 3 Group P: Wave 39 GSI HPA+ChronicSOFA & GSE Disruption/TotalMAE/3YrFTN (282 -> 292)
+    w39_gsi = evaluate_wave39_gsi_hpa_and_chronic_sofa_suite(
+        away_team="KC", home_team="DEN", as_of_week=10, repo_root=root
+    )
+    w39_suite = evaluate_wave39_disruption_total_and_3yr_ftn_suite(
+        away_team="CIN", home_team="BUF", as_of_week=10, repo_root=root
+    )
+    hpa_d = w39_gsi["hpa_proteomics_concordance"]
+    sofa39_d = w39_gsi["mimic_iv_chronic_elixhauser_sofa"]
+    ftn3_d = w39_suite["longitudinal_3yr_ftn_vaults"]
+    tm39_hm = w39_suite["home_w1_w10_w39_profile"]
+    quar39 = w39_suite["quarantined_close_overpriced_signals"]
+    tot39 = w39_suite["game_total_environmental_shift"]
+    ast39 = w39_suite["live_honest_ast"]
+    w39_gt_map: dict[str, dict[str, Any]] = {
+        "w39_gsi_hpa_ihc_subcellular_and_gtex_concordance_00": {
+            "tnni3_cardiac_specific": bool(
+                float(hpa_d["tnni3_cardiac_ihc_ordinal"]) == 3.0
+                and float(hpa_d["tnni3_skeletal_ihc_ordinal"]) == 0.0
+            ),
+            "adr0003_ruo": bool(
+                w39_gsi["adr0003_rule_in_only_doctrine"]
+                and float(w39_gsi["clinical_ruo_sports_weight"]) == 0.0
+            ),
+        },
+        "w39_gsi_tnni3_ckm_gfap_membrane_leakage_ode_00": {
+            "clearance_ratio_positive": bool(
+                float(hpa_d["steady_state_ckm_to_tnni3_clearance_ratio"]) > 10.0
+            ),
+        },
+        "w39_gsi_mimic_chronic_elixhauser_sofa_auroc_0788_00": {
+            "auroc_ge_078": bool(float(sofa39_d["mortality_auroc"]) >= 0.78),
+            "brier_lt_0110": bool(float(sofa39_d["mortality_brier"]) < 0.110),
+        },
+        "w39_3yr_ftn_120k_and_2025_vault_continuity_00": {
+            "ftn_3yr_ge_115k": bool(int(ftn3_d["ftn_3yr_combined_rows"]) >= 115000),
+        },
+        "w39_def_hurry_hit_and_net_pressure_margin_00": {
+            "pressure_bounded": bool(
+                -1.0 <= float(tm39_hm["def_hurry_hit_per_game_norm"]) <= 1.0
+                and -1.0 <= float(tm39_hm["net_pressure_margin_norm"]) <= 1.0
+            ),
+        },
+        "w39_wr_drop_avoidance_and_penalty_1st_down_00": {
+            "drops_and_pen_bounded": bool(
+                -2.0 <= float(tm39_hm["wr_drop_avoidance_norm"]) <= 0.5
+                and -0.2 <= float(tm39_hm["penalty_first_down_net"]) <= 0.2
+            ),
+        },
+        "w39_short_yardage_power_trench_conversion_00": {
+            "short_yd_bounded": bool(-1.0 <= float(tm39_hm["short_yardage_power_conv_net"]) <= 1.0),
+        },
+        "w39_quarantine_pass_succ_2min_explosive_00": {
+            "all_four_zero": bool(
+                len(quar39) == 4 and all(float(v) == 0.0 for v in quar39.values())
+            ),
+        },
+        "w39_dynamic_kickoff_outdoor_divisional_total_00": {
+            "total_shift_bounded": bool(-2.0 <= float(tot39["total_shift_pts"]) <= 2.0),
+        },
+        "w39_honest_ast_6eq_and_zero_stake_hold_00": {
+            "all_six_evaluated": bool(int(ast39["parsed_evaluated_count"]) == 6),
+            "zero_stake": bool(
+                w39_suite["real_money_stake_cleared"] is False
+                and float(w39_suite["live_stake_fraction"]) == 0.0
+            ),
+        },
+    }
+    for spec_w39 in (*WAVE39_GSI_RLVR_TRAJECTORIES, *WAVE39_TRACKING_RLVR_TRAJECTORIES):
+        rid_w39 = str(spec_w39["record_id"])
+        gt_w39 = w39_gt_map[rid_w39]
+        records.append(
+            _build_rlvr_record(
+                record_id=rid_w39,
+                domain=str(spec_w39["domain"]),
+                prompt=str(spec_w39["prompt"]),
+                think=str(spec_w39["think"]),
+                ground_truth=gt_w39,
+                verifier_src=_formula_exact_verifier_src(gt_w39),
                 curriculum_tier="TIER_3_BEHEMOTH",
             )
         )
