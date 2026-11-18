@@ -394,7 +394,10 @@ def main() -> int:
     for g in slate:
         away = team_advance(sealed_obj, current.get(g["away"], []), prior.get(g["away"], []))
         home = team_advance(sealed_obj, current.get(g["home"], []), prior.get(g["home"], []))
-        net_shift = round(home["points_equivalent_delta"] - away["points_equivalent_delta"], 4)
+        # Convention: points_equivalent_delta is points LOST to injury. A team that
+        # loses more moves the projected margin toward its opponent, so a positive
+        # net_margin_shift_points means the projection moves toward HOME.
+        net_shift = round(away["points_equivalent_delta"] - home["points_equivalent_delta"], 4)
         total_shift = round(home["points_equivalent_delta"] + away["points_equivalent_delta"], 4)
         state = "ADVANCED" if (away["advanced"] or home["advanced"]) else "CARRIED_UNCHANGED"
         advanced_count += 1 if state == "ADVANCED" else 0
@@ -533,6 +536,12 @@ def main() -> int:
             "sha256": sha256_file(slate_path),
             "games": len(slate),
         },
+        "convention": (
+            "points_equivalent_delta = points the team LOSES to its designations (role EPA "
+            "dropoff x 18, offensive buckets only). net_margin_shift_points = away loss - "
+            "home loss; positive means the projection moves toward the HOME team. "
+            "total_shift_points = away loss + home loss."
+        ),
         "summary": {
             "games_on_card": len(slate),
             "games_advanced": advanced_count,
