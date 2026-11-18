@@ -369,3 +369,21 @@ with the local base), while the IG and X feeds and this MANIFEST live
 under docs/data-sources/research/2026-11-14/sweep-ingestion/. The
 2026-11-14 and 2026-11-15 analytics deltas remain standalone files in
 the new-path directory; their records are part of the corpus totals.
+
+## Delta 2026-11-17 X For You PM (landed 2026-11-17)
+
+Source: ~/workspace/x-for-you-sweep/reports/2026-11-17-PM.md. Sweep:
+100 feed rows (80 organic, 20 ads, 2 trading-skip) plus 118 watchlist
+pulls; 85 unique NEW with verified IDs (76 watchlist + 9 feed); 20
+dossiers covering 34 posts; seen index 6,327 to 6,488. Delta: 152
+records (34 dossier + 49 inventoried with IDs + 69 NO-ID slug-keyed),
+0 duplicates, 0 collisions, 0 slug-collision skips, 140,468 bytes
+appended to x-for-you-feed.jsonl (now 6,373 records). Four items
+excluded under the zero sportsbook rule (two inventoried picks posts
+carrying odds/stakes, a picks promo, and a devig results post).
+Reconciliation: 85 NEW with IDs = 34 dossier + 51 inventoried, minus
+2 excluded = 83 landed with IDs; 73 NO-ID feed lines minus 2 excluded
+= 69 slug records (2 trading-skip ad rows were never candidates).
+Strongest finds: PattonAnalytics Substack game-script QB efficiency
+piece (TEST); WalrusQuant/sports-leader-mcp, MIT verified, 43 tools,
+30 leagues (TEST). Running feed total: 11,671 records.
