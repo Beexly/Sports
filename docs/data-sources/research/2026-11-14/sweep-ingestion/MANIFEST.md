@@ -415,3 +415,22 @@ only, all with shortcodes, no NOCODE loss. Delta: 45 records
 2,996 records). Strongest finds: AG-UI protocol (TEST), Java4Shell
 CVE-2026-114938 patch check (TEST), Higgsfield Short Drama Studio
 inside Claude (TEST). Running feed total: 11,763 records.
+
+## Delta 2026-11-18 X analytics AM (landed 2026-11-18)
+
+Source: x-intel-2026-11-18-09.md (run log: run-log-2026-11-18-09.md).
+The sweep itself pushed Sports main commit c06a813 (AGENTS.md
+2026-11-18 section + 85 CSVs in docs/research/2026-11-18/full-
+tables/); final watermark 2123070718476750961. Delta: 164 records
+(154 ID-keyed + 10 slug-keyed), 16 duplicates skipped (all cross-
+lane, already in the X For You feed), 3 slug-collision skips
+(@FTNData, @NFLResearcher, @NerdingonNFL account-state slugs,
+unchanged from 2026-11-17), 4 sportsbook items excluded, 161,233
+bytes appended to x-analytics-feed.jsonl (now 1,949 records). New
+inventory of note: QB Turnover Rate with printed definition
+(sfdata9ers), PROE and ARBY (MagicSportsGuy / StatRankings),
+QB Aggressiveness and CPOE tables (GridironInfo_), efficiency by
+expected pass rate (PattonAnalytics), Dynatyze WAR, PFF Accuracy
+Tracker, plus endpoints for nflmcp, csv_enjoyer, PigskinLab,
+SH8Model, sharpshotcalc. Running feed total: 11,927 records.
+Path note stands: this feed lives at the pre-rebucket path below.
