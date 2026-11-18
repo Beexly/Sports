@@ -3,6 +3,16 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-18 — Weekly cadence v2.0 Wed 17:00 CT mid-week injury advance (Week 11)
+
+**Changed:** Added the Wednesday cadence window and ran it for Week 11. New runner `scripts/ops/run_cadence_v20_wednesday_injury_advance.py` advances the Tuesday v1.0 lock into `docs/predictions/research/2026-11-18/cadence_v20_wednesday_injury_advance_w11.json` (v2.0, phase `INJURY_WEATHER_OVERLAY`, 13-game ESPN card, per-team Sinkhorn reallocation under the sealed cost matrix). `CADENCE_WINDOWS` in `run_weekly_cadence_tick.py` now carries `(INJURY_WEATHER_OVERLAY, WED_MIDWEEK) -> Wed 17:00, v2.0`.
+
+**Proven (executed, exit 0):** seal identity byte-identical before and after the advance — `seal_checks_6_of_6=true`, tau `0.42 -> 0.42`, coach-mind canonical digest `354b4c13...` unchanged, EPA dropoff table `9b8c701c...` unchanged, sealed-center merkle `23245bcb...` unchanged, cost matrix C read and not refit. TS invariant gate now actually executes: `src/coach-sim/**` was absent from the `vitest.config.ts` include list, so `locked-projection.test.ts` and `weekly-cadence-orchestrator.test.ts` never ran under `npm test`; added, 15/15 pass (`keeps it byte-for-byte identical when Friday v3.0 scratches starters`). Dedicated coach-sim config run: 11 files / 90 tests pass. Injury math: 13/13 games advanced, 23.7492 points-equivalent total, largest net margin shift 2.52 (MIN@SF). Stage-0 exclusion kept 8 already-unavailable names out of the ESPN feed (Aiyuk, Evans, Kyler Murray, DeVonta Smith, ...).
+
+**Not proven / defects found:** (1) the v1.0 Tuesday tick's `simulated_games` list is an earlier week's slate — 8 matchups, 0 overlap with the real Week 11 card (ESPN: 13 games, TNF IND@HOU 2026-11-20T01:15Z). The v1.0 lock therefore carries no per-game Week-11 numbers; v2.0 reports injury deltas only and asserts no baseline margin/total. (2) The Stage-0 roster config is week 9 (`as_of 2026-11-07`, 11 days old; the gate would refuse a publishable run), so this report is `publishable=false`. (3) nflverse `injuries_2026.csv` carries practice participation only for week 11 (26 HOU/IND rows, empty `report_status`); the ESPN feed is the designation source. (4) The sealed EPA table has one slot per position group, so a second designated CB or OL lands in `unmapped` and moves nothing.
+
+**Next role:** Refresh the Stage-0 roster config for week 11 (`data/nflverse/week9_live_roster_transactions_and_starters_2026.json` is the stale default) before anything publishable. Point the writeup engine at the real Week-11 slate. Do NOT advance the sealed center past `2026-W44` or every cadence script's `AUTHORITATIVE_MERKLE` breaks.
+
 ## 2026-11-17 — Weekly cadence v1.0 Tue 04:00 CT seal (Week 11)
 
 **Changed:** Ran the v1.0 Tuesday seal cadence for NFL Week 11 (ISO 2026-W47). Deliverable: `docs/predictions/research/2026-11-17/cadence_tick_mon_tue_fine_tune_seal_sun_early_w11.json` (merkle `2c1fa2a4ae2cc323...`, phase `MON_TUE_FINE_TUNE_SEAL`, slot `SUN_EARLY`, v1.0).

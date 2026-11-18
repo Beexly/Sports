@@ -16,6 +16,11 @@ export default defineConfig({
       "src/__tests__/**/*.spec.ts",
       "src/engine/**/*.test.ts",
       "src/engine/**/*.spec.ts",
+      // The coach-sim cadence seal tests guard the money path: a Tuesday v1.0 lock
+      // must advance through injury overlays with coachMindsetHash and tau
+      // byte-identical. They sat outside this include list and therefore never ran
+      // under `npm test`; an unexecuted gate is not a gate.
+      "src/coach-sim/**/*.test.ts",
       "src/nfl/**/*.test.ts",
       "src/nfl/**/*.spec.ts",
       "src/reasoning/**/*.test.ts",

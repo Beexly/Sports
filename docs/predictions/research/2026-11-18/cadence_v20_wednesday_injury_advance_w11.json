@@ -1,0 +1,4854 @@
+{
+  "report_type": "CADENCE_V2_0_WEDNESDAY_INJURY_ADVANCE",
+  "version": "v2.0",
+  "phase": "INJURY_WEATHER_OVERLAY",
+  "cadence_window": {
+    "day": "Wed",
+    "ct_time": "17:00"
+  },
+  "season": 2026,
+  "week": 11,
+  "generated_at_utc": "2026-11-18T23:13:31.847300+00:00",
+  "flag_only": true,
+  "publishable": false,
+  "baseline_lock": {
+    "path": "docs/predictions/research/2026-11-17/cadence_tick_mon_tue_fine_tune_seal_sun_early_w11.json",
+    "version": "v1.0",
+    "phase": "MON_TUE_FINE_TUNE_SEAL",
+    "sha256_merkle": "2c1fa2a4ae2cc32326df01ff435fac3ae93b203b7e998ab57ed633d396910a1a",
+    "sealed_at": "2026-11-17T10:12:43.071316+00:00"
+  },
+  "seal_identity": {
+    "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "coach_mind_canonical_digest": "354b4c132e200657fa2bfb9f3235680a249d8a7d28cf3fb64cdd65c165022599",
+    "coach_tau": 0.42,
+    "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+    "sealed_checks": {
+      "sealed_center_merkle_matches_recorded": true,
+      "candidate_parent_seal_hash_matches_center": true,
+      "candidate_tau_rating_recorded": true,
+      "coach_mind_tau_is_0_42": true,
+      "epa_dropoff_table_unmodified": true,
+      "qb_questionable_ev_dropoff_is_0_0947": true
+    },
+    "provenance_caveat": "candidates/ is quarantined per artifacts/CANONICAL-ENVIRONMENT-2026-10-27.md D1: the parent seal hash is documented as sequential hex. 'unchanged' asserts byte-identity with the active seal center, not that the seal is independently reproducible."
+  },
+  "designations": {
+    "source": "data/engine/espn_nfl_injuries_2026-11-18.json",
+    "sha256": "52beef31f8c3d59954128b853be647555a40eca9759f68301cfaf7847361d493",
+    "captured_at_utc": "2026-11-18T23:06:52Z",
+    "designating_statuses": [
+      "Out",
+      "Doubtful",
+      "Questionable"
+    ],
+    "corroboration": {
+      "path": "data/nflverse/injuries_2026.csv",
+      "sha256": "a334fa75f31fbc2037981efa0c0f5a4fcf9475077820f774124087d9ebe4c8e6",
+      "week_rows": 26,
+      "report_status_populated": false,
+      "note": "nflverse week-11 slice carries practice participation only at Wednesday 17:00 CT"
+    },
+    "role_mapping_extensions": {
+      "DT": "EDGE1 (interior DL)",
+      "NT": "EDGE1 (interior DL)",
+      "S": "CB1 (secondary bucket)",
+      "FS": "CB1 (secondary bucket)",
+      "SS": "CB1 (secondary bucket)"
+    },
+    "unmapped": {
+      "ARI": [
+        {
+          "player": "James Conner",
+          "position": "RB",
+          "status": "Injured Reserve",
+          "injury": "Foot",
+          "detail": "Surgery",
+          "return_date": "2026-12-20",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Gardner Minshew II",
+          "position": "QB",
+          "status": "Injured Reserve",
+          "injury": "Elbow",
+          "detail": "Surgery",
+          "return_date": "2027-02-15",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Jordan Burch",
+          "position": "LB",
+          "status": "Injured Reserve",
+          "injury": "Knee - MCL",
+          "detail": "Not Specified",
+          "return_date": "2027-02-15",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Andrew Wingard",
+          "position": "S",
+          "status": "Injured Reserve",
+          "injury": "Wrist",
+          "detail": "Not Specified",
+          "return_date": "2026-12-27",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Zachary Carter",
+          "position": "DT",
+          "status": "Injured Reserve",
+          "injury": "Knee",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "BAL": [
+        {
+          "player": "Lamar Jackson",
+          "position": "QB",
+          "status": "Injured Reserve",
+          "injury": "Thumb",
+          "detail": "Surgery",
+          "return_date": "2026-12-27",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "BUF": [
+        {
+          "player": "Amani Hooker",
+          "position": "S",
+          "status": "Questionable",
+          "injury": "Knee",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Cole Bishop",
+          "position": "S",
+          "status": "Questionable",
+          "injury": "Shoulder",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Dalton Kincaid",
+          "position": "TE",
+          "status": "Questionable",
+          "injury": "Thumb",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Ar'maj Reed-Adams",
+          "position": "G",
+          "status": "Injured Reserve",
+          "injury": "Back",
+          "detail": "Not Specified",
+          "return_date": "2026-12-19",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Christian Benford",
+          "position": "CB",
+          "status": "Questionable",
+          "injury": "Groin",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        }
+      ],
+      "CAR": [
+        {
+          "player": "Darren Waller",
+          "position": "TE",
+          "status": "Questionable",
+          "injury": "Knee",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Jonathon Brooks",
+          "position": "RB",
+          "status": "Injured Reserve",
+          "injury": "Groin",
+          "detail": "Surgery",
+          "return_date": "2026-11-22",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Bobby Okereke",
+          "position": "LB",
+          "status": "Questionable",
+          "injury": "Foot",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Brady Christensen",
+          "position": "G",
+          "status": "Injured Reserve",
+          "injury": "Hamstring",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "CHI": [
+        {
+          "player": "Zavier Scott",
+          "position": "RB",
+          "status": "Injured Reserve",
+          "injury": "Wrist",
+          "detail": "Not Specified",
+          "return_date": "2026-12-13",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Kentavius Street",
+          "position": "DT",
+          "status": "Injured Reserve",
+          "injury": "Knee",
+          "detail": "Not Specified",
+          "return_date": "2027-02-15",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "CIN": [
+        {
+          "player": "Andrei Iosivas",
+          "position": "WR",
+          "status": "Injured Reserve",
+          "injury": "Thumb",
+          "detail": "Surgery",
+          "return_date": "2026-11-23",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Brian Parker II",
+          "position": "OT",
+          "status": "Injured Reserve",
+          "injury": "Knee",
+          "detail": "Not Specified",
+          "return_date": "2026-11-23",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Jalen Davis",
+          "position": "CB",
+          "status": "Injured Reserve",
+          "injury": "Hamstring",
+          "detail": "Not Specified",
+          "return_date": "2026-11-23",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "DAL": [
+        {
+          "player": "P.J. Locke",
+          "position": "S",
+          "status": "Questionable",
+          "injury": "Concussion",
+          "detail": "Concussion",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Tyler Goodson",
+          "position": "RB",
+          "status": "Injured Reserve",
+          "injury": "Knee - ACL + MCL",
+          "detail": "Sprain",
+          "return_date": "2026-12-20",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "DEN": [
+        {
+          "player": "Caleb Lohner",
+          "position": "TE",
+          "status": "Injured Reserve",
+          "injury": "Lower Body",
+          "detail": "Surgery",
+          "return_date": "2026-11-22",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Brandon Jones",
+          "position": "S",
+          "status": "Questionable",
+          "injury": "Hamstring",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Riley Moss",
+          "position": "CB",
+          "status": "Questionable",
+          "injury": "Concussion",
+          "detail": "Concussion",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Eyioma Uwazurike",
+          "position": "DE",
+          "status": "Injured Reserve",
+          "injury": "Shoulder",
+          "detail": "Not Specified",
+          "return_date": "2026-12-13",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "DET": [
+        {
+          "player": "Aidan Hutchinson",
+          "position": "DE",
+          "status": "Injured Reserve",
+          "injury": "Knee - ACL",
+          "detail": "Surgery",
+          "return_date": "2027-02-15",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Khalil Dorsey",
+          "position": "CB",
+          "status": "Questionable",
+          "injury": "Ankle",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "D.J. Reed",
+          "position": "CB",
+          "status": "Questionable",
+          "injury": "Hip",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        }
+      ],
+      "HOU": [
+        {
+          "player": "Jaylin Smith",
+          "position": "CB",
+          "status": "Injured Reserve",
+          "injury": "Hamstring",
+          "detail": "Strain",
+          "return_date": "2026-11-19",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Azeez Al-Shaair",
+          "position": "LB",
+          "status": "Injured Reserve",
+          "injury": "Groin",
+          "detail": "Surgery",
+          "return_date": "2026-12-20",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "IND": [
+        {
+          "player": "Jalen Travis",
+          "position": "OT",
+          "status": "Out",
+          "injury": "Knee",
+          "detail": "Not Specified",
+          "return_date": "2026-11-29",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Jaylon Carlies",
+          "position": "LB",
+          "status": "Injured Reserve",
+          "injury": "Neck",
+          "detail": "Not Specified",
+          "return_date": "2026-12-27",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Luke Rhodes",
+          "position": "LS",
+          "status": "Questionable",
+          "injury": "Hamstring",
+          "detail": "Not Specified",
+          "return_date": "2026-11-19",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Sauce Gardner",
+          "position": "CB",
+          "status": "Questionable",
+          "injury": "Calf",
+          "detail": "Not Specified",
+          "return_date": "2026-11-19",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Akeem Davis-Gaither",
+          "position": "LB",
+          "status": "Injured Reserve",
+          "injury": "Knee",
+          "detail": "Not Specified",
+          "return_date": "2026-12-20",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Mo Alie-Cox",
+          "position": "TE",
+          "status": "Injured Reserve",
+          "injury": "Groin",
+          "detail": "Not Specified",
+          "return_date": "2026-12-20",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "JAX": [
+        {
+          "player": "Matt Dickerson",
+          "position": "DE",
+          "status": "Questionable",
+          "injury": "Neck",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "LeQuint Allen Jr.",
+          "position": "RB",
+          "status": "Questionable",
+          "injury": "Hamstring",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Bhayshul Tuten",
+          "position": "RB",
+          "status": "Questionable",
+          "injury": "Ankle",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Robert Hainsey",
+          "position": "C",
+          "status": "Out",
+          "injury": "Knee",
+          "detail": "Sprain",
+          "return_date": "2026-11-29",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Danny Striggow",
+          "position": "DE",
+          "status": "Questionable",
+          "injury": "Concussion",
+          "detail": "Concussion",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "B.J. Green II",
+          "position": "DE",
+          "status": "Injured Reserve",
+          "injury": "Forearm",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "KC": [
+        {
+          "player": "Jared Wiley",
+          "position": "TE",
+          "status": "Injured Reserve",
+          "injury": "Ankle",
+          "detail": "Fracture",
+          "return_date": "2026-12-21",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "LAC": [
+        {
+          "player": "Rodney Shelley",
+          "position": "CB",
+          "status": "Questionable",
+          "injury": "Ankle",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Trey Pipkins III",
+          "position": "OT",
+          "status": "Injured Reserve",
+          "injury": "Knee",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Branson Taylor",
+          "position": "G",
+          "status": "Injured Reserve",
+          "injury": "Ankle",
+          "detail": "Not Specified",
+          "return_date": "2026-12-13",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "MIA": [
+        {
+          "player": "Bradley Pinion",
+          "position": "P",
+          "status": "Questionable",
+          "injury": "Groin",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Dante Trader Jr.",
+          "position": "S",
+          "status": "Questionable",
+          "injury": "Shoulder",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Tucker Addington",
+          "position": "LS",
+          "status": "Questionable",
+          "injury": "Shoulder - AC Joint",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Jordan Phillips",
+          "position": "DT",
+          "status": "Injured Reserve",
+          "injury": "Biceps",
+          "detail": "Surgery",
+          "return_date": "2027-02-15",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Zeek Biggers",
+          "position": "DT",
+          "status": "Injured Reserve",
+          "injury": "Knee - Meniscus",
+          "detail": "Surgery",
+          "return_date": "2027-02-15",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Malik Willis",
+          "position": "QB",
+          "status": "Injured Reserve",
+          "injury": "Abdomen",
+          "detail": "Not Specified",
+          "return_date": "2026-12-13",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "MIN": [
+        {
+          "player": "Bo Richter",
+          "position": "LB",
+          "status": "Injured Reserve",
+          "injury": "Foot",
+          "detail": "Not Specified",
+          "return_date": "2026-12-20",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Blake Cashman",
+          "position": "LB",
+          "status": "Questionable",
+          "injury": "Concussion",
+          "detail": "Concussion",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Andrew Van Ginkel",
+          "position": "LB",
+          "status": "Questionable",
+          "injury": "Quadriceps",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        }
+      ],
+      "NO": [
+        {
+          "player": "Martin Emerson Jr.",
+          "position": "CB",
+          "status": "Questionable",
+          "injury": "Concussion",
+          "detail": "Concussion",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Asim Richards",
+          "position": "OT",
+          "status": "Out",
+          "injury": "Knee",
+          "detail": "Not Specified",
+          "return_date": "2026-11-29",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Christen Miller",
+          "position": "DT",
+          "status": "Injured Reserve",
+          "injury": "Knee",
+          "detail": "Not Specified",
+          "return_date": "2026-12-13",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "NYG": [
+        {
+          "player": "Tyrone Tracy Jr.",
+          "position": "RB",
+          "status": "Injured Reserve",
+          "injury": "Hamstring",
+          "detail": "Strain",
+          "return_date": "2026-12-06",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "NYJ": [
+        {
+          "player": "David Onyemata",
+          "position": "DT",
+          "status": "Injured Reserve",
+          "injury": "Groin",
+          "detail": "Surgery",
+          "return_date": "2026-11-22",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "PHI": [
+        {
+          "player": "Michael Carter II",
+          "position": "CB",
+          "status": "Questionable",
+          "injury": "Abdomen",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        },
+        {
+          "player": "Will Shipley",
+          "position": "RB",
+          "status": "Injured Reserve",
+          "injury": "Foot",
+          "detail": "Plantar Fasciitis",
+          "return_date": "2026-11-22",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Zack Baun",
+          "position": "LB",
+          "status": "Questionable",
+          "injury": "Back",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        }
+      ],
+      "PIT": [
+        {
+          "player": "Roman Wilson",
+          "position": "WR",
+          "status": "Injured Reserve",
+          "injury": "Finger",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Michael Pittman Jr.",
+          "position": "WR",
+          "status": "Injured Reserve",
+          "injury": "Foot",
+          "detail": "Plantar Fasciitis",
+          "return_date": "2026-11-22",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Mason McCormick",
+          "position": "G",
+          "status": "Injured Reserve",
+          "injury": "Ankle",
+          "detail": "Dislocated",
+          "return_date": "2027-01-03",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Patrick Queen",
+          "position": "LB",
+          "status": "Questionable",
+          "injury": "Hand",
+          "detail": null,
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        }
+      ],
+      "SF": [
+        {
+          "player": "De'Zhaun Stribling",
+          "position": "WR",
+          "status": "Injured Reserve",
+          "injury": "Ankle",
+          "detail": "Surgery",
+          "return_date": "2026-12-06",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "C.J. West",
+          "position": "DT",
+          "status": "Injured Reserve",
+          "injury": "Knee",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "TB": [
+        {
+          "player": "Jalen McMillan",
+          "position": "WR",
+          "status": "Injured Reserve",
+          "injury": "Knee - PCL",
+          "detail": "Sprain",
+          "return_date": "2026-11-30",
+          "reason": "non-designating roster status"
+        }
+      ],
+      "TEN": [
+        {
+          "player": "Fernando Carmona",
+          "position": "G",
+          "status": "Injured Reserve",
+          "injury": "Ankle",
+          "detail": "Sprain",
+          "return_date": "2026-11-22",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Wan'Dale Robinson",
+          "position": "WR",
+          "status": "Injured Reserve",
+          "injury": "Ankle",
+          "detail": "Not Specified",
+          "return_date": "2027-02-15",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Cody Barton",
+          "position": "LB",
+          "status": "Questionable",
+          "injury": "Concussion",
+          "detail": "Concussion",
+          "return_date": "2026-11-22",
+          "reason": "position has no sealed role slot"
+        }
+      ],
+      "WSH": [
+        {
+          "player": "Jacory Croskey-Merritt",
+          "position": "RB",
+          "status": "Injured Reserve",
+          "injury": "Groin",
+          "detail": "Not Specified",
+          "return_date": "2026-11-23",
+          "reason": "non-designating roster status"
+        },
+        {
+          "player": "Laremy Tunsil",
+          "position": "OT",
+          "status": "Injured Reserve",
+          "injury": "Triceps",
+          "detail": "Surgery",
+          "return_date": "2026-12-20",
+          "reason": "non-designating roster status"
+        }
+      ]
+    },
+    "teams_off_card": [
+      "Atlanta Falcons",
+      "Cleveland Browns",
+      "Green Bay Packers",
+      "Los Angeles Rams",
+      "New England Patriots",
+      "Seattle Seahawks"
+    ],
+    "stage0_exclusion": {
+      "available": true,
+      "path": "data/nflverse/week9_live_roster_transactions_and_starters_2026.json",
+      "config_week": 9,
+      "as_of": "2026-11-07",
+      "age_days": 11,
+      "publishable": false,
+      "names": 132
+    },
+    "blocked_by_stage0": {
+      "DAL": [
+        {
+          "player": "Jake Ferguson",
+          "position": "TE",
+          "status": "Out",
+          "injury": "Knee",
+          "detail": "Not Specified",
+          "return_date": "2026-11-26",
+          "reason": "already excluded by the sealed baseline (OUT/IR/traded)"
+        }
+      ],
+      "LAC": [
+        {
+          "player": "Brenen Thompson",
+          "position": "WR",
+          "status": "Questionable",
+          "injury": "Hamstring",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "already excluded by the sealed baseline (OUT/IR/traded)"
+        }
+      ],
+      "MIN": [
+        {
+          "player": "Kyler Murray",
+          "position": "QB",
+          "status": "Out",
+          "injury": "Hamstring",
+          "detail": "Strain",
+          "return_date": "2026-11-29",
+          "reason": "already excluded by the sealed baseline (OUT/IR/traded)"
+        }
+      ],
+      "PHI": [
+        {
+          "player": "DeVonta Smith",
+          "position": "WR",
+          "status": "Questionable",
+          "injury": "Hamstring",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "already excluded by the sealed baseline (OUT/IR/traded)"
+        },
+        {
+          "player": "Dontayvion Wicks",
+          "position": "WR",
+          "status": "Questionable",
+          "injury": "Ankle",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "already excluded by the sealed baseline (OUT/IR/traded)"
+        },
+        {
+          "player": "Britain Covey",
+          "position": "WR",
+          "status": "Questionable",
+          "injury": "Knee",
+          "detail": "Not Specified",
+          "return_date": "2026-11-22",
+          "reason": "already excluded by the sealed baseline (OUT/IR/traded)"
+        }
+      ],
+      "SF": [
+        {
+          "player": "Mike Evans",
+          "position": "WR",
+          "status": "Questionable",
+          "injury": "Achilles",
+          "detail": "Tendinitis",
+          "return_date": "2026-11-22",
+          "reason": "already excluded by the sealed baseline (OUT/IR/traded)"
+        },
+        {
+          "player": "Brandon Aiyuk",
+          "position": "WR",
+          "status": "Out",
+          "injury": "Personal",
+          "detail": "Not Specified",
+          "return_date": "2026-11-29",
+          "reason": "already excluded by the sealed baseline (OUT/IR/traded)"
+        }
+      ],
+      "TB": [
+        {
+          "player": "Yaya Diaby",
+          "position": "LB",
+          "status": "Questionable",
+          "injury": "Knee - MCL",
+          "detail": "Sprain",
+          "return_date": "2026-11-22",
+          "reason": "already excluded by the sealed baseline (OUT/IR/traded)"
+        }
+      ]
+    }
+  },
+  "cost_matrix": {
+    "sealed_cost_matrix_C": [
+      [
+        0.05,
+        0.35,
+        0.55,
+        0.75,
+        0.9
+      ],
+      [
+        0.35,
+        0.05,
+        0.28,
+        0.5,
+        0.75
+      ],
+      [
+        0.55,
+        0.28,
+        0.05,
+        0.42,
+        0.65
+      ],
+      [
+        0.75,
+        0.5,
+        0.42,
+        0.05,
+        0.48
+      ],
+      [
+        0.9,
+        0.75,
+        0.65,
+        0.48,
+        0.05
+      ]
+    ],
+    "refit": false,
+    "base_shares": {
+      "WR1": 0.26,
+      "WR2": 0.21,
+      "WR3": 0.17,
+      "TE1": 0.2,
+      "RB1": 0.16
+    },
+    "execution_multipliers": {
+      "QB1": 0.78,
+      "QB2_BACKUP": 0.72,
+      "EMERGENCY_QB3_UDFA": 0.62,
+      "RB1": 0.85,
+      "WR1": 0.82,
+      "WR2": 0.88,
+      "TE1": 0.84,
+      "OL": 0.91
+    },
+    "epa_points_multiplier": 18.0
+  },
+  "slate": {
+    "source": "data/engine/week11_slate_espn_2026-11-18.json",
+    "sha256": "8b308ac60049693b24a8ef79b097f12a6868937465f8bf72075517d1bdc15db8",
+    "games": 13
+  },
+  "summary": {
+    "games_on_card": 13,
+    "games_advanced": 13,
+    "games_carried_unchanged": 0,
+    "total_points_equivalent_moved": 23.7492,
+    "largest_net_margin_shift_points": 2.6046
+  },
+  "games": [
+    {
+      "game_id": "401873066",
+      "matchup": "Indianapolis Colts at Houston Texans",
+      "window_slot": "TNF",
+      "kickoff_utc": "2026-11-20T01:15Z",
+      "venue_indoor": true,
+      "state": "ADVANCED",
+      "away": {
+        "qualifying_roles": [
+          "CB1",
+          "TE1",
+          "WR1",
+          "LT",
+          "EDGE1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "CB1",
+            "TE1",
+            "WR1",
+            "LT",
+            "EDGE1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.0178571429,
+            "WR2": 0.375,
+            "WR3": 0.3035714286,
+            "TE1": 0.0178571429,
+            "RB1": 0.2857142857
+          },
+          "execution_multipliers": {
+            "WR1": 0.82,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.0146428571,
+            "WR2": 0.375,
+            "WR3": 0.3035714286,
+            "TE1": 0.015,
+            "RB1": 0.2857142857
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9939285714,
+          "mass_moved": 0.4242857143,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.0178571429,
+            "WR2": 0.375,
+            "WR3": 0.3035714286,
+            "TE1": 0.0178571429,
+            "RB1": 0.2857142857
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.0146428571,
+            "WR2": 0.33,
+            "WR3": 0.3035714286,
+            "TE1": 0.015,
+            "RB1": 0.2428571429
+          },
+          "mass_loss": 0.0939285714,
+          "sinkhorn": {
+            "iterations": 131,
+            "row_residual": 1.0027376151633405e-10,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.214190771013
+          }
+        },
+        "epa_drop_sum_offense": 0.08,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 1.44,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "home": {
+        "qualifying_roles": [
+          "LT",
+          "WR1",
+          "RB1",
+          "TE1",
+          "EDGE1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "LT",
+            "WR1",
+            "RB1",
+            "TE1",
+            "EDGE1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.0243902439,
+            "WR2": 0.512195122,
+            "WR3": 0.4146341463,
+            "TE1": 0.0243902439,
+            "RB1": 0.0243902439
+          },
+          "execution_multipliers": {
+            "WR1": 0.82,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.02,
+            "WR2": 0.512195122,
+            "WR3": 0.4146341463,
+            "TE1": 0.0204878049,
+            "RB1": 0.0207317073
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9880487805,
+          "mass_moved": 0.5468292683,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.0243902439,
+            "WR2": 0.512195122,
+            "WR3": 0.4146341463,
+            "TE1": 0.0243902439,
+            "RB1": 0.0243902439
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.02,
+            "WR2": 0.4507317073,
+            "WR3": 0.4146341463,
+            "TE1": 0.0204878049,
+            "RB1": 0.0207317073
+          },
+          "mass_loss": 0.0734146341,
+          "sinkhorn": {
+            "iterations": 87,
+            "row_residual": 7.966072246290423e-12,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.274458547394
+          }
+        },
+        "epa_drop_sum_offense": 0.11,
+        "epa_drop_sum_defense_sealed_sign": -0.015,
+        "points_equivalent_delta": 1.98,
+        "defense_bucket_points_equivalent_not_applied": -0.27
+      },
+      "projection_delta": {
+        "net_margin_shift_points": 0.54,
+        "total_shift_points": 3.42
+      },
+      "designations": {
+        "away": [
+          {
+            "player": "Charvarius Ward",
+            "position": "CB",
+            "status": "Out",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-29",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Will Mallory",
+            "position": "TE",
+            "status": "Out",
+            "injury": "Hamstring",
+            "detail": "Not Specified",
+            "return_date": "2026-11-29",
+            "sealed_role": "TE1"
+          },
+          {
+            "player": "Anthony Gould",
+            "position": "WR",
+            "status": "Questionable",
+            "injury": "Toe",
+            "detail": "Not Specified",
+            "return_date": "2026-11-19",
+            "sealed_role": "WR1"
+          },
+          {
+            "player": "Bernhard Raimann",
+            "position": "OT",
+            "status": "Out",
+            "injury": "Concussion",
+            "detail": "Concussion",
+            "return_date": "2026-11-29",
+            "sealed_role": "LT"
+          },
+          {
+            "player": "Jerry Tillery",
+            "position": "DT",
+            "status": "Out",
+            "injury": "Calf",
+            "detail": "Not Specified",
+            "return_date": "2026-11-29",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Jalen Travis",
+            "position": "OT",
+            "status": "Out",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-29",
+            "sealed_role": null
+          },
+          {
+            "player": "Luke Rhodes",
+            "position": "LS",
+            "status": "Questionable",
+            "injury": "Hamstring",
+            "detail": "Not Specified",
+            "return_date": "2026-11-19",
+            "sealed_role": null
+          },
+          {
+            "player": "Sauce Gardner",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Calf",
+            "detail": "Not Specified",
+            "return_date": "2026-11-19",
+            "sealed_role": null
+          }
+        ],
+        "home": [
+          {
+            "player": "Wyatt Teller",
+            "position": "G",
+            "status": "Questionable",
+            "injury": "Back",
+            "detail": "Not Specified",
+            "return_date": "2026-11-19",
+            "sealed_role": "LT"
+          },
+          {
+            "player": "Marvin Harrison Jr.",
+            "position": "WR",
+            "status": "Out",
+            "injury": "Hamstring",
+            "detail": "Not Specified",
+            "return_date": "2026-11-29",
+            "sealed_role": "WR1"
+          },
+          {
+            "player": "Woody Marks",
+            "position": "RB",
+            "status": "Out",
+            "injury": "Concussion",
+            "detail": "Concussion",
+            "return_date": "2026-11-29",
+            "sealed_role": "RB1"
+          },
+          {
+            "player": "Brevin Jordan",
+            "position": "TE",
+            "status": "Out",
+            "injury": "Foot",
+            "detail": "Not Specified",
+            "return_date": "2026-11-29",
+            "sealed_role": "TE1"
+          },
+          {
+            "player": "Danielle Hunter",
+            "position": "DE",
+            "status": "Out",
+            "injury": "Hamstring",
+            "detail": "Not Specified",
+            "return_date": "2026-11-29",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Jake Hummel",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Groin",
+            "detail": "Not Specified",
+            "return_date": "2026-11-19",
+            "sealed_role": "EDGE1"
+          }
+        ]
+      },
+      "practice_signals_only": {
+        "away": [
+          {
+            "player": "Charvarius Ward",
+            "position": "CB",
+            "sealed_role": "CB1",
+            "practice_level": "DNP",
+            "practice_status": "Did Not Participate In Practice",
+            "injury": "Knee",
+            "report_status": "",
+            "promoted_to_designation": false
+          },
+          {
+            "player": "Jerry Tillery",
+            "position": "DT",
+            "sealed_role": "EDGE1",
+            "practice_level": "DNP",
+            "practice_status": "Did Not Participate In Practice",
+            "injury": "Calf",
+            "report_status": "",
+            "promoted_to_designation": false
+          },
+          {
+            "player": "Charlie Heck",
+            "position": "T",
+            "sealed_role": "LT",
+            "practice_level": "DNP",
+            "practice_status": "Did Not Participate In Practice",
+            "injury": "Not injury related - personal matter",
+            "report_status": "",
+            "promoted_to_designation": false
+          },
+          {
+            "player": "Will Mallory",
+            "position": "TE",
+            "sealed_role": "TE1",
+            "practice_level": "DNP",
+            "practice_status": "Did Not Participate In Practice",
+            "injury": "Hamstring",
+            "report_status": "",
+            "promoted_to_designation": false
+          },
+          {
+            "player": "Jaylon Carlies",
+            "position": "LB",
+            "sealed_role": "EDGE1",
+            "practice_level": "DNP",
+            "practice_status": "Did Not Participate In Practice",
+            "injury": "Neck",
+            "report_status": "",
+            "promoted_to_designation": false
+          },
+          {
+            "player": "Dalton Tucker",
+            "position": "G",
+            "sealed_role": "LT",
+            "practice_level": "FULL",
+            "practice_status": "Full Participation in Practice",
+            "injury": "Shoulder",
+            "report_status": "",
+            "promoted_to_designation": false
+          },
+          {
+            "player": "Anthony Gould",
+            "position": "WR",
+            "sealed_role": "WR1",
+            "practice_level": "LIMITED",
+            "practice_status": "Limited Participation in Practice",
+            "injury": "Toe",
+            "report_status": "",
+            "promoted_to_designation": false
+          }
+        ],
+        "home": [
+          {
+            "player": "Danielle Hunter",
+            "position": "DE",
+            "sealed_role": "EDGE1",
+            "practice_level": "DNP",
+            "practice_status": "Did Not Participate In Practice",
+            "injury": "Hamstring",
+            "report_status": "",
+            "promoted_to_designation": false
+          },
+          {
+            "player": "Wyatt Teller",
+            "position": "G",
+            "sealed_role": "LT",
+            "practice_level": "FULL",
+            "practice_status": "Full Participation in Practice",
+            "injury": "Back",
+            "report_status": "",
+            "promoted_to_designation": false
+          },
+          {
+            "player": "Azeez Al-Shaair",
+            "position": "LB",
+            "sealed_role": "EDGE1",
+            "practice_level": "DNP",
+            "practice_status": "Did Not Participate In Practice",
+            "injury": "Groin",
+            "report_status": "",
+            "promoted_to_designation": false
+          },
+          {
+            "player": "David Montgomery",
+            "position": "RB",
+            "sealed_role": "RB1",
+            "practice_level": "FULL",
+            "practice_status": "Full Participation in Practice",
+            "injury": "Groin",
+            "report_status": "",
+            "promoted_to_designation": false
+          },
+          {
+            "player": "Brevin Jordan",
+            "position": "TE",
+            "sealed_role": "TE1",
+            "practice_level": "DNP",
+            "practice_status": "Did Not Participate In Practice",
+            "injury": "Foot",
+            "report_status": "",
+            "promoted_to_designation": false
+          },
+          {
+            "player": "Reed Blankenship",
+            "position": "S",
+            "sealed_role": "CB1",
+            "practice_level": "FULL",
+            "practice_status": "Full Participation in Practice",
+            "injury": "Hand",
+            "report_status": "",
+            "promoted_to_designation": false
+          },
+          {
+            "player": "Tank Dell",
+            "position": "WR",
+            "sealed_role": "WR1",
+            "practice_level": "FULL",
+            "practice_status": "Full Participation in Practice",
+            "injury": "Hand",
+            "report_status": "",
+            "promoted_to_designation": false
+          },
+          {
+            "player": "Kamari Lassiter",
+            "position": "CB",
+            "sealed_role": "CB1",
+            "practice_level": "DNP",
+            "practice_status": "Did Not Participate In Practice",
+            "injury": "Wrist",
+            "report_status": "",
+            "promoted_to_designation": false
+          },
+          {
+            "player": "Marvin Harrison Jr.",
+            "position": "WR",
+            "sealed_role": "WR2",
+            "practice_level": "DNP",
+            "practice_status": "Did Not Participate In Practice",
+            "injury": "Hamstring",
+            "report_status": "",
+            "promoted_to_designation": false
+          },
+          {
+            "player": "Blake Fisher",
+            "position": "T",
+            "sealed_role": "LT",
+            "practice_level": "FULL",
+            "practice_status": "Full Participation in Practice",
+            "injury": "Thumb",
+            "report_status": "",
+            "promoted_to_designation": false
+          }
+        ]
+      }
+    },
+    {
+      "game_id": "401873070",
+      "matchup": "Miami Dolphins at Buffalo Bills",
+      "window_slot": "SUN_EARLY",
+      "kickoff_utc": "2026-11-22T18:00Z",
+      "venue_indoor": false,
+      "state": "ADVANCED",
+      "away": {
+        "qualifying_roles": [
+          "WR1",
+          "WR2",
+          "CB1",
+          "WR3",
+          "LT"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "WR1",
+            "WR2",
+            "CB1",
+            "WR3",
+            "LT"
+          ],
+          "feasible_shares": {
+            "WR1": 0.0256410256,
+            "WR2": 0.0256410256,
+            "WR3": 0.0256410256,
+            "TE1": 0.5128205128,
+            "RB1": 0.4102564103
+          },
+          "execution_multipliers": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 0.9,
+            "TE1": 1.0,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.021025641,
+            "WR2": 0.0225641026,
+            "WR3": 0.0230769231,
+            "TE1": 0.5128205128,
+            "RB1": 0.4102564103
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9897435897,
+          "mass_moved": 0.5630769231,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.0256410256,
+            "WR2": 0.0256410256,
+            "WR3": 0.0256410256,
+            "TE1": 0.5128205128,
+            "RB1": 0.4102564103
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.021025641,
+            "WR2": 0.0225641026,
+            "WR3": 0.0256410256,
+            "TE1": 0.4307692308,
+            "RB1": 0.3487179487
+          },
+          "mass_loss": 0.1512820513,
+          "sinkhorn": {
+            "iterations": 43,
+            "row_residual": 8.492095915357822e-13,
+            "col_residual": 3.469446951953614e-18,
+            "converged": true,
+            "objective": 0.397001095431
+          }
+        },
+        "epa_drop_sum_offense": 0.11,
+        "epa_drop_sum_defense_sealed_sign": -0.015,
+        "points_equivalent_delta": 1.98,
+        "defense_bucket_points_equivalent_not_applied": -0.27
+      },
+      "home": {
+        "qualifying_roles": [
+          "RB1",
+          "TE1",
+          "CB1",
+          "EDGE1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "RB1",
+            "TE1",
+            "CB1",
+            "EDGE1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.3939393939,
+            "WR2": 0.3181818182,
+            "WR3": 0.2575757576,
+            "TE1": 0.0151515152,
+            "RB1": 0.0151515152
+          },
+          "execution_multipliers": {
+            "WR1": 1.0,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.3939393939,
+            "WR2": 0.3181818182,
+            "WR3": 0.2575757576,
+            "TE1": 0.0127272727,
+            "RB1": 0.0128787879
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9953030303,
+          "mass_moved": 0.3296969697,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.3939393939,
+            "WR2": 0.3181818182,
+            "WR3": 0.2575757576,
+            "TE1": 0.0151515152,
+            "RB1": 0.0151515152
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.323030303,
+            "WR2": 0.28,
+            "WR3": 0.2575757576,
+            "TE1": 0.0127272727,
+            "RB1": 0.0128787879
+          },
+          "mass_loss": 0.1137878788,
+          "sinkhorn": {
+            "iterations": 68,
+            "row_residual": 2.2261081866759014e-12,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.255790506136
+          }
+        },
+        "epa_drop_sum_offense": 0.06,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 1.08,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "projection_delta": {
+        "net_margin_shift_points": -0.9,
+        "total_shift_points": 3.06
+      },
+      "designations": {
+        "away": [
+          {
+            "player": "Chris Bell",
+            "position": "WR",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "WR1"
+          },
+          {
+            "player": "Caleb Douglas",
+            "position": "WR",
+            "status": "Questionable",
+            "injury": "Shoulder",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "WR2"
+          },
+          {
+            "player": "Bradley Pinion",
+            "position": "P",
+            "status": "Questionable",
+            "injury": "Groin",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "Jaylin Simpson",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Dante Trader Jr.",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Shoulder",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "JuJu Brents",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Neck",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Tucker Addington",
+            "position": "LS",
+            "status": "Questionable",
+            "injury": "Shoulder - AC Joint",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "Jared Wayne",
+            "position": "WR",
+            "status": "Questionable",
+            "injury": "Quadriceps",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "WR3"
+          },
+          {
+            "player": "Aaron Brewer",
+            "position": "C",
+            "status": "Questionable",
+            "injury": "Concussion",
+            "detail": "Concussion",
+            "return_date": "2026-11-22",
+            "sealed_role": "LT"
+          }
+        ],
+        "home": [
+          {
+            "player": "Ray Davis",
+            "position": "RB",
+            "status": "Questionable",
+            "injury": "Hamstring",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "RB1"
+          },
+          {
+            "player": "Jackson Hawes",
+            "position": "TE",
+            "status": "Questionable",
+            "injury": "Shoulder",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "TE1"
+          },
+          {
+            "player": "Damar Hamlin",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Toe",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Amani Hooker",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "Cole Bishop",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Shoulder",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "Dalton Kincaid",
+            "position": "TE",
+            "status": "Questionable",
+            "injury": "Thumb",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "Dorian Williams",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Calf",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Dee Alford",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Concussion",
+            "detail": "Concussion",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Christian Benford",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Groin",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          }
+        ]
+      },
+      "practice_signals_only": {
+        "away": [],
+        "home": []
+      }
+    },
+    {
+      "game_id": "401873071",
+      "matchup": "New Orleans Saints at Chicago Bears",
+      "window_slot": "SUN_EARLY",
+      "kickoff_utc": "2026-11-22T18:00Z",
+      "venue_indoor": false,
+      "state": "ADVANCED",
+      "away": {
+        "qualifying_roles": [
+          "CB1",
+          "WR1",
+          "LT",
+          "EDGE1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "CB1",
+            "WR1",
+            "LT",
+            "EDGE1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.0133333333,
+            "WR2": 0.28,
+            "WR3": 0.2266666667,
+            "TE1": 0.2666666667,
+            "RB1": 0.2133333333
+          },
+          "execution_multipliers": {
+            "WR1": 0.82,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.0109333333,
+            "WR2": 0.28,
+            "WR3": 0.2266666667,
+            "TE1": 0.2666666667,
+            "RB1": 0.2133333333
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9976,
+          "mass_moved": 0.2466666667,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.0133333333,
+            "WR2": 0.28,
+            "WR3": 0.2266666667,
+            "TE1": 0.2666666667,
+            "RB1": 0.2133333333
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.0109333333,
+            "WR2": 0.2464,
+            "WR3": 0.2266666667,
+            "TE1": 0.224,
+            "RB1": 0.1813333333
+          },
+          "mass_loss": 0.1106666667,
+          "sinkhorn": {
+            "iterations": 91,
+            "row_residual": 1.4125686731425446e-10,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.195288850767
+          }
+        },
+        "epa_drop_sum_offense": 0.05,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 0.9,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "home": {
+        "qualifying_roles": [
+          "EDGE1",
+          "CB1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "EDGE1",
+            "CB1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "execution_multipliers": {
+            "WR1": 1.0,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 1.0,
+          "mass_moved": 0.0,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.2132,
+            "WR2": 0.1848,
+            "WR3": 0.17,
+            "TE1": 0.168,
+            "RB1": 0.136
+          },
+          "mass_loss": 0.128,
+          "sinkhorn": {
+            "iterations": 200,
+            "row_residual": 4.4392012333915876e-05,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.051353823658
+          }
+        },
+        "epa_drop_sum_offense": 0,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 0.0,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "projection_delta": {
+        "net_margin_shift_points": -0.9,
+        "total_shift_points": 0.9
+      },
+      "designations": {
+        "away": [
+          {
+            "player": "Decamerion Richardson",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Thigh",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Martin Emerson Jr.",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Concussion",
+            "detail": "Concussion",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "Jordyn Tyson",
+            "position": "WR",
+            "status": "Questionable",
+            "injury": "Chest",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "WR1"
+          },
+          {
+            "player": "Erik McCoy",
+            "position": "C",
+            "status": "Doubtful",
+            "injury": "Biceps",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "LT"
+          },
+          {
+            "player": "Taliese Fuaga",
+            "position": "OT",
+            "status": "Doubtful",
+            "injury": "Knee",
+            "detail": "Sprain",
+            "return_date": "2026-11-22",
+            "sealed_role": "LT"
+          },
+          {
+            "player": "Asim Richards",
+            "position": "OT",
+            "status": "Out",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-29",
+            "sealed_role": null
+          },
+          {
+            "player": "Pete Werner",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Hamstring",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          }
+        ],
+        "home": [
+          {
+            "player": "Jeffery Simmons",
+            "position": "DT",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Kyler Gordon",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Shoulder",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          }
+        ]
+      },
+      "practice_signals_only": {
+        "away": [],
+        "home": []
+      }
+    },
+    {
+      "game_id": "401873073",
+      "matchup": "Tennessee Titans at Dallas Cowboys",
+      "window_slot": "SUN_EARLY",
+      "kickoff_utc": "2026-11-22T18:00Z",
+      "venue_indoor": true,
+      "state": "ADVANCED",
+      "away": {
+        "qualifying_roles": [
+          "RB1",
+          "EDGE1",
+          "WR1",
+          "CB1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "RB1",
+            "EDGE1",
+            "WR1",
+            "CB1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.0166666667,
+            "WR2": 0.35,
+            "WR3": 0.2833333333,
+            "TE1": 0.3333333333,
+            "RB1": 0.0166666667
+          },
+          "execution_multipliers": {
+            "WR1": 0.82,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.0136666667,
+            "WR2": 0.35,
+            "WR3": 0.2833333333,
+            "TE1": 0.3333333333,
+            "RB1": 0.0141666667
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9945,
+          "mass_moved": 0.3866666667,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.0166666667,
+            "WR2": 0.35,
+            "WR3": 0.2833333333,
+            "TE1": 0.3333333333,
+            "RB1": 0.0166666667
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.0136666667,
+            "WR2": 0.308,
+            "WR3": 0.2833333333,
+            "TE1": 0.28,
+            "RB1": 0.0141666667
+          },
+          "mass_loss": 0.1008333333,
+          "sinkhorn": {
+            "iterations": 200,
+            "row_residual": 3.059468095256701e-07,
+            "col_residual": 1.1102230246251565e-16,
+            "converged": true,
+            "objective": 0.208493471091
+          }
+        },
+        "epa_drop_sum_offense": 0.06,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 1.08,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "home": {
+        "qualifying_roles": [
+          "CB1",
+          "WR1",
+          "EDGE1",
+          "LT"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "CB1",
+            "WR1",
+            "EDGE1",
+            "LT"
+          ],
+          "feasible_shares": {
+            "WR1": 0.0133333333,
+            "WR2": 0.28,
+            "WR3": 0.2266666667,
+            "TE1": 0.2666666667,
+            "RB1": 0.2133333333
+          },
+          "execution_multipliers": {
+            "WR1": 0.82,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.0109333333,
+            "WR2": 0.28,
+            "WR3": 0.2266666667,
+            "TE1": 0.2666666667,
+            "RB1": 0.2133333333
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9976,
+          "mass_moved": 0.2466666667,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.0133333333,
+            "WR2": 0.28,
+            "WR3": 0.2266666667,
+            "TE1": 0.2666666667,
+            "RB1": 0.2133333333
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.0109333333,
+            "WR2": 0.2464,
+            "WR3": 0.2266666667,
+            "TE1": 0.224,
+            "RB1": 0.1813333333
+          },
+          "mass_loss": 0.1106666667,
+          "sinkhorn": {
+            "iterations": 91,
+            "row_residual": 1.4125686731425446e-10,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.195288850767
+          }
+        },
+        "epa_drop_sum_offense": 0.05,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 0.9,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "projection_delta": {
+        "net_margin_shift_points": -0.18,
+        "total_shift_points": 1.98
+      },
+      "designations": {
+        "away": [
+          {
+            "player": "Tyjae Spears",
+            "position": "RB",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "RB1"
+          },
+          {
+            "player": "John Franklin-Myers",
+            "position": "DE",
+            "status": "Questionable",
+            "injury": "Back",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Carnell Tate",
+            "position": "WR",
+            "status": "Questionable",
+            "injury": "Shoulder",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "WR1"
+          },
+          {
+            "player": "Anthony Hill Jr.",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Neck",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Cody Barton",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Concussion",
+            "detail": "Concussion",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "Tony Adams",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Concussion",
+            "detail": "Concussion",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          }
+        ],
+        "home": [
+          {
+            "player": "Juanyeh Thomas",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Ribs",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "P.J. Locke",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Concussion",
+            "detail": "Concussion",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "Jonathan Mingo",
+            "position": "WR",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "WR1"
+          },
+          {
+            "player": "Donovan Ezeiruaku",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "DaRon Bland",
+            "position": "CB",
+            "status": "Out",
+            "injury": "Ankle",
+            "detail": "Sprain",
+            "return_date": "2026-11-26",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Tyler Booker",
+            "position": "G",
+            "status": "Out",
+            "injury": "Ankle",
+            "detail": "Sprain",
+            "return_date": "2026-12-07",
+            "sealed_role": "LT"
+          }
+        ]
+      },
+      "practice_signals_only": {
+        "away": [],
+        "home": []
+      }
+    },
+    {
+      "game_id": "401873072",
+      "matchup": "Tampa Bay Buccaneers at Detroit Lions",
+      "window_slot": "SUN_EARLY",
+      "kickoff_utc": "2026-11-22T18:00Z",
+      "venue_indoor": true,
+      "state": "ADVANCED",
+      "away": {
+        "qualifying_roles": [
+          "CB1",
+          "QB_QUESTIONABLE"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "CB1",
+            "QB_QUESTIONABLE"
+          ],
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "execution_multipliers": {
+            "WR1": 1.0,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 1.0,
+          "mass_moved": 0.0,
+          "epa_drop_sum": 0.0947
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.2132,
+            "WR2": 0.1848,
+            "WR3": 0.17,
+            "TE1": 0.168,
+            "RB1": 0.136
+          },
+          "mass_loss": 0.128,
+          "sinkhorn": {
+            "iterations": 200,
+            "row_residual": 4.4392012333915876e-05,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.051353823658
+          }
+        },
+        "epa_drop_sum_offense": 0.0947,
+        "epa_drop_sum_defense_sealed_sign": -0.015,
+        "points_equivalent_delta": 1.7046,
+        "defense_bucket_points_equivalent_not_applied": -0.27
+      },
+      "home": {
+        "qualifying_roles": [
+          "RB1",
+          "EDGE1",
+          "CB1",
+          "LT"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "RB1",
+            "EDGE1",
+            "CB1",
+            "LT"
+          ],
+          "feasible_shares": {
+            "WR1": 0.3058823529,
+            "WR2": 0.2470588235,
+            "WR3": 0.2,
+            "TE1": 0.2352941176,
+            "RB1": 0.0117647059
+          },
+          "execution_multipliers": {
+            "WR1": 1.0,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.3058823529,
+            "WR2": 0.2470588235,
+            "WR3": 0.2,
+            "TE1": 0.2352941176,
+            "RB1": 0.01
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9982352941,
+          "mass_moved": 0.1482352941,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.3058823529,
+            "WR2": 0.2470588235,
+            "WR3": 0.2,
+            "TE1": 0.2352941176,
+            "RB1": 0.0117647059
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.2508235294,
+            "WR2": 0.2174117647,
+            "WR3": 0.2,
+            "TE1": 0.1976470588,
+            "RB1": 0.01
+          },
+          "mass_loss": 0.1241176471,
+          "sinkhorn": {
+            "iterations": 143,
+            "row_residual": 1.2907230839687145e-11,
+            "col_residual": 2.7755575615628914e-17,
+            "converged": true,
+            "objective": 0.152861075717
+          }
+        },
+        "epa_drop_sum_offense": 0.05,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 0.9,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "projection_delta": {
+        "net_margin_shift_points": -0.8046,
+        "total_shift_points": 2.6046
+      },
+      "designations": {
+        "away": [
+          {
+            "player": "Antoine Winfield Jr.",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Baker Mayfield",
+            "position": "QB",
+            "status": "Questionable",
+            "injury": "Foot",
+            "detail": "Strain",
+            "return_date": "2026-11-22",
+            "sealed_role": "QB_QUESTIONABLE"
+          }
+        ],
+        "home": [
+          {
+            "player": "Sione Vaki",
+            "position": "RB",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "RB1"
+          },
+          {
+            "player": "Tyler Lacy",
+            "position": "DT",
+            "status": "Questionable",
+            "injury": "Shoulder",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Ennis Rakestraw Jr.",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Shoulder",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Khalil Dorsey",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "Joe Bachie",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Cade Mays",
+            "position": "C",
+            "status": "Doubtful",
+            "injury": "Ankle",
+            "detail": "Sprain",
+            "return_date": "2026-11-22",
+            "sealed_role": "LT"
+          },
+          {
+            "player": "D.J. Reed",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Hip",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          }
+        ]
+      },
+      "practice_signals_only": {
+        "away": [],
+        "home": []
+      }
+    },
+    {
+      "game_id": "401873067",
+      "matchup": "Arizona Cardinals at Kansas City Chiefs",
+      "window_slot": "SUN_EARLY",
+      "kickoff_utc": "2026-11-22T18:00Z",
+      "venue_indoor": false,
+      "state": "ADVANCED",
+      "away": {
+        "qualifying_roles": [
+          "LT"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "LT"
+          ],
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "execution_multipliers": {
+            "WR1": 1.0,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 1.0,
+          "mass_moved": 0.0,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.2132,
+            "WR2": 0.1848,
+            "WR3": 0.17,
+            "TE1": 0.168,
+            "RB1": 0.136
+          },
+          "mass_loss": 0.128,
+          "sinkhorn": {
+            "iterations": 200,
+            "row_residual": 4.4392012333915876e-05,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.051353823658
+          }
+        },
+        "epa_drop_sum_offense": 0.02,
+        "epa_drop_sum_defense_sealed_sign": 0,
+        "points_equivalent_delta": 0.36,
+        "defense_bucket_points_equivalent_not_applied": 0.0
+      },
+      "home": {
+        "qualifying_roles": [
+          "EDGE1",
+          "RB1",
+          "LT"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "EDGE1",
+            "RB1",
+            "LT"
+          ],
+          "feasible_shares": {
+            "WR1": 0.3058823529,
+            "WR2": 0.2470588235,
+            "WR3": 0.2,
+            "TE1": 0.2352941176,
+            "RB1": 0.0117647059
+          },
+          "execution_multipliers": {
+            "WR1": 1.0,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.3058823529,
+            "WR2": 0.2470588235,
+            "WR3": 0.2,
+            "TE1": 0.2352941176,
+            "RB1": 0.01
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9982352941,
+          "mass_moved": 0.1482352941,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.3058823529,
+            "WR2": 0.2470588235,
+            "WR3": 0.2,
+            "TE1": 0.2352941176,
+            "RB1": 0.0117647059
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.2508235294,
+            "WR2": 0.2174117647,
+            "WR3": 0.2,
+            "TE1": 0.1976470588,
+            "RB1": 0.01
+          },
+          "mass_loss": 0.1241176471,
+          "sinkhorn": {
+            "iterations": 143,
+            "row_residual": 1.2907230839687145e-11,
+            "col_residual": 2.7755575615628914e-17,
+            "converged": true,
+            "objective": 0.152861075717
+          }
+        },
+        "epa_drop_sum_offense": 0.05,
+        "epa_drop_sum_defense_sealed_sign": -0.015,
+        "points_equivalent_delta": 0.9,
+        "defense_bucket_points_equivalent_not_applied": -0.27
+      },
+      "projection_delta": {
+        "net_margin_shift_points": 0.54,
+        "total_shift_points": 1.26
+      },
+      "designations": {
+        "away": [
+          {
+            "player": "Jayden Williams",
+            "position": "OT",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "LT"
+          },
+          {
+            "player": "Hjalte Froholdt",
+            "position": "C",
+            "status": "Questionable",
+            "injury": "Concussion",
+            "detail": "Concussion",
+            "return_date": "2026-11-22",
+            "sealed_role": "LT"
+          },
+          {
+            "player": "Jon Gaines II",
+            "position": "G",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "LT"
+          }
+        ],
+        "home": [
+          {
+            "player": "Omarr Norman-Lott",
+            "position": "DT",
+            "status": "Questionable",
+            "injury": "Knee - ACL",
+            "detail": "Surgery",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Kenneth Walker III",
+            "position": "RB",
+            "status": "Questionable",
+            "injury": "Groin",
+            "detail": "Soreness",
+            "return_date": "2026-11-22",
+            "sealed_role": "RB1"
+          },
+          {
+            "player": "Nick Bolton",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Shin",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Jaylon Moore",
+            "position": "OT",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "LT"
+          },
+          {
+            "player": "Trey Smith",
+            "position": "G",
+            "status": "Questionable",
+            "injury": "Concussion",
+            "detail": "Concussion",
+            "return_date": "2026-11-22",
+            "sealed_role": "LT"
+          }
+        ]
+      },
+      "practice_signals_only": {
+        "away": [],
+        "home": []
+      }
+    },
+    {
+      "game_id": "401873076",
+      "matchup": "Pittsburgh Steelers at Philadelphia Eagles",
+      "window_slot": "SUN_EARLY",
+      "kickoff_utc": "2026-11-22T18:00Z",
+      "venue_indoor": false,
+      "state": "ADVANCED",
+      "away": {
+        "qualifying_roles": [
+          "EDGE1",
+          "CB1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "EDGE1",
+            "CB1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "execution_multipliers": {
+            "WR1": 1.0,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 1.0,
+          "mass_moved": 0.0,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.2132,
+            "WR2": 0.1848,
+            "WR3": 0.17,
+            "TE1": 0.168,
+            "RB1": 0.136
+          },
+          "mass_loss": 0.128,
+          "sinkhorn": {
+            "iterations": 200,
+            "row_residual": 4.4392012333915876e-05,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.051353823658
+          }
+        },
+        "epa_drop_sum_offense": 0,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 0.0,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "home": {
+        "qualifying_roles": [
+          "CB1",
+          "EDGE1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "CB1",
+            "EDGE1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "execution_multipliers": {
+            "WR1": 1.0,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 1.0,
+          "mass_moved": 0.0,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.2132,
+            "WR2": 0.1848,
+            "WR3": 0.17,
+            "TE1": 0.168,
+            "RB1": 0.136
+          },
+          "mass_loss": 0.128,
+          "sinkhorn": {
+            "iterations": 200,
+            "row_residual": 4.4392012333915876e-05,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.051353823658
+          }
+        },
+        "epa_drop_sum_offense": 0,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 0.0,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "projection_delta": {
+        "net_margin_shift_points": 0.0,
+        "total_shift_points": 0.0
+      },
+      "designations": {
+        "away": [
+          {
+            "player": "Nick Herbig",
+            "position": "LB",
+            "status": "Doubtful",
+            "injury": "Hip",
+            "detail": null,
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Patrick Queen",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Hand",
+            "detail": null,
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "DeShon Elliott",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          }
+        ],
+        "home": [
+          {
+            "player": "Jonathan Jones",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Hamstring",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Jihaad Campbell",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Hamstring",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Michael Carter II",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Abdomen",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "Zack Baun",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Back",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          }
+        ]
+      },
+      "practice_signals_only": {
+        "away": [],
+        "home": []
+      }
+    },
+    {
+      "game_id": "401873068",
+      "matchup": "Baltimore Ravens at Carolina Panthers",
+      "window_slot": "SUN_EARLY",
+      "kickoff_utc": "2026-11-22T18:00Z",
+      "venue_indoor": false,
+      "state": "ADVANCED",
+      "away": {
+        "qualifying_roles": [
+          "CB1",
+          "EDGE1",
+          "LT"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "CB1",
+            "EDGE1",
+            "LT"
+          ],
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "execution_multipliers": {
+            "WR1": 1.0,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 1.0,
+          "mass_moved": 0.0,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.2132,
+            "WR2": 0.1848,
+            "WR3": 0.17,
+            "TE1": 0.168,
+            "RB1": 0.136
+          },
+          "mass_loss": 0.128,
+          "sinkhorn": {
+            "iterations": 200,
+            "row_residual": 4.4392012333915876e-05,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.051353823658
+          }
+        },
+        "epa_drop_sum_offense": 0.02,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 0.36,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "home": {
+        "qualifying_roles": [
+          "TE1",
+          "EDGE1",
+          "CB1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "TE1",
+            "EDGE1",
+            "CB1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.3209876543,
+            "WR2": 0.2592592593,
+            "WR3": 0.2098765432,
+            "TE1": 0.012345679,
+            "RB1": 0.1975308642
+          },
+          "execution_multipliers": {
+            "WR1": 1.0,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.3209876543,
+            "WR2": 0.2592592593,
+            "WR3": 0.2098765432,
+            "TE1": 0.0103703704,
+            "RB1": 0.1975308642
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9980246914,
+          "mass_moved": 0.187654321,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.3209876543,
+            "WR2": 0.2592592593,
+            "WR3": 0.2098765432,
+            "TE1": 0.012345679,
+            "RB1": 0.1975308642
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.2632098765,
+            "WR2": 0.2281481481,
+            "WR3": 0.2098765432,
+            "TE1": 0.0103703704,
+            "RB1": 0.1679012346
+          },
+          "mass_loss": 0.1204938272,
+          "sinkhorn": {
+            "iterations": 117,
+            "row_residual": 1.767696544696662e-10,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.149296036877
+          }
+        },
+        "epa_drop_sum_offense": 0.03,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 0.54,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "projection_delta": {
+        "net_margin_shift_points": 0.18,
+        "total_shift_points": 0.9
+      },
+      "designations": {
+        "away": [
+          {
+            "player": "Jaylinn Hawkins",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Nnamdi Madubuike",
+            "position": "DT",
+            "status": "Questionable",
+            "injury": "Hamstring",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Olaivavega Ioane",
+            "position": "G",
+            "status": "Questionable",
+            "injury": "Shoulder",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "LT"
+          }
+        ],
+        "home": [
+          {
+            "player": "Tommy Tremble",
+            "position": "TE",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "TE1"
+          },
+          {
+            "player": "Claudin Cherelus",
+            "position": "LB",
+            "status": "Out",
+            "injury": "Undisclosed",
+            "detail": "Not Specified",
+            "return_date": "2026-12-20",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Isaiah Simmons",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Darren Waller",
+            "position": "TE",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "Bobby Okereke",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Foot",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          }
+        ]
+      },
+      "practice_signals_only": {
+        "away": [],
+        "home": []
+      }
+    },
+    {
+      "game_id": "401873074",
+      "matchup": "New York Jets at Los Angeles Chargers",
+      "window_slot": "SUN_EARLY",
+      "kickoff_utc": "2026-11-22T21:05Z",
+      "venue_indoor": false,
+      "state": "ADVANCED",
+      "away": {
+        "qualifying_roles": [
+          "EDGE1",
+          "WR1",
+          "WR2",
+          "QB_QUESTIONABLE",
+          "LT"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "EDGE1",
+            "WR1",
+            "WR2",
+            "QB_QUESTIONABLE",
+            "LT"
+          ],
+          "feasible_shares": {
+            "WR1": 0.0181818182,
+            "WR2": 0.0181818182,
+            "WR3": 0.3090909091,
+            "TE1": 0.3636363636,
+            "RB1": 0.2909090909
+          },
+          "execution_multipliers": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.0149090909,
+            "WR2": 0.016,
+            "WR3": 0.3090909091,
+            "TE1": 0.3636363636,
+            "RB1": 0.2909090909
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9945454545,
+          "mass_moved": 0.4336363636,
+          "epa_drop_sum": 0.0947
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.0181818182,
+            "WR2": 0.0181818182,
+            "WR3": 0.3090909091,
+            "TE1": 0.3636363636,
+            "RB1": 0.2909090909
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.0149090909,
+            "WR2": 0.016,
+            "WR3": 0.3090909091,
+            "TE1": 0.3054545455,
+            "RB1": 0.2472727273
+          },
+          "mass_loss": 0.1072727273,
+          "sinkhorn": {
+            "iterations": 59,
+            "row_residual": 3.482242272312419e-12,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.299564615661
+          }
+        },
+        "epa_drop_sum_offense": 0.1747,
+        "epa_drop_sum_defense_sealed_sign": -0.015,
+        "points_equivalent_delta": 3.1446,
+        "defense_bucket_points_equivalent_not_applied": -0.27
+      },
+      "home": {
+        "qualifying_roles": [
+          "CB1",
+          "WR1",
+          "EDGE1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "CB1",
+            "WR1",
+            "EDGE1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.0133333333,
+            "WR2": 0.28,
+            "WR3": 0.2266666667,
+            "TE1": 0.2666666667,
+            "RB1": 0.2133333333
+          },
+          "execution_multipliers": {
+            "WR1": 0.82,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.0109333333,
+            "WR2": 0.28,
+            "WR3": 0.2266666667,
+            "TE1": 0.2666666667,
+            "RB1": 0.2133333333
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9976,
+          "mass_moved": 0.2466666667,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.0133333333,
+            "WR2": 0.28,
+            "WR3": 0.2266666667,
+            "TE1": 0.2666666667,
+            "RB1": 0.2133333333
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.0109333333,
+            "WR2": 0.2464,
+            "WR3": 0.2266666667,
+            "TE1": 0.224,
+            "RB1": 0.1813333333
+          },
+          "mass_loss": 0.1106666667,
+          "sinkhorn": {
+            "iterations": 91,
+            "row_residual": 1.4125686731425446e-10,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.195288850767
+          }
+        },
+        "epa_drop_sum_offense": 0.03,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 0.54,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "projection_delta": {
+        "net_margin_shift_points": -2.6046,
+        "total_shift_points": 3.6846
+      },
+      "designations": {
+        "away": [
+          {
+            "player": "Joseph Ossai",
+            "position": "DE",
+            "status": "Questionable",
+            "injury": "Foot",
+            "detail": null,
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Isaiah Williams",
+            "position": "WR",
+            "status": "Questionable",
+            "injury": "Ribs",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "WR1"
+          },
+          {
+            "player": "Omar Cooper Jr.",
+            "position": "WR",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "WR2"
+          },
+          {
+            "player": "Geno Smith",
+            "position": "QB",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "QB_QUESTIONABLE"
+          },
+          {
+            "player": "Harrison Phillips",
+            "position": "DT",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": null,
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Trevin Wallace",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Groin",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Dylan Parham",
+            "position": "G",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "LT"
+          }
+        ],
+        "home": [
+          {
+            "player": "Kendall Williamson",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Calf",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Isas Waxter",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Ladd McConkey",
+            "position": "WR",
+            "status": "Questionable",
+            "injury": "Back",
+            "detail": "Spasms",
+            "return_date": "2026-11-22",
+            "sealed_role": "WR1"
+          },
+          {
+            "player": "Rodney Shelley",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "Justin Eboigbe",
+            "position": "DT",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          }
+        ]
+      },
+      "practice_signals_only": {
+        "away": [],
+        "home": []
+      }
+    },
+    {
+      "game_id": "401873075",
+      "matchup": "Las Vegas Raiders at Denver Broncos",
+      "window_slot": "SUN_EARLY",
+      "kickoff_utc": "2026-11-22T21:25Z",
+      "venue_indoor": false,
+      "state": "ADVANCED",
+      "away": {
+        "qualifying_roles": [
+          "TE1",
+          "WR1",
+          "EDGE1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "TE1",
+            "WR1",
+            "EDGE1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.0178571429,
+            "WR2": 0.375,
+            "WR3": 0.3035714286,
+            "TE1": 0.0178571429,
+            "RB1": 0.2857142857
+          },
+          "execution_multipliers": {
+            "WR1": 0.82,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.0146428571,
+            "WR2": 0.375,
+            "WR3": 0.3035714286,
+            "TE1": 0.015,
+            "RB1": 0.2857142857
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9939285714,
+          "mass_moved": 0.4242857143,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.0178571429,
+            "WR2": 0.375,
+            "WR3": 0.3035714286,
+            "TE1": 0.0178571429,
+            "RB1": 0.2857142857
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.0146428571,
+            "WR2": 0.33,
+            "WR3": 0.3035714286,
+            "TE1": 0.015,
+            "RB1": 0.2428571429
+          },
+          "mass_loss": 0.0939285714,
+          "sinkhorn": {
+            "iterations": 131,
+            "row_residual": 1.0027376151633405e-10,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.214190771013
+          }
+        },
+        "epa_drop_sum_offense": 0.06,
+        "epa_drop_sum_defense_sealed_sign": -0.015,
+        "points_equivalent_delta": 1.08,
+        "defense_bucket_points_equivalent_not_applied": -0.27
+      },
+      "home": {
+        "qualifying_roles": [
+          "WR1",
+          "CB1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "WR1",
+            "CB1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.0133333333,
+            "WR2": 0.28,
+            "WR3": 0.2266666667,
+            "TE1": 0.2666666667,
+            "RB1": 0.2133333333
+          },
+          "execution_multipliers": {
+            "WR1": 0.82,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.0109333333,
+            "WR2": 0.28,
+            "WR3": 0.2266666667,
+            "TE1": 0.2666666667,
+            "RB1": 0.2133333333
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9976,
+          "mass_moved": 0.2466666667,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.0133333333,
+            "WR2": 0.28,
+            "WR3": 0.2266666667,
+            "TE1": 0.2666666667,
+            "RB1": 0.2133333333
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.0109333333,
+            "WR2": 0.2464,
+            "WR3": 0.2266666667,
+            "TE1": 0.224,
+            "RB1": 0.1813333333
+          },
+          "mass_loss": 0.1106666667,
+          "sinkhorn": {
+            "iterations": 91,
+            "row_residual": 1.4125686731425446e-10,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.195288850767
+          }
+        },
+        "epa_drop_sum_offense": 0.03,
+        "epa_drop_sum_defense_sealed_sign": -0.015,
+        "points_equivalent_delta": 0.54,
+        "defense_bucket_points_equivalent_not_applied": -0.27
+      },
+      "projection_delta": {
+        "net_margin_shift_points": -0.54,
+        "total_shift_points": 1.62
+      },
+      "designations": {
+        "away": [
+          {
+            "player": "Brock Bowers",
+            "position": "TE",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "TE1"
+          },
+          {
+            "player": "Dont'e Thornton Jr.",
+            "position": "WR",
+            "status": "Questionable",
+            "injury": "Back",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "WR1"
+          },
+          {
+            "player": "Thomas Booker IV",
+            "position": "DT",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Kwity Paye",
+            "position": "DE",
+            "status": "Questionable",
+            "injury": "Neck",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          }
+        ],
+        "home": [
+          {
+            "player": "Jaylen Waddle",
+            "position": "WR",
+            "status": "Questionable",
+            "injury": "Concussion",
+            "detail": "Concussion",
+            "return_date": "2026-11-22",
+            "sealed_role": "WR1"
+          },
+          {
+            "player": "Talanoa Hufanga",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Brandon Jones",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Hamstring",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "Kris Abrams-Draine",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Riley Moss",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Concussion",
+            "detail": "Concussion",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          }
+        ]
+      },
+      "practice_signals_only": {
+        "away": [],
+        "home": []
+      }
+    },
+    {
+      "game_id": "401873069",
+      "matchup": "Jacksonville Jaguars at New York Giants",
+      "window_slot": "SUN_EARLY",
+      "kickoff_utc": "2026-11-22T21:25Z",
+      "venue_indoor": false,
+      "state": "ADVANCED",
+      "away": {
+        "qualifying_roles": [
+          "RB1",
+          "EDGE1",
+          "LT",
+          "CB1",
+          "WR1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "RB1",
+            "EDGE1",
+            "LT",
+            "CB1",
+            "WR1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.0166666667,
+            "WR2": 0.35,
+            "WR3": 0.2833333333,
+            "TE1": 0.3333333333,
+            "RB1": 0.0166666667
+          },
+          "execution_multipliers": {
+            "WR1": 0.82,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.0136666667,
+            "WR2": 0.35,
+            "WR3": 0.2833333333,
+            "TE1": 0.3333333333,
+            "RB1": 0.0141666667
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9945,
+          "mass_moved": 0.3866666667,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.0166666667,
+            "WR2": 0.35,
+            "WR3": 0.2833333333,
+            "TE1": 0.3333333333,
+            "RB1": 0.0166666667
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.0136666667,
+            "WR2": 0.308,
+            "WR3": 0.2833333333,
+            "TE1": 0.28,
+            "RB1": 0.0141666667
+          },
+          "mass_loss": 0.1008333333,
+          "sinkhorn": {
+            "iterations": 200,
+            "row_residual": 3.059468095256701e-07,
+            "col_residual": 1.1102230246251565e-16,
+            "converged": true,
+            "objective": 0.208493471091
+          }
+        },
+        "epa_drop_sum_offense": 0.08,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 1.44,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "home": {
+        "qualifying_roles": [
+          "CB1",
+          "EDGE1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "CB1",
+            "EDGE1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "execution_multipliers": {
+            "WR1": 1.0,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 1.0,
+          "mass_moved": 0.0,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.2132,
+            "WR2": 0.1848,
+            "WR3": 0.17,
+            "TE1": 0.168,
+            "RB1": 0.136
+          },
+          "mass_loss": 0.128,
+          "sinkhorn": {
+            "iterations": 200,
+            "row_residual": 4.4392012333915876e-05,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.051353823658
+          }
+        },
+        "epa_drop_sum_offense": 0,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 0.0,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "projection_delta": {
+        "net_margin_shift_points": -1.44,
+        "total_shift_points": 1.44
+      },
+      "designations": {
+        "away": [
+          {
+            "player": "Chris Rodriguez Jr.",
+            "position": "RB",
+            "status": "Questionable",
+            "injury": "Hand",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "RB1"
+          },
+          {
+            "player": "Travon Walker",
+            "position": "DE",
+            "status": "Questionable",
+            "injury": "Ribs",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Jonah Monheim",
+            "position": "C",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "LT"
+          },
+          {
+            "player": "Antonio Johnson",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Jalen McLeod",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Groin",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Matt Dickerson",
+            "position": "DE",
+            "status": "Questionable",
+            "injury": "Neck",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "LeQuint Allen Jr.",
+            "position": "RB",
+            "status": "Questionable",
+            "injury": "Hamstring",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "Bhayshul Tuten",
+            "position": "RB",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "Jakobi Meyers",
+            "position": "WR",
+            "status": "Questionable",
+            "injury": "Ankle",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "WR1"
+          },
+          {
+            "player": "Robert Hainsey",
+            "position": "C",
+            "status": "Out",
+            "injury": "Knee",
+            "detail": "Sprain",
+            "return_date": "2026-11-29",
+            "sealed_role": null
+          },
+          {
+            "player": "Danny Striggow",
+            "position": "DE",
+            "status": "Questionable",
+            "injury": "Concussion",
+            "detail": "Concussion",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          }
+        ],
+        "home": [
+          {
+            "player": "Nic Jones",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Malik Harrison",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Groin",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Jason Pinnock",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Back",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          }
+        ]
+      },
+      "practice_signals_only": {
+        "away": [],
+        "home": []
+      }
+    },
+    {
+      "game_id": "401873077",
+      "matchup": "Minnesota Vikings at San Francisco 49ers",
+      "window_slot": "SNF",
+      "kickoff_utc": "2026-11-23T01:20Z",
+      "venue_indoor": false,
+      "state": "ADVANCED",
+      "away": {
+        "qualifying_roles": [
+          "CB1",
+          "WR1",
+          "EDGE1",
+          "TE1",
+          "WR2"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "CB1",
+            "WR1",
+            "EDGE1",
+            "TE1",
+            "WR2"
+          ],
+          "feasible_shares": {
+            "WR1": 0.0277777778,
+            "WR2": 0.0277777778,
+            "WR3": 0.4722222222,
+            "TE1": 0.0277777778,
+            "RB1": 0.4444444444
+          },
+          "execution_multipliers": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.0227777778,
+            "WR2": 0.0244444444,
+            "WR3": 0.4722222222,
+            "TE1": 0.0233333333,
+            "RB1": 0.4444444444
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9872222222,
+          "mass_moved": 0.5866666667,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.0277777778,
+            "WR2": 0.0277777778,
+            "WR3": 0.4722222222,
+            "TE1": 0.0277777778,
+            "RB1": 0.4444444444
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.0227777778,
+            "WR2": 0.0244444444,
+            "WR3": 0.4722222222,
+            "TE1": 0.0233333333,
+            "RB1": 0.3777777778
+          },
+          "mass_loss": 0.0794444444,
+          "sinkhorn": {
+            "iterations": 76,
+            "row_residual": 2.8800628548708573e-11,
+            "col_residual": 3.469446951953614e-18,
+            "converged": true,
+            "objective": 0.323566871793
+          }
+        },
+        "epa_drop_sum_offense": 0.09,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 1.62,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "home": {
+        "qualifying_roles": [
+          "CB1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "CB1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "execution_multipliers": {
+            "WR1": 1.0,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 1.0,
+          "mass_moved": 0.0,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.2132,
+            "WR2": 0.1848,
+            "WR3": 0.17,
+            "TE1": 0.168,
+            "RB1": 0.136
+          },
+          "mass_loss": 0.128,
+          "sinkhorn": {
+            "iterations": 200,
+            "row_residual": 4.4392012333915876e-05,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.051353823658
+          }
+        },
+        "epa_drop_sum_offense": 0,
+        "epa_drop_sum_defense_sealed_sign": -0.015,
+        "points_equivalent_delta": 0.0,
+        "defense_bucket_points_equivalent_not_applied": -0.27
+      },
+      "projection_delta": {
+        "net_margin_shift_points": -1.62,
+        "total_shift_points": 1.62
+      },
+      "designations": {
+        "away": [
+          {
+            "player": "Jay Ward",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Jeshaun Jones",
+            "position": "WR",
+            "status": "Questionable",
+            "injury": "Shoulder",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "WR1"
+          },
+          {
+            "player": "Kyle Van Noy",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Calf",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "T.J. Hockenson",
+            "position": "TE",
+            "status": "Questionable",
+            "injury": "Wrist",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "TE1"
+          },
+          {
+            "player": "Jordan Addison",
+            "position": "WR",
+            "status": "Out",
+            "injury": "Thumb",
+            "detail": "Surgery",
+            "return_date": "2026-11-29",
+            "sealed_role": "WR2"
+          },
+          {
+            "player": "Blake Cashman",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Concussion",
+            "detail": "Concussion",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          },
+          {
+            "player": "Andrew Van Ginkel",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Quadriceps",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": null
+          }
+        ],
+        "home": [
+          {
+            "player": "Renardo Green",
+            "position": "CB",
+            "status": "Questionable",
+            "injury": "Back",
+            "detail": "Not Specified",
+            "return_date": "2026-11-22",
+            "sealed_role": "CB1"
+          }
+        ]
+      },
+      "practice_signals_only": {
+        "away": [],
+        "home": []
+      }
+    },
+    {
+      "game_id": "401873078",
+      "matchup": "Cincinnati Bengals at Washington Commanders",
+      "window_slot": "MNF",
+      "kickoff_utc": "2026-11-24T01:15Z",
+      "venue_indoor": false,
+      "state": "ADVANCED",
+      "away": {
+        "qualifying_roles": [
+          "CB1",
+          "LT",
+          "EDGE1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "CB1",
+            "LT",
+            "EDGE1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "execution_multipliers": {
+            "WR1": 1.0,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 1.0,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 1.0,
+          "mass_moved": 0.0,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.26,
+            "WR2": 0.21,
+            "WR3": 0.17,
+            "TE1": 0.2,
+            "RB1": 0.16
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.2132,
+            "WR2": 0.1848,
+            "WR3": 0.17,
+            "TE1": 0.168,
+            "RB1": 0.136
+          },
+          "mass_loss": 0.128,
+          "sinkhorn": {
+            "iterations": 200,
+            "row_residual": 4.4392012333915876e-05,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.051353823658
+          }
+        },
+        "epa_drop_sum_offense": 0.02,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 0.36,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "home": {
+        "qualifying_roles": [
+          "TE1",
+          "LT"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "TE1",
+            "LT"
+          ],
+          "feasible_shares": {
+            "WR1": 0.3209876543,
+            "WR2": 0.2592592593,
+            "WR3": 0.2098765432,
+            "TE1": 0.012345679,
+            "RB1": 0.1975308642
+          },
+          "execution_multipliers": {
+            "WR1": 1.0,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.3209876543,
+            "WR2": 0.2592592593,
+            "WR3": 0.2098765432,
+            "TE1": 0.0103703704,
+            "RB1": 0.1975308642
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9980246914,
+          "mass_moved": 0.187654321,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.3209876543,
+            "WR2": 0.2592592593,
+            "WR3": 0.2098765432,
+            "TE1": 0.012345679,
+            "RB1": 0.1975308642
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.2632098765,
+            "WR2": 0.2281481481,
+            "WR3": 0.2098765432,
+            "TE1": 0.0103703704,
+            "RB1": 0.1679012346
+          },
+          "mass_loss": 0.1204938272,
+          "sinkhorn": {
+            "iterations": 117,
+            "row_residual": 1.767696544696662e-10,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.149296036877
+          }
+        },
+        "epa_drop_sum_offense": 0.05,
+        "epa_drop_sum_defense_sealed_sign": 0,
+        "points_equivalent_delta": 0.9,
+        "defense_bucket_points_equivalent_not_applied": 0.0
+      },
+      "projection_delta": {
+        "net_margin_shift_points": 0.54,
+        "total_shift_points": 1.26
+      },
+      "designations": {
+        "away": [
+          {
+            "player": "Kyle Dugger",
+            "position": "S",
+            "status": "Questionable",
+            "injury": "Quadriceps",
+            "detail": "Not Specified",
+            "return_date": "2026-11-23",
+            "sealed_role": "CB1"
+          },
+          {
+            "player": "Myles Hinton",
+            "position": "OT",
+            "status": "Questionable",
+            "injury": "Illness",
+            "detail": "Not Specified",
+            "return_date": "2026-11-23",
+            "sealed_role": "LT"
+          },
+          {
+            "player": "Oren Burks",
+            "position": "LB",
+            "status": "Questionable",
+            "injury": "Groin",
+            "detail": "Not Specified",
+            "return_date": "2026-11-23",
+            "sealed_role": "EDGE1"
+          },
+          {
+            "player": "Dalton Risner",
+            "position": "G",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-23",
+            "sealed_role": "LT"
+          }
+        ],
+        "home": [
+          {
+            "player": "Colson Yankoff",
+            "position": "TE",
+            "status": "Questionable",
+            "injury": "Knee",
+            "detail": "Not Specified",
+            "return_date": "2026-11-23",
+            "sealed_role": "TE1"
+          },
+          {
+            "player": "Lucas Patrick",
+            "position": "G",
+            "status": "Questionable",
+            "injury": "Concussion",
+            "detail": "Concussion",
+            "return_date": "2026-11-23",
+            "sealed_role": "LT"
+          }
+        ]
+      },
+      "practice_signals_only": {
+        "away": [],
+        "home": []
+      }
+    }
+  ],
+  "baseline_defects": [
+    {
+      "defect": "baseline_slate_is_not_week_11",
+      "detail": "the v1.0 tick's simulated_games list 8 matchups, of which 0 appear on the Week-11 card; the writeup engine is still running an earlier week's slate, so the v1.0 lock carries no per-game Week-11 numbers",
+      "baseline_matchups": [
+        "Browns@Pittsburgh",
+        "Cardinals@Dallas",
+        "Colts@Jacksonville",
+        "Falcons@Tampa",
+        "Raiders@New",
+        "Ravens@Buffalo",
+        "Titans@Cincinnati",
+        "Vikings@Detroit"
+      ],
+      "week_11_overlap": [],
+      "consequence": "v2.0 reports injury-driven deltas only; no baseline margin/total is asserted"
+    }
+  ],
+  "scenario_only": {
+    "label": "SCENARIO_ONLY",
+    "do_not_publish": true,
+    "hypothesis": "every DNP/Limited practice signal hardens into an Out designation",
+    "teams": {
+      "HOU": {
+        "qualifying_roles": [
+          "CB1",
+          "EDGE1",
+          "TE1",
+          "WR2"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "CB1",
+            "EDGE1",
+            "TE1",
+            "WR2"
+          ],
+          "feasible_shares": {
+            "WR1": 0.4262295082,
+            "WR2": 0.0163934426,
+            "WR3": 0.2786885246,
+            "TE1": 0.0163934426,
+            "RB1": 0.262295082
+          },
+          "execution_multipliers": {
+            "WR1": 1.0,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.4262295082,
+            "WR2": 0.0144262295,
+            "WR3": 0.2786885246,
+            "TE1": 0.0137704918,
+            "RB1": 0.262295082
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9954098361,
+          "mass_moved": 0.3772131148,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.4262295082,
+            "WR2": 0.0163934426,
+            "WR3": 0.2786885246,
+            "TE1": 0.0163934426,
+            "RB1": 0.262295082
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.3495081967,
+            "WR2": 0.0144262295,
+            "WR3": 0.2786885246,
+            "TE1": 0.0137704918,
+            "RB1": 0.2229508197
+          },
+          "mass_loss": 0.1206557377,
+          "sinkhorn": {
+            "iterations": 190,
+            "row_residual": 9.287964841675489e-11,
+            "col_residual": 3.469446951953614e-18,
+            "converged": true,
+            "objective": 0.1809667769
+          }
+        },
+        "epa_drop_sum_offense": 0.06,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 1.08,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      },
+      "IND": {
+        "qualifying_roles": [
+          "CB1",
+          "EDGE1",
+          "LT",
+          "TE1",
+          "WR1"
+        ],
+        "prior_qualifying_roles": [],
+        "advanced": true,
+        "sinkhorn_current": {
+          "injured_roles": [
+            "CB1",
+            "EDGE1",
+            "LT",
+            "TE1",
+            "WR1"
+          ],
+          "feasible_shares": {
+            "WR1": 0.0178571429,
+            "WR2": 0.375,
+            "WR3": 0.3035714286,
+            "TE1": 0.0178571429,
+            "RB1": 0.2857142857
+          },
+          "execution_multipliers": {
+            "WR1": 0.82,
+            "WR2": 1.0,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 1.0
+          },
+          "effective_shares": {
+            "WR1": 0.0146428571,
+            "WR2": 0.375,
+            "WR3": 0.3035714286,
+            "TE1": 0.015,
+            "RB1": 0.2857142857
+          },
+          "total_mass_before": 1.0,
+          "total_mass_after": 0.9939285714,
+          "mass_moved": 0.4242857143,
+          "epa_drop_sum": 0
+        },
+        "sinkhorn_prior": null,
+        "independent_cross_check": {
+          "feasible_shares": {
+            "WR1": 0.0178571429,
+            "WR2": 0.375,
+            "WR3": 0.3035714286,
+            "TE1": 0.0178571429,
+            "RB1": 0.2857142857
+          },
+          "retention_factors": {
+            "WR1": 0.82,
+            "WR2": 0.88,
+            "WR3": 1.0,
+            "TE1": 0.84,
+            "RB1": 0.85
+          },
+          "effective_shares": {
+            "WR1": 0.0146428571,
+            "WR2": 0.33,
+            "WR3": 0.3035714286,
+            "TE1": 0.015,
+            "RB1": 0.2428571429
+          },
+          "mass_loss": 0.0939285714,
+          "sinkhorn": {
+            "iterations": 131,
+            "row_residual": 1.0027376151633405e-10,
+            "col_residual": 5.551115123125783e-17,
+            "converged": true,
+            "objective": 0.214190771013
+          }
+        },
+        "epa_drop_sum_offense": 0.08,
+        "epa_drop_sum_defense_sealed_sign": -0.03,
+        "points_equivalent_delta": 1.44,
+        "defense_bucket_points_equivalent_not_applied": -0.54
+      }
+    }
+  },
+  "invariants": {
+    "sealed_center_merkle_unchanged": true,
+    "coach_mind_canonical_digest_unchanged": true,
+    "coach_tau_byte_identical": true,
+    "epa_dropoff_table_sha256_unchanged": true,
+    "seal_checks_6_of_6": true,
+    "cost_matrix_not_refit": true,
+    "no_practice_status_promoted": true
+  },
+  "invariants_hold": true,
+  "note": "Practice participation is not a game designation and is not promoted here. The sealed cost matrix and EPA dropoff table were read, never refit. coachMindsetHash identity (tau + canonical digest) is asserted byte-identical before and after the advance."
+}
