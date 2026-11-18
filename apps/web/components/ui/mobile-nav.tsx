@@ -145,7 +145,7 @@ export function MobileNav() {
   }, [open]);
 
   return (
-    <div className="mobile-nav" ref={containerRef}>
+    <div className="mobile-nav" ref={containerRef}><Link href="/packages" className="mr-2 inline-flex items-center justify-center rounded-full bg-emerald-400 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] text-black shadow-sm transition hover:bg-emerald-300">Buy Packs</Link>
       <button
         ref={triggerRef}
         type="button"
