@@ -403,3 +403,15 @@ organic feed's tool/repo yield was zero for the second straight run,
 a pattern the report's synthesis names. Media gaps carried from the
 report: post-page video black on 24 of 47 posts; carousel slides
 unread at positions 44, 47, 51. Running feed total: 11,718 records.
+
+## Delta 2026-11-18 IG For You AM (landed 2026-11-18)
+
+Source: ~/workspace/ig-for-you-sweep/reports/2026-11-18-AM.md. Sweep:
+60 feed positions = 13 ads + 1 partnership (excluded) + 46 organic;
+45 NEW organic, 1 duplicate skipped; 20 dossiers + 25 inventoried-
+only, all with shortcodes, no NOCODE loss. Delta: 45 records
+(20 dossier + 25 inventoried), 0 duplicates, 0 collisions,
+0 slug-keyed, 48,050 bytes appended to ig-for-you-feed.jsonl (now
+2,996 records). Strongest finds: AG-UI protocol (TEST), Java4Shell
+CVE-2026-114938 patch check (TEST), Higgsfield Short Drama Studio
+inside Claude (TEST). Running feed total: 11,763 records.
