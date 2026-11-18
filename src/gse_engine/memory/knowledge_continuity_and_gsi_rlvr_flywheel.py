@@ -92,6 +92,10 @@ from gse_engine.science.wave45_alphaxiv_59new_conformal_copula_parlay_dfs_and_re
     WAVE45_GSI_RLVR_TRAJECTORIES,
     evaluate_wave45_alphaxiv_78paper_conformal_copula_dfs_suite,
 )
+from gse_engine.science.wave46_alphaxiv_66paper_transactional_memory_durable_ci_upa_and_spec_ledger_engine import (  # noqa: E501
+    WAVE46_GSI_RLVR_TRAJECTORIES,
+    evaluate_wave46_alphaxiv_66paper_memory_ci_upa_ledger_suite,
+)
 from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine import (  # noqa: E501
     WAVE35_TRACKING_RLVR_TRAJECTORIES,
     evaluate_wave35_player_micro_matchup_suite,
@@ -137,6 +141,11 @@ from gse_engine.tracking.wave45_skill_wopr_snap_continuity_props_and_milp_dfs_nf
     WAVE45_TRACKING_RLVR_TRAJECTORIES,
     evaluate_w45_martingale_and_shortcut_audit,
     evaluate_wave45_skill_harmony_props_dfs_and_78paper_suite,
+)
+from gse_engine.tracking.wave46_causal_picks_combo_props_and_stacked_portfolio_dfs_nfl_engine import (  # noqa: E501
+    WAVE46_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_w46_martingale_and_shortcut_audit,
+    evaluate_wave46_memtx_picks_7props_and_stacked_dfs_suite,
 )
 
 _DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -4246,6 +4255,117 @@ def compile_gse_to_gsi_rlvr_training_batch(
                 think=str(spec_w45["think"]),
                 ground_truth=gt_w45,
                 verifier_src=_formula_exact_verifier_src(gt_w45),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    # Tier 3 Group W: Wave 46 66-Paper MemTX/CI/UPA/LEDGER & 7-Props/Stacked DFS (364 -> 376)
+    w46_sci = evaluate_wave46_alphaxiv_66paper_memory_ci_upa_ledger_suite(root)
+    w46_trk = evaluate_wave46_memtx_picks_7props_and_stacked_dfs_suite(
+        away_team="KC", home_team="DEN", as_of_week=10, is_indoor=False, repo_root=root
+    )
+    w46_pl = evaluate_w46_martingale_and_shortcut_audit(root)
+    w46_pa = w46_sci["pillar_a_memtx_gatemem_retention"]
+    w46_pb = w46_sci["pillar_b_durable_ci_safety_resonact"]
+    w46_pc = w46_sci["pillar_c_upa_escrow_human_anchor"]
+    w46_pd = w46_sci["pillar_d_ledger_spec_consort_agentpprof"]
+    w46_hm = w46_trk["home_w46_memtx_profile"]
+    w46_tot = w46_trk["game_total_clock_drain_shift"]
+    w46_prop = w46_trk["walk_forward_7props_and_stacked_dfs"]
+    w46_dfs = w46_prop["dfs_stacked_portfolio_backtest"]
+    w46_quar = w46_trk["quarantined_metrics_weights"]
+    w46_ast = w46_trk["live_honest_ast"]
+    w46_gt_map: dict[str, dict[str, Any]] = {
+        "w46_memtx_transactional_belief_commit_and_recovery_00": {
+            "complete_state_recovered": bool(w46_pa["complete_state_recovered"]),
+            "memtx_residue_lt_unguarded": bool(
+                float(w46_pa["memtx_corrupt_residue_l2"]) < float(w46_pa["unguarded_corrupt_l2"])
+            ),
+        },
+        "w46_gatemem_acl_use_disuse_and_anti_collusion_00": {
+            "zero_cross_principal_leak": bool(float(w46_pa["gatemem_leak_rate"]) == 0.0),
+            "consolidated_beats_fifo": bool(
+                float(w46_pa["consolidated_retention_recall"])
+                > float(w46_pa["fifo_retention_recall"])
+            ),
+            "collusion_detected": bool(w46_pa["collusion_detected"]),
+        },
+        "w46_durable_upgrade_risk_and_meta_change_safety_00": {
+            "unsafe_replay_halted": bool(w46_pb["unsafe_replay_halted"]),
+            "sprt_caught_and_passed": bool(
+                w46_pb["canary_regression_caught"] and w46_pb["healthy_release_passed"]
+            ),
+        },
+        "w46_resonact_self_healing_and_ml_ci_tail_duration_00": {
+            "resonact_faster_recovery": bool(w46_pb["resonact_faster_recovery"]),
+            "ml_ci_tail_verified": bool(w46_pb["ml_ci_tail_predictor_verified"]),
+        },
+        "w46_upa_escrow_policy_conformance_and_human_anchor_00": {
+            "zero_upa_violations": bool(float(w46_pc["upa_policy_violation_rate"]) == 0.0),
+            "nonconforming_flagged": bool(w46_pc["nonconforming_trace_flagged"]),
+            "human_anchor_enforced": bool(w46_pc["human_anchor_enforced"]),
+        },
+        "w46_ledger_claim_evidence_spec_growth_and_agentpprof_00": {
+            "ledger_unbacked_recall_1": bool(float(w46_pd["ledger_unbacked_recall"]) == 1.0),
+            "spec_divergence_caught": bool(w46_pd["spec_code_divergence_caught"]),
+            "agentpprof_verified": bool(w46_pd["agentpprof_verified"]),
+        },
+        "w46_nfl_memtx_ftn_fieldpos_and_multiread_margin_00": {
+            "max_prior_week_lt10": bool(int(w46_trk["max_prior_week_used"]) < 10),
+            "signals_bounded": bool(
+                -5.0 <= float(w46_hm["punt_in20_norm"]) <= 5.0
+                and -5.0 <= float(w46_hm["multi_read_autonomy_norm"]) <= 5.0
+                and -5.0 <= float(w46_hm["lbox_space_norm"]) <= 5.0
+            ),
+        },
+        "w46_nfl_clock_drain_ybc_and_1read_total_shift_00": {
+            "total_shift_bounded": bool(-1.25 <= float(w46_tot["total_shift_pts"]) <= 1.25),
+            "clock_drain_bounded": bool(-5.0 <= float(w46_hm["rush_10_norm"]) <= 5.0),
+        },
+        "w46_nfl_7market_memtx_player_props_walkforward_00": {
+            "all_7_beat_naive": bool(w46_prop["all_7_prop_markets_beat_naive"]),
+            "gated_hit_gt_065": bool(float(w46_prop["overall_gated_prop_hit_rate"]) > 0.65),
+        },
+        "w46_nfl_stacked_3lineup_portfolio_milp_dfs_00": {
+            "all_game_stacks_verified": bool(w46_dfs["all_game_stacks_verified"]),
+            "zero_cap_violations": bool(w46_dfs["zero_cap_violations"]),
+            "stack_and_cash_beat_chalk": bool(
+                w46_dfs["cash_beats_chalk"] and w46_dfs["stack1_beats_chalk"]
+            ),
+        },
+        "w46_nfl_martingale_500_placebo_and_quarantine_5_00": {
+            "all_five_zero": bool(
+                len(w46_quar) == 5 and all(float(v) == 0.0 for v in w46_quar.values())
+            ),
+            "placebo_and_mask_ok": bool(
+                w46_pl["beats_null_95pct"]
+                and w46_pl["total_beats_null_99pct"]
+                and w46_pl["shortcut_invariance_verified"]
+                and float(w46_pl["shortcut_max_output_perturbation"]) == 0.0
+            ),
+        },
+        "w46_nfl_honest_ast_8eq_kkt_and_ruo_zero_00": {
+            "all_eight_ast": bool(
+                int(w46_ast["parsed_evaluated_count"]) == 8 and w46_ast["zero_fabricated_bindings"]
+            ),
+            "kkt_and_ruo_zero": bool(
+                float(w46_prop["max_kkt_harmony_residual"]) < 1e-6
+                and w46_trk["real_money_stake_cleared"] is False
+                and float(w46_trk["clinical_ruo_sports_weight"]) == 0.0
+            ),
+        },
+    }
+    for spec_w46 in (*WAVE46_GSI_RLVR_TRAJECTORIES, *WAVE46_TRACKING_RLVR_TRAJECTORIES):
+        rid_w46 = str(spec_w46["record_id"])
+        gt_w46 = w46_gt_map[rid_w46]
+        records.append(
+            _build_rlvr_record(
+                record_id=rid_w46,
+                domain=str(spec_w46["domain"]),
+                prompt=str(spec_w46["prompt"]),
+                think=str(spec_w46["think"]),
+                ground_truth=gt_w46,
+                verifier_src=_formula_exact_verifier_src(gt_w46),
                 curriculum_tier="TIER_3_BEHEMOTH",
             )
         )

@@ -1328,6 +1328,7 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     conditioners["wave43_alphaxiv_ebm_wsp_coupled"] = True
     conditioners["wave44_alphaxiv_dfl_rim_parr_coupled"] = True
     conditioners["wave45_picks_props_milp_dfs_harmony_coupled"] = True
+    conditioners["wave46_memtx_picks_7props_stacked_dfs_coupled"] = True
 
     result = {
         "schema": "gse_pre_projection_universal_and_deep_non_stationary_priors_v1",
@@ -1372,6 +1373,9 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         ),
         "wave45_skill_harmony_props_and_dfs_matchups": (
             wave32_fusion["wave45_skill_harmony_props_and_dfs_matchups"]
+        ),
+        "wave46_memtx_picks_7props_and_stacked_dfs_matchups": (
+            wave32_fusion["wave46_memtx_picks_7props_and_stacked_dfs_matchups"]
         ),
         "trajectory_conditioners": conditioners,
         "simulation_trajectory_conditioners": conditioners,

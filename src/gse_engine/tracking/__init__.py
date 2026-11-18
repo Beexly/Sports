@@ -129,6 +129,16 @@ from gse_engine.tracking.wave45_skill_wopr_snap_continuity_props_and_milp_dfs_nf
     evaluate_wave45_skill_harmony_props_dfs_and_78paper_suite,
     run_wave45_78paper_picks_props_and_milp_dfs_benchmark,
 )
+from gse_engine.tracking.wave46_causal_picks_combo_props_and_stacked_portfolio_dfs_nfl_engine import (  # noqa: E501
+    WAVE46_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_causal_w46_game_total_clock_drain_and_1read_shift,
+    evaluate_causal_w46_memtx_ftn_and_fieldpos_features,
+    evaluate_w46_martingale_and_shortcut_audit,
+    evaluate_w46_walk_forward_7props_and_stacked_portfolio_dfs,
+    evaluate_wave46_live_honest_ast_equations,
+    evaluate_wave46_memtx_picks_7props_and_stacked_dfs_suite,
+    run_wave46_66paper_picks_7props_and_stacked_dfs_benchmark,
+)
 
 __all__ = [
     "AWS_NGS_GOING_DEEP_SOURCES",
@@ -147,6 +157,7 @@ __all__ = [
     "WAVE43_TRACKING_RLVR_TRAJECTORIES",
     "WAVE44_TRACKING_RLVR_TRAJECTORIES",
     "WAVE45_TRACKING_RLVR_TRAJECTORIES",
+    "WAVE46_TRACKING_RLVR_TRAJECTORIES",
     "ChalkContaminationError",
     "ClusterScalingPlan",
     "DualEpauletKinematics",
@@ -189,6 +200,8 @@ __all__ = [
     "evaluate_causal_w44_game_total_pace_air_shift",
     "evaluate_causal_w45_game_total_wopr_te_shift",
     "evaluate_causal_w45_skill_wopr_and_snap_features",
+    "evaluate_causal_w46_game_total_clock_drain_and_1read_shift",
+    "evaluate_causal_w46_memtx_ftn_and_fieldpos_features",
     "evaluate_contract_year_5b_incentive_audit",
     "evaluate_dated_csv_and_live_ast_equations",
     "evaluate_longitudinal_3yr_ftn_and_2025_baseline_vaults",
@@ -202,6 +215,8 @@ __all__ = [
     "evaluate_w44_martingale_and_baitbench_shortcut_audit",
     "evaluate_w45_martingale_and_shortcut_audit",
     "evaluate_w45_walk_forward_props_and_milp_dfs_harmony",
+    "evaluate_w46_martingale_and_shortcut_audit",
+    "evaluate_w46_walk_forward_7props_and_stacked_portfolio_dfs",
     "evaluate_wave35_player_micro_matchup_suite",
     "evaluate_wave36_360_board_matchup_suite",
     "evaluate_wave36_live_honest_ast_equations",
@@ -223,6 +238,8 @@ __all__ = [
     "evaluate_wave44_live_honest_ast_equations",
     "evaluate_wave45_live_honest_ast_equations",
     "evaluate_wave45_skill_harmony_props_dfs_and_78paper_suite",
+    "evaluate_wave46_live_honest_ast_equations",
+    "evaluate_wave46_memtx_picks_7props_and_stacked_dfs_suite",
     "evaluate_wr_separation_vs_db_coverage",
     "run_wave35_gsi_and_micro_metrics_benchmark",
     "run_wave36_gsi_icu_and_360_board_benchmark",
@@ -235,5 +252,6 @@ __all__ = [
     "run_wave43_alphaxiv_ebm_wsp_and_deconfounded_nfl_benchmark",
     "run_wave44_alphaxiv_28paper_dfl_causal_and_integrity_benchmark",
     "run_wave45_78paper_picks_props_and_milp_dfs_benchmark",
+    "run_wave46_66paper_picks_7props_and_stacked_dfs_benchmark",
     "verify_nonzero_stage2_jacobians",
 ]

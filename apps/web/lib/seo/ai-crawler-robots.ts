@@ -20,6 +20,7 @@ export const PRIVATE_DISALLOW_PATHS: string[] = [
 
 export const PUBLIC_AGENT_ALLOW_PATHS: string[] = [
   "/",
+  "/api/og/",
   "/llms.txt",
   "/llms-full.txt",
   "/.well-known/agent-card.json",

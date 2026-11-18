@@ -50,6 +50,9 @@ from gse_engine.fabric.registry_hotswap import (
     HotSwapInferenceEngine,
     verify_champion_bundle,
 )
+from gse_engine.governance.revenue_orchestration_and_w11_tnf_readiness import (  # noqa: E501
+    evaluate_revenue_and_4plane_orchestration_readiness_suite,
+)
 from gse_engine.ingestion.beat_langextract import extract_grounded_beat_claims
 from gse_engine.ingestion.deepke_triples import extract_football_knowledge_triples
 from gse_engine.ingestion.multimodal_vlm_and_provenance import (
@@ -161,6 +164,9 @@ from gse_engine.science.wave44_alphaxiv_28paper_dfl_cvar_causal_mspem_integrity_
 from gse_engine.science.wave45_alphaxiv_59new_conformal_copula_parlay_dfs_and_referee_engine import (  # noqa: E501
     evaluate_wave45_alphaxiv_78paper_conformal_copula_dfs_suite,
 )
+from gse_engine.science.wave46_alphaxiv_66paper_transactional_memory_durable_ci_upa_and_spec_ledger_engine import (  # noqa: E501
+    evaluate_wave46_alphaxiv_66paper_memory_ci_upa_ledger_suite,
+)
 from gse_engine.tracking.aws_ngs_going_deep_gse_gsi_suite import (
     evaluate_aws_ngs_going_deep_stage2_bridge,
 )
@@ -196,6 +202,9 @@ from gse_engine.tracking.wave44_dfl_rim_officiating_kicker_parr_dynamo_and_anti_
 )
 from gse_engine.tracking.wave45_skill_wopr_snap_continuity_props_and_milp_dfs_nfl_engine import (  # noqa: E501
     evaluate_wave45_skill_harmony_props_dfs_and_78paper_suite,
+)
+from gse_engine.tracking.wave46_causal_picks_combo_props_and_stacked_portfolio_dfs_nfl_engine import (  # noqa: E501
+    evaluate_wave46_memtx_picks_7props_and_stacked_dfs_suite,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -2895,6 +2904,22 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
                 repo_root=REPO_ROOT,
             )
         ),
+        "wave46_alphaxiv_66paper_pillar": (
+            evaluate_wave46_alphaxiv_66paper_memory_ci_upa_ledger_suite(REPO_ROOT)
+        ),
+        "wave46_memtx_picks_7props_stacked_dfs_pillar": (
+            wave32_res.get("wave46_memtx_picks_7props_and_stacked_dfs_matchups")
+            or evaluate_wave46_memtx_picks_7props_and_stacked_dfs_suite(
+                away_team=away_u,
+                home_team=home_u,
+                as_of_week=int(week),
+                is_indoor=bool(is_indoor),
+                repo_root=REPO_ROOT,
+            )
+        ),
+        "revenue_orchestration_4plane_pillar": (
+            evaluate_revenue_and_4plane_orchestration_readiness_suite()
+        ),
         "nvidia_hermes_capability_routes": nvidia_hermes_routes,
         "away_epa_corpus_delta": round(away_epa_corpus_delta, 5),
         "home_epa_corpus_delta": round(home_epa_corpus_delta, 5),
@@ -3562,6 +3587,33 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         else:
             w45_wired = True
 
+    w46_blk = priors.get("wave46_memtx_picks_7props_stacked_dfs_pillar")
+    w46_wired = False
+    if w46_blk is not None:
+        if (
+            not isinstance(w46_blk, Mapping)
+            or w46_blk.get("wired") is not True
+            or w46_blk.get("real_money_stake_cleared") is not False
+            or float(w46_blk.get("clinical_ruo_sports_weight", 1.0)) != 0.0
+        ):
+            missing_or_unwired.append("wave46_memtx_picks_7props_stacked_dfs_pillar")
+        else:
+            w46_wired = True
+
+    rev_blk = priors.get("revenue_orchestration_4plane_pillar")
+    rev_wired = False
+    if rev_blk is not None:
+        if (
+            not isinstance(rev_blk, Mapping)
+            or rev_blk.get("wired") is not True
+            or rev_blk.get("real_money_stake_cleared") is not False
+            or rev_blk.get("public_token_reseller_enabled") is not False
+            or rev_blk.get("w11_default_hold_enforced") is not True
+        ):
+            missing_or_unwired.append("revenue_orchestration_4plane_pillar")
+        else:
+            rev_wired = True
+
     required_scalars = (
         "away_epa_corpus_delta",
         "home_epa_corpus_delta",
@@ -3625,6 +3677,8 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         "wave43_ebm_deconfounded_nfl_wired": w43_wired,
         "wave44_dfl_rim_kicker_parr_wired": w44_wired,
         "wave45_skill_harmony_props_dfs_wired": w45_wired,
+        "wave46_memtx_picks_7props_stacked_dfs_wired": w46_wired,
+        "revenue_orchestration_4plane_wired": rev_wired,
         "pillars_verified": list(required_pillars),
         "scalars_verified_count": len(required_scalars),
         "player_multipliers_count": len(priors.get("player_target_and_carry_multipliers") or {}),

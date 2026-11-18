@@ -1,0 +1,1127 @@
+{
+  "schema": "alphaxiv_66paper_persistent_memory_durable_ci_governance_and_spec_ledger_vault_v1",
+  "submitted_url_count": 66,
+  "unique_paper_count": 66,
+  "brand_new_wave46_count": 66,
+  "cross_wave_overlap_count": 0,
+  "clinical_ruo_sports_weight": 0.0,
+  "real_money_stake_cleared": false,
+  "pillar_counts": {
+    "pillar_a_transactional_persistent_memory_and_retention": 16,
+    "pillar_b_durable_workflow_self_healing_and_ci_safety": 15,
+    "pillar_c_upa_policy_governance_conformance_and_human_anchor": 17,
+    "pillar_d_spec_growth_ledger_evidence_trace_and_profiling": 18
+  },
+  "pillar_id_lists": {
+    "pillar_a_transactional_persistent_memory_and_retention": [
+      "2609.05510",
+      "2607.09493",
+      "2606.10662",
+      "2611.00314",
+      "2607.23929",
+      "2609.32511",
+      "2609.15009",
+      "2606.18829",
+      "2610.19581",
+      "2608.29310",
+      "2611.03219",
+      "2609.06986",
+      "2610.34724",
+      "2610.12124",
+      "2607.27834",
+      "2609.24967"
+    ],
+    "pillar_b_durable_workflow_self_healing_and_ci_safety": [
+      "2609.17645",
+      "2607.13617",
+      "2609.06128",
+      "2608.20513",
+      "2609.00050",
+      "2608.07317",
+      "2609.08020",
+      "2608.08248",
+      "2611.02300",
+      "2611.17276",
+      "2609.34701",
+      "2605.06737",
+      "2603.03823",
+      "2611.15522",
+      "2611.00667"
+    ],
+    "pillar_c_upa_policy_governance_conformance_and_human_anchor": [
+      "2610.31444",
+      "2606.20669",
+      "2610.05942",
+      "2609.07984",
+      "2610.05912",
+      "2610.27531",
+      "2609.06543",
+      "2610.17702",
+      "2611.14371",
+      "2609.38643",
+      "2608.01772",
+      "2610.30445",
+      "2608.08621",
+      "2610.41682",
+      "2609.24986",
+      "2607.16738",
+      "2609.02095"
+    ],
+    "pillar_d_spec_growth_ledger_evidence_trace_and_profiling": [
+      "2610.39468",
+      "2611.09395",
+      "2610.11725",
+      "2611.05094",
+      "2608.25202",
+      "2609.00252",
+      "2610.06406",
+      "2608.24271",
+      "2610.21146",
+      "2608.18398",
+      "2611.03231",
+      "2606.30546",
+      "2609.20301",
+      "2608.21208",
+      "2610.37340",
+      "2609.29744",
+      "2609.09671",
+      "2609.32198"
+    ]
+  },
+  "papers": [
+    {
+      "arxiv_id": "2609.05510",
+      "id": "2609.05510",
+      "published": "2026-08-31",
+      "title": "Memory as Infrastructure: Reliability Engineering for Persistent Agent Memory in Months-Long LLM-Assisted Development",
+      "authors": [
+        "Mike Helwig"
+      ],
+      "pillar": "pillar_a_transactional_persistent_memory_and_retention",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.05510",
+      "arxiv_url": "https://arxiv.org/abs/2609.05510",
+      "abstract_excerpt": "LLM coding agents are crossing from task-scale to project-scale: single assisted efforts that run for months, across repeated context compactions, on codebases far larger than any context window. We report operational experience from one such effort (a research project under a single continuous Claude Code session line since January 2026, driving a 633,000-line codebase, with its memory subsystem continuously instrum"
+    },
+    {
+      "arxiv_id": "2607.09493",
+      "id": "2607.09493",
+      "published": "2026-07-10",
+      "title": "Shared Selective Persistent Memory for Agentic LLM Systems",
+      "authors": [
+        "Sanjana Pedada",
+        "Aditya Dhavala",
+        "Neelraj Patil"
+      ],
+      "pillar": "pillar_a_transactional_persistent_memory_and_retention",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2607.09493",
+      "arxiv_url": "https://arxiv.org/abs/2607.09493",
+      "abstract_excerpt": "Agentic LLM systems that generate code through multi-turn tool use face a fundamental context problem: each session starts from zero, discarding the domain constraints, data schemas, tool configurations, and output preferences that made previous sessions productive. We introduce shared selective persistent memory, an architecture that retains four categories of reusable context - task specifications, data schemas, to"
+    },
+    {
+      "arxiv_id": "2606.10662",
+      "id": "2606.10662",
+      "published": "2026-06-09",
+      "title": "Decentralized Multi-Agent Systems with Shared Context",
+      "authors": [
+        "Yuzhen Mao",
+        "Jerry Gu",
+        "Aadi Chauhan",
+        "Qizheng Zhang",
+        "Hangoo Kang"
+      ],
+      "pillar": "pillar_a_transactional_persistent_memory_and_retention",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2606.10662",
+      "arxiv_url": "https://arxiv.org/abs/2606.10662",
+      "abstract_excerpt": "Multi-agent systems (MAS) can scale large language model agents on long-horizon tasks by running them in parallel, yet existing designs waste much of this parallelism in bubbles: agent time spent waiting on others or redoing a peer's work. These bubbles stem from how agents communicate. Independent agents share nothing and rediscover what their peers have already found; peer-communicating agents wait at synchronous r"
+    },
+    {
+      "arxiv_id": "2611.00314",
+      "id": "2611.00314",
+      "published": "2026-10-30",
+      "title": "Decentralized Multi-Agent Coordination and Communication in Shared Codebases",
+      "authors": [
+        "Rishabh Mediratta",
+        "Lingyun Xiao",
+        "Peter Stone",
+        "Joydeep Biswas",
+        "Elias Stengel-Eskin"
+      ],
+      "pillar": "pillar_a_transactional_persistent_memory_and_retention",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2611.00314",
+      "arxiv_url": "https://arxiv.org/abs/2611.00314",
+      "abstract_excerpt": "Coding agents working in shared repositories may receive separate, independently-motivated requests from human developers, creating a setting that is multi-agent by necessity. When this scenario happens, their individual implementations may work separately but conflict when combined. To study this setting, we introduce ParallACT, a benchmark of orchestrator-free multi-agent coding tasks. ParallACT contains both compl"
+    },
+    {
+      "arxiv_id": "2607.23929",
+      "id": "2607.23929",
+      "published": "2026-07-27",
+      "title": "MemTX: Transactional Belief Commit for Stateful Agent Memory",
+      "authors": [
+        "Xiaoyang Li",
+        "Yiqi Wang",
+        "Haohui Lu",
+        "Zhi Chen",
+        "Mo Li"
+      ],
+      "pillar": "pillar_a_transactional_persistent_memory_and_retention",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2607.23929",
+      "arxiv_url": "https://arxiv.org/abs/2607.23929",
+      "abstract_excerpt": "LLM agents increasingly coordinate through persistent shared memory: one agent's write becomes another agent's premise, and eventually a tool call with real side effects. Current agent memory systems treat every accepted write as immediately actionable truth, so a polluted tool result, a stale update, or a teammate's half-finished note can silently drive an irreversible action. We argue that a memory write is not a b"
+    },
+    {
+      "arxiv_id": "2609.32511",
+      "id": "2609.32511",
+      "published": "2026-09-26",
+      "title": "Learning from Others, Acting for You: Cross-User Memory Sharing for LLM Agents",
+      "authors": [
+        "Jinming Hu",
+        "Haodong Zhao",
+        "Qi Jia",
+        "Die Chen",
+        "Tianhang Zhao"
+      ],
+      "pillar": "pillar_a_transactional_persistent_memory_and_retention",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.32511",
+      "arxiv_url": "https://arxiv.org/abs/2609.32511",
+      "abstract_excerpt": "Large language model (LLM) agents serving different users often solve related tasks, yet separate user histories can leave reusable experience inaccessible to other agents. Pooling memories expands access but risks transferring preferences that conflict with the receiving user's requirements. We introduce ShareMem, a memory architecture that shares reusable experience while grounding its application in the receiving "
+    },
+    {
+      "arxiv_id": "2609.15009",
+      "id": "2609.15009",
+      "published": "2026-09-14",
+      "title": "CoMem: Collective-Individual Memory Synergy for Evolutionary Multi-Agent Systems",
+      "authors": [
+        "Chengxin Yu",
+        "Zhaoxin Fan",
+        "Faguo Wu",
+        "Hongwei Zheng",
+        "Yun Zhou"
+      ],
+      "pillar": "pillar_a_transactional_persistent_memory_and_retention",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.15009",
+      "arxiv_url": "https://arxiv.org/abs/2609.15009",
+      "abstract_excerpt": "Designing effective memory mechanisms is crucial for advancing LLM-driven Multi-Agent Systems (MAS), helping agents learn together and perform better over time. While recent work has led to strong cooperation skills, most methods still use flat, unstructured memories, which easily get filled with noise and erase differences between agents. To address this, we introduce the concept of collective-individual memory syne"
+    },
+    {
+      "arxiv_id": "2606.18829",
+      "id": "2606.18829",
+      "published": "2026-06-17",
+      "title": "GateMem: Benchmarking Memory Governance in Multi-Principal Shared-Memory Agents",
+      "authors": [
+        "Zhe Ren",
+        "Yibo Yang",
+        "Yimeng Chen",
+        "Zijun Zhao",
+        "Benshuo Fu"
+      ],
+      "pillar": "pillar_a_transactional_persistent_memory_and_retention",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2606.18829",
+      "arxiv_url": "https://arxiv.org/abs/2606.18829",
+      "abstract_excerpt": "Memory benchmarks for LLM agents largely assume single-user settings, leaving shared assistants for hospitals, workplaces, campuses, and households understudied. In these deployments, multiple principals write to a common memory pool and query it under different roles, scopes, and relationships, so memory quality requires governance as well as recall. We introduce GateMem, a benchmark for multi-principal shared-memor"
+    },
+    {
+      "arxiv_id": "2610.19581",
+      "id": "2610.19581",
+      "published": "2026-10-14",
+      "title": "XferAgent: Cross-Agent Experience Transfer for Self-Improving LLM Agents",
+      "authors": [
+        "Weihao Li",
+        "Jun Bai",
+        "Shijie Chen",
+        "Qincheng Lu",
+        "Xinyu Wang"
+      ],
+      "pillar": "pillar_a_transactional_persistent_memory_and_retention",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2610.19581",
+      "arxiv_url": "https://arxiv.org/abs/2610.19581",
+      "abstract_excerpt": "Large language model (LLM) agents can reuse experience from prior task executions to improve performance on subsequent tasks. Although existing methods enable cross-agent experience sharing, differences in agents' execution histories and task requirements make shared experiences difficult to reuse effectively. We propose XferAgent, a framework for cross-agent experience transfer that organizes reusable experience in "
+    },
+    {
+      "arxiv_id": "2608.29310",
+      "id": "2608.29310",
+      "published": "2026-08-29",
+      "title": "Super Library Agent: Joint Generation and Maintenance of Multiple Applications Beyond the Single Codebase",
+      "authors": [
+        "Daegyu Sung",
+        "Yukyeong Lee",
+        "Geon Park",
+        "Yumin Choi",
+        "Sung Ju Hwang"
+      ],
+      "pillar": "pillar_a_transactional_persistent_memory_and_retention",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2608.29310",
+      "arxiv_url": "https://arxiv.org/abs/2608.29310",
+      "abstract_excerpt": "Organizations often develop and maintain portfolios of related applications: independently deployable codebases that share substantial domain logic, interface patterns, or operational conventions. As LLM coding agents are increasingly used to generate and maintain such software, a naive application-by-application workflow duplicates shared logic across codebases and allows prolonged agentic maintenance to accumulate "
+    },
+    {
+      "arxiv_id": "2611.03219",
+      "id": "2611.03219",
+      "published": "2026-11-02",
+      "title": "Can Coding Agents Sustain Continual Evolution without Forgetting?",
+      "authors": [
+        "Shangziqi Zhao",
+        "Yitong Zhang",
+        "Jia Li"
+      ],
+      "pillar": "pillar_a_transactional_persistent_memory_and_retention",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2611.03219",
+      "arxiv_url": "https://arxiv.org/abs/2611.03219",
+      "abstract_excerpt": "Recently, harness self-evolution has emerged as an important paradigm for improving agent performance. Prior studies show that evolving the agent harness can effectively enhance agent capabilities without modifying the foundation model's parameters. We find that existing approaches largely study agent evolution on a single task. In practice, coding agents may need to handle multiple task types over time. Whether an a"
+    },
+    {
+      "arxiv_id": "2609.06986",
+      "id": "2609.06986",
+      "published": "2026-09-07",
+      "title": "Continual Learning Mechanisms Compose for Long-Horizon Memorization",
+      "authors": [
+        "Zheyuan Zhang",
+        "Alvin Zhang",
+        "Daniel Khashabi",
+        "Tianmin Shu"
+      ],
+      "pillar": "pillar_a_transactional_persistent_memory_and_retention",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.06986",
+      "arxiv_url": "https://arxiv.org/abs/2609.06986",
+      "abstract_excerpt": "Language models may need to internalize information that arrives over time and retain it through many subsequent updates. To study this challenge, we introduce long-horizon memorization, a setting in which a model learns 100 query-answer tasks through continual supervised fine-tuning without retaining earlier training examples or receiving task identifiers at inference. Sequential updates cause catastrophic forgettin"
+    },
+    {
+      "arxiv_id": "2610.34724",
+      "id": "2610.34724",
+      "published": "2026-10-26",
+      "title": "Harness-Model Collaboration for Long-Horizon Continual Learning",
+      "authors": [
+        "Zhen Bi",
+        "Zhizhi Peng",
+        "Yan Wang",
+        "Xueshu Chen",
+        "Haofei Zhang"
+      ],
+      "pillar": "pillar_a_transactional_persistent_memory_and_retention",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2610.34724",
+      "arxiv_url": "https://arxiv.org/abs/2610.34724",
+      "abstract_excerpt": "Long-horizon agents continuously encounter reusable procedural knowledge, yet existing systems typically rely either on model adaptation or external memory, trading persistent learning for rapid reuse. This limitation is especially important for Web agents that repeatedly execute related multi-step workflows. We propose HaMo, a Harness-Model collaborative framework that combines fast non-parametric experience accumul"
+    },
+    {
+      "arxiv_id": "2610.12124",
+      "id": "2610.12124",
+      "published": "2026-10-08",
+      "title": "Use and Disuse: Intent-Structured Experience Consolidation for Memory and Learning in LLM Agents",
+      "authors": [
+        "Xiangyi Zeng",
+        "Baihang Liu",
+        "Xutong Wang",
+        "Ze Jin",
+        "Yunpeng Li"
+      ],
+      "pillar": "pillar_a_transactional_persistent_memory_and_retention",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2610.12124",
+      "arxiv_url": "https://arxiv.org/abs/2610.12124",
+      "abstract_excerpt": "The evolution of Large Language Model agents from single-task execution to long-term autonomous operation highlights the critical challenge of transforming continuous experiences into reusable knowledge. To address this, we propose Hippocam, a hierarchical memory and continual learning architecture. Hippocam draws inspiration from two characteristics of human memory: cognitive processes selectively maintain informati"
+    },
+    {
+      "arxiv_id": "2607.27834",
+      "id": "2607.27834",
+      "published": "2026-07-30",
+      "title": "MemTxn: A Transaction Boundary for Source-Supported Updates and Complete-State Recovery in Agent Memory",
+      "authors": [
+        "Hanshuai Cui",
+        "Zhiqing Tang",
+        "Zhi Yao",
+        "Fanshuai Meng",
+        "Qianli Ma"
+      ],
+      "pillar": "pillar_a_transactional_persistent_memory_and_retention",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2607.27834",
+      "arxiv_url": "https://arxiv.org/abs/2607.27834",
+      "abstract_excerpt": "Persistent memory lets long-running large language model agents reuse information across sessions and tasks. Yet errors in writable memory can persist and corrupt future behavior. Existing systems improve storage and retrieval, but they do not provide a transaction boundary for reliable updates and recovery. We therefore propose MemTxn, a governance layer outside the answer model. MemTxn verifies whether an update is"
+    },
+    {
+      "arxiv_id": "2609.24967",
+      "id": "2609.24967",
+      "published": "2026-09-21",
+      "title": "Emergent Collusion in Long-Horizon LLM Agent Interaction",
+      "authors": [
+        "Xinrui Shi",
+        "Yanzhe Zhang",
+        "Diyi Yang"
+      ],
+      "pillar": "pillar_a_transactional_persistent_memory_and_retention",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.24967",
+      "arxiv_url": "https://arxiv.org/abs/2609.24967",
+      "abstract_excerpt": "LLM agents are increasingly deployed in collaborative settings, yet long-term interaction may give rise to undesirable coordination. We study the emergence of collusion in a long-horizon multi-agent environment: two agents repeatedly complete individual tasks, share task logs, verify each other's work, and receive rewards. We introduce realistic constraints under which higher reward is attainable only by violating th"
+    },
+    {
+      "arxiv_id": "2609.17645",
+      "id": "2609.17645",
+      "published": "2026-09-15",
+      "title": "State Without a Landlord: An Architecture Proposal for Peer-to-Peer Replication of Durable Workflow State",
+      "authors": [
+        "Luca Maraschi",
+        "Matteo Collina"
+      ],
+      "pillar": "pillar_b_durable_workflow_self_healing_and_ci_safety",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.17645",
+      "arxiv_url": "https://arxiv.org/abs/2609.17645",
+      "abstract_excerpt": "Durable-execution frameworks commonly journal execution steps of a long-running function and reconstruct state by deterministic replay; the journal is therefore the workflow's authoritative state, and in current deployments it typically resides with whichever provider hosts the run. This paper examines what changes if the journal is instead an authenticated, append-only log replicated among the parties to the workflo"
+    },
+    {
+      "arxiv_id": "2607.13617",
+      "id": "2607.13617",
+      "published": "2026-07-15",
+      "title": "A Telemetry-Driven Model for Quantifying Upgrade Risk in Durable Workflow Execution",
+      "authors": [
+        "Luca Maraschi",
+        "Matteo Collina"
+      ],
+      "pillar": "pillar_b_durable_workflow_self_healing_and_ci_safety",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2607.13617",
+      "arxiv_url": "https://arxiv.org/abs/2607.13617",
+      "abstract_excerpt": "Durable workflow engines reconstruct execution state by deterministically replaying an immutable event log, coupling every in-flight run to the code version that produced its history: a new deployment can invalidate the replay of runs started under the old version, silently corrupting state or halting progress. Existing mitigations -- pinning, patch gates, side-by-side deployment -- treat every change as maximally da"
+    },
+    {
+      "arxiv_id": "2609.06128",
+      "id": "2609.06128",
+      "published": "2026-09-05",
+      "title": "Substrate-Portable Execution for Production LLM Workflows",
+      "authors": [
+        "Tarun Gopinath",
+        "Atul Kulkarni",
+        "Vijay Rajakumar",
+        "Shrikar Katti",
+        "Parthasarathy Govindarajen"
+      ],
+      "pillar": "pillar_b_durable_workflow_self_healing_and_ci_safety",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.06128",
+      "arxiv_url": "https://arxiv.org/abs/2609.06128",
+      "abstract_excerpt": "Production LLM agents execute tool-calling loops, retrieval chains, and compositional workflows in multiple modes, yet execution semantics are often coupled to one runtime. We encountered this portability problem in Rufus, a conversational AI assistant with a large tool catalog that serves millions of Amazon customers. Rufus supports real-time serving, asynchronous background tasks, and high-volume batch workloads su"
+    },
+    {
+      "arxiv_id": "2608.20513",
+      "id": "2608.20513",
+      "published": "2026-08-20",
+      "title": "Making Deployments Safe at Meta: Health Checks for Continuous Change-Safety",
+      "authors": [
+        "Prakash KL",
+        "Anton Korenkov",
+        "Uttam Thakore",
+        "Christopher Hegre"
+      ],
+      "pillar": "pillar_b_durable_workflow_self_healing_and_ci_safety",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2608.20513",
+      "arxiv_url": "https://arxiv.org/abs/2608.20513",
+      "abstract_excerpt": "Continuous deployment to large scale production systems creates a tension between release velocity and reliability. Every change is a potential reliability incident, yet every delay is a missed opportunity. This paper describes the deployment time health check infrastructure that Meta uses to mediate this tension across thousands of heterogeneous services. We summarize the architecture of this prevention based distri"
+    },
+    {
+      "arxiv_id": "2609.00050",
+      "id": "2609.00050",
+      "published": "2026-08-30",
+      "title": "Towards Agentic Cloud Engineering: Graph and Loop Engineering with a Zero-Trust Agent Harness",
+      "authors": [
+        "Sagar Srinivas Sakhinana",
+        "Venkataramana Runkana"
+      ],
+      "pillar": "pillar_b_durable_workflow_self_healing_and_ci_safety",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.00050",
+      "arxiv_url": "https://arxiv.org/abs/2609.00050",
+      "abstract_excerpt": "Agentic AI is enabling cloud-based workflows in which autonomous agents reason over operational state, invoke authorized tools, modify software and infrastructure, deploy services, verify execution outcomes, and adapt across long-horizon, multistep tasks. Engineering such workflows requires explicit mechanisms for workflow progression, constrained execution, failure recovery, and verifiable completion. We present Age"
+    },
+    {
+      "arxiv_id": "2608.07317",
+      "id": "2608.07317",
+      "published": "2026-08-07",
+      "title": "Towards Assurance Closure in AI-Native Large-Scale Agile Software Development",
+      "authors": [
+        "Ricardo Britto"
+      ],
+      "pillar": "pillar_b_durable_workflow_self_healing_and_ci_safety",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2608.07317",
+      "arxiv_url": "https://arxiv.org/abs/2608.07317",
+      "abstract_excerpt": "The AI-Native Manifesto envisions large-scale agile software development in which humans increasingly govern intent, risk, and exceptions while agents execute more of the engineering process. Realizing that end-state requires more than better code generation: it requires assurance closure, meaning that the system can establish what must be true, determine and obtain appropriate evidence, judge the credibility of that"
+    },
+    {
+      "arxiv_id": "2609.08020",
+      "id": "2609.08020",
+      "published": "2026-09-07",
+      "title": "Service Health Engineering for Distributed Systems",
+      "authors": [
+        "Siva Rama Krishna Varma Bayyavarapu"
+      ],
+      "pillar": "pillar_b_durable_workflow_self_healing_and_ci_safety",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.08020",
+      "arxiv_url": "https://arxiv.org/abs/2609.08020",
+      "abstract_excerpt": "Distributed systems support many critical business workflows, but service health is often judged through component dashboards rather than through end-to-end user outcomes. This article presents service health engineering as a practical reliability discipline that connects telemetry, workflow completion, dependency behavior, operational readiness, and recovery validation. Using a document approval workflow as a runnin"
+    },
+    {
+      "arxiv_id": "2608.08248",
+      "id": "2608.08248",
+      "published": "2026-08-08",
+      "title": "Catching Transpilation Drift with a CI/CD Workflow in Quantum Software Development",
+      "authors": [
+        "Jouni Peltonen",
+        "Otso Kinanen",
+        "Vlad Stirbu"
+      ],
+      "pillar": "pillar_b_durable_workflow_self_healing_and_ci_safety",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2608.08248",
+      "arxiv_url": "https://arxiv.org/abs/2608.08248",
+      "abstract_excerpt": "Quantum software workflows rely on compiler and provider toolchains that evolve independently of application source code. Consequently, an unchanged quantum circuit may transpile into a different target-specific realization after changes in SDK versions, optimization settings, basis gates, coupling maps, or backend descriptions. Such transpilation drift can affect circuit depth, gate composition, qubit mapping, and e"
+    },
+    {
+      "arxiv_id": "2611.02300",
+      "id": "2611.02300",
+      "published": "2026-11-01",
+      "title": "Trustworthy Execution of Industrial Agents",
+      "authors": [
+        "Zhongjie Wang",
+        "Mingyi Liu",
+        "Xiang He",
+        "Xiao Wang",
+        "Shuang Yu"
+      ],
+      "pillar": "pillar_b_durable_workflow_self_healing_and_ci_safety",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2611.02300",
+      "arxiv_url": "https://arxiv.org/abs/2611.02300",
+      "abstract_excerpt": "Industrial agents increasingly modify persistent engineering objects rather than merely generate answers. Authentication and successful calls cannot establish whether intended changes occurred, evidence supports a conclusion, or historical results remain applicable. We present a framework for trustworthy industrial-agent execution within a single enterprise governance domain. Eight control domains assign responsibili"
+    },
+    {
+      "arxiv_id": "2611.17276",
+      "id": "2611.17276",
+      "published": "2026-11-12",
+      "title": "Patterns for Designing CI/CD Workflows",
+      "authors": [
+        "Leandro Sousa",
+        "Filipe Correia"
+      ],
+      "pillar": "pillar_b_durable_workflow_self_healing_and_ci_safety",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2611.17276",
+      "arxiv_url": "https://arxiv.org/abs/2611.17276",
+      "abstract_excerpt": "CI/CD pipelines are difficult to build and maintain, and information about them is scattered across empirical studies, practitioner books, and catalogues of 'smells'. We collected candidate practices and anti-practices converted them into patterns, and then consolidated these into patterns. These patterns address issues such as security, pipeline scheduling, workflow structure, performance and failure and release man"
+    },
+    {
+      "arxiv_id": "2609.34701",
+      "id": "2609.34701",
+      "published": "2026-09-28",
+      "title": "ResonAct: Streaming Metrics for Runtime Diagnosis and Self-Healing in Multi-Agent Systems",
+      "authors": [
+        "Tarun Chintada",
+        "Neelamadhav Gantayat",
+        "Ishaan Romil",
+        "Renuka Sindhgatta",
+        "Soujanya Soni"
+      ],
+      "pillar": "pillar_b_durable_workflow_self_healing_and_ci_safety",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.34701",
+      "arxiv_url": "https://arxiv.org/abs/2609.34701",
+      "abstract_excerpt": "Multi-agent systems (MAS) are increasingly used to automate enterprise workflows involving multiple specialized agents, external tools, and long-running task execution. Failures may arise from tool degradation, context propagation errors, coordination breakdowns, or repeated agent interactions that prevent task completion. While existing observability frameworks provide traces and logs, diagnosis and remediation are "
+    },
+    {
+      "arxiv_id": "2605.06737",
+      "id": "2605.06737",
+      "published": "2026-05-07",
+      "title": "A Self-Healing Framework for Reliable LLM-Based Autonomous Agents",
+      "authors": [
+        "Cheonsu Jeong",
+        "Younggun Shin"
+      ],
+      "pillar": "pillar_b_durable_workflow_self_healing_and_ci_safety",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2605.06737",
+      "arxiv_url": "https://arxiv.org/abs/2605.06737",
+      "abstract_excerpt": "Autonomous agents based on Large Language Models (LLMs) are increasingly being utilized in complex software systems. However, reliability remains a significant challenge due to unpredictable failures such as hallucinations, execution errors, and inconsistent reasoning. This paper proposes a reliability-aware self-healing framework for LLM-based software agents. The framework integrates failure detection, reliability "
+    },
+    {
+      "arxiv_id": "2603.03823",
+      "id": "2603.03823",
+      "published": "2026-03-04",
+      "title": "SWE-CI: Evaluating Agent Capabilities in Maintaining Codebases via Continuous Integration",
+      "authors": [
+        "Jialong Chen",
+        "Xander Xu",
+        "Hu Wei",
+        "Chuan Chen",
+        "Bing Zhao"
+      ],
+      "pillar": "pillar_b_durable_workflow_self_healing_and_ci_safety",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2603.03823",
+      "arxiv_url": "https://arxiv.org/abs/2603.03823",
+      "abstract_excerpt": "Large language model (LLM)-powered agents have demonstrated strong capabilities in automating software engineering tasks such as static bug fixing. However, in the real world, the development of mature software is typically predicated on complex requirement changes and long-term feature iterations -- a process that static, one-shot repair paradigms fail to capture. To bridge this gap, we propose SWE-CI, the first rep"
+    },
+    {
+      "arxiv_id": "2611.15522",
+      "id": "2611.15522",
+      "published": "2026-11-11",
+      "title": "GHAgentCI: A Dataset of Coding-Agent Invocations in CI Workflow Histories",
+      "authors": [
+        "Daniel Ogenrwot",
+        "Jorge Gonzalo Delgado Cervantes",
+        "Woojoong Kim",
+        "John Businge"
+      ],
+      "pillar": "pillar_b_durable_workflow_self_healing_and_ci_safety",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2611.15522",
+      "arxiv_url": "https://arxiv.org/abs/2611.15522",
+      "abstract_excerpt": "Coding agents are increasingly integrated into GitHub Actions to review pull requests, triage issues and modify code. Identifying these integrations is challenging because agentic workflows often resemble ordinary CI files, with evidence appearing in action references, shell commands and workflow conventions. We present GHAgentCI, a dataset of 15K+ workflow histories from 6K+ of 196K+ mined GitHub repositories, compr"
+    },
+    {
+      "arxiv_id": "2611.00667",
+      "id": "2611.00667",
+      "published": "2026-10-31",
+      "title": "Characterizing and Predicting the Longest CI Builds in Machine Learning Projects",
+      "authors": [
+        "Yonghui Huang",
+        "Daniel Alencar da Costa",
+        "Mohamed Sami Rakha",
+        "Grant Dick"
+      ],
+      "pillar": "pillar_b_durable_workflow_self_healing_and_ci_safety",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2611.00667",
+      "arxiv_url": "https://arxiv.org/abs/2611.00667",
+      "abstract_excerpt": "Continuous integration (CI) builds in machine learning (ML) projects tend to run longer than in other projects, yet little is known about the longest builds, which consume most CI time. This paper characterizes the longest builds in ML projects, analyzes how CI workflow properties are associated with them, and evaluates whether they can be predicted before execution. We study 269,930 GitHub Actions builds from 107 op"
+    },
+    {
+      "arxiv_id": "2610.31444",
+      "id": "2610.31444",
+      "published": "2026-10-22",
+      "title": "Procrustes-Bering-Sheaft: Automated Model Discovery and Virtual Crash Tests for Microservices",
+      "authors": [
+        "Anatoly A. Krasnovsky"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2610.31444",
+      "arxiv_url": "https://arxiv.org/abs/2610.31444",
+      "abstract_excerpt": "Procrustes-Bering-Sheaft automates lightweight model discovery and virtual crash tests for microservices. Each test estimates operation availability by Monte Carlo sampling of service and communication failures. Procrustes checks deployment and tracing evidence; Bering discovers dependencies and incorporates replica declarations; Sheaft evaluates declared operation-success conditions. Independent command-line interfa"
+    },
+    {
+      "arxiv_id": "2606.20669",
+      "id": "2606.20669",
+      "published": "2026-06-12",
+      "title": "Agent Behavior Mining: Generative AI Agent Governance in Business Processes",
+      "authors": [
+        "Hoang Vu",
+        "Maximilian Korner",
+        "Adrian Rebmann",
+        "Gabriel Kevorkian",
+        "Michael Perscheid"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2606.20669",
+      "arxiv_url": "https://arxiv.org/abs/2606.20669",
+      "abstract_excerpt": "As organizations increasingly deploy generative AI agents to automate business processes, they face a governance dilemma: although these agents can increase operational flexibility, their non-deterministic nature challenges the control and standardization that Business Process Management seeks to enforce. This paper addresses this \\emph{invisible autonomy risk} by introducing \\emph{Agent Behavior Mining}, a governanc"
+    },
+    {
+      "arxiv_id": "2610.05942",
+      "id": "2610.05942",
+      "published": "2026-10-05",
+      "title": "Process Constitutions and Process Stewards: Towards the Next Generation of BPM for Agentic Organizations",
+      "authors": [
+        "Amin Jalali",
+        "Majid Rafiei"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2610.05942",
+      "arxiv_url": "https://arxiv.org/abs/2610.05942",
+      "abstract_excerpt": "Business Process Management (BPM) was built on a foundational assumption that organizations are populated primarily by human actors whose work can be made visible, governable, and improvable through process models. That assumption is depreciating. AI agent ecosystems increasingly execute, coordinate, and adapt organizational work with limited human direction, challenging not only BPM's methods but its core conception"
+    },
+    {
+      "arxiv_id": "2609.07984",
+      "id": "2609.07984",
+      "published": "2026-09-07",
+      "title": "From Event Logs to Governed Action: A BlueSky Agenda for Agentic Process Mining",
+      "authors": [
+        "Yiyuan Yang",
+        "Zheshun Wu",
+        "Yong Chu",
+        "Zhenghua Chen",
+        "Zenglin Xu"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.07984",
+      "arxiv_url": "https://arxiv.org/abs/2609.07984",
+      "abstract_excerpt": "Process mining has long turned event logs into process knowledge: discovered models, conformance evidence, bottleneck diagnoses, and runtime predictions. Agentic AI changes the target. Process-aware agents will not only ask what happened. They will ask whether a proposed action should be taken, given the available evidence, privacy budget, organizational authority, and downstream risk. This BlueSky paper proposes eve"
+    },
+    {
+      "arxiv_id": "2610.05912",
+      "id": "2610.05912",
+      "published": "2026-10-05",
+      "title": "MiniCorp: The Last Mile to an AI Agent Corporation",
+      "authors": [
+        "Jingying Zeng",
+        "Zhenwei Dai",
+        "Jinning Li",
+        "Changho Shin",
+        "Dylan Zhang"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2610.05912",
+      "arxiv_url": "https://arxiv.org/abs/2610.05912",
+      "abstract_excerpt": "The last mile toward enterprise AGI is a company that runs itself. Training and adapting such agents require longitudinal enterprise data, which remain scarce, costly to acquire, and often restricted by privacy constraints. Historical archives are also frequently incomplete and record only what actually happened. They cannot show the outcomes of alternative decisions. We introduce MiniCorp, an office simulator for st"
+    },
+    {
+      "arxiv_id": "2610.27531",
+      "id": "2610.27531",
+      "published": "2026-10-20",
+      "title": "Automated Multi-Agent Organization Design: From Architecture Search to Organizational Learning",
+      "authors": [
+        "Shao-Jun Xia",
+        "Yuner Zhang",
+        "Huixin Zhang",
+        "Di Wang",
+        "Yifan Jiang"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2610.27531",
+      "arxiv_url": "https://arxiv.org/abs/2610.27531",
+      "abstract_excerpt": "Agentic system design is increasingly shifting from hand-crafted prompts and workflows toward automated search over agentic programs and interaction structures, with multi-agent systems receiving growing attention. Yet a central question remains unresolved: when does an automatically generated multi-agent structure exhibit a functionally meaningful division of responsibility? We argue that automated multi-agent desig"
+    },
+    {
+      "arxiv_id": "2609.06543",
+      "id": "2609.06543",
+      "published": "2026-09-06",
+      "title": "A Unified Policy Architecture (UPA): The Governance Kernel for Enterprise AI Operating Systems",
+      "authors": [
+        "Prabhu Raghav",
+        "Balamurugan Pandi",
+        "Arul Vivek",
+        "Shek Mohammed",
+        "Sridhar S"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.06543",
+      "arxiv_url": "https://arxiv.org/abs/2609.06543",
+      "abstract_excerpt": "Enterprise AI is evolving into an Enterprise Operating System where autonomous AI agents can plan, reason, use memory, invoke tools, execute workflows, and collaborate with other agents. This shift creates a new governance challenge: existing authorization, security, guardrails, and compliance mechanisms are fragmented and are not designed to govern autonomous AI as a unified system. This paper introduces the Unified"
+    },
+    {
+      "arxiv_id": "2610.17702",
+      "id": "2610.17702",
+      "published": "2026-10-13",
+      "title": "A Node Embedding Framework for Model-Centric Conformance Checking in Process Mining",
+      "authors": [
+        "Mostafa Abbasi",
+        "Homayoun Najjaran"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2610.17702",
+      "arxiv_url": "https://arxiv.org/abs/2610.17702",
+      "abstract_excerpt": "Evaluating the quality of process models discovered from event logs is a fundamental challenge in process mining. Traditional evaluation relies on conformance metrics such as fitness and precision, which are highly sensitive to noise and deviations in event logs and therefore often fail to give a consistent assessment of discovery algorithms. We introduce a model-centric evaluation framework that combines node embedd"
+    },
+    {
+      "arxiv_id": "2611.14371",
+      "id": "2611.14371",
+      "published": "2026-11-10",
+      "title": "Reliable and explainable analysis of AVS/RS by Statistical Model Checking and Process Mining",
+      "authors": [
+        "Emanuele Guerrazzi",
+        "Andrea Vandin"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2611.14371",
+      "arxiv_url": "https://arxiv.org/abs/2611.14371",
+      "abstract_excerpt": "Automated Vehicle Storage and Retrieval Systems (AVS/RS) are increasingly adopted to boost warehouse throughput while containing operational costs. We present a tool-supported analysis workflow that combines discrete-event simulation, Statistical Model Checking (SMC), and Process Mining (PM) techniques to quantify and explain AVS/RS performance. SMC, implemented through the MultiVeStA tool, delivers statistically rel"
+    },
+    {
+      "arxiv_id": "2609.38643",
+      "id": "2609.38643",
+      "published": "2026-09-29",
+      "title": "Recursive Organization Improvement: A Modeling Specification for Human--Agent Organizations",
+      "authors": [
+        "Zilong Wang"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.38643",
+      "arxiv_url": "https://arxiv.org/abs/2609.38643",
+      "abstract_excerpt": "Stronger AI agents do not automatically produce better organizations: teams must also learn which work arrangements to retain and when to reconsider them, while those arrangements determine what evidence the team can learn from. We propose a modeling specification for recursive organization improvement and evaluate it through an executable checker, a public-record mapping, and two simulation studies. The specificatio"
+    },
+    {
+      "arxiv_id": "2608.01772",
+      "id": "2608.01772",
+      "published": "2026-08-03",
+      "title": "ESCROW: Guarded and Dual-Objective Continual Maintenance for Agents in Policy-Governed Enterprise Workflows",
+      "authors": [
+        "Ruoqi Shu",
+        "Chen Dan",
+        "Xuhui Wang",
+        "Tianhua Xu",
+        "Mengxi Luo"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2608.01772",
+      "arxiv_url": "https://arxiv.org/abs/2608.01772",
+      "abstract_excerpt": "LLM agents increasingly run policy-bound enterprise workflows, where they must apply rules consistently and stay auditable. Deploying such an agent is the start of its long-term maintenance cycle: it must adapt to a stream of operational signals, yet reliably turning these sparse, unlabeled signals into reusable skill revisions is hard, and a careless update can trade one task category's accuracy for the overall gain"
+    },
+    {
+      "arxiv_id": "2610.30445",
+      "id": "2610.30445",
+      "published": "2026-10-21",
+      "title": "A Three-Pillar Governance Framework for Safe and Trustworthy AI Agents",
+      "authors": [
+        "Edward C. Cheng",
+        "Jeshua Cheng",
+        "Alice Siu"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2610.30445",
+      "arxiv_url": "https://arxiv.org/abs/2610.30445",
+      "abstract_excerpt": "AI agents capable of autonomous decision-making introduce significant challenges related to safety, alignment, accountability, and human oversight. Existing Human-in-the-Loop (HITL) and responsible AI approaches provide important foundations, but many remain fragmented across system design, governance, and operational deployment. This paper presents a Three-Pillar (3P) model and framework for developing safe and trus"
+    },
+    {
+      "arxiv_id": "2608.08621",
+      "id": "2608.08621",
+      "published": "2026-08-09",
+      "title": "Business Arena: Benchmarking LLM Agents in a Realistic Marketplace",
+      "authors": [
+        "Yijun Pan",
+        "Yukun Lian",
+        "Kunyu Shi",
+        "Junbo Li",
+        "Hongwei Xue"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2608.08621",
+      "arxiv_url": "https://arxiv.org/abs/2608.08621",
+      "abstract_excerpt": "Running a business is a challenging form of intelligent work. Operators must infer opportunities from partial signals, commit capital under uncertainty, adapt to delayed outcomes in a changing market, and satisfy regulatory obligations before trading legally. Frontier LLM agents can increasingly complete complex workflows, yet business-related capabilities are rarely evaluated in existing agent benchmarks. We introdu"
+    },
+    {
+      "arxiv_id": "2610.41682",
+      "id": "2610.41682",
+      "published": "2026-10-30",
+      "title": "The Ineliminable Anchor: Human Judgment as a Structural Requirement of Autonomous Artificial Intelligence Systems",
+      "authors": [
+        "Junjie Li",
+        "Haoran Liu",
+        "Yidan Zhang",
+        "Jian Xu",
+        "Zhaoyuan Ma"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2610.41682",
+      "arxiv_url": "https://arxiv.org/abs/2610.41682",
+      "abstract_excerpt": "As artificial intelligence (AI) agents carry out longer chains of tasks, oversight must establish whether their behavior still serves an authorized goal. Here, we introduce the anchor: the point at which reference information and human-authorized standards enter an autonomous system. We argue that oversight design should first identify the reference needed to assess goal drift and whether the system's internal record"
+    },
+    {
+      "arxiv_id": "2609.24986",
+      "id": "2609.24986",
+      "published": "2026-09-21",
+      "title": "Who Does What in AI Auditing? Designing Human-AI Collaboration for Auditing Generative AI",
+      "authors": [
+        "Eunkyu Park",
+        "Markelle Roesti",
+        "Wesley Hanwen Deng",
+        "Renata Barreto",
+        "Mohammad Tahaei"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.24986",
+      "arxiv_url": "https://arxiv.org/abs/2609.24986",
+      "abstract_excerpt": "AI auditing increasingly incorporates AI agents to expand the scale and breadth of audit coverage, yet little is known about how auditing work should be divided without displacing human judgment. We introduce Human-Agent Audit Collaboration (HAAC), a workflow and system for structuring human-AI collaboration in AI auditing. Drawing on prior work and formative consultations with AI auditing practitioners, HAAC specifi"
+    },
+    {
+      "arxiv_id": "2607.16738",
+      "id": "2607.16738",
+      "published": "2026-07-18",
+      "title": "Supporting Autonomous Process Execution within a Multi-Perspective Constraint Frame via Numeric Planning",
+      "authors": [
+        "Paul Wittlinger",
+        "Giacomo Acitelli",
+        "Anti Alman",
+        "Fabrizio Maria Maggi",
+        "Andrea Marrella"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2607.16738",
+      "arxiv_url": "https://arxiv.org/abs/2607.16738",
+      "abstract_excerpt": "AI-Augmented Business Process Management Systems (ABPMS) enhance traditional BPMS by leveraging advanced AI techniques to define, execute, and monitor complex process structures. Within this landscape, Framed Autonomy denotes the capability of a system to autonomously advance the execution of a Business Process (BP) instance while strictly adhering to a predefined frame, i.e., a set of constraints that may span multi"
+    },
+    {
+      "arxiv_id": "2609.02095",
+      "id": "2609.02095",
+      "published": "2026-09-02",
+      "title": "READY or Not: Reliable Enterprise Agent Deployment",
+      "authors": [
+        "Veronica Chatrath",
+        "Bryan Zhu",
+        "Jingxuan Fan",
+        "George Pu",
+        "Soham Dinesh Tiwari"
+      ],
+      "pillar": "pillar_c_upa_policy_governance_conformance_and_human_anchor",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.02095",
+      "arxiv_url": "https://arxiv.org/abs/2609.02095",
+      "abstract_excerpt": "An AI agent can perform well on benchmarks and still be unsuitable for deployment. Existing AI-agent benchmarks measure whether an agent can complete realistic professional work, whereas enterprise deployment asks a different question: whether an agent can meet a required reliability level, under acceptable human oversight, and at tolerable cost. We introduce Reliable Enterprise Agent Deployment (READY), a framework "
+    },
+    {
+      "arxiv_id": "2610.39468",
+      "id": "2610.39468",
+      "published": "2026-10-29",
+      "title": "Soei: Structured Observability of Evidence and Intent for Multi-Agent AI Software Engineering",
+      "authors": [
+        "Mohammed Nayeem Khan",
+        "K S Sarun Kumar"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2610.39468",
+      "arxiv_url": "https://arxiv.org/abs/2610.39468",
+      "abstract_excerpt": "AI coding agents now do long, multi-step and multi-session software work with little supervision. When a developer comes back to that work, the useful question is not what the model said but what was actually done, by whom, and whether it is finished. We study this in three parts. First, we verify Agenttrail, an open-source local observability tool for coding agents, against its source at commit e4ba2da: nine documen"
+    },
+    {
+      "arxiv_id": "2611.09395",
+      "id": "2611.09395",
+      "published": "2026-11-06",
+      "title": "Tracybot: Preserving Developer Intent by Tracing Agent-Generated Code to Prompts",
+      "authors": [
+        "Razvan Albu",
+        "Aliaksei Khval",
+        "Maxine Orlova",
+        "Danis Music",
+        "Filipe Araujo Veras Rosa"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2611.09395",
+      "arxiv_url": "https://arxiv.org/abs/2611.09395",
+      "abstract_excerpt": "Large language models (LLMs) are now widely used in software development, and LLM-based coding agents are given increasing autonomy. With coding agents, many design decisions are made in the conversation between the developer and the agent. Typically, the developer starts a conversation with an agent and states their intent, the agent proposes options if needed, and the developer plans the change accordingly. Then, t"
+    },
+    {
+      "arxiv_id": "2610.11725",
+      "id": "2610.11725",
+      "published": "2026-10-08",
+      "title": "Implementing the Spec Growth Engine: Preventing Spec-Code Divergence, and Growing the Spec with Agents",
+      "authors": [
+        "Hartwig Grabowski"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2610.11725",
+      "arxiv_url": "https://arxiv.org/abs/2610.11725",
+      "abstract_excerpt": "The Spec Growth Engine anchors AI-assisted software development in a graph of specifications that the code is coupled to. This paper describes its implementation, which serves two tasks and keeps them apart as two layers. The first layer prevents spec-code divergence: a deterministic engine validates the spec graph, compares it with the code's import graph, earns a node's verified status from recorded test evidence, "
+    },
+    {
+      "arxiv_id": "2611.05094",
+      "id": "2611.05094",
+      "published": "2026-11-03",
+      "title": "A Gated Spec-Driven Workflow: An Audit-Trail Study of Coding-Agent Work",
+      "authors": [
+        "Rodrigo Figueiredo Abdo",
+        "Pedro Carvalho Brom"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2611.05094",
+      "arxiv_url": "https://arxiv.org/abs/2611.05094",
+      "abstract_excerpt": "Spec-driven development (SDD) asks a coding agent to work from specifications, plans, and task lists rather than from the chat transcript. We study one such workflow for Claude Code, in which almost every control is an instruction carried out by the same model that it constrains. The user must approve each stage before the next begins. A reviewer subagent checks each artefact against a fixed, stage-specific defect li"
+    },
+    {
+      "arxiv_id": "2608.25202",
+      "id": "2608.25202",
+      "published": "2026-08-25",
+      "title": "Spec-Driven Development as Prescribed and as Practiced",
+      "authors": [
+        "Shyam Agarwal",
+        "Anmol Singhal",
+        "Andrew Macvean",
+        "Bogdan Vasilescu",
+        "Travis Breaux"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2608.25202",
+      "arxiv_url": "https://arxiv.org/abs/2608.25202",
+      "abstract_excerpt": "AI coding agents implement software from naturallanguage instructions, but the intent behind that work is lost when stated only in chat sessions. Spec-driven development (SDD) addresses this by having developers and agents write specifications that guide implementation, yet evidence on its use comes largely from tool vendors. We study SDD in practice through a thematic analysis of Reddit discussions, interviews with "
+    },
+    {
+      "arxiv_id": "2609.00252",
+      "id": "2609.00252",
+      "published": "2026-08-31",
+      "title": "Spec-Driven Development for Agentic Software Engineering: Harnessing Human-Agent Teamwork",
+      "authors": [
+        "Jessica Diaz",
+        "Joaquin Gayoso",
+        "Andrea Cimminio",
+        "Jorge Perez"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.00252",
+      "arxiv_url": "https://arxiv.org/abs/2609.00252",
+      "abstract_excerpt": "Context: Software engineering is moving from AI-assisted practices like vibe coding, in which assistants accelerate individual developers, towards Agentic Software Engineering (ASE), in which autonomous agents are delegated goal-level tasks. However, industry reports a productivity paradox: as individual productivity increases, team throughput, review capacity, and stability degrade because team-scale software engine"
+    },
+    {
+      "arxiv_id": "2610.06406",
+      "id": "2610.06406",
+      "published": "2026-10-05",
+      "title": "What Did the Agent Actually Do? Evidence-Grounded Oversight for Long-Horizon Agents",
+      "authors": [
+        "Zhongxiang Sun",
+        "Jiahao Yan",
+        "Hongkang Zhao",
+        "Haojie Ding",
+        "Boheng Zhang"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2610.06406",
+      "arxiv_url": "https://arxiv.org/abs/2610.06406",
+      "abstract_excerpt": "As agents take on long-horizon tasks, users shift from making individual decisions to overseeing autonomous execution. Yet the volume of agent activity and the fragmentation of supporting evidence make it difficult to determine which decisions warrant user verification. We study monitors that identify consequential decisions and locate evidence to help users assess their implications. We introduce AgentMonBench, a so"
+    },
+    {
+      "arxiv_id": "2608.24271",
+      "id": "2608.24271",
+      "published": "2026-08-25",
+      "title": "Observability and Fault Injection for LLM-Based Multi-Agent Systems in Software Engineering",
+      "authors": [
+        "Zahra Seyedghorban",
+        "Egor Klimov",
+        "Arie van Deursen",
+        "Annibale Panichella",
+        "Burcu Kulahcioglu Ozkan"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2608.24271",
+      "arxiv_url": "https://arxiv.org/abs/2608.24271",
+      "abstract_excerpt": "Large Language Model-based multi-agent systems are increasingly explored for software engineering tasks, but they remain difficult to inspect, debug, and evaluate under controlled failures. We present llmmas-otel, a lightweight and framework-agnostic tool that combines OpenTelemetry-based distributed tracing with fault injection for LLM-based multi-agent systems in software engineering workflows. The tool instruments"
+    },
+    {
+      "arxiv_id": "2610.21146",
+      "id": "2610.21146",
+      "published": "2026-10-15",
+      "title": "ExecWeave: Cross-Layer Execution Provenance for Observable Agentic Software",
+      "authors": [
+        "Guo-Wei Wong",
+        "Meng Chang Chen"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2610.21146",
+      "arxiv_url": "https://arxiv.org/abs/2610.21146",
+      "abstract_excerpt": "Agentic software invokes tools, launches processes, accesses files, and communicates with local or remote services. Application traces describe logical operations, whereas operating-system telemetry records machine activity without necessarily identifying the responsible agent action. Relating these evidence planes is a reconstruction problem: a plausible but unsupported association can assign an effect to the wrong "
+    },
+    {
+      "arxiv_id": "2608.18398",
+      "id": "2608.18398",
+      "published": "2026-08-19",
+      "title": "LEDGER: Claim-to-Evidence Trace Graphs for Auditing LLM Agents",
+      "authors": [
+        "Daehong Kim",
+        "Haichao Miao",
+        "Shusen Liu"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2608.18398",
+      "arxiv_url": "https://arxiv.org/abs/2608.18398",
+      "abstract_excerpt": "Large language model (LLM) agents can now carry out long-horizon technical workflows involving complex tool use, code execution, file edits, and generated artifacts. As agents do more work faster, the productivity bottleneck shifts from producing outputs to auditing whether those outputs are correct and trustworthy. Agent observability systems make fine-grained execution events visible, but visibility alone still lea"
+    },
+    {
+      "arxiv_id": "2611.03231",
+      "id": "2611.03231",
+      "published": "2026-11-02",
+      "title": "Specification-Driven Governance for Fairness-by-Design in Agentic Software Engineering: How Far Can We Go?",
+      "authors": [
+        "Alfonso Cannavale",
+        "Alessandra Parziale",
+        "Valeria Pontillo",
+        "Patrizio Pelliccione",
+        "Andrea De Lucia"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2611.03231",
+      "arxiv_url": "https://arxiv.org/abs/2611.03231",
+      "abstract_excerpt": "Agentic AI is shifting developers' responsibilities from software implementation to software governance. While this paradigm improves productivity, it also raises challenges in ensuring that autonomous coding agents preserve developers' intentions. Among these, operationalizing fairness-by-design is largely unexplored, as existing approaches provide limited support for representing and propagating fairness requiremen"
+    },
+    {
+      "arxiv_id": "2606.30546",
+      "id": "2606.30546",
+      "published": "2026-06-29",
+      "title": "MAS-Lab: A Specification-Driven Validation Framework for Reliable Multi-Agent Systems",
+      "authors": [
+        "Jordan Auge",
+        "Giovanna Carofiglio",
+        "Giulio Grassi",
+        "Jacques Samain"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2606.30546",
+      "arxiv_url": "https://arxiv.org/abs/2606.30546",
+      "abstract_excerpt": "The rapid emergence of LLM-based agentic frameworks has significantly reduced the cost of assembling multi-agent systems (MAS), enabling fast prototyping and exploration of agentic behaviors. However, systems built with current tooling remain ill-suited for reliable, evolvable, and production-grade deployment. In practice, MAS are often developed in an ad-hoc and imperative manner, with agent logic, orchestration, ob"
+    },
+    {
+      "arxiv_id": "2609.20301",
+      "id": "2609.20301",
+      "published": "2026-09-14",
+      "title": "AgentPProf: Semantic Profiler for Long Horizon AI Agents",
+      "authors": [
+        "Yusheng Zheng",
+        "Chaokun Chang",
+        "Yu Mao",
+        "Tianyuan Wu",
+        "Yuxi Huang"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.20301",
+      "arxiv_url": "https://arxiv.org/abs/2609.20301",
+      "abstract_excerpt": "AI agents increasingly orchestrate long-running activities with users, tools, and system resources for days and weeks. To improve agent quality, safety, and cost efficiency, developers need to determine where failures happen, what triggers unsafe effects, and which tasks consume the most budget, then optimize those tasks. In systems software, profiling answers similar questions by aggregating resource consumption and"
+    },
+    {
+      "arxiv_id": "2608.21208",
+      "id": "2608.21208",
+      "published": "2026-08-21",
+      "title": "Specification Portability Across LLM Development Agents: Cross-Agent Compatibility in Specification-Driven Software Migration",
+      "authors": [
+        "Oleg Grynets",
+        "Oleksii Ilchuk",
+        "Dariia Zatulna",
+        "Vasyl Lyashkevych"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2608.21208",
+      "arxiv_url": "https://arxiv.org/abs/2608.21208",
+      "abstract_excerpt": "This paper investigates cross-agent specification portability using Oracle-to-PostgreSQL migration as a controlled software transformation task. The study combines two experimental stages. First, a specification-first migration pipeline was evaluated on 1,006 PL/SQL files, of which 623 were successfully regenerated and 380 generated scripts executed successfully in PostgreSQL 16. Second, cross-agent experiments were "
+    },
+    {
+      "arxiv_id": "2610.37340",
+      "id": "2610.37340",
+      "published": "2026-10-27",
+      "title": "Mind the Intent Gap: A Methodology for Collaborative Agent-Driven Software Engineering",
+      "authors": [
+        "Nicolas Tacheny",
+        "Tom Mens",
+        "Said Mahmoudi"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2610.37340",
+      "arxiv_url": "https://arxiv.org/abs/2610.37340",
+      "abstract_excerpt": "AI agents have entered software teams, first as tools and now as team members. They produce in minutes what used to take days, yet the expected gain in delivery often fails to appear. We argue that they are entering processes designed for people, which quietly relied on people to cover three of their weaknesses. The team's intent was never fully written down, because colleagues filled the gaps. An AI agent fills them"
+    },
+    {
+      "arxiv_id": "2609.29744",
+      "id": "2609.29744",
+      "published": "2026-09-24",
+      "title": "Between the Commits: Process, Error, and Claim Reliability in a Wholly AI-Authored Codebase",
+      "authors": [
+        "Douglas Leith"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.29744",
+      "arxiv_url": "https://arxiv.org/abs/2609.29744",
+      "abstract_excerpt": "We present: (i) a new dataset consisting of the full development history of a 21,000-line Python tool built entirely by Claude AI, with no human-authored code or tests, (ii) two code-provenance tracing tools, (iii) three taxonomies for instruction intent, commit provenance, and response reliability, (iv) application of these to analyse the dataset. We find that: (i) user coding agent CLI instructions differ in kind f"
+    },
+    {
+      "arxiv_id": "2609.09671",
+      "id": "2609.09671",
+      "published": "2026-09-09",
+      "title": "Introducing Consort: A Spec-First Agent Framework for Enforced, Test-Driven Development on Live Database Branches",
+      "authors": [
+        "Kevin Hartman"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.09671",
+      "arxiv_url": "https://arxiv.org/abs/2609.09671",
+      "abstract_excerpt": "When an agent writes code, the development framework becomes the control system for a non-deterministic worker. Spec-first, agent-driven frameworks have gained rapid traction since 2025; the installable ones, GitHub Spec Kit, obra/superpowers, BMAD, and GSD, and our own, all capture intent through a specification or durable planning artifacts. Since they agree on capturing intent up front, what separates them is how "
+    },
+    {
+      "arxiv_id": "2609.32198",
+      "id": "2609.32198",
+      "published": "2026-09-26",
+      "title": "Agents as Software: A Programming Languages Agenda for Agent Reliability",
+      "authors": [
+        "Shraddha Barke",
+        "Adithya Murali"
+      ],
+      "pillar": "pillar_d_spec_growth_ledger_evidence_trace_and_profiling",
+      "alphaxiv_url": "https://www.alphaxiv.org/abs/2609.32198",
+      "arxiv_url": "https://arxiv.org/abs/2609.32198",
+      "abstract_excerpt": "AI agents increasingly resemble software systems: they call tools, remember facts, follow policies, delegate work, and take actions with real consequences. % Yet the ``program'' of an agent is scattered across prompts, tools, memories, workflows, and execution traces, making its behavior difficult to inspect through ordinary testing and debugging alone. % This essay argues that a programming-systems perspective offer"
+    }
+  ],
+  "payload_sha256": "d8cc3aa79e402548f978da6e2088371746fe4a2ae04df650003d5c86b9cdd60e"
+}

@@ -49,3 +49,19 @@ export const SUPERSEDED_RECORD_NOTE = `47-19-1 (+24.92u) is the audited 2026-11-
 
 /** Every pick with an official settlement event, including non-premium tiers. */
 export const PUBLIC_PIPELINE_SETTLED = verifiedLedger.pipeline.wlp.settled;
+
+const flat1uMinus110Total =
+  Math.round(
+    (verifiedLedger.official.wlp.wins * (100 / 110) - verifiedLedger.official.wlp.losses) * 100
+  ) / 100;
+
+/** Normalized flat 1u -110 equivalent units (+25.82u on 79-46-0) alongside stake-weighted units. */
+export const PUBLIC_RECORD_FLAT_1U_MINUS110_UNITS = formatUnits(flat1uMinus110Total);
+
+/** Ratio of stake-weighted official units to 1u flat -110 equivalent units ("3.16"). */
+export const PUBLIC_RECORD_SIZING_MULTIPLIER = (
+  verifiedLedger.official.units.total / Math.max(0.01, flat1uMinus110Total)
+).toFixed(2);
+
+/** Dual-disclosure banner showing weighted units alongside 1u-normalized flat -110 units. */
+export const PUBLIC_RECORD_NORMALIZED_BANNER = `${PUBLIC_RECORD_COUNTS} (${PUBLIC_RECORD_UNITS} actual · ${PUBLIC_RECORD_FLAT_1U_MINUS110_UNITS} 1u-normalized flat -110 · ${PUBLIC_RECORD_SIZING_MULTIPLIER}x weighted)`;

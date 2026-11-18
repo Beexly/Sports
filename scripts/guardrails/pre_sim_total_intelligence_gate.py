@@ -415,6 +415,21 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "wave45_skill_wopr_snap_continuity_props_and_milp_dfs_nfl_engine",
         "src/gse_engine/tracking/wave45_skill_wopr_snap_continuity_props_and_milp_dfs_nfl_engine.py",
     ),
+    (
+        "Pillar1_Wave46_AlphaXiv_66Paper_MemTX_DurableCI_UPA_LEDGER",
+        "wave46_alphaxiv_66paper_transactional_memory_durable_ci_upa_and_spec_ledger_engine",
+        "src/gse_engine/science/wave46_alphaxiv_66paper_transactional_memory_durable_ci_upa_and_spec_ledger_engine.py",
+    ),
+    (
+        "Pillar1_Wave46_GSE_MemTX_Picks_7Props_Stacked_MILP_DFS_NFL",
+        "wave46_causal_picks_combo_props_and_stacked_portfolio_dfs_nfl_engine",
+        "src/gse_engine/tracking/wave46_causal_picks_combo_props_and_stacked_portfolio_dfs_nfl_engine.py",
+    ),
+    (
+        "Pillar1_Wave46_GSE_Revenue_4Plane_Cloud_And_W11_TNF_Readiness",
+        "revenue_orchestration_and_w11_tnf_readiness",
+        "src/gse_engine/governance/revenue_orchestration_and_w11_tnf_readiness.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (

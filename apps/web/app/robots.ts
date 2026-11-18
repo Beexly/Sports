@@ -38,12 +38,12 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/llms.txt", "/llms-full.txt", "/.well-known/ai-plugin.json"],
+        allow: ["/", "/api/og/", "/llms.txt", "/llms-full.txt", "/.well-known/ai-plugin.json"],
         disallow: disallowed,
       },
       {
         userAgent: AI_CRAWLER_USER_AGENTS,
-        allow: ["/", "/llms.txt", "/llms-full.txt", "/.well-known/ai-plugin.json"],
+        allow: ["/", "/api/og/", "/llms.txt", "/llms-full.txt", "/.well-known/ai-plugin.json"],
         disallow: disallowed,
       },
     ],
