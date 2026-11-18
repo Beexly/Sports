@@ -50,6 +50,9 @@ from gse_engine.fabric.registry_hotswap import (
     HotSwapInferenceEngine,
     verify_champion_bundle,
 )
+from gse_engine.governance.credit_and_zero_waste_router import (  # noqa: E501
+    evaluate_executive_credit_and_zero_waste_alignment_suite,
+)
 from gse_engine.governance.revenue_orchestration_and_w11_tnf_readiness import (  # noqa: E501
     evaluate_revenue_and_4plane_orchestration_readiness_suite,
 )
@@ -205,6 +208,9 @@ from gse_engine.tracking.wave45_skill_wopr_snap_continuity_props_and_milp_dfs_nf
 )
 from gse_engine.tracking.wave46_causal_picks_combo_props_and_stacked_portfolio_dfs_nfl_engine import (  # noqa: E501
     evaluate_wave46_memtx_picks_7props_and_stacked_dfs_suite,
+)
+from gse_engine.workflows.unified_reasoning_simulation_projection_spine import (  # noqa: E501
+    evaluate_unified_reasoning_simulation_projection_spine_suite,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -2920,6 +2926,17 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "revenue_orchestration_4plane_pillar": (
             evaluate_revenue_and_4plane_orchestration_readiness_suite()
         ),
+        "executive_credit_zero_waste_pillar": (
+            evaluate_executive_credit_and_zero_waste_alignment_suite()
+        ),
+        "unified_reasoning_sim_projection_spine_pillar": (
+            evaluate_unified_reasoning_simulation_projection_spine_suite(
+                away_u,
+                home_u,
+                min(10, max(1, int(week))),
+                is_indoor=bool(is_indoor),
+            )
+        ),
         "nvidia_hermes_capability_routes": nvidia_hermes_routes,
         "away_epa_corpus_delta": round(away_epa_corpus_delta, 5),
         "home_epa_corpus_delta": round(home_epa_corpus_delta, 5),
@@ -3614,6 +3631,33 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         else:
             rev_wired = True
 
+    cred_blk = priors.get("executive_credit_zero_waste_pillar")
+    cred_wired = False
+    if cred_blk is not None:
+        if (
+            not isinstance(cred_blk, Mapping)
+            or cred_blk.get("wired") is not True
+            or cred_blk.get("all_11_workloads_credit_or_free_aligned") is not True
+            or int(cred_blk.get("unneeded_cash_leak_count", 1)) != 0
+        ):
+            missing_or_unwired.append("executive_credit_zero_waste_pillar")
+        else:
+            cred_wired = True
+
+    sp47_blk = priors.get("unified_reasoning_sim_projection_spine_pillar")
+    sp47_wired = False
+    if sp47_blk is not None:
+        if (
+            not isinstance(sp47_blk, Mapping)
+            or sp47_blk.get("wired") is not True
+            or float(sp47_blk.get("max_world_conservation_residual", 1.0)) != 0.0
+            or int(sp47_blk.get("orphaned_non_simulated_projections", 1)) != 0
+            or sp47_blk.get("real_money_stake_cleared") is not False
+        ):
+            missing_or_unwired.append("unified_reasoning_sim_projection_spine_pillar")
+        else:
+            sp47_wired = True
+
     required_scalars = (
         "away_epa_corpus_delta",
         "home_epa_corpus_delta",
@@ -3679,6 +3723,8 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         "wave45_skill_harmony_props_dfs_wired": w45_wired,
         "wave46_memtx_picks_7props_stacked_dfs_wired": w46_wired,
         "revenue_orchestration_4plane_wired": rev_wired,
+        "executive_credit_zero_waste_wired": cred_wired,
+        "unified_reasoning_sim_projection_spine_wired": sp47_wired,
         "pillars_verified": list(required_pillars),
         "scalars_verified_count": len(required_scalars),
         "player_multipliers_count": len(priors.get("player_target_and_carry_multipliers") or {}),

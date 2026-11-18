@@ -36,6 +36,10 @@ from gse_engine.biometrics.wave34_holistic_combine_cognition_bioenergetics_cross
     explain_books_and_equations_to_projection_chain,
     fit_empirical_position_age_curves,
 )
+from gse_engine.governance.credit_and_zero_waste_router import (
+    WAVE47_CREDIT_RLVR_TRAJECTORIES,
+    evaluate_executive_credit_and_zero_waste_alignment_suite,
+)
 from gse_engine.memory.monorepo_omnibus_vault_indexer import (
     OmnibusVaultContinuityError,
     audit_all_25_monorepo_knowledge_vaults,
@@ -146,6 +150,10 @@ from gse_engine.tracking.wave46_causal_picks_combo_props_and_stacked_portfolio_d
     WAVE46_TRACKING_RLVR_TRAJECTORIES,
     evaluate_w46_martingale_and_shortcut_audit,
     evaluate_wave46_memtx_picks_7props_and_stacked_dfs_suite,
+)
+from gse_engine.workflows.unified_reasoning_simulation_projection_spine import (
+    WAVE47_SPINE_RLVR_TRAJECTORIES,
+    evaluate_unified_reasoning_simulation_projection_spine_suite,
 )
 
 _DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -4366,6 +4374,67 @@ def compile_gse_to_gsi_rlvr_training_batch(
                 think=str(spec_w46["think"]),
                 ground_truth=gt_w46,
                 verifier_src=_formula_exact_verifier_src(gt_w46),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    # Tier 3 Group X: Wave 47 Unified Reasoning->Sim->Projection Spine & Credit Router (376 -> 382)
+    w47_cred = evaluate_executive_credit_and_zero_waste_alignment_suite()
+    w47_spine = evaluate_unified_reasoning_simulation_projection_spine_suite("KC", "BUF", 10)
+    w47_s1 = w47_spine["stage1_audited_signals"]
+    w47_s2 = w47_spine["stage2_reasoned_environment"]
+    w47_s4 = w47_spine["stage4_derived_outputs"]
+    w47_sgps = w47_s4["correlated_sgps"]
+    w47_dfs = w47_s4["dfs"]
+    w47_gt_map: dict[str, dict[str, Any]] = {
+        "w47_alibaba_dashscope_internal_and_free_lane_routing_00": {
+            "alibaba_qwen_wired": bool(w47_cred["alibaba_qwen_lane_wired"]),
+            "zero_unneeded_cash_leaks": bool(int(w47_cred["unneeded_cash_leak_count"]) == 0),
+            "public_token_reseller_disabled": bool(
+                w47_cred["public_token_reseller_enabled"] is False
+            ),
+        },
+        "w47_posthog_crawler_suppression_and_replay_cap_00": {
+            "posthog_guard_active": bool(w47_cred["posthog_bot_and_replay_guard_active"]),
+            "prohibited_traps_halted": int(w47_cred["prohibited_traps_halted_count"]),
+        },
+        "w47_single_reasoning_sim_conservation_and_trap_halt_00": {
+            "all_11_workloads_aligned": bool(w47_cred["all_11_workloads_credit_or_free_aligned"]),
+            "workloads_aligned": int(w47_cred["workload_count"]),
+        },
+        "w47_signal_audit_memtx_ledger_quarantine_before_sim_00": {
+            "quarantined_weight_sum": float(w47_s1["quarantined_weight_sum"]),
+            "accepted_gt_zero": bool(int(w47_s1["accepted_count"]) >= 1),
+        },
+        "w47_coherent_10k_world_sinkhorn_conservation_00": {
+            "n_worlds": int(w47_spine["n_worlds"]),
+            "named_attribution_ok": bool(
+                float(w47_s2["away"]["named_target_attribution"]) >= 0.94
+                and float(w47_s2["home"]["named_target_attribution"]) >= 0.94
+            ),
+            "max_world_conservation_residual": float(
+                w47_spine["max_world_conservation_residual"]
+            ),
+        },
+        "w47_single_projection_sha_across_plays_props_sgp_dfs_00": {
+            "orphaned_non_simulated_projections": int(
+                w47_spine["orphaned_non_simulated_projections"]
+            ),
+            "zero_cap_violations": bool(w47_dfs["zero_cap_violations"]),
+            "positive_stack_lift": bool(float(w47_sgps[0]["correlation_lift"]) > 0.0),
+        },
+    }
+    for spec_w47 in (*WAVE47_CREDIT_RLVR_TRAJECTORIES, *WAVE47_SPINE_RLVR_TRAJECTORIES):
+        rid_w47 = str(spec_w47["record_id"])
+        gt_w47 = w47_gt_map[rid_w47]
+        records.append(
+            _build_rlvr_record(
+                record_id=rid_w47,
+                domain=str(spec_w47["domain"]),
+                prompt=str(spec_w47["prompt"]),
+                think=str(spec_w47["think"]),
+                ground_truth=gt_w47,
+                verifier_src=_formula_exact_verifier_src(gt_w47),
                 curriculum_tier="TIER_3_BEHEMOTH",
             )
         )

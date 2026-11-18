@@ -13,12 +13,13 @@ export type CreditPool =
   | "aws_activate"
   | "vertex_partner"
   | "azure_foundry"
+  | "alibaba_credits"
   | "content_free"
   | "anthropic_direct";
 
 export interface CreditPoolMeta {
   readonly label: string;
-  readonly provider: "bedrock" | "vertex" | "azure" | "cerebras" | "anthropic";
+  readonly provider: "bedrock" | "vertex" | "azure" | "alibaba" | "cerebras" | "anthropic";
   /** Whether this spend is offsettable by a free tier or cloud-program credit. */
   readonly creditEligible: boolean;
   readonly note: string;
@@ -43,6 +44,12 @@ export const CREDIT_POOL_META: Record<CreditPool, CreditPoolMeta> = {
     creditEligible: true,
     note: "Claude via Foundry Messages API — bills Azure subscription; verify credit SKU covers Claude.",
   },
+  alibaba_credits: {
+    label: "Alibaba Cloud Model Studio (DashScope / Qwen)",
+    provider: "alibaba",
+    creditEligible: true,
+    note: "Qwen / DashScope OpenAI-compatible lane — offset by Alibaba Cloud credits.",
+  },
   content_free: {
     label: "Open free lane (Cerebras / Gemma / Nemotron hosts)",
     provider: "cerebras",
@@ -66,6 +73,9 @@ export function creditPoolForModel(modelName: string): CreditPool {
   if (id.startsWith("azure-foundry/")) return "azure_foundry";
   if (id.includes("@")) return "vertex_partner";
   if (/^(?:[a-z]{2,4}\.)?anthropic\./.test(id)) return "aws_activate";
+  if (id.startsWith("alibaba-qwen/") || id.startsWith("dashscope/") || /^qwen/i.test(id) || /^qwq/i.test(id)) {
+    return "alibaba_credits";
+  }
   if (/^gpt-oss/i.test(id) || /cerebras/i.test(id)) return "content_free";
   if (id.startsWith("free-secondary/") || id.startsWith("free-groq/") || id.startsWith("free-nim/") || id.startsWith("free-compat/")) return "content_free";
   return "anthropic_direct";

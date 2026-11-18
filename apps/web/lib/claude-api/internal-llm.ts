@@ -14,14 +14,33 @@
  *   INTERNAL_LLM_API_KEY   (Groq key; omit for local Ollama)
  */
 
+const ALIBABA_COMPAT_DEFAULT_BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1";
+const ALIBABA_COMPAT_DEFAULT_MODEL = "qwen-plus";
+
 export type InternalLlmConfig = { baseUrl: string; model: string; apiKey?: string };
 
 export function internalLlmConfig(env: Record<string, string | undefined> = process.env): InternalLlmConfig | null {
   const baseUrl = env["INTERNAL_LLM_BASE_URL"]?.trim();
   const model = env["INTERNAL_LLM_MODEL"]?.trim();
-  if (!baseUrl || !model) return null;
-  const apiKey = env["INTERNAL_LLM_API_KEY"]?.trim();
-  return { baseUrl: baseUrl.replace(/\/$/, ""), model, ...(apiKey ? { apiKey } : {}) };
+  if (baseUrl && model) {
+    const apiKey = env["INTERNAL_LLM_API_KEY"]?.trim();
+    return { baseUrl: baseUrl.replace(/\/$/, ""), model, ...(apiKey ? { apiKey } : {}) };
+  }
+  const alibabaKey = env["ALIBABA_API_KEY"]?.trim() || env["DASHSCOPE_API_KEY"]?.trim();
+  if (alibabaKey) {
+    const alibabaBaseUrl = (
+      env["ALIBABA_BASE_URL"]?.trim() ||
+      env["DASHSCOPE_BASE_URL"]?.trim() ||
+      ALIBABA_COMPAT_DEFAULT_BASE_URL
+    ).replace(/\/+$/, "");
+    const alibabaModel =
+      env["ALIBABA_INTERNAL_MODEL"]?.trim() ||
+      env["ALIBABA_MODEL"]?.trim() ||
+      env["DASHSCOPE_MODEL"]?.trim() ||
+      ALIBABA_COMPAT_DEFAULT_MODEL;
+    return { baseUrl: alibabaBaseUrl, model: alibabaModel, apiKey: alibabaKey };
+  }
+  return null;
 }
 
 export function isInternalLlmConfigured(env: Record<string, string | undefined> = process.env): boolean {

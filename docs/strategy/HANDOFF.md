@@ -3,6 +3,19 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-18 (2026-11-18 CT) -- Wave 47 Unified Reasoning -> 10k-World Simulation -> Derived Projections Spine & Zero-Waste Credit Alignment (`382+24=406` RLVR)
+
+- **What changed**:
+  - Built canonical single-source spine `src/gse_engine/workflows/unified_reasoning_simulation_projection_spine.py` (`watch_and_audit_pregame_signals` MemTX + LEDGER + `0.0` anti-mirage quarantine -> `synthesize_reasoned_game_environment` football reasoning + Sinkhorn `reallocate_vacated_volume` -> `simulate_coherent_10k_game_worlds` deterministic Philox `10,000` worlds -> `derive_all_plays_props_sgps_and_dfs_from_simulation` across `8` game surfaces, `12` player prop markets, empirical correlated SGPs, and shrunk-covariance Cash + `3`-lineup GPP MILP DFS sharing one `projection_source_sha256` with `0` orphans).
+  - Built `src/gse_engine/governance/credit_and_zero_waste_router.py` governing all `11` GSE/GSI workloads (`$0` cash leaks, `6` prohibited billing traps halted, `$1,241.18/mo` estimated cash waste avoided) and wired **Alibaba Cloud Model Studio / DashScope Qwen** (`ALIBABA_API_KEY` / `DASHSCOPE_API_KEY`, `alibaba_credits` pool) across `free-lane-policy.ts`, `free-lane.ts`, `internal-llm.ts`, and `credit-pool.ts`.
+  - Hardened PostHog (`project 516325`) in `posthog-config.ts` and `posthog-client.ts` (`isAutomatedCrawlerOrHeadlessClient` + `buildPostHogZeroWasteInitOptions`: suppresses Google/AI crawlers & `webdriver`, keeps session replay/heatmaps/dead-clicks off by default, and caps client event bursts).
+  - Wired `corpus_situational_integrator.py`, `pre_sim_total_intelligence_gate.py`, `docs/ops/CREDITS.md`, `lessons_learned_permanent_ledger.jsonl` (`LL-2026-11-18-067`), agent-bus JSON, research doc, `test_wave47`, and Group X RLVR (`376 -> 382`, `+ 24 = 406` zero-odds records).
+- **What was proven**:
+  - `10,000`-world conservation exact (`max_world_conservation_residual = 0.0` across `KC @ BUF W10` and `IND @ HOU W11` under `env_override="11"`), `orphaned_non_simulated_projections = 0`, `KC @ BUF` positive SGP stack lift `+0.0077` vs negative script lift `-0.01002`, Cash MILP `139.8859` pts at `$49,500`, `3/3` GPP MILP stacked + bring-back at `<= $49,500`, and `IND @ HOU -12.5` fails closed to `TRANSPARENT_PASS` (`model_prob = 0.1157`, `publish_allowed = False`) while raising `OperatorSimulationHoldError` without `env_override`.
+  - `11/11` workloads aligned to free/credit tiers; web Vitest suites (`49` tests across 5 files), AI boundary/sealing guardrails, `ruff`, `mypy --strict`, `pre_sim_total_intelligence_gate.py --self-test`, and Waves 40-47 `pytest` verified cleanly.
+- **What was not**: Live `>= W11` NFL week simulations stay held under `OperatorSimulationHoldError` unless explicitly authorized by Founder Tap `GSE_OPERATOR_APPROVED_SIM_WEEKS=11`, API keys (`ALIBABA_API_KEY`, Whop, rotated Neon URL) remain operator-entered in Vercel/cloud env consoles, and `brain/mind.jsonl` remains untouched for the single-writer trainer.
+- **Next role must**: Keep `PUBLIC_TOKEN_RESELLER_ENABLED = False`, `REAL_MONEY_STAKE_CLEARED = False`, `CLINICAL_RUO_ALPHAXIV_W46_SPORTS_WEIGHT = 0.0`, and derive all future market additions solely downstream from `simulate_coherent_10k_game_worlds` with shared `projection_source_sha256`.
+
 ## 2026-11-18 (2026-11-18 CT) -- Wave 46 66-Paper alphaXiv MemTX/Durable-CI/UPA/LEDGER, Causal Picks + 7-Props + Stacked L=3 MILP DFS & GSE Revenue/4-Plane Cloud/W11 TNF Readiness (`376+24=400` RLVR)
 
 - **What changed**:
