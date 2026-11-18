@@ -158,6 +158,9 @@ from gse_engine.science.wave43_alphaxiv_31paper_ebm_lf_wsp_calibration_arithmeti
 from gse_engine.science.wave44_alphaxiv_28paper_dfl_cvar_causal_mspem_integrity_and_rg_engine import (  # noqa: E501
     evaluate_wave44_alphaxiv_28paper_dfl_causal_integrity_suite,
 )
+from gse_engine.science.wave45_alphaxiv_59new_conformal_copula_parlay_dfs_and_referee_engine import (  # noqa: E501
+    evaluate_wave45_alphaxiv_78paper_conformal_copula_dfs_suite,
+)
 from gse_engine.tracking.aws_ngs_going_deep_gse_gsi_suite import (
     evaluate_aws_ngs_going_deep_stage2_bridge,
 )
@@ -190,6 +193,9 @@ from gse_engine.tracking.wave43_ebm_composed_deconfounded_situational_nfl_engine
 )
 from gse_engine.tracking.wave44_dfl_rim_officiating_kicker_parr_dynamo_and_anti_shortcut_nfl_engine import (  # noqa: E501
     evaluate_wave44_dfl_rim_kicker_parr_and_integrity_suite,
+)
+from gse_engine.tracking.wave45_skill_wopr_snap_continuity_props_and_milp_dfs_nfl_engine import (  # noqa: E501
+    evaluate_wave45_skill_harmony_props_dfs_and_78paper_suite,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -2876,6 +2882,19 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
                 repo_root=REPO_ROOT,
             )
         ),
+        "wave45_alphaxiv_78paper_pillar": (
+            evaluate_wave45_alphaxiv_78paper_conformal_copula_dfs_suite(REPO_ROOT)
+        ),
+        "wave45_skill_harmony_props_dfs_pillar": (
+            wave32_res.get("wave45_skill_harmony_props_and_dfs_matchups")
+            or evaluate_wave45_skill_harmony_props_dfs_and_78paper_suite(
+                away_team=away_u,
+                home_team=home_u,
+                as_of_week=int(week),
+                is_indoor=bool(is_indoor),
+                repo_root=REPO_ROOT,
+            )
+        ),
         "nvidia_hermes_capability_routes": nvidia_hermes_routes,
         "away_epa_corpus_delta": round(away_epa_corpus_delta, 5),
         "home_epa_corpus_delta": round(home_epa_corpus_delta, 5),
@@ -3530,6 +3549,19 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         else:
             w44_wired = True
 
+    w45_blk = priors.get("wave45_skill_harmony_props_dfs_pillar")
+    w45_wired = False
+    if w45_blk is not None:
+        if (
+            not isinstance(w45_blk, Mapping)
+            or w45_blk.get("wired") is not True
+            or w45_blk.get("real_money_stake_cleared") is not False
+            or float(w45_blk.get("clinical_ruo_sports_weight", 1.0)) != 0.0
+        ):
+            missing_or_unwired.append("wave45_skill_harmony_props_dfs_pillar")
+        else:
+            w45_wired = True
+
     required_scalars = (
         "away_epa_corpus_delta",
         "home_epa_corpus_delta",
@@ -3592,6 +3624,7 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         "wave42_pfr_qbr_and_18sport_wired": w42_wired,
         "wave43_ebm_deconfounded_nfl_wired": w43_wired,
         "wave44_dfl_rim_kicker_parr_wired": w44_wired,
+        "wave45_skill_harmony_props_dfs_wired": w45_wired,
         "pillars_verified": list(required_pillars),
         "scalars_verified_count": len(required_scalars),
         "player_multipliers_count": len(priors.get("player_target_and_carry_multipliers") or {}),

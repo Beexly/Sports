@@ -405,6 +405,16 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "wave44_dfl_rim_officiating_kicker_parr_dynamo_and_anti_shortcut_nfl_engine",
         "src/gse_engine/tracking/wave44_dfl_rim_officiating_kicker_parr_dynamo_and_anti_shortcut_nfl_engine.py",
     ),
+    (
+        "Pillar1_Wave45_AlphaXiv_78Paper_Conformal_Copula_DFS_Integrity",
+        "wave45_alphaxiv_59new_conformal_copula_parlay_dfs_and_referee_engine",
+        "src/gse_engine/science/wave45_alphaxiv_59new_conformal_copula_parlay_dfs_and_referee_engine.py",
+    ),
+    (
+        "Pillar1_Wave45_GSE_Picks_5Props_MILP_DFS_Harmony_NFL",
+        "wave45_skill_wopr_snap_continuity_props_and_milp_dfs_nfl_engine",
+        "src/gse_engine/tracking/wave45_skill_wopr_snap_continuity_props_and_milp_dfs_nfl_engine.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (

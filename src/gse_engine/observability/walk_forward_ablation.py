@@ -61,6 +61,10 @@ from gse_engine.tracking.wave44_dfl_rim_officiating_kicker_parr_dynamo_and_anti_
     evaluate_causal_w44_game_total_pace_air_shift,
     evaluate_wave44_dfl_rim_kicker_parr_and_integrity_suite,
 )
+from gse_engine.tracking.wave45_skill_wopr_snap_continuity_props_and_milp_dfs_nfl_engine import (  # noqa: E501
+    evaluate_causal_w45_game_total_wopr_te_shift,
+    evaluate_wave45_skill_harmony_props_dfs_and_78paper_suite,
+)
 
 _TEAM_ALIAS: dict[str, str] = {"LA": "LAR", "WSH": "WAS", "JAC": "JAX"}
 
@@ -977,8 +981,16 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 repo_root=repo_root,
             )
             w44_sig = float(w44_g["w44_close_residual_signal"])
+            w45_g = evaluate_wave45_skill_harmony_props_dfs_and_78paper_suite(
+                away_team=g.away_team,
+                home_team=g.home_team,
+                as_of_week=int(wk),
+                is_indoor=bool(g.is_indoor),
+                repo_root=repo_root,
+            )
+            w45_sig = float(w45_g["w45_close_residual_signal"])
 
-            # Layer-1 market foundation + Wave 32-44 FWL-damped orthogonal shift
+            # Layer-1 market foundation + Wave 32-45 FWL-damped orthogonal shift
             epa_edge_pts = (
                 (hm_shrunk_net - aw_shrunk_net) * 18.0
                 + 0.10 * (hm_aux_sc - aw_aux_sc) * 14.0
@@ -995,6 +1007,7 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 + 0.28 * w42_sig
                 + 0.28 * w43_sig
                 + 0.16 * w44_sig
+                + 0.046 * w45_sig
             )
             mkt_implied_edge = g.expected_home_margin_mkt
             orth_resid = epa_edge_pts - 0.55 * mkt_implied_edge
@@ -1028,6 +1041,13 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 is_indoor=bool(g.is_indoor),
                 repo_root=repo_root,
             )
+            w45_tot = evaluate_causal_w45_game_total_wopr_te_shift(
+                away_team=g.away_team,
+                home_team=g.home_team,
+                as_of_week=int(wk),
+                is_indoor=bool(g.is_indoor),
+                repo_root=repo_root,
+            )
             tot_shift = max(
                 -1.8,
                 min(
@@ -1035,7 +1055,8 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                     dome_tot_shift
                     + float(w42_tot["total_shift_pts"])
                     + float(w43_tot["total_shift_pts"])
-                    + float(w44_tot["total_shift_pts"]),
+                    + float(w44_tot["total_shift_pts"])
+                    + float(w45_tot["total_shift_pts"]),
                 ),
             )
 
