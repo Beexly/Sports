@@ -19,13 +19,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from gse_engine.tracking.aws_ngs_going_deep_gse_gsi_suite import (
-    LIVE_STAKE_FRACTION,
-    REAL_MONEY_STAKE_CLEARED,
-)
-
 REPO_ROOT = Path(__file__).resolve().parents[3]
 CLINICAL_RUO_SPORTS_WEIGHT: float = 0.0
+REAL_MONEY_STAKE_CLEARED: bool = False
+LIVE_STAKE_FRACTION: float = 0.0
 
 _TEAM_ALIASES: dict[str, str] = {
     "ARZ": "ARI",

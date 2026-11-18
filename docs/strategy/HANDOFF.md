@@ -3,6 +3,26 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-17 (2026-11-17 CT) -- Wave 36 GSI MIMIC-IV ICU Early Warning, Fleisig Glenohumeral Chain & GSE Full W1-10 (`26,246`-Snap) 360-Board Engine (`262+24` RLVR)
+
+- **What changed**:
+  - **Hydrated 10 Official `nflverse` Datasets (`14.42 MB`, all 2026 feeds strictly `week <= 10`)**:
+    - `pbp_2026_w1_w10.parquet` (`26,246 x 372`), `ftn_charting_2026_w1_w10.parquet` (`25,310 x 29`), `stats_player_week_2026_w1_w10.parquet` (`10,446 x 150`), `snap_counts_2026_w1_w10.parquet` (`14,004 x 16`), `advstats_week_{pass,rush,rec,def}_2026_w1_w10.parquet` (`317`, `1,093`, `2,180`, `3,928` rows), `officials_through_2026_w10.parquet` (`22,012 x 9`), and `historical_contracts.csv.gz` (`31,893 x 24`) without touching legacy `play_by_play_2026.parquet`, `ftn_charting_2026.parquet`, or `pennydata_2026_player_week_stats.csv`.
+  - **GSI ADR-0003 MIMIC-IV ICU Critical-Care Early Warning & Fleisig Glenohumeral Chain (`src/gse_engine/science/wave36_gsi_icu_hemodynamic_hypoxia_and_shoulder_kinetic_engine.py`)**:
+    - Parsed `668,862` ICU `chartevents` rows across `140` stays & `4,506` ICD diagnoses: `Shock Index (HR/SBP >= 0.90)` (`112` stays), `MAP < 65` (`106` stays), `SpO2 < 92%` (`453` readings), Hill/Severinghaus oxyhemoglobin (`n_H = 2.7`, `P_50 = 26.6`, `8.6013x` hypoxia cliff ratio), and Baxley anytime-valid martingale (`82` rule-in stays at `E_t >= 20.0`) with `CLINICAL_RUO_ICU_SPORTS_WEIGHT = 0.0` and `adr0003_rule_in_only_doctrine = True`.
+    - Coupled `19`-case Fleisig glenohumeral surgical throwing chain (`kaggle_qb_shoulder_injuries_zone1`) with causal 2026 QB arm injuries (`KC @ DEN` W10: `deep_pass_velocity_retention_mult = 0.9825`, `high_pitch_q4_accuracy_mult = 0.9875`) and removed the `science` <-> `tracking` circular import cleanly.
+  - **GSE Full W1-10 (`26,246`-Snap) 360-Board, Officials, Special Teams, QB Progression & IDP Engine (`src/gse_engine/tracking/wave36_360_board_officials_special_teams_progression_and_idp_engine.py`)**:
+    - Built causal close-residual signal aggregator retaining Play-Action EPA (`r = +0.1278`), `2H - 1H` coaching surge (`r = +0.0868`), `read2` progression EPA (`r = +0.0727`), OL non-QB-fault clean sack rate (`r = +0.0698`), Kicker FGOE (`r = +0.0670`), penalty discipline (`r = +0.0446`), and punt inside-20 (`r = +0.0345`), while quarantining close-overpriced `read1` (`r = -0.0550`) and raw defensive havoc (`r = -0.0416`).
+    - Indexed `17` NFL referee crews via `old_game_id` (`league_mean_penalty_yds_per_game = 101.66`), completed OTC `31,893`-row `5B` contract-year audit (`LOGGED_EVIDENCE_ONLY`, `live_spread_weight = 0.0`), executed `6/6` `PARSED_EVALUATED` `HonestEquationExecutor` ASTs, and ran full Weeks `2..10` 5-cohort OOS validation (`4,784` player-weeks across `QB`, `RB`, `WR/TE`, `Kicker`, `IDP` + `613` half-sacks).
+  - **End-to-End Pipeline & RLVR Expansion (`LL-2026-11-17-056`)**:
+    - Wired into `walk_forward_ablation.py`, `wave32_unified_sports_situational_live_fusion.py`, `corpus_situational_integrator.py` (`wave36_gsi_icu_and_360_board_wired = True`), `gse_coach_mind_simulator.py`, `pre_sim_total_intelligence_gate.py`, and `knowledge_continuity_and_gsi_rlvr_flywheel.py`; expanded RLVR to `262 + 24 = 286` pure-ASCII zero-odds trajectories and added `test_wave36_gsi_icu_and_360_board_w1_w10_engine.py` + `deep-research-wave36-gsi-icu-hemodynamic-early-warning-and-gse-360-board-w1-w10-engine.md`.
+- **What was proven**:
+  - All `5` full-board Weeks `2..10` OOS cohorts beat naive (`4,784` evals: `QB 64.542->57.997`, `RB 26.590->24.774`, `WR/TE 26.211->24.429`, `Kicker 3.302->2.979`, `IDP Tackles 1.623->1.551`, `all_5_suites_beat_naive = True`); `147`-game OOS ablation improved across every metric (`norm CRPS 7.0761->7.0742`, `raw CRPS 6.9779->6.9760`, `Margin MAE 9.7443->9.7417`, `Brier 0.21967->0.21966`, `ECE 0.07084->0.07080 < 0.07171` close, `FWL slope 1.411127->1.411425`, `monotone_ratchet_promote = True`); `43,225,000`-snap PBP simulation CRPS improved `6.9913->6.9854` (beats close `7.0108`); `MAIN_SHA 0b4cb4077b17b98d`, `W36_SHA 10430f9da20c1802`.
+- **What was not proven**:
+  - NFL Week `11+` simulations remain held under `OPERATOR_SIM_HOLD`, `real_money_stake_cleared` remains `False` (`0.0` live stake), ADR-0003 ICU/shoulder clinical RUO weights remain `0.0`, OTC contract-year `5B` remains `LOGGED_EVIDENCE_ONLY` (`0.0` spread weight), and `brain/mind.jsonl` remains single-writer untouched.
+
+---
+
 ## 2026-11-17 (2026-11-17 CT) -- Wave 35 GSI Life-Saving Phase-Transition Physics & GSE Granular Player-vs-Defender Micro-Metrics (`252+24` RLVR)
 
 - **What changed**:

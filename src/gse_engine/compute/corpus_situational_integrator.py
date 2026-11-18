@@ -125,11 +125,17 @@ from gse_engine.science.gsi_translational_bridge import (
 from gse_engine.science.wave35_gsi_lifesaving_neuro_cardiac_and_tissue_phase_engine import (  # noqa: E501
     evaluate_wave35_gsi_safety_and_skill_channels,
 )
+from gse_engine.science.wave36_gsi_icu_hemodynamic_hypoxia_and_shoulder_kinetic_engine import (  # noqa: E501
+    evaluate_wave36_gsi_icu_and_throwing_suite,
+)
 from gse_engine.tracking.aws_ngs_going_deep_gse_gsi_suite import (
     evaluate_aws_ngs_going_deep_stage2_bridge,
 )
 from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine import (  # noqa: E501
     evaluate_wave35_player_micro_matchup_suite,
+)
+from gse_engine.tracking.wave36_360_board_officials_special_teams_progression_and_idp_engine import (  # noqa: E501
+    evaluate_wave36_360_board_matchup_suite,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -2511,6 +2517,16 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         **dict(w35_gsi_safety["away_tissue_channels"].get("player_six_channels", {})),
         **dict(w35_gsi_safety["home_tissue_channels"].get("player_six_channels", {})),
     }
+    w36_gsi_throw = evaluate_wave36_gsi_icu_and_throwing_suite(
+        away_team=away_u,
+        home_team=home_u,
+        as_of_week=int(week),
+        repo_root=REPO_ROOT,
+    )
+    w36_qb_throw_map = {
+        away_u: dict(w36_gsi_throw["glenohumeral_throwing_chain"]["away"]),
+        home_u: dict(w36_gsi_throw["glenohumeral_throwing_chain"]["home"]),
+    }
     for p_nm, inf in (verified_athletes_map or {}).items():
         if p_nm in player_mults:
             pos_nm = str(inf.get("position") or "").upper()
@@ -2533,6 +2549,11 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
                 else:
                     ch_mult = float(ch_p.get("gap_fill_leverage_mult", 1.0))
                 player_mults[p_nm] = round(_clip(player_mults[p_nm] * ch_mult, 0.72, 1.06), 4)
+            if pos_nm == "QB":
+                tm_qb = str(inf.get("team") or "").strip().upper()
+                qb_chain = w36_qb_throw_map.get(tm_qb, {})
+                vel_m = float(qb_chain.get("deep_pass_velocity_retention_mult", 1.0))
+                player_mults[p_nm] = round(_clip(player_mults[p_nm] * vel_m, 0.72, 1.06), 4)
             if inj_st_p in {"QUESTIONABLE", "DOUBTFUL"}:
                 player_mults[p_nm] = round(_clip(player_mults[p_nm] * k14_snap_mult, 0.72, 1.0), 4)
                 player_mults[p_nm] = round(
@@ -2620,6 +2641,16 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "wave35_gsi_and_micro_matchup_pillar": (
             wave32_res.get("wave35_gsi_and_micro_matchups")
             or evaluate_wave35_player_micro_matchup_suite(
+                away_team=away_u,
+                home_team=home_u,
+                as_of_week=int(week),
+                is_indoor=bool(is_indoor),
+                repo_root=REPO_ROOT,
+            )
+        ),
+        "wave36_360_board_matchup_pillar": (
+            wave32_res.get("wave36_360_board_matchups")
+            or evaluate_wave36_360_board_matchup_suite(
                 away_team=away_u,
                 home_team=home_u,
                 as_of_week=int(week),
@@ -3169,6 +3200,18 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         else:
             w35_wired = True
 
+    w36_blk = priors.get("wave36_360_board_matchup_pillar")
+    w36_wired = False
+    if w36_blk is not None:
+        if (
+            not isinstance(w36_blk, Mapping)
+            or w36_blk.get("wired") is not True
+            or w36_blk.get("real_money_stake_cleared") is not False
+        ):
+            missing_or_unwired.append("wave36_360_board_matchup_pillar")
+        else:
+            w36_wired = True
+
     required_scalars = (
         "away_epa_corpus_delta",
         "home_epa_corpus_delta",
@@ -3222,6 +3265,7 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         "wave32_unified_live_fusion_wired": w32_wired,
         "wave34_holistic_biometrics_wired": w34_wired,
         "wave35_gsi_and_micro_wired": w35_wired,
+        "wave36_gsi_icu_and_360_board_wired": w36_wired,
         "pillars_verified": list(required_pillars),
         "scalars_verified_count": len(required_scalars),
         "player_multipliers_count": len(priors.get("player_target_and_carry_multipliers") or {}),

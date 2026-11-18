@@ -305,6 +305,16 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "wave35_player_micro_metrics_and_matchup_physics_engine",
         "src/gse_engine/tracking/wave35_player_micro_metrics_and_matchup_physics_engine.py",
     ),
+    (
+        "Pillar1_Wave36_GSI_MIMIC_ICU_Hypoxia_Glenohumeral",
+        "wave36_gsi_icu_hemodynamic_hypoxia_and_shoulder_kinetic_engine",
+        "src/gse_engine/science/wave36_gsi_icu_hemodynamic_hypoxia_and_shoulder_kinetic_engine.py",
+    ),
+    (
+        "Pillar1_Wave36_GSE_360Board_W1_W10_Officials_ST_IDP",
+        "wave36_360_board_officials_special_teams_progression_and_idp_engine",
+        "src/gse_engine/tracking/wave36_360_board_officials_special_teams_progression_and_idp_engine.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (

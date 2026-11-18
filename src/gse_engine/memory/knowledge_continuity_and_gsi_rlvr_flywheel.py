@@ -44,9 +44,17 @@ from gse_engine.science.wave35_gsi_lifesaving_neuro_cardiac_and_tissue_phase_eng
     WAVE35_GSI_RLVR_TRAJECTORIES,
     evaluate_wave35_gsi_safety_and_skill_channels,
 )
+from gse_engine.science.wave36_gsi_icu_hemodynamic_hypoxia_and_shoulder_kinetic_engine import (  # noqa: E501
+    WAVE36_GSI_RLVR_TRAJECTORIES,
+    evaluate_wave36_gsi_icu_and_throwing_suite,
+)
 from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine import (  # noqa: E501
     WAVE35_TRACKING_RLVR_TRAJECTORIES,
     evaluate_wave35_player_micro_matchup_suite,
+)
+from gse_engine.tracking.wave36_360_board_officials_special_teams_progression_and_idp_engine import (  # noqa: E501
+    WAVE36_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_wave36_360_board_matchup_suite,
 )
 
 _DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -3193,6 +3201,92 @@ def compile_gse_to_gsi_rlvr_training_batch(
                 think=str(spec_w35["think"]),
                 ground_truth=gt_w35,
                 verifier_src=_formula_exact_verifier_src(gt_w35),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    # Tier 3 Block M: Wave 36 GSI MIMIC-IV ICU + Glenohumeral & GSE W1-10 360-Board (252 -> 262)
+    w36_gsi = evaluate_wave36_gsi_icu_and_throwing_suite(
+        away_team="KC", home_team="DEN", as_of_week=10, repo_root=root
+    )
+    w36_suite = evaluate_wave36_360_board_matchup_suite(
+        away_team="CIN", home_team="BUF", as_of_week=10, repo_root=root
+    )
+    icu_d = w36_gsi["mimic_iv_icu_early_warning"]
+    thr_d = w36_gsi["glenohumeral_throwing_chain"]
+    tm_aw = w36_suite["away_w1_w10_profile"]
+    off_d = w36_suite["officiating_crews"]
+    oos_d = w36_suite["full_360_board_w2_w10_oos"]
+    con_d = w36_suite["contract_year_5b_audit"]
+    ast36 = w36_suite["live_honest_ast"]
+    w36_gt_map: dict[str, dict[str, Any]] = {
+        "w36_gsi_mimic_iv_icu_shock_index_baxley_00": {
+            "adr0003_ruo": bool(
+                w36_gsi["adr0003_rule_in_only_doctrine"]
+                and float(w36_gsi["clinical_ruo_sports_weight"]) == 0.0
+            ),
+            "stays_or_fallback": bool(int(icu_d["icu_stays_count"]) in {0, 140}),
+        },
+        "w36_gsi_oxyhemoglobin_hill_hypoxia_curve_00": {
+            "cliff_above_35": bool(float(icu_d["hill_hypoxia_cliff_ratio"]) > 3.5),
+            "pao2_positive": bool(float(icu_d["estimated_pao2_mmhg"]) > 50.0),
+        },
+        "w36_gsi_glenohumeral_fleisig_kinetic_chain_00": {
+            "torque_ge_one": bool(
+                float(thr_d["away"]["glenohumeral_internal_rotation_torque_ratio"]) >= 1.0
+            ),
+            "mult_bounded": bool(
+                0.80 <= float(thr_d["away"]["deep_pass_velocity_retention_mult"]) <= 1.0
+            ),
+        },
+        "w36_ftn_read_progression_vs_first_read_00": {
+            "finite_epas": bool(
+                -1.0 < float(tm_aw["read2_progression_epa"]) < 1.0
+                and -1.0 < float(tm_aw["play_action_epa"]) < 1.0
+            ),
+        },
+        "w36_ol_clean_vs_qb_fault_sack_attribution_00": {
+            "rates_bounded": bool(
+                0.0 <= float(tm_aw["ol_clean_sack_rate"]) <= 0.25
+                and 0.0 <= float(tm_aw["qb_fault_sack_rate"]) <= 0.25
+            ),
+        },
+        "w36_halftime_2h_adjustments_and_1q_cadence_00": {
+            "finite_delta": bool(-1.0 < float(tm_aw["halftime_2h_adjust_delta"]) < 1.0),
+        },
+        "w36_kicker_fgoe_punt_pin_and_referee_crews_00": {
+            "fgoe_and_pen_bounded": bool(
+                -0.5 <= float(tm_aw["kicker_fgoe_per_att"]) <= 0.5
+                and float(off_d["league_mean_penalty_yds_per_game"]) > 0.0
+            ),
+        },
+        "w36_360_board_qb_rb_wr_kicker_idp_w2_w10_oos_00": {
+            "all_five_ok": bool(oos_d["all_5_suites_beat_naive"]),
+            "max_wk_le_10": bool(int(oos_d["max_week_evaluated"]) <= 10),
+        },
+        "w36_contract_year_5b_backtest_or_cut_audit_00": {
+            "zero_weight": bool(float(con_d["live_spread_weight"]) == 0.0),
+            "logged_only": bool(con_d["agents_5b_backtest_or_cut_gate"] == "LOGGED_EVIDENCE_ONLY"),
+        },
+        "w36_honest_ast_and_147_walk_forward_gate_00": {
+            "all_six_evaluated": bool(int(ast36["parsed_evaluated_count"]) == 6),
+            "zero_stake": bool(
+                w36_suite["real_money_stake_cleared"] is False
+                and float(w36_suite["live_stake_fraction"]) == 0.0
+            ),
+        },
+    }
+    for spec_w36 in (*WAVE36_GSI_RLVR_TRAJECTORIES, *WAVE36_TRACKING_RLVR_TRAJECTORIES):
+        rid_w36 = str(spec_w36["record_id"])
+        gt_w36 = w36_gt_map[rid_w36]
+        records.append(
+            _build_rlvr_record(
+                record_id=rid_w36,
+                domain=str(spec_w36["domain"]),
+                prompt=str(spec_w36["prompt"]),
+                think=str(spec_w36["think"]),
+                ground_truth=gt_w36,
+                verifier_src=_formula_exact_verifier_src(gt_w36),
                 curriculum_tier="TIER_3_BEHEMOTH",
             )
         )

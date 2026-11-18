@@ -43,6 +43,15 @@ from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine 
     evaluate_wr_separation_vs_db_coverage,
     run_wave35_gsi_and_micro_metrics_benchmark,
 )
+from gse_engine.tracking.wave36_360_board_officials_special_teams_progression_and_idp_engine import (  # noqa: E501
+    WAVE36_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_360_board_full_w2_w10_player_kicker_idp_oos,
+    evaluate_causal_w36_team_and_officials_features,
+    evaluate_contract_year_5b_incentive_audit,
+    evaluate_wave36_360_board_matchup_suite,
+    evaluate_wave36_live_honest_ast_equations,
+    run_wave36_gsi_icu_and_360_board_benchmark,
+)
 
 __all__ = [
     "AWS_NGS_GOING_DEEP_SOURCES",
@@ -51,6 +60,7 @@ __all__ = [
     "LIVE_STAKE_FRACTION",
     "REAL_MONEY_STAKE_CLEARED",
     "WAVE35_TRACKING_RLVR_TRAJECTORIES",
+    "WAVE36_TRACKING_RLVR_TRAJECTORIES",
     "ChalkContaminationError",
     "ClusterScalingPlan",
     "DualEpauletKinematics",
@@ -75,13 +85,19 @@ __all__ = [
     "TopicMessage",
     "assert_week11_simulation_hold",
     "audit_and_optimize_real_2026_snaps_going_deep",
+    "evaluate_360_board_full_w2_w10_player_kicker_idp_oos",
     "evaluate_aws_ngs_going_deep_stage2_bridge",
     "evaluate_causal_player_week_micro_features",
+    "evaluate_causal_w36_team_and_officials_features",
+    "evaluate_contract_year_5b_incentive_audit",
     "evaluate_dated_csv_and_live_ast_equations",
     "evaluate_qb_air_yards_and_catchable_accuracy",
     "evaluate_rb_speed_elusiveness_vs_lb_gap_fill",
     "evaluate_wave35_player_micro_matchup_suite",
+    "evaluate_wave36_360_board_matchup_suite",
+    "evaluate_wave36_live_honest_ast_equations",
     "evaluate_wr_separation_vs_db_coverage",
     "run_wave35_gsi_and_micro_metrics_benchmark",
+    "run_wave36_gsi_icu_and_360_board_benchmark",
     "verify_nonzero_stage2_jacobians",
 ]
