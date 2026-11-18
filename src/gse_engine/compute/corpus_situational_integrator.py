@@ -114,6 +114,9 @@ from gse_engine.multisport.daily_multisport_slate_engine import (
 from gse_engine.multisport.wave40_universal_sports_metrics_encyclopedia_and_handicap_engine import (  # noqa: E501
     evaluate_wave40_universal_multisport_metrics_suite,
 )
+from gse_engine.multisport.wave41_f1_pit_strategy_nba_pra_copula_and_14sport_expansion import (  # noqa: E501
+    evaluate_wave41_14sport_and_copula_propsim_suite,
+)
 from gse_engine.observability.kernel_registry_and_antipatterns import (
     run_all_antipattern_guards,
 )
@@ -140,6 +143,9 @@ from gse_engine.science.wave38_gsi_gtex_transcriptomics_and_schrodinger_bridge_e
 from gse_engine.science.wave39_gsi_hpa_proteomics_mrna_concordance_and_chronic_sofa_engine import (  # noqa: E501
     evaluate_wave39_gsi_hpa_and_chronic_sofa_suite,
 )
+from gse_engine.science.wave41_gsi_reactome_pathway_uniprot_stokes_einstein_and_icu_los_engine import (  # noqa: E501
+    evaluate_wave41_gsi_reactome_uniprot_and_icu_los_suite,
+)
 from gse_engine.tracking.aws_ngs_going_deep_gse_gsi_suite import (
     evaluate_aws_ngs_going_deep_stage2_bridge,
 )
@@ -160,6 +166,9 @@ from gse_engine.tracking.wave39_pass_rush_disruption_drops_total_kickoff_and_3yr
 )
 from gse_engine.tracking.wave40_ngs_separation_ryoe_cpoe_and_ftn_qb_fault_engine import (  # noqa: E501
     evaluate_wave40_ngs_ftn_and_universal_metrics_suite,
+)
+from gse_engine.tracking.wave41_pocket_ball_security_kickoff_return_swarm_and_14sport_engine import (  # noqa: E501
+    evaluate_wave41_pocket_security_kr_and_14sport_suite,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -2778,6 +2787,27 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
                 repo_root=REPO_ROOT,
             )
         ),
+        "wave41_gsi_reactome_uniprot_pillar": (
+            evaluate_wave41_gsi_reactome_uniprot_and_icu_los_suite(
+                away_team=away_u,
+                home_team=home_u,
+                as_of_week=int(week),
+                repo_root=REPO_ROOT,
+            )
+        ),
+        "wave41_14sport_copula_propsim_pillar": evaluate_wave41_14sport_and_copula_propsim_suite(
+            REPO_ROOT
+        ),
+        "wave41_pocket_security_and_14sport_pillar": (
+            wave32_res.get("wave41_pocket_security_and_14sport_matchups")
+            or evaluate_wave41_pocket_security_kr_and_14sport_suite(
+                away_team=away_u,
+                home_team=home_u,
+                as_of_week=int(week),
+                is_indoor=bool(is_indoor),
+                repo_root=REPO_ROOT,
+            )
+        ),
         "nvidia_hermes_capability_routes": nvidia_hermes_routes,
         "away_epa_corpus_delta": round(away_epa_corpus_delta, 5),
         "home_epa_corpus_delta": round(home_epa_corpus_delta, 5),
@@ -3380,6 +3410,19 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         else:
             w40_wired = True
 
+    w41_blk = priors.get("wave41_pocket_security_and_14sport_pillar")
+    w41_wired = False
+    if w41_blk is not None:
+        if (
+            not isinstance(w41_blk, Mapping)
+            or w41_blk.get("wired") is not True
+            or w41_blk.get("real_money_stake_cleared") is not False
+            or float(w41_blk.get("clinical_ruo_sports_weight", 1.0)) != 0.0
+        ):
+            missing_or_unwired.append("wave41_pocket_security_and_14sport_pillar")
+        else:
+            w41_wired = True
+
     required_scalars = (
         "away_epa_corpus_delta",
         "home_epa_corpus_delta",
@@ -3438,6 +3481,7 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         "wave38_gsi_gtex_and_sgp_copula_wired": w38_wired,
         "wave39_gsi_hpa_and_disruption_total_wired": w39_wired,
         "wave40_ngs_and_universal_metrics_wired": w40_wired,
+        "wave41_pocket_security_and_14sport_wired": w41_wired,
         "pillars_verified": list(required_pillars),
         "scalars_verified_count": len(required_scalars),
         "player_multipliers_count": len(priors.get("player_target_and_carry_multipliers") or {}),

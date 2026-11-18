@@ -3,6 +3,20 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-18 (2026-11-18 CT) -- Wave 41 GSI Reactome/UniProt Stokes-Einstein & First-24h ICU LOS + 14-Sport F1/NBA PRA Copula & NFL Pocket-Security Engine (`316+24` RLVR)
+
+- **What changed**:
+  - Hydrated Reactome `v98` (`178` pathways, `0` unmapped identifiers) and UniProtKB/Swiss-Prot (`9` proteins, `24,008` Da `TNNI3` to `183,560` Da `COL5A1`) into `data/science/reactome_uniprot_gsi_pathway_and_mass_atlas_2026.json` (`sha256 ee08a14cd3bc26b6`) alongside `.licenses/reactome_database_LICENSE.txt` and `.licenses/uniprot_database_LICENSE.txt`.
+  - Built `src/gse_engine/science/wave41_gsi_reactome_pathway_uniprot_stokes_einstein_and_icu_los_engine.py` (`CLINICAL_RUO_REACTOME_UNIPROT_SPORTS_WEIGHT = 0.0`) proving monotone Stokes-Einstein capillary diffusivity (`ratio = 1.970011`) and causal first-24h MIMIC-IV prolonged ICU LOS (`>= 4.0d`, `140` stays, `41` prolonged, `AUROC = 0.748`, Platt `Brier = 0.1716 < 0.2071` base).
+  - Built `src/gse_engine/multisport/wave41_f1_pit_strategy_nba_pra_copula_and_14sport_expansion.py` expanding `284` metrics / `10` sports to **`356` metrics across `14` sports** (`+72` across `MOTORSPORTS`, `BOXING`, `ESPORTS`, `CRICKET_RUGBY` while keeping Wave 40's base tuple immutable), plus F1 fuel-corrected stint degradation & undercut optimizer (`optimal_stint_pit_lap = 25`, `undercut_overtake_prob = 0.8881`) and NBA `PRA` NegBin + Student-t copula (`df = 5`, `p_over_copula = 0.4855`).
+  - Built `src/gse_engine/tracking/wave41_pocket_ball_security_kickoff_return_swarm_and_14sport_engine.py` (`stats_team_week_2025` EB prior + `< W10` causal `stats_team_week_2026_w1_w10`, `6` positive signals, `5` quarantined box metrics at `0.0`, `8/8 PARSED_EVALUATED` ASTs, fail-closed `OperatorSimulationHoldError` above W10) and wired all 6 spine/guardrail/RLVR layers + RLVR Group R (`304 -> 316`, `+ 24 = 340`).
+- **What was proven**:
+  - `147`-game OOS walk-forward ablation improved monotonically (`alpha_w41 = 0.25`): normalized CRPS `7.0402 -> 7.0298`, raw CRPS `6.9420 -> 6.9316` (`< 7.0108` close), Margin MAE `9.6987 -> 9.6800` (`< 9.7687` close), Total MAE `10.4024` (`< 10.4116` close), Brier `0.21942 -> 0.21934`, ECE `0.07054 -> 0.07047`, `rliable_iqm = 0.732818`, `all_floors_held = true`.
+  - `43,225,000`-snap PBP simulation: spotlight CRPS `8.9305 -> 8.9234`, 147-game PBP CRPS `6.9953 -> 6.9895` (`MAIN_SHA = 354b1626d4983d6e`, `W41_SHA = ea1cd8be4d000f59`).
+  - `316+24=340` RLVR zero-odds (`all_verifiers_passed = true`), `ruff check src/gse_engine` clean, `mypy --strict src/gse_engine` (`99` files) clean, `pre_sim_total_intelligence_gate.py --self-test` `PASS` (`dead_leaf_unwired_pre_sim_modules = []`).
+- **What was not**: Live `>= W11` NFL week simulations stay held under `OperatorSimulationHoldError`, `real_money_stake_cleared = false`, `clinical_ruo_sports_weight = 0.0`, and `brain/mind.jsonl` remains untouched for the single-writer trainer.
+- **Next role must**: Keep clinical RUO weights at `0.0`, preserve Reactome/UniProt license attributions, and verify `python tests/verify_out_of_sample_calibration.py --enforce-gate` before modifying any Stage-2/3 spine weight.
+
 ## 2026-11-17 (2026-11-17 CT) -- Wave 40 Universal 10-Sport Metrics Encyclopedia, Tennis/Soccer/NHL/MLB Calculators & NFL Next Gen Stats Engine (`304+24` RLVR)
 
 - **What changed**:

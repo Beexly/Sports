@@ -86,6 +86,13 @@ from gse_engine.tracking.wave40_ngs_separation_ryoe_cpoe_and_ftn_qb_fault_engine
     evaluate_wave40_ngs_ftn_and_universal_metrics_suite,
     run_wave40_ngs_and_universal_metrics_benchmark,
 )
+from gse_engine.tracking.wave41_pocket_ball_security_kickoff_return_swarm_and_14sport_engine import (  # noqa: E501
+    WAVE41_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_causal_w41_pocket_security_and_kr_features,
+    evaluate_wave41_live_honest_ast_equations,
+    evaluate_wave41_pocket_security_kr_and_14sport_suite,
+    run_wave41_gsi_reactome_and_14sport_benchmark,
+)
 
 __all__ = [
     "AWS_NGS_GOING_DEEP_SOURCES",
@@ -99,6 +106,7 @@ __all__ = [
     "WAVE38_TRACKING_RLVR_TRAJECTORIES",
     "WAVE39_TRACKING_RLVR_TRAJECTORIES",
     "WAVE40_TRACKING_RLVR_TRAJECTORIES",
+    "WAVE41_TRACKING_RLVR_TRAJECTORIES",
     "ChalkContaminationError",
     "ClusterScalingPlan",
     "DualEpauletKinematics",
@@ -132,6 +140,7 @@ __all__ = [
     "evaluate_causal_w39_disruption_drops_and_total_features",
     "evaluate_causal_w39_game_total_environmental_shift",
     "evaluate_causal_w40_ngs_and_ftn_features",
+    "evaluate_causal_w41_pocket_security_and_kr_features",
     "evaluate_contract_year_5b_incentive_audit",
     "evaluate_dated_csv_and_live_ast_equations",
     "evaluate_longitudinal_3yr_ftn_and_2025_baseline_vaults",
@@ -152,6 +161,8 @@ __all__ = [
     "evaluate_wave39_live_honest_ast_equations",
     "evaluate_wave40_live_honest_ast_equations",
     "evaluate_wave40_ngs_ftn_and_universal_metrics_suite",
+    "evaluate_wave41_live_honest_ast_equations",
+    "evaluate_wave41_pocket_security_kr_and_14sport_suite",
     "evaluate_wr_separation_vs_db_coverage",
     "run_wave35_gsi_and_micro_metrics_benchmark",
     "run_wave36_gsi_icu_and_360_board_benchmark",
@@ -159,5 +170,6 @@ __all__ = [
     "run_wave38_gsi_gtex_and_sgp_copula_cir_benchmark",
     "run_wave39_gsi_hpa_and_disruption_total_benchmark",
     "run_wave40_ngs_and_universal_metrics_benchmark",
+    "run_wave41_gsi_reactome_and_14sport_benchmark",
     "verify_nonzero_stage2_jacobians",
 ]

@@ -44,6 +44,10 @@ from gse_engine.multisport.wave40_universal_sports_metrics_encyclopedia_and_hand
     WAVE40_MULTISPORT_RLVR_TRAJECTORIES,
     evaluate_wave40_universal_multisport_metrics_suite,
 )
+from gse_engine.multisport.wave41_f1_pit_strategy_nba_pra_copula_and_14sport_expansion import (  # noqa: E501
+    WAVE41_MULTISPORT_RLVR_TRAJECTORIES,
+    evaluate_wave41_14sport_and_copula_propsim_suite,
+)
 from gse_engine.science.wave35_gsi_lifesaving_neuro_cardiac_and_tissue_phase_engine import (  # noqa: E501
     WAVE35_GSI_RLVR_TRAJECTORIES,
     evaluate_wave35_gsi_safety_and_skill_channels,
@@ -63,6 +67,10 @@ from gse_engine.science.wave38_gsi_gtex_transcriptomics_and_schrodinger_bridge_e
 from gse_engine.science.wave39_gsi_hpa_proteomics_mrna_concordance_and_chronic_sofa_engine import (  # noqa: E501
     WAVE39_GSI_RLVR_TRAJECTORIES,
     evaluate_wave39_gsi_hpa_and_chronic_sofa_suite,
+)
+from gse_engine.science.wave41_gsi_reactome_pathway_uniprot_stokes_einstein_and_icu_los_engine import (  # noqa: E501
+    WAVE41_GSI_RLVR_TRAJECTORIES,
+    evaluate_wave41_gsi_reactome_uniprot_and_icu_los_suite,
 )
 from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine import (  # noqa: E501
     WAVE35_TRACKING_RLVR_TRAJECTORIES,
@@ -87,6 +95,10 @@ from gse_engine.tracking.wave39_pass_rush_disruption_drops_total_kickoff_and_3yr
 from gse_engine.tracking.wave40_ngs_separation_ryoe_cpoe_and_ftn_qb_fault_engine import (  # noqa: E501
     WAVE40_TRACKING_RLVR_TRAJECTORIES,
     evaluate_wave40_ngs_ftn_and_universal_metrics_suite,
+)
+from gse_engine.tracking.wave41_pocket_ball_security_kickoff_return_swarm_and_14sport_engine import (  # noqa: E501
+    WAVE41_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_wave41_pocket_security_kr_and_14sport_suite,
 )
 
 _DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -3664,6 +3676,103 @@ def compile_gse_to_gsi_rlvr_training_batch(
                 think=str(spec_w40["think"]),
                 ground_truth=gt_w40,
                 verifier_src=_formula_exact_verifier_src(gt_w40),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    # Tier 3 Group R: Wave 41 GSI Reactome + 14-Sport F1/NBA PRA + NFL Pocket/KR (304 -> 316)
+    w41_gsi = evaluate_wave41_gsi_reactome_uniprot_and_icu_los_suite(
+        away_team="KC", home_team="DEN", as_of_week=10, repo_root=root
+    )
+    w41_ms = evaluate_wave41_14sport_and_copula_propsim_suite(root)
+    w41_trk = evaluate_wave41_pocket_security_kr_and_14sport_suite(
+        away_team="CIN", home_team="BUF", as_of_week=10, is_indoor=False, repo_root=root
+    )
+    w41_ru = w41_gsi["reactome_uniprot_diffusivity"]
+    w41_los = w41_gsi["mimic_iv_prolonged_icu_los"]
+    w41_f1 = w41_ms["f1_stint_undercut"]
+    w41_pra = w41_ms["nba_pra_negbin_copula"]
+    w41_hm = w41_trk["home_w41_pocket_security_profile"]
+    w41_quar = w41_trk["quarantined_box_weights"]
+    w41_ast = w41_trk["live_honest_ast"]
+    w41_gt_map: dict[str, dict[str, Any]] = {
+        "w41_gsi_reactome_v98_pathway_enrichment_178_00": {
+            "pathways_total": int(w41_ru["reactome_pathways_found_total"]),
+            "unmapped_zero": bool(int(w41_ru["identifiers_not_found"]) == 0),
+            "ruo_zero": bool(float(w41_ru["clinical_ruo_sports_weight"]) == 0.0),
+        },
+        "w41_gsi_uniprot_stokes_einstein_diffusivity_00": {
+            "proteins_count": int(w41_ru["uniprot_proteins_count"]),
+            "strictly_monotone": bool(w41_ru["diffusivity_strictly_monotone"]),
+            "tnni3_col5_ratio": float(w41_ru["tnni3_over_col5a1_diffusivity_ratio"]),
+        },
+        "w41_gsi_mimic_first24h_prolonged_icu_los_00": {
+            "stays_count": int(w41_los["icu_stays_count"]),
+            "auroc_ge_074": bool(float(w41_los["prolonged_los_auroc"]) >= 0.74),
+            "brier_beats_base": bool(
+                float(w41_los["prolonged_los_brier"]) < float(w41_los["base_prevalence_brier"])
+            ),
+        },
+        "w41_14sport_356_metrics_f1_boxing_esports_cricket_00": {
+            "total_metrics": int(w41_ms["total_canonical_metrics"]),
+            "sports_covered": int(w41_ms["sports_covered_count"]),
+            "w40_preserved_284": bool(int(w41_ms["wave40_base_metrics_preserved"]) == 284),
+        },
+        "w41_f1_fuel_corrected_stint_deg_and_undercut_00": {
+            "optimal_pit_lap": int(w41_f1["optimal_stint_pit_lap"]),
+            "undercut_prob_bounded": bool(0.0 < float(w41_f1["undercut_overtake_prob"]) < 1.0),
+        },
+        "w41_nba_pra_negbin_student_t_copula_propsim_00": {
+            "copula_df": int(w41_pra["copula_df"]),
+            "overdispersed_pts": bool(float(w41_pra["pts_variance_to_mean_ratio"]) > 1.0),
+            "pos_corr_pts_ast": bool(float(w41_pra["empirical_corr_pts_ast"]) > 0.2),
+        },
+        "w41_nfl_causal_stats_team_week_w1_w10_00": {
+            "max_prior_week_lt10": bool(int(w41_trk["max_prior_week_used"]) < 10),
+        },
+        "w41_def_int_and_sack_fumble_security_00": {
+            "def_int_bounded": bool(-1.0 <= float(w41_hm["def_int_rate_norm"]) <= 1.0),
+            "sack_fumble_bounded": bool(-1.0 <= float(w41_hm["sack_fumble_security_norm"]) <= 1.0),
+        },
+        "w41_kickoff_return_and_sack_avoidance_00": {
+            "kr_bounded": bool(-1.0 <= float(w41_hm["kickoff_return_fieldpos_norm"]) <= 1.0),
+            "sack_avoid_bounded": bool(-1.0 <= float(w41_hm["sack_avoidance_norm"]) <= 1.0),
+        },
+        "w41_passing_yac_and_def_tackle_assists_00": {
+            "yac_bounded": bool(-1.0 <= float(w41_hm["passing_yac_norm"]) <= 1.0),
+            "tackle_ast_bounded": bool(
+                -1.0 <= float(w41_hm["def_tackle_assists_swarm_norm"]) <= 1.0
+            ),
+        },
+        "w41_quarantine_rushing20_carries_tds_fgatt_00": {
+            "all_five_zero": bool(
+                len(w41_quar) == 5 and all(float(v) == 0.0 for v in w41_quar.values())
+            ),
+        },
+        "w41_honest_ast_8eq_hold_and_gsi_ruo_zero_00": {
+            "all_eight_evaluated": bool(int(w41_ast["parsed_evaluated_count"]) == 8),
+            "zero_stake": bool(
+                w41_trk["real_money_stake_cleared"] is False
+                and float(w41_trk["live_stake_fraction"]) == 0.0
+                and float(w41_trk["clinical_ruo_sports_weight"]) == 0.0
+            ),
+        },
+    }
+    for spec_w41 in (
+        *WAVE41_GSI_RLVR_TRAJECTORIES,
+        *WAVE41_MULTISPORT_RLVR_TRAJECTORIES,
+        *WAVE41_TRACKING_RLVR_TRAJECTORIES,
+    ):
+        rid_w41 = str(spec_w41["record_id"])
+        gt_w41 = w41_gt_map[rid_w41]
+        records.append(
+            _build_rlvr_record(
+                record_id=rid_w41,
+                domain=str(spec_w41["domain"]),
+                prompt=str(spec_w41["prompt"]),
+                think=str(spec_w41["think"]),
+                ground_truth=gt_w41,
+                verifier_src=_formula_exact_verifier_src(gt_w41),
                 curriculum_tier="TIER_3_BEHEMOTH",
             )
         )
