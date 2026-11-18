@@ -3,6 +3,24 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-17 (2026-11-17 CT) -- Wave 38 GSI GTEx v10 + Schrodinger Bridge OT & GSE Pre-Snap Scheme, Front-5 Continuity, Student-t SGP Copula, Shrinkage-CIR & EB-LCB Engine (`282+24` RLVR)
+
+- **What changed**:
+  - **Hydrated Official `nflverse` Participation + Master Athlete Crosswalk & Live GTEx v10 Transcriptomics (`8.04 MB` + `378` RNA Profiles)**:
+    - `pbp_participation_2024.parquet` (`45,919 x 26`, paired with `2025` for `91,103` participation rows, `mean_box_count_combined = 4.9236`), `players_master.parquet` (`24,869 x 39`), `.licenses/gtex_database_LICENSE.txt`, and `data/science/gtex_v10_human_tissue_transcriptomics_2026.json` (`7` core GSI genes x `54` human tissues = `378` median TPM records, `payload_sha256 = 49d51664853c3c0e`).
+  - **GSI ADR-0003 GTEx v10 Transcriptomics & Schrodinger Bridge Entropic OT (`src/gse_engine/science/wave38_gsi_gtex_transcriptomics_and_schrodinger_bridge_engine.py`)**:
+    - Computed `54`-tissue selectivity ratios (`ACTN3` `2,257.93x` skeletal/cardiac LV, `TNNI3` `979.24x` cardiac/skeletal, `MAPT` `380.31x` brain cortex/fibroblast, `COL1A1+COL5A1 = 4,197.37 TPM`, `PPARGC1A = 11.4438 TPM`, `CLINICAL_RUO_GTEX_SPORTS_WEIGHT = 0.0`) paired with a 5-state discrete Schrodinger Bridge Sinkhorn-Knopp optimal transport recovery solver (`sinkhorn_l1_marginal_error = 0.0 < 1e-6`).
+  - **GSE Pre-Snap Scheme Matrix, Front-5 Continuity, Student-t SGP Copula & Shrinkage-CIR Gate (`src/gse_engine/tracking/wave38_presnap_scheme_def_continuity_sgp_copula_and_cir_engine.py`)**:
+    - Cross-tabulated `16,124` BDB25 pre-snap plays (`POWER +0.04250`, `Cover-1 +0.00537` vs `Quarters -0.06600` EPA, free rush `0.04366`) + `91,103` participation rows; retained causal W1-10 `heavy_box_run_succ_net` (`r=+0.0969`), `third_down_sack_avoid_net` (`r=+0.0682`), `takeaway_margin_per_snap` (`r=+0.0569`), `q4_one_score_clutch_epa_net` (`r=+0.0526`), `no_huddle_tempo_off_epa` (`r=+0.0510`), `def_front5_continuity_jaccard` (`r=+0.0295`), and `redzone_td_conv_net` (`r=+0.0069`) while quarantining `4` overpriced metrics at `0.0`; verified `5,303`-pair Student-t (`df=4`) copula cutting joint Brier across `WR yds+rec` (`0.25926->0.23594`), `QB+WR` (`0.21474->0.21186`), and neg-script `QB+RB` (`0.16751->0.16683`); proved `1,052`-row chronological Shrinkage-CIR Brier (`0.25626->0.25576`) & bias (`0.0506->0.0187`) improvements plus Maurer-Pontil Empirical-Bernstein LCB (`identity=False`, `overfit=False`, `oracle=True`); and evaluated `6/6` live `HonestEquationExecutor` ASTs.
+  - **End-to-End Pipeline & RLVR Expansion (`LL-2026-11-17-058`)**:
+    - Wired into `walk_forward_ablation.py`, `wave32_unified_sports_situational_live_fusion.py`, `corpus_situational_integrator.py` (`wave38_gsi_gtex_and_sgp_copula_wired = True`), `gse_coach_mind_simulator.py`, `pre_sim_total_intelligence_gate.py`, and `knowledge_continuity_and_gsi_rlvr_flywheel.py`; expanded RLVR to `282 + 24 = 306` zero-odds trajectories and added `test_wave38_gsi_gtex_and_sgp_copula_cir_engine.py` + `deep-research-wave38-gsi-gtex-schrodinger-bridge-and-gse-presnap-sgp-copula-cir-engine.md`.
+- **What was proven**:
+  - `147`-game OOS ablation improved across every single metric (`norm CRPS 7.0637->7.0586`, `raw CRPS 6.9655->6.9604`, `Margin MAE 9.7297->9.7236 < 9.7687` close, `Brier 0.21958->0.21954`, `ECE 0.07072->0.07067`, `FWL slope 1.423104->1.429187`, `rliable IQM 0.732125->0.732167`, `monotone_ratchet_promote = True`); `43,225,000`-snap PBP simulation `147`-game CRPS `6.9920` beats closing market `7.0108`; `MAIN_SHA dcb228138d57161c`, `W38_SHA 3f8a5e54189bac08`.
+- **What was not proven**:
+  - NFL Week `11+` simulations remain held under `OPERATOR_SIM_HOLD`, `real_money_stake_cleared` remains `False` (`0.0` live stake), ADR-0003 GTEx clinical RUO weight stays `0.0`, and `brain/mind.jsonl` remains single-writer untouched.
+
+---
+
 ## 2026-11-17 (2026-11-17 CT) -- Wave 37 GSI 6-Organ MIMIC-IV SOFA + MTU Collagen & GSE 5-Man OL Continuity, Rest/Surface, Trench Stuffing, Draft Pedigree & Skew-Debiased Prop Engine (`272+24` RLVR)
 
 - **What changed**:

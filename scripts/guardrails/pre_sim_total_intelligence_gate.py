@@ -325,6 +325,16 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "wave37_ol_continuity_rest_stuff_pedigree_and_skew_props_engine",
         "src/gse_engine/tracking/wave37_ol_continuity_rest_stuff_pedigree_and_skew_props_engine.py",
     ),
+    (
+        "Pillar1_Wave38_GSI_GTEx_Transcriptomics_SchrodingerBridge",
+        "wave38_gsi_gtex_transcriptomics_and_schrodinger_bridge_engine",
+        "src/gse_engine/science/wave38_gsi_gtex_transcriptomics_and_schrodinger_bridge_engine.py",
+    ),
+    (
+        "Pillar1_Wave38_GSE_Presnap_DefContinuity_SGPCopula_CIR",
+        "wave38_presnap_scheme_def_continuity_sgp_copula_and_cir_engine",
+        "src/gse_engine/tracking/wave38_presnap_scheme_def_continuity_sgp_copula_and_cir_engine.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (

@@ -52,6 +52,10 @@ from gse_engine.science.wave37_gsi_sofa_sepsis_organ_network_and_mtu_collagen_en
     WAVE37_GSI_RLVR_TRAJECTORIES,
     evaluate_wave37_gsi_sofa_and_mtu_suite,
 )
+from gse_engine.science.wave38_gsi_gtex_transcriptomics_and_schrodinger_bridge_engine import (  # noqa: E501
+    WAVE38_GSI_RLVR_TRAJECTORIES,
+    evaluate_wave38_gsi_gtex_and_schrodinger_suite,
+)
 from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine import (  # noqa: E501
     WAVE35_TRACKING_RLVR_TRAJECTORIES,
     evaluate_wave35_player_micro_matchup_suite,
@@ -63,6 +67,10 @@ from gse_engine.tracking.wave36_360_board_officials_special_teams_progression_an
 from gse_engine.tracking.wave37_ol_continuity_rest_stuff_pedigree_and_skew_props_engine import (  # noqa: E501
     WAVE37_TRACKING_RLVR_TRAJECTORIES,
     evaluate_wave37_ol_continuity_and_prop_tail_suite,
+)
+from gse_engine.tracking.wave38_presnap_scheme_def_continuity_sgp_copula_and_cir_engine import (  # noqa: E501
+    WAVE38_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_wave38_presnap_sgp_copula_and_cir_suite,
 )
 
 _DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -3377,6 +3385,98 @@ def compile_gse_to_gsi_rlvr_training_batch(
                 think=str(spec_w37["think"]),
                 ground_truth=gt_w37,
                 verifier_src=_formula_exact_verifier_src(gt_w37),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    # Tier 3 Group O: Wave 38 GSI GTEx+Schrodinger & GSE PreSnap/Copula/CIR (272 -> 282)
+    w38_gsi = evaluate_wave38_gsi_gtex_and_schrodinger_suite(
+        away_team="KC", home_team="DEN", as_of_week=10, repo_root=root
+    )
+    w38_suite = evaluate_wave38_presnap_sgp_copula_and_cir_suite(
+        away_team="CIN", home_team="BUF", as_of_week=10, repo_root=root
+    )
+    gtex_d = w38_gsi["gtex_v10_partition"]
+    sb_d = w38_gsi["schrodinger_bridge_recovery"]
+    mx38 = w38_suite["presnap_scheme_matrix"]
+    tm38_hm = w38_suite["home_w1_w10_w38_profile"]
+    quar38 = w38_suite["quarantined_close_overpriced_signals"]
+    cop38 = w38_suite["student_t_sgp_copula_and_cir"]
+    cir38 = cop38["cir_time_holdout"]
+    gates38 = cop38["promotion_gates"]
+    ast38 = w38_suite["live_honest_ast"]
+    w38_gt_map: dict[str, dict[str, Any]] = {
+        "w38_gsi_gtex_v10_54tissue_selectivity_00": {
+            "actn3_gt_2000x": bool(float(gtex_d["actn3_skeletal_to_cardiac_ratio"]) >= 2000.0),
+            "adr0003_ruo": bool(
+                w38_gsi["adr0003_rule_in_only_doctrine"]
+                and float(w38_gsi["clinical_ruo_sports_weight"]) == 0.0
+            ),
+        },
+        "w38_gsi_tnni3_mapt_biomarker_isolation_00": {
+            "tnni3_gt_900x": bool(float(gtex_d["tnni3_cardiac_to_skeletal_ratio"]) >= 900.0),
+            "mapt_gt_350x": bool(float(gtex_d["mapt_brain_to_fibroblast_ratio"]) >= 350.0),
+        },
+        "w38_gsi_schrodinger_bridge_sinkhorn_recovery_00": {
+            "sinkhorn_converged": bool(
+                float(sb_d["away"]["sinkhorn_l1_marginal_error"]) < 1e-6
+                and float(sb_d["home"]["sinkhorn_l1_marginal_error"]) < 1e-6
+            ),
+        },
+        "w38_presnap_bdb25_and_90k_participation_matrix_00": {
+            "participation_ge_90k": bool(int(mx38["participation_combined_count"]) >= 90000),
+            "bdb25_loaded": bool(int(mx38["bdb25_plays_count"]) >= 16000),
+        },
+        "w38_heavy_box_trench_and_def_front5_jaccard_00": {
+            "hb_and_jacc_bounded": bool(
+                -1.0 <= float(tm38_hm["heavy_box_run_succ_net"]) <= 1.0
+                and 0.0 <= float(tm38_hm["def_front5_continuity_jaccard"]) <= 1.0
+            ),
+        },
+        "w38_late_down_sack_takeaway_and_q4_clutch_00": {
+            "clutch_and_ast_ok": bool(
+                -2.0 <= float(w38_suite["w38_close_residual_signal"]) <= 2.0
+                and int(ast38["parsed_evaluated_count"]) == 6
+            ),
+        },
+        "w38_quarantine_light_box_shotgun_secondary_00": {
+            "all_four_zero": bool(
+                len(quar38) == 4 and all(float(v) == 0.0 for v in quar38.values())
+            ),
+        },
+        "w38_student_t_multileg_tail_copula_positive_00": {
+            "positive_pairs_beat_indep": bool(
+                cop38["archetypes"]["wr_rec_yds_and_receptions"]["beats_independence_brier"]
+                and cop38["archetypes"]["qb_pass_and_wr_rec_yds"]["beats_independence_brier"]
+            ),
+        },
+        "w38_negative_script_cannibalization_copula_00": {
+            "neg_script_beats_indep": bool(
+                cop38["archetypes"]["qb_pass_and_rb_rush_yds_neg_script"][
+                    "beats_independence_brier"
+                ]
+            ),
+        },
+        "w38_centered_isotonic_and_eb_lcb_gate_00": {
+            "cir_and_gates_valid": bool(
+                cir38["improves_brier_and_bias"]
+                and gates38["identity_fixed_point"]["eligible"] is False
+                and gates38["oracle_sanity_gate"]["eligible"] is True
+                and w38_suite["real_money_stake_cleared"] is False
+            ),
+        },
+    }
+    for spec_w38 in (*WAVE38_GSI_RLVR_TRAJECTORIES, *WAVE38_TRACKING_RLVR_TRAJECTORIES):
+        rid_w38 = str(spec_w38["record_id"])
+        gt_w38 = w38_gt_map[rid_w38]
+        records.append(
+            _build_rlvr_record(
+                record_id=rid_w38,
+                domain=str(spec_w38["domain"]),
+                prompt=str(spec_w38["prompt"]),
+                think=str(spec_w38["think"]),
+                ground_truth=gt_w38,
+                verifier_src=_formula_exact_verifier_src(gt_w38),
                 curriculum_tier="TIER_3_BEHEMOTH",
             )
         )

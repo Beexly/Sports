@@ -131,6 +131,9 @@ from gse_engine.science.wave36_gsi_icu_hemodynamic_hypoxia_and_shoulder_kinetic_
 from gse_engine.science.wave37_gsi_sofa_sepsis_organ_network_and_mtu_collagen_engine import (  # noqa: E501
     evaluate_wave37_gsi_sofa_and_mtu_suite,
 )
+from gse_engine.science.wave38_gsi_gtex_transcriptomics_and_schrodinger_bridge_engine import (  # noqa: E501
+    evaluate_wave38_gsi_gtex_and_schrodinger_suite,
+)
 from gse_engine.tracking.aws_ngs_going_deep_gse_gsi_suite import (
     evaluate_aws_ngs_going_deep_stage2_bridge,
 )
@@ -142,6 +145,9 @@ from gse_engine.tracking.wave36_360_board_officials_special_teams_progression_an
 )
 from gse_engine.tracking.wave37_ol_continuity_rest_stuff_pedigree_and_skew_props_engine import (  # noqa: E501
     evaluate_wave37_ol_continuity_and_prop_tail_suite,
+)
+from gse_engine.tracking.wave38_presnap_scheme_def_continuity_sgp_copula_and_cir_engine import (  # noqa: E501
+    evaluate_wave38_presnap_sgp_copula_and_cir_suite,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -2543,6 +2549,16 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         away_u: dict(w37_gsi_mtu["mtu_collagen_mechanics"]["away"]),
         home_u: dict(w37_gsi_mtu["mtu_collagen_mechanics"]["home"]),
     }
+    w38_gsi_sb = evaluate_wave38_gsi_gtex_and_schrodinger_suite(
+        away_team=away_u,
+        home_team=home_u,
+        as_of_week=int(week),
+        repo_root=REPO_ROOT,
+    )
+    w38_sb_map = {
+        away_u: dict(w38_gsi_sb["schrodinger_bridge_recovery"]["away"]),
+        home_u: dict(w38_gsi_sb["schrodinger_bridge_recovery"]["home"]),
+    }
     for p_nm, inf in (verified_athletes_map or {}).items():
         if p_nm in player_mults:
             pos_nm = str(inf.get("position") or "").upper()
@@ -2579,6 +2595,15 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
                 )
                 soft_mtu_m = 1.0 + 0.10 * (raw_mtu_m - 1.0)
                 player_mults[p_nm] = round(_clip(player_mults[p_nm] * soft_mtu_m, 0.72, 1.06), 4)
+            tm_sb = w38_sb_map.get(str(inf.get("team") or "").strip().upper(), {})
+            if tm_sb:
+                raw_sb_m = (
+                    float(tm_sb.get("fast_twitch_power_retention_mult", 1.0))
+                    if pos_nm in {"RB", "WR", "TE"}
+                    else float(tm_sb.get("mitochondrial_q4_stamina_mult", 1.0))
+                )
+                soft_sb_m = 1.0 + 0.08 * (raw_sb_m - 1.0)
+                player_mults[p_nm] = round(_clip(player_mults[p_nm] * soft_sb_m, 0.72, 1.06), 4)
             if inj_st_p in {"QUESTIONABLE", "DOUBTFUL"}:
                 player_mults[p_nm] = round(_clip(player_mults[p_nm] * k14_snap_mult, 0.72, 1.0), 4)
                 player_mults[p_nm] = round(
@@ -2686,6 +2711,16 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "wave37_ol_continuity_and_prop_tail_pillar": (
             wave32_res.get("wave37_ol_continuity_matchups")
             or evaluate_wave37_ol_continuity_and_prop_tail_suite(
+                away_team=away_u,
+                home_team=home_u,
+                as_of_week=int(week),
+                is_indoor=bool(is_indoor),
+                repo_root=REPO_ROOT,
+            )
+        ),
+        "wave38_presnap_sgp_copula_and_cir_pillar": (
+            wave32_res.get("wave38_presnap_sgp_copula_matchups")
+            or evaluate_wave38_presnap_sgp_copula_and_cir_suite(
                 away_team=away_u,
                 home_team=home_u,
                 as_of_week=int(week),
@@ -3259,6 +3294,18 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         else:
             w37_wired = True
 
+    w38_blk = priors.get("wave38_presnap_sgp_copula_and_cir_pillar")
+    w38_wired = False
+    if w38_blk is not None:
+        if (
+            not isinstance(w38_blk, Mapping)
+            or w38_blk.get("wired") is not True
+            or w38_blk.get("real_money_stake_cleared") is not False
+        ):
+            missing_or_unwired.append("wave38_presnap_sgp_copula_and_cir_pillar")
+        else:
+            w38_wired = True
+
     required_scalars = (
         "away_epa_corpus_delta",
         "home_epa_corpus_delta",
@@ -3314,6 +3361,7 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         "wave35_gsi_and_micro_wired": w35_wired,
         "wave36_gsi_icu_and_360_board_wired": w36_wired,
         "wave37_gsi_sofa_and_ol_continuity_wired": w37_wired,
+        "wave38_gsi_gtex_and_sgp_copula_wired": w38_wired,
         "pillars_verified": list(required_pillars),
         "scalars_verified_count": len(required_scalars),
         "player_multipliers_count": len(priors.get("player_target_and_carry_multipliers") or {}),
