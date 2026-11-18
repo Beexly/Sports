@@ -33,6 +33,9 @@ from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine 
 from gse_engine.tracking.wave36_360_board_officials_special_teams_progression_and_idp_engine import (  # noqa: E501
     evaluate_wave36_360_board_matchup_suite,
 )
+from gse_engine.tracking.wave37_ol_continuity_rest_stuff_pedigree_and_skew_props_engine import (  # noqa: E501
+    evaluate_wave37_ol_continuity_and_prop_tail_suite,
+)
 
 _TEAM_ALIAS: dict[str, str] = {"LA": "LAR", "WSH": "WAS", "JAC": "JAX"}
 
@@ -885,8 +888,16 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 repo_root=repo_root,
             )
             w36_sig = float(w36_g["w36_close_residual_signal"])
+            w37_g = evaluate_wave37_ol_continuity_and_prop_tail_suite(
+                away_team=g.away_team,
+                home_team=g.home_team,
+                as_of_week=int(wk),
+                is_indoor=bool(g.is_indoor),
+                repo_root=repo_root,
+            )
+            w37_sig = float(w37_g["w37_close_residual_signal"])
 
-            # Layer-1 market foundation + Wave 32/34/35/36 FWL-damped orthogonal shift
+            # Layer-1 market foundation + Wave 32/34/35/36/37 FWL-damped orthogonal shift
             epa_edge_pts = (
                 (hm_shrunk_net - aw_shrunk_net) * 18.0
                 + 0.10 * (hm_aux_sc - aw_aux_sc) * 14.0
@@ -895,6 +906,7 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 + 40.0 * w34_diff
                 + 2.0 * w35_sig
                 + 0.25 * w36_sig
+                + 0.60 * w37_sig
             )
             mkt_implied_edge = g.expected_home_margin_mkt
             orth_resid = epa_edge_pts - 0.55 * mkt_implied_edge

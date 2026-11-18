@@ -48,6 +48,10 @@ from gse_engine.science.wave36_gsi_icu_hemodynamic_hypoxia_and_shoulder_kinetic_
     WAVE36_GSI_RLVR_TRAJECTORIES,
     evaluate_wave36_gsi_icu_and_throwing_suite,
 )
+from gse_engine.science.wave37_gsi_sofa_sepsis_organ_network_and_mtu_collagen_engine import (  # noqa: E501
+    WAVE37_GSI_RLVR_TRAJECTORIES,
+    evaluate_wave37_gsi_sofa_and_mtu_suite,
+)
 from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine import (  # noqa: E501
     WAVE35_TRACKING_RLVR_TRAJECTORIES,
     evaluate_wave35_player_micro_matchup_suite,
@@ -55,6 +59,10 @@ from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine 
 from gse_engine.tracking.wave36_360_board_officials_special_teams_progression_and_idp_engine import (  # noqa: E501
     WAVE36_TRACKING_RLVR_TRAJECTORIES,
     evaluate_wave36_360_board_matchup_suite,
+)
+from gse_engine.tracking.wave37_ol_continuity_rest_stuff_pedigree_and_skew_props_engine import (  # noqa: E501
+    WAVE37_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_wave37_ol_continuity_and_prop_tail_suite,
 )
 
 _DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -3287,6 +3295,88 @@ def compile_gse_to_gsi_rlvr_training_batch(
                 think=str(spec_w36["think"]),
                 ground_truth=gt_w36,
                 verifier_src=_formula_exact_verifier_src(gt_w36),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    # Tier 3 Group N: Wave 37 GSI SOFA+MTU & GSE OL Continuity/Skew-Props (262 -> 272)
+    w37_gsi = evaluate_wave37_gsi_sofa_and_mtu_suite(
+        away_team="KC", home_team="DEN", as_of_week=10, repo_root=root
+    )
+    w37_suite = evaluate_wave37_ol_continuity_and_prop_tail_suite(
+        away_team="CIN", home_team="BUF", as_of_week=10, repo_root=root
+    )
+    sofa_d = w37_gsi["mimic_iv_sofa_mortality"]
+    mtu_d = w37_gsi["mtu_collagen_mechanics"]
+    tm37_aw = w37_suite["away_w1_w10_w37_profile"]
+    prop37 = w37_suite["skewness_debiased_prop_backtest"]
+    ast37 = w37_suite["live_honest_ast"]
+    quar37 = w37_suite["quarantined_close_overpriced_signals"]
+    w37_gt_map: dict[str, dict[str, Any]] = {
+        "w37_gsi_mimic_iv_6organ_sofa_sepsis_mortality_00": {
+            "adr0003_ruo": bool(
+                w37_gsi["adr0003_rule_in_only_doctrine"]
+                and float(w37_gsi["clinical_ruo_sports_weight"]) == 0.0
+            ),
+            "auroc_ge_074": bool(float(sofa_d["mortality_auroc"]) >= 0.74),
+        },
+        "w37_gsi_scheffer_csd_hr_autocorrelation_00": {
+            "csd_finite": bool(0.0 <= float(sofa_d["mean_hr_csd_lag1"]) <= 1.0),
+            "brier_lt_base": bool(
+                float(sofa_d["mortality_brier"]) < float(sofa_d["base_prevalence_brier"])
+            ),
+        },
+        "w37_gsi_mtu_collagen_surface_rest_mechanics_00": {
+            "mtu_bounded": bool(
+                0.70 <= float(mtu_d["away"]["mtu_strain_energy_ratio"]) <= 1.60
+                and 0.92 <= float(mtu_d["away"]["explosive_cut_retention_mult"]) <= 1.04
+            ),
+        },
+        "w37_ol_5man_jaccard_continuity_edge_00": {
+            "jaccard_bounded": bool(0.0 <= float(tm37_aw["ol_5man_continuity_jaccard"]) <= 1.0),
+        },
+        "w37_trench_net_stuff_rate_and_pedigree_00": {
+            "stuff_and_ped_bounded": bool(
+                -0.5 <= float(tm37_aw["trench_stuff_net_rate"]) <= 0.5
+                and 0.0 < float(tm37_aw["active_draft_pedigree_index"]) <= 1.0
+            ),
+        },
+        "w37_hidden_field_pos_and_screen_rpo_00": {
+            "fp_and_sr_bounded": bool(
+                -5.0 <= float(tm37_aw["hidden_drive_start_fp_net"]) <= 5.0
+                and -1.5 <= float(tm37_aw["screen_rpo_epa"]) <= 1.5
+            ),
+        },
+        "w37_schedule_rest_differential_and_surface_00": {
+            "rest_edge_bounded": bool(-1.0 <= float(w37_suite["rest_edge_normalized"]) <= 1.0),
+        },
+        "w37_quarantine_overpriced_3rd4th_blitz_00": {
+            "all_zero_weight": bool(
+                len(quar37) == 4 and all(float(v) == 0.0 for v in quar37.values())
+            ),
+        },
+        "w37_skewness_debiased_lognormal_prop_tail_00": {
+            "improves_brier": bool(prop37["improves_both_rec_and_pass_brier"]),
+        },
+        "w37_honest_ast_and_qbr_rosters_depth_w10_00": {
+            "all_six_evaluated": bool(int(ast37["parsed_evaluated_count"]) == 6),
+            "zero_stake": bool(
+                w37_suite["real_money_stake_cleared"] is False
+                and float(w37_suite["live_stake_fraction"]) == 0.0
+            ),
+        },
+    }
+    for spec_w37 in (*WAVE37_GSI_RLVR_TRAJECTORIES, *WAVE37_TRACKING_RLVR_TRAJECTORIES):
+        rid_w37 = str(spec_w37["record_id"])
+        gt_w37 = w37_gt_map[rid_w37]
+        records.append(
+            _build_rlvr_record(
+                record_id=rid_w37,
+                domain=str(spec_w37["domain"]),
+                prompt=str(spec_w37["prompt"]),
+                think=str(spec_w37["think"]),
+                ground_truth=gt_w37,
+                verifier_src=_formula_exact_verifier_src(gt_w37),
                 curriculum_tier="TIER_3_BEHEMOTH",
             )
         )

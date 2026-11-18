@@ -28,12 +28,21 @@ from gse_engine.science.wave36_gsi_icu_hemodynamic_hypoxia_and_shoulder_kinetic_
     evaluate_gsi_mimic_iv_icu_critical_care_early_warning,
     evaluate_wave36_gsi_icu_and_throwing_suite,
 )
+from gse_engine.science.wave37_gsi_sofa_sepsis_organ_network_and_mtu_collagen_engine import (
+    CLINICAL_RUO_SOFA_SPORTS_WEIGHT,
+    WAVE37_GSI_RLVR_TRAJECTORIES,
+    evaluate_gsi_mimic_iv_6organ_sofa_and_mortality_network,
+    evaluate_gsi_mtu_collagen_surface_rest_mechanics,
+    evaluate_wave37_gsi_sofa_and_mtu_suite,
+)
 
 __all__ = [
     "CLINICAL_RUO_ICU_SPORTS_WEIGHT",
+    "CLINICAL_RUO_SOFA_SPORTS_WEIGHT",
     "CLINICAL_RUO_SPORTS_WEIGHT",
     "WAVE35_GSI_RLVR_TRAJECTORIES",
     "WAVE36_GSI_RLVR_TRAJECTORIES",
+    "WAVE37_GSI_RLVR_TRAJECTORIES",
     "BiomarkerStructuralProfile",
     "ClinicalTrialPortfolioSummary",
     "CongenericSarSummary",
@@ -44,10 +53,13 @@ __all__ = [
     "evaluate_gsi_glenohumeral_throwing_mechanics",
     "evaluate_gsi_koopman_cardiac_and_wbgt_autonomic_safety",
     "evaluate_gsi_longitudinal_injury_and_tissue_mechanics",
+    "evaluate_gsi_mimic_iv_6organ_sofa_and_mortality_network",
     "evaluate_gsi_mimic_iv_icu_critical_care_early_warning",
+    "evaluate_gsi_mtu_collagen_surface_rest_mechanics",
     "evaluate_paired_projection_progression",
     "evaluate_wave35_gsi_safety_and_skill_channels",
     "evaluate_wave36_gsi_icu_and_throwing_suite",
+    "evaluate_wave37_gsi_sofa_and_mtu_suite",
     "load_and_verify_wave16_telemetry",
     "validate_and_serialize_wave16_bundle",
 ]

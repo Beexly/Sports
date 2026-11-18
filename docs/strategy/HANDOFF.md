@@ -3,6 +3,24 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-17 (2026-11-17 CT) -- Wave 37 GSI 6-Organ MIMIC-IV SOFA + MTU Collagen & GSE 5-Man OL Continuity, Rest/Surface, Trench Stuffing, Draft Pedigree & Skew-Debiased Prop Engine (`272+24` RLVR)
+
+- **What changed**:
+  - **Hydrated 8 Official `nflverse` Datasets (`5.73 MB`, all 2026 feeds strictly `<= W10`)**:
+    - `roster_weekly_2026_w1_w10.parquet` (`24,565 x 36`), `depth_charts_2026_w1_w10.parquet` (`644,688 x 12`, `max_dt = 2026-11-10T15:32:14Z`), `stats_team_week_2026_w1_w10.parquet` (`300 x 138`), `espn_qbr_week_through_2026_w10.parquet` (`11,010 x 30`), `espn_qbr_season_through_2025.parquet` (`1,523 x 23`), `draft_picks_1980_2026.parquet` (`12,927 x 36`), `trades_through_2026_w10.parquet` (`4,975 x 11`), and `schedules_games_through_2026_w10.parquet` (`7,426 x 46`).
+  - **GSI ADR-0003 6-Organ MIMIC-IV SOFA Mortality Network & Hill-Zajac MTU Collagen (`src/gse_engine/science/wave37_gsi_sofa_sepsis_organ_network_and_mtu_collagen_engine.py`)**:
+    - Scored all `6` Vincent/Sepsis-3 `SOFA` organs (`Rice S/F`, platelets, bilirubin, `MAP` + Shock Index, `GCS E+V+M`, creatinine), Sepsis-3 Lactate (`44` septic shock stays), `qSOFA >= 2` (`122` stays), and Scheffer HR critical slowing down lag-1 AC(1) (`0.6375`) across `140` stays (`20` deaths): non-survivors mean SOFA `13.35` vs survivors `7.75`, Mann-Whitney `AUROC = 0.7562`, calibrated `Brier = 0.1142` (`< 0.1224` base), `CLINICAL_RUO_SOFA_SPORTS_WEIGHT = 0.0`, and coupled Hill-Zajac MTU surface-stiffness & rest procollagen synthesis mechanics.
+  - **GSE W1-10 OL Continuity, Rest/Surface, Stuffing, Pedigree & Skew-Debiased Prop Tails (`src/gse_engine/tracking/wave37_ol_continuity_rest_stuff_pedigree_and_skew_props_engine.py`)**:
+    - Built causal Stage-2 close-residual signal retaining schedule rest (`r = +0.2968`), 5-man OL Jaccard continuity (`r = +0.1961`), trench net run-stuffing (`r = +0.1854`), hidden starting field position (`r = +0.0975`), FTN screen/RPO EPA (`r = +0.0972`), active draft-pick pedigree (`r = +0.0832`), ESPN QBR prior (`r = +0.0367`), and middle-8 EPA (`r = +0.0101`), while quarantining `3rd-down`, `4th-down WPA`, `explosive rate`, and `blitz EPA` at `0.0` weight; verified skewness-debiased prop tail calibration across `1,067` sportsbook backtest rows (`rec Brier 0.25230 -> 0.24963`, `bias 0.0549 -> 0.0023`; `pass Brier 0.25459 -> 0.24951`, `bias 0.0666 -> 0.0213`); and evaluated `6/6` live `HonestEquationExecutor` ASTs.
+  - **End-to-End Pipeline & RLVR Expansion (`LL-2026-11-17-057`)**:
+    - Wired into `walk_forward_ablation.py`, `wave32_unified_sports_situational_live_fusion.py`, `corpus_situational_integrator.py` (`wave37_gsi_sofa_and_ol_continuity_wired = True`), `gse_coach_mind_simulator.py`, `pre_sim_total_intelligence_gate.py`, and `knowledge_continuity_and_gsi_rlvr_flywheel.py`; expanded RLVR to `272 + 24 = 296` zero-odds trajectories and added `test_wave37_gsi_sofa_and_ol_continuity_skew_props_engine.py` + `deep-research-wave37-gsi-sofa-sepsis-mortality-and-gse-ol-continuity-skew-props-engine.md`.
+- **What was proven**:
+  - `147`-game OOS ablation improved across every metric (`norm CRPS 7.0742->7.0637`, `raw CRPS 6.9760->6.9655`, `Margin MAE 9.7417->9.7297 < 9.7687` close, `Brier 0.21966->0.21958`, `ECE 0.07080->0.07072`, `FWL slope 1.411425->1.423104`, `rliable IQM 0.731802->0.732125`, `monotone_ratchet_promote = True`); `43,225,000`-snap PBP simulation spotlight CRPS improved `8.9377->8.9350` and `147`-game CRPS `6.9866` beats closing market `7.0108`; `MAIN_SHA b1a05bde7044b5b5`, `W37_SHA cb18a6b297c1cd5a`.
+- **What was not proven**:
+  - NFL Week `11+` simulations remain held under `OPERATOR_SIM_HOLD`, `real_money_stake_cleared` remains `False` (`0.0` live stake), ADR-0003 SOFA/MTU clinical RUO weight stays `0.0`, and `brain/mind.jsonl` remains single-writer untouched.
+
+---
+
 ## 2026-11-17 (2026-11-17 CT) -- Wave 36 GSI MIMIC-IV ICU Early Warning, Fleisig Glenohumeral Chain & GSE Full W1-10 (`26,246`-Snap) 360-Board Engine (`262+24` RLVR)
 
 - **What changed**:

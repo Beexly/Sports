@@ -1,0 +1,361 @@
+{
+  "schema": "wave37_gsi_sofa_and_ol_continuity_benchmark_v1",
+  "generated_utc": "2026-11-18T01:47:15.615186+00:00",
+  "real_money_stake_cleared": false,
+  "live_stake_fraction": 0.0,
+  "sample_kc_at_den": {
+    "schema": "wave37_ol_continuity_and_prop_tail_suite_v1",
+    "wired": true,
+    "matchup": "KC @ DEN",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "gsi_sofa_and_mtu": {
+      "schema": "wave37_gsi_sofa_and_mtu_suite_v1",
+      "wired": true,
+      "matchup": "KC @ DEN",
+      "as_of_week": 10,
+      "adr0003_rule_in_only_doctrine": true,
+      "clinical_ruo_sports_weight": 0.0,
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "mimic_iv_sofa_mortality": {
+        "schema": "wave37_gsi_mimic_iv_sofa_mortality_v1",
+        "clean_checkout_fallback": false,
+        "adr0003_rule_in_only_doctrine": true,
+        "clinical_ruo_sports_weight": 0.0,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0,
+        "icu_stays_count": 140,
+        "deaths_count": 20,
+        "survivor_mean_sofa": 7.75,
+        "non_survivor_mean_sofa": 13.35,
+        "septic_shock_stays_count": 44,
+        "qsofa_ge2_stays_count": 122,
+        "mean_hr_csd_lag1": 0.6375,
+        "mortality_auroc": 0.7562,
+        "mortality_brier": 0.1142,
+        "base_prevalence_brier": 0.1224
+      },
+      "mtu_collagen_mechanics": {
+        "schema": "wave37_gsi_mtu_collagen_surface_rest_v1",
+        "matchup": "KC @ DEN",
+        "as_of_week": 10,
+        "surface": "grass",
+        "surface_stiffness_ratio": 1.0,
+        "away": {
+          "team": "KC",
+          "rest_days": 7.0,
+          "mean_prior_off_snaps": 701.2,
+          "collagen_remodeling_readiness": 0.84152,
+          "mtu_strain_energy_ratio": 1.15738,
+          "explosive_cut_retention_mult": 1.0137,
+          "q4_trench_anchor_retention_mult": 1.01028
+        },
+        "home": {
+          "team": "DEN",
+          "rest_days": 7.0,
+          "mean_prior_off_snaps": 690.6,
+          "collagen_remodeling_readiness": 0.84152,
+          "mtu_strain_energy_ratio": 1.13973,
+          "explosive_cut_retention_mult": 1.01441,
+          "q4_trench_anchor_retention_mult": 1.01081
+        }
+      }
+    },
+    "away_w1_w10_w37_profile": {
+      "ol_5man_continuity_jaccard": 0.7381,
+      "trench_stuff_net_rate": 0.0179,
+      "hidden_drive_start_fp_net": 0.22712,
+      "screen_rpo_epa": 0.12259,
+      "active_draft_pedigree_index": 0.12677,
+      "espn_qbr_prior_z": 0.353,
+      "middle_eight_net_epa": 0.17624
+    },
+    "home_w1_w10_w37_profile": {
+      "ol_5man_continuity_jaccard": 1.0,
+      "trench_stuff_net_rate": 0.00583,
+      "hidden_drive_start_fp_net": 0.27782,
+      "screen_rpo_epa": 0.0809,
+      "active_draft_pedigree_index": 0.13858,
+      "espn_qbr_prior_z": -0.04667,
+      "middle_eight_net_epa": -0.24888
+    },
+    "schedule_rest_surface": {
+      "home_rest": 7.0,
+      "away_rest": 7.0,
+      "surface": "grass",
+      "div_game": 0
+    },
+    "rest_edge_normalized": 0.0,
+    "max_week_loaded": 10,
+    "hydrated_counts": {
+      "roster_weekly_2026_w1_w10": 24565,
+      "depth_charts_2026_w1_w10": 644688,
+      "stats_team_week_2026_w1_w10": 300,
+      "espn_qbr_week_through_2026_w10": 11010,
+      "espn_qbr_season_through_2025": 1523,
+      "draft_picks_1980_2026": 12927,
+      "trades_through_2026_w10": 4975,
+      "schedules_games_through_2026_w10": 7426
+    },
+    "quarantined_close_overpriced_signals": {
+      "third_down_conversion_diff": 0.0,
+      "fourth_down_raw_wpa": 0.0,
+      "highlight_explosive_play_rate": 0.0,
+      "blitz_raw_epa": 0.0
+    },
+    "skewness_debiased_prop_backtest": {
+      "schema": "wave37_skewness_debiased_prop_tail_v1",
+      "clean_checkout_fallback": false,
+      "total_prop_rows_audited": 1067,
+      "rec_n": 659,
+      "rec_gauss_brier": 0.2523,
+      "rec_eb_skew_brier": 0.24963,
+      "rec_gauss_bias": 0.0549,
+      "rec_eb_skew_bias": 0.0023,
+      "pass_n": 393,
+      "pass_raw_brier": 0.25459,
+      "pass_eb_deb_brier": 0.24951,
+      "pass_raw_bias": 0.0666,
+      "pass_eb_deb_bias": 0.0213,
+      "rush_rows": 15,
+      "improves_both_rec_and_pass_brier": true
+    },
+    "live_honest_ast": {
+      "schema": "wave37_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 6,
+      "equations_evaluated": [
+        {
+          "eq_id": "sofa_rice_sf_ratio",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 271.428571,
+          "operators": 1
+        },
+        {
+          "eq_id": "hill_zajac_mtu_strain_energy",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.157297,
+          "operators": 2
+        },
+        {
+          "eq_id": "ol_jaccard_continuity",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.0,
+          "operators": 1
+        },
+        {
+          "eq_id": "draft_pedigree_value",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.2,
+          "operators": 2
+        },
+        {
+          "eq_id": "trench_net_stuff_edge",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.00583,
+          "operators": 1
+        },
+        {
+          "eq_id": "skew_debiased_prop_over",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.49839,
+          "operators": 6
+        }
+      ]
+    },
+    "w37_close_residual_signal": 0.354327,
+    "stage2_deltas": {
+      "away_epa_delta": -0.000425,
+      "home_epa_delta": 0.000425,
+      "away_sack_prob_delta": 0.000179,
+      "home_sack_prob_delta": -0.00375
+    }
+  },
+  "sample_cin_at_buf": {
+    "schema": "wave37_ol_continuity_and_prop_tail_suite_v1",
+    "wired": true,
+    "matchup": "CIN @ BUF",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "gsi_sofa_and_mtu": {
+      "schema": "wave37_gsi_sofa_and_mtu_suite_v1",
+      "wired": true,
+      "matchup": "CIN @ BUF",
+      "as_of_week": 10,
+      "adr0003_rule_in_only_doctrine": true,
+      "clinical_ruo_sports_weight": 0.0,
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "mimic_iv_sofa_mortality": {
+        "schema": "wave37_gsi_mimic_iv_sofa_mortality_v1",
+        "clean_checkout_fallback": false,
+        "adr0003_rule_in_only_doctrine": true,
+        "clinical_ruo_sports_weight": 0.0,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0,
+        "icu_stays_count": 140,
+        "deaths_count": 20,
+        "survivor_mean_sofa": 7.75,
+        "non_survivor_mean_sofa": 13.35,
+        "septic_shock_stays_count": 44,
+        "qsofa_ge2_stays_count": 122,
+        "mean_hr_csd_lag1": 0.6375,
+        "mortality_auroc": 0.7562,
+        "mortality_brier": 0.1142,
+        "base_prevalence_brier": 0.1224
+      },
+      "mtu_collagen_mechanics": {
+        "schema": "wave37_gsi_mtu_collagen_surface_rest_v1",
+        "matchup": "CIN @ BUF",
+        "as_of_week": 10,
+        "surface": "grass",
+        "surface_stiffness_ratio": 1.0,
+        "away": {
+          "team": "CIN",
+          "rest_days": 7.0,
+          "mean_prior_off_snaps": 695.8,
+          "collagen_remodeling_readiness": 0.84152,
+          "mtu_strain_energy_ratio": 1.14831,
+          "explosive_cut_retention_mult": 1.01407,
+          "q4_trench_anchor_retention_mult": 1.01055
+        },
+        "home": {
+          "team": "BUF",
+          "rest_days": 7.0,
+          "mean_prior_off_snaps": 757.8,
+          "collagen_remodeling_readiness": 0.84152,
+          "mtu_strain_energy_ratio": 1.25064,
+          "explosive_cut_retention_mult": 1.00997,
+          "q4_trench_anchor_retention_mult": 1.00748
+        }
+      }
+    },
+    "away_w1_w10_w37_profile": {
+      "ol_5man_continuity_jaccard": 1.0,
+      "trench_stuff_net_rate": 0.02755,
+      "hidden_drive_start_fp_net": 0.70681,
+      "screen_rpo_epa": -0.07986,
+      "active_draft_pedigree_index": 0.18373,
+      "espn_qbr_prior_z": 1.085,
+      "middle_eight_net_epa": 0.16443
+    },
+    "home_w1_w10_w37_profile": {
+      "ol_5man_continuity_jaccard": 0.79365,
+      "trench_stuff_net_rate": 0.01587,
+      "hidden_drive_start_fp_net": 0.2067,
+      "screen_rpo_epa": 0.07635,
+      "active_draft_pedigree_index": 0.13916,
+      "espn_qbr_prior_z": 0.909,
+      "middle_eight_net_epa": 0.33214
+    },
+    "schedule_rest_surface": {
+      "home_rest": 7.0,
+      "away_rest": 7.0,
+      "surface": "grass",
+      "div_game": 0
+    },
+    "rest_edge_normalized": 0.0,
+    "max_week_loaded": 10,
+    "hydrated_counts": {
+      "roster_weekly_2026_w1_w10": 24565,
+      "depth_charts_2026_w1_w10": 644688,
+      "stats_team_week_2026_w1_w10": 300,
+      "espn_qbr_week_through_2026_w10": 11010,
+      "espn_qbr_season_through_2025": 1523,
+      "draft_picks_1980_2026": 12927,
+      "trades_through_2026_w10": 4975,
+      "schedules_games_through_2026_w10": 7426
+    },
+    "quarantined_close_overpriced_signals": {
+      "third_down_conversion_diff": 0.0,
+      "fourth_down_raw_wpa": 0.0,
+      "highlight_explosive_play_rate": 0.0,
+      "blitz_raw_epa": 0.0
+    },
+    "skewness_debiased_prop_backtest": {
+      "schema": "wave37_skewness_debiased_prop_tail_v1",
+      "clean_checkout_fallback": false,
+      "total_prop_rows_audited": 1067,
+      "rec_n": 659,
+      "rec_gauss_brier": 0.2523,
+      "rec_eb_skew_brier": 0.24963,
+      "rec_gauss_bias": 0.0549,
+      "rec_eb_skew_bias": 0.0023,
+      "pass_n": 393,
+      "pass_raw_brier": 0.25459,
+      "pass_eb_deb_brier": 0.24951,
+      "pass_raw_bias": 0.0666,
+      "pass_eb_deb_bias": 0.0213,
+      "rush_rows": 15,
+      "improves_both_rec_and_pass_brier": true
+    },
+    "live_honest_ast": {
+      "schema": "wave37_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 6,
+      "equations_evaluated": [
+        {
+          "eq_id": "sofa_rice_sf_ratio",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 271.428571,
+          "operators": 1
+        },
+        {
+          "eq_id": "hill_zajac_mtu_strain_energy",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.148385,
+          "operators": 2
+        },
+        {
+          "eq_id": "ol_jaccard_continuity",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.794,
+          "operators": 1
+        },
+        {
+          "eq_id": "draft_pedigree_value",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.2,
+          "operators": 2
+        },
+        {
+          "eq_id": "trench_net_stuff_edge",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.01587,
+          "operators": 1
+        },
+        {
+          "eq_id": "skew_debiased_prop_over",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.49839,
+          "operators": 6
+        }
+      ]
+    },
+    "w37_close_residual_signal": -0.648919,
+    "stage2_deltas": {
+      "away_epa_delta": 0.000779,
+      "home_epa_delta": -0.000779,
+      "away_sack_prob_delta": -0.00375,
+      "home_sack_prob_delta": -0.000655
+    }
+  },
+  "benchmark_sha256": "cb18a6b297c1cd5a216fd6aebf3b7f0398857ea7fd42244aa494b1b4e9153977"
+}

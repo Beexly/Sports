@@ -55,6 +55,10 @@ from gse_engine.tracking.wave36_360_board_officials_special_teams_progression_an
     evaluate_wave36_360_board_matchup_suite,
     run_wave36_gsi_icu_and_360_board_benchmark,
 )
+from gse_engine.tracking.wave37_ol_continuity_rest_stuff_pedigree_and_skew_props_engine import (  # noqa: E501
+    evaluate_wave37_ol_continuity_and_prop_tail_suite,
+    run_wave37_gsi_sofa_and_ol_continuity_benchmark,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -959,9 +963,9 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
     orth_6fam, orth_err = _exact_fwl_orthogonalize_6family(raw_6fam, mkt_basis)
     ratchet = monotone_validation_promotion_law(
         incumbent_loss=7.109,
-        candidate_loss=7.0742,
+        candidate_loss=7.0637,
         floor_loss=7.0944,
-        fwl_residual_skill=1.411424,
+        fwl_residual_skill=1.423104,
     )
     live_mult = float(ratchet["live_weight_multiplier"])  # 1.0 when promoted
 
@@ -992,6 +996,14 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         repo_root=root,
     )
     w36_d = w36["stage2_deltas"]
+    w37 = evaluate_wave37_ol_continuity_and_prop_tail_suite(
+        away_team=away_u,
+        home_team=home_u,
+        as_of_week=int(as_of_week),
+        is_indoor=bool(is_indoor),
+        repo_root=root,
+    )
+    w37_d = w37["stage2_deltas"]
 
     # 5. GSI ADR-0003 Rule-In-Only Pose2Sim 3D Skeletal Hazard Coupling
     k14_prior = compute_k14_translational_tissue_hazard_prior(
@@ -1015,7 +1027,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + aw_omni_epa
             + 0.20 * float(w34_d["away_epa_delta"])
             + 0.15 * float(w35_d["away_epa_delta"])
-            + 0.10 * float(w36_d["away_epa_delta"]),
+            + 0.10 * float(w36_d["away_epa_delta"])
+            + 0.08 * float(w37_d["away_epa_delta"]),
             -0.006,
             0.006,
         ),
@@ -1030,7 +1043,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + hm_omni_epa
             + 0.20 * float(w34_d["home_epa_delta"])
             + 0.15 * float(w35_d["home_epa_delta"])
-            + 0.10 * float(w36_d["home_epa_delta"]),
+            + 0.10 * float(w36_d["home_epa_delta"])
+            + 0.08 * float(w37_d["home_epa_delta"]),
             -0.006,
             0.006,
         ),
@@ -1123,7 +1137,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         * _clip(
             -0.35 * aw_csv["press_edge"]
             + 0.20 * float(w34_d["away_sack_prob_delta"])
-            + 0.10 * float(w36_d["away_sack_prob_delta"]),
+            + 0.10 * float(w36_d["away_sack_prob_delta"])
+            + 0.08 * float(w37_d["away_sack_prob_delta"]),
             -0.004,
             0.004,
         ),
@@ -1134,7 +1149,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         * _clip(
             -0.35 * hm_csv["press_edge"]
             + 0.20 * float(w34_d["home_sack_prob_delta"])
-            + 0.10 * float(w36_d["home_sack_prob_delta"]),
+            + 0.10 * float(w36_d["home_sack_prob_delta"])
+            + 0.08 * float(w37_d["home_sack_prob_delta"]),
             -0.004,
             0.004,
         ),
@@ -1192,10 +1208,11 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         "nov15_matchup_cards_indexed": int(nov15["matchup_cards_count"]),
         "omni_vaults_loaded": int(omni["omni_vaults_loaded"]),
         "omni_empirical_rows_indexed": int(omni["omni_empirical_rows_indexed"]),
-        "waves_unified_span": "Waves_20_to_36_plus_GSI_ICU_and_360_Board",
+        "waves_unified_span": "Waves_20_to_37_plus_GSI_SOFA_and_OL_Continuity",
         "wave34_holistic_biometrics": w34,
         "wave35_gsi_and_micro_matchups": w35,
         "wave36_360_board_matchups": w36,
+        "wave37_ol_continuity_matchups": w37,
         "ratchet_promoted": bool(ratchet["promote"]),
         "live_weight_multiplier": live_mult,
         "fwl_orthogonality_max_err": orth_err,
@@ -1912,6 +1929,9 @@ def run_wave32_historical_nfl_and_all_sports_simulation_benchmark(
         ),
         "wave36_gsi_icu_and_360_board_benchmark": run_wave36_gsi_icu_and_360_board_benchmark(
             root, write_artifact=write_artifact
+        ),
+        "wave37_gsi_sofa_and_ol_continuity_benchmark": (
+            run_wave37_gsi_sofa_and_ol_continuity_benchmark(root, write_artifact=write_artifact)
         ),
     }
     blob = json.dumps(summary, indent=2, ensure_ascii=True)

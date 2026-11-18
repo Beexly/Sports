@@ -315,6 +315,16 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "wave36_360_board_officials_special_teams_progression_and_idp_engine",
         "src/gse_engine/tracking/wave36_360_board_officials_special_teams_progression_and_idp_engine.py",
     ),
+    (
+        "Pillar1_Wave37_GSI_MIMIC_6Organ_SOFA_MTU",
+        "wave37_gsi_sofa_sepsis_organ_network_and_mtu_collagen_engine",
+        "src/gse_engine/science/wave37_gsi_sofa_sepsis_organ_network_and_mtu_collagen_engine.py",
+    ),
+    (
+        "Pillar1_Wave37_GSE_OL_Continuity_Rest_Pedigree_SkewProps",
+        "wave37_ol_continuity_rest_stuff_pedigree_and_skew_props_engine",
+        "src/gse_engine/tracking/wave37_ol_continuity_rest_stuff_pedigree_and_skew_props_engine.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (
