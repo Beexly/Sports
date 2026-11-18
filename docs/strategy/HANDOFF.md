@@ -3,6 +3,21 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-18 (2026-11-18 CT) -- Wave 48 Real 32-Team Spine Hydration, Showdown CPT MILP, Unmined Vaults Audit, Causal Stage-2 Engine & 4.86x Bit-Exact Speedup (`388+24=412` RLVR)
+
+- **What changed**:
+  - Eliminated cold-start Python/Pandas overhead across `wave35`, `wave45`, and `wave46` via pure-Python `man_share_by_team` precomputation and contiguous week-sorted `np.searchsorted` arrays (`p26_arrays`), preserving all `6/6` baseline SHA-256 cryptographic digests bit-exact while slashing combined cold-start runtime `101.696s -> 20.934s` (`4.8627x` speedup, `-80.762s` saved).
+  - Added DraftKings Single-Game Showdown (`1.5x` CPT + `5` FLEX `<= $50k`) duplication-aware SciPy HiGHS MILP (`solve_showdown_cpt_duplication_aware_milp` in `src/gse_engine/compute/dfs_optimizer.py`) with `$47,600-$49,400` anti-duplication band, `WR` CPT `+0.55` leverage, `QB` CPT `1..2` teammate pass-catcher + `>= 1` opponent bring-back constraints, and Schur-complement DPP repulsion (`max_player_overlap <= 4`).
+  - Added real 32-team causal roster, Stage-0 injury/trade exclusion, active `player_gp`, and Showdown portfolio derivation inside `src/gse_engine/workflows/unified_reasoning_simulation_projection_spine.py` (`hydrate_causal_matchup_context_from_vaults`, `evaluate_vault_hydrated_unified_spine_matchup`, `_sanitize_display_name` e.g. `SEA -> "Drew L."`).
+  - Built `src/gse_engine/tracking/wave48_stage0_weather_sentiment_trade_and_showdown_engine.py` auditing 5 unmined `data/nflverse/` vaults (`kaggle_tobycrabtree_scores_weather_zone1`, `hf_sentiment_twitter_zone2` behind K23 Chalk Firewall `live_win_prob_weight = 0.0`, `hf_ypolatog_contracts_500_zone1` quarantined at `nfl_live_weight = 0.0`, `trades_through_2026_w10`, `stage0_truth_s2026_w10`) + causal Stage-2 `7` margin & `4` obvious-pass/RZ/weather/divisional total signals, wired into `walk_forward_ablation.py` (`alpha_m = 0.08`, `alpha_t = 0.28`), `wave32_unified_sports_situational_live_fusion.py`, `corpus_situational_integrator.py`, `pre_sim_total_intelligence_gate.py`, and `knowledge_continuity_and_gsi_rlvr_flywheel.py` (`Group Y: 382 -> 388`, `+ 24 = 412`).
+- **What was proven**:
+  - Across `18` completed 2026 Weeks 2-10 matchups (`18,000` simulated worlds, `54` GPP Showdown rosters + `18` Cash Showdown rosters): `all_hydrated_from_vaults = True`, `max_world_conservation_residual = 0.0`, `total_orphaned_projections = 0`, `zero_cap_violations = True`, `all_showdown_gpp_in_anti_dupe_band = True`, `all_qb_cpt_stacks_compliant = True`, `max_portfolio_overlap <= 4`.
+  - `500`-draw Rademacher martingale placebo falsification cleared on `147`/`148` games (`margin r = +0.144543 / p = 0.04192`, `total r = +0.226998 / p = 0.00998`), `0.0` shortcut perturbation, and `8/8 PARSED_EVALUATED` `HonestEquationExecutor` ASTs (`zero_fabricated_bindings = True`).
+  - Monotone `147`-game OOS ablation gains over Wave 46: normalized CRPS `7.0063 -> 7.0047`, raw CRPS `6.9082 -> 6.9065`, Margin MAE `9.6442 -> 9.6410`, Total MAE `10.2970 -> 10.2730` (`-0.1386` vs `10.4116` close), Brier `0.21916 -> 0.21915`, ECE `0.07021 -> 0.07017`, `rliable_iqm = 0.733567`, `all_floors_held = True`.
+  - `388+24=412` zero-odds RLVR, `ruff check`, `mypy --strict`, `pytest`, and guardrail checks pass.
+- **What was not**: Live `>= W11` NFL week simulations stay held under `OperatorSimulationHoldError` unless explicitly authorized by Founder Tap `GSE_OPERATOR_APPROVED_SIM_WEEKS=11`, `real_money_stake_cleared = False`, `live_win_prob_sentiment_weight = 0.0`, `cross_sport_soccer_contract_nfl_weight = 0.0`, and `brain/mind.jsonl` remains untouched for the single-writer trainer.
+- **Next role must**: Keep clinical RUO, Twitter sentiment win-prob, European soccer contract, and shortcut-probe weights at `0.0`, preserve `_sanitize_display_name` before serializing any QB string, and run `python tests/verify_out_of_sample_calibration.py --enforce-gate` before modifying any Stage-2/3 spine weight.
+
 ## 2026-11-18 (2026-11-18 CT) -- Wave 47 Unified Reasoning -> 10k-World Simulation -> Derived Projections Spine & Zero-Waste Credit Alignment (`382+24=406` RLVR)
 
 - **What changed**:

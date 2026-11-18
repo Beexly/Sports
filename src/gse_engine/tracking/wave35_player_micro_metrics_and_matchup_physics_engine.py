@@ -261,6 +261,35 @@ def _load_raw_micro_tables(repo_root: Path | None = None) -> dict[str, Any]:
         ["game_id", "play_id", "coverage_responsibility", "targeted_defender"],
     )
 
+    for _ngs_df in (ngs_rush, ngs_pass, ngs_rec):
+        if not _ngs_df.empty and "team_abbr" in _ngs_df.columns:
+            _ngs_df["team_u"] = _ngs_df["team_abbr"].astype(str).map(_norm_team)
+
+    man_share_by_team: dict[str, float] = {}
+    if not part25.empty and "nflverse_game_id" in part25.columns:
+        p_cov = part25[
+            part25["defense_man_zone_type"].isin(["MAN_COVERAGE", "ZONE_COVERAGE"])
+        ]
+        if not p_cov.empty:
+            gids = p_cov["nflverse_game_id"].fillna("").astype(str).tolist()
+            poss_l = p_cov["possession_team"].fillna("").astype(str).tolist()
+            m_flags = (p_cov["defense_man_zone_type"] == "MAN_COVERAGE").tolist()
+            m_sums: dict[str, int] = {}
+            m_cnts: dict[str, int] = {}
+            for gid_s, pos_raw, is_m in zip(gids, poss_l, m_flags, strict=True):
+                parts = gid_s.split("_")
+                pos_u = _norm_team(pos_raw)
+                if len(parts) >= 4:
+                    aw = _norm_team(parts[2])
+                    hm = _norm_team(parts[3])
+                    dt_u = hm if pos_u == aw else aw
+                else:
+                    dt_u = pos_u
+                m_sums[dt_u] = m_sums.get(dt_u, 0) + (1 if is_m else 0)
+                m_cnts[dt_u] = m_cnts.get(dt_u, 0) + 1
+            for tm_k, c_tot in m_cnts.items():
+                man_share_by_team[tm_k] = round(float(m_sums[tm_k]) / float(c_tot), 4)
+
     data: dict[str, Any] = {
         "pbp26": pbp26,
         "pbp25": pbp25,
@@ -273,6 +302,7 @@ def _load_raw_micro_tables(repo_root: Path | None = None) -> dict[str, Any]:
         "adv_rec": adv_rec,
         "adv_def": adv_def,
         "part25": part25,
+        "man_share_by_team": man_share_by_team,
         "sumer_bdb26": sumer_bdb26,
         "tables_present": sum(
             1
@@ -515,34 +545,8 @@ def evaluate_causal_player_week_micro_features(
                 "lb_db_missed_tackle_pct": round(float(mtkl_g.mean()) if len(mtkl_g) else 0.09, 5),
             }
 
-    # Extract Man/Zone share per defense from pbp_participation_2025 + team coverage shells
-    man_share_by_team: dict[str, float] = {}
-    if not part25.empty and not pbp25.empty:
-        p25_d = pbp25[["game_id", "play_id", "defteam"]].drop_duplicates()
-        pm = part25.merge(
-            p25_d,
-            left_on=["nflverse_game_id", "possession_team"],
-            right_on=["game_id", "possession_team"],
-            how="left",
-        ) if "possession_team" in p25_d.columns else pd.DataFrame()
-        if pm.empty and "nflverse_game_id" in part25.columns:
-            # Map nflverse_game_id '2025_01_AWAY_HOME' teams minus possession_team -> def team
-            def _opp_from_gid(row: Any) -> str:
-                parts = str(row.get("nflverse_game_id") or "").split("_")
-                pos_u = _norm_team(str(row.get("possession_team") or ""))
-                if len(parts) >= 4:
-                    aw = _norm_team(parts[2])
-                    hm = _norm_team(parts[3])
-                    return hm if pos_u == aw else aw
-                return pos_u
-
-            p_cov = part25[
-                part25["defense_man_zone_type"].isin(["MAN_COVERAGE", "ZONE_COVERAGE"])
-            ].copy()
-            p_cov["defteam_u"] = p_cov.apply(_opp_from_gid, axis=1)
-            for tm, grp in p_cov.groupby("defteam_u"):
-                man_r = float((grp["defense_man_zone_type"] == "MAN_COVERAGE").mean())
-                man_share_by_team[str(tm)] = round(man_r, 4)
+    # Extract Man/Zone share precomputed once per raw table load
+    man_share_by_team: dict[str, float] = dict(raw.get("man_share_by_team", {}))
 
     out: dict[str, Any] = {
         "as_of_week": wk_cut,
@@ -587,7 +591,7 @@ def evaluate_rb_speed_elusiveness_vs_lb_gap_fill(
         if ngs_rush.empty:
             return 2.75, 0.0, float(causal["team_rb_brk_rate"].get(tm, 0.085))
         sub = ngs_rush[
-            (ngs_rush["team_abbr"].astype(str).map(_norm_team) == tm)
+            (ngs_rush["team_u"] == tm)
             & (
                 (
                     (ngs_rush["season"] == 2026)
@@ -698,7 +702,7 @@ def evaluate_qb_air_yards_and_catchable_accuracy(
         cpoe_v = 0.0
         if not ngs_pass.empty:
             sub = ngs_pass[
-                (ngs_pass["team_abbr"].astype(str).map(_norm_team) == tm)
+                (ngs_pass["team_u"] == tm)
                 & (
                     (
                         (ngs_pass["season"] == 2026)
@@ -770,7 +774,7 @@ def evaluate_wr_separation_vs_db_coverage(
         yacoe = 0.0
         if not ngs_rec.empty:
             sub = ngs_rec[
-                (ngs_rec["team_abbr"].astype(str).map(_norm_team) == off_tm)
+                (ngs_rec["team_u"] == off_tm)
                 & (
                     (
                         (ngs_rec["season"] == 2026)

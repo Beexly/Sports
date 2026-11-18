@@ -489,6 +489,41 @@ def _load_w46_raw_vaults(root: Path) -> dict[str, Any]:
             "xfp": float(grp["xfp_dk"].mean()),
         }
 
+    wk_arr26 = pw26["week"].to_numpy(dtype=np.int64)
+    pid_list26 = pw26["player_id"].astype(str).tolist()
+    pos_list26 = pw26["position"].astype(str).tolist()
+    team_list26 = pw26["team_u"].astype(str).tolist()
+    opp_list26 = pw26["opp_u"].astype(str).tolist()
+    num_cols26: dict[str, np.ndarray] = {
+        c: pw26[c].fillna(0.0).to_numpy(dtype=np.float64)
+        for c in (
+            "passing_yards",
+            "attempts",
+            "rushing_yards",
+            "carries",
+            "receiving_yards",
+            "targets",
+            "receptions",
+            "rush_rec_yds",
+            "opps",
+            "any_td",
+            "pass_td2",
+            "dk_pts",
+            "xfp_dk",
+        )
+    }
+    idx_by_pid26: dict[str, list[int]] = {}
+    for row_i, pid_s in enumerate(pid_list26):
+        idx_by_pid26.setdefault(pid_s, []).append(row_i)
+    p26_arrays: dict[str, dict[str, np.ndarray]] = {}
+    for pid_s, idxs in idx_by_pid26.items():
+        idxs_sorted = sorted(idxs, key=lambda i: int(wk_arr26[i]))
+        arr_idx = np.asarray(idxs_sorted, dtype=np.int64)
+        p_rec: dict[str, np.ndarray] = {"week": wk_arr26[arr_idx]}
+        for col_k, arr_v in num_cols26.items():
+            p_rec[col_k] = arr_v[arr_idx]
+        p26_arrays[pid_s] = p_rec
+
     bundle: dict[str, Any] = {
         "clean_checkout_fallback": False,
         "d26": d26,
@@ -498,6 +533,13 @@ def _load_w46_raw_vaults(root: Path) -> dict[str, Any]:
         "league_std": league_std,
         "pw26": pw26,
         "b25": b25,
+        "wk_arr26": wk_arr26,
+        "pid_list26": pid_list26,
+        "pos_list26": pos_list26,
+        "team_list26": team_list26,
+        "opp_list26": opp_list26,
+        "num_cols26": num_cols26,
+        "p26_arrays": p26_arrays,
     }
     _RAW46_CACHE[ck] = bundle
     return bundle
@@ -774,6 +816,18 @@ def evaluate_w46_walk_forward_7props_and_stacked_portfolio_dfs(
 
     pw26: pd.DataFrame = raw["pw26"]
     b25: dict[str, dict[str, float]] = raw["b25"]
+    wk_arr26: np.ndarray = raw["wk_arr26"]
+    pid_list26: list[str] = raw["pid_list26"]
+    pos_list26: list[str] = raw["pos_list26"]
+    team_list26: list[str] = raw["team_list26"]
+    opp_list26: list[str] = raw["opp_list26"]
+    num_cols26: dict[str, np.ndarray] = raw["num_cols26"]
+    p26_arrays: dict[str, dict[str, np.ndarray]] = raw["p26_arrays"]
+    n_pw26 = len(pid_list26)
+    hist_by_wk = {wk: pw26[pw26["week"] < wk] for wk in range(2, 11)}
+    opp_wks_by_wk = {
+        wk: hist_by_wk[wk].groupby("opp_u")["week"].nunique().to_dict() for wk in range(2, 11)
+    }
 
     props_out: dict[str, dict[str, Any]] = {}
     tot_g_hits = 0
@@ -791,13 +845,11 @@ def evaluate_w46_walk_forward_7props_and_stacked_portfolio_dfs(
         err_n: list[float] = []
         err_g: list[float] = []
         g_hits, g_n, t1_hits, t1_n = 0, 0, 0, 0
+        pos_set = set(pos_l)
+        s_arr_all = num_cols26[scol]
+        v_arr_all = num_cols26[vcol]
         for wk in range(2, 11):
-            hist = pw26[pw26["week"] < wk]
-            cur = pw26[
-                (pw26["week"] == wk)
-                & (pw26["position"].isin(pos_l))
-                & (pw26[vcol].fillna(0.0) >= min_v)
-            ]
+            hist = hist_by_wk[wk]
             opp_g = (
                 hist[hist["position"].isin(pos_l)]
                 .groupby(["opp_u", "week"])[scol]
@@ -805,20 +857,28 @@ def evaluate_w46_walk_forward_7props_and_stacked_portfolio_dfs(
                 .groupby("opp_u")
                 .mean()
             )
-            opp_wks = hist.groupby("opp_u")["week"].nunique().to_dict()
+            opp_wks = opp_wks_by_wk[wk]
             lg_avg = float(opp_g.mean()) if len(opp_g) else 1.0
-            ph_map = {str(pid): grp.sort_values("week") for pid, grp in hist.groupby("player_id")}
-            for _, row in cur.iterrows():
-                pid = str(row["player_id"])
-                ph = ph_map.get(pid)
-                if ph is None or len(ph) == 0:
+            for idx_r in range(n_pw26):
+                if (
+                    wk_arr26[idx_r] != wk
+                    or pos_list26[idx_r] not in pos_set
+                    or v_arr_all[idx_r] < min_v
+                ):
                     continue
-                actual = float(row[scol] or 0.0)
+                pid = pid_list26[idx_r]
+                p_rec = p26_arrays.get(pid)
+                if p_rec is None:
+                    continue
+                cut = int(np.searchsorted(p_rec["week"], wk, side="left"))
+                if cut == 0:
+                    continue
+                actual = float(s_arr_all[idx_r])
                 pm = float(b25.get(pid, {}).get(mkt, fb_p))
-                vals = ph[scol].fillna(0.0).to_numpy(dtype=float)
-                vols = ph[vcol].fillna(0.0).to_numpy(dtype=float)
+                vals = p_rec[scol][:cut]
+                vols = p_rec[vcol][:cut]
                 naive = float(np.mean(vals))
-                nw = len(vals)
+                nw = cut
                 cap = max(12.0 if "yds" in mkt else 2.2, 0.55 * max(pm, naive, 10.0))
                 clipped_vals = np.clip(vals, pm - cap, pm + cap)
                 w = np.exp(0.28 * np.arange(nw))
@@ -826,7 +886,7 @@ def evaluate_w46_walk_forward_7props_and_stacked_portfolio_dfs(
                 ewma_vol = float(np.sum(w * vols) / np.sum(w))
                 vol_tr = _clip(ewma_vol / max(1.0, float(np.mean(vols))), 0.88, 1.14)
                 eb = (nw / (nw + 3.0)) * ewma_v + (3.0 / (nw + 3.0)) * pm
-                otm = str(row["opp_u"])
+                otm = opp_list26[idx_r]
                 om = 1.0
                 if otm in opp_g and lg_avg > 1e-6:
                     onw = float(opp_wks.get(otm, 1))
@@ -875,13 +935,11 @@ def evaluate_w46_walk_forward_7props_and_stacked_portfolio_dfs(
     ):
         bn: list[float] = []
         bg: list[float] = []
+        p_set = set(p_l)
+        b_arr_all = num_cols26[bcol]
+        v_arr_all = num_cols26[vcol]
         for wk in range(2, 11):
-            hist = pw26[pw26["week"] < wk]
-            cur = pw26[
-                (pw26["week"] == wk)
-                & (pw26["position"].isin(p_l))
-                & (pw26[vcol].fillna(0.0) >= mv)
-            ]
+            hist = hist_by_wk[wk]
             opp_td = (
                 hist[hist["position"].isin(p_l)]
                 .groupby(["opp_u", "week"])[bcol]
@@ -890,18 +948,26 @@ def evaluate_w46_walk_forward_7props_and_stacked_portfolio_dfs(
                 .mean()
             )
             lg_td = float(opp_td.mean()) if len(opp_td) else 1.0
-            ph_map = {str(pid): grp.sort_values("week") for pid, grp in hist.groupby("player_id")}
-            for _, row in cur.iterrows():
-                pid = str(row["player_id"])
-                ph = ph_map.get(pid)
-                if ph is None or len(ph) == 0:
+            for idx_r in range(n_pw26):
+                if (
+                    wk_arr26[idx_r] != wk
+                    or pos_list26[idx_r] not in p_set
+                    or v_arr_all[idx_r] < mv
+                ):
                     continue
-                y = float(row[bcol])
+                pid = pid_list26[idx_r]
+                p_rec = p26_arrays.get(pid)
+                if p_rec is None:
+                    continue
+                cut = int(np.searchsorted(p_rec["week"], wk, side="left"))
+                if cut == 0:
+                    continue
+                y = float(b_arr_all[idx_r])
                 pr = float(b25.get(pid, {}).get(bcol, fb_val))
-                pn = float(np.mean(ph[bcol].to_numpy(dtype=float)))
-                nw = len(ph)
+                pn = float(np.mean(p_rec[bcol][:cut]))
+                nw = cut
                 eb = (nw / (nw + 5.0)) * pn + (5.0 / (nw + 5.0)) * pr
-                otm = str(row["opp_u"])
+                otm = opp_list26[idx_r]
                 ft = 1.0 + 0.25 * (float(opp_td.get(otm, lg_td)) / max(0.3, lg_td) - 1.0)
                 pg = _clip(eb * _clip(ft, 0.85, 1.18), 0.04, 0.78)
                 bn.append((y - _clip(pn, 0.04, 0.78)) ** 2)
@@ -923,11 +989,10 @@ def evaluate_w46_walk_forward_7props_and_stacked_portfolio_dfs(
     mae_dk_gse: list[float] = []
     all_stacks_ok = True
     max_sal_all = 0
+    dk_all = num_cols26["dk_pts"]
+    dfs_pos_set = {"QB", "RB", "WR", "TE"}
     for wk in range(2, 11):
-        hist = pw26[pw26["week"] < wk]
-        cur = pw26[
-            (pw26["week"] == wk) & (pw26["position"].isin(["QB", "RB", "WR", "TE"]))
-        ].copy()
+        hist = hist_by_wk[wk]
         opp_a = (
             hist.groupby(["opp_u", "position", "week"])["dk_pts"]
             .sum()
@@ -942,22 +1007,26 @@ def evaluate_w46_walk_forward_7props_and_stacked_portfolio_dfs(
             .mean()
             .to_dict()
         )
-        ph_map = {str(pid): grp.sort_values("week") for pid, grp in hist.groupby("player_id")}
         rows: list[dict[str, Any]] = []
-        for _, r in cur.iterrows():
-            pid = str(r["player_id"])
-            pos = str(r["position"])
-            otm = str(r["opp_u"])
-            ttm = str(r["team_u"])
-            ph = ph_map.get(pid)
-            if ph is None or len(ph) == 0:
+        for idx_r in range(n_pw26):
+            if wk_arr26[idx_r] != wk or pos_list26[idx_r] not in dfs_pos_set:
+                continue
+            pid = pid_list26[idx_r]
+            pos = pos_list26[idx_r]
+            otm = opp_list26[idx_r]
+            ttm = team_list26[idx_r]
+            p_rec = p26_arrays.get(pid)
+            if p_rec is None:
+                continue
+            cut = int(np.searchsorted(p_rec["week"], wk, side="left"))
+            if cut == 0:
                 continue
             bd = b25.get(pid, {})
             base_dk = float(bd.get("dk", {"QB": 14.5, "RB": 8.5, "WR": 8.0, "TE": 6.2}[pos]))
             base_xfp = float(bd.get("xfp", base_dk))
-            dk_v = ph["dk_pts"].to_numpy(dtype=float)
-            xfp_v = ph["xfp_dk"].to_numpy(dtype=float)
-            opp_v = ph["opps"].to_numpy(dtype=float)
+            dk_v = p_rec["dk_pts"][:cut]
+            xfp_v = p_rec["xfp_dk"][:cut]
+            opp_v = p_rec["opps"][:cut]
             raw_m = float(np.mean(dk_v))
             sticky = 0.75 * base_dk + 0.25 * raw_m
             mult_s = {"QB": 340.0, "RB": 405.0, "WR": 400.0, "TE": 375.0}[pos]
@@ -966,7 +1035,7 @@ def evaluate_w46_walk_forward_7props_and_stacked_portfolio_dfs(
                 round(_clip(floor_s + mult_s * max(0.0, sticky - 4.0), floor_s, 9200) / 100.0)
                 * 100
             )
-            nw = len(dk_v)
+            nw = cut
             cap_d = max(5.0, 0.60 * max(base_dk, raw_m))
             dk_clip = np.clip(dk_v, base_dk - cap_d, base_dk + cap_d)
             w = np.exp(0.35 * np.arange(nw))
@@ -984,7 +1053,7 @@ def evaluate_w46_walk_forward_7props_and_stacked_portfolio_dfs(
             gse_p = eb_p * opp_m
             std_v = float(np.std(dk_v)) if nw > 1 else 0.30 * gse_p
             gpp_u = gse_p + 0.25 * std_v
-            act = float(r["dk_pts"])
+            act = float(dk_all[idx_r])
             mae_dk_raw.append(abs(act - raw_m))
             mae_dk_gse.append(abs(act - gse_p))
             rows.append(

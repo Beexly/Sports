@@ -209,6 +209,9 @@ from gse_engine.tracking.wave45_skill_wopr_snap_continuity_props_and_milp_dfs_nf
 from gse_engine.tracking.wave46_causal_picks_combo_props_and_stacked_portfolio_dfs_nfl_engine import (  # noqa: E501
     evaluate_wave46_memtx_picks_7props_and_stacked_dfs_suite,
 )
+from gse_engine.tracking.wave48_stage0_weather_sentiment_trade_and_showdown_engine import (  # noqa: E501
+    evaluate_wave48_stage0_weather_sentiment_and_showdown_suite,
+)
 from gse_engine.workflows.unified_reasoning_simulation_projection_spine import (  # noqa: E501
     evaluate_unified_reasoning_simulation_projection_spine_suite,
 )
@@ -2923,6 +2926,16 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
                 repo_root=REPO_ROOT,
             )
         ),
+        "wave48_stage0_weather_sentiment_showdown_pillar": (
+            wave32_res.get("wave48_stage0_weather_sentiment_and_showdown_matchups")
+            or evaluate_wave48_stage0_weather_sentiment_and_showdown_suite(
+                away_team=away_u,
+                home_team=home_u,
+                as_of_week=int(week),
+                is_indoor=bool(is_indoor),
+                repo_root=REPO_ROOT,
+            )
+        ),
         "revenue_orchestration_4plane_pillar": (
             evaluate_revenue_and_4plane_orchestration_readiness_suite()
         ),
@@ -3617,6 +3630,21 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         else:
             w46_wired = True
 
+    w48_blk = priors.get("wave48_stage0_weather_sentiment_showdown_pillar")
+    w48_wired = False
+    if w48_blk is not None:
+        if (
+            not isinstance(w48_blk, Mapping)
+            or w48_blk.get("wired") is not True
+            or w48_blk.get("real_money_stake_cleared") is not False
+            or float(w48_blk.get("clinical_ruo_sports_weight", 1.0)) != 0.0
+            or float(w48_blk.get("live_win_prob_sentiment_weight", 1.0)) != 0.0
+            or float(w48_blk.get("cross_sport_soccer_contract_nfl_weight", 1.0)) != 0.0
+        ):
+            missing_or_unwired.append("wave48_stage0_weather_sentiment_showdown_pillar")
+        else:
+            w48_wired = True
+
     rev_blk = priors.get("revenue_orchestration_4plane_pillar")
     rev_wired = False
     if rev_blk is not None:
@@ -3722,6 +3750,7 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         "wave44_dfl_rim_kicker_parr_wired": w44_wired,
         "wave45_skill_harmony_props_dfs_wired": w45_wired,
         "wave46_memtx_picks_7props_stacked_dfs_wired": w46_wired,
+        "wave48_stage0_weather_sentiment_showdown_wired": w48_wired,
         "revenue_orchestration_4plane_wired": rev_wired,
         "executive_credit_zero_waste_wired": cred_wired,
         "unified_reasoning_sim_projection_spine_wired": sp47_wired,

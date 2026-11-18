@@ -95,6 +95,10 @@ from gse_engine.tracking.wave46_causal_picks_combo_props_and_stacked_portfolio_d
     evaluate_wave46_memtx_picks_7props_and_stacked_dfs_suite,
     run_wave46_66paper_picks_7props_and_stacked_dfs_benchmark,
 )
+from gse_engine.tracking.wave48_stage0_weather_sentiment_trade_and_showdown_engine import (  # noqa: E501
+    evaluate_wave48_stage0_weather_sentiment_and_showdown_suite,
+    run_wave48_stage0_weather_showdown_benchmark,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -1112,6 +1116,14 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         repo_root=root,
     )
     w46_d = w46["stage2_deltas"]
+    w48 = evaluate_wave48_stage0_weather_sentiment_and_showdown_suite(
+        away_team=away_u,
+        home_team=home_u,
+        as_of_week=int(as_of_week),
+        is_indoor=bool(is_indoor),
+        repo_root=root,
+    )
+    w48_d = w48["stage2_deltas"]
 
     # 5. GSI ADR-0003 Rule-In-Only Pose2Sim 3D Skeletal Hazard Coupling
     k14_prior = compute_k14_translational_tissue_hazard_prior(
@@ -1145,7 +1157,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.03 * float(w43_d["away_epa_delta"])
             + 0.03 * float(w44_d["away_epa_delta"])
             + 0.03 * float(w45_d["away_epa_delta"])
-            + 0.03 * float(w46_d["away_epa_delta"]),
+            + 0.03 * float(w46_d["away_epa_delta"])
+            + 0.03 * float(w48_d["away_epa_delta"]),
             -0.006,
             0.006,
         ),
@@ -1170,7 +1183,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.03 * float(w43_d["home_epa_delta"])
             + 0.03 * float(w44_d["home_epa_delta"])
             + 0.03 * float(w45_d["home_epa_delta"])
-            + 0.03 * float(w46_d["home_epa_delta"]),
+            + 0.03 * float(w46_d["home_epa_delta"])
+            + 0.03 * float(w48_d["home_epa_delta"]),
             -0.006,
             0.006,
         ),
@@ -1275,7 +1289,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.03 * float(w43_d["away_sack_prob_delta"])
             + 0.03 * float(w44_d["away_sack_prob_delta"])
             + 0.03 * float(w45_d["away_sack_prob_delta"])
-            + 0.03 * float(w46_d["away_sack_prob_delta"]),
+            + 0.03 * float(w46_d["away_sack_prob_delta"])
+            + 0.03 * float(w48_d["away_sack_prob_delta"]),
             -0.004,
             0.004,
         ),
@@ -1296,7 +1311,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.03 * float(w43_d["home_sack_prob_delta"])
             + 0.03 * float(w44_d["home_sack_prob_delta"])
             + 0.03 * float(w45_d["home_sack_prob_delta"])
-            + 0.03 * float(w46_d["home_sack_prob_delta"]),
+            + 0.03 * float(w46_d["home_sack_prob_delta"])
+            + 0.03 * float(w48_d["home_sack_prob_delta"]),
             -0.004,
             0.004,
         ),
@@ -1355,7 +1371,7 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         "omni_vaults_loaded": int(omni["omni_vaults_loaded"]),
         "omni_empirical_rows_indexed": int(omni["omni_empirical_rows_indexed"]),
         "waves_unified_span": (
-            "Waves_20_to_46_plus_18Sport_AlphaFold_and_AlphaXiv_203Paper_Picks_7Props_StackedDFS"
+            "Waves_20_to_48_plus_18Sport_AlphaFold_203Paper_32TeamShowdown_and_Speedup"
         ),
         "wave34_holistic_biometrics": w34,
         "wave35_gsi_and_micro_matchups": w35,
@@ -1370,6 +1386,7 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         "wave44_dfl_rim_kicker_and_integrity_matchups": w44,
         "wave45_skill_harmony_props_and_dfs_matchups": w45,
         "wave46_memtx_picks_7props_and_stacked_dfs_matchups": w46,
+        "wave48_stage0_weather_sentiment_and_showdown_matchups": w48,
         "ratchet_promoted": bool(ratchet["promote"]),
         "live_weight_multiplier": live_mult,
         "fwl_orthogonality_max_err": orth_err,
@@ -2130,6 +2147,9 @@ def run_wave32_historical_nfl_and_all_sports_simulation_benchmark(
             run_wave46_66paper_picks_7props_and_stacked_dfs_benchmark(
                 root, write_artifact=write_artifact
             )
+        ),
+        "wave48_stage0_weather_showdown_benchmark": run_wave48_stage0_weather_showdown_benchmark(
+            root, write_artifact=write_artifact
         ),
     }
     blob = json.dumps(summary, indent=2, ensure_ascii=True)

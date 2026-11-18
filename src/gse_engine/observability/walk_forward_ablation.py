@@ -69,6 +69,10 @@ from gse_engine.tracking.wave46_causal_picks_combo_props_and_stacked_portfolio_d
     evaluate_causal_w46_game_total_clock_drain_and_1read_shift,
     evaluate_wave46_memtx_picks_7props_and_stacked_dfs_suite,
 )
+from gse_engine.tracking.wave48_stage0_weather_sentiment_trade_and_showdown_engine import (  # noqa: E501
+    evaluate_causal_w48_game_total_obv_stop_divisional_and_weather_shift,
+    evaluate_wave48_stage0_weather_sentiment_and_showdown_suite,
+)
 
 _TEAM_ALIAS: dict[str, str] = {"LA": "LAR", "WSH": "WAS", "JAC": "JAX"}
 
@@ -1001,8 +1005,16 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 repo_root=repo_root,
             )
             w46_sig = float(w46_g["w46_close_residual_signal"])
+            w48_g = evaluate_wave48_stage0_weather_sentiment_and_showdown_suite(
+                away_team=g.away_team,
+                home_team=g.home_team,
+                as_of_week=int(wk),
+                is_indoor=bool(g.is_indoor),
+                repo_root=repo_root,
+            )
+            w48_sig = float(w48_g["w48_close_residual_signal"])
 
-            # Layer-1 market foundation + Wave 32-46 FWL-damped orthogonal shift
+            # Layer-1 market foundation + Wave 32-48 FWL-damped orthogonal shift
             epa_edge_pts = (
                 (hm_shrunk_net - aw_shrunk_net) * 18.0
                 + 0.10 * (hm_aux_sc - aw_aux_sc) * 14.0
@@ -1021,6 +1033,7 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 + 0.16 * w44_sig
                 + 0.046 * w45_sig
                 + 0.22 * w46_sig
+                + 0.08 * w48_sig
             )
             mkt_implied_edge = g.expected_home_margin_mkt
             orth_resid = epa_edge_pts - 0.55 * mkt_implied_edge
@@ -1068,6 +1081,13 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 is_indoor=bool(g.is_indoor),
                 repo_root=repo_root,
             )
+            w48_tot = evaluate_causal_w48_game_total_obv_stop_divisional_and_weather_shift(
+                away_team=g.away_team,
+                home_team=g.home_team,
+                as_of_week=int(wk),
+                is_indoor=bool(g.is_indoor),
+                repo_root=repo_root,
+            )
             tot_shift = max(
                 -1.8,
                 min(
@@ -1077,7 +1097,8 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                     + float(w43_tot["total_shift_pts"])
                     + float(w44_tot["total_shift_pts"])
                     + float(w45_tot["total_shift_pts"])
-                    + float(w46_tot["total_shift_pts"]),
+                    + float(w46_tot["total_shift_pts"])
+                    + float(w48_tot["total_shift_pts"]),
                 ),
             )
 

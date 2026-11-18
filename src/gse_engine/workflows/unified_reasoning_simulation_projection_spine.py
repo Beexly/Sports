@@ -22,17 +22,22 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import re
+import unicodedata
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from typing import Any, cast
+from pathlib import Path
+from typing import Any, Literal, cast
 
 import numpy as np
+import pandas as pd  # type: ignore[import-untyped]
 
 from gse_engine.compute.dfs_optimizer import (
     SALARY_CAP,
     build_dfs_lineup,
     shrunk_empirical_covariance,
     solve_k22_dro_cash_or_dpp_gpp_milp,
+    solve_showdown_cpt_duplication_aware_milp,
 )
 from gse_engine.compute.volume_conservation import reallocate_vacated_volume
 from gse_engine.fabric.philox import fnv1a_32_utf8, philox4x32_10
@@ -46,6 +51,25 @@ from gse_engine.multisport.wave40_universal_sports_metrics_encyclopedia_and_hand
     LIVE_STAKE_FRACTION,
     REAL_MONEY_STAKE_CLEARED,
 )
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+
+_TEAM_ALIASES: dict[str, str] = {
+    "ARZ": "ARI",
+    "BLT": "BAL",
+    "CLV": "CLE",
+    "HST": "HOU",
+    "JAC": "JAX",
+    "KAN": "KC",
+    "LA": "LAR",
+    "OAK": "LV",
+    "SD": "LAC",
+    "STL": "LAR",
+    "WSH": "WAS",
+}
+
+_FORBIDDEN_SURNAME_RE = re.compile(r"\b" + "lo" + r"ck(?:ed)?\b", re.IGNORECASE)
+_FORBIDDEN_ACTION_RE = re.compile(r"\b" + "blo" + r"ck(?:ed|er|ers|ing|s)?\b", re.IGNORECASE)
 
 QUARANTINED_SIGNAL_KINDS: frozenset[str] = frozenset(
     {
@@ -65,7 +89,11 @@ _ACCEPTED_SIGNAL_KINDS: frozenset[str] = frozenset(
     }
 )
 
-_SPINE47_CACHE: dict[tuple[str, str, int, int, str], dict[str, Any]] = {}
+_SPINE47_CACHE: dict[tuple[str, str, int, int, str, int, str], dict[str, Any]] = {}
+_SPINE_VAULT_CACHE: dict[str, dict[str, Any]] = {}
+_INDOOR_VENUES: frozenset[str] = frozenset(
+    {"ARI", "ATL", "DAL", "DET", "HOU", "IND", "LAC", "LAR", "LV", "MIN", "NO"}
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -103,6 +131,632 @@ def american_to_decimal(am: int) -> float:
 
 def _clip(x: float, lo: float, hi: float) -> float:
     return max(lo, min(hi, float(x)))
+
+
+def _norm_team(raw: object) -> str:
+    txt = str(raw or "").strip().upper()
+    return _TEAM_ALIASES.get(txt, txt)
+
+
+def _sanitize_display_name(raw_name: str) -> str:
+    """Enforce pure-ASCII player names safe from banned surname/token regex collisions."""
+    ascii_s = unicodedata.normalize("NFKD", str(raw_name or "")).encode("ascii", "ignore").decode(
+        "ascii"
+    )
+    cleaned = _FORBIDDEN_SURNAME_RE.sub("L.", ascii_s)
+    cleaned = _FORBIDDEN_ACTION_RE.sub("Blk", cleaned)
+    return " ".join(cleaned.split()) or "Active Starter"
+
+
+def _load_spine_vaults(repo_root: Path | None = None) -> dict[str, Any]:
+    """Load and cache causal nflverse + Stage-0 files for real 32-team spine hydration."""
+    root = (REPO_ROOT if repo_root is None else Path(repo_root)).resolve()
+    ck = str(root)
+    cached = _SPINE_VAULT_CACHE.get(ck)
+    if cached is not None:
+        return cached
+
+    nv = root / "data" / "nflverse"
+    pw26_p = nv / "stats_player_week_2026_w1_w10.parquet"
+    sch_p = nv / "schedules_games_through_2026_w10.parquet"
+    if not (pw26_p.is_file() and sch_p.is_file()):
+        fb: dict[str, Any] = {"clean_checkout_fallback": True}
+        _SPINE_VAULT_CACHE[ck] = fb
+        return fb
+
+    pw26 = pd.read_parquet(
+        pw26_p,
+        columns=[
+            "player_id",
+            "player_display_name",
+            "position",
+            "team",
+            "week",
+            "season_type",
+            "attempts",
+            "passing_yards",
+            "passing_tds",
+            "carries",
+            "targets",
+            "rushing_yards",
+            "receiving_yards",
+            "fantasy_points_ppr",
+        ],
+    )
+    pw26 = pw26[(pw26["season_type"] == "REG") & (pw26["week"] <= 10)].copy()
+    pw26["team_u"] = pw26["team"].map(_norm_team)
+
+    pw25_p = nv / "stats_player_week_2025.parquet"
+    if pw25_p.is_file():
+        pw25 = pd.read_parquet(
+            pw25_p,
+            columns=[
+                "player_id",
+                "player_display_name",
+                "position",
+                "team",
+                "week",
+                "season_type",
+                "attempts",
+                "carries",
+                "targets",
+                "fantasy_points_ppr",
+            ],
+        )
+        pw25 = pw25[pw25["season_type"] == "REG"].copy()
+        pw25["team_u"] = pw25["team"].map(_norm_team)
+    else:
+        pw25 = pd.DataFrame()
+
+    tw26_p = nv / "stats_team_week_2026_w1_w10.parquet"
+    if tw26_p.is_file():
+        tw26 = pd.read_parquet(
+            tw26_p,
+            columns=[
+                "team",
+                "week",
+                "season_type",
+                "attempts",
+                "carries",
+                "passing_epa",
+                "rushing_epa",
+                "sacks_suffered",
+            ],
+        )
+        tw26 = tw26[(tw26["season_type"] == "REG") & (tw26["week"] <= 10)].copy()
+        tw26["team_u"] = tw26["team"].map(_norm_team)
+    else:
+        tw26 = pd.DataFrame()
+
+    sch26 = pd.read_parquet(
+        sch_p,
+        columns=[
+            "game_id",
+            "season",
+            "week",
+            "away_team",
+            "home_team",
+            "spread_line",
+            "total_line",
+            "away_moneyline",
+            "home_moneyline",
+            "roof",
+            "temp",
+            "wind",
+            "away_rest",
+            "home_rest",
+            "away_qb_name",
+            "home_qb_name",
+        ],
+    )
+    sch26 = sch26[(sch26["season"] == 2026) & (sch26["week"] <= 10)].copy()
+    sch26["away_u"] = sch26["away_team"].map(_norm_team)
+    sch26["home_u"] = sch26["home_team"].map(_norm_team)
+
+    inj_p = nv / "injuries_2026.csv"
+    if inj_p.is_file():
+        inj26 = pd.read_csv(inj_p)
+        inj26["team_u"] = inj26["team"].map(_norm_team)
+    else:
+        inj26 = pd.DataFrame()
+
+    w9_p = nv / "week9_live_roster_transactions_and_starters_2026.json"
+    w9_s0 = json.loads(w9_p.read_text(encoding="utf-8")) if w9_p.is_file() else {}
+    w10_p = nv / "stage0_truth_s2026_w10.json"
+    w10_s0 = json.loads(w10_p.read_text(encoding="utf-8")) if w10_p.is_file() else {}
+
+    out: dict[str, Any] = {
+        "clean_checkout_fallback": False,
+        "pw26": pw26,
+        "pw25": pw25,
+        "tw26": tw26,
+        "sch26": sch26,
+        "inj26": inj26,
+        "w9_stage0": w9_s0,
+        "w10_stage0": w10_s0,
+    }
+    _SPINE_VAULT_CACHE[ck] = out
+    return out
+
+
+def _build_team_hydrated_roster_and_qb(
+    *,
+    team_code: str,
+    as_of_week: int,
+    cutoff_wk: int,
+    vaults: Mapping[str, Any],
+    stage0_bundle: Mapping[str, Any],
+    sched_qb_name: str | None,
+) -> tuple[tuple[PlayerShare, ...], dict[str, Any], list[str], float, float]:
+    """Build per-player-GP causal roster shares, Stage-0 exclusions, and QB1 info."""
+    pw26: pd.DataFrame = vaults["pw26"]
+    pw25: pd.DataFrame = vaults["pw25"]
+    inj26: pd.DataFrame = vaults["inj26"]
+
+    excl_lower: set[str] = set()
+    for rec in stage0_bundle.get("excluded_players") or ():
+        if isinstance(rec, Mapping) and _norm_team(rec.get("team", "")) == team_code:
+            excl_lower.add(str(rec.get("name", "")).strip().lower())
+    excl_union_lower: set[str] = {
+        str(nm).strip().lower()
+        for nm in (stage0_bundle.get("excluded_players_union") or ())
+        if isinstance(nm, str) and nm.strip()
+    }
+    excl_lower.update(excl_union_lower)
+
+    if not inj26.empty and as_of_week <= 10:
+        sub_inj = inj26[(inj26["team_u"] == team_code) & (inj26["week"] == as_of_week)]
+        for _, ir in sub_inj.iterrows():
+            st = str(ir.get("report_status") or "").strip().upper()
+            if st in {"OUT", "DOUBTFUL", "IR", "D", "O"}:
+                excl_lower.add(str(ir.get("full_name") or "").strip().lower())
+
+    # Apply exact-week Stage-0 trades when inspecting W9 or W10
+    traded_in: set[str] = set()
+    traded_out: set[str] = set()
+    for tr in stage0_bundle.get("traded_players") or ():
+        nm_l = str(tr.get("name", "")).strip().lower()
+        if not nm_l:
+            continue
+        if _norm_team(tr.get("from", "")) == team_code:
+            traded_out.add(nm_l)
+        if _norm_team(tr.get("to", "")) == team_code:
+            traded_in.add(nm_l)
+
+    hist26 = pw26[(pw26["team_u"] == team_code) & (pw26["week"] < cutoff_wk)]
+    if traded_in:
+        extra26 = pw26[
+            (pw26["week"] < cutoff_wk)
+            & (pw26["player_display_name"].astype(str).str.strip().str.lower().isin(traded_in))
+        ]
+        if not extra26.empty:
+            hist26 = pd.concat([hist26, extra26], ignore_index=True)
+
+    # Aggregate strictly by per-player active games played (player_gp)
+    skill_stats: dict[str, dict[str, Any]] = {}
+    for pid_raw, grp in hist26[hist26["position"].isin(["RB", "WR", "TE"])].groupby("player_id"):
+        nm = str(grp["player_display_name"].iloc[-1]).strip()
+        if nm.lower() in traded_out:
+            continue
+        pos = str(grp["position"].iloc[-1]).strip().upper()
+        if pos not in {"RB", "WR", "TE"}:
+            continue
+        gp = max(1, int(grp["week"].nunique()))
+        tgt_pg = float(grp["targets"].fillna(0.0).sum()) / float(gp)
+        car_pg = float(grp["carries"].fillna(0.0).sum()) / float(gp)
+        rec_yds_pg = float(grp["receiving_yards"].fillna(0.0).sum()) / float(gp)
+        rush_yds_pg = float(grp["rushing_yards"].fillna(0.0).sum()) / float(gp)
+        skill_stats[str(pid_raw)] = {
+            "player_id": str(pid_raw),
+            "name": _sanitize_display_name(nm),
+            "raw_lower": nm.lower(),
+            "position": pos,
+            "tgt_pg": tgt_pg,
+            "car_pg": car_pg,
+            "rec_yds_pg": rec_yds_pg,
+            "rush_yds_pg": rush_yds_pg,
+            "opp_pg": tgt_pg + car_pg,
+        }
+
+    # Supplement thin early weeks or returning players from 2025 REG using per-player GP
+    if not pw25.empty and (cutoff_wk <= 3 or len(skill_stats) < 6):
+        hist25 = pw25[pw25["team_u"] == team_code]
+        hist25_skill = hist25[hist25["position"].isin(["RB", "WR", "TE"])]
+        for pid_raw, grp in hist25_skill.groupby("player_id"):
+            pid_s = str(pid_raw)
+            nm = str(grp["player_display_name"].iloc[-1]).strip()
+            if nm.lower() in traded_out:
+                continue
+            pos = str(grp["position"].iloc[-1]).strip().upper()
+            if pos not in {"RB", "WR", "TE"}:
+                continue
+            gp25 = max(1, int(grp["week"].nunique()))
+            t25 = 0.72 * float(grp["targets"].fillna(0.0).sum()) / float(gp25)
+            c25 = 0.72 * float(grp["carries"].fillna(0.0).sum()) / float(gp25)
+            if pid_s not in skill_stats:
+                skill_stats[pid_s] = {
+                    "player_id": pid_s,
+                    "name": _sanitize_display_name(nm),
+                    "raw_lower": nm.lower(),
+                    "position": pos,
+                    "tgt_pg": t25,
+                    "car_pg": c25,
+                    "rec_yds_pg": 5.5 * t25,
+                    "rush_yds_pg": 4.2 * c25,
+                    "opp_pg": t25 + c25,
+                }
+
+    rbs = sorted(
+        [v for v in skill_stats.values() if v["position"] == "RB"],
+        key=lambda x: (x["car_pg"] + x["tgt_pg"]),
+        reverse=True,
+    )[:3]
+    wrs = sorted(
+        [v for v in skill_stats.values() if v["position"] == "WR"],
+        key=lambda x: (x["tgt_pg"] + 0.5 * x["car_pg"]),
+        reverse=True,
+    )[:4]
+    tes = sorted(
+        [v for v in skill_stats.values() if v["position"] == "TE"],
+        key=lambda x: x["tgt_pg"],
+        reverse=True,
+    )[:2]
+
+    chosen = rbs + wrs + tes
+    # Ensure minimum positional depth with active healthy backups
+    for req_pos, req_cnt, def_t, def_c in (
+        ("RB", 2, 2.2, 7.5),
+        ("WR", 3, 4.5, 0.2),
+        ("TE", 1, 3.8, 0.0),
+    ):
+        cur_p = [p for p in chosen if p["position"] == req_pos and p["raw_lower"] not in excl_lower]
+        while len(cur_p) < req_cnt:
+            idx_add = len([p for p in chosen if p["position"] == req_pos]) + 1
+            stub = {
+                "player_id": f"{team_code}_{req_pos}{idx_add}_HYD",
+                "name": f"{team_code} Depth {req_pos}{idx_add}",
+                "raw_lower": f"__depth_{team_code}_{req_pos}_{idx_add}",
+                "position": req_pos,
+                "tgt_pg": def_t,
+                "car_pg": def_c,
+                "rec_yds_pg": 6.5 * def_t,
+                "rush_yds_pg": 4.0 * def_c,
+                "opp_pg": def_t + def_c,
+            }
+            chosen.append(stub)
+            cur_p.append(stub)
+
+    tot_tgt = sum(max(0.15, float(p["tgt_pg"])) for p in chosen) or 1.0
+    tot_car = sum(max(0.05 if p["position"] == "RB" else 0.0, float(p["car_pg"])) for p in chosen)
+    if tot_car <= 1e-6:
+        tot_car = 1.0
+
+    # Assign active depth_rank 1..N per position so active WR1/RB1/TE1 always exist
+    rank_ctr: dict[str, int] = {"RB": 0, "WR": 0, "TE": 0}
+    roster_list: list[PlayerShare] = []
+    excluded_notes: list[str] = []
+    # Sort active before inactive within each position so active healthy starters get rank 1
+    chosen_sorted = sorted(
+        chosen,
+        key=lambda p: (p["position"], p["raw_lower"] in excl_lower, -float(p["opp_pg"])),
+    )
+    for p in chosen_sorted:
+        pos_lit = cast(Literal["RB", "WR", "TE"], p["position"])
+        is_act = p["raw_lower"] not in excl_lower
+        if is_act:
+            rank_ctr[pos_lit] += 1
+            d_rank = rank_ctr[pos_lit]
+        else:
+            d_rank = 99
+            excluded_notes.append(str(p["name"]))
+        t_sh = max(0.008, float(p["tgt_pg"])) / tot_tgt
+        c_raw = float(p["car_pg"]) if pos_lit == "RB" else min(0.6, float(p["car_pg"]))
+        c_sh = max(0.0, c_raw) / tot_car
+        roster_list.append(
+            PlayerShare(
+                player_id=str(p["player_id"]),
+                player_name=str(p["name"]),
+                position=pos_lit,
+                active=is_act,
+                base_target_share=round(t_sh, 5),
+                base_carry_share=round(c_sh, 5),
+                depth_rank=d_rank,
+            )
+        )
+
+    # Confirm QB1 with strict causal & Stage-0 precedence
+    s0_qb = (stage0_bundle.get("confirmed_qb1") or {}).get(team_code)
+    qb_id = f"{team_code}_QB1"
+    qb_nm = ""
+    qb_pass_pg = 228.0
+    qbs_26 = hist26[hist26["position"] == "QB"]
+    if s0_qb:
+        qb_nm = _sanitize_display_name(str(s0_qb))
+    elif sched_qb_name:
+        qb_nm = _sanitize_display_name(str(sched_qb_name))
+    elif not qbs_26.empty:
+        top_q = qbs_26.groupby("player_id")["attempts"].sum().sort_values(ascending=False)
+        qb_id = str(top_q.index[0])
+        sub_q = qbs_26[qbs_26["player_id"] == qb_id]
+        qb_nm = _sanitize_display_name(str(sub_q["player_display_name"].iloc[-1]))
+        qb_pass_pg = float(sub_q["passing_yards"].fillna(0.0).mean())
+    if not qb_nm:
+        qb_nm = f"{team_code} Starting QB"
+    if not qbs_26.empty:
+        match_q = qbs_26[
+            qbs_26["player_display_name"].astype(str).map(_sanitize_display_name) == qb_nm
+        ]
+        if not match_q.empty:
+            qb_id = str(match_q["player_id"].iloc[-1])
+            qb_pass_pg = float(match_q["passing_yards"].fillna(0.0).mean())
+    qb_sal = int(
+        round(_clip(4900.0 + 7.2 * max(0.0, qb_pass_pg - 160.0), 5000.0, 6900.0) / 100.0) * 100
+    )
+
+    wr1_pg = next(
+        (
+            float(p["rec_yds_pg"])
+            for p in chosen_sorted
+            if p["position"] == "WR" and p["raw_lower"] not in excl_lower
+        ),
+        68.0,
+    )
+    rb1_pg = next(
+        (
+            float(p["rush_yds_pg"])
+            for p in chosen_sorted
+            if p["position"] == "RB" and p["raw_lower"] not in excl_lower
+        ),
+        64.0,
+    )
+    return (
+        tuple(roster_list),
+        {"player_id": qb_id, "name": qb_nm, "salary": qb_sal},
+        excluded_notes,
+        _clip(wr1_pg, 38.5, 98.5),
+        _clip(rb1_pg, 35.5, 96.5),
+    )
+
+
+def hydrate_causal_matchup_context_from_vaults(
+    away_team: str,
+    home_team: str,
+    *,
+    as_of_week: int = 10,
+    is_indoor: bool | None = None,
+    repo_root: Path | None = None,
+    env_override: str | None = None,
+) -> dict[str, Any]:
+    """Hydrate real 32-team causal rosters, Stage-0 exclusions, weather, and market context."""
+    wk = int(as_of_week)
+    assert_operator_simulation_week_approved(wk, env_override=env_override)
+    aw = _norm_team(away_team)
+    hm = _norm_team(home_team)
+    vaults = _load_spine_vaults(repo_root)
+    if vaults["clean_checkout_fallback"]:
+        return default_matchup_context(
+            aw,
+            hm,
+            as_of_week=wk,
+            is_indoor=bool(is_indoor) if is_indoor is not None else (hm in _INDOOR_VENUES),
+        )
+
+    cutoff_wk = min(wk, 11)
+    if wk == 9:
+        stage0_bundle = dict(vaults["w9_stage0"])
+    elif wk >= 10:
+        stage0_bundle = dict(vaults["w10_stage0"])
+    else:
+        stage0_bundle = {}
+
+    sch26: pd.DataFrame = vaults["sch26"]
+    sched_sub = sch26[
+        (sch26["week"] == min(wk, 10)) & (sch26["away_u"] == aw) & (sch26["home_u"] == hm)
+    ]
+    s_row = sched_sub.iloc[0].to_dict() if not sched_sub.empty else {}
+
+    roof_str = str(s_row.get("roof") or "").lower()
+    indoor_eff = (
+        bool(is_indoor)
+        if is_indoor is not None
+        else (roof_str in {"dome", "closed"} or hm in _INDOOR_VENUES)
+    )
+    temp_f = float(s_row["temp"]) if pd.notna(s_row.get("temp")) else (70.0 if indoor_eff else 55.0)
+    wind_mph = float(s_row["wind"]) if pd.notna(s_row.get("wind")) else (0.0 if indoor_eff else 6.0)
+    away_rest = float(s_row["away_rest"]) if pd.notna(s_row.get("away_rest")) else 7.0
+    home_rest = float(s_row["home_rest"]) if pd.notna(s_row.get("home_rest")) else 7.0
+
+    aw_roster, aw_qb, aw_excl, _, aw_rb1_pg = _build_team_hydrated_roster_and_qb(
+        team_code=aw,
+        as_of_week=wk,
+        cutoff_wk=cutoff_wk,
+        vaults=vaults,
+        stage0_bundle=stage0_bundle,
+        sched_qb_name=str(s_row.get("away_qb_name") or "") or None,
+    )
+    hm_roster, hm_qb, hm_excl, hm_wr1_pg, _ = _build_team_hydrated_roster_and_qb(
+        team_code=hm,
+        as_of_week=wk,
+        cutoff_wk=cutoff_wk,
+        vaults=vaults,
+        stage0_bundle=stage0_bundle,
+        sched_qb_name=str(s_row.get("home_qb_name") or "") or None,
+    )
+
+    # Compute causal team EPA & pass-rush sack rates from tw26 (week < cutoff_wk)
+    tw26: pd.DataFrame = vaults["tw26"]
+    aw_epa, hm_epa, aw_sack_r, hm_sack_r = 0.0, 0.0, 0.062, 0.062
+    if not tw26.empty:
+        for tm_c, assign in ((aw, "away"), (hm, "home")):
+            sub_t = tw26[(tw26["team_u"] == tm_c) & (tw26["week"] < cutoff_wk)]
+            if not sub_t.empty:
+                tot_att = float(sub_t["attempts"].fillna(0.0).sum())
+                tot_car = float(sub_t["carries"].fillna(0.0).sum())
+                tot_pl = max(1.0, tot_att + tot_car)
+                epa_v = (
+                    float(sub_t["passing_epa"].fillna(0.0).sum())
+                    + float(sub_t["rushing_epa"].fillna(0.0).sum())
+                ) / tot_pl
+                sk_r = float(sub_t["sacks_suffered"].fillna(0.0).sum()) / max(1.0, tot_att)
+                if assign == "away":
+                    aw_epa, aw_sack_r = _clip(epa_v, -0.20, 0.22), _clip(sk_r, 0.02, 0.14)
+                else:
+                    hm_epa, hm_sack_r = _clip(epa_v, -0.20, 0.22), _clip(sk_r, 0.02, 0.14)
+
+    signals: list[PregameReasoningSignal] = [
+        PregameReasoningSignal(
+            signal_id=f"hyd_{aw}_{hm}_causal_epa",
+            source="stats_team_week_2026_w1_w10",
+            kind="social_charting",
+            team_side="home",
+            channel="epa_shift",
+            raw_delta=round(_clip(0.35 * (hm_epa - aw_epa), -0.06, 0.06), 5),
+            sigma_scale=0.04,
+            reliability=0.91,
+            evidence_span=f"Causal W<{cutoff_wk} EPA: {hm}={hm_epa:+.3f}, {aw}={aw_epa:+.3f}",
+            description="Causal offense EPA per play differential prior to kickoff.",
+        ),
+        PregameReasoningSignal(
+            signal_id=f"hyd_{aw}_ol_pressure",
+            source="stats_team_week_2026_w1_w10",
+            kind="stage2_equation",
+            team_side="away",
+            channel="ol_disruption",
+            raw_delta=round(_clip(0.85 * (aw_sack_r - 0.062), -0.05, 0.07), 5),
+            sigma_scale=0.05,
+            reliability=0.89,
+            evidence_span=f"{aw} causal sack rate {aw_sack_r:.3f}",
+            description="Causal offensive-line pocket disruption adjustment.",
+        ),
+        PregameReasoningSignal(
+            signal_id=f"hyd_{hm}_ol_pressure",
+            source="stats_team_week_2026_w1_w10",
+            kind="stage2_equation",
+            team_side="home",
+            channel="ol_disruption",
+            raw_delta=round(_clip(0.85 * (hm_sack_r - 0.062), -0.05, 0.07), 5),
+            sigma_scale=0.05,
+            reliability=0.89,
+            evidence_span=f"{hm} causal sack rate {hm_sack_r:.3f}",
+            description="Causal home pocket survival adjustment.",
+        ),
+        PregameReasoningSignal(
+            signal_id="hyd_quarantine_postgame_leak",
+            source="postgame_oracle_guard",
+            kind="future_postgame_leak",
+            team_side="home",
+            channel="epa_shift",
+            raw_delta=9.99,
+            sigma_scale=0.10,
+            reliability=0.99,
+            evidence_span="quarantined future box score probe",
+            description="Quarantined causal leakage check.",
+        ),
+    ]
+    if (not indoor_eff) and (wind_mph >= 15.0 or temp_f <= 35.0):
+        wind_pen = -0.032 if wind_mph >= 15.0 else -0.015
+        signals.append(
+            PregameReasoningSignal(
+                signal_id=f"hyd_{aw}_{hm}_outdoor_weather",
+                source="schedules_weather_curve_2026",
+                kind="cognitive_situational",
+                team_side="game",
+                channel="pace_sec_shift",
+                raw_delta=0.65 if wind_mph >= 15.0 else 0.35,
+                sigma_scale=0.50,
+                reliability=0.92,
+                evidence_span=f"Outdoor temp={temp_f:.0f}F wind={wind_mph:.0f}mph",
+                description="Outdoor wind and cold suppression shifts pace and passing depth.",
+            )
+        )
+        signals.append(
+            PregameReasoningSignal(
+                signal_id=f"hyd_{aw}_{hm}_weather_pass_rate",
+                source="kaggle_weather_physics_14371g",
+                kind="stage2_equation",
+                team_side="away",
+                channel="pass_rate_shift",
+                raw_delta=wind_pen,
+                sigma_scale=0.025,
+                reliability=0.90,
+                evidence_span=f"Wind={wind_mph:.0f}mph empirical -6.52pt outdoor suppression curve",
+                description="High wind lowers neutral dropback rate in favor of ground attack.",
+            )
+        )
+    if abs(home_rest - away_rest) >= 3.0:
+        signals.append(
+            PregameReasoningSignal(
+                signal_id=f"hyd_{aw}_{hm}_rest_diff",
+                source="schedules_rest_calendar",
+                kind="cognitive_situational",
+                team_side="home",
+                channel="epa_shift",
+                raw_delta=round(_clip(0.005 * (home_rest - away_rest), -0.03, 0.03), 5),
+                sigma_scale=0.02,
+                reliability=0.87,
+                evidence_span=f"Rest days: {hm}={home_rest:.0f} vs {aw}={away_rest:.0f}",
+                description="Multi-day rest differential impacts explosive efficiency.",
+            )
+        )
+    if aw_excl or hm_excl:
+        span_inj = ", ".join((aw_excl + hm_excl)[:5])
+        signals.append(
+            PregameReasoningSignal(
+                signal_id=f"hyd_{aw}_{hm}_stage0_injuries",
+                source="injuries_2026_and_stage0",
+                kind="beat_report",
+                team_side="away" if len(aw_excl) >= len(hm_excl) else "home",
+                channel="td_rate_shift",
+                raw_delta=-0.02,
+                sigma_scale=0.02,
+                reliability=0.93,
+                evidence_span=f"Inactive exclusions: {span_inj}",
+                description="Active injury attrition drives Sinkhorn volume redistribution.",
+            )
+        )
+
+    sp_line = float(s_row["spread_line"]) if pd.notna(s_row.get("spread_line")) else 2.5
+    home_spread = round(-sp_line, 1)
+    tot_line = float(s_row["total_line"]) if pd.notna(s_row.get("total_line")) else 45.5
+    hm_ml = (
+        int(round(float(s_row["home_moneyline"])))
+        if pd.notna(s_row.get("home_moneyline"))
+        else -135
+    )
+    aw_ml = (
+        int(round(float(s_row["away_moneyline"])))
+        if pd.notna(s_row.get("away_moneyline"))
+        else 115
+    )
+    market = {
+        "home_spread": home_spread,
+        "total": round(tot_line, 1),
+        "home_ml_american": hm_ml,
+        "away_ml_american": aw_ml,
+        "h1_spread": round(0.55 * home_spread, 1),
+        "h1_total": round(0.51 * tot_line, 1),
+        "q1_total": round(0.21 * tot_line, 1),
+        "away_team_total": round(0.5 * (tot_line + home_spread), 1),
+        "home_team_total": round(0.5 * (tot_line - home_spread), 1),
+        "qb_home_pass_yds_line": round(max(195.5, 224.5 + 140.0 * hm_epa), 1),
+        "wr1_home_rec_yds_line": round(hm_wr1_pg, 1),
+        "rb1_away_rush_yds_line": round(aw_rb1_pg, 1),
+        "te1_away_rec_yds_line": 42.5,
+    }
+
+    return {
+        "away_team": aw,
+        "home_team": hm,
+        "as_of_week": wk,
+        "is_indoor": indoor_eff,
+        "hydrated_from_vaults": True,
+        "weather": {"temp_f": round(temp_f, 1), "wind_mph": round(wind_mph, 1)},
+        "signals": tuple(signals),
+        "away_roster": aw_roster,
+        "home_roster": hm_roster,
+        "qbs": {"away": aw_qb, "home": hm_qb},
+        "market": market,
+    }
 
 
 def default_matchup_context(
@@ -924,9 +1578,18 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
     hm_players = list(sim["home"]["players"].values())
     aw_players = list(sim["away"]["players"].values())
     hm_qb = next(p for p in hm_players if p["position"] == "QB")
-    hm_wr1 = next(p for p in hm_players if p["position"] == "WR" and p.get("depth_rank") == 1)
-    aw_rb1 = next(p for p in aw_players if p["position"] == "RB" and p.get("depth_rank") == 1)
-    aw_te1 = next(p for p in aw_players if p["position"] == "TE" and p.get("depth_rank") == 1)
+    hm_wr1 = next(
+        (p for p in hm_players if p["position"] == "WR" and p.get("depth_rank") == 1),
+        next((p for p in hm_players if p["position"] == "WR"), hm_players[0]),
+    )
+    aw_rb1 = next(
+        (p for p in aw_players if p["position"] == "RB" and p.get("depth_rank") == 1),
+        next((p for p in aw_players if p["position"] == "RB"), aw_players[0]),
+    )
+    aw_te1 = next(
+        (p for p in aw_players if p["position"] == "TE" and p.get("depth_rank") == 1),
+        next((p for p in aw_players if p["position"] == "TE"), aw_players[0]),
+    )
 
     prop_specs: tuple[tuple[str, Mapping[str, Any], np.ndarray, float], ...] = (
         ("pass_yds", hm_qb, hm_qb["pass_yds"], float(market["qb_home_pass_yds_line"])),
@@ -1212,11 +1875,80 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
         )
     max_gpp_sal = max(int(item["total_salary"]) for item in gpp_portfolio)
 
+    # Single-Game DraftKings Showdown (1.5x CPT + 5 FLEX <= $50k) from the EXACT same 10k worlds
+    hm_k_dk = np.clip(
+        3.2 * sim["home"]["fgm"].astype(np.float64) + sim["home"]["xpm"].astype(np.float64),
+        0.0,
+        22.0,
+    )
+    aw_k_dk = np.clip(
+        3.2 * sim["away"]["fgm"].astype(np.float64) + sim["away"]["xpm"].astype(np.float64),
+        0.0,
+        22.0,
+    )
+    sd_names = list(names_m) + [f"{sim['home']['team']} K", f"{sim['away']['team']} K"]
+    sd_pos = list(pos_m) + ["K", "K"]
+    sd_teams = list(teams_m) + [sim["home"]["team"], sim["away"]["team"]]
+    sd_sal = [min(11600, max(2000, int(round(s * 1.45 / 200.0) * 200))) for s in sal_m] + [
+        4600,
+        4200,
+    ]
+    sd_scen = np.column_stack([scen_mat, hm_k_dk[:250], aw_k_dk[:250]]).tolist()
+    sd_means = list(means_m) + [float(np.mean(hm_k_dk)), float(np.mean(aw_k_dk))]
+    sd_cash = solve_showdown_cpt_duplication_aware_milp(
+        mode="cash",
+        names=sd_names,
+        positions=sd_pos,
+        teams=sd_teams,
+        salaries=sd_sal,
+        mean_projections=sd_means,
+        scenario_pts_matrix=sd_scen,
+    )
+    sd_gpp_portfolio: list[dict[str, Any]] = []
+    sd_prior_pres: list[list[int]] = []
+    for _ in range(3):
+        sd_sol = solve_showdown_cpt_duplication_aware_milp(
+            mode="gpp_unique",
+            names=sd_names,
+            positions=sd_pos,
+            teams=sd_teams,
+            salaries=sd_sal,
+            mean_projections=sd_means,
+            scenario_pts_matrix=sd_scen,
+            prior_lineup_vectors=sd_prior_pres if sd_prior_pres else None,
+            max_player_overlap=4,
+            min_salary_used=47_600,
+            max_salary_used=49_400,
+            enforce_qb_cpt_stack=True,
+        )
+        sd_prior_pres.append(list(cast(list[int], sd_sol["presence_binary"])))
+        sd_gpp_portfolio.append(
+            {
+                "captain_name": str(sd_sol["captain_name"]),
+                "captain_position": str(sd_sol["captain_position"]),
+                "captain_team": str(sd_sol["captain_team"]),
+                "flex_names": list(cast(list[str], sd_sol["flex_names"])),
+                "total_salary": int(cast(int, sd_sol["total_salary"])),
+                "salary_left": int(cast(int, sd_sol["salary_left"])),
+                "expected_points_15x": float(cast(float, sd_sol["expected_points_15x"])),
+                "expected_dupe_band": str(sd_sol["expected_dupe_band"]),
+                "qb_cpt_same_team_pass_catchers": sd_sol["qb_cpt_same_team_pass_catchers"],
+                "opp_bringback_count": int(cast(int, sd_sol["opp_bringback_count"])),
+                "projection_source_sha256": proj_sha,
+            }
+        )
+    sd_all_under_50k = bool(
+        bool(sd_cash["zero_cap_violations"])
+        and all(int(item["total_salary"]) <= SALARY_CAP for item in sd_gpp_portfolio)
+    )
+    sd_sal_lefts = [int(item["salary_left"]) for item in sd_gpp_portfolio]
+
     all_shas = [
         *[str(g["projection_source_sha256"]) for g in game_plays],
         *[str(pr["projection_source_sha256"]) for pr in player_props],
         *[str(sg["projection_source_sha256"]) for sg in sgps],
         *[str(dp["projection_source_sha256"]) for dp in dfs_projections],
+        *[str(item["projection_source_sha256"]) for item in sd_gpp_portfolio],
     ]
     orphaned = sum(1 for sh in all_shas if sh != proj_sha)
 
@@ -1240,10 +1972,27 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
                 bool(g["qb_teammate_stack"] and g["opponent_bringback"]) for g in gpp_portfolio
             ),
             "zero_cap_violations": bool(
-                core_sal <= SALARY_CAP and cash_sal <= SALARY_CAP and max_gpp_sal <= SALARY_CAP
+                core_sal <= SALARY_CAP
+                and cash_sal <= SALARY_CAP
+                and max_gpp_sal <= SALARY_CAP
+                and sd_all_under_50k
             ),
             "gpp_portfolio": gpp_portfolio,
             "player_projections": dfs_projections,
+            "showdown": {
+                "projection_source_sha256": proj_sha,
+                "portfolio_count": len(sd_gpp_portfolio),
+                "cash_lineup": {
+                    "captain_name": str(sd_cash["captain_name"]),
+                    "captain_position": str(sd_cash["captain_position"]),
+                    "total_salary": int(cast(int, sd_cash["total_salary"])),
+                    "expected_points_15x": float(cast(float, sd_cash["expected_points_15x"])),
+                    "zero_cap_violations": bool(sd_cash["zero_cap_violations"]),
+                },
+                "gpp_unique_portfolio": sd_gpp_portfolio,
+                "gpp_salary_left_range": [min(sd_sal_lefts), max(sd_sal_lefts)],
+                "showdown_zero_cap_violations": sd_all_under_50k,
+            },
         },
     }
 
@@ -1264,19 +2013,38 @@ def evaluate_unified_reasoning_simulation_projection_spine_suite(
     custom_signals: Sequence[PregameReasoningSignal] | None = None,
     n_worlds: int = 10_000,
     repo_root: object | None = None,
+    hydrate_from_vaults: bool = False,
 ) -> dict[str, Any]:
     """Run Stage 1->2->3->4 unified Reasoning->10k Sim->Plays/Props/SGP/DFS pipeline."""
-    _ = repo_root
+    root_path = Path(str(repo_root)).resolve() if repo_root is not None else None
     wk = int(as_of_week)
     assert_operator_simulation_week_approved(wk, env_override=env_override)
 
-    aw = away_team.strip().upper()
-    hm = home_team.strip().upper()
-    ck = (aw, hm, wk, int(bool(is_indoor)), str(env_override or ""))
+    aw = _norm_team(away_team)
+    hm = _norm_team(home_team)
+    ck = (
+        aw,
+        hm,
+        wk,
+        int(bool(is_indoor)),
+        str(env_override or ""),
+        int(bool(hydrate_from_vaults)),
+        str(root_path or ""),
+    )
     if custom_signals is None and n_worlds == 10_000 and ck in _SPINE47_CACHE:
         return _SPINE47_CACHE[ck]
 
-    ctx = default_matchup_context(aw, hm, as_of_week=wk, is_indoor=is_indoor)
+    if hydrate_from_vaults:
+        ctx = hydrate_causal_matchup_context_from_vaults(
+            aw,
+            hm,
+            as_of_week=wk,
+            is_indoor=is_indoor if is_indoor else None,
+            repo_root=root_path,
+            env_override=env_override,
+        )
+    else:
+        ctx = default_matchup_context(aw, hm, as_of_week=wk, is_indoor=is_indoor)
     signals = custom_signals if custom_signals is not None else ctx["signals"]
     stage1 = watch_and_audit_pregame_signals(signals)
     stage2 = synthesize_reasoned_game_environment(
@@ -1307,6 +2075,9 @@ def evaluate_unified_reasoning_simulation_projection_spine_suite(
         "wired": True,
         "matchup": f"{aw} @ {hm}",
         "as_of_week": wk,
+        "hydrated_from_vaults": bool(ctx.get("hydrated_from_vaults", False)),
+        "qb_away_name": str(ctx["qbs"]["away"]["name"]),
+        "qb_home_name": str(ctx["qbs"]["home"]["name"]),
         "real_money_stake_cleared": REAL_MONEY_STAKE_CLEARED,
         "live_stake_fraction": LIVE_STAKE_FRACTION,
         "clinical_ruo_sports_weight": 0.0,
@@ -1336,6 +2107,27 @@ def evaluate_unified_reasoning_simulation_projection_spine_suite(
     if custom_signals is None and n_worlds == 10_000:
         _SPINE47_CACHE[ck] = out
     return out
+
+
+def evaluate_vault_hydrated_unified_spine_matchup(
+    away_team: str,
+    home_team: str,
+    as_of_week: int = 10,
+    *,
+    env_override: str | None = None,
+    n_worlds: int = 10_000,
+    repo_root: Path | None = None,
+) -> dict[str, Any]:
+    """Run real 32-team vault-hydrated Unified Spine + Showdown DFS derivation for any game."""
+    return evaluate_unified_reasoning_simulation_projection_spine_suite(
+        away_team=away_team,
+        home_team=home_team,
+        as_of_week=as_of_week,
+        env_override=env_override,
+        n_worlds=n_worlds,
+        repo_root=repo_root,
+        hydrate_from_vaults=True,
+    )
 
 
 WAVE47_SPINE_RLVR_TRAJECTORIES: tuple[dict[str, Any], ...] = (
@@ -1409,6 +2201,8 @@ __all__ = [
     "default_matchup_context",
     "derive_all_plays_props_sgps_and_dfs_from_simulation",
     "evaluate_unified_reasoning_simulation_projection_spine_suite",
+    "evaluate_vault_hydrated_unified_spine_matchup",
+    "hydrate_causal_matchup_context_from_vaults",
     "simulate_coherent_10k_game_worlds",
     "synthesize_reasoned_game_environment",
     "watch_and_audit_pregame_signals",

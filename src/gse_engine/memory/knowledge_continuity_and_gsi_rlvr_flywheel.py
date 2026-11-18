@@ -151,6 +151,11 @@ from gse_engine.tracking.wave46_causal_picks_combo_props_and_stacked_portfolio_d
     evaluate_w46_martingale_and_shortcut_audit,
     evaluate_wave46_memtx_picks_7props_and_stacked_dfs_suite,
 )
+from gse_engine.tracking.wave48_stage0_weather_sentiment_trade_and_showdown_engine import (  # noqa: E501
+    WAVE48_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_w48_martingale_and_shortcut_audit,
+    evaluate_wave48_stage0_weather_sentiment_and_showdown_suite,
+)
 from gse_engine.workflows.unified_reasoning_simulation_projection_spine import (
     WAVE47_SPINE_RLVR_TRAJECTORIES,
     evaluate_unified_reasoning_simulation_projection_spine_suite,
@@ -4435,6 +4440,91 @@ def compile_gse_to_gsi_rlvr_training_batch(
                 think=str(spec_w47["think"]),
                 ground_truth=gt_w47,
                 verifier_src=_formula_exact_verifier_src(gt_w47),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    # Tier 3 Group Y: Wave 48 Unmined Vaults, Causal Stage-2, Hydrated Showdown MILP (382 -> 388)
+    w48_trk = evaluate_wave48_stage0_weather_sentiment_and_showdown_suite(
+        away_team="KC", home_team="DEN", as_of_week=10, is_indoor=False, repo_root=root
+    )
+    w48_pl = evaluate_w48_martingale_and_shortcut_audit(root)
+    w48_va = w48_trk["unmined_vaults_audit"]
+    w48_kw = w48_va["kaggle_weather_zone1"]
+    w48_hs = w48_va["hf_twitter_sentiment_zone2"]
+    w48_hc = w48_va["hf_contracts_zone1_quarantine"]
+    w48_hm = w48_trk["home_w48_profile"]
+    w48_tot = w48_trk["game_total_obv_stop_weather_shift"]
+    w48_sd = w48_trk["walk_forward_hydrated_spine_showdown"]
+    w48_quar = w48_trk["quarantined_metrics_weights"]
+    w48_ast = w48_trk["live_honest_ast"]
+    w48_cs = w48_sd["cold_start_vectorization_telemetry"]
+    w48_gt_map: dict[str, dict[str, Any]] = {
+        "w48_unmined_weather_sentiment_chalk_firewall_and_soccer_quarantine_00": {
+            "wind_15mph_negative_delta": bool(float(w48_kw["wind_15mph_total_delta_pts"]) < -5.0),
+            "sentiment_zero_win_prob_weight": bool(
+                float(w48_hs["live_win_prob_weight"]) == 0.0
+                and w48_hs["chalk_firewall_zero_true_grad"] is True
+            ),
+            "soccer_contract_nfl_weight_zero": bool(float(w48_hc["nfl_live_weight"]) == 0.0),
+        },
+        "w48_nfl_motion_early_down_4man_and_rz_causal_margin_00": {
+            "max_prior_week_lt10": bool(int(w48_trk["max_prior_week_used"]) < 10),
+            "signals_bounded": bool(
+                -5.0 <= float(w48_hm.get("mot_sr_norm", 0.0)) <= 5.0
+                and -5.0 <= float(w48_hm.get("d1_neut_epa_norm", 0.0)) <= 5.0
+                and -5.0 <= float(w48_hm.get("def_four_man_stop_norm", 0.0)) <= 5.0
+            ),
+        },
+        "w48_nfl_obvious_pass_stop_weather_and_divisional_total_00": {
+            "total_shift_bounded": bool(-1.25 <= float(w48_tot["total_shift_pts"]) <= 1.25),
+            "total_driver_bounded": bool(
+                -5.0 <= float(w48_hm.get("def_obv_stop_norm", 0.0)) <= 5.0
+            ),
+        },
+        "w48_hydrated_32team_spine_and_showdown_cpt_milp_00": {
+            "all_cap_compliant": bool(w48_sd["zero_cap_violations"]),
+            "conservation_residual_zero": bool(
+                float(w48_sd["max_world_conservation_residual"]) == 0.0
+                and int(w48_sd["total_orphaned_projections"]) == 0
+            ),
+            "anti_dupe_and_qb_stack_ok": bool(
+                w48_sd["all_showdown_gpp_in_anti_dupe_band"]
+                and w48_sd["all_qb_cpt_stacks_compliant"]
+            ),
+        },
+        "w48_martingale_500_placebo_and_quarantine_5_00": {
+            "all_five_zero": bool(
+                len(w48_quar) == 5 and all(float(v) == 0.0 for v in w48_quar.values())
+            ),
+            "placebo_and_mask_ok": bool(
+                w48_pl["beats_null_95pct"]
+                and w48_pl["total_beats_null_99pct"]
+                and w48_pl["shortcut_invariance_verified"]
+                and float(w48_pl["shortcut_max_output_perturbation"]) == 0.0
+            ),
+        },
+        "w48_honest_ast_8eq_and_cold_start_vectorization_00": {
+            "all_eight_ast": bool(
+                int(w48_ast["parsed_evaluated_count"]) == 8 and w48_ast["zero_fabricated_bindings"]
+            ),
+            "speedup_and_exact_sha256": bool(
+                float(w48_cs["speedup_factor"]) >= 4.0
+                and int(w48_cs["sha256_exact_matches"]) == 6
+            ),
+        },
+    }
+    for spec_w48 in WAVE48_TRACKING_RLVR_TRAJECTORIES:
+        rid_w48 = str(spec_w48["record_id"])
+        gt_w48 = w48_gt_map[rid_w48]
+        records.append(
+            _build_rlvr_record(
+                record_id=rid_w48,
+                domain=str(spec_w48["domain"]),
+                prompt=str(spec_w48["prompt"]),
+                think=str(spec_w48["think"]),
+                ground_truth=gt_w48,
+                verifier_src=_formula_exact_verifier_src(gt_w48),
                 curriculum_tier="TIER_3_BEHEMOTH",
             )
         )

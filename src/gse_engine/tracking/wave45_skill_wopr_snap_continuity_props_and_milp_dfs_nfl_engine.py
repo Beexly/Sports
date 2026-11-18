@@ -337,12 +337,50 @@ def _load_w45_raw_vaults(root: Path) -> dict[str, Any]:
         for wk in range(1, 11)
     }
 
+    wk_arr26 = pw26["week"].to_numpy(dtype=np.int64)
+    pid_list26 = pw26["player_id"].astype(str).tolist()
+    pos_list26 = pw26["position"].astype(str).tolist()
+    opp_list26 = pw26["opponent_team"].astype(str).tolist()
+    num_cols26: dict[str, np.ndarray] = {
+        c: pw26[c].fillna(0.0).to_numpy(dtype=np.float64)
+        for c in (
+            "passing_yards",
+            "attempts",
+            "rushing_yards",
+            "carries",
+            "receiving_yards",
+            "targets",
+            "receptions",
+            "any_td",
+            "opps",
+            "dk_pts",
+            "xfp_dk",
+        )
+    }
+    idx_by_pid26: dict[str, list[int]] = {}
+    for row_i, pid_s in enumerate(pid_list26):
+        idx_by_pid26.setdefault(pid_s, []).append(row_i)
+    p26_arrays: dict[str, dict[str, np.ndarray]] = {}
+    for pid_s, idxs in idx_by_pid26.items():
+        idxs_sorted = sorted(idxs, key=lambda i: int(wk_arr26[i]))
+        arr_idx = np.asarray(idxs_sorted, dtype=np.int64)
+        p_rec: dict[str, np.ndarray] = {"week": wk_arr26[arr_idx]}
+        for col_k, arr_v in num_cols26.items():
+            p_rec[col_k] = arr_v[arr_idx]
+        p26_arrays[pid_s] = p_rec
+
     res: dict[str, Any] = {
         "clean_checkout_fallback": False,
         "p25_agg": p25_agg,
         "by_wk": by_wk,
         "pw25": pw25,
         "pw26": pw26,
+        "wk_arr26": wk_arr26,
+        "pid_list26": pid_list26,
+        "pos_list26": pos_list26,
+        "opp_list26": opp_list26,
+        "num_cols26": num_cols26,
+        "p26_arrays": p26_arrays,
     }
     _RAW45_CACHE[ck] = res
     return res
@@ -533,7 +571,20 @@ def evaluate_w45_walk_forward_props_and_milp_dfs_harmony(
 
     pw25: pd.DataFrame = raw["pw25"]
     pw26: pd.DataFrame = raw["pw26"]
-    b25 = (
+    wk_arr26: np.ndarray = raw["wk_arr26"]
+    pid_list26: list[str] = raw["pid_list26"]
+    pos_list26: list[str] = raw["pos_list26"]
+    opp_list26: list[str] = raw["opp_list26"]
+    num_cols26: dict[str, np.ndarray] = raw["num_cols26"]
+    p26_arrays: dict[str, dict[str, np.ndarray]] = raw["p26_arrays"]
+    n_pw26 = len(pid_list26)
+    hist_by_wk = {wk: pw26[pw26["week"] < wk] for wk in range(2, 11)}
+    opp_wks_by_wk = {
+        wk: hist_by_wk[wk].groupby("opponent_team")["week"].nunique().to_dict()
+        for wk in range(2, 11)
+    }
+
+    b25_raw = (
         pw25.groupby(["player_id", "position"])
         .agg(
             pass_yds=("passing_yards", "mean"),
@@ -548,6 +599,7 @@ def evaluate_w45_walk_forward_props_and_milp_dfs_harmony(
         .set_index("player_id")
         .to_dict("index")
     )
+    b25: dict[str, dict[str, float]] = {str(k): v for k, v in b25_raw.items()}
 
     # Part 1: 5-Market OOS Player Props (Weeks 2-10, strictly causal week < wk)
     props_out: dict[str, dict[str, Any]] = {}
@@ -562,13 +614,11 @@ def evaluate_w45_walk_forward_props_and_milp_dfs_harmony(
         err_n: list[float] = []
         err_g: list[float] = []
         g_hits, g_n, t1_hits, t1_n = 0, 0, 0, 0
+        pos_set = set(pos_list)
+        s_arr_all = num_cols26[stat_col]
+        v_arr_all = num_cols26[vol_col]
         for wk in range(2, 11):
-            hist = pw26[pw26["week"] < wk]
-            cur = pw26[
-                (pw26["week"] == wk)
-                & (pw26["position"].isin(pos_list))
-                & (pw26[vol_col].fillna(0.0) >= min_vol)
-            ]
+            hist = hist_by_wk[wk]
             opp_g = (
                 hist[hist["position"].isin(pos_list)]
                 .groupby(["opponent_team", "week"])[stat_col]
@@ -576,18 +626,26 @@ def evaluate_w45_walk_forward_props_and_milp_dfs_harmony(
                 .groupby("opponent_team")
                 .mean()
             )
-            opp_wks = hist.groupby("opponent_team")["week"].nunique().to_dict()
+            opp_wks = opp_wks_by_wk[wk]
             lg_avg = float(opp_g.mean()) if len(opp_g) else 1.0
-            ph_map = {pid: grp.sort_values("week") for pid, grp in hist.groupby("player_id")}
-            for _, row in cur.iterrows():
-                pid = row["player_id"]
-                ph = ph_map.get(pid)
-                if ph is None or len(ph) == 0:
+            for idx_r in range(n_pw26):
+                if (
+                    wk_arr26[idx_r] != wk
+                    or pos_list26[idx_r] not in pos_set
+                    or v_arr_all[idx_r] < min_vol
+                ):
                     continue
-                actual = float(row[stat_col] or 0.0)
+                pid = pid_list26[idx_r]
+                p_rec = p26_arrays.get(pid)
+                if p_rec is None:
+                    continue
+                cut = int(np.searchsorted(p_rec["week"], wk, side="left"))
+                if cut == 0:
+                    continue
+                actual = float(s_arr_all[idx_r])
                 prior_m = float(b25.get(pid, {}).get(mkt, fallback_prior))
-                vals = ph[stat_col].fillna(0.0).to_numpy(dtype=float)
-                vols = ph[vol_col].fillna(0.0).to_numpy(dtype=float)
+                vals = p_rec[stat_col][:cut]
+                vols = p_rec[vol_col][:cut]
                 naive = float(np.mean(vals))
                 nw = len(vals)
                 w = np.exp(0.28 * np.arange(nw))
@@ -595,7 +653,7 @@ def evaluate_w45_walk_forward_props_and_milp_dfs_harmony(
                 ewma_vol = float(np.sum(w * vols) / np.sum(w))
                 vol_tr = float(np.clip(ewma_vol / max(1.0, float(np.mean(vols))), 0.88, 1.14))
                 eb = (nw / (nw + 3.0)) * ewma_val + (3.0 / (nw + 3.0)) * prior_m
-                opp_tm = str(row["opponent_team"])
+                opp_tm = opp_list26[idx_r]
                 opp_m = 1.0
                 if opp_tm in opp_g and lg_avg > 1e-6:
                     onw = float(opp_wks.get(opp_tm, 1))
@@ -638,13 +696,11 @@ def evaluate_w45_walk_forward_props_and_milp_dfs_harmony(
     # Market 5: Anytime TD Brier (RB/WR/TE, opps >= 6)
     td_b_n: list[float] = []
     td_b_g: list[float] = []
+    any_td_all = num_cols26["any_td"]
+    opps_all = num_cols26["opps"]
+    td_pos_set = {"RB", "WR", "TE"}
     for wk in range(2, 11):
-        hist = pw26[pw26["week"] < wk]
-        cur = pw26[
-            (pw26["week"] == wk)
-            & (pw26["position"].isin(["RB", "WR", "TE"]))
-            & (pw26["opps"] >= 6.0)
-        ]
+        hist = hist_by_wk[wk]
         opp_td = (
             hist[hist["position"].isin(["RB", "WR", "TE"])]
             .groupby(["opponent_team", "week"])["any_td"]
@@ -653,18 +709,26 @@ def evaluate_w45_walk_forward_props_and_milp_dfs_harmony(
             .mean()
         )
         lg_td = float(opp_td.mean()) if len(opp_td) else 1.8
-        ph_map = {pid: grp.sort_values("week") for pid, grp in hist.groupby("player_id")}
-        for _, row in cur.iterrows():
-            pid = row["player_id"]
-            ph = ph_map.get(pid)
-            if ph is None or len(ph) == 0:
+        for idx_r in range(n_pw26):
+            if (
+                wk_arr26[idx_r] != wk
+                or pos_list26[idx_r] not in td_pos_set
+                or opps_all[idx_r] < 6.0
+            ):
                 continue
-            y_td = float(row["any_td"])
+            pid = pid_list26[idx_r]
+            p_rec = p26_arrays.get(pid)
+            if p_rec is None:
+                continue
+            cut = int(np.searchsorted(p_rec["week"], wk, side="left"))
+            if cut == 0:
+                continue
+            y_td = float(any_td_all[idx_r])
             prior_td = float(b25.get(pid, {}).get("any_td", 0.28))
-            p_naive = float(np.mean(ph["any_td"].to_numpy(dtype=float)))
-            nw = len(ph)
+            p_naive = float(np.mean(p_rec["any_td"][:cut]))
+            nw = cut
             eb_td = (nw / (nw + 5.0)) * p_naive + (5.0 / (nw + 5.0)) * prior_td
-            opp_tm = str(row["opponent_team"])
+            opp_tm = opp_list26[idx_r]
             f_td = 1.0 + 0.25 * (float(opp_td.get(opp_tm, lg_td)) / max(0.5, lg_td) - 1.0)
             p_gse = _clip(eb_td * _clip(f_td, 0.85, 1.18), 0.04, 0.72)
             td_b_n.append((y_td - _clip(p_naive, 0.04, 0.72)) ** 2)
@@ -683,9 +747,10 @@ def evaluate_w45_walk_forward_props_and_milp_dfs_harmony(
     mae_dk_raw: list[float] = []
     mae_dk_gse: list[float] = []
     max_sal_used = 0
+    dk_all = num_cols26["dk_pts"]
+    dfs_pos_set = {"QB", "RB", "WR", "TE"}
     for wk in range(2, 11):
-        hist = pw26[pw26["week"] < wk]
-        cur = pw26[(pw26["week"] == wk) & (pw26["position"].isin(["QB", "RB", "WR", "TE"]))].copy()
+        hist = hist_by_wk[wk]
         opp_a = (
             hist.groupby(["opponent_team", "position", "week"])["dk_pts"]
             .sum()
@@ -700,28 +765,32 @@ def evaluate_w45_walk_forward_props_and_milp_dfs_harmony(
             .mean()
             .to_dict()
         )
-        ph_map = {pid: grp.sort_values("week") for pid, grp in hist.groupby("player_id")}
         rows: list[dict[str, Any]] = []
-        for _, r in cur.iterrows():
-            pid = r["player_id"]
-            pos = str(r["position"])
-            opp = str(r["opponent_team"])
-            ph = ph_map.get(pid)
-            if ph is None or len(ph) == 0:
+        for idx_r in range(n_pw26):
+            if wk_arr26[idx_r] != wk or pos_list26[idx_r] not in dfs_pos_set:
+                continue
+            pid = pid_list26[idx_r]
+            pos = pos_list26[idx_r]
+            opp = opp_list26[idx_r]
+            p_rec = p26_arrays.get(pid)
+            if p_rec is None:
+                continue
+            cut = int(np.searchsorted(p_rec["week"], wk, side="left"))
+            if cut == 0:
                 continue
             bd = b25.get(pid, {})
             base_dk = float(bd.get("dk", {"QB": 14.5, "RB": 8.5, "WR": 8.0, "TE": 6.2}[pos]))
             base_xfp = float(bd.get("xfp", base_dk))
-            dk_v = ph["dk_pts"].to_numpy(dtype=float)
-            xfp_v = ph["xfp_dk"].to_numpy(dtype=float)
-            opp_v = ph["opps"].to_numpy(dtype=float)
+            dk_v = p_rec["dk_pts"][:cut]
+            xfp_v = p_rec["xfp_dk"][:cut]
+            opp_v = p_rec["opps"][:cut]
             raw_m = float(np.mean(dk_v))
             sticky_anchor = 0.75 * base_dk + 0.25 * raw_m
             mult_s = {"QB": 340.0, "RB": 405.0, "WR": 400.0, "TE": 375.0}[pos]
             floor_s = {"QB": 4800, "RB": 4000, "WR": 3400, "TE": 2800}[pos]
             raw_sal = _clip(floor_s + mult_s * max(0.0, sticky_anchor - 4.0), floor_s, 9200)
             sal = int(round(raw_sal / 100.0) * 100)
-            nw = len(dk_v)
+            nw = cut
             w = np.exp(0.35 * np.arange(nw))
             ewma_x = float(np.sum(w * xfp_v) / np.sum(w))
             ewma_d = float(np.sum(w * dk_v) / np.sum(w))
@@ -737,7 +806,7 @@ def evaluate_w45_walk_forward_props_and_milp_dfs_harmony(
             gse_p = eb_p * opp_m
             std_v = float(np.std(dk_v)) if nw > 1 else 0.30 * gse_p
             gpp_u = 0.75 * gse_p + 0.25 * (gse_p + 0.90 * std_v)
-            act = float(r["dk_pts"])
+            act = float(dk_all[idx_r])
             mae_dk_raw.append(abs(act - raw_m))
             mae_dk_gse.append(abs(act - gse_p))
             rows.append(
