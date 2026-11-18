@@ -14,24 +14,25 @@ from scripts.ops.execute_all_installed_skills_suite import (
     validate_infrastructure_artifacts,
 )
 
-# Host-installation prerequisite. The suites below assert a *locally installed*
-# skills tree (``~/.agents/skills`` + ``~/.gemini/config/{skills,plugins}`` — 758
-# skills on the dev box). A portable CI runner carries none of those roots, so the
-# scanner legitimately discovers 0 SKILL.md files and every count assertion fails.
-# The invariants are real *of that host*, so instead of deleting or weakening them
-# we gate the module on the skills install being present: it runs unchanged where
-# the tree exists and reports an explicit skip where it does not.
+# Host-installation prerequisite. One suite asserts a *locally installed* skills
+# tree (``~/.agents/skills`` + ``~/.gemini/config/{skills,plugins}`` — 758 skills on
+# the dev box). A portable CI runner carries none of those roots, so the scanner
+# legitimately discovers 0 SKILL.md files and every count assertion fails. That
+# invariant is real *of that host*, so we gate just that suite on the install being
+# present: it runs unchanged where the tree exists and skips where it does not. The
+# infrastructure-manifest suite reads repo files and stays ungated (it must run in CI).
 _INSTALLED_SKILLS_ROOTS = (
     Path.home() / ".agents" / "skills",
     Path.home() / ".gemini" / "config" / "skills",
     Path.home() / ".gemini" / "config" / "plugins",
 )
-pytestmark = pytest.mark.skipif(
-    not any(root.is_dir() for root in _INSTALLED_SKILLS_ROOTS),
-    reason="requires the local installed-skills tree (~/.agents/skills); absent on a portable CI runner",
+_SKILLS_INSTALL_PRESENT = any(root.is_dir() for root in _INSTALLED_SKILLS_ROOTS)
+_SKILLS_SKIP_REASON = (
+    "requires the local installed-skills tree (~/.agents/skills); absent on a portable CI runner"
 )
 
 
+@pytest.mark.skipif(not _SKILLS_INSTALL_PRESENT, reason=_SKILLS_SKIP_REASON)
 def test_all_758_skills_executed_and_verified() -> None:
     summary = run_all_758_skills_execution_suite()
     assert summary["overall_status"] == "ALL_SKILLS_EXECUTED_PASS"
@@ -74,6 +75,10 @@ def test_gcp_gke_assured_workloads_infrastructure_manifests() -> None:
 class TestAllInstalledSkillsExecution(unittest.TestCase):
     """Unittest discovery wrapper for `test_all_installed_skills_execution.py`."""
 
+    # The wrapper method must carry the same host-install gate as the module-level
+    # function above; pytest collects BOTH the bare function and this class method,
+    # so gating only one leaves the other to fail on a portable CI runner.
+    @unittest.skipUnless(_SKILLS_INSTALL_PRESENT, _SKILLS_SKIP_REASON)
     def test_all_758_skills_executed_and_verified(self) -> None:
         test_all_758_skills_executed_and_verified()
 
