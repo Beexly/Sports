@@ -219,3 +219,36 @@ test("a residual standalone lock on a stat-table line still hits", () => {
   assert.equal(r.code, 1, r.out);
   assert.match(r.out, /banned\.lock/);
 });
+
+// 2026-11-18 (this gate red on c06a813c0, the Nov 18 09:08 CT morning analytics
+// sweep appended to AGENTS.md): four digest lines. Each body is the sentence as
+// appended; each must pass while the slang shapes on the same words keep failing.
+test("the 2026-11-18 sweep's Lock shapes and quoted third-party copy are data, not picks", () => {
+  const digestLines = [
+    "- @hawkblogger standout run blocks with printed HIGH-mark definition (source: SumerSports); Lock same-defense EPA comparisons (source: nflverse).",
+    "Different-angle note (attributed): the two Lock items above present the same QB's passing in two different comparison frames in the same window, as reported.",
+    '- **@FTNData — still protected, 0 of 1,276 posts visible.** Profile: "Follow @FTNFantasy" with a lock, 1,276 posts, 1 Following, 2,540 Followers.',
+    'Text note as printed: "Lamb looks like a lock, but Jefferson could blow up or bust".',
+  ];
+  for (const line of digestLines) {
+    const r = scan({ "AGENTS.md": line + "\n" });
+    assert.equal(r.code, 0, `${line}\n${r.out}`);
+  }
+  // Narrowness pins — the same words in a claim shape still fail.
+  for (const body of [
+    "This is a lock, play it at 2 units.\n",
+    "Priced with a lock, 3 followers of the sharp play.\n",
+    "we quote as printed: \"the line moved\" and this is a lock, so take it.\n",
+  ]) {
+    const r = scan(clean(body));
+    assert.equal(r.code, 1, `expected refusal for: ${body}\n${r.out}`);
+    assert.match(r.out, /banned\.lock/);
+  }
+  // The quoted-copy blanking only removes text INSIDE the quotes; an
+  // unattributed claim next to a quoted bio still hits.
+  const mixed =
+    'Profile as printed: bio "NFL analyst | AI-assisted content" and this one is a lock for Sunday.';
+  const r = scan({ "AGENTS.md": mixed + "\n" });
+  assert.equal(r.code, 1, r.out);
+  assert.match(r.out, /banned\.lock/);
+});

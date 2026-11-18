@@ -61,8 +61,11 @@ const RETIRED_FIGURES: ReadonlyArray<{
     // higher rung) are only caught when they are the bare retired amount.
     // The lookahead also excludes the decimal point: "$19.07MM" (an NFL
     // contract figure in scraped news) and "$19.99" (Google AI Pro) are
-    // different figures, not the retired $19.
-    pattern: /\$19(?![\d.])/,
+    // different figures, not the retired $19. And a magnitude suffix — "$19M"
+    // in a transcribed third-party post about a player's salary — is a
+    // contract value, not our monthly price; the 2026-11-18 sweep's AGENTS.md
+    // digest tripped the bare-amount rule on exactly that line.
+    pattern: /\$19(?![\d.])(?![MmKkBb])/,
     why: `not an advertised amount in any phase of ${SOURCE_OF_TRUTH}`,
   },
   {
@@ -237,6 +240,18 @@ describe("docs  -  retired money-path figures stay retired", () => {
   it("every exemption carries a stated reason", () => {
     for (const [file, why] of [...EXEMPT_FILES, ...EXEMPT_TREES]) {
       expect(why.trim().length, `${file} is exempt with no reason given`).toBeGreaterThan(20);
+    }
+  });
+
+  it("the retired-pro-monthly pattern still catches the price and not a salary magnitude", () => {
+    const pattern = RETIRED_FIGURES.find((f) => f.id === "retired-pro-monthly")!.pattern;
+    // Real retired-price shapes must still offend.
+    for (const hit of ["Pro is $19 a month", "just $19/mo", "$19 per month"]) {
+      expect(pattern.test(hit), `expected to catch: ${hit}`).toBe(true);
+    }
+    // A transcribed contract figure is not our price.
+    for (const miss of ["Christian McCaffrey ($19M)", "a $19.07MM cap figure"]) {
+      expect(pattern.test(miss), `expected to skip: ${miss}`).toBe(false);
     }
   });
 

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
-import { scanForBannedPhrases, isAttributedThirdPartyDigestLine } from "@/lib/trust-claims";
+import { scanForBannedPhrases, isAttributedThirdPartyDigestLine, blankAttributedQuotedSpans } from "@/lib/trust-claims";
 import { FORBIDDEN_PHRASES, buildPositioningRegex } from "@/lib/positioning-vocab";
 
 /**
@@ -120,6 +120,7 @@ interface PositioningHit {
 function scanForPositioningVocab(
   text: string,
   isExemptLine?: (line: string) => boolean,
+  blankQuotedThirdPartyCopy = false,
 ): PositioningHit[] {
   const hits: PositioningHit[] = [];
   const lines = text.split(/\r?\n/);
@@ -127,7 +128,12 @@ function scanForPositioningVocab(
     const pattern = buildPositioningRegex([phrase]);
     lines.forEach((line, idx) => {
       if (isExemptLine?.(line)) return;
-      if (pattern.test(line)) {
+      // Root memory docs quote a third party's bio verbatim ("as printed"), and
+      // that bio is the third party's positioning, not this platform's. Same
+      // rule the shared scanner applies to root memory docs only; whatever sits
+      // outside the quotes on the line is still scanned.
+      const scanLine = blankQuotedThirdPartyCopy ? blankAttributedQuotedSpans(line) : line;
+      if (pattern.test(scanLine)) {
         hits.push({ phrase, line: idx + 1, snippet: line.trim() });
       }
     });
@@ -175,6 +181,7 @@ describe("Docs — public-copy banned-phrase scan", () => {
       const hits = scanForPositioningVocab(
         stripped,
         MEMORY_DOCS.has(doc) ? isAttributedThirdPartyDigestLine : undefined,
+        MEMORY_DOCS.has(doc),
       );
       if (hits.length > 0) {
         const summary = hits
