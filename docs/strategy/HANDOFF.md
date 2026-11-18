@@ -3,6 +3,20 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-18 (2026-11-18 CT) -- Wave 42 GSI AlphaFold DB v6 / InterPro Proteolysis & ICU Trajectory + 18-Sport Darts/Cycling & NFL PFR/QBR Engine (`328+24` RLVR)
+
+- **What changed**:
+  - Hydrated AlphaFold DB `v6` (`9` GSI proteins, `0` isoform/`>2700` AA warnings, mmCIF B-factor column per-residue pLDDT note), InterPro conserved domains, and `11` arXiv citations into `data/science/alphafold_interpro_gsi_structural_disorder_atlas_2026.json` (`sha256 0ca680d1007f1067`) alongside `.licenses/{alphafold_database_fetch_and_analyze,interpro_database,literature_search_arxiv}_LICENSE.txt`.
+  - Built `src/gse_engine/science/wave42_gsi_alphafold_interpro_proteolysis_and_icu_trajectory_engine.py` (`CLINICAL_RUO_ALPHAFOLD_INTERPRO_SPORTS_WEIGHT = 0.0`) proving IDR proteolytic half-life separation (`CKM` `94.81` vs `MAPT` `49.22`, `3.3159x`), disorder docking restrictions (`COL1A1`, `COL5A1`, `MAPT`, `NEFL`, `PPARGC1A`), and MIMIC-IV chronological GCS/MAP/RR/PP trajectory mortality across `140` ICU stays (`20` deaths, `AUROC = 0.8050`, `Brier = 0.0939 < 0.1224` base).
+  - Built `src/gse_engine/multisport/wave42_darts_markov_cycling_wbal_and_18sport_expansion.py` expanding `356` metrics / `14` sports to **`428` metrics across `18` sports** (`+72` across `VOLLEYBALL_HANDBALL`, `TRACK_SWIMMING_CYCLING`, `DARTS_SNOOKER_TABLETENNIS`, `LACROSSE_AFL` while keeping Wave 40 `284` and Wave 41 `356` tuples immutable), plus a `502`-state Darts 501 absorbing Markov solver (`pmf_total_mass = 1.0`, `hold = 0.6647 > break = 0.4873`) and Skiba `W'-bal >= 500 J` road cycling optimizer (`time_saved = 16.567 s`, `min_w_bal_optimal_joules = 2298.1 J`).
+  - Built `src/gse_engine/tracking/wave42_pfr_advstats_qbr_two_high_yac_and_total_pace_engine.py` (`2025` EB prior + `< W10` causal PFR `advstats_week_*` & Regular ESPN QBR, `6` positive margin signals, `3` game-total drivers, `5` quarantined metrics at `0.0`, `8/8 PARSED_EVALUATED` ASTs, fail-closed `OperatorSimulationHoldError` above W10) and wired all 6 spine/guardrail/RLVR layers + RLVR Group S (`316 -> 328`, `+ 24 = 352`).
+- **What was proven**:
+  - `147`-game OOS walk-forward ablation improved monotonically (`alpha_margin = 0.28`, `alpha_total = 0.55`): normalized CRPS `7.0298 -> 7.0190`, raw CRPS `6.9316 -> 6.9208` (`< 7.0108` close), Margin MAE `9.6800 -> 9.6616` (`< 9.7687` close), Total MAE `10.4024 -> 10.3739` (`< 10.4116` close), Brier `0.21934 -> 0.21926`, ECE `0.07047 -> 0.07043`, `rliable_iqm = 0.733144`, `fwl_partial_slope = 1.458271`, `all_floors_held = true`.
+  - `43,225,000`-snap PBP simulation: spotlight CRPS `8.9508`, all-147 PBP CRPS `7.0004` (`< 7.0108` close; `MAIN_SHA = 562d9a7e36d7b0dcb3d16b712f4f8c7681b588f085061b076dd8a1fe344b8566`, `W42_SHA = 1fd7aa35843a2f6d35a5e00fbfbedf1c77618a97b91a627c41a51d8e0a342c31`).
+  - `328+24=352` RLVR zero-odds (`all_verifiers_passed = true`), `ruff check` & `mypy --strict` clean (`102` files), `pre_sim_total_intelligence_gate.py --self-test` `PASS` (`dead_leaf_unwired_pre_sim_modules = []`).
+- **What was not**: Live `>= W11` NFL week simulations stay held under `OperatorSimulationHoldError`, `real_money_stake_cleared = false`, `clinical_ruo_sports_weight = 0.0`, and `brain/mind.jsonl` remains untouched for the single-writer trainer.
+- **Next role must**: Keep clinical RUO weights at `0.0`, enforce AlphaFold disorder docking boundaries (`COL1A1`, `COL5A1`, `MAPT`, `NEFL`, `PPARGC1A`), and run `python tests/verify_out_of_sample_calibration.py --enforce-gate` before modifying any Stage-2/3 spine weight.
+
 ## 2026-11-18 (2026-11-18 CT) -- Wave 41 GSI Reactome/UniProt Stokes-Einstein & First-24h ICU LOS + 14-Sport F1/NBA PRA Copula & NFL Pocket-Security Engine (`316+24` RLVR)
 
 - **What changed**:

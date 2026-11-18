@@ -93,6 +93,14 @@ from gse_engine.tracking.wave41_pocket_ball_security_kickoff_return_swarm_and_14
     evaluate_wave41_pocket_security_kr_and_14sport_suite,
     run_wave41_gsi_reactome_and_14sport_benchmark,
 )
+from gse_engine.tracking.wave42_pfr_advstats_qbr_two_high_yac_and_total_pace_engine import (  # noqa: E501
+    WAVE42_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_causal_w42_game_total_accuracy_adot_shift,
+    evaluate_causal_w42_pfr_advstats_and_qbr_features,
+    evaluate_wave42_live_honest_ast_equations,
+    evaluate_wave42_pfr_advstats_qbr_and_18sport_suite,
+    run_wave42_gsi_alphafold_and_18sport_benchmark,
+)
 
 __all__ = [
     "AWS_NGS_GOING_DEEP_SOURCES",
@@ -107,6 +115,7 @@ __all__ = [
     "WAVE39_TRACKING_RLVR_TRAJECTORIES",
     "WAVE40_TRACKING_RLVR_TRAJECTORIES",
     "WAVE41_TRACKING_RLVR_TRAJECTORIES",
+    "WAVE42_TRACKING_RLVR_TRAJECTORIES",
     "ChalkContaminationError",
     "ClusterScalingPlan",
     "DualEpauletKinematics",
@@ -141,6 +150,8 @@ __all__ = [
     "evaluate_causal_w39_game_total_environmental_shift",
     "evaluate_causal_w40_ngs_and_ftn_features",
     "evaluate_causal_w41_pocket_security_and_kr_features",
+    "evaluate_causal_w42_game_total_accuracy_adot_shift",
+    "evaluate_causal_w42_pfr_advstats_and_qbr_features",
     "evaluate_contract_year_5b_incentive_audit",
     "evaluate_dated_csv_and_live_ast_equations",
     "evaluate_longitudinal_3yr_ftn_and_2025_baseline_vaults",
@@ -163,6 +174,8 @@ __all__ = [
     "evaluate_wave40_ngs_ftn_and_universal_metrics_suite",
     "evaluate_wave41_live_honest_ast_equations",
     "evaluate_wave41_pocket_security_kr_and_14sport_suite",
+    "evaluate_wave42_live_honest_ast_equations",
+    "evaluate_wave42_pfr_advstats_qbr_and_18sport_suite",
     "evaluate_wr_separation_vs_db_coverage",
     "run_wave35_gsi_and_micro_metrics_benchmark",
     "run_wave36_gsi_icu_and_360_board_benchmark",
@@ -171,5 +184,6 @@ __all__ = [
     "run_wave39_gsi_hpa_and_disruption_total_benchmark",
     "run_wave40_ngs_and_universal_metrics_benchmark",
     "run_wave41_gsi_reactome_and_14sport_benchmark",
+    "run_wave42_gsi_alphafold_and_18sport_benchmark",
     "verify_nonzero_stage2_jacobians",
 ]

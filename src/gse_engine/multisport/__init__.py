@@ -46,6 +46,15 @@ if TYPE_CHECKING:
         evaluate_wave41_14sport_and_copula_propsim_suite,
         query_14sport_universal_metric,
     )
+    from gse_engine.multisport.wave42_darts_markov_cycling_wbal_and_18sport_expansion import (  # noqa: E501
+        UNIVERSAL_18SPORT_METRICS_REGISTRY,
+        WAVE42_18SPORT_EXTENSION_METRICS,
+        WAVE42_MULTISPORT_RLVR_TRAJECTORIES,
+        evaluate_cycling_skiba_wbal_and_climb_tt,
+        evaluate_darts_501_markov_leg_and_handicap,
+        evaluate_wave42_18sport_darts_and_cycling_suite,
+        query_18sport_universal_metric,
+    )
 
 _WAVE40_EXPORTS: frozenset[str] = frozenset(
     {
@@ -74,6 +83,18 @@ _WAVE41_EXPORTS: frozenset[str] = frozenset(
     }
 )
 
+_WAVE42_EXPORTS: frozenset[str] = frozenset(
+    {
+        "UNIVERSAL_18SPORT_METRICS_REGISTRY",
+        "WAVE42_18SPORT_EXTENSION_METRICS",
+        "WAVE42_MULTISPORT_RLVR_TRAJECTORIES",
+        "evaluate_cycling_skiba_wbal_and_climb_tt",
+        "evaluate_darts_501_markov_leg_and_handicap",
+        "evaluate_wave42_18sport_darts_and_cycling_suite",
+        "query_18sport_universal_metric",
+    }
+)
+
 __all__ = [
     "BcAciState",
     "CopulaLegSpec",
@@ -81,13 +102,18 @@ __all__ = [
     "ESPN_SCOREBOARD_ENDPOINTS",
     "SportMetricSpec",
     "UNIVERSAL_14SPORT_METRICS_REGISTRY",
+    "UNIVERSAL_18SPORT_METRICS_REGISTRY",
     "UNIVERSAL_SPORTS_METRICS_REGISTRY",
     "WAVE40_MULTISPORT_RLVR_TRAJECTORIES",
     "WAVE41_14SPORT_EXTENSION_METRICS",
     "WAVE41_MULTISPORT_RLVR_TRAJECTORIES",
+    "WAVE42_18SPORT_EXTENSION_METRICS",
+    "WAVE42_MULTISPORT_RLVR_TRAJECTORIES",
     "build_dixon_coles_pmf",
     "compute_frechet_hoeffding_joint_bounds",
     "evaluate_cfb_nba_golf_mma_metrics_suite",
+    "evaluate_cycling_skiba_wbal_and_climb_tt",
+    "evaluate_darts_501_markov_leg_and_handicap",
     "evaluate_f1_stint_degradation_and_undercut_window",
     "evaluate_mlb_statcast_barrel_and_pitch_arsenal",
     "evaluate_multisport_sabermetrics_and_pitch_control_overlay",
@@ -97,6 +123,7 @@ __all__ = [
     "evaluate_tennis_markov_game_and_set_handicaps",
     "evaluate_wave40_universal_multisport_metrics_suite",
     "evaluate_wave41_14sport_and_copula_propsim_suite",
+    "evaluate_wave42_18sport_darts_and_cycling_suite",
     "fetch_365_day_five_league_slate",
     "fetch_live_multisport_slate",
     "main",
@@ -104,6 +131,7 @@ __all__ = [
     "predict_directional_bc_aci_band",
     "price_copula_conformal_sgp",
     "query_14sport_universal_metric",
+    "query_18sport_universal_metric",
     "query_universal_sport_metric",
     "render_multisport_daily_card",
     "run_all_sports_unified_situational_simulation_suite",
@@ -131,6 +159,15 @@ def __getattr__(name: str) -> Any:
 
         return getattr(
             wave41_f1_pit_strategy_nba_pra_copula_and_14sport_expansion,
+            name,
+        )
+    if name in _WAVE42_EXPORTS:
+        from gse_engine.multisport import (
+            wave42_darts_markov_cycling_wbal_and_18sport_expansion,
+        )
+
+        return getattr(
+            wave42_darts_markov_cycling_wbal_and_18sport_expansion,
             name,
         )
     if name in __all__:

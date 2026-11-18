@@ -370,6 +370,21 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "wave41_pocket_ball_security_kickoff_return_swarm_and_14sport_engine",
         "src/gse_engine/tracking/wave41_pocket_ball_security_kickoff_return_swarm_and_14sport_engine.py",
     ),
+    (
+        "Pillar1_Wave42_GSI_AlphaFold_InterPro_And_ICU_Trajectory",
+        "wave42_gsi_alphafold_interpro_proteolysis_and_icu_trajectory_engine",
+        "src/gse_engine/science/wave42_gsi_alphafold_interpro_proteolysis_and_icu_trajectory_engine.py",
+    ),
+    (
+        "Pillar1_Wave42_18Sport_Darts_Markov_Cycling_Wbal",
+        "wave42_darts_markov_cycling_wbal_and_18sport_expansion",
+        "src/gse_engine/multisport/wave42_darts_markov_cycling_wbal_and_18sport_expansion.py",
+    ),
+    (
+        "Pillar1_Wave42_GSE_PFR_AdvStats_QBR_And_Total_Pace",
+        "wave42_pfr_advstats_qbr_two_high_yac_and_total_pace_engine",
+        "src/gse_engine/tracking/wave42_pfr_advstats_qbr_two_high_yac_and_total_pace_engine.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (

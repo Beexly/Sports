@@ -1,0 +1,584 @@
+{
+  "schema": "wave42_gsi_alphafold_and_18sport_benchmark_v1",
+  "generated_utc": "2026-11-18T12:55:37.184633+00:00",
+  "real_money_stake_cleared": false,
+  "live_stake_fraction": 0.0,
+  "clinical_ruo_sports_weight": 0.0,
+  "sample_kc_at_den": {
+    "schema": "wave42_pfr_advstats_qbr_and_18sport_suite_v1",
+    "wired": true,
+    "matchup": "KC @ DEN",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "clinical_ruo_sports_weight": 0.0,
+    "multisport_18sport_summary": {
+      "schema": "wave42_18sport_darts_and_cycling_suite_v1",
+      "wired": true,
+      "clean_checkout_fallback": false,
+      "total_canonical_metrics": 428,
+      "wave40_base_metrics_preserved": 284,
+      "wave41_base_metrics_preserved": 356,
+      "wave42_extension_metrics": 72,
+      "sports_covered_count": 18,
+      "sports_metric_counts": {
+        "NFL": 58,
+        "NCAAF": 29,
+        "NBA": 33,
+        "NCAAB_WNBA": 14,
+        "MLB": 40,
+        "SOCCER": 31,
+        "NHL": 30,
+        "TENNIS": 24,
+        "GOLF_PGA": 13,
+        "MMA_UFC": 12,
+        "MOTORSPORTS": 18,
+        "BOXING": 18,
+        "ESPORTS": 18,
+        "CRICKET_RUGBY": 18,
+        "VOLLEYBALL_HANDBALL": 18,
+        "TRACK_SWIMMING_CYCLING": 18,
+        "DARTS_SNOOKER_TABLETENNIS": 18,
+        "LACROSSE_AFL": 18
+      },
+      "new_sport_probe_resolutions": {
+        "volleyball_sideout": "volley_sideout_efficiency_pct",
+        "handball_7m": "handball_7m_penalty_conv_pct",
+        "cycling_wbal": "cycling_w_bal_minimum_reserve_kj",
+        "darts_3da": "darts_three_dart_average_3da",
+        "lax_faceoff": "lax_faceoff_win_pct"
+      },
+      "darts_501_markov": {
+        "schema": "wave42_darts_501_markov_handicap_v1",
+        "best_of_legs": 19,
+        "pmf_total_mass": 1.0,
+        "visit_pmf_mass_a": 1.0,
+        "player_a_expected_visits": 6.909,
+        "player_a_hold_of_throw_prob": 0.6647,
+        "player_a_break_of_throw_prob": 0.4873,
+        "player_a_match_win_prob": 0.7671,
+        "player_b_match_win_prob": 0.2329,
+        "expected_leg_margin_a": 2.543,
+        "expected_total_legs": 16.061,
+        "leg_handicaps_a_cover_prob": {
+          "-3.5": 0.4471,
+          "-2.5": 0.5801,
+          "-1.5": 0.6662,
+          "+1.5": 0.8181,
+          "+2.5": 0.8826
+        },
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0
+      },
+      "cycling_skiba_wbal": {
+        "schema": "wave42_cycling_skiba_wbal_climb_tt_v1",
+        "cp_watts": 415.0,
+        "w_prime_capacity_j": 22500.0,
+        "cda_m2": 0.205,
+        "iso_power_time_s": 2884.239,
+        "optimal_variable_time_s": 2867.672,
+        "time_saved_by_wbal_pacing_s": 16.567,
+        "min_w_bal_iso_joules": 8136.5,
+        "min_w_bal_optimal_joules": 2298.1,
+        "climb_surge_watts": 428.3,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0
+      },
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "suite_sha256": "6ff8f9a28b4d752f1a2f5cb186c53667d60859cf0eacc550e9218b877aab7d9f"
+    },
+    "gsi_alphafold_interpro_summary": {
+      "schema": "wave42_gsi_alphafold_interpro_and_trajectory_suite_v1",
+      "wired": true,
+      "matchup": "KC @ DEN",
+      "as_of_week": 10,
+      "adr0003_rule_in_only_doctrine": true,
+      "clinical_ruo_sports_weight": 0.0,
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "alphafold_interpro_proteolysis": {
+        "schema": "wave42_gsi_alphafold_interpro_proteolysis_v1",
+        "clean_checkout_fallback": false,
+        "adr0003_rule_in_only_doctrine": true,
+        "clinical_ruo_sports_weight": 0.0,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0,
+        "payload_sha256": "0ca680d1007f1067a0efd0fb80e03eb224aa2e52c656f28caef1f5f96330ddea",
+        "proteins_count": 9,
+        "arxiv_citations_count": 11,
+        "high_disorder_warning_genes": [
+          "COL1A1",
+          "COL5A1",
+          "MAPT",
+          "NEFL",
+          "PPARGC1A"
+        ],
+        "ckm_plddt": 94.81,
+        "tnni3_plddt": 78.62,
+        "mapt_plddt": 49.22,
+        "ckm_gt_mapt_half_life": true,
+        "ckm_to_mapt_half_life_ratio": 3.3159,
+        "proteolytic_half_life_hr": {
+          "ACTN3": 12.6807,
+          "CKM": 15.0437,
+          "COL1A1": 4.6709,
+          "COL5A1": 5.1999,
+          "GFAP": 10.1732,
+          "MAPT": 4.5369,
+          "NEFL": 8.2611,
+          "PPARGC1A": 4.8591,
+          "TNNI3": 10.2764
+        },
+        "global_plddts": {
+          "ACTN3": 84.19,
+          "CKM": 94.81,
+          "COL1A1": 52.72,
+          "COL5A1": 51.25,
+          "GFAP": 80.0,
+          "MAPT": 49.22,
+          "NEFL": 73.06,
+          "PPARGC1A": 52.75,
+          "TNNI3": 78.62
+        },
+        "interpro_domain_counts": {
+          "ACTN3": 8,
+          "CKM": 6,
+          "COL1A1": 3,
+          "COL5A1": 5,
+          "GFAP": 4,
+          "MAPT": 3,
+          "NEFL": 4,
+          "PPARGC1A": 5,
+          "TNNI3": 4
+        }
+      },
+      "mimic_iv_dynamic_trajectory_mortality": {
+        "schema": "wave42_gsi_mimic_dynamic_trajectory_mortality_v1",
+        "clean_checkout_fallback": false,
+        "adr0003_rule_in_only_doctrine": true,
+        "clinical_ruo_sports_weight": 0.0,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0,
+        "icu_stays_count": 140,
+        "deaths_count": 20,
+        "survivor_mean_composite": 10.692,
+        "non_survivor_mean_composite": 20.843,
+        "mortality_auroc": 0.805,
+        "mortality_brier": 0.0939,
+        "base_prevalence_brier": 0.1224
+      },
+      "proteolytic_clearance_kinetics": {
+        "away": {
+          "team": "KC",
+          "rest_days": 7.0,
+          "ckm_structural_residual": 0.000435,
+          "tnni3_structural_residual": 1.2e-05,
+          "folded_biomarker_clearance_mult": 1.00999
+        },
+        "home": {
+          "team": "DEN",
+          "rest_days": 7.0,
+          "ckm_structural_residual": 0.000435,
+          "tnni3_structural_residual": 1.2e-05,
+          "folded_biomarker_clearance_mult": 1.00999
+        }
+      }
+    },
+    "max_prior_week_used": 9,
+    "quarantined_metrics_weights": {
+      "raw_rushing_broken_tackles": 0.0,
+      "raw_qbr_penalty_epa": 0.0,
+      "raw_rushing_yac_volume": 0.0,
+      "raw_qbr_pass_epa": 0.0,
+      "raw_qbr_pts_added_headline": 0.0
+    },
+    "away_w42_pfr_qbr_profile": {
+      "def_yac_umbrella_norm": 0.2708,
+      "rec_tipped_int_reversion_norm": -0.28034,
+      "qbr_sack_epa_preservation_norm": 0.33561,
+      "rec_broken_tackles_norm": 0.26279,
+      "pass_hurry_avoidance_norm": 0.44469,
+      "def_adot_norm": -0.72763,
+      "qb_accuracy_low_bad_throw_norm": 0.13599,
+      "anti_clock_bleed_rush_yac_norm": -0.40842
+    },
+    "home_w42_pfr_qbr_profile": {
+      "def_yac_umbrella_norm": 0.08091,
+      "rec_tipped_int_reversion_norm": -0.37066,
+      "qbr_sack_epa_preservation_norm": 0.64056,
+      "rec_broken_tackles_norm": -0.18506,
+      "pass_hurry_avoidance_norm": -0.4946,
+      "def_adot_norm": -0.04708,
+      "qb_accuracy_low_bad_throw_norm": -0.08896,
+      "anti_clock_bleed_rush_yac_norm": 0.38956
+    },
+    "game_total_accuracy_adot_shift": {
+      "schema": "wave42_causal_game_total_accuracy_adot_v1",
+      "matchup": "KC @ DEN",
+      "as_of_week": 10,
+      "w42_tot_signal": -0.295322,
+      "total_shift_pts": -0.162427
+    },
+    "live_honest_ast": {
+      "schema": "wave42_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 8,
+      "equations_evaluated": [
+        {
+          "eq_id": "gsi_alphafold_idr_proteolysis_rate",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.15278,
+          "operators": 6
+        },
+        {
+          "eq_id": "gsi_mimic_dynamic_trajectory_logit",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.24347,
+          "operators": 7
+        },
+        {
+          "eq_id": "darts_alternating_throw_expected_margin",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.444,
+          "operators": 4
+        },
+        {
+          "eq_id": "cycling_skiba_wbal_climb_depletion",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": -2800.0,
+          "operators": 3
+        },
+        {
+          "eq_id": "cycling_aero_gravity_wheel_power",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 290.194797,
+          "operators": 8
+        },
+        {
+          "eq_id": "volleyball_sideout_kill_efficiency",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.333333,
+          "operators": 2
+        },
+        {
+          "eq_id": "nfl_w42_pfr_qbr_margin_signal",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": -1.740097,
+          "operators": 11
+        },
+        {
+          "eq_id": "nfl_w42_total_accuracy_adot_pace_shift",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": -0.162427,
+          "operators": 6
+        }
+      ]
+    },
+    "w42_close_residual_signal": -1.740097,
+    "stage2_deltas": {
+      "away_epa_delta": 0.00174,
+      "home_epa_delta": -0.00174,
+      "away_sack_prob_delta": -0.00047,
+      "home_sack_prob_delta": -0.000897
+    }
+  },
+  "sample_cin_at_buf": {
+    "schema": "wave42_pfr_advstats_qbr_and_18sport_suite_v1",
+    "wired": true,
+    "matchup": "CIN @ BUF",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "clinical_ruo_sports_weight": 0.0,
+    "multisport_18sport_summary": {
+      "schema": "wave42_18sport_darts_and_cycling_suite_v1",
+      "wired": true,
+      "clean_checkout_fallback": false,
+      "total_canonical_metrics": 428,
+      "wave40_base_metrics_preserved": 284,
+      "wave41_base_metrics_preserved": 356,
+      "wave42_extension_metrics": 72,
+      "sports_covered_count": 18,
+      "sports_metric_counts": {
+        "NFL": 58,
+        "NCAAF": 29,
+        "NBA": 33,
+        "NCAAB_WNBA": 14,
+        "MLB": 40,
+        "SOCCER": 31,
+        "NHL": 30,
+        "TENNIS": 24,
+        "GOLF_PGA": 13,
+        "MMA_UFC": 12,
+        "MOTORSPORTS": 18,
+        "BOXING": 18,
+        "ESPORTS": 18,
+        "CRICKET_RUGBY": 18,
+        "VOLLEYBALL_HANDBALL": 18,
+        "TRACK_SWIMMING_CYCLING": 18,
+        "DARTS_SNOOKER_TABLETENNIS": 18,
+        "LACROSSE_AFL": 18
+      },
+      "new_sport_probe_resolutions": {
+        "volleyball_sideout": "volley_sideout_efficiency_pct",
+        "handball_7m": "handball_7m_penalty_conv_pct",
+        "cycling_wbal": "cycling_w_bal_minimum_reserve_kj",
+        "darts_3da": "darts_three_dart_average_3da",
+        "lax_faceoff": "lax_faceoff_win_pct"
+      },
+      "darts_501_markov": {
+        "schema": "wave42_darts_501_markov_handicap_v1",
+        "best_of_legs": 19,
+        "pmf_total_mass": 1.0,
+        "visit_pmf_mass_a": 1.0,
+        "player_a_expected_visits": 6.909,
+        "player_a_hold_of_throw_prob": 0.6647,
+        "player_a_break_of_throw_prob": 0.4873,
+        "player_a_match_win_prob": 0.7671,
+        "player_b_match_win_prob": 0.2329,
+        "expected_leg_margin_a": 2.543,
+        "expected_total_legs": 16.061,
+        "leg_handicaps_a_cover_prob": {
+          "-3.5": 0.4471,
+          "-2.5": 0.5801,
+          "-1.5": 0.6662,
+          "+1.5": 0.8181,
+          "+2.5": 0.8826
+        },
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0
+      },
+      "cycling_skiba_wbal": {
+        "schema": "wave42_cycling_skiba_wbal_climb_tt_v1",
+        "cp_watts": 415.0,
+        "w_prime_capacity_j": 22500.0,
+        "cda_m2": 0.205,
+        "iso_power_time_s": 2884.239,
+        "optimal_variable_time_s": 2867.672,
+        "time_saved_by_wbal_pacing_s": 16.567,
+        "min_w_bal_iso_joules": 8136.5,
+        "min_w_bal_optimal_joules": 2298.1,
+        "climb_surge_watts": 428.3,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0
+      },
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "suite_sha256": "6ff8f9a28b4d752f1a2f5cb186c53667d60859cf0eacc550e9218b877aab7d9f"
+    },
+    "gsi_alphafold_interpro_summary": {
+      "schema": "wave42_gsi_alphafold_interpro_and_trajectory_suite_v1",
+      "wired": true,
+      "matchup": "CIN @ BUF",
+      "as_of_week": 10,
+      "adr0003_rule_in_only_doctrine": true,
+      "clinical_ruo_sports_weight": 0.0,
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "alphafold_interpro_proteolysis": {
+        "schema": "wave42_gsi_alphafold_interpro_proteolysis_v1",
+        "clean_checkout_fallback": false,
+        "adr0003_rule_in_only_doctrine": true,
+        "clinical_ruo_sports_weight": 0.0,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0,
+        "payload_sha256": "0ca680d1007f1067a0efd0fb80e03eb224aa2e52c656f28caef1f5f96330ddea",
+        "proteins_count": 9,
+        "arxiv_citations_count": 11,
+        "high_disorder_warning_genes": [
+          "COL1A1",
+          "COL5A1",
+          "MAPT",
+          "NEFL",
+          "PPARGC1A"
+        ],
+        "ckm_plddt": 94.81,
+        "tnni3_plddt": 78.62,
+        "mapt_plddt": 49.22,
+        "ckm_gt_mapt_half_life": true,
+        "ckm_to_mapt_half_life_ratio": 3.3159,
+        "proteolytic_half_life_hr": {
+          "ACTN3": 12.6807,
+          "CKM": 15.0437,
+          "COL1A1": 4.6709,
+          "COL5A1": 5.1999,
+          "GFAP": 10.1732,
+          "MAPT": 4.5369,
+          "NEFL": 8.2611,
+          "PPARGC1A": 4.8591,
+          "TNNI3": 10.2764
+        },
+        "global_plddts": {
+          "ACTN3": 84.19,
+          "CKM": 94.81,
+          "COL1A1": 52.72,
+          "COL5A1": 51.25,
+          "GFAP": 80.0,
+          "MAPT": 49.22,
+          "NEFL": 73.06,
+          "PPARGC1A": 52.75,
+          "TNNI3": 78.62
+        },
+        "interpro_domain_counts": {
+          "ACTN3": 8,
+          "CKM": 6,
+          "COL1A1": 3,
+          "COL5A1": 5,
+          "GFAP": 4,
+          "MAPT": 3,
+          "NEFL": 4,
+          "PPARGC1A": 5,
+          "TNNI3": 4
+        }
+      },
+      "mimic_iv_dynamic_trajectory_mortality": {
+        "schema": "wave42_gsi_mimic_dynamic_trajectory_mortality_v1",
+        "clean_checkout_fallback": false,
+        "adr0003_rule_in_only_doctrine": true,
+        "clinical_ruo_sports_weight": 0.0,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0,
+        "icu_stays_count": 140,
+        "deaths_count": 20,
+        "survivor_mean_composite": 10.692,
+        "non_survivor_mean_composite": 20.843,
+        "mortality_auroc": 0.805,
+        "mortality_brier": 0.0939,
+        "base_prevalence_brier": 0.1224
+      },
+      "proteolytic_clearance_kinetics": {
+        "away": {
+          "team": "CIN",
+          "rest_days": 7.0,
+          "ckm_structural_residual": 0.000435,
+          "tnni3_structural_residual": 1.2e-05,
+          "folded_biomarker_clearance_mult": 1.00999
+        },
+        "home": {
+          "team": "BUF",
+          "rest_days": 7.0,
+          "ckm_structural_residual": 0.000435,
+          "tnni3_structural_residual": 1.2e-05,
+          "folded_biomarker_clearance_mult": 1.00999
+        }
+      }
+    },
+    "max_prior_week_used": 9,
+    "quarantined_metrics_weights": {
+      "raw_rushing_broken_tackles": 0.0,
+      "raw_qbr_penalty_epa": 0.0,
+      "raw_rushing_yac_volume": 0.0,
+      "raw_qbr_pass_epa": 0.0,
+      "raw_qbr_pts_added_headline": 0.0
+    },
+    "away_w42_pfr_qbr_profile": {
+      "def_yac_umbrella_norm": 1.0,
+      "rec_tipped_int_reversion_norm": 0.14413,
+      "qbr_sack_epa_preservation_norm": 0.13658,
+      "rec_broken_tackles_norm": 0.89362,
+      "pass_hurry_avoidance_norm": 0.03745,
+      "def_adot_norm": -0.06064,
+      "qb_accuracy_low_bad_throw_norm": 0.85093,
+      "anti_clock_bleed_rush_yac_norm": 0.56255
+    },
+    "home_w42_pfr_qbr_profile": {
+      "def_yac_umbrella_norm": -0.31827,
+      "rec_tipped_int_reversion_norm": 0.0172,
+      "qbr_sack_epa_preservation_norm": 0.13081,
+      "rec_broken_tackles_norm": 0.18672,
+      "pass_hurry_avoidance_norm": 0.32248,
+      "def_adot_norm": -0.04243,
+      "qb_accuracy_low_bad_throw_norm": 0.18866,
+      "anti_clock_bleed_rush_yac_norm": -0.44015
+    },
+    "game_total_accuracy_adot_shift": {
+      "schema": "wave42_causal_game_total_accuracy_adot_v1",
+      "matchup": "CIN @ BUF",
+      "as_of_week": 10,
+      "w42_tot_signal": 0.469427,
+      "total_shift_pts": 0.258185
+    },
+    "live_honest_ast": {
+      "schema": "wave42_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 8,
+      "equations_evaluated": [
+        {
+          "eq_id": "gsi_alphafold_idr_proteolysis_rate",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.15278,
+          "operators": 6
+        },
+        {
+          "eq_id": "gsi_mimic_dynamic_trajectory_logit",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.24347,
+          "operators": 7
+        },
+        {
+          "eq_id": "darts_alternating_throw_expected_margin",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.444,
+          "operators": 4
+        },
+        {
+          "eq_id": "cycling_skiba_wbal_climb_depletion",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": -2800.0,
+          "operators": 3
+        },
+        {
+          "eq_id": "cycling_aero_gravity_wheel_power",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 290.194797,
+          "operators": 8
+        },
+        {
+          "eq_id": "volleyball_sideout_kill_efficiency",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.333333,
+          "operators": 2
+        },
+        {
+          "eq_id": "nfl_w42_pfr_qbr_margin_signal",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": -2.533689,
+          "operators": 11
+        },
+        {
+          "eq_id": "nfl_w42_total_accuracy_adot_pace_shift",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.258185,
+          "operators": 6
+        }
+      ]
+    },
+    "w42_close_residual_signal": -2.533689,
+    "stage2_deltas": {
+      "away_epa_delta": 0.002534,
+      "home_epa_delta": -0.002534,
+      "away_sack_prob_delta": -0.000191,
+      "home_sack_prob_delta": -0.000183
+    }
+  },
+  "benchmark_sha256": "1fd7aa35843a2f6d35a5e00fbfbedf1c77618a97b91a627c41a51d8e0a342c31"
+}

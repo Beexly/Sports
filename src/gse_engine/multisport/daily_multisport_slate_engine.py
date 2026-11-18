@@ -42,6 +42,9 @@ from gse_engine.multisport.wave40_universal_sports_metrics_encyclopedia_and_hand
 from gse_engine.multisport.wave41_f1_pit_strategy_nba_pra_copula_and_14sport_expansion import (  # noqa: E501
     evaluate_wave41_14sport_and_copula_propsim_suite,
 )
+from gse_engine.multisport.wave42_darts_markov_cycling_wbal_and_18sport_expansion import (  # noqa: E501
+    evaluate_wave42_18sport_darts_and_cycling_suite,
+)
 
 ESPN_SCOREBOARD_ENDPOINTS: dict[str, str] = {
     "NBA": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
@@ -1543,6 +1546,7 @@ def evaluate_multisport_sabermetrics_and_pitch_control_overlay(
     w34_xfer = evaluate_cross_sport_metric_transfers()
     w40_ms = evaluate_wave40_universal_multisport_metrics_suite()
     w41_ms = evaluate_wave41_14sport_and_copula_propsim_suite()
+    w42_ms = evaluate_wave42_18sport_darts_and_cycling_suite()
     return {
         "schema": "wave26_sabermetric_pitch_control_overlay_v1",
         "mlb_woba": float(saber["mlb_woba"]),
@@ -1556,6 +1560,7 @@ def evaluate_multisport_sabermetrics_and_pitch_control_overlay(
         "wave34_cross_sport_transfers": w34_xfer,
         "wave40_universal_metrics_and_handicaps": w40_ms,
         "wave41_14sport_f1_and_nba_pra_copula": w41_ms,
+        "wave42_18sport_darts_and_cycling": w42_ms,
         "all_finite": all(math.isfinite(v) for v in vals),
     }
 

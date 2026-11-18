@@ -117,6 +117,9 @@ from gse_engine.multisport.wave40_universal_sports_metrics_encyclopedia_and_hand
 from gse_engine.multisport.wave41_f1_pit_strategy_nba_pra_copula_and_14sport_expansion import (  # noqa: E501
     evaluate_wave41_14sport_and_copula_propsim_suite,
 )
+from gse_engine.multisport.wave42_darts_markov_cycling_wbal_and_18sport_expansion import (  # noqa: E501
+    evaluate_wave42_18sport_darts_and_cycling_suite,
+)
 from gse_engine.observability.kernel_registry_and_antipatterns import (
     run_all_antipattern_guards,
 )
@@ -146,6 +149,9 @@ from gse_engine.science.wave39_gsi_hpa_proteomics_mrna_concordance_and_chronic_s
 from gse_engine.science.wave41_gsi_reactome_pathway_uniprot_stokes_einstein_and_icu_los_engine import (  # noqa: E501
     evaluate_wave41_gsi_reactome_uniprot_and_icu_los_suite,
 )
+from gse_engine.science.wave42_gsi_alphafold_interpro_proteolysis_and_icu_trajectory_engine import (  # noqa: E501
+    evaluate_wave42_gsi_alphafold_interpro_and_trajectory_suite,
+)
 from gse_engine.tracking.aws_ngs_going_deep_gse_gsi_suite import (
     evaluate_aws_ngs_going_deep_stage2_bridge,
 )
@@ -169,6 +175,9 @@ from gse_engine.tracking.wave40_ngs_separation_ryoe_cpoe_and_ftn_qb_fault_engine
 )
 from gse_engine.tracking.wave41_pocket_ball_security_kickoff_return_swarm_and_14sport_engine import (  # noqa: E501
     evaluate_wave41_pocket_security_kr_and_14sport_suite,
+)
+from gse_engine.tracking.wave42_pfr_advstats_qbr_two_high_yac_and_total_pace_engine import (  # noqa: E501
+    evaluate_wave42_pfr_advstats_qbr_and_18sport_suite,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -2808,6 +2817,27 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
                 repo_root=REPO_ROOT,
             )
         ),
+        "wave42_gsi_alphafold_interpro_pillar": (
+            evaluate_wave42_gsi_alphafold_interpro_and_trajectory_suite(
+                away_team=away_u,
+                home_team=home_u,
+                as_of_week=int(week),
+                repo_root=REPO_ROOT,
+            )
+        ),
+        "wave42_18sport_darts_cycling_pillar": evaluate_wave42_18sport_darts_and_cycling_suite(
+            REPO_ROOT
+        ),
+        "wave42_pfr_qbr_and_18sport_pillar": (
+            wave32_res.get("wave42_pfr_qbr_and_18sport_matchups")
+            or evaluate_wave42_pfr_advstats_qbr_and_18sport_suite(
+                away_team=away_u,
+                home_team=home_u,
+                as_of_week=int(week),
+                is_indoor=bool(is_indoor),
+                repo_root=REPO_ROOT,
+            )
+        ),
         "nvidia_hermes_capability_routes": nvidia_hermes_routes,
         "away_epa_corpus_delta": round(away_epa_corpus_delta, 5),
         "home_epa_corpus_delta": round(home_epa_corpus_delta, 5),
@@ -3423,6 +3453,19 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         else:
             w41_wired = True
 
+    w42_blk = priors.get("wave42_pfr_qbr_and_18sport_pillar")
+    w42_wired = False
+    if w42_blk is not None:
+        if (
+            not isinstance(w42_blk, Mapping)
+            or w42_blk.get("wired") is not True
+            or w42_blk.get("real_money_stake_cleared") is not False
+            or float(w42_blk.get("clinical_ruo_sports_weight", 1.0)) != 0.0
+        ):
+            missing_or_unwired.append("wave42_pfr_qbr_and_18sport_pillar")
+        else:
+            w42_wired = True
+
     required_scalars = (
         "away_epa_corpus_delta",
         "home_epa_corpus_delta",
@@ -3482,6 +3525,7 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         "wave39_gsi_hpa_and_disruption_total_wired": w39_wired,
         "wave40_ngs_and_universal_metrics_wired": w40_wired,
         "wave41_pocket_security_and_14sport_wired": w41_wired,
+        "wave42_pfr_qbr_and_18sport_wired": w42_wired,
         "pillars_verified": list(required_pillars),
         "scalars_verified_count": len(required_scalars),
         "player_multipliers_count": len(priors.get("player_target_and_carry_multipliers") or {}),
