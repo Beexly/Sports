@@ -1,0 +1,71 @@
+{
+  "schema": "gse.w11_tnf_zero_surprise_preflight_receipt.v1",
+  "generated_utc": "2026-11-19T05:07:53.893366+00:00",
+  "season": 2026,
+  "week": 11,
+  "corpus": {
+    "pdfs_877": 877,
+    "alphaxiv_papers": 203,
+    "alphaxiv_vault_breakdown": {
+      "alphaxiv_28paper_dfl_causal_sports_integrity_and_rg_vault_2026.json": 28,
+      "alphaxiv_31paper_frontier_and_arithmetic_audit_vault_2026.json": 31,
+      "alphaxiv_66paper_persistent_memory_durable_ci_governance_and_spec_ledger_vault_2026.json": 66,
+      "alphaxiv_78paper_conformal_copula_dfs_parlay_nfl_and_referee_vault_2026.json": 78
+    },
+    "matrix_equations": 9875,
+    "inventory_equations": 21419,
+    "complete_books": 503,
+    "foundry_primitives": 50656,
+    "nov16_to_18_csvs": 145,
+    "zero_odds_rlvr_count": 412
+  },
+  "reachability": {
+    "seeds": [
+      "gse_engine.workflows.unified_reasoning_simulation_projection_spine",
+      "gse_engine.cli",
+      "gse_engine.compute.corpus_situational_integrator"
+    ],
+    "src_gse_engine_total": 98,
+    "src_gse_engine_reachable": 98,
+    "unreachable": []
+  },
+  "parity": {
+    "w11_sealed_sha256": "a2aca13a763e7fce3ab38d5ef5f996b7e41b3e0034ffebfd4f587faa2632c30b",
+    "web_sealed_sha256": "a2aca13a763e7fce3ab38d5ef5f996b7e41b3e0034ffebfd4f587faa2632c30b",
+    "hash_match": true,
+    "games_simulated": 13,
+    "total_worlds_simulated": 130000
+  },
+  "guardrails": {
+    "public_root_files_scanned": 101,
+    "public_root_zero_vault_violations": 0,
+    "vercel_cron_count": 16,
+    "vercel_config_byte_identical": true,
+    "mind_staging_records": 1448,
+    "mind_jsonl_untouched": true
+  },
+  "governance": {
+    "clinical_ruo_sports_weight": 0.0,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0
+  },
+  "checks": {
+    "pdfs_877_ok": true,
+    "alphaxiv_203_ok": true,
+    "matrix_equations_ok": true,
+    "inventory_equations_ok": true,
+    "complete_books_503_ok": true,
+    "foundry_primitives_50656_ok": true,
+    "nov16_to_18_csvs_145_ok": true,
+    "zero_odds_rlvr_412_ok": true,
+    "src_gse_engine_100pct_reachable": true,
+    "w11_web_sha_parity_ok": true,
+    "w11_13_games_ok": true,
+    "public_root_zero_vault_leak_ok": true,
+    "vercel_cron_cap_16_ok": true,
+    "mind_staging_shard_ok": true,
+    "governance_locks_ok": true
+  },
+  "overall_ready": true,
+  "receipt_sha256": "909848ee8f3725d387a0fded4a0df536ab2e0f1538c03d11f95a87894ff6f5fa"
+}
