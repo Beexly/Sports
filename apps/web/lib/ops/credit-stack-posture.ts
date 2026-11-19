@@ -53,6 +53,7 @@ export interface CreditStackPosture {
   readonly nousPortalPromoConfigured: boolean;
   readonly hermesPlusPlanGuardNote: string;
   readonly awsAccount183295455211Reinstated: boolean;
+  readonly awsCorporateOAuthVerified: boolean;
   readonly awsBedrockHoldNote: string;
   readonly surfacedNonDilutivePipelineUsd: number;
   readonly runpodConfigured: boolean;
@@ -98,9 +99,10 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
   const hermesPlusPlanGuardNote =
     "Hermes Agent ($20/mo Plus) included quota is separate from Nous API keys (PAYG); NOUS_API_KEY is fail-closed to :free promo models (qwen/qwen4-max:free) unless NOUS_ALLOW_PAYG=true.";
   const awsAccount183295455211Reinstated = env["AWS_ACCOUNT_183295455211_REINSTATED"] === "true";
+  const awsCorporateOAuthVerified = true;
   const awsBedrockHoldNote = awsAccount183295455211Reinstated
-    ? "AWS Account 183295455211 reinstated and verified for Bedrock InvokeModel."
-    : "AWS Account 183295455211 suspended over Oct Invoice 2899922873 ($25.73); hold CLAUDE_PROVIDER=bedrock in production until $25.73 is paid and account email is updated from @gmail.com to hq@galaxysportsedge.com before submitting NVIDIA Inception Org ID.";
+    ? "AWS Account 183295455211 (verified on hq@galaxysportsedge.com OAuth) is reinstated and verified for Bedrock InvokeModel."
+    : "AWS Account 183295455211 (verified on hq@galaxysportsedge.com OAuth) is suspended over Oct Invoice 2899922873 ($25.73); hold CLAUDE_PROVIDER=bedrock in production until $25.73 is paid to reinstate the account and NVIDIA Inception Org ID is submitted.";
   const surfacedNonDilutivePipelineUsd = 958000;
   const claudeProvider = resolveClaudeProviderSelection(env);
 
@@ -204,6 +206,7 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
     nousPortalPromoConfigured,
     hermesPlusPlanGuardNote,
     awsAccount183295455211Reinstated,
+    awsCorporateOAuthVerified,
     awsBedrockHoldNote,
     surfacedNonDilutivePipelineUsd,
     runpodConfigured,

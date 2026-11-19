@@ -127,8 +127,10 @@ describe("loadCreditStackPosture", () => {
     expect(p.nousPortalPromoConfigured).toBe(true);
     expect(p.hermesPlusPlanGuardNote).toContain("NOUS_ALLOW_PAYG=true");
     expect(p.awsAccount183295455211Reinstated).toBe(false);
+    expect(p.awsCorporateOAuthVerified).toBe(true);
     expect(p.awsBedrockHoldNote).toContain("2899922873");
     expect(p.awsBedrockHoldNote).toContain("hq@galaxysportsedge.com");
+    expect(p.awsBedrockHoldNote).toMatch(/OAuth/i);
     expect(p.surfacedNonDilutivePipelineUsd).toBe(958000);
     const reinstated = loadCreditStackPosture({
       AWS_ACCOUNT_183295455211_REINSTATED: "true",

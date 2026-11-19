@@ -19,6 +19,7 @@ from typing import Any
 
 import numpy as np
 
+from gse_engine.cloud.gcp_path36_stack import PATH36_DEFERRAL_LOCKS, PATH36_VERIFIED_STATUS
 from gse_engine.cloud.gcp_warehouse import BigQueryClientProtocol, DryRunJobProtocol
 from gse_engine.compute.biomech_and_ballistics import (
     compute_humid_air_density,
@@ -98,6 +99,7 @@ _CROWN_JEWEL_REGISTRY: tuple[str, ...] = (
     "cache_and_sandbox_governor",
     "vision_and_geofence",
     "gcp_warehouse",
+    "gcp_path36_stack",
     "kantorovich_mmot",
     "galaxy_conformal_ot",
     "intelligence_props_suite",
@@ -412,6 +414,8 @@ def evaluate_dark_intelligence_pack_for_matchup(
         str(qb2_shift.get("archetype", "GameManager_Vet")),
     )
     activated.append("gcp_warehouse")
+    _path36_gke_lock = PATH36_DEFERRAL_LOCKS["gke_cluster_build"]
+    activated.append("gcp_path36_stack")
 
     # 8. Kantorovich MMOT + Birkhoff Certificate
     mmot_mod = _safe_import("engine.transport.kantorovich_mmot")
@@ -632,6 +636,9 @@ def evaluate_dark_intelligence_pack_for_matchup(
             "flatbuffer_roundtrip_ok": bool(isinstance(unpacked, tuple)),
             "gvisor_profile": gv_runtime,
             "warehouse_protocols": _warehouse_protocols,
+            "path36_verified_complete": bool(PATH36_VERIFIED_STATUS["overall_complete"]),
+            "path36_credits_remaining": int(PATH36_VERIFIED_STATUS["total_credits_remaining"]),
+            "path36_gke_lock": _path36_gke_lock,
             "cache_entries": cache_hits,
             "prose_preview": prose_out,
             "public_copy_clean": copy_clean,

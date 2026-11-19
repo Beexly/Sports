@@ -186,6 +186,8 @@ def test_wave47_credit_router_spine_wiring_rlvr_406_and_hygiene() -> None:
     aws_held = validate_aws_bedrock_reinstatement_guard({})
     assert aws_held["account_id"] == "183295455211"
     assert aws_held["invoice_id"] == "2899922873"
+    assert aws_held["corporate_oauth_email"] == "hq@galaxysportsedge.com"
+    assert aws_held["corporate_oauth_verified"] is True
     assert aws_held["reinstated"] is False
     assert aws_held["bedrock_flip_allowed"] is False
     assert aws_held["status"] == "suspended_invoice_2899922873_halted"

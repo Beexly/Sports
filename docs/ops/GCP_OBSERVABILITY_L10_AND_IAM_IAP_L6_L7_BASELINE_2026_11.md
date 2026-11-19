@@ -2,7 +2,7 @@
 
 **Date:** 2026-11-19
 **Status:** Active P0 Governance Baseline (Zero-Waste + Fail-Closed)
-**Compliance Anchor:** Incorporates Motif's Path 36 progress (`1,977` pts: C1-C2 `100%`, C3 `96%`, C4 `87%`; `GSP089` Monitoring; `X-Goog-IAP-JWT-Assertion`; Google AI Ultra `$100/mo` = `$1,200/yr` GCP credit + `35` monthly GDP lab credits). Contains zero unconfirmed lab IDs and zero primitive broad roles.
+**Compliance Anchor:** Incorporates Motif's final Path 36 Write-Up (`docs/ops/GCP_PATH36_FOUNDATIONS_IMPLEMENTATION_RECORD_2026_11_19.md`): **Path 36 is NOT 100%** (`1,977` pts: C1-C2 `100%`, C3 `96%`, C4 `87%` capped by deprecated/unavailable Dataprep `640821`; `0 TOTAL CREDITS` blocking 4 skill badges & Paths `420/419/4525` at `0%`; `GSP089` Monitoring; `X-Goog-IAP-JWT-Assertion` ES256 guard in `apps/web/lib/auth/iap-jwt-guard.ts`). Contains zero primitive broad roles.
 
 ---
 

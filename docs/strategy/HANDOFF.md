@@ -3,6 +3,22 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-19 (2026-11-19 CT) -- Path 36 Foundations Backlog Implementation (TS + Python), AWS `hq@galaxysportsedge.com` OAuth Confirmation & Exact Status Sync
+
+- **What changed**:
+  - Updated AWS Account `183295455211` reinstatement guard (`apps/web/lib/ops/credit-stack-posture.ts`, `src/gse_engine/governance/credit_and_zero_waste_router.py`, and credit docs) to record Garrett's confirmation that Account `183295455211` already runs on `hq@galaxysportsedge.com` OAuth (`awsCorporateOAuthVerified: true`), simplifying recovery to paying `$25.73` Oct Invoice `2899922873` + submitting NVIDIA Inception Org ID `#1086418431979798` before flipping `CLAUDE_PROVIDER=bedrock`.
+  - Implemented Motif's Path 36 Sections 3-6 priority backlog in code:
+    - `packages/ops/src/gcp-path36-runtime.ts` (Pub/Sub + Cloud Run Gen 2 `CloudEvent` handler, Monitoring Ops Agent `2.73.0` & alert teardown guard, `EXTERNAL_MANAGED` ALB + Cloud Armor `deny-403`, IAM CEL `hasOnly([...])` & `networkAdmin` vs `securityAdmin` separation, GCS JSON API & in-shell OAuth token validation).
+    - `apps/web/lib/auth/iap-jwt-guard.ts` (pure `node:crypto` ES256 `X-Goog-IAP-JWT-Assertion` verifier rejecting spoofed unsigned `X-Goog-Authenticated-User-*` headers) and `apps/web/lib/nova/gcp-prebuilt-ml-enrichment.ts` (`GSP097` Natural Language, `GSP119` Speech-to-Text with `keyString:` normalization & SiriusXM fail-closed halt, `GSP154` Video Intelligence LRO polling).
+    - `src/gse_engine/cloud/gcp_path36_stack.py` + `gcp_warehouse.py` (time-partitioned BigQuery DDL, BQML `LOGISTIC_REG` / `ML.EVALUATE` / `ML.PREDICT` SQL builders, `GSP192` `PubSub_to_BigQuery` preflight guard, `GSP207` 6-flag Beam `DataflowRunner` command builder, AutoML fail-closed gate, `PATH36_VERIFIED_STATUS`, and `PATH36_DEFERRAL_LOCKS`), wired into `dark_intelligence_activation_bridge.py` (`99/99` reachability).
+  - Created canonical `docs/ops/GCP_PATH36_FOUNDATIONS_IMPLEMENTATION_RECORD_2026_11_19.md` and reconciled all baseline docs so zero docs claim Path 36 or Course 4 is `100%` (`1,977` pts, Starter plan at `0 TOTAL CREDITS`, Course 4 at `87%` permanently capped by deprecated/unavailable Dataprep `640821`).
+- **What was proven**:
+  - Real `node:crypto` P-256 ES256 JWT tests (`apps/web/__tests__/iap-jwt-and-nova-ml-apis.test.ts`), `packages/ops/src/__tests__/gcp-path36-runtime.test.ts`, `tests/unit/test_gcp_path36_stack.py`, `tests/unit/test_gcp_warehouse.py`, doc/pricing/ADR/guardrail tests, `ruff`, `mypy --strict`, `verify_total_corpus_and_w11_preflight.py --write-receipt` (`99/99` reachable, `overall_ready: true`), and staged `secret-scan.mjs` all pass.
+- **What was not**:
+  - Google Skills Starter plan remains at `0 TOTAL CREDITS` (`0%` Skill Badges, `0%` Paths `420/419/4525`) pending Garrett's choice between Option A (`$29/mo` 7-day Pro trial) and Option B (`$0.01` Starter pack); Course 4 cannot reach `100%` due to Google's unavailable Dataprep lab `640821`.
+- **Next role must**:
+  - Keep `PATH36_DEFERRAL_LOCKS` (no GKE, no Workbench custom training, no Dataprep) and `AWS_ACCOUNT_183295455211_REINSTATED=false` hold active until Garrett confirms Invoice `2899922873` is paid and selects his Google Skills credit option.
+
 ## 2026-11-19 (2026-11-19 CT) -- Master Plan /goal Closure: Layer-1 Market-Anchored 10k-World W1-11 Battery, 147-Game Dark-Intelligence Bake-Off, Alibaba + Nous qwen/qwen4-max:free Guardrails & Zero-Surprise W11 TNF Preflight
 
 - **What changed**:
