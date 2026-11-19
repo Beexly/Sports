@@ -199,12 +199,30 @@ def test_post_window_settlement_grading_logic():
     assert grade3["total_result"] == "PUSH"
 
 
-def test_post_window_settlement_trainer_feed_schema():
+def test_post_window_settlement_trainer_feed_schema(tmp_path: Path) -> None:
     """Verify settlement generates trainer-ready jsonl feeds under brain/feeds/<date>/."""
+    # Hermetic: run against a throwaway repo root seeded with the committed
+    # scoreboard snapshot. Live refresh off and the boxscore/corpus side effects
+    # disabled, so the suite never overwrites the tracked
+    # data/engine/espn_2026_week10_scoreboard.json artifact (which poisons every
+    # downstream walk-forward metric) and never hits the network.
+    tmp_repo = tmp_path / "repo"
+    sb_dir = tmp_repo / "data" / "engine"
+    sb_dir.mkdir(parents=True)
+    (sb_dir / "espn_2026_week10_scoreboard.json").write_text(
+        (REPO_ROOT / "data" / "engine" / "espn_2026_week10_scoreboard.json").read_text(
+            encoding="utf-8"
+        ),
+        encoding="utf-8",
+    )
     result = run_post_window_settlement_and_autopsy(
         season=2026,
         week=10,
         window="sun_early",
+        repo_root=tmp_repo,
+        live_refresh=False,
+        fetch_boxscore=False,
+        sync_grading_corpus=False,
     )
     assert result.get("records_written", 0) >= 1
     feed_path = Path(result["feed_output_path"])
@@ -234,8 +252,20 @@ def test_post_window_settlement_trainer_feed_schema():
         assert required_field in first_record
 
 
-def test_post_window_direct_to_mind_safety_violation():
+def test_post_window_direct_to_mind_safety_violation(tmp_path: Path) -> None:
     """Verify HARD DIRECT-TO-MIND DOCTRINE: writing to brain/mind.jsonl is strictly blocked."""
+    # Hermetic repo root + live refresh off: the safety check is reached before any
+    # write, but the default (live) path would refresh the tracked ESPN scoreboard
+    # artifact first; keep this test free of network and repo side effects.
+    tmp_repo = tmp_path / "repo"
+    sb_dir = tmp_repo / "data" / "engine"
+    sb_dir.mkdir(parents=True)
+    (sb_dir / "espn_2026_week10_scoreboard.json").write_text(
+        (REPO_ROOT / "data" / "engine" / "espn_2026_week10_scoreboard.json").read_text(
+            encoding="utf-8"
+        ),
+        encoding="utf-8",
+    )
     forbidden_path = REPO_ROOT / "brain" / "mind.jsonl"
     with pytest.raises(RuntimeError) as exc_info:
         run_post_window_settlement_and_autopsy(
@@ -243,6 +273,10 @@ def test_post_window_direct_to_mind_safety_violation():
             week=10,
             window="sun_early",
             output_feed_path=forbidden_path,
+            repo_root=tmp_repo,
+            live_refresh=False,
+            fetch_boxscore=False,
+            sync_grading_corpus=False,
         )
     assert "HARD SAFETY VIOLATION" in str(exc_info.value)
     assert "brain/mind.jsonl" in str(exc_info.value)
