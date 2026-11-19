@@ -8,13 +8,24 @@ function pct(value: number): string {
   return `${(value * 100).toFixed(1)}%`;
 }
 
+export interface LockedRowPlaceholder {
+  readonly matchup: string;
+  readonly confidence_display: string;
+}
+
 interface SealedTableProps {
   rows: SealedRow[];
   watch?: boolean;
   freeLimit?: number;
+  lockedPlaceholders?: ReadonlyArray<LockedRowPlaceholder>;
 }
 
-export function SealedTable({ rows, watch = false, freeLimit }: SealedTableProps): JSX.Element {
+export function SealedTable({
+  rows,
+  watch = false,
+  freeLimit,
+  lockedPlaceholders,
+}: SealedTableProps): JSX.Element {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -37,9 +48,22 @@ export function SealedTable({ rows, watch = false, freeLimit }: SealedTableProps
     }
   };
 
-  const hasLimit = typeof freeLimit === "number" && freeLimit > 0 && freeLimit < rows.length;
-  const freeRows = hasLimit ? rows.slice(0, freeLimit) : rows;
-  const lockedRows = hasLimit ? rows.slice(freeLimit) : [];
+  const hasPlaceholders = Array.isArray(lockedPlaceholders) && lockedPlaceholders.length > 0;
+  const hasLimit =
+    hasPlaceholders ||
+    (typeof freeLimit === "number" && freeLimit > 0 && freeLimit < rows.length);
+  const freeRows =
+    !hasPlaceholders && typeof freeLimit === "number" && freeLimit > 0 && freeLimit < rows.length
+      ? rows.slice(0, freeLimit)
+      : rows;
+  const lockedRows: ReadonlyArray<LockedRowPlaceholder> = hasPlaceholders
+    ? lockedPlaceholders!
+    : typeof freeLimit === "number" && freeLimit > 0 && freeLimit < rows.length
+      ? rows.slice(freeLimit).map((r) => ({
+          matchup: r.matchup,
+          confidence_display: r.confidence_display,
+        }))
+      : [];
 
   return (
     <div className="overflow-x-auto border-y border-[#31353F]">
@@ -101,7 +125,7 @@ export function SealedTable({ rows, watch = false, freeLimit }: SealedTableProps
                     Get Weekly NFL Matchup &amp; Injury Notes
                   </h3>
                   <p className="mt-2 text-sm text-[#C4BFB6]">
-                    Register your email for weekly NFL game-environment and injury workload notes, or unlock the full Week 10 card on our storefront now.
+                    Register your email for weekly NFL game-environment and injury workload notes, or unlock the active Week 11 card on our storefront now.
                   </p>
 
                   {!submitted ? (
@@ -125,7 +149,7 @@ export function SealedTable({ rows, watch = false, freeLimit }: SealedTableProps
                         href="/packages"
                         className="inline-flex min-h-[44px] items-center rounded border border-[#FF4D2E] px-6 text-xs font-bold uppercase tracking-wider text-[#FF4D2E] hover:bg-[#FF4D2E]/10"
                       >
-                        Unlock Full Card (From $19) →
+                        Unlock Full Card (From $9) →
                       </Link>
                     </form>
                   ) : (
@@ -142,8 +166,8 @@ export function SealedTable({ rows, watch = false, freeLimit }: SealedTableProps
           )}
 
           {/* Locked Card Rows */}
-          {lockedRows.map((row) => (
-            <tr key={`${row.matchup}-${row.selection}`} className="border-t border-[#31353F] bg-[#0B0D12]/60">
+          {lockedRows.map((row, idx) => (
+            <tr key={`${row.matchup}-locked-${idx}`} className="border-t border-[#31353F] bg-[#0B0D12]/60">
               <td className="px-4 py-6 pr-6 align-top">
                 <div className="font-display text-xl uppercase tracking-wide text-[#8F8A82]">
                   🔒 [LOCKED · ALL-ACCESS / PRO PACK ONLY]

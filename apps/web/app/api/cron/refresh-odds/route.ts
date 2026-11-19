@@ -46,6 +46,7 @@
 
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
+import { canMintSignalPicksNow } from "@/lib/cron/noon-window-guard";
 import { isNeonQuietWindow } from "@/lib/cron/neon-quiet-window";
 import { db } from "@sports/db";
 import {
@@ -115,16 +116,18 @@ export async function GET(request: Request) {
   });
 
   let signalFill: Awaited<ReturnType<typeof import("@sports/ingestion-pipeline").generateSignalSlate>> | null = null;
-  try {
-    const { generateSignalSlate, slateAssociationTrace } = await import("@sports/ingestion-pipeline");
-    signalFill = await generateSignalSlate({
-      logPrefix: "[cron:refresh-odds:signal]",
-      trace: await slateAssociationTrace(),
-    });
-  } catch (sigErr) {
-    console.warn(
-      `[cron:refresh-odds] signal slate failed: ${sigErr instanceof Error ? sigErr.message : sigErr}`,
-    );
+  if (canMintSignalPicksNow(request).allowed) {
+    try {
+      const { generateSignalSlate, slateAssociationTrace } = await import("@sports/ingestion-pipeline");
+      signalFill = await generateSignalSlate({
+        logPrefix: "[cron:refresh-odds:signal]",
+        trace: await slateAssociationTrace(),
+      });
+    } catch (sigErr) {
+      console.warn(
+        `[cron:refresh-odds] signal slate failed: ${sigErr instanceof Error ? sigErr.message : sigErr}`,
+      );
+    }
   }
 
   const shadow: Record<string, ShadowPassResult | { readonly error: string }> = {};

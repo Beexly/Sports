@@ -24,7 +24,7 @@ Updated: **2026-11-18** (Week 11 TNF `IND @ HOU` Launch Readiness & Whop Ladder 
 | 0 | Open Field Pass (`/props`, `/tools`, `/parlay-mri`) | `$0` | Free public lane | Zero paid picks leaked; free game-environment analytics and transparent pass reasoning |
 | 1 | Week 11 TNF `IND @ HOU` Impulse Door | `$9` | One-time slate unlock | Includes `72-hour` full `$9` upgrade credit toward `$39/mo` Pro |
 | 2 | Week 12 Thanksgiving 5-Game Slate SKU | `$14` | One-time 5-game pack | Covers `GB @ LAR`, `CHI @ DET`, `PHI @ DAL`, `KC @ BUF`, `DEN @ PIT` |
-| 3 | Quant Workbook / Specialty Core Packs | `$19` - `$24` | One-time specialty pass | Defense/IDP (`$19`), Anytime TD (`$24`), Kicking & 1Q/1H (`$24`) |
+| 3 | Quant Workbook / Specialty Core Packs | `$24` - `$29` | One-time specialty pass | Anytime TD (`$24`), Kicking & 1Q/1H (`$24`), Defense/IDP & Props (`$29`) |
 | 4 | Week 11 Sunday Full Slate / SGP Card | `$29` | One-time 11-game Sunday card | Backed by 30-Day Positive-CLV Pledge |
 | 5 | GSE Pro Membership (Founding 100 Seats) | `$39/mo` | Recurring monthly (or `$149` seasonal) | Backed by 30-Day Positive-CLV Pledge (`1.07%` trigger -> `98.94%` retention replacing single-slate refund traps) |
 | 6 | GSE Elite Membership (150-Lineup MME DFS) | `$79/mo` | Recurring monthly | Full Classic + Showdown 150-lineup MME DFS portfolio, SGPs, props, and 30-Day Positive-CLV Pledge |

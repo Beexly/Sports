@@ -131,7 +131,7 @@ function authorizationHeader({
   bodyParams = {},
   nonceValue = nonce(),
   timestampValue = timestamp(),
-  signatureMethod = "HMAC-SHA256",
+  signatureMethod = "HMAC-SHA1",
 }) {
   const oauthParams = {
     oauth_consumer_key: consumerKey,

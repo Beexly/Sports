@@ -316,7 +316,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     subtitle:
       "Every Week 11 Sunday & MNF Pack Included + 30-Day Positive-CLV Pledge Alignment",
     description:
-      "Unlock every single Week 11 pack across the Week 11 Sunday Main Slate & Monday Night Football (CIN @ WSH) in one click: Sunday/MNF Main Game Lines, Skill/QB Props, Defense & IDP Pack, Anytime Touchdown Pack, Correlated Parlay & SGP Pack, Kicking & 1Q/1H Derivative Pack, AND the complete RedZone DFS Portfolio (with Pro $39/mo and Elite $79/mo paths on Whop). The verified record is recomputed from the settlement database and lives at /record.",
+      "Unlock every single Week 11 pack across the Week 11 Sunday Main Slate & Monday Night Football (CIN @ WSH) in one click: Sunday/MNF Main Game Lines, Skill/QB Props, Defense & IDP Pack, Anytime Touchdown Pack, Correlated Parlay & SGP Pack, Kicking & 1Q/1H Derivative Pack, AND the complete RedZone DFS Portfolio on Whop. The verified record is recomputed from the settlement database and lives at /record.",
     windowSlot: "WEEKLY_PASS",
     standardPriceCents: 4900,
     creditBackPriceCents: null,

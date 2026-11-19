@@ -22,6 +22,7 @@
  */
 export const HANDLED_STRIPE_WEBHOOK_EVENTS = [
   "charge.refunded",
+  "checkout.session.async_payment_succeeded",
   "checkout.session.completed",
   "checkout.session.expired",
   "customer.subscription.created",

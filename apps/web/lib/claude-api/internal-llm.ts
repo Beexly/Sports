@@ -14,6 +14,11 @@
  *   INTERNAL_LLM_API_KEY   (Groq key; omit for local Ollama)
  */
 
+import {
+  DEFAULT_NOUS_BASE_URL,
+  resolveNousPromoModel,
+} from "./free-lane-policy";
+
 const ALIBABA_COMPAT_DEFAULT_BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1";
 const ALIBABA_COMPAT_DEFAULT_MODEL = "qwen-plus";
 
@@ -25,6 +30,14 @@ export function internalLlmConfig(env: Record<string, string | undefined> = proc
   if (baseUrl && model) {
     const apiKey = env["INTERNAL_LLM_API_KEY"]?.trim();
     return { baseUrl: baseUrl.replace(/\/$/, ""), model, ...(apiKey ? { apiKey } : {}) };
+  }
+  const nousKey = env["NOUS_API_KEY"]?.trim() || env["NOUS_PORTAL_API_KEY"]?.trim();
+  if (nousKey && env["NOUS_QWEN4_MAX_FREE_PROMO_ENABLED"] === "true") {
+    const promoModel = resolveNousPromoModel(env["NOUS_MODEL"], env);
+    if (promoModel) {
+      const nousBase = (env["NOUS_BASE_URL"]?.trim() || DEFAULT_NOUS_BASE_URL).replace(/\/+$/, "");
+      return { baseUrl: nousBase, model: promoModel, apiKey: nousKey };
+    }
   }
   const alibabaKey = env["ALIBABA_API_KEY"]?.trim() || env["DASHSCOPE_API_KEY"]?.trim();
   if (alibabaKey) {
@@ -89,7 +102,18 @@ export async function callInternalLlm(request: InternalLlmRequest): Promise<Inte
   const config = internalLlmConfig(request.env);
   if (!config) throw new InternalLlmError("Internal LLM tier is not configured", 0);
 
-  const model = request.model ?? config.model;
+  let model = request.model ?? config.model;
+  if (config.baseUrl.toLowerCase().includes("nousresearch")) {
+    const validated = resolveNousPromoModel(model, request.env);
+    if (!validated) {
+      throw new InternalLlmError(
+        `Model '${model}' blocked by Nous free-promo allowlist policy.`,
+        403,
+      );
+    }
+    model = validated;
+  }
+
   const doFetch = request.fetchImpl ?? fetch;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), request.timeoutMs ?? 30000);
@@ -98,6 +122,7 @@ export async function callInternalLlm(request: InternalLlmRequest): Promise<Inte
   try {
     const res = await doFetch(`${config.baseUrl}/chat/completions`, {
       method: "POST",
+      signal: controller.signal,
       headers: {
         "Content-Type": "application/json",
         ...(config.apiKey ? { Authorization: `Bearer ${config.apiKey}` } : {}),

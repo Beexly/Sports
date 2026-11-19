@@ -357,13 +357,8 @@ describe("/api/ops/public-surface-truth latency, timeout, and 45s cache", () => 
   });
 
   afterEach(async () => {
-    const mod = (await import("@/app/api/ops/public-surface-truth/route")) as Record<
-      string,
-      unknown
-    >;
-    if (typeof mod.__resetPublicSurfaceTruthCacheForTests === "function") {
-      (mod.__resetPublicSurfaceTruthCacheForTests as () => void)();
-    }
+    const cacheMod = await import("@/lib/ops/public-surface-truth-cache");
+    cacheMod.__resetPublicSurfaceTruthCacheForTests();
     delete process.env.CRON_SECRET;
     vi.unstubAllEnvs();
   });
@@ -412,19 +407,16 @@ describe("/api/ops/public-surface-truth latency, timeout, and 45s cache", () => 
     expect(body.mapBakeoff).toBeNull();
   }, 10_000);
 
-  it("serves bounded 45s cache without re-querying DB, honors ?fresh=1, and enforces 429 before cache", async () => {
-    const mod = (await import("@/app/api/ops/public-surface-truth/route")) as typeof import("@/app/api/ops/public-surface-truth/route") & {
-      __resetPublicSurfaceTruthCacheForTests?: () => void;
-      __setPublicSurfaceTruthCacheEnabledForTests?: (enabled: boolean | null) => void;
-      PUBLIC_SURFACE_TRUTH_CACHE_TTL_MS?: number;
-    };
+  it("serves bounded 45s cache without re-querying DB, gates ?fresh=1 to operator auth, and enforces 429 before cache", async () => {
+    const mod = await import("@/app/api/ops/public-surface-truth/route");
+    const cacheMod = await import("@/lib/ops/public-surface-truth-cache");
 
-    expect(typeof mod.__resetPublicSurfaceTruthCacheForTests).toBe("function");
-    expect(typeof mod.__setPublicSurfaceTruthCacheEnabledForTests).toBe("function");
-    expect(mod.PUBLIC_SURFACE_TRUTH_CACHE_TTL_MS).toBe(45_000);
+    expect(typeof cacheMod.__resetPublicSurfaceTruthCacheForTests).toBe("function");
+    expect(typeof cacheMod.__setPublicSurfaceTruthCacheEnabledForTests).toBe("function");
+    expect(cacheMod.PUBLIC_SURFACE_TRUTH_CACHE_TTL_MS).toBe(45_000);
 
-    mod.__resetPublicSurfaceTruthCacheForTests!();
-    mod.__setPublicSurfaceTruthCacheEnabledForTests!(true);
+    cacheMod.__resetPublicSurfaceTruthCacheForTests();
+    cacheMod.__setPublicSurfaceTruthCacheEnabledForTests(true);
 
     const req = makeRequest("http://localhost/api/ops/public-surface-truth");
     const first = await mod.GET(req);
@@ -438,13 +430,24 @@ describe("/api/ops/public-surface-truth latency, timeout, and 45s cache", () => 
     expect(secondBody.generatedAt).toBe(firstBody.generatedAt);
     expect(opsMocks.loadSettlementHealth).toHaveBeenCalledTimes(1);
 
-    const freshRes = await mod.GET(
+    // Unauthenticated ?fresh=1 must NOT bypass cache (prevents anonymous DB stampedes).
+    const anonFreshRes = await mod.GET(
       makeRequest("http://localhost/api/ops/public-surface-truth?fresh=1"),
     );
-    expect(freshRes.status).toBe(200);
+    expect(anonFreshRes.status).toBe(200);
+    expect(opsMocks.loadSettlementHealth).toHaveBeenCalledTimes(1);
+
+    // Authenticated operator ?fresh=1 bypasses the operator cache and queries DB.
+    process.env.CRON_SECRET = "latency-secret";
+    const opFreshRes = await mod.GET(
+      makeRequest("http://localhost/api/ops/public-surface-truth?fresh=1", {
+        authorization: "Bearer latency-secret",
+      }),
+    );
+    expect(opFreshRes.status).toBe(200);
     expect(opsMocks.loadSettlementHealth).toHaveBeenCalledTimes(2);
 
-    // 3 requests consumed so far; 57 more allowed before 429 on #61 (rate limit runs BEFORE cache).
+    // 3 public requests consumed so far; 57 more allowed before 429 on #61 (rate limit runs BEFORE cache).
     for (let i = 0; i < 57; i += 1) {
       const okRes = await mod.GET(req);
       expect(okRes.status).toBe(200);

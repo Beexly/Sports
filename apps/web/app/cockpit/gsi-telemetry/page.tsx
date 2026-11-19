@@ -27,13 +27,13 @@ export default function GsiTelemetryPage() {
             from the Beth Israel Deaconess Medical Center MIMIC-IV cohort.
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-3 text-[11px] font-mono text-ion-3">
-            <span>Galaxy Science Institute</span>
+            <span>GALAXY SPORTS NETWORK LLC · TX SOS #0806617184</span>
             <span>·</span>
-            <span>Texas SOS #15043440630001</span>
+            <span>Galaxy Science Institute (TX SOS #15043440630001 · Cure Before Dec 10)</span>
             <span>·</span>
             <span>IRS EIN 43-2804773</span>
             <span>·</span>
-            <span className="text-verify">Production Engine Active</span>
+            <span className="text-verify">ADR-0003 RUO Research Benchmarks</span>
           </div>
         </div>
 

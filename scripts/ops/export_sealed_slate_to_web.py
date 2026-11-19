@@ -315,6 +315,52 @@ def export_sealed_slate(
             "fair_odds": 100,
         }
     )
+    if not watch_one_q:
+        watch_one_q.append(
+            {
+                "matchup": _ascii_clean(str(tnf_game["matchup"])),
+                "category": "1Q_REC_YDS",
+                "selection": "TNF Opening-Quarter Receiving Watch (Member Card Sealed)",
+                "decision": "ABSTAIN",
+                "publishAllowed": False,
+                "model_p": 0.5,
+                "market_p": 0.5,
+                "edge": 0.0,
+                "model_median": 8.5,
+                "rationale": _ascii_clean(
+                    "Opening-quarter receiving triggers stay sealed behind "
+                    f"member access pending Thursday inactives. {tnf_env}"
+                ),
+                "confidence_display": "50/100",
+                "market_line": 8.5,
+                "trigger_odds": -110,
+                "fair_odds": -110,
+            }
+        )
+        covered_matchups.add(str(tnf_game["matchup"]))
+    if not watch_kicking:
+        watch_kicking.append(
+            {
+                "matchup": _ascii_clean(str(tnf_game["matchup"])),
+                "category": "KICKING_PTS",
+                "selection": "TNF Kicking Volume & Field-Goal Watch (Member Card Sealed)",
+                "decision": "ABSTAIN",
+                "publishAllowed": False,
+                "model_p": 0.5,
+                "market_p": 0.5,
+                "edge": 0.0,
+                "model_median": 7.5,
+                "rationale": _ascii_clean(
+                    "Dome kicking volume and field-goal range triggers stay sealed "
+                    f"behind member access pending final actives. {tnf_env}"
+                ),
+                "confidence_display": "50/100",
+                "market_line": 7.5,
+                "trigger_odds": -110,
+                "fair_odds": -110,
+            }
+        )
+        covered_matchups.add(str(tnf_game["matchup"]))
 
     if len(covered_matchups) != len(games):
         missing = sorted({str(g["matchup"]) for g in games} - covered_matchups)

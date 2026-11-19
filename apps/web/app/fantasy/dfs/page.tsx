@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description:
     "Plain-English NFL DFS game-environment breakdowns, target volume notes, cash cores, and tournament stack blueprints.",
   alternates: { canonical: "/fantasy/dfs" },
-  robots: { index: true, follow: true },
+  robots: { index: false, follow: true },
 };
 
 export default async function DfsSuitePage() {
@@ -57,7 +57,7 @@ export default async function DfsSuitePage() {
   const note = salaryIsReal
     ? `Licensed DFS salaries are live. ${measuredCopy}`
     : feedDown
-      ? `DraftKings and FanDuel pool projections are active below with role shares verified ahead of kickoff. ${measuredCopy}`
+      ? `No licensed salary feed is connected. DraftKings and FanDuel pool projections are active below with role shares verified ahead of kickoff. ${measuredCopy}`
       : `DFS salary board pricing is gated to active Fantasy, Pro, and DFS Pack members. ${measuredCopy}`;
 
   const dfsPackage = getPackageBySlug("week8-all-access") ?? LIVE_PACKAGE_CATALOG[4]!;

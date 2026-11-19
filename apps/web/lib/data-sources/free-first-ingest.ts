@@ -7,8 +7,8 @@
  * cleared source covers the need.
  */
 
-import { checkClearance } from "@/lib/scraping/clearance-engine";
-import type { ExtractionMode } from "@/lib/scraping/extraction-modes";
+import { checkClearance } from "../scraping/clearance-engine";
+import type { ExtractionMode } from "../scraping/extraction-modes";
 import {
   planIngestion,
   bestFreeClearedSource,

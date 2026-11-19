@@ -15,11 +15,14 @@ from gse_engine.compute.corpus_situational_integrator import (
     compile_all_books_pdfs_ig_x_and_situational_priors,
 )
 from gse_engine.governance.credit_and_zero_waste_router import (
+    NOUS_HERMES_PLUS_GUARDRAILS,
     PROHIBITED_SPEND_TRAPS,
     WAVE47_CREDIT_RLVR_TRAJECTORIES,
     WORKLOAD_CREDIT_ROUTES,
     evaluate_executive_credit_and_zero_waste_alignment_suite,
     resolve_zero_waste_workload_route,
+    validate_aws_bedrock_reinstatement_guard,
+    validate_nous_portal_zero_payg_request,
 )
 from gse_engine.governance.simulation_hold_gate import OperatorSimulationHoldError
 from gse_engine.memory.knowledge_continuity_and_gsi_rlvr_flywheel import (
@@ -151,15 +154,49 @@ def test_wave47_credit_router_spine_wiring_rlvr_406_and_hygiene() -> None:
     assert route_triage["env_signals_detected"]["posthog_session_replay_default_off"] is True
 
     cred = evaluate_executive_credit_and_zero_waste_alignment_suite(
-        env={"ALIBABA_API_KEY": "ali-test-key", "CEREBRAS_API_KEY": "cb-test"}
+        env={
+            "ALIBABA_API_KEY": "ali-test-key",
+            "CEREBRAS_API_KEY": "cb-test",
+            "NOUS_API_KEY": "nous-test-key",
+            "NOUS_MODEL": "qwen4-max",
+            "NOUS_QWEN4_MAX_FREE_PROMO_ENABLED": "true",
+            "NOUS_ALLOW_PAYG": "false",
+        }
     )
     assert cred["wired"] is True
     assert cred["all_11_workloads_credit_or_free_aligned"] is True
     assert int(cred["unneeded_cash_leak_count"]) == 0
     assert cred["alibaba_qwen_lane_wired"] is True
+    assert cred["nous_portal_qwen4_max_free_promo_wired"] is True
+    assert cred["nous_payg_guard_active"] is True
     assert cred["posthog_bot_and_replay_guard_active"] is True
     assert cred["public_token_reseller_enabled"] is False
     assert cred["real_money_stake_cleared"] is False
+
+    assert NOUS_HERMES_PLUS_GUARDRAILS["api_keys_use_payg_credits_not_included_usage"] is True
+    free_ok = validate_nous_portal_zero_payg_request("qwen4-max", env={"NOUS_ALLOW_PAYG": "false"})
+    assert free_ok["allowed"] is True
+    assert free_ok["model"] == "qwen/qwen4-max:free"
+    payg_halted = validate_nous_portal_zero_payg_request(
+        "nousresearch/hermes-4-405b", env={"NOUS_ALLOW_PAYG": "false"}
+    )
+    assert payg_halted["allowed"] is False
+    assert payg_halted["reason"] == "NOUS_API_KEY_PAYG_HALTED"
+
+    aws_held = validate_aws_bedrock_reinstatement_guard({})
+    assert aws_held["account_id"] == "183295455211"
+    assert aws_held["invoice_id"] == "2899922873"
+    assert aws_held["corporate_oauth_email"] == "hq@galaxysportsedge.com"
+    assert aws_held["corporate_oauth_verified"] is True
+    assert aws_held["reinstated"] is False
+    assert aws_held["bedrock_flip_allowed"] is False
+    assert aws_held["status"] == "suspended_invoice_2899922873_halted"
+    aws_ready = validate_aws_bedrock_reinstatement_guard(
+        {"AWS_ACCOUNT_183295455211_REINSTATED": "true"}
+    )
+    assert aws_ready["reinstated"] is True
+    assert aws_ready["bedrock_flip_allowed"] is True
+    assert aws_ready["status"] == "reinstated_ready"
 
     compiled = compile_all_books_pdfs_ig_x_and_situational_priors(
         away_team="ARI",

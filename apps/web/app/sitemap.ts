@@ -24,11 +24,11 @@ const CANONICAL_UPCOMING_NFL_PREVIEWS: ReadonlyArray<{
   homeTeam: string;
 }> = [
   { awayTeam: "Indianapolis Colts", homeTeam: "Houston Texans" },
-  { awayTeam: "Green Bay Packers", homeTeam: "Los Angeles Rams" },
-  { awayTeam: "Chicago Bears", homeTeam: "Detroit Lions" },
-  { awayTeam: "Philadelphia Eagles", homeTeam: "Dallas Cowboys" },
-  { awayTeam: "Kansas City Chiefs", homeTeam: "Buffalo Bills" },
-  { awayTeam: "Denver Broncos", homeTeam: "Pittsburgh Steelers" },
+  { awayTeam: "Miami Dolphins", homeTeam: "Buffalo Bills" },
+  { awayTeam: "New York Jets", homeTeam: "Los Angeles Chargers" },
+  { awayTeam: "New Orleans Saints", homeTeam: "Chicago Bears" },
+  { awayTeam: "Carolina Panthers", homeTeam: "Tampa Bay Buccaneers" },
+  { awayTeam: "Minnesota Vikings", homeTeam: "San Francisco 49ers" },
 ];
 
 const ROUTES: ReadonlyArray<{
@@ -52,7 +52,6 @@ const ROUTES: ReadonlyArray<{
   { path: "/journal", priority: 0.7, changeFrequency: "weekly" },
   { path: "/blog", priority: 0.7, changeFrequency: "weekly" },
   { path: "/pricing", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/observatory", priority: 0.6, changeFrequency: "weekly" },
   { path: "/airwave", priority: 0.6, changeFrequency: "weekly" },
   { path: "/vault", priority: 0.6, changeFrequency: "weekly" },
   { path: "/about", priority: 0.5, changeFrequency: "monthly" },

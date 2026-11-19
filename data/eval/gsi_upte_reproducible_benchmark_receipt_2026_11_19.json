@@ -1,0 +1,56 @@
+{
+  "schema": "gsi.upte.reproducible_benchmark_receipt.v1",
+  "generated_by": "scripts/ops/run_gsi_upte_reproducible_benchmark.py",
+  "deterministic_core_sha256": "223dafb0d1ffa661a09fdbd72af5097e3c6d18a6fef52ed4901c842ac4224a05",
+  "measured_host_verification": {
+    "compiler": "g++.EXE",
+    "flags": [
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-O3",
+      "-fno-exceptions",
+      "-fno-rtti",
+      "-ffast-math"
+    ],
+    "object_text_bytes": 11036,
+    "object_data_bytes": 0,
+    "object_bss_bytes": 16384,
+    "object_total_bytes": 27420,
+    "tests_passed": 10,
+    "tests_total": 10,
+    "static_sram_bytes_used": 20769,
+    "static_sram_bytes_total": 262144,
+    "sram_utilization_pct": 7.92274,
+    "sram_under_38400_bytes_budget": true,
+    "host_latency_us_per_frame": 8.2176,
+    "host_cycles_per_frame": 21449,
+    "python_dual_use_invariants": {
+      "rough_path_levy_area_expected_ellipse": 9.676105,
+      "rough_path_levy_area_measured": 9.674118,
+      "rough_path_nonlinear_warp_rel_err": 7.392e-05,
+      "barber_ess_pass_c_hat": 1.0,
+      "barber_ess_abstain_c_hat": 29.4031,
+      "barber_ess_abstain_reason": "ESS_ABSTAIN: c_hat=29.4031 > 12.42",
+      "fwl_true_tau": 0.25,
+      "fwl_recovered_tau_hat": 0.24125,
+      "fwl_naive_biased_beta": 1.486642
+    }
+  },
+  "retrospective_mimic_iv_quarantined_baseline": {
+    "cohort_stays": "138-140",
+    "full_stay_auc": 0.8545,
+    "early_24h_auc": 0.8387,
+    "early_12h_auc": 0.8118,
+    "empirical_time_warp_drift_pct": 0.212,
+    "status": "RETROSPECTIVE_RESEARCH_ONLY_NOT_PROSPECTIVE_CLINICAL_CLEARANCE"
+  },
+  "phase1_hardware_and_clinical_targets": {
+    "target_mcu": "STM32H743 (ARM Cortex-M7)",
+    "static_sram_budget_bytes": 38400,
+    "target_hil_latency_ms": 2.0,
+    "target_power_mw": 45.0,
+    "target_multi_site_sepsis_lead_hours": "6.5-7.08",
+    "status": "PHASE_1_PROPOSED_TARGET_PENDING_HIL_AND_EXTERNAL_IRB"
+  }
+}

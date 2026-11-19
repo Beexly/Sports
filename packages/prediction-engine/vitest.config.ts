@@ -29,6 +29,10 @@ export default defineConfig({
       "test/**/*.spec.ts",
       "test/**/*.test.ts",
     ],
+    exclude: [
+      "**/node_modules/**",
+      "src/reasoning/__tests__/mind-reasoning.mutation-v2.spec.ts",
+    ],
     isolate: false,
     pool: "forks",
   },

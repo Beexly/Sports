@@ -18,8 +18,8 @@ import { timingSafeEqual } from "node:crypto";
  * secret is configured, so a misconfigured deployment fails closed rather
  * than open.
  */
-export function hasOpsAuth(request: Request): boolean {
-  const auth = request.headers.get("authorization") ?? "";
+export function hasOpsAuth(request?: Request): boolean {
+  const auth = request?.headers?.get("authorization") ?? "";
   const a = Buffer.from(auth);
   const candidates = [process.env["CRON_SECRET"], process.env["OPS_READ_SECRET"]];
   for (const candidate of candidates) {

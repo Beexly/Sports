@@ -43,8 +43,15 @@ export const metadata: Metadata = {
 };
 
 export default async function PropsPage(): Promise<JSX.Element> {
-  const [{ board: card }] = await Promise.all([loadPropsSlateCached()]);
-  const props = card.props.filter((row) => row.publishAllowed && row.decision === "PUBLISH");
+  const [{ board: card, policyAdmitted }] = await Promise.all([loadPropsSlateCached()]);
+  const eligibleProps = policyAdmitted
+    ? card.props.filter((row) => row.publishAllowed && row.decision === "PUBLISH")
+    : [];
+  const freeProps = eligibleProps.slice(0, 2);
+  const lockedPlaceholders = eligibleProps.slice(2).map((row) => ({
+    matchup: row.matchup,
+    confidence_display: row.confidence_display ?? "Sealed",
+  }));
   const watch = [
     ...(card.watch?.one_q ?? []),
     ...(card.watch?.kicking ?? []),
@@ -76,8 +83,8 @@ export default async function PropsPage(): Promise<JSX.Element> {
         <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">{PUBLIC_RECORD_LINE}</p>
         <h1 className="mt-3 font-display text-5xl uppercase sm:text-7xl">Sealed props</h1>
         <div className="mt-10">
-          {props.length > 0 ? (
-            <SealedTable rows={props} freeLimit={2} />
+          {freeProps.length > 0 ? (
+            <SealedTable rows={freeProps} lockedPlaceholders={lockedPlaceholders} />
           ) : (
             <p className="border-y border-[#31353F] py-6 text-sm text-[#C4BFB6]">
               No standalone player prop cleared our public release gate for the active primetime window. Pass discipline holds bankroll; paid member props remain sealed behind /packages, and watchlist triggers and passed markets are shown below.

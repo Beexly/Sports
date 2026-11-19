@@ -12,7 +12,7 @@ import { sanitizePlainFootballText } from "@/lib/writeups/coach-writeup-engine";
 export const metadata: Metadata = {
   title: { absolute: "Pricing & Plans | Galaxy Sports Edge" },
   description:
-    "No monthly subscription needed right now. One-time Week 10 NFL packs: Player Props & SGPs ($29), Sunday & MNF Best Bets ($39), RedZone Standalone DFS ($39.99), and All-Access Bundle ($49). Every settled result is recomputed from the database and published at /record.",
+    "No monthly subscription needed right now. One-time Week 11 NFL packs: TNF IND @ HOU ($9), Player Props & SGPs ($29), Sunday & MNF Best Bets ($39), RedZone Standalone DFS ($39.99), and All-Access Bundle ($49). Every settled result is recomputed from the database and published at /record.",
   alternates: { canonical: "/pricing" },
 };
 
@@ -58,7 +58,7 @@ export default async function PricingPage(): Promise<JSX.Element> {
               href="/packages#sgp-correlation-basket"
               className="inline-flex min-h-[46px] items-center justify-center rounded border border-[#FF4D2E] bg-[#12141C] px-6 text-xs font-bold uppercase tracking-wider text-[#EDE8E0] transition-colors hover:bg-[#FF4D2E] hover:text-white"
             >
-              MNF Props &amp; SGP Pack · $29 →
+              Week 11 Props &amp; SGP Pack · $29 →
             </Link>
             <Link
               href="/fantasy/dfs"
@@ -146,30 +146,22 @@ export default async function PricingPage(): Promise<JSX.Element> {
                   </div>
 
                   <div className="mt-8 space-y-2">
-                    {isForSale && Boolean(pkg.stripePriceId) && (
-                    <form method="POST" action="/api/packages/checkout">
-                      <input type="hidden" name="packageSlug" value={pkg.slug} />
-                      <button type="submit" className="inline-flex min-h-[46px] w-full cursor-pointer items-center justify-center rounded bg-[#FF4D2E] text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#e03e20]">
-                          {`Buy Pack Now - ${formatPackPrice(pkg)} ->`}
-                        </button>
-                      </form>
-                        )}
                     <Link
                       href={`/packages#${pkg.slug}`}
                       className={`inline-flex min-h-[46px] w-full items-center justify-center rounded text-xs font-bold uppercase tracking-wider transition-colors ${
-                        isForSale && !pkg.stripePriceId
+                        isForSale
                           ? "bg-[#FF4D2E] text-white hover:bg-[#e03e20]"
                           : "border border-[#EDE8E0]/30 text-[#C4BFB6] hover:border-[#FF4D2E] hover:text-white"
                       }`}
                     >
-                      {isForSale ? "View Pack Details ->" : "View Archived Pack ->"}
+                      {isForSale ? `Open Pack (${formatPackPrice(pkg)}) ->` : "View Archived Pack ->"}
                     </Link>
                     {!isForSale && (
                       <Link
                         href="/packages#sgp-correlation-basket"
                         className="inline-flex min-h-[42px] w-full items-center justify-center rounded bg-[#FF4D2E] text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#e03e20]"
                       >
-                        Pivot to Active MNF Props &amp; SGP Pack · $29 →
+                        Pivot to Active Week 11 Props &amp; SGP Pack · $29 →
                       </Link>
                     )}
                   </div>

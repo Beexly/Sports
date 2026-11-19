@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const tier = searchParams.get("tier");
   if (tier) {
-    return subscriptionCheckoutPost(req);
+    return NextResponse.redirect(new URL("/pricing", req.url), 303);
   }
   return packageCheckoutGet(req);
 }

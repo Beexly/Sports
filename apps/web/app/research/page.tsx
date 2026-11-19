@@ -145,7 +145,7 @@ export default function ResearchPortalPage(): JSX.Element {
             <span className="inline-flex items-center gap-2 rounded-full border border-mineral/40 bg-eclipse/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-ion-1">
               Public Settlement Ledger · 2026 NFL Season
             </span>
-            <span className="text-xs font-mono text-ion-1">Updated Through Week 8</span>
+            <span className="text-xs font-mono text-ion-1">Updated Through Week 10 - Week 11 Prep Live</span>
           </div>
 
           <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-white">

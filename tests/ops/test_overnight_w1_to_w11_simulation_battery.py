@@ -26,6 +26,7 @@ def test_overnight_battery_fast_mode_produces_sealed_w1_10_matrix_and_w11_slate(
         row["verdict"] in ("PROMOTE", "HOLD_RD", "CUT")
         for row in report["dark_intelligence_bakeoff"]["modules"]
     )
+    assert float(report["multi_surface_w1_to_w10_audit"]["sgp_copula"]["superadditive_lift"]) > 0.0
     assert int(report["week11_slate"]["games_simulated"]) >= 13
     assert "IND @ HOU" in report["week11_slate"]["matchups"]
     assert len(str(report["week11_slate"]["projection_source_sha256"])) == 64

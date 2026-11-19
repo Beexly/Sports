@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { hasOpsAuth } from "@/lib/ops/ops-auth";
+import { PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
 
 export const dynamic = "force-dynamic";
 
@@ -154,8 +156,6 @@ function loadWriteups(): WriteupsPayload {
     path.join(process.cwd(), "data", "packages", "live-slate-writeups.json"),
     path.join(process.cwd(), "..", "..", "data", "packages", "live-slate-writeups.json"),
     path.join(process.cwd(), "..", "data", "packages", "live-slate-writeups.json"),
-    path.resolve(process.cwd(), "Sports", "data", "packages", "live-slate-writeups.json"),
-    "C:\\Users\\Garrett\\Sports\\data\\packages\\live-slate-writeups.json",
   ];
 
   for (const candidate of candidatePaths) {
@@ -175,13 +175,14 @@ function loadWriteups(): WriteupsPayload {
   return FALLBACK_WRITEUPS;
 }
 
-export async function GET(): Promise<NextResponse> {
-  // Default-off feature gate (public-surface keep-out sweep): this packet
-  // names keep-out material (edge internals, metric families) and serves
-  // illustrative writeups, so it is not publicly reachable until an operator
-  // deliberately enables it.
+export async function GET(request: Request): Promise<NextResponse> {
+  // Default-off feature gate + ops auth required: this packet contains
+  // internal content briefs and is not public.
   if (process.env.CONTENT_OS_PACKET_ENABLED !== "true") {
     return NextResponse.json({ error: "not_found" }, { status: 404 });
+  }
+  if (!hasOpsAuth(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const rawPayload = loadWriteups();
   const writeups = rawPayload.writeups;
@@ -231,7 +232,7 @@ export async function GET(): Promise<NextResponse> {
       kickoff: w.kickoff,
       printed_line: w.sideTotalCall.sideSelection,
       printed_total: w.sideTotalCall.totalSelection,
-      record_line: "Graded Season Record: 64.2% CLV Beat Rate",
+      record_line: PUBLIC_RECORD_LINE,
       reasoning_one_liner: w.sideTotalCall.rationale.split(". ")[0] + ".",
       proof_stat: `Pace: ${w.paceOfPlay?.neutralSecPerSnap ?? 24.9}s/snap | Pass EPA: ${w.paceOfPlay?.passEpaPlay ?? 0.12}`,
     };

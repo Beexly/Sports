@@ -87,6 +87,7 @@ export default defineConfig({
           "phase-c",
           "quote-plane",
           "stats-api",
+          "stealth-skeleton-provider",
           "types",
           "util",
         ].map((name) => [`@sports/${name}`, resolve(__dirname, "../../packages", name)]),

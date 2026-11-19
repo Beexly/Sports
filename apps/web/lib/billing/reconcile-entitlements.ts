@@ -468,6 +468,9 @@ async function downgradeStaleRows(
   for (const row of paidRows) {
     checked++;
 
+    // Non-Stripe members (whop:*, apple:*) are managed outside Stripe Subscriptions API.
+    if (!row.stripeCustomerId.startsWith("cus_")) continue;
+
     // Confirmed active in this run ⇒ definitely keep access.
     if (confirmedCustomerIds.has(row.stripeCustomerId)) continue;
     if (row.stripeSubscriptionId && confirmedSubscriptionIds.has(row.stripeSubscriptionId)) continue;
@@ -877,8 +880,8 @@ export async function reconcileUserEntitlement(userId: string): Promise<void> {
       select: { stripeCustomerId: true, tier: true, status: true, stripeSubscriptionId: true },
     });
 
-    // No Stripe customer yet ⇒ nothing has been paid for; nothing to confirm.
-    if (!row?.stripeCustomerId) return;
+    // No Stripe customer yet (or external provider like whop:/apple:) ⇒ nothing for Stripe reconcile.
+    if (!row?.stripeCustomerId || !row.stripeCustomerId.startsWith("cus_")) return;
 
     const list = await stripe.subscriptions.list({
       customer: row.stripeCustomerId,

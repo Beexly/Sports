@@ -37,6 +37,13 @@ test("the banned list mirrors the server's positioning vocabulary", () => {
     "ML model",
     "AI agents",
     "multimodal intelligence",
+    "22,750,000 snap evaluations",
+    "10-Layer Autonomous Engine",
+    "deep-math dossiers",
+    "Romano CQR honest conformal intervals",
+    "Optimal Transport certificates",
+    "31-11 banner is retracted",
+    "TNF card 14-6",
   ];
   assert.deepEqual([...voice.BANNED_PHRASES], expected);
 });

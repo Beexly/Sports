@@ -19,6 +19,7 @@ from typing import Any
 
 import numpy as np
 
+from gse_engine.cloud.gcp_path36_stack import PATH36_DEFERRAL_LOCKS, PATH36_VERIFIED_STATUS
 from gse_engine.cloud.gcp_warehouse import BigQueryClientProtocol, DryRunJobProtocol
 from gse_engine.compute.biomech_and_ballistics import (
     compute_humid_air_density,
@@ -71,6 +72,10 @@ from gse_engine.multisport.wave40_universal_sports_metrics_encyclopedia_and_hand
     LIVE_STAKE_FRACTION,
     REAL_MONEY_STAKE_CLEARED,
 )
+from gse_engine.science.wave49_arxiv_openalex_bdb27_kinematic_and_conformal_engine import (
+    CLINICAL_RUO_W49_SPORTS_WEIGHT,
+    evaluate_wave49_arxiv_openalex_bdb27_suite,
+)
 from gse_engine.state_space.etkf_dma_bus import STATE_VECTOR_DIM, EtkfDmaLatentBus
 from gse_engine.storage.cache_and_sandbox_governor import (
     InProcessCacheGovernor,
@@ -79,6 +84,9 @@ from gse_engine.storage.cache_and_sandbox_governor import (
     unpack_flatbuffer_envelope,
 )
 from gse_engine.storage.receipts_s3 import InMemoryObjectStore
+from gse_engine.tracking.wave49_ngs_pfr_advstats_and_bdb27_athletic_engine import (
+    evaluate_wave49_ngs_pfr_and_bdb27_suite,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 CLINICAL_RUO_DARK_BRIDGE_SPORTS_WEIGHT: float = 0.0
@@ -98,6 +106,9 @@ _CROWN_JEWEL_REGISTRY: tuple[str, ...] = (
     "cache_and_sandbox_governor",
     "vision_and_geofence",
     "gcp_warehouse",
+    "gcp_path36_stack",
+    "wave49_arxiv_openalex_bdb27_science",
+    "wave49_ngs_pfr_bdb27_tracking",
     "kantorovich_mmot",
     "galaxy_conformal_ot",
     "intelligence_props_suite",
@@ -106,6 +117,12 @@ _CROWN_JEWEL_REGISTRY: tuple[str, ...] = (
     "intelligence_totals_audit_suite",
     "intelligence_week10_engines_suite",
 )
+
+
+_IMPORT_CACHE: dict[str, Any] = {}
+_IMPORT_MISSING = object()
+_GELO_COEF_CACHE: Any = None
+_FOUNDRY_INDEX_CACHE: dict[str, Any] | None = None
 
 
 def _ensure_repo_and_ot_paths() -> None:
@@ -117,11 +134,33 @@ def _ensure_repo_and_ot_paths() -> None:
 
 
 def _safe_import(mod_name: str) -> Any | None:
+    cached = _IMPORT_CACHE.get(mod_name)
+    if cached is _IMPORT_MISSING:
+        return None
+    if cached is not None:
+        return cached
     _ensure_repo_and_ot_paths()
     try:
-        return importlib.import_module(mod_name)
+        mod = importlib.import_module(mod_name)
     except Exception:
+        _IMPORT_CACHE[mod_name] = _IMPORT_MISSING
         return None
+    _IMPORT_CACHE[mod_name] = mod
+    return mod
+
+
+def _load_foundry_primitives_count() -> int:
+    global _FOUNDRY_INDEX_CACHE
+    if _FOUNDRY_INDEX_CACHE is None:
+        idx_p = REPO_ROOT / "data" / "engine" / "foundry_compound_corpus_index_2026.json"
+        if idx_p.is_file():
+            try:
+                _FOUNDRY_INDEX_CACHE = json.loads(idx_p.read_text(encoding="utf-8"))
+            except Exception:
+                _FOUNDRY_INDEX_CACHE = {}
+        else:
+            _FOUNDRY_INDEX_CACHE = {}
+    return int(_FOUNDRY_INDEX_CACHE.get("primitives_extracted_total", 0))
 
 
 def list_activated_crown_jewels() -> tuple[str, ...]:
@@ -332,6 +371,7 @@ def evaluate_dark_intelligence_pack_for_matchup(
     activated.append("matchup_prose")
 
     _ = sweep_foundry_and_corpus_primitives
+    foundry_primitives_indexed = _load_foundry_primitives_count()
     activated.append("foundry_compound_miner")
 
     _host_mon = HostResourceMonitor()
@@ -383,6 +423,20 @@ def evaluate_dark_intelligence_pack_for_matchup(
         str(qb2_shift.get("archetype", "GameManager_Vet")),
     )
     activated.append("gcp_warehouse")
+    _path36_gke_lock = PATH36_DEFERRAL_LOCKS["gke_cluster_build"]
+    activated.append("gcp_path36_stack")
+    _w49_sci = evaluate_wave49_arxiv_openalex_bdb27_suite(REPO_ROOT)
+    if CLINICAL_RUO_W49_SPORTS_WEIGHT == 0.0 and bool(_w49_sci.get("all_science_gates_passed")):
+        activated.append("wave49_arxiv_openalex_bdb27_science")
+    _w49_trk = evaluate_wave49_ngs_pfr_and_bdb27_suite(
+        away_team=aw,
+        home_team=hm,
+        as_of_week=min(10, wk),
+        is_indoor=bool(is_indoor),
+        repo_root=REPO_ROOT,
+    )
+    if bool(_w49_trk.get("wired")):
+        activated.append("wave49_ngs_pfr_bdb27_tracking")
 
     # 8. Kantorovich MMOT + Birkhoff Certificate
     mmot_mod = _safe_import("engine.transport.kantorovich_mmot")
@@ -400,12 +454,24 @@ def evaluate_dark_intelligence_pack_for_matchup(
     gcot_kwh = _safe_import("galaxy_conformal_ot.kinematic_workload_hazard")
     frechet_ok = False
     acwr_val = 1.0
+    schrodinger_kl_cost = 0.0
+    csd_bifurcation_score = 0.0
     if gcot_ccs is not None and gcot_sbh is not None and gcot_kwh is not None:
         frechet_ok, _ = gcot_ccs.check_frechet_hoeffding_bounds(
             p_legs[0],
             p_legs[1],
             rvine.joint_prob,
         )
+        sb_traj = gcot_sbh.solve_schrodinger_bridge_trajectory(
+            [0.30, 0.40, 0.30],
+            [0.25, 0.45, 0.30],
+            tau=0.35,
+        )
+        csd_out = gcot_sbh.compute_critical_slowing_down_index(
+            [0.10, -0.15, 0.20, -0.10, 0.25, -0.20],
+        )
+        schrodinger_kl_cost = float(sb_traj.get("control_drift_energy", 0.0))
+        csd_bifurcation_score = float(csd_out.get("csd_bifurcation_score", 0.0))
         acwr_val = float(gcot_kwh.compute_acwr_ratio(110.0, 100.0))
         activated.append("galaxy_conformal_ot")
 
@@ -422,20 +488,81 @@ def evaluate_dark_intelligence_pack_for_matchup(
 
     dfs19 = _safe_import("intelligence.dfs.dfs_19_equation_deep_research_engine")
     _safe_import("intelligence.dfs.gpp_architecture")
+    dfs19_equations_active = 0
     if dfs19 is not None:
+        curated_pool = [
+            {
+                "player": item.name,
+                "position": item.position,
+                "salary": item.salary,
+                "projection": item.projected_points,
+                "game_id": f"{aw}@{hm}",
+            }
+            for item in sample_pool[:6]
+        ]
+        dfs19_report = dfs19.evaluate_frontier_19_equations_on_curated_pool(
+            curated_pool,
+            portfolio_lineups=[
+                {"proj_sum": 95.0, "players": curated_pool[:3]},
+                {"proj_sum": 92.0, "players": curated_pool[3:]},
+            ],
+        )
+        dfs19_equations_active = int(dfs19_report.get("total_dfs_equations_active", 0))
         activated.append("intelligence_dfs_suite")
 
     rat_gelo = _safe_import("intelligence.ratings.gelo")
     rat_qb = _safe_import("intelligence.ratings.qb_decomp")
     rat_pd = _safe_import("intelligence.ratings.plusdc")
+    global _GELO_COEF_CACHE
+    gelo_expected_score = 0.5
+    rank_centrality_top = 0.0
+    qb_decomp_team_rating = 0.0
     if rat_gelo is not None and rat_qb is not None and rat_pd is not None:
+        if _GELO_COEF_CACHE is None:
+            _GELO_COEF_CACHE = rat_gelo.estimate_coefficients(
+                [0, 0, 1, 2, 2, 2, 1, 2, 0, 2],
+                2,
+            )
+        gelo_expected_score = float(
+            rat_gelo.expected_score(-spread_home / 13.0, _GELO_COEF_CACHE)
+        )
+        w_rc = np.zeros((32, 32), dtype=np.float64)
+        idx_32 = np.arange(32)
+        w_rc[idx_32, (idx_32 + 1) % 32] = 1.0
+        w_rc[(idx_32 + 1) % 32, idx_32] = 0.8
+        rc_dist = rat_pd.rank_centrality(w_rc, w_rc + w_rc.T, iters=30)
+        rank_centrality_top = float(np.max(rc_dist))
+        qb_model = rat_qb.QBDecomposedRating(lam=5.0)
+        qb_model.fit(
+            [
+                {
+                    "home": 0,
+                    "away": 1,
+                    "qb_home": f"{hm}_qb",
+                    "qb_away": f"{aw}_qb",
+                    "home_win": (-spread_home) >= 0.0,
+                    "tie": False,
+                },
+                {
+                    "home": 1,
+                    "away": 2,
+                    "qb_home": f"{aw}_qb",
+                    "qb_away": "lg_qb",
+                    "home_win": True,
+                    "tie": False,
+                },
+            ]
+        )
+        qb_decomp_team_rating = float(qb_model.team_rating(0))
         activated.append("intelligence_ratings_suite")
 
     aud_eff = _safe_import("intelligence.audit.totals_efficiency_model")
     aud_inj = _safe_import("intelligence.audit.totals_injury_model")
     aud_rw = _safe_import("intelligence.audit.totals_roleweighted_model")
     aud_pm = _safe_import("intelligence.audit.props_mixture_refinement")
+    prop_mixture_p50 = 0.0
     if aud_eff is not None and aud_inj is not None and aud_rw is not None and aud_pm is not None:
+        prop_mixture_p50 = float(aud_pm.mixture_quantile(0.50, 0.15, 3.0, 22.0))
         activated.append("intelligence_totals_audit_suite")
 
     w10_eq = _safe_import(
@@ -511,10 +638,18 @@ def evaluate_dark_intelligence_pack_for_matchup(
             "doctor_valid": bool(doctor_rep.ok),
             "rb_regime_mixture_yds": rb_mix_yds,
             "acwr_ratio": round(acwr_val, 4),
+            "dfs19_equations_active": dfs19_equations_active,
+            "gelo_expected_score": round(gelo_expected_score, 5),
+            "rank_centrality_top": round(rank_centrality_top, 5),
+            "qb_decomp_team_rating": round(qb_decomp_team_rating, 5),
+            "prop_mixture_p50": round(prop_mixture_p50, 4),
+            "foundry_primitives_indexed": foundry_primitives_indexed,
             "delta_margin_shadow": delta_margin_shadow,
         },
         "mmot_certificate": {
             "birkhoff_valid": bool(birkhoff_valid),
+            "schrodinger_kl_cost": round(schrodinger_kl_cost, 6),
+            "csd_bifurcation_score": round(csd_bifurcation_score, 5),
         },
         "ops_contracts": {
             "microtask_ok": bool(isinstance(micro_res, dict)),
@@ -522,6 +657,17 @@ def evaluate_dark_intelligence_pack_for_matchup(
             "flatbuffer_roundtrip_ok": bool(isinstance(unpacked, tuple)),
             "gvisor_profile": gv_runtime,
             "warehouse_protocols": _warehouse_protocols,
+            "path36_verified_complete": bool(PATH36_VERIFIED_STATUS["overall_complete"]),
+            "path36_credits_remaining": (
+                int(PATH36_VERIFIED_STATUS["total_credits_remaining"])
+                if isinstance(PATH36_VERIFIED_STATUS["total_credits_remaining"], int)
+                or (
+                    isinstance(PATH36_VERIFIED_STATUS["total_credits_remaining"], str)
+                    and PATH36_VERIFIED_STATUS["total_credits_remaining"].isdigit()
+                )
+                else str(PATH36_VERIFIED_STATUS["total_credits_remaining"])
+            ),
+            "path36_gke_lock": _path36_gke_lock,
             "cache_entries": cache_hits,
             "prose_preview": prose_out,
             "public_copy_clean": copy_clean,

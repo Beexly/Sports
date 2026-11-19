@@ -448,7 +448,11 @@ export async function adjudicateOne(
     });
 
     const ruling = parseRuling(result.text, disagreement);
-    const costUsd = estimateClaudeCostUsd(result.inputTokens, result.outputTokens);
+    const costUsd = estimateClaudeCostUsd(
+      result.inputTokens,
+      result.outputTokens,
+      result.modelName,
+    );
 
     // Recorded on EVERY terminal path, including a rejected parse. A call whose
     // cost is not written down is spend nobody can attribute.

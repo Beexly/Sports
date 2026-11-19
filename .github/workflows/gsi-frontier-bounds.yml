@@ -2,13 +2,18 @@ name: GSI Frontier Bounds & Hardware Telemetry Verification
 
 on:
   push:
-    branches: [ main, Autonomous-Revenue-Engine ]
+    branches: [ main, Autonomous-Revenue-Engine, feat/pregame-engine-dfs-harmony-2026-11-15 ]
   pull_request:
     branches: [ main, Autonomous-Revenue-Engine ]
+  schedule:
+    # Daily post-quiet-window hardware, dual-use, and ecosystem consistency gate.
+    - cron: "35 14 * * *"
+  workflow_dispatch:
 
 jobs:
   verify-frontier-bounds:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -16,20 +21,25 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.12"
 
-      - name: Verify STM32H7 256KB SRAM Ceiling & Zero-Copy Telemetry Structs
-        run: |
-          python -c "print('Verifying 48B/28B zero-copy telemetry structs and 256KB SRAM ceiling...')"
+      - name: Install Python Test & YAML Dependencies
+        run: python -m pip install --quiet numpy pytest pyyaml
 
-      - name: Verify Theorem 4 0.0000% Nurse Charting-Frequency Drift & D(S_3) Braiding
-        run: |
-          python -c "print('Verifying Theorem 4 invariant log-signature drift (0.0000%)...')"
+      - name: Verify Bare-Metal C++20 Embedded Kernel (10/10) & Dual-Use Benchmark Receipt
+        run: python scripts/ops/run_gsi_upte_reproducible_benchmark.py --check
 
-      - name: Verify CTE Cumulative Hit Braiding (Delta t = 40s vs 300s)
+      - name: Run Dual-Use TBI/Sepsis (18/18) & Wave 51 Reasoning/Consistency Pytest Suites
+        env:
+          PYTHONPATH: "${{ github.workspace }}/src:${{ github.workspace }}"
         run: |
-          python -c "print('Verifying surrogate WHIM CTE cumulative hit braiding...')"
+          python -m pytest -q -p no:cacheprovider \
+            intelligence/week10_engines_2026_11_13/GSE-GSI-Dual-Use-TBI-and-Phase-Transition-Engine-2026-11-13/test_gsi_gse_dual_use_kernel.py \
+            tests/unit/test_wave51_autonomous_regime_reasoning_supervisor.py \
+            tests/unit/test_wave51_gsi_upte_benchmark_and_consistency.py
+
+      - name: Verify Ecosystem Structure & Consistency Gate
+        run: python scripts/ops/verify_ecosystem_consistency.py --check
 
       - name: Validate Grant Proposal and LaTeX Camera-Ready Files
-        run: |
-          python docs/engine/research/2026-11-04/submission/compile_proposal.py --validate-only
+        run: python docs/engine/research/2026-11-04/submission/compile_proposal.py --validate-only

@@ -533,6 +533,11 @@ jobs:
           node-version: "20"
           cache: "npm"
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
       - name: Install dependencies (minimal)
         run: npm ci --no-audit --no-fund
 
@@ -602,11 +607,24 @@ jobs:
   leapwork-checkout-unlock-e2e:
     name: Leapwork Checkout & Unlock Storefront E2E
     needs: osv-polyglot-and-pre-sim-gate
-    if: ${{ secrets.LEAPWORK_API_KEY != '' }}
+    if: ${{ vars.LEAPWORK_ENABLED == 'true' && vars.LEAPWORK_CONTROLLER_URL != '' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+      - name: Check Leapwork API key presence
+        id: check_leapwork
+        env:
+          LEAPWORK_API_KEY: ${{ secrets.LEAPWORK_API_KEY }}
+        run: |
+          if [ -z "$LEAPWORK_API_KEY" ]; then
+            echo "has_key=false" >> "$GITHUB_OUTPUT"
+            echo "LEAPWORK_API_KEY secret is not configured; skipping Leapwork trigger."
+          else
+            echo "has_key=true" >> "$GITHUB_OUTPUT"
+          fi
       - name: Trigger Leapwork Checkout & Unlock Runlist
+        if: steps.check_leapwork.outputs.has_key == 'true'
         uses: leapwork/Github-action@v2
         with:
           leapworkControllerURL: ${{ vars.LEAPWORK_CONTROLLER_URL }}

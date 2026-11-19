@@ -82,7 +82,7 @@ export default async function PackagesPage(): Promise<JSX.Element> {
         <main id="main-content" className="mx-auto w-full max-w-6xl px-4 pb-24 pt-14 sm:px-6">
           {/* ── Hero · filed report, not a template plate ─────────────── */}
           <header className="gse-rise border-b border-mineral pb-10">
-            <p className={`${eyebrow} text-plasma`}>Galaxy Sports Edge · Week 10 · Storefront</p>
+            <p className={`${eyebrow} text-plasma`}>Galaxy Sports Edge - Week 11 - Storefront</p>
             <h1 className="mt-4 max-w-3xl font-display text-4xl leading-[1.05] text-ion-white sm:text-6xl">
               Two doors. One standard.
             </h1>
@@ -115,7 +115,7 @@ export default async function PackagesPage(): Promise<JSX.Element> {
                 {gate.officialPlayCount} official {gate.officialPlayCount === 1 ? "play" : "plays"} published
               </span>
               <span className="w-full text-sm leading-6 text-ion-1 sm:w-auto sm:flex-1">
-                {gate.reason} <Link href="/pricing" className="ml-3 text-xs font-semibold uppercase tracking-[0.12em] text-plasma underline hover:text-ion-white focus:outline-none focus:ring-2 focus:ring-plasma">Open Live Week 10 Slate Packs -&gt;</Link> <Link href="/board" className="ml-3 text-xs font-semibold uppercase tracking-[0.12em] text-ion-white underline hover:text-plasma focus:outline-none focus:ring-2 focus:ring-plasma">View 13 Live Board Plays -&gt;</Link>
+                {gate.reason} <Link href="/pricing" className="ml-3 text-xs font-semibold uppercase tracking-[0.12em] text-plasma underline hover:text-ion-white focus:outline-none focus:ring-2 focus:ring-plasma">Open Live Week 11 Slate Packs -&gt;</Link> <Link href="/board" className="ml-3 text-xs font-semibold uppercase tracking-[0.12em] text-ion-white underline hover:text-plasma focus:outline-none focus:ring-2 focus:ring-plasma">View Live Board -&gt;</Link>
               </span>
             </div>
           </header>

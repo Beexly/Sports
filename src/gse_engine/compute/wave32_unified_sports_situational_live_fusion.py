@@ -100,6 +100,10 @@ from gse_engine.tracking.wave48_stage0_weather_sentiment_trade_and_showdown_engi
     evaluate_wave48_stage0_weather_sentiment_and_showdown_suite,
     run_wave48_stage0_weather_showdown_benchmark,
 )
+from gse_engine.tracking.wave49_ngs_pfr_advstats_and_bdb27_athletic_engine import (  # noqa: E501
+    evaluate_wave49_ngs_pfr_and_bdb27_suite,
+    run_wave49_bdb27_and_ngs_benchmark,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -1166,6 +1170,14 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         repo_root=root,
     )
     w48_d = w48["stage2_deltas"]
+    w49 = evaluate_wave49_ngs_pfr_and_bdb27_suite(
+        away_team=away_u,
+        home_team=home_u,
+        as_of_week=int(as_of_week),
+        is_indoor=bool(is_indoor),
+        repo_root=root,
+    )
+    w49_d = w49["stage2_deltas"]
 
     # 5. GSI ADR-0003 Rule-In-Only Pose2Sim 3D Skeletal Hazard Coupling
     k14_prior = compute_k14_translational_tissue_hazard_prior(
@@ -1200,7 +1212,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.03 * float(w44_d["away_epa_delta"])
             + 0.03 * float(w45_d["away_epa_delta"])
             + 0.03 * float(w46_d["away_epa_delta"])
-            + 0.03 * float(w48_d["away_epa_delta"]),
+            + 0.03 * float(w48_d["away_epa_delta"])
+            + 0.03 * float(w49_d["away_epa_delta"]),
             -0.006,
             0.006,
         ),
@@ -1226,7 +1239,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.03 * float(w44_d["home_epa_delta"])
             + 0.03 * float(w45_d["home_epa_delta"])
             + 0.03 * float(w46_d["home_epa_delta"])
-            + 0.03 * float(w48_d["home_epa_delta"]),
+            + 0.03 * float(w48_d["home_epa_delta"])
+            + 0.03 * float(w49_d["home_epa_delta"]),
             -0.006,
             0.006,
         ),
@@ -1332,7 +1346,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.03 * float(w44_d["away_sack_prob_delta"])
             + 0.03 * float(w45_d["away_sack_prob_delta"])
             + 0.03 * float(w46_d["away_sack_prob_delta"])
-            + 0.03 * float(w48_d["away_sack_prob_delta"]),
+            + 0.03 * float(w48_d["away_sack_prob_delta"])
+            + 0.03 * float(w49_d["away_sack_prob_delta"]),
             -0.004,
             0.004,
         ),
@@ -1354,7 +1369,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.03 * float(w44_d["home_sack_prob_delta"])
             + 0.03 * float(w45_d["home_sack_prob_delta"])
             + 0.03 * float(w46_d["home_sack_prob_delta"])
-            + 0.03 * float(w48_d["home_sack_prob_delta"]),
+            + 0.03 * float(w48_d["home_sack_prob_delta"])
+            + 0.03 * float(w49_d["home_sack_prob_delta"]),
             -0.004,
             0.004,
         ),
@@ -1413,7 +1429,7 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         "omni_vaults_loaded": int(omni["omni_vaults_loaded"]),
         "omni_empirical_rows_indexed": int(omni["omni_empirical_rows_indexed"]),
         "waves_unified_span": (
-            "Waves_20_to_48_plus_18Sport_AlphaFold_203Paper_32TeamShowdown_and_Speedup"
+            "Waves_20_to_49_plus_18Sport_AlphaFold_248Paper_BDB27_and_NGS_PFR"
         ),
         "wave34_holistic_biometrics": w34,
         "wave35_gsi_and_micro_matchups": w35,
@@ -1429,6 +1445,7 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         "wave45_skill_harmony_props_and_dfs_matchups": w45,
         "wave46_memtx_picks_7props_and_stacked_dfs_matchups": w46,
         "wave48_stage0_weather_sentiment_and_showdown_matchups": w48,
+        "wave49_arxiv_openalex_bdb27_and_ngs_pfr_matchups": w49,
         "ratchet_promoted": bool(ratchet["promote"]),
         "live_weight_multiplier": live_mult,
         "fwl_orthogonality_max_err": orth_err,
@@ -2191,6 +2208,9 @@ def run_wave32_historical_nfl_and_all_sports_simulation_benchmark(
             )
         ),
         "wave48_stage0_weather_showdown_benchmark": run_wave48_stage0_weather_showdown_benchmark(
+            root, write_artifact=write_artifact
+        ),
+        "wave49_bdb27_and_ngs_benchmark": run_wave49_bdb27_and_ngs_benchmark(
             root, write_artifact=write_artifact
         ),
     }

@@ -1,16 +1,17 @@
 {
   "schema": "gse.w11_tnf_zero_surprise_preflight_receipt.v1",
-  "generated_utc": "2026-11-19T05:07:53.893366+00:00",
+  "generated_utc": "2026-11-19T10:32:10.323271+00:00",
   "season": 2026,
   "week": 11,
   "corpus": {
     "pdfs_877": 877,
-    "alphaxiv_papers": 203,
+    "alphaxiv_papers": 248,
     "alphaxiv_vault_breakdown": {
       "alphaxiv_28paper_dfl_causal_sports_integrity_and_rg_vault_2026.json": 28,
       "alphaxiv_31paper_frontier_and_arithmetic_audit_vault_2026.json": 31,
       "alphaxiv_66paper_persistent_memory_durable_ci_governance_and_spec_ledger_vault_2026.json": 66,
-      "alphaxiv_78paper_conformal_copula_dfs_parlay_nfl_and_referee_vault_2026.json": 78
+      "alphaxiv_78paper_conformal_copula_dfs_parlay_nfl_and_referee_vault_2026.json": 78,
+      "arxiv_wave49_tracking_bdb27_conformal_and_rlvr_vault_2026.json": 45
     },
     "matrix_equations": 9875,
     "inventory_equations": 21419,
@@ -25,19 +26,19 @@
       "gse_engine.cli",
       "gse_engine.compute.corpus_situational_integrator"
     ],
-    "src_gse_engine_total": 98,
-    "src_gse_engine_reachable": 98,
+    "src_gse_engine_total": 101,
+    "src_gse_engine_reachable": 101,
     "unreachable": []
   },
   "parity": {
-    "w11_sealed_sha256": "a2aca13a763e7fce3ab38d5ef5f996b7e41b3e0034ffebfd4f587faa2632c30b",
-    "web_sealed_sha256": "a2aca13a763e7fce3ab38d5ef5f996b7e41b3e0034ffebfd4f587faa2632c30b",
+    "w11_sealed_sha256": "ab30af438cfac08e66ed12fb8f545cb032ec3567d4a9160a95ff4237b24b1bd1",
+    "web_sealed_sha256": "ab30af438cfac08e66ed12fb8f545cb032ec3567d4a9160a95ff4237b24b1bd1",
     "hash_match": true,
     "games_simulated": 13,
     "total_worlds_simulated": 130000
   },
   "guardrails": {
-    "public_root_files_scanned": 101,
+    "public_root_files_scanned": 100,
     "public_root_zero_vault_violations": 0,
     "vercel_cron_count": 16,
     "vercel_config_byte_identical": true,
@@ -67,5 +68,5 @@
     "governance_locks_ok": true
   },
   "overall_ready": true,
-  "receipt_sha256": "909848ee8f3725d387a0fded4a0df536ab2e0f1538c03d11f95a87894ff6f5fa"
+  "receipt_sha256": "188a2c5c6260606e7b98ae7bbbb80a7ba226ad84141e5dbe0677a108de060494"
 }

@@ -67,7 +67,7 @@ describe("pricing never advertises a surface the app does not serve", () => {
     const src = readFileSync(PRICING_PAGE, "utf8");
     const haystack = viewerStrings(src).join("\n");
     expect(haystack).toContain("No monthly subscription needed right now");
-    expect(haystack).toContain("One-time Week 10 NFL packs");
+    expect(haystack).toContain("One-time Week 11 NFL packs");
     expect(haystack).toContain("ONE-TIME PACK");
   });
 

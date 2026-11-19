@@ -1,3 +1,4 @@
+import { createHash, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import {
   OUR_STEALTH_SKELETON_MODELS,
@@ -21,10 +22,13 @@ function resolveOpenRouterModelToInternal(requestedModel: string): StealthSkelet
 }
 
 function verifyApiKey(req: Request): boolean {
-  const configuredKey = process.env["OPENROUTER_PROVIDER_API_KEY"];
-  if (!configuredKey) return true;
+  const configuredKey = process.env["OPENROUTER_PROVIDER_API_KEY"]?.trim();
+  if (!configuredKey) return false;
   const authHeader = req.headers.get("authorization") ?? "";
-  return authHeader === `Bearer ${configuredKey}`;
+  const expected = `Bearer ${configuredKey}`;
+  const a = createHash("sha256").update(authHeader, "utf8").digest();
+  const b = createHash("sha256").update(expected, "utf8").digest();
+  return timingSafeEqual(a, b);
 }
 
 export async function GET(req: Request): Promise<NextResponse> {

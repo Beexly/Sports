@@ -24,6 +24,14 @@ export const EVENT_NAMES: readonly GseEventName[] = [
   "clv.captured.v1",
 ] as const;
 
+export const GCP_FREE_TIER_PUBSUB_TOPICS = {
+  oddsTicks: "gse-odds-ticks",
+  injuryWire: "gse-injury-wire",
+  intakeDlq: "gse-intake-dlq",
+  monthlyFreeGib: 10,
+  cloudRunMonthlyFreeRequests: 2_000_000,
+} as const;
+
 export interface DeadLetterPolicy {
   readonly maxDeliveryAttempts: number;
   readonly deadLetterTopic: string;
@@ -392,15 +400,23 @@ export function createStatelessEventHandler<K extends GseEventName>(
       };
     }
 
+    // Claim idempotency key before invoking side effect so concurrent redeliveries
+    // do not double-execute; release if onEvent throws and store exposes delete.
+    await options.seenStore.add(envelope.idempotencyKey);
     try {
       await options.onEvent(envelope);
-      await options.seenStore.add(envelope.idempotencyKey);
       return {
         status: "acked",
         deadLettered: false,
         idempotencyKey: envelope.idempotencyKey,
       };
     } catch (err) {
+      const storeWithDelete = options.seenStore as unknown as {
+        delete?: (key: string) => Promise<void> | void;
+      };
+      if (typeof storeWithDelete.delete === "function") {
+        await storeWithDelete.delete(envelope.idempotencyKey);
+      }
       const reason = err instanceof Error ? err.message : String(err);
       if (deliveryAttempt >= dlqPolicy.maxDeliveryAttempts) {
         return {

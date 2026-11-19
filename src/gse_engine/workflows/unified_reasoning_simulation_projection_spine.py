@@ -116,6 +116,8 @@ def american_to_fair_prob_pair(over_american: int, under_american: int) -> tuple
     """Compute de-vigged fair market probabilities from two-sided American odds."""
 
     def _imp(am: int) -> float:
+        if am == 0:
+            raise ValueError("American odds cannot be 0")
         return (100.0 / (am + 100.0)) if am > 0 else (-am / (-am + 100.0))
 
     p_o = _imp(over_american)
@@ -126,6 +128,8 @@ def american_to_fair_prob_pair(over_american: int, under_american: int) -> tuple
 
 def american_to_decimal(am: int) -> float:
     """Convert American odds integer to decimal payout multiplier."""
+    if am == 0:
+        raise ValueError("American odds cannot be 0")
     return (1.0 + float(am) / 100.0) if am > 0 else (1.0 + 100.0 / float(abs(am)))
 
 
@@ -136,6 +140,22 @@ def _clip(x: float, lo: float, hi: float) -> float:
 def _norm_team(raw: object) -> str:
     txt = str(raw or "").strip().upper()
     return _TEAM_ALIASES.get(txt, txt)
+
+
+_SUFFIX_RE = re.compile(r"\b(?:jr|sr|ii|iii|iv|v)\b", re.IGNORECASE)
+
+
+def _norm_player_key(raw: object) -> str:
+    """Normalize player display names across punctuation and generational suffixes."""
+    ascii_s = (
+        unicodedata.normalize("NFKD", str(raw or ""))
+        .encode("ascii", "ignore")
+        .decode("ascii")
+        .lower()
+    )
+    cleaned = re.sub(r"[^a-z0-9\s]", "", ascii_s)
+    cleaned = _SUFFIX_RE.sub("", cleaned)
+    return " ".join(cleaned.split())
 
 
 def _sanitize_display_name(raw_name: str) -> str:
@@ -390,16 +410,24 @@ def _build_team_hydrated_roster_and_qb(
     pw25: pd.DataFrame = vaults["pw25"]
     inj26: pd.DataFrame = vaults["inj26"]
 
-    excl_lower: set[str] = set()
-    for rec in stage0_bundle.get("excluded_players") or ():
-        if isinstance(rec, Mapping) and _norm_team(rec.get("team", "")) == team_code:
-            excl_lower.add(str(rec.get("name", "")).strip().lower())
-    excl_union_lower: set[str] = {
-        str(nm).strip().lower()
-        for nm in (stage0_bundle.get("excluded_players_union") or ())
-        if isinstance(nm, str) and nm.strip()
-    }
-    excl_lower.update(excl_union_lower)
+    excl_keys: set[str] = set()
+    raw_excl_recs = [
+        rec
+        for rec in (stage0_bundle.get("excluded_players") or ())
+        if isinstance(rec, Mapping)
+    ]
+    if raw_excl_recs:
+        for rec in raw_excl_recs:
+            if _norm_team(rec.get("team", "")) == team_code:
+                ek = _norm_player_key(rec.get("name", ""))
+                if ek:
+                    excl_keys.add(ek)
+    else:
+        for nm in stage0_bundle.get("excluded_players_union") or ():
+            if isinstance(nm, str) and nm.strip():
+                ek = _norm_player_key(nm)
+                if ek:
+                    excl_keys.add(ek)
 
     injury_rows_scanned = 0
     if not inj26.empty:
@@ -408,7 +436,9 @@ def _build_team_hydrated_roster_and_qb(
         for _, ir in sub_inj.iterrows():
             st = str(ir.get("report_status") or "").strip().upper()
             if st in {"OUT", "DOUBTFUL", "IR", "D", "O"}:
-                excl_lower.add(str(ir.get("full_name") or "").strip().lower())
+                ek = _norm_player_key(ir.get("full_name") or "")
+                if ek:
+                    excl_keys.add(ek)
 
     if as_of_week >= 11:
         espn_slate = vaults.get("w11_espn_slate") or {}
@@ -431,36 +461,39 @@ def _build_team_hydrated_roster_and_qb(
                 st = str(ent.get("status") or "").strip().upper()
                 if st in {"OUT", "DOUBTFUL", "INJURED RESERVE", "SUSPENSION"}:
                     ath = ent.get("athlete") or {}
-                    nm = str(ath.get("displayName") or "").strip().lower()
-                    if nm:
-                        excl_lower.add(nm)
+                    ek = _norm_player_key(ath.get("displayName") or "")
+                    if ek:
+                        excl_keys.add(ek)
 
     # Apply exact-week Stage-0 trades when inspecting W9 or W10
-    traded_in: set[str] = set()
-    traded_out: set[str] = set()
+    traded_in_keys: set[str] = set()
+    traded_out_keys: set[str] = set()
     for tr in stage0_bundle.get("traded_players") or ():
-        nm_l = str(tr.get("name", "")).strip().lower()
-        if not nm_l:
+        nm_k = _norm_player_key(tr.get("name", ""))
+        if not nm_k:
             continue
         if _norm_team(tr.get("from", "")) == team_code:
-            traded_out.add(nm_l)
+            traded_out_keys.add(nm_k)
         if _norm_team(tr.get("to", "")) == team_code:
-            traded_in.add(nm_l)
+            traded_in_keys.add(nm_k)
 
     hist26 = pw26[(pw26["team_u"] == team_code) & (pw26["week"] < cutoff_wk)]
-    if traded_in:
+    if traded_in_keys:
         extra26 = pw26[
             (pw26["week"] < cutoff_wk)
-            & (pw26["player_display_name"].astype(str).str.strip().str.lower().isin(traded_in))
+            & (pw26["player_display_name"].map(_norm_player_key).isin(traded_in_keys))
         ]
         if not extra26.empty:
-            hist26 = pd.concat([hist26, extra26], ignore_index=True)
+            hist26 = pd.concat([hist26, extra26], ignore_index=True).drop_duplicates(
+                subset=["player_id", "week"]
+            )
 
     # Aggregate strictly by per-player active games played (player_gp)
     skill_stats: dict[str, dict[str, Any]] = {}
     for pid_raw, grp in hist26[hist26["position"].isin(["RB", "WR", "TE"])].groupby("player_id"):
         nm = str(grp["player_display_name"].iloc[-1]).strip()
-        if nm.lower() in traded_out:
+        nm_k = _norm_player_key(nm)
+        if nm_k in traded_out_keys:
             continue
         pos = str(grp["position"].iloc[-1]).strip().upper()
         if pos not in {"RB", "WR", "TE"}:
@@ -473,7 +506,7 @@ def _build_team_hydrated_roster_and_qb(
         skill_stats[str(pid_raw)] = {
             "player_id": str(pid_raw),
             "name": _sanitize_display_name(nm),
-            "raw_lower": nm.lower(),
+            "raw_key": nm_k,
             "position": pos,
             "tgt_pg": tgt_pg,
             "car_pg": car_pg,
@@ -489,7 +522,8 @@ def _build_team_hydrated_roster_and_qb(
         for pid_raw, grp in hist25_skill.groupby("player_id"):
             pid_s = str(pid_raw)
             nm = str(grp["player_display_name"].iloc[-1]).strip()
-            if nm.lower() in traded_out:
+            nm_k = _norm_player_key(nm)
+            if nm_k in traded_out_keys:
                 continue
             pos = str(grp["position"].iloc[-1]).strip().upper()
             if pos not in {"RB", "WR", "TE"}:
@@ -501,7 +535,7 @@ def _build_team_hydrated_roster_and_qb(
                 skill_stats[pid_s] = {
                     "player_id": pid_s,
                     "name": _sanitize_display_name(nm),
-                    "raw_lower": nm.lower(),
+                    "raw_key": nm_k,
                     "position": pos,
                     "tgt_pg": t25,
                     "car_pg": c25,
@@ -533,13 +567,13 @@ def _build_team_hydrated_roster_and_qb(
         ("WR", 3, 4.5, 0.2),
         ("TE", 1, 3.8, 0.0),
     ):
-        cur_p = [p for p in chosen if p["position"] == req_pos and p["raw_lower"] not in excl_lower]
+        cur_p = [p for p in chosen if p["position"] == req_pos and p["raw_key"] not in excl_keys]
         while len(cur_p) < req_cnt:
             idx_add = len([p for p in chosen if p["position"] == req_pos]) + 1
             stub = {
                 "player_id": f"{team_code}_{req_pos}{idx_add}_HYD",
                 "name": f"{team_code} Depth {req_pos}{idx_add}",
-                "raw_lower": f"__depth_{team_code}_{req_pos}_{idx_add}",
+                "raw_key": f"__depth_{team_code}_{req_pos}_{idx_add}",
                 "position": req_pos,
                 "tgt_pg": def_t,
                 "car_pg": def_c,
@@ -562,11 +596,11 @@ def _build_team_hydrated_roster_and_qb(
     # Sort active before inactive within each position so active healthy starters get rank 1
     chosen_sorted = sorted(
         chosen,
-        key=lambda p: (p["position"], p["raw_lower"] in excl_lower, -float(p["opp_pg"])),
+        key=lambda p: (p["position"], p["raw_key"] in excl_keys, -float(p["opp_pg"])),
     )
     for p in chosen_sorted:
         pos_lit = cast(Literal["RB", "WR", "TE"], p["position"])
-        is_act = p["raw_lower"] not in excl_lower
+        is_act = p["raw_key"] not in excl_keys
         if is_act:
             rank_ctr[pos_lit] += 1
             d_rank = rank_ctr[pos_lit]
@@ -621,7 +655,7 @@ def _build_team_hydrated_roster_and_qb(
         (
             float(p["rec_yds_pg"])
             for p in chosen_sorted
-            if p["position"] == "WR" and p["raw_lower"] not in excl_lower
+            if p["position"] == "WR" and p["raw_key"] not in excl_keys
         ),
         68.0,
     )
@@ -629,7 +663,7 @@ def _build_team_hydrated_roster_and_qb(
         (
             float(p["rush_yds_pg"])
             for p in chosen_sorted
-            if p["position"] == "RB" and p["raw_lower"] not in excl_lower
+            if p["position"] == "RB" and p["raw_key"] not in excl_keys
         ),
         64.0,
     )
@@ -698,16 +732,16 @@ def hydrate_causal_matchup_context_from_vaults(
         s_row = {}
         schedule_source = "synthetic_default"
 
-    roof_str = str(s_row.get("roof") or "").lower()
-    indoor_eff = (
-        bool(is_indoor)
-        if is_indoor is not None
-        else (
-            (roof_str in {"dome", "closed"})
-            if roof_str
-            else (hm in _INDOOR_VENUES)
-        )
-    )
+    roof_str = str(s_row.get("roof") or "").strip().lower()
+    neutral_site = bool(s_row.get("neutral_site"))
+    if is_indoor is not None:
+        indoor_eff = bool(is_indoor)
+    elif not neutral_site and hm in _INDOOR_VENUES:
+        indoor_eff = True
+    elif roof_str:
+        indoor_eff = roof_str in {"dome", "closed", "retractable"}
+    else:
+        indoor_eff = hm in _INDOOR_VENUES
     temp_f = float(s_row["temp"]) if pd.notna(s_row.get("temp")) else (70.0 if indoor_eff else 55.0)
     wind_mph = float(s_row["wind"]) if pd.notna(s_row.get("wind")) else (0.0 if indoor_eff else 6.0)
     away_rest = float(s_row["away_rest"]) if pd.notna(s_row.get("away_rest")) else 7.0
@@ -915,11 +949,12 @@ def default_matchup_context(
     home_team: str,
     *,
     as_of_week: int = 10,
-    is_indoor: bool = False,
+    is_indoor: bool | None = None,
 ) -> dict[str, Any]:
     """Build deterministic baseline signals, rosters, and market lines for a matchup."""
-    aw = away_team.strip().upper()
-    hm = home_team.strip().upper()
+    aw = _norm_team(away_team)
+    hm = _norm_team(home_team)
+    indoor_eff = bool(is_indoor) if is_indoor is not None else (hm in _INDOOR_VENUES)
 
     if aw == "IND" and hm == "HOU":
         signals: tuple[PregameReasoningSignal, ...] = (
@@ -1064,7 +1099,7 @@ def default_matchup_context(
                 kind="stage2_equation",
                 team_side="game",
                 channel="pace_sec_shift",
-                raw_delta=-0.55 if not is_indoor else -0.80,
+                raw_delta=-0.55 if not indoor_eff else -0.80,
                 sigma_scale=0.45,
                 reliability=0.89,
                 evidence_span="L3 PROE+ and neutral play-clock cadence",
@@ -1123,7 +1158,7 @@ def default_matchup_context(
         "away_team": aw,
         "home_team": hm,
         "as_of_week": int(as_of_week),
-        "is_indoor": bool(is_indoor or (aw == "IND" and hm == "HOU")),
+        "is_indoor": bool(indoor_eff or (aw == "IND" and hm == "HOU")),
         "signals": signals,
         "away_roster": away_roster,
         "home_roster": home_roster,
@@ -1209,8 +1244,9 @@ def synthesize_reasoned_game_environment(
     away_roster: Sequence[PlayerShare],
     home_roster: Sequence[PlayerShare],
     is_indoor: bool = False,
+    market: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Reason through audited signals and conserve player opportunity via Sinkhorn."""
+    """Reason through audited signals on Layer-1 market anchor and conserve via Sinkhorn."""
     ch = dict(audited_signals["channels"])
     away_ol = _clip(0.22 + float(ch["away_ol_disruption"]), 0.12, 0.48)
     home_ol = _clip(0.22 + float(ch["home_ol_disruption"]), 0.12, 0.48)
@@ -1224,12 +1260,26 @@ def synthesize_reasoned_game_environment(
         home_roster, opp_front7_outs=away_front7_outs
     )
 
+    aw_is_ind_hou = away_team == "IND" and home_team == "HOU"
+    mkt = dict(market) if market is not None else {}
+    mkt_total = float(mkt.get("total", 44.5 if aw_is_ind_hou else 45.5))
+    mkt_spread_home = float(mkt.get("home_spread", -12.5 if aw_is_ind_hou else -2.5))
+    away_mkt_pts = _clip(
+        float(mkt.get("away_team_total", 0.5 * (mkt_total + mkt_spread_home))),
+        10.5,
+        38.0,
+    )
+    home_mkt_pts = _clip(
+        float(mkt.get("home_team_total", 0.5 * (mkt_total - mkt_spread_home))),
+        10.5,
+        38.0,
+    )
+
     pace_sec = _clip(
         27.2 + float(ch["game_pace_sec_shift"]) + (0.0 if is_indoor else 0.4), 23.0, 31.5
     )
     base_plays = 62.5 + (27.2 - pace_sec) * 0.9
 
-    aw_is_ind_hou = away_team == "IND" and home_team == "HOU"
     aw_epa = _clip(
         (-0.055 if aw_is_ind_hou else 0.015)
         + float(ch["away_epa_shift"])
@@ -1247,23 +1297,56 @@ def synthesize_reasoned_game_environment(
         (0.525 if aw_is_ind_hou else 0.575) + float(ch["away_pass_rate_shift"]), 0.44, 0.68
     )
     hm_pass_rate = _clip(
-        (0.585 if aw_is_ind_hou else 0.585) + float(ch["home_pass_rate_shift"]), 0.44, 0.68
+        0.585 + float(ch["home_pass_rate_shift"]), 0.44, 0.68
     )
 
-    aw_td_rate = _clip(0.54 + float(ch["away_td_rate_shift"]), 0.40, 0.72)
-    hm_td_rate = _clip(0.60 + float(ch["home_td_rate_shift"]), 0.42, 0.75)
+    aw_td_rate_base = _clip(0.54 + float(ch["away_td_rate_shift"]), 0.40, 0.72)
+    hm_td_rate_base = _clip(0.60 + float(ch["home_td_rate_shift"]), 0.42, 0.75)
+
+    # THE STACK: Layer-1 market implied points + bounded Layer-2 situational residual.
+    heavy_shrink = 0.55 if abs(mkt_spread_home) >= 10.0 else 0.85
+    away_l2_pts = _clip(
+        heavy_shrink * (4.0 * aw_epa - 3.0 * (away_ol - 0.22) + 3.5 * (aw_td_rate_base - 0.56)),
+        -1.10,
+        1.10,
+    )
+    home_l2_pts = _clip(
+        heavy_shrink * (4.0 * hm_epa - 3.0 * (home_ol - 0.22) + 3.5 * (hm_td_rate_base - 0.58)),
+        -1.10,
+        1.10,
+    )
+    away_target_pts = _clip(away_mkt_pts + away_l2_pts, 10.0, 40.0)
+    home_target_pts = _clip(home_mkt_pts + home_l2_pts, 10.0, 40.0)
+
+    aw_plays = _clip(
+        base_plays - (1.0 if aw_is_ind_hou else 0.0) + 0.22 * (away_target_pts - 22.0),
+        54.0,
+        71.0,
+    )
+    hm_plays = _clip(
+        base_plays + (1.2 if aw_is_ind_hou else 0.5) + 0.22 * (home_target_pts - 22.0),
+        54.0,
+        71.0,
+    )
+    aw_td_rate = _clip(aw_td_rate_base + 0.007 * (away_target_pts - 22.0), 0.42, 0.75)
+    hm_td_rate = _clip(hm_td_rate_base + 0.007 * (home_target_pts - 22.0), 0.42, 0.75)
 
     return {
         "schema": "w47_reasoned_game_environment_v1",
         "matchup": f"{away_team} @ {home_team}",
         "is_indoor": bool(is_indoor),
         "pace_sec_per_play": round(pace_sec, 4),
+        "market_home_spread": round(mkt_spread_home, 2),
+        "market_total": round(mkt_total, 2),
         "away": {
-            "plays_mean": round(base_plays - (1.0 if aw_is_ind_hou else 0.0), 3),
+            "plays_mean": round(aw_plays, 3),
             "pass_rate": round(aw_pass_rate, 4),
             "epa_per_play": round(aw_epa, 5),
             "ol_disruption": round(away_ol, 4),
             "rz_td_rate": round(aw_td_rate, 4),
+            "market_implied_points": round(away_mkt_pts, 3),
+            "layer2_situational_pts": round(away_l2_pts, 4),
+            "target_points_mean": round(away_target_pts, 3),
             "named_target_attribution": away_conv.named_target_attribution,
             "named_carry_attribution": away_conv.named_carry_attribution,
             "residual_target_share": away_conv.residual_target_share,
@@ -1271,11 +1354,14 @@ def synthesize_reasoned_game_environment(
             "allocated_carries": dict(away_conv.allocated_carries),
         },
         "home": {
-            "plays_mean": round(base_plays + (1.2 if aw_is_ind_hou else 0.5), 3),
+            "plays_mean": round(hm_plays, 3),
             "pass_rate": round(hm_pass_rate, 4),
             "epa_per_play": round(hm_epa, 5),
             "ol_disruption": round(home_ol, 4),
             "rz_td_rate": round(hm_td_rate, 4),
+            "market_implied_points": round(home_mkt_pts, 3),
+            "layer2_situational_pts": round(home_l2_pts, 4),
+            "target_points_mean": round(home_target_pts, 3),
             "named_target_attribution": home_conv.named_target_attribution,
             "named_carry_attribution": home_conv.named_carry_attribution,
             "residual_target_share": home_conv.residual_target_share,
@@ -1318,6 +1404,9 @@ def _simulate_team_worlds(
     ).astype(np.int64)
     ints_thrown = rng.binomial(n=pass_att, p=np.clip(0.017 + 0.030 * (ol_dis - 0.18), 0.008, 0.045))
 
+    target_pts = float(team_env.get("target_points_mean", 22.0))
+    eff_scale = _clip(1.0 + 0.011 * (target_pts - 22.0), 0.86, 1.18)
+
     comp_prob = np.clip(
         0.655 + 0.25 * float(team_env["epa_per_play"]) - 0.12 * (ol_dis - 0.22),
         0.54,
@@ -1325,28 +1414,31 @@ def _simulate_team_worlds(
     )
     pass_comp = rng.binomial(n=pass_att, p=comp_prob).astype(np.int64)
     ypc_air = np.clip(
-        rng.normal(11.1 + 3.2 * float(team_env["epa_per_play"]), 1.35, size=n_worlds),
+        rng.normal((11.1 + 3.2 * float(team_env["epa_per_play"])) * eff_scale, 1.35, size=n_worlds),
         7.2,
-        16.2,
+        16.8,
     )
     pass_yds = np.round(pass_comp.astype(np.float64) * ypc_air, 1)
 
     rush_ypc = np.clip(
-        rng.normal(4.35 + 1.8 * float(team_env["epa_per_play"]), 0.65, size=n_worlds), 2.5, 7.2
+        rng.normal((4.35 + 1.8 * float(team_env["epa_per_play"])) * eff_scale, 0.65, size=n_worlds),
+        2.5,
+        7.4,
     )
     team_rush_yds = np.round(non_qb_carries_team.astype(np.float64) * rush_ypc, 1)
 
-    off_pts_raw = (
+    phys_raw = (
         0.042 * pass_yds
         + 0.046 * team_rush_yds
         - 2.6 * ints_thrown
         - 0.75 * sacks_taken
         + 10.5 * (0.28 + 0.45 * float(team_env["epa_per_play"]))
-        + rng.normal(0.0, 4.4, size=n_worlds)
     )
-    rz_drives = np.clip(np.rint(np.maximum(1.5, off_pts_raw / 6.2)), 1, 8).astype(np.int64)
-    tds = np.clip(rng.binomial(n=rz_drives, p=float(team_env["rz_td_rate"])), 0, 7).astype(np.int64)
-    fgs = np.clip(np.rint(np.maximum(0.0, (off_pts_raw - 7.0 * tds) / 3.0)), 0, 5).astype(np.int64)
+    phys_centered = phys_raw - float(np.mean(phys_raw))
+    off_pts_raw = target_pts + phys_centered + rng.normal(0.0, 5.0, size=n_worlds)
+    rz_drives = np.clip(np.rint(np.maximum(1.5, off_pts_raw / 6.2)), 1, 10).astype(np.int64)
+    tds = np.clip(rng.binomial(n=rz_drives, p=float(team_env["rz_td_rate"])), 0, 8).astype(np.int64)
+    fgs = np.clip(np.rint(np.maximum(0.0, (off_pts_raw - 6.96 * tds) / 3.0)), 0, 6).astype(np.int64)
     xpm = np.minimum(tds, rng.binomial(n=tds, p=0.96)).astype(np.int64)
     pts = (6 * tds + xpm + 3 * fgs).astype(np.int64)
 
@@ -1635,6 +1727,51 @@ def _gate_binary_surface(
     }
 
 
+def _gate_two_sided_surface(
+    *,
+    market_id: str,
+    sel_a: str,
+    prob_a: float,
+    fair_a: float,
+    sel_b: str,
+    prob_b: float,
+    fair_b: float,
+    n_worlds: int,
+    proj_sha: str,
+    min_clv: float = 0.025,
+) -> dict[str, Any]:
+    clv_a = float(prob_a) - float(fair_a)
+    clv_b = float(prob_b) - float(fair_b)
+    if clv_a >= clv_b:
+        return _gate_binary_surface(
+            market_id=market_id,
+            selection=sel_a,
+            model_prob=float(prob_a),
+            fair_market_prob=float(fair_a),
+            n_worlds=n_worlds,
+            proj_sha=proj_sha,
+            min_clv=min_clv,
+        )
+    return _gate_binary_surface(
+        market_id=market_id,
+        selection=sel_b,
+        model_prob=float(prob_b),
+        fair_market_prob=float(fair_b),
+        n_worlds=n_worlds,
+        proj_sha=proj_sha,
+        min_clv=min_clv,
+    )
+
+
+def _two_sided_win_probs(values: np.ndarray, threshold: float) -> tuple[float, float]:
+    over_m = values > threshold
+    under_m = values < threshold
+    non_push = float(np.mean(over_m | under_m))
+    if non_push <= 1e-6:
+        return 0.50, 0.50
+    return float(np.mean(over_m)) / non_push, float(np.mean(under_m)) / non_push
+
+
 def derive_all_plays_props_sgps_and_dfs_from_simulation(
     *,
     sim: Mapping[str, Any],
@@ -1643,6 +1780,8 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
     """Derive Game Plays, 12 Prop Markets, Correlated SGPs & DFS from 1 single simulation."""
     proj_sha = str(sim["projection_source_sha256"])
     n_worlds = int(sim["n_worlds"])
+    aw_team = str(sim["away"]["team"])
+    hm_team = str(sim["home"]["team"])
     aw_f = sim["away_final"]
     hm_f = sim["home_final"]
     margin = hm_f - aw_f
@@ -1654,72 +1793,111 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
     q1_total = aw_q[:, 0] + hm_q[:, 0]
 
     home_spread = float(market["home_spread"])
-    fair_ml_hm, _ = american_to_fair_prob_pair(
+    tot_line = float(market["total"])
+    h1_spread = float(market["h1_spread"])
+    h1_tot_line = float(market["h1_total"])
+    q1_tot_line = float(market["q1_total"])
+    aw_tt_line = float(market["away_team_total"])
+    hm_tt_line = float(market["home_team_total"])
+
+    fair_ml_hm, fair_ml_aw = american_to_fair_prob_pair(
         int(market["home_ml_american"]), int(market["away_ml_american"])
     )
+    p_fg_sp_hm, p_fg_sp_aw = _two_sided_win_probs(margin, -home_spread)
+    p_fg_ov, p_fg_un = _two_sided_win_probs(total_pts, tot_line)
+    p_ml_hm, p_ml_aw = _two_sided_win_probs(margin, 0.0)
+    p_h1_sp_hm, p_h1_sp_aw = _two_sided_win_probs(h1_margin, -h1_spread)
+    p_h1_ov, p_h1_un = _two_sided_win_probs(h1_total, h1_tot_line)
+    p_q1_ov, p_q1_un = _two_sided_win_probs(q1_total, q1_tot_line)
+    p_aw_ov, p_aw_un = _two_sided_win_probs(aw_f, aw_tt_line)
+    p_hm_ov, p_hm_un = _two_sided_win_probs(hm_f, hm_tt_line)
 
     game_plays = [
-        _gate_binary_surface(
+        _gate_two_sided_surface(
             market_id="full_game_spread",
-            selection=f"{sim['home']['team']} {home_spread:+.1f}",
-            model_prob=float(np.mean(margin > (-home_spread))),
-            fair_market_prob=0.50,
+            sel_a=f"{hm_team} {home_spread:+.1f}",
+            prob_a=p_fg_sp_hm,
+            fair_a=0.50,
+            sel_b=f"{aw_team} {-home_spread:+.1f}",
+            prob_b=p_fg_sp_aw,
+            fair_b=0.50,
             n_worlds=n_worlds,
             proj_sha=proj_sha,
         ),
-        _gate_binary_surface(
+        _gate_two_sided_surface(
             market_id="full_game_total",
-            selection=f"OVER {float(market['total']):.1f}",
-            model_prob=float(np.mean(total_pts > float(market["total"]))),
-            fair_market_prob=0.50,
+            sel_a=f"OVER {tot_line:.1f}",
+            prob_a=p_fg_ov,
+            fair_a=0.50,
+            sel_b=f"UNDER {tot_line:.1f}",
+            prob_b=p_fg_un,
+            fair_b=0.50,
             n_worlds=n_worlds,
             proj_sha=proj_sha,
         ),
-        _gate_binary_surface(
+        _gate_two_sided_surface(
             market_id="full_game_ml",
-            selection=f"{sim['home']['team']} ML",
-            model_prob=float(np.mean(hm_f > aw_f)),
-            fair_market_prob=fair_ml_hm,
+            sel_a=f"{hm_team} ML",
+            prob_a=p_ml_hm,
+            fair_a=fair_ml_hm,
+            sel_b=f"{aw_team} ML",
+            prob_b=p_ml_aw,
+            fair_b=fair_ml_aw,
             n_worlds=n_worlds,
             proj_sha=proj_sha,
         ),
-        _gate_binary_surface(
+        _gate_two_sided_surface(
             market_id="first_half_spread",
-            selection=f"1H {sim['home']['team']} {float(market['h1_spread']):+.1f}",
-            model_prob=float(np.mean(h1_margin > (-float(market["h1_spread"])))),
-            fair_market_prob=0.50,
+            sel_a=f"1H {hm_team} {h1_spread:+.1f}",
+            prob_a=p_h1_sp_hm,
+            fair_a=0.50,
+            sel_b=f"1H {aw_team} {-h1_spread:+.1f}",
+            prob_b=p_h1_sp_aw,
+            fair_b=0.50,
             n_worlds=n_worlds,
             proj_sha=proj_sha,
         ),
-        _gate_binary_surface(
+        _gate_two_sided_surface(
             market_id="first_half_total",
-            selection=f"1H OVER {float(market['h1_total']):.1f}",
-            model_prob=float(np.mean(h1_total > float(market["h1_total"]))),
-            fair_market_prob=0.50,
+            sel_a=f"1H OVER {h1_tot_line:.1f}",
+            prob_a=p_h1_ov,
+            fair_a=0.50,
+            sel_b=f"1H UNDER {h1_tot_line:.1f}",
+            prob_b=p_h1_un,
+            fair_b=0.50,
             n_worlds=n_worlds,
             proj_sha=proj_sha,
         ),
-        _gate_binary_surface(
+        _gate_two_sided_surface(
             market_id="first_quarter_total",
-            selection=f"1Q OVER {float(market['q1_total']):.1f}",
-            model_prob=float(np.mean(q1_total > float(market["q1_total"]))),
-            fair_market_prob=0.50,
+            sel_a=f"1Q OVER {q1_tot_line:.1f}",
+            prob_a=p_q1_ov,
+            fair_a=0.50,
+            sel_b=f"1Q UNDER {q1_tot_line:.1f}",
+            prob_b=p_q1_un,
+            fair_b=0.50,
             n_worlds=n_worlds,
             proj_sha=proj_sha,
         ),
-        _gate_binary_surface(
+        _gate_two_sided_surface(
             market_id="away_team_total",
-            selection=f"{sim['away']['team']} OVER {float(market['away_team_total']):.1f}",
-            model_prob=float(np.mean(aw_f > float(market["away_team_total"]))),
-            fair_market_prob=0.50,
+            sel_a=f"{aw_team} OVER {aw_tt_line:.1f}",
+            prob_a=p_aw_ov,
+            fair_a=0.50,
+            sel_b=f"{aw_team} UNDER {aw_tt_line:.1f}",
+            prob_b=p_aw_un,
+            fair_b=0.50,
             n_worlds=n_worlds,
             proj_sha=proj_sha,
         ),
-        _gate_binary_surface(
+        _gate_two_sided_surface(
             market_id="home_team_total",
-            selection=f"{sim['home']['team']} OVER {float(market['home_team_total']):.1f}",
-            model_prob=float(np.mean(hm_f > float(market["home_team_total"]))),
-            fair_market_prob=0.50,
+            sel_a=f"{hm_team} OVER {hm_tt_line:.1f}",
+            prob_a=p_hm_ov,
+            fair_a=0.50,
+            sel_b=f"{hm_team} UNDER {hm_tt_line:.1f}",
+            prob_b=p_hm_un,
+            fair_b=0.50,
             n_worlds=n_worlds,
             proj_sha=proj_sha,
         ),
@@ -1777,9 +1955,9 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
 
     player_props: list[dict[str, Any]] = []
     for mkt_name, pl, arr, line in prop_specs:
-        p_over = float(np.mean(arr > line))
-        side = "OVER" if p_over >= 0.50 else "UNDER"
-        best_p = p_over if side == "OVER" else 1.0 - p_over
+        p_over, p_under = _two_sided_win_probs(arr, line)
+        side = "OVER" if p_over >= p_under else "UNDER"
+        best_p = p_over if side == "OVER" else p_under
         gated = _gate_binary_surface(
             market_id=f"prop_{mkt_name}",
             selection=f"{pl['name']} {side} {line}",
@@ -1791,6 +1969,7 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
         gated["player_id"] = str(pl["player_id"])
         gated["market"] = mkt_name
         gated["mean_proj"] = round(float(np.mean(arr)), 3)
+        gated["median_proj"] = round(float(np.median(arr)), 3)
         gated["p10_proj"] = round(float(np.quantile(arr, 0.10)), 3)
         gated["p90_proj"] = round(float(np.quantile(arr, 0.90)), 3)
         player_props.append(gated)
@@ -1873,7 +2052,7 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
                 team=str(pl["team"]),
                 position=str(pl["position"]),  # type: ignore[arg-type]
                 salary=sal,
-                kickoff_utc="2026-11-19T01:15:00Z",
+                kickoff_utc="2026-11-20T01:15:00Z",
                 projected_points=round(mu, 3),
                 p20_value_mult=round(p20 / max(1.0, sal / 1000.0), 3),
                 median_snaps=46.0,
@@ -1908,35 +2087,51 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
     dst_aw_dk = np.clip(
         5.0 + 0.8 * sim["home"]["sacks_taken"] + 2.0 * sim["home"]["ints"] - 0.18 * hm_f, 0.0, 22.0
     )
-    extra_pool = [
-        ("HOU_DST", f"{sim['home']['team']} DST", sim["home"]["team"], "DST", 3000, dst_hm_dk),
-        ("IND_DST", f"{sim['away']['team']} DST", sim["away"]["team"], "DST", 2600, dst_aw_dk),
-        (
-            "FLEX_RB_VAL",
-            f"{sim['home']['team']} Backup RB",
-            sim["home"]["team"],
-            "RB",
-            3400,
-            np.clip(5.8 + rng_sim_noise(sim["home"]["rush_yds"]), 0.5, 22.0),
-        ),
-        (
-            "FLEX_WR_VAL",
-            f"{sim['away']['team']} Speed WR3",
-            sim["away"]["team"],
-            "WR",
-            3300,
-            np.clip(6.2 + rng_sim_noise(sim["away"]["pass_yds"]), 0.5, 24.0),
-        ),
-        (
-            "FLEX_TE_VAL",
-            f"{sim['home']['team']} Backup TE",
-            sim["home"]["team"],
-            "TE",
-            3100,
-            np.clip(4.8 + rng_sim_noise(sim["home"]["pass_yds"]) * 0.7, 0.5, 18.0),
-        ),
+    rb_cnt = sum(1 for item in pool_items if item.position == "RB")
+    wr_cnt = sum(1 for item in pool_items if item.position == "WR")
+    te_cnt = sum(1 for item in pool_items if item.position == "TE")
+    skill_cnt = rb_cnt + wr_cnt + te_cnt
+    extra_pool: list[tuple[str, str, str, str, int, np.ndarray, bool]] = [
+        (f"{hm_team}_DST", f"{hm_team} DST", hm_team, "DST", 3000, dst_hm_dk, False),
+        (f"{aw_team}_DST", f"{aw_team} DST", aw_team, "DST", 2600, dst_aw_dk, False),
     ]
-    for pid, pname, pteam, ppos, psal, parr in extra_pool:
+    if rb_cnt < 3 or skill_cnt < 7:
+        extra_pool.append(
+            (
+                "FLEX_RB_VAL",
+                f"{hm_team} Backup RB",
+                hm_team,
+                "RB",
+                3400,
+                np.clip(5.8 + rng_sim_noise(sim["home"]["rush_yds"]), 0.5, 22.0),
+                True,
+            )
+        )
+    if wr_cnt < 4 or skill_cnt < 7:
+        extra_pool.append(
+            (
+                "FLEX_WR_VAL",
+                f"{aw_team} Speed WR3",
+                aw_team,
+                "WR",
+                3300,
+                np.clip(6.2 + rng_sim_noise(sim["away"]["pass_yds"]), 0.5, 24.0),
+                True,
+            )
+        )
+    if te_cnt < 2 or skill_cnt < 7:
+        extra_pool.append(
+            (
+                "FLEX_TE_VAL",
+                f"{hm_team} Backup TE",
+                hm_team,
+                "TE",
+                3100,
+                np.clip(4.8 + rng_sim_noise(sim["home"]["pass_yds"]) * 0.7, 0.5, 18.0),
+                True,
+            )
+        )
+    for pid, pname, pteam, ppos, psal, parr, is_synthetic_stub in extra_pool:
         mu = float(np.mean(parr))
         p20 = float(np.quantile(parr, 0.20))
         pool_items.append(
@@ -1946,7 +2141,7 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
                 team=pteam,
                 position=ppos,  # type: ignore[arg-type]
                 salary=psal,
-                kickoff_utc="2026-11-19T01:15:00Z",
+                kickoff_utc="2026-11-20T01:15:00Z",
                 projected_points=round(mu, 3),
                 p20_value_mult=round(p20 / max(1.0, psal / 1000.0), 3),
                 median_snaps=28.0,
@@ -1959,20 +2154,21 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
         teams_m.append(pteam)
         sal_m.append(psal)
         means_m.append(mu)
-        dfs_projections.append(
-            {
-                "player_id": pid,
-                "name": pname,
-                "team": pteam,
-                "position": ppos,
-                "salary": psal,
-                "dk_mean": round(mu, 3),
-                "dk_p20": round(p20, 3),
-                "dk_p85": round(float(np.quantile(parr, 0.85)), 3),
-                "dk_p95": round(float(np.quantile(parr, 0.95)), 3),
-                "projection_source_sha256": proj_sha,
-            }
-        )
+        if not is_synthetic_stub:
+            dfs_projections.append(
+                {
+                    "player_id": pid,
+                    "name": pname,
+                    "team": pteam,
+                    "position": ppos,
+                    "salary": psal,
+                    "dk_mean": round(mu, 3),
+                    "dk_p20": round(p20, 3),
+                    "dk_p85": round(float(np.quantile(parr, 0.85)), 3),
+                    "dk_p95": round(float(np.quantile(parr, 0.95)), 3),
+                    "projection_source_sha256": proj_sha,
+                }
+            )
 
     scen_mat = np.column_stack(scen_cols)
     scen_list = scen_mat.tolist()
@@ -2195,7 +2391,9 @@ def evaluate_unified_reasoning_simulation_projection_spine_suite(
             env_override=env_override,
         )
     else:
-        ctx = default_matchup_context(aw, hm, as_of_week=wk, is_indoor=is_indoor)
+        ctx = default_matchup_context(
+            aw, hm, as_of_week=wk, is_indoor=is_indoor if is_indoor else None
+        )
     signals = custom_signals if custom_signals is not None else ctx["signals"]
     stage1 = watch_and_audit_pregame_signals(signals)
     stage2 = synthesize_reasoned_game_environment(
@@ -2205,6 +2403,7 @@ def evaluate_unified_reasoning_simulation_projection_spine_suite(
         away_roster=ctx["away_roster"],
         home_roster=ctx["home_roster"],
         is_indoor=bool(ctx["is_indoor"]),
+        market=ctx["market"],
     )
     stage3 = simulate_coherent_10k_game_worlds(
         away_team=aw,

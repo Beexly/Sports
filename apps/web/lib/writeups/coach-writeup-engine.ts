@@ -3182,16 +3182,18 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
  * Filters out any writeup whose kickoff has already passed (with a 3.5-hour live-game buffer),
  * guaranteeing that yesterday's completed games never remain on live storefront cards.
  */
-export function getActiveUpcomingWriteups(now: Date = new Date()): CoachGameWriteup[] {
+export function getActiveUpcomingWriteups(
+  now: Date = new Date(),
+  options?: { allowExpiredFallback?: boolean },
+): CoachGameWriteup[] {
   const cutoffMs = now.getTime() - 3.5 * 60 * 60 * 1000;
   const filtered = LIVE_SLATE_COACH_WRITEUPS.filter((w) => {
     const kMs = Date.parse(w.kickoff);
     return Number.isNaN(kMs) || kMs >= cutoffMs;
   });
-  // Fall back to the full slate when all games have kicked off,
-  // ensuring the live storefront never wipes to 0 during mid-week transitions.
+  const allowFallback = options?.allowExpiredFallback ?? true;
   if (filtered.length === 0) {
-    return [...LIVE_SLATE_COACH_WRITEUPS];
+    return allowFallback ? [...LIVE_SLATE_COACH_WRITEUPS] : [];
   }
   return filtered;
 }

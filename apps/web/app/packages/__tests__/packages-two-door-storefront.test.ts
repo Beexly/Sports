@@ -117,7 +117,7 @@ describe("storefront source — public-copy fence", () => {
 
   it("states founding pricing honestly without a fabricated live counter", () => {
     expect(pageSrc).toContain("FOUNDING_SEAT_COPY");
-    expect(FOUNDING_SEAT_COPY).toBe("Founding pricing · first 100 members");
+    expect(FOUNDING_SEAT_COPY).toBe("Founding pricing - first 100 members");
     expect(pageSrc).toContain("we do not publish");
     expect(pageSrc).not.toMatch(/\d+\s+seats?\s+(left|remaining)/i);
   });
@@ -133,7 +133,7 @@ describe("checkout route — live PASS-only state (0 official plays)", () => {
     expect(data.checkoutEnabled).toBe(false);
     expect(data.officialPlayCount).toBe(0);
     expect(data.reason).toBeTruthy();
-    expect(data.singleSlateOffers).toHaveLength(2);
+    expect(data.singleSlateOffers).toHaveLength(3);
     expect(data.membershipPlans).toBeDefined();
   });
 

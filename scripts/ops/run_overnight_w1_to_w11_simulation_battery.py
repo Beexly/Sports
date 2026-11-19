@@ -25,6 +25,7 @@ for _p in (str(REPO_ROOT / "src"), str(REPO_ROOT)):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
+from gse_engine.compute.rvine_sgp_copula import evaluate_5regime_rvine_sgp  # noqa: E402
 from gse_engine.ingestion.multimodal_vlm_and_provenance import NFL_EPA_MIN_GAMES  # noqa: E402
 from gse_engine.memory.knowledge_continuity_and_gsi_rlvr_flywheel import (  # noqa: E402
     compile_gse_to_gsi_rlvr_training_batch,
@@ -410,8 +411,11 @@ def _run_dark_intelligence_bakeoff(
     fast_smoke: bool,
 ) -> dict[str, Any]:
     """Run empirical W1-10 bake-off across all activated Task 8 Dark-Intelligence modules."""
-    step = 28 if fast_smoke else 8
-    sample_rows = [r for i, r in enumerate(vectors) if i % step == 0][:18]
+    sample_rows = (
+        [r for i, r in enumerate(vectors) if i % 28 == 0][:6]
+        if fast_smoke
+        else list(vectors)
+    )
     packs: list[tuple[dict[str, Any], dict[str, Any]]] = []
     for row in sample_rows:
         g: CompletedGameRow = row["game"]
@@ -715,6 +719,52 @@ def _run_gsi_ruo_and_rlvr_audit() -> dict[str, Any]:
     }
 
 
+def _run_multi_surface_w1_to_w10_audit(*, fast_smoke: bool) -> dict[str, Any]:
+    """Summarize empirical W1-10 audit across Props, SGP Copula, Classic & Showdown."""
+    rvine = evaluate_5regime_rvine_sgp(
+        leg_exceedance_probs=[0.58, 0.56, 0.54],
+        raw_corr_matrix=[[1.0, 0.24, 0.24], [0.24, 1.0, 0.24], [0.24, 0.24, 1.0]],
+    )
+    sgp_summary = {
+        "joint_prob": round(float(rvine.joint_prob), 6),
+        "independent_prob": round(float(rvine.independent_prob), 6),
+        "superadditive_lift": round(float(rvine.joint_prob - rvine.independent_prob), 6),
+        "shootout_upper_tail_lambda": round(float(rvine.shootout_upper_tail_lambda), 6),
+    }
+    if fast_smoke:
+        return {
+            "mode": "fast_smoke",
+            "sgp_copula": sgp_summary,
+        }
+
+    from gse_engine.tracking.wave46_causal_picks_combo_props_and_stacked_portfolio_dfs_nfl_engine import (  # noqa: E501
+        evaluate_w46_walk_forward_7props_and_stacked_portfolio_dfs,
+    )
+    from gse_engine.tracking.wave48_stage0_weather_sentiment_trade_and_showdown_engine import (  # noqa: E501
+        evaluate_w48_walk_forward_hydrated_spine_and_showdown,
+    )
+
+    props_dfs_w46 = evaluate_w46_walk_forward_7props_and_stacked_portfolio_dfs(REPO_ROOT)
+    wf_showdown = evaluate_w48_walk_forward_hydrated_spine_and_showdown(REPO_ROOT)
+    return {
+        "mode": "full_w1_to_w10",
+        "sgp_copula": sgp_summary,
+        "props_7market": props_dfs_w46.get("props_7_market_summary") or {},
+        "classic_3lineup_milp": props_dfs_w46.get("stacked_portfolio_dfs_summary") or {},
+        "showdown_18g_walkforward": {
+            "games_evaluated": int(wf_showdown.get("games_evaluated", 0)),
+            "total_worlds_simulated": int(wf_showdown.get("total_worlds_simulated", 0)),
+            "max_world_conservation_residual": float(
+                wf_showdown.get("max_world_conservation_residual", 0.0)
+            ),
+            "zero_cap_violations": bool(wf_showdown.get("zero_cap_violations", False)),
+            "all_qb_cpt_stacks_compliant": bool(
+                wf_showdown.get("all_qb_cpt_stacks_compliant", False)
+            ),
+        },
+    }
+
+
 def run_overnight_battery(
     *,
     fast_smoke: bool = False,
@@ -743,6 +793,7 @@ def run_overnight_battery(
             wf_metrics=wf_metrics,
         )
         dark_bakeoff = _run_dark_intelligence_bakeoff(vectors, fast_smoke=fast_smoke)
+        multi_surface_audit = _run_multi_surface_w1_to_w10_audit(fast_smoke=fast_smoke)
         w11_sealed = _run_week11_13game_spine(
             w11_worlds_per_game=int(w11_worlds_per_game),
             approved_sim_weeks=str(approved_sim_weeks),
@@ -774,6 +825,7 @@ def run_overnight_battery(
                 },
                 "theory_ablation_leaderboard": leaderboard,
                 "dark_intelligence_bakeoff": dark_bakeoff,
+                "multi_surface_w1_to_w10_audit": multi_surface_audit,
                 "week11_slate": {
                     "games_simulated": w11_sealed["games_simulated"],
                     "worlds_per_game": w11_sealed["worlds_per_game"],

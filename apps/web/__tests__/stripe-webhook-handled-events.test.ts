@@ -38,11 +38,11 @@ describe("the published handled-event list is the handler's own (C-182 / F-20)",
     expect(fromSource).toEqual([...HANDLED_STRIPE_WEBHOOK_EVENTS].sort());
   });
 
-  it("finds the ten events the handler is documented to cover", () => {
+  it("finds the eleven events the handler is documented to cover", () => {
     // A count assertion on its own would pass a swap; the set equality above is
     // the real check. This one pins the number the F-20 row names, so a silent
     // REMOVAL is as loud as an addition.
-    expect(HANDLED_STRIPE_WEBHOOK_EVENTS).toHaveLength(10);
-    expect(new Set(caseLabelsInHandler(source)).size).toBe(10);
+    expect(HANDLED_STRIPE_WEBHOOK_EVENTS).toHaveLength(11);
+    expect(new Set(caseLabelsInHandler(source)).size).toBe(11);
   });
 });

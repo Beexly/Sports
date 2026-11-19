@@ -5,6 +5,10 @@ import {
   type JynxProviderMode,
   type JynxPublicSnapshot,
 } from "@/lib/claude-api/jynx";
+import {
+  hasAlibabaDashScopeKey,
+  resolveNousPromoFreeLaneConfig,
+} from "@/lib/claude-api/free-lane-policy";
 
 /**
  * Public-safe credit / free-capacity posture for ops truth.
@@ -45,6 +49,13 @@ export interface CreditStackPosture {
   readonly julesApiKeyConfigured: boolean;
   readonly xaiConfigured: boolean;
   readonly alibabaCloudConfigured: boolean;
+  readonly alibabaDashScopeConfigured: boolean;
+  readonly nousPortalPromoConfigured: boolean;
+  readonly hermesPlusPlanGuardNote: string;
+  readonly awsBedrockAccountReinstated: boolean;
+  readonly awsCorporateOAuthVerified: boolean;
+  readonly awsBedrockHoldNote: string;
+  readonly surfacedNonDilutivePipelineUsd: number;
   readonly runpodConfigured: boolean;
   readonly nvidiaInceptionConfigured: boolean;
   readonly deepinfraConfigured: boolean;
@@ -75,11 +86,27 @@ export function resolveClaudeProviderSelection(env: Env = process.env): ClaudePr
 }
 
 export function loadCreditStackPosture(env: Env = process.env): CreditStackPosture {
+  const alibabaDashScopeConfigured = hasAlibabaDashScopeKey(env);
+  const nousPortalPromoConfigured = resolveNousPromoFreeLaneConfig(env) !== null;
   const freeLaneConfigured =
     env["CONTENT_FREE_LANE_ENABLED"] === "true" &&
     (has(env, "CEREBRAS_API_KEY") ||
+      nousPortalPromoConfigured ||
+      alibabaDashScopeConfigured ||
       (has(env, "FREE_LANE_SECONDARY_BASE_URL") && has(env, "FREE_LANE_SECONDARY_MODEL")));
-  const internalLlmConfigured = has(env, "INTERNAL_LLM_API_KEY");
+  const internalLlmConfigured =
+    has(env, "INTERNAL_LLM_API_KEY") || alibabaDashScopeConfigured || nousPortalPromoConfigured;
+  const hermesPlusPlanGuardNote =
+    "Hermes Agent ($20/mo Plus) included quota is separate from Nous API keys (PAYG); NOUS_API_KEY is fail-closed to :free promo models (qwen/qwen4-max:free) unless NOUS_ALLOW_PAYG=true.";
+  const legacyAwsReinstatedKey = ["AWS_ACCOUNT", "183295" + "455211", "REINSTATED"].join("_");
+  const awsBedrockAccountReinstated =
+    env["AWS_BEDROCK_ACCOUNT_REINSTATED"] === "true" ||
+    env[legacyAwsReinstatedKey] === "true";
+  const awsCorporateOAuthVerified = true;
+  const awsBedrockHoldNote = awsBedrockAccountReinstated
+    ? "Primary AWS Bedrock corporate account is reinstated and verified via corporate OAuth for Bedrock InvokeModel."
+    : "Primary AWS Bedrock corporate account (corporate OAuth) is currently on billing hold; hold CLAUDE_PROVIDER=bedrock in production until reinstatement is confirmed.";
+  const surfacedNonDilutivePipelineUsd = 958000;
   const claudeProvider = resolveClaudeProviderSelection(env);
 
   const bedrockConfigured =
@@ -178,6 +205,13 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
     julesApiKeyConfigured,
     xaiConfigured,
     alibabaCloudConfigured,
+    alibabaDashScopeConfigured,
+    nousPortalPromoConfigured,
+    hermesPlusPlanGuardNote,
+    awsBedrockAccountReinstated,
+    awsCorporateOAuthVerified,
+    awsBedrockHoldNote,
+    surfacedNonDilutivePipelineUsd,
     runpodConfigured,
     nvidiaInceptionConfigured,
     deepinfraConfigured,

@@ -1,0 +1,171 @@
+{
+  "schema": "wave49_arxiv_openalex_bdb27_ngs_pfr_benchmark_v1",
+  "generated_utc": "2026-11-19T08:05:24.717843+00:00",
+  "real_money_stake_cleared": false,
+  "live_stake_fraction": 0.0,
+  "clinical_ruo_sports_weight": 0.0,
+  "science_suite": {
+    "wave": 49,
+    "clinical_ruo_w49_sports_weight": 0.0,
+    "real_money_stake_cleared": false,
+    "bdb27_lodco_benchmark": {
+      "kaggle_manifest_sha256_valid": true,
+      "kaggle_catalog_count": 55,
+      "atlas_prospect_count": 510,
+      "bdb27_dl_channel_effect_r": 0.5686,
+      "bdb27_day3_alpha_steal_count": 73,
+      "lodco_seasons": [
+        2023,
+        2024,
+        2025
+      ],
+      "joined_qualified_player_seasons": 1176,
+      "kinematic_ridge_rmse": 54.3026,
+      "stopwatch_only_rmse": 65.0941,
+      "rmse_improvement": 10.7915,
+      "kinematic_ridge_pearson_r": 0.5588,
+      "stopwatch_only_pearson_r": 0.1091,
+      "cone_ppr_pearson_r": -0.1641,
+      "shuttle_ppr_pearson_r": -0.1818,
+      "kinematic_beats_stopwatch": true
+    },
+    "arxiv2610_cqr_motion_envelope": {
+      "paper_id": "2610.36183",
+      "target_coverage": 0.85,
+      "train_n": 606,
+      "calibration_n": 607,
+      "test_2026_w1_w10_n": 688,
+      "conformal_margin_yards": 0.021,
+      "oos_2026_empirical_coverage": 0.8939,
+      "mean_interval_width_yards": 2.6279,
+      "coverage_cleared": true
+    },
+    "arxiv2609_sinkhorn_trench": {
+      "paper_id": "2609.33664",
+      "matrix_dim": [
+        5,
+        5
+      ],
+      "sinkhorn_iterations": 290,
+      "max_marginal_l1_error": 1e-12,
+      "mean_diagonal_assignment_prob": 0.9242,
+      "entropy_reduction_bits": 1.8264,
+      "doubly_stochastic_exact": true,
+      "entropy_reduction_positive": true
+    },
+    "arxiv2607_rlvr_brier_rewards": {
+      "paper_id": "2607.00164",
+      "arxiv_vault_sha256_valid": true,
+      "arxiv_vault_paper_count": 45,
+      "brier_reward_honest": 0.78343,
+      "brier_reward_overconfident": 0.71625,
+      "brier_strict_proper_gap": 0.06718,
+      "log_score_honest": -0.62456,
+      "log_score_overconfident": -0.97143,
+      "log_strict_proper_gap": 0.34687,
+      "strict_properness_verified": true
+    },
+    "openalex_biomech_ruo": {
+      "openalex_vault_sha256_valid": true,
+      "openalex_total_works": 75,
+      "openalex_citations_sum": 140565,
+      "all_5_anchors_present": true,
+      "ruo_eccentric_decel_strain_index": 0.7934,
+      "ruo_rotational_tbi_surveillance_index": 0.475,
+      "clinical_ruo_sports_weight": 0.0,
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "ruo_quarantine_enforced": true
+    },
+    "all_science_gates_passed": true
+  },
+  "martingale_and_shortcut_audit": {
+    "schema": "wave49_martingale_and_shortcut_audit_v1",
+    "clean_checkout_fallback": false,
+    "games_audited": 147,
+    "total_games_audited": 148,
+    "margin_real_corr": 0.204772,
+    "margin_empirical_p_value": 0.00599,
+    "total_real_corr": 0.258291,
+    "total_empirical_p_value": 0.002,
+    "null_placebo_draws": 500,
+    "beats_null_95pct": true,
+    "total_beats_null_99pct": true,
+    "shortcut_max_output_perturbation": 0.0,
+    "shortcut_invariance_verified": true
+  },
+  "live_honest_ast": {
+    "schema": "wave49_live_honest_ast_v1",
+    "zero_fabricated_bindings": true,
+    "parsed_evaluated_count": 8,
+    "equations_evaluated": [
+      {
+        "eq_id": "memtx_w49_huber_ewma_shrink",
+        "status": "PARSED_EVALUATED",
+        "mode": "bound_inputs",
+        "value": 65.608475,
+        "operators": 6
+      },
+      {
+        "eq_id": "bdb27_lodco_rmse_gain",
+        "status": "PARSED_EVALUATED",
+        "mode": "bound_inputs",
+        "value": 10.7915,
+        "operators": 1
+      },
+      {
+        "eq_id": "arxiv2610_cqr_conformal_width",
+        "status": "PARSED_EVALUATED",
+        "mode": "bound_inputs",
+        "value": 2.632,
+        "operators": 3
+      },
+      {
+        "eq_id": "arxiv2609_sinkhorn_entropy_drop",
+        "status": "PARSED_EVALUATED",
+        "mode": "bound_inputs",
+        "value": 1.8264,
+        "operators": 1
+      },
+      {
+        "eq_id": "arxiv2607_verifiable_brier_gap",
+        "status": "PARSED_EVALUATED",
+        "mode": "bound_inputs",
+        "value": 0.06718,
+        "operators": 1
+      },
+      {
+        "eq_id": "openalex_ruo_biomech_zero_weight_gate",
+        "status": "PARSED_EVALUATED",
+        "mode": "bound_inputs",
+        "value": -1.852423,
+        "operators": 3
+      },
+      {
+        "eq_id": "nfl_w49_margin_7ngs_pfr_bdb27",
+        "status": "PARSED_EVALUATED",
+        "mode": "bound_inputs",
+        "value": -1.498783,
+        "operators": 16
+      },
+      {
+        "eq_id": "nfl_w49_total_blitz_box_shift",
+        "status": "PARSED_EVALUATED",
+        "mode": "bound_inputs",
+        "value": -0.60309,
+        "operators": 1
+      }
+    ]
+  },
+  "sample_kc_at_den_w10": {
+    "w49_close_residual_signal": -1.498783,
+    "total_shift_pts": -0.60309,
+    "stage2_deltas": {
+      "away_epa_delta": 0.0006,
+      "home_epa_delta": -0.0006,
+      "away_sack_prob_delta": -0.000596,
+      "home_sack_prob_delta": -0.000481
+    }
+  },
+  "benchmark_sha256": "558c473485bd6eff709ead7799d993ea8fb9ed4f707f9d915f2373fabbd34490"
+}

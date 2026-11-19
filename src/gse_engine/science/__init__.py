@@ -105,6 +105,16 @@ from gse_engine.science.wave46_alphaxiv_66paper_transactional_memory_durable_ci_
     evaluate_upa_escrow_conformance_and_human_anchor_pillar,
     evaluate_wave46_alphaxiv_66paper_memory_ci_upa_ledger_suite,
 )
+from gse_engine.science.wave49_arxiv_openalex_bdb27_kinematic_and_conformal_engine import (  # noqa: E501
+    CLINICAL_RUO_W49_SPORTS_WEIGHT,
+    WAVE49_SCIENCE_RLVR_TRAJECTORIES,
+    evaluate_arxiv2607_rlvr_verifiable_calibration_rewards,
+    evaluate_arxiv2609_sinkhorn_trench_assignment_matrix,
+    evaluate_arxiv2610_quantile_conformal_motion_envelope,
+    evaluate_bdb27_combine_to_nfl_lodco_benchmark,
+    evaluate_openalex_biomech_deceleration_and_rotational_ruo,
+    evaluate_wave49_arxiv_openalex_bdb27_suite,
+)
 
 __all__ = [
     "CLINICAL_RUO_ALPHAFOLD_INTERPRO_SPORTS_WEIGHT",
@@ -112,6 +122,7 @@ __all__ = [
     "CLINICAL_RUO_ALPHAXIV_W44_SPORTS_WEIGHT",
     "CLINICAL_RUO_ALPHAXIV_W45_SPORTS_WEIGHT",
     "CLINICAL_RUO_ALPHAXIV_W46_SPORTS_WEIGHT",
+    "CLINICAL_RUO_W49_SPORTS_WEIGHT",
     "CLINICAL_RUO_GTEX_SPORTS_WEIGHT",
     "CLINICAL_RUO_HPA_SPORTS_WEIGHT",
     "CLINICAL_RUO_ICU_SPORTS_WEIGHT",
@@ -129,6 +140,7 @@ __all__ = [
     "WAVE44_GSI_RLVR_TRAJECTORIES",
     "WAVE45_GSI_RLVR_TRAJECTORIES",
     "WAVE46_GSI_RLVR_TRAJECTORIES",
+    "WAVE49_SCIENCE_RLVR_TRAJECTORIES",
     "BiomarkerStructuralProfile",
     "ClinicalTrialPortfolioSummary",
     "CongenericSarSummary",
@@ -138,6 +150,10 @@ __all__ = [
     "evaluate_agent_containment_debate_and_multisport_cfa_hawkes",
     "evaluate_agent_integrity_reverification_anti_hacking_and_pool_diversity",
     "evaluate_anytime_valid_conformal_martingales_aci_and_blown_lead",
+    "evaluate_arxiv2607_rlvr_verifiable_calibration_rewards",
+    "evaluate_arxiv2609_sinkhorn_trench_assignment_matrix",
+    "evaluate_arxiv2610_quantile_conformal_motion_envelope",
+    "evaluate_bdb27_combine_to_nfl_lodco_benchmark",
     "evaluate_causal_sports_mspem_dynamo_ate_att_and_parr",
     "evaluate_clv_vs_breakeven_hit_rate_and_beuoy_kelly",
     "evaluate_conformal_kelly_fisher_deflator_and_drawdown",
@@ -184,6 +200,8 @@ __all__ = [
     "evaluate_wave44_alphaxiv_28paper_dfl_causal_integrity_suite",
     "evaluate_wave45_alphaxiv_78paper_conformal_copula_dfs_suite",
     "evaluate_wave46_alphaxiv_66paper_memory_ci_upa_ledger_suite",
+    "evaluate_openalex_biomech_deceleration_and_rotational_ruo",
+    "evaluate_wave49_arxiv_openalex_bdb27_suite",
     "load_and_verify_wave16_telemetry",
     "validate_and_serialize_wave16_bundle",
 ]
