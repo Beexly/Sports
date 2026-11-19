@@ -494,3 +494,19 @@ and Firecrawl v2 lanes. Also: Muse Try On launch announcement
 jiangshan-map interactive China atlas (DeanChensj/jiangshan-map,
 GPL-3.0, design-pattern reference). Running corpus total: 12,283
 records.
+
+## Delta 2026-11-19 X For You AM (landed 2026-11-19)
+
+Source: ~/workspace/x-for-you-sweep/reports/2026-11-19-AM.md.
+Sweep: 60 unique NEW posts with verified IDs (52 watchlist +
+9 feed - 1 overlap); 20 dossiers covering 25 posts; 35
+inventoried-only with IDs; 119 NO-ID feed rows in the seen index
+(43 pass 1 + 76 pass 2); 1 trading-bot post skipped; 1 health
+item recorded. Delta file delta-2026-11-19-x-am.jsonl: 178
+records (25 dossier + 35 inventoried with IDs + 118 NO-ID
+slug-keyed), 0 duplicates, 0 slug-collision skips, 1 sportsbook
+item excluded, 173,484 bytes. Key finds: F7 defense influence
+on time to throw (Jaguars -0.17s), W4 Flores Paradox scheme,
+W13 Watt sack-pressure persistence, F2 interior defensive line
+production grading, F4 linebacker contact rate vs alignment.
+Running corpus total: 12,461 records.
