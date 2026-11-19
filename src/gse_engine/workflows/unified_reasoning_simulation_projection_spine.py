@@ -2268,9 +2268,10 @@ def evaluate_vault_hydrated_unified_spine_matchup(
     env_override: str | None = None,
     n_worlds: int = 10_000,
     repo_root: Path | None = None,
+    include_dark_intelligence: bool = False,
 ) -> dict[str, Any]:
     """Run real 32-team vault-hydrated Unified Spine + Showdown DFS derivation for any game."""
-    return evaluate_unified_reasoning_simulation_projection_spine_suite(
+    out = evaluate_unified_reasoning_simulation_projection_spine_suite(
         away_team=away_team,
         home_team=home_team,
         as_of_week=as_of_week,
@@ -2279,6 +2280,23 @@ def evaluate_vault_hydrated_unified_spine_matchup(
         repo_root=repo_root,
         hydrate_from_vaults=True,
     )
+    if not include_dark_intelligence:
+        return out
+
+    from gse_engine.workflows.dark_intelligence_activation_bridge import (
+        evaluate_dark_intelligence_pack_for_matchup,
+    )
+
+    stage2_env = out.get("stage2_reasoned_environment") or {}
+    dark_pack = evaluate_dark_intelligence_pack_for_matchup(
+        away_team=away_team,
+        home_team=home_team,
+        as_of_week=as_of_week,
+        spread_home=float(stage2_env.get("market_home_spread", -3.0)),
+        total_line=float(stage2_env.get("market_total", 45.0)),
+        env_override=env_override,
+    )
+    return {**out, "dark_intelligence_pack": dark_pack}
 
 
 WAVE47_SPINE_RLVR_TRAJECTORIES: tuple[dict[str, Any], ...] = (
