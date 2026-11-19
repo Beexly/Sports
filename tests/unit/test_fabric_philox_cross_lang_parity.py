@@ -11,10 +11,12 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import random
 import subprocess
 from pathlib import Path
 
+import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
@@ -32,8 +34,33 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 TS_PHILOX_PATH = REPO_ROOT / "packages" / "prediction-engine" / "src" / "fabric" / "philox.ts"
 
 
+def _typescript_root() -> Path | None:
+    """Locate a directory holding `node_modules/typescript`.
+
+    Order: TYPESCRIPT_ROOT env (CI installs the compiler into a standalone
+    prefix so the monorepo's full npm tree is never installed), then the repo
+    root for dev machines that already ran npm install.
+    """
+    candidates = []
+    env_root = os.environ.get("TYPESCRIPT_ROOT")
+    if env_root:
+        candidates.append(Path(env_root))
+    candidates.append(REPO_ROOT)
+    for root in candidates:
+        if (root / "node_modules" / "typescript" / "package.json").is_file():
+            return root
+    return None
+
+
 def test_cross_language_bit_exact_10000_tuples() -> None:
     """Verify bit-exact Python vs TypeScript parity across 10,200 random tuples."""
+    ts_root = _typescript_root()
+    if ts_root is None:
+        pytest.skip(
+            "TypeScript compiler not installed (no node_modules/typescript under "
+            "TYPESCRIPT_ROOT or the repo root); cross-language parity needs a "
+            "node toolchain, so it cannot run in this environment"
+        )
     rng = random.Random(20261116)
     cases = []
     py_words = []
@@ -93,7 +120,7 @@ process.stdout.write(JSON.stringify({ words, uniforms, normals, hashes }));
 """
     normals_wire = [[str(s), tid, p, stp, sub] for s, tid, p, stp, sub in normal_cases]
     proc = subprocess.run(
-        ["node", "-e", node_script, str(REPO_ROOT), str(TS_PHILOX_PATH)],
+        ["node", "-e", node_script, str(ts_root), str(TS_PHILOX_PATH)],
         input=json.dumps({"cases": cases, "normals": normals_wire}),
         text=True,
         capture_output=True,
