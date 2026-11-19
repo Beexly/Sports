@@ -2,7 +2,7 @@ name: GSE Site-Wide Autonomous Fabric
 
 on:
   schedule:
-    # Runs every 4 hours OUTSIDE the Neon autosuspend quiet window (08:30-12:30 UTC).
+    # Runs outside the Neon autosuspend quiet window (08:30-12:30 UTC).
     - cron: "12 0,4,13,17,21 * * *"
   workflow_dispatch:
     inputs:
@@ -34,6 +34,11 @@ on:
         description: "NFL week selector (always 'auto' on unattended schedule)"
         required: true
         default: "auto"
+      dry_run:
+        description: "Optional manual dry-run override (scheduled runs execute live bounded non-destructive loop)"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -42,6 +47,19 @@ jobs:
   run-autonomous-fabric:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # Four Founder Hard Gates enforced on all autonomous runs:
+    # 1. Never flip PUBLIC_PICKS_ENABLED or release gates.
+    # 2. Never spend cash or stake real money (max_cost=0.0, LIVE_STAKE_FRACTION=0.0).
+    # 3. External applications/partnerships remain strictly founder-only.
+    # 4. Public posts and paid cards stay strictly draft-only (no auto-publish).
+    env:
+      PYTHONPATH: "${{ github.workspace }}/src:${{ github.workspace }}"
+      PUBLIC_PICKS_ENABLED: "false"
+      LIVE_STAKE_FRACTION: "0.0"
+      REAL_MONEY_STAKE_CLEARED: "false"
+      EXTERNAL_APPLICATIONS_FOUNDER_ONLY: "true"
+      DRAFT_ONLY_MODE: "true"
+      AUTO_PUBLISH_PUBLIC_POSTS: "false"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -56,7 +74,7 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Run Python Autonomous Fabric Plan & Gate Check
+      - name: Run Bounded Live Non-Destructive Autonomous Fabric
         env:
           MODELSCOPE_API_KEY: ${{ secrets.MODELSCOPE_API_KEY }}
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
@@ -70,14 +88,22 @@ jobs:
             --model-lane "${{ github.event.inputs.model_lane || 'hybrid_auto' }}" \
             --suite "${{ github.event.inputs.suite || 'all' }}" \
             --week "${{ github.event.inputs.week || 'auto' }}" \
-            --dry-run
+            --max-cost-usd 0.0 \
+            ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run) && '--dry-run' || '' }}
 
-      - name: Run Guardrails on Autonomous Council & Copy Surfaces
+      - name: Run Guardrails on Autonomous Council, Draft-Only, and Copy Surfaces
         run: |
+          node scripts/guardrails/draft-only.mjs
           node scripts/guardrails/em-dash-scan.mjs
           node scripts/guardrails/claude-api-usage.mjs
           python -m pip install --quiet pytest
-          # Run from the repo root so `intelligence` resolves as a package.
-          # Executing the file directly puts intelligence/tests on sys.path and
-          # the `from intelligence.ops...` import fails.
           python -m pytest intelligence/tests/test_gse_autonomous_platform_fabric.py -q -p no:cacheprovider
+
+      - name: Upload Autonomous Fabric Receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: gse-autonomous-fabric-receipt-${{ github.run_id }}
+          if-no-files-found: warn
+          retention-days: 7
+          path: |
+            docs/engine/research/2026-11-13/06_autonomous_platform_fabric_latest_receipt.json

@@ -34,6 +34,9 @@ on:
         default: "auto"
         type: string
 
+permissions:
+  contents: read
+
 concurrency:
   group: gse-5stage-orchestrator-${{ github.event.schedule || github.event.inputs.mode }}-${{ github.event.inputs.week || 'auto' }}
   cancel-in-progress: false
@@ -54,6 +57,11 @@ jobs:
       ))
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      PYTHONPATH: "${{ github.workspace }}/src:${{ github.workspace }}"
+      GSE_OPERATOR_APPROVED_SIM_WEEKS: "11"
+      PUBLIC_PICKS_ENABLED: "false"
+      LIVE_STAKE_FRACTION: "0.0"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -67,7 +75,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Install Python scientific stack
         run: |
@@ -94,8 +102,15 @@ jobs:
           --mode t85m-lock
           --skip-js-guards
 
-      - name: Verify Cryptographic Stage 0..5 Receipts & E2E Projection Conservation Invariants
+      - name: Run Wave 48 Unified Spine Simulation Battery & Export Sealed Slate to Web
         run: |
+          python scripts/ops/run_overnight_w1_to_w11_simulation_battery.py --fast-smoke --approved-weeks 11
+          python scripts/ops/export_sealed_slate_to_web.py
+
+      - name: Verify Corpus Wiring, Zero Vault Leak, and Stage 0..5 Receipts
+        run: |
+          python scripts/guardrails/verify_total_corpus_and_w11_preflight.py --write-receipt
+          python scripts/guardrails/verify_public_root_zero_vault_leak.py
           python scripts/guardrails/connected-workflow-dossier-guard.py
           python -m unittest tests/unit/test_unified_5000eq_mnf_projections_and_storefront.py tests/unit/test_intel_loop_q52_q54_and_research_consolidation.py tests/unit/test_no_fake_projections_or_ir_players.py
 
@@ -103,6 +118,19 @@ jobs:
         run: |
           node scripts/trust-gate.mjs
           node scripts/guardrails/trust-gate.mjs
+
+      - name: Upload Pregame Sealed Slate & Preflight Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gse-pregame-5stage-receipts-${{ github.run_id }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            data/eval/overnight_w1_to_w11_simulation_battery_2026_11_18.json
+            data/eval/dark_intelligence_bakeoff_leaderboard_2026_11_18.json
+            data/engine/week11_unified_sealed_projections_2026_11_18.json
+            data/eval/w11_tnf_zero_surprise_preflight_receipt_2026_11_18.json
+            apps/web/lib/slate/current-sealed-slate.json
 
   halftime-live-2h-resimulator:
     name: Halftime Live 2H 10,000-World Re-Simulator (Rules H1, H2, H3)
@@ -113,6 +141,10 @@ jobs:
       (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'halftime_live_2h')
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      PYTHONPATH: "${{ github.workspace }}/src:${{ github.workspace }}"
+      PUBLIC_PICKS_ENABLED: "false"
+      LIVE_STAKE_FRACTION: "0.0"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -126,7 +158,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Install Python scientific stack
         run: |
@@ -141,6 +173,9 @@ jobs:
           ENFORCE_RULE_H3_IMMUTABLE_PREGAME_DIRECTION_LOCK: "1"
         run: python scripts/ops/run_halftime_live_simulator.py
 
+      - name: Verify Zero Public Vault Leak
+        run: python scripts/guardrails/verify_public_root_zero_vault_leak.py
+
   overnight-corpus-and-mind-shift:
     name: Overnight Corpus & Mind Shift Consolidation
     if: >-
@@ -148,6 +183,11 @@ jobs:
       (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'overnight_corpus_mind_consolidation')
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      PYTHONPATH: "${{ github.workspace }}/src:${{ github.workspace }}"
+      GSE_OPERATOR_APPROVED_SIM_WEEKS: "11"
+      PUBLIC_PICKS_ENABLED: "false"
+      LIVE_STAKE_FRACTION: "0.0"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -161,12 +201,12 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Install Python scientific stack
         run: |
           python -m pip install --upgrade pip
-          pip install numpy scipy
+          pip install numpy scipy pandas pyarrow
 
       - name: Consolidate Mind Staging & Corpus
         run: |
@@ -175,5 +215,25 @@ jobs:
           python intelligence/metrics/intel_loop_q52_q54_and_research_consolidation_2026_11_09.py
           python -m unittest tests/unit/test_unified_5000eq_mnf_projections_and_storefront.py tests/unit/test_intel_loop_q52_q54_and_research_consolidation.py
 
+      - name: Execute Overnight W1-W11 Simulation Battery, Web Export & Preflight Guards
+        run: |
+          python scripts/ops/run_overnight_w1_to_w11_simulation_battery.py --worlds 10000 --approved-weeks 11
+          python scripts/ops/export_sealed_slate_to_web.py
+          python scripts/guardrails/verify_total_corpus_and_w11_preflight.py --write-receipt
+          python scripts/guardrails/verify_public_root_zero_vault_leak.py
+
       - name: Execute 20h Overnight Hermes/OpenCode/NVIDIA/OpenRouter/RunPod Shift Verification
         run: python scripts/ops/run_overnight_20h_hermes_opencode_nvidia_openrouter_shift.py --dry-run
+
+      - name: Upload Overnight Simulation & Preflight Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gse-overnight-battery-receipts-${{ github.run_id }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            data/eval/overnight_w1_to_w11_simulation_battery_2026_11_18.json
+            data/eval/dark_intelligence_bakeoff_leaderboard_2026_11_18.json
+            data/engine/week11_unified_sealed_projections_2026_11_18.json
+            data/eval/w11_tnf_zero_surprise_preflight_receipt_2026_11_18.json
+            apps/web/lib/slate/current-sealed-slate.json
