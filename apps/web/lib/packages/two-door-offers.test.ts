@@ -34,14 +34,14 @@ import {
 
 describe("founding price selection", () => {
   it("gives the founding rate to the first 100 members (index 0..99)", () => {
-    expect(selectMembershipMonthlyPrice(0)).toEqual({ priceCents: 5999, rate: "founding" });
-    expect(selectMembershipMonthlyPrice(42)).toEqual({ priceCents: 5999, rate: "founding" });
-    expect(selectMembershipMonthlyPrice(99)).toEqual({ priceCents: 5999, rate: "founding" });
+    expect(selectMembershipMonthlyPrice(0)).toEqual({ priceCents: 3900, rate: "founding" });
+    expect(selectMembershipMonthlyPrice(42)).toEqual({ priceCents: 3900, rate: "founding" });
+    expect(selectMembershipMonthlyPrice(99)).toEqual({ priceCents: 3900, rate: "founding" });
   });
 
   it("gives the standard rate from member 100 onward", () => {
-    expect(selectMembershipMonthlyPrice(100)).toEqual({ priceCents: 7999, rate: "standard" });
-    expect(selectMembershipMonthlyPrice(1000)).toEqual({ priceCents: 7999, rate: "standard" });
+    expect(selectMembershipMonthlyPrice(100)).toEqual({ priceCents: 7900, rate: "standard" });
+    expect(selectMembershipMonthlyPrice(1000)).toEqual({ priceCents: 7900, rate: "standard" });
   });
 
   it("rejects invalid member indices", () => {
@@ -51,9 +51,9 @@ describe("founding price selection", () => {
   });
 
   it("pins the published pricing constants", () => {
-    expect(MEMBERSHIP_PRICING.foundingMonthlyCents).toBe(5999);
-    expect(MEMBERSHIP_PRICING.standardMonthlyCents).toBe(7999);
-    expect(MEMBERSHIP_PRICING.restOfSeasonCents).toBe(24900);
+    expect(MEMBERSHIP_PRICING.foundingMonthlyCents).toBe(3900);
+    expect(MEMBERSHIP_PRICING.standardMonthlyCents).toBe(7900);
+    expect(MEMBERSHIP_PRICING.restOfSeasonCents).toBe(14900);
     expect(FOUNDING_SEAT_LIMIT).toBe(100);
     expect(FOUNDING_SEAT_COPY).toContain("first 100 members");
     expect(SEASON_MEMBERSHIP_SLUG).toBe("season-membership");
@@ -66,26 +66,30 @@ describe("founding price selection", () => {
 });
 
 describe("single-slate offers", () => {
-  it("exposes exactly the two Door-2 packs at the directed prices", () => {
-    expect(TWO_DOOR_PACK_OFFERS).toHaveLength(2);
+  it("exposes the three Door-2 packs at the directed prices", () => {
+    expect(TWO_DOOR_PACK_OFFERS).toHaveLength(3);
     const primetime = getSingleSlateOffer("primetime-showdown-pack")!;
+    const thanksgiving = getSingleSlateOffer("thanksgiving-5game-pack")!;
     const sunday = getSingleSlateOffer("sunday-full-slate-pack")!;
-    expect(primetime.standardPriceCents).toBe(1900);
-    expect(primetime.creditBackPriceCents).toBe(2900);
+    expect(primetime.standardPriceCents).toBe(900);
+    expect(primetime.creditBackPriceCents).toBe(1900);
+    expect(thanksgiving.standardPriceCents).toBe(1400);
+    expect(thanksgiving.creditBackPriceCents).toBe(2400);
     expect(sunday.standardPriceCents).toBe(2900);
     expect(sunday.creditBackPriceCents).toBe(3900);
     expect(primetime.slateKey).toBe("primetime-showdown");
+    expect(thanksgiving.slateKey).toBe("thanksgiving-slate");
     expect(sunday.slateKey).toBe("sunday-full-slate");
   });
 
-  it("carries the exact credit-back terms (0.00u trigger, 100% back, flat $35 upgrade)", () => {
+  it("carries the exact credit-back terms and 30-Day Positive-CLV Pledge copy", () => {
     expect(CREDIT_BACK_TERMS.triggerNetUnits).toBe(0);
     expect(CREDIT_BACK_TERMS.refundPercentOfPrice).toBe(100);
     expect(CREDIT_BACK_TERMS.upgradeCreditCents).toBe(3500);
     for (const offer of TWO_DOOR_PACK_OFFERS) {
       expect(offer.creditBackTerms).toEqual(CREDIT_BACK_TERMS);
-      expect(offer.protectionCopy).toContain("0.00 units");
-      expect(offer.protectionCopy).toContain("$35");
+      expect(offer.protectionCopy).toContain("30-Day Positive-CLV Pledge");
+      expect(offer.protectionCopy).toContain("$39/mo");
     }
   });
 
@@ -145,7 +149,7 @@ describe("Whop checkout-link resolution (env-driven, fail-closed)", () => {
 
   it("reports per-offer and per-plan availability as booleans", () => {
     const empty = singleSlateCheckoutAvailability({});
-    expect(empty).toHaveLength(2);
+    expect(empty).toHaveLength(3);
     expect(empty.every((a) => !a.standardConfigured && !a.creditBackConfigured)).toBe(true);
 
     const env = { WHOP_CHECKOUT_SUNDAY_CREDIT_BACK: "https://whop.com/checkout/sunday-cb" };
@@ -180,10 +184,9 @@ describe("catalog backward compatibility (homepage + legacy consumers)", () => {
 
   it("orderPacksForStorefront still works off PickPackageOffering[]", () => {
     const ordered = orderPacksForStorefront(LIVE_PACKAGE_CATALOG);
-    // forSale:false TNF pack drops out; full-slate pass leads.
-    expect(ordered).toHaveLength(4);
+    expect(ordered).toHaveLength(5);
     expect(ordered[0].slug).toBe("week8-all-access");
-    expect(ordered.some((p) => p.slug === "tnf-all-in-pack")).toBe(false);
+    expect(ordered.some((p) => p.slug === "tnf-all-in-pack")).toBe(true);
   });
 
   it("getPackageBySlug still resolves legacy slugs and aliases", () => {
@@ -198,7 +201,7 @@ describe("catalog backward compatibility (homepage + legacy consumers)", () => {
     expect(payload.mode).toBe("payment");
     expect(payload.line_items[0].price_data.unit_amount).toBe(1900);
     const description = payload.line_items[0].price_data.product_data.description;
-    expect(description).toContain("Washington");
+    expect(description).toContain("Indianapolis Colts at Houston Texans");
     expect(containsBannedRecordCopy(description)).toBe(false);
   });
 });

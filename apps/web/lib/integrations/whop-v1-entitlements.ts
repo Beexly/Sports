@@ -37,11 +37,16 @@ const MAX_IDEMPOTENCY_CACHE = 5000;
 
 export const WHOP_SLUG_ALLOWLIST = new Set<string>([
   "free-proof-room",
+  "tnf-all-in-pack",
+  "primetime-showdown-pack",
+  "thanksgiving-5game-pack",
+  "sunday-full-slate-pack",
   "sgp-correlation-basket",
   "sunday-nfl-5pct-slate",
   "redzone-dfs-pro-pack",
   "week8-all-access",
   "global-multisport-pro",
+  "season-membership",
 ]);
 
 export function verifyWhopStandardWebhook(params: {

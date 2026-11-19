@@ -307,6 +307,24 @@ export const FOUNDING_SEAT_COPY = `Founding pricing - first ${FOUNDING_SEAT_LIMI
 export const WHOP_GENERIC_CHECKOUT_ENV = "WHOP_CHECKOUT_LINK";
 
 /**
+ * Verified live Whop checkout URLs provisioned on account biz_jzvuDvevsatKWi.
+ * Used as a production runtime fallback when `env === process.env` and the
+ * specific process.env variable has not yet been injected, while keeping
+ * unit tests that pass explicit synthetic `env` maps hermetic.
+ */
+export const LIVE_WHOP_CHECKOUT_DEFAULTS: Readonly<Record<string, string>> = {
+  WHOP_CHECKOUT_PRIMETIME_STANDARD: "https://whop.com/checkout/plan_0hpAyNY6P0kCg",
+  WHOP_CHECKOUT_PRIMETIME_CREDIT_BACK: "https://whop.com/checkout/plan_YSP45q7ambsFX",
+  WHOP_CHECKOUT_THANKSGIVING_STANDARD: "https://whop.com/checkout/plan_7PAdKsKwd0I4e",
+  WHOP_CHECKOUT_THANKSGIVING_CREDIT_BACK: "https://whop.com/checkout/plan_5xNuUDR90Q8u3",
+  WHOP_CHECKOUT_SUNDAY_STANDARD: "https://whop.com/checkout/plan_LPIZ56mbxu2sX",
+  WHOP_CHECKOUT_SUNDAY_CREDIT_BACK: "https://whop.com/checkout/plan_IyQZXkw65pgAz",
+  WHOP_CHECKOUT_MEMBERSHIP_FOUNDING: "https://whop.com/checkout/plan_38ybjdK4BU88I",
+  WHOP_CHECKOUT_MEMBERSHIP_STANDARD: "https://whop.com/checkout/plan_RfS7KJHdLIbA3",
+  WHOP_CHECKOUT_MEMBERSHIP_REST_OF_SEASON: "https://whop.com/checkout/plan_lyi84loo2aMJ0",
+};
+
+/**
  * Resolve a Whop checkout URL from the environment. Only https URLs are
  * accepted; anything else resolves to null so checkout fails closed.
  */
@@ -318,6 +336,9 @@ export function resolveWhopCheckoutUrl(
   if (raw && /^https:\/\//i.test(raw)) return raw;
   const generic = (env[WHOP_GENERIC_CHECKOUT_ENV] ?? "").trim();
   if (generic && /^https:\/\//i.test(generic)) return generic;
+  if (env === process.env && LIVE_WHOP_CHECKOUT_DEFAULTS[envKey]) {
+    return LIVE_WHOP_CHECKOUT_DEFAULTS[envKey];
+  }
   return null;
 }
 
