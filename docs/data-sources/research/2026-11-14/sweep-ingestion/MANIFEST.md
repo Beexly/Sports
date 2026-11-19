@@ -434,3 +434,19 @@ expected pass rate (PattonAnalytics), Dynatyze WAR, PFF Accuracy
 Tracker, plus endpoints for nflmcp, csv_enjoyer, PigskinLab,
 SH8Model, sharpshotcalc. Running feed total: 11,927 records.
 Path note stands: this feed lives at the pre-rebucket path below.
+
+## Delta 2026-11-18 IG For You PM (landed 2026-11-18)
+
+Source: ~/workspace/ig-for-you-sweep/reports/2026-11-18-PM.md.
+Sweep shortfall, recorded in the report's gap audit: 63 feed
+positions inventoried; 19 coded NEW posts dossiered (4 feed-
+verified + 1 reload-only + 14 by-catch); 44 positions inventoried-
+only with NO shortcode - the feed view did not expose shortcodes
+and the recovery pass came too late for high-volume accounts.
+Those 44 are a named source loss, not backlog (same failure mode
+as the 2026-11-16 AM run's 9 NOCODE positions). Delta: 19 records,
+all dossier-grade and shortcode-keyed, 0 duplicates, 0 collisions,
+30,866 bytes appended to ig-for-you-feed.jsonl (now 3,015
+records). Strongest finds: Gemini 4 Neon reel (Df5nhTRRFbK),
+EvolvingInfra, Agent Substrate runtime, RustingStrata engine,
+QR Snip extension. Running feed total: 11,946 records.
