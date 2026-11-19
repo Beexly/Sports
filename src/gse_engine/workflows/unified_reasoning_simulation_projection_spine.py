@@ -264,6 +264,28 @@ def _load_spine_vaults(repo_root: Path | None = None) -> dict[str, Any]:
     w9_s0 = json.loads(w9_p.read_text(encoding="utf-8")) if w9_p.is_file() else {}
     w10_p = nv / "stage0_truth_s2026_w10.json"
     w10_s0 = json.loads(w10_p.read_text(encoding="utf-8")) if w10_p.is_file() else {}
+    stage0_by_week: dict[int, dict[str, Any]] = {}
+    if w9_s0:
+        stage0_by_week[9] = w9_s0
+    for s0_file in sorted(nv.glob("stage0_truth_s2026_w*.json")):
+        try:
+            payload = json.loads(s0_file.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        wk_val = int(payload.get("week") or 0)
+        if wk_val > 0:
+            stage0_by_week[wk_val] = payload
+    w11_s0 = stage0_by_week.get(11, {})
+
+    eng_dir = root / "data" / "engine"
+    w11_slate_p = eng_dir / "week11_slate_espn_2026-11-18.json"
+    w11_espn_slate = (
+        json.loads(w11_slate_p.read_text(encoding="utf-8")) if w11_slate_p.is_file() else {}
+    )
+    w11_inj_p = eng_dir / "espn_nfl_injuries_2026-11-18.json"
+    w11_espn_injuries = (
+        json.loads(w11_inj_p.read_text(encoding="utf-8")) if w11_inj_p.is_file() else {}
+    )
 
     out: dict[str, Any] = {
         "clean_checkout_fallback": False,
@@ -274,9 +296,84 @@ def _load_spine_vaults(repo_root: Path | None = None) -> dict[str, Any]:
         "inj26": inj26,
         "w9_stage0": w9_s0,
         "w10_stage0": w10_s0,
+        "w11_stage0": w11_s0,
+        "stage0_by_week": stage0_by_week,
+        "w11_espn_slate": w11_espn_slate,
+        "w11_espn_injuries": w11_espn_injuries,
     }
     _SPINE_VAULT_CACHE[ck] = out
     return out
+
+
+def _espn_w11_schedule_row(
+    *,
+    vaults: Mapping[str, Any],
+    away_team: str,
+    home_team: str,
+) -> dict[str, Any]:
+    """Build schedule/odds/weather dict for Week 11 from ESPN slate JSON."""
+    slate = vaults.get("w11_espn_slate") or {}
+    for ev in slate.get("events", []):
+        comps = (ev.get("competitions") or [{}])[0]
+        competitors = comps.get("competitors") or []
+        home_c = next((c for c in competitors if c.get("homeAway") == "home"), None)
+        away_c = next((c for c in competitors if c.get("homeAway") == "away"), None)
+        if not (home_c and away_c):
+            continue
+        ev_aw = _norm_team((away_c.get("team") or {}).get("abbreviation", ""))
+        ev_hm = _norm_team((home_c.get("team") or {}).get("abbreviation", ""))
+        if ev_aw != away_team or ev_hm != home_team:
+            continue
+        odds = (comps.get("odds") or [{}])[0]
+        espn_spread = odds.get("spread")
+        # ESPN uses negative spread for home favored; nflverse spread_line is positive.
+        spread_line = -float(espn_spread) if espn_spread is not None else 2.5
+        total_line = float(odds.get("overUnder")) if odds.get("overUnder") is not None else 45.5
+        hm_ml = ((odds.get("homeTeamOdds") or {}).get("moneyLine"))
+        aw_ml = ((odds.get("awayTeamOdds") or {}).get("moneyLine"))
+        if hm_ml is None or aw_ml is None:
+            p_hm = _clip(1.0 / (1.0 + math.exp(-0.148 * spread_line)), 0.04, 0.96)
+            p_aw = 1.0 - p_hm
+            hm_ml = (
+                int(round(-100.0 * p_hm / (1.0 - p_hm)))
+                if p_hm >= 0.5
+                else int(round(100.0 * (1.0 - p_hm) / p_hm))
+            )
+            aw_ml = (
+                int(round(-100.0 * p_aw / (1.0 - p_aw)))
+                if p_aw >= 0.5
+                else int(round(100.0 * (1.0 - p_aw) / p_aw))
+            )
+        venue = comps.get("venue") or {}
+        weather = ev.get("weather") or {}
+        indoor = bool(venue.get("indoor"))
+        temp_val = weather.get("temperature")
+        kickoff = str(ev.get("date") or "")
+        # TNF games (2026-11-20T01:15Z -> Thu 7:15 PM CT) are short-week 4-day turnarounds.
+        is_tnf = kickoff.startswith("2026-11-20")
+        rest_days = 4.0 if is_tnf else 7.0
+        wind_est = (
+            0.0 if indoor else (8.0 if "Banorte" in str(venue.get("fullName") or "") else 7.0)
+        )
+        return {
+            "game_id": str(ev.get("id") or f"2026_11_{away_team}_{home_team}"),
+            "season": 2026,
+            "week": 11,
+            "away_team": away_team,
+            "home_team": home_team,
+            "spread_line": spread_line,
+            "total_line": total_line,
+            "away_moneyline": aw_ml,
+            "home_moneyline": hm_ml,
+            "roof": "dome" if indoor else "outdoors",
+            "temp": float(temp_val) if temp_val is not None else (70.0 if indoor else 58.0),
+            "wind": wind_est,
+            "away_rest": rest_days,
+            "home_rest": rest_days,
+            "venue_name": str(venue.get("fullName") or ""),
+            "neutral_site": bool(comps.get("neutralSite")),
+        }
+    return {}
 
 
 def _build_team_hydrated_roster_and_qb(
@@ -287,8 +384,8 @@ def _build_team_hydrated_roster_and_qb(
     vaults: Mapping[str, Any],
     stage0_bundle: Mapping[str, Any],
     sched_qb_name: str | None,
-) -> tuple[tuple[PlayerShare, ...], dict[str, Any], list[str], float, float]:
-    """Build per-player-GP causal roster shares, Stage-0 exclusions, and QB1 info."""
+) -> tuple[tuple[PlayerShare, ...], dict[str, Any], list[str], float, float, int]:
+    """Build per-player-GP causal roster shares, Stage-0 exclusions, QB1 info, and injury count."""
     pw26: pd.DataFrame = vaults["pw26"]
     pw25: pd.DataFrame = vaults["pw25"]
     inj26: pd.DataFrame = vaults["inj26"]
@@ -304,12 +401,39 @@ def _build_team_hydrated_roster_and_qb(
     }
     excl_lower.update(excl_union_lower)
 
-    if not inj26.empty and as_of_week <= 10:
+    injury_rows_scanned = 0
+    if not inj26.empty:
         sub_inj = inj26[(inj26["team_u"] == team_code) & (inj26["week"] == as_of_week)]
+        injury_rows_scanned += int(len(sub_inj))
         for _, ir in sub_inj.iterrows():
             st = str(ir.get("report_status") or "").strip().upper()
             if st in {"OUT", "DOUBTFUL", "IR", "D", "O"}:
                 excl_lower.add(str(ir.get("full_name") or "").strip().lower())
+
+    if as_of_week >= 11:
+        espn_slate = vaults.get("w11_espn_slate") or {}
+        espn_inj = vaults.get("w11_espn_injuries") or {}
+        id_to_team: dict[str, str] = {}
+        for ev in espn_slate.get("events", []):
+            comp = (ev.get("competitions") or [{}])[0]
+            for c in comp.get("competitors", []):
+                tm_info = c.get("team") or {}
+                id_to_team[str(tm_info.get("id") or "")] = _norm_team(
+                    tm_info.get("abbreviation", "")
+                )
+        for tb in espn_inj.get("injuries", []):
+            tb_team = id_to_team.get(str(tb.get("id") or "").strip(), "")
+            if tb_team != team_code:
+                continue
+            entries = tb.get("injuries") or []
+            injury_rows_scanned += len(entries)
+            for ent in entries:
+                st = str(ent.get("status") or "").strip().upper()
+                if st in {"OUT", "DOUBTFUL", "INJURED RESERVE", "SUSPENSION"}:
+                    ath = ent.get("athlete") or {}
+                    nm = str(ath.get("displayName") or "").strip().lower()
+                    if nm:
+                        excl_lower.add(nm)
 
     # Apply exact-week Stage-0 trades when inspecting W9 or W10
     traded_in: set[str] = set()
@@ -515,6 +639,7 @@ def _build_team_hydrated_roster_and_qb(
         excluded_notes,
         _clip(wr1_pg, 38.5, 98.5),
         _clip(rb1_pg, 35.5, 96.5),
+        injury_rows_scanned,
     )
 
 
@@ -534,39 +659,61 @@ def hydrate_causal_matchup_context_from_vaults(
     hm = _norm_team(home_team)
     vaults = _load_spine_vaults(repo_root)
     if vaults["clean_checkout_fallback"]:
-        return default_matchup_context(
+        fb = default_matchup_context(
             aw,
             hm,
             as_of_week=wk,
             is_indoor=bool(is_indoor) if is_indoor is not None else (hm in _INDOOR_VENUES),
         )
+        fb["stage0_week"] = 0
+        fb["injury_rows_scanned"] = 0
+        fb["schedule_source"] = "clean_checkout_fallback"
+        return fb
 
     cutoff_wk = min(wk, 11)
-    if wk == 9:
-        stage0_bundle = dict(vaults["w9_stage0"])
-    elif wk >= 10:
-        stage0_bundle = dict(vaults["w10_stage0"])
+    stage0_by_week: dict[int, dict[str, Any]] = dict(vaults.get("stage0_by_week") or {})
+    if wk in stage0_by_week:
+        stage0_bundle = dict(stage0_by_week[wk])
+        stage0_week = wk
     else:
-        stage0_bundle = {}
+        prior_wks = sorted(w for w in stage0_by_week if w <= wk)
+        if prior_wks:
+            stage0_week = prior_wks[-1]
+            stage0_bundle = dict(stage0_by_week[stage0_week])
+        else:
+            stage0_week = 0
+            stage0_bundle = {}
 
     sch26: pd.DataFrame = vaults["sch26"]
     sched_sub = sch26[
-        (sch26["week"] == min(wk, 10)) & (sch26["away_u"] == aw) & (sch26["home_u"] == hm)
+        (sch26["week"] == wk) & (sch26["away_u"] == aw) & (sch26["home_u"] == hm)
     ]
-    s_row = sched_sub.iloc[0].to_dict() if not sched_sub.empty else {}
+    if not sched_sub.empty:
+        s_row = sched_sub.iloc[0].to_dict()
+        schedule_source = "schedules_2026_parquet"
+    elif wk >= 11:
+        s_row = _espn_w11_schedule_row(vaults=vaults, away_team=aw, home_team=hm)
+        schedule_source = "espn_week11_live" if s_row else "synthetic_default"
+    else:
+        s_row = {}
+        schedule_source = "synthetic_default"
 
     roof_str = str(s_row.get("roof") or "").lower()
     indoor_eff = (
         bool(is_indoor)
         if is_indoor is not None
-        else (roof_str in {"dome", "closed"} or hm in _INDOOR_VENUES)
+        else (
+            (roof_str in {"dome", "closed"})
+            if roof_str
+            else (hm in _INDOOR_VENUES)
+        )
     )
     temp_f = float(s_row["temp"]) if pd.notna(s_row.get("temp")) else (70.0 if indoor_eff else 55.0)
     wind_mph = float(s_row["wind"]) if pd.notna(s_row.get("wind")) else (0.0 if indoor_eff else 6.0)
     away_rest = float(s_row["away_rest"]) if pd.notna(s_row.get("away_rest")) else 7.0
     home_rest = float(s_row["home_rest"]) if pd.notna(s_row.get("home_rest")) else 7.0
 
-    aw_roster, aw_qb, aw_excl, _, aw_rb1_pg = _build_team_hydrated_roster_and_qb(
+    aw_roster, aw_qb, aw_excl, _, aw_rb1_pg, aw_inj_cnt = _build_team_hydrated_roster_and_qb(
         team_code=aw,
         as_of_week=wk,
         cutoff_wk=cutoff_wk,
@@ -574,7 +721,7 @@ def hydrate_causal_matchup_context_from_vaults(
         stage0_bundle=stage0_bundle,
         sched_qb_name=str(s_row.get("away_qb_name") or "") or None,
     )
-    hm_roster, hm_qb, hm_excl, hm_wr1_pg, _ = _build_team_hydrated_roster_and_qb(
+    hm_roster, hm_qb, hm_excl, hm_wr1_pg, _, hm_inj_cnt = _build_team_hydrated_roster_and_qb(
         team_code=hm,
         as_of_week=wk,
         cutoff_wk=cutoff_wk,
@@ -582,6 +729,7 @@ def hydrate_causal_matchup_context_from_vaults(
         stage0_bundle=stage0_bundle,
         sched_qb_name=str(s_row.get("home_qb_name") or "") or None,
     )
+    injury_rows_scanned = aw_inj_cnt + hm_inj_cnt
 
     # Compute causal team EPA & pass-rush sack rates from tw26 (week < cutoff_wk)
     tw26: pd.DataFrame = vaults["tw26"]
@@ -748,6 +896,9 @@ def hydrate_causal_matchup_context_from_vaults(
         "away_team": aw,
         "home_team": hm,
         "as_of_week": wk,
+        "stage0_week": stage0_week,
+        "injury_rows_scanned": injury_rows_scanned,
+        "schedule_source": schedule_source,
         "is_indoor": indoor_eff,
         "hydrated_from_vaults": True,
         "weather": {"temp_f": round(temp_f, 1), "wind_mph": round(wind_mph, 1)},

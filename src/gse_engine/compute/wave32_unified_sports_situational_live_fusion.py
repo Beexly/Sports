@@ -14,6 +14,7 @@ import hashlib
 import importlib
 import json
 import math
+import re
 import statistics
 from collections.abc import Sequence
 from datetime import UTC, datetime
@@ -245,6 +246,41 @@ def _resolve_root(repo_root: Path | None) -> Path:
     if repo_root is None or repo_root is REPO_ROOT or repo_root == REPO_ROOT:
         return REPO_ROOT
     return repo_root.resolve()
+
+
+def load_all_analytics_sweep_tables_as_of(
+    *,
+    as_of_date: str = "2026-11-18",
+    repo_root: Path | None = None,
+) -> dict[str, dict[str, Any]]:
+    """Bitemporally load all dated analytics sweep CSV tables up to `as_of_date`."""
+    root = _resolve_root(repo_root)
+    research_root = root / "docs" / "research"
+    if not research_root.is_dir():
+        return {}
+    tables: dict[str, dict[str, Any]] = {}
+    cutoff = str(as_of_date).strip()
+    for date_dir in sorted(research_root.iterdir()):
+        if not date_dir.is_dir():
+            continue
+        date_str = date_dir.name
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date_str):
+            continue
+        if date_str > cutoff:
+            continue
+        ft_dir = date_dir / "full-tables"
+        if not ft_dir.is_dir():
+            continue
+        for csv_path in sorted(ft_dir.glob("*.csv")):
+            rows = _csv_rows(csv_path)
+            key = f"{date_str}/{csv_path.stem}"
+            tables[key] = {
+                "date": date_str,
+                "path": str(csv_path.relative_to(root)).replace("\\", "/"),
+                "row_count": len(rows),
+                "rows": rows,
+            }
+    return tables
 
 
 def load_nov15_44_csv_situational_sweep(
@@ -774,8 +810,11 @@ def fuse_universal_sports_stat_engineering_vaults(
 
     n16_files, n16_rows = _count_dated_csv_dir("2026-11-16")
     n17_files, n17_rows = _count_dated_csv_dir("2026-11-17")
+    n18_files, n18_rows = _count_dated_csv_dir("2026-11-18") if wk_cut >= 11 else (0, 0)
     n15_17_total_files = int(nov15["csv_files_indexed"]) + n16_files + n17_files
     n15_17_total_rows = int(nov15["total_csv_rows_parsed"]) + n16_rows + n17_rows
+    n15_18_total_files = n15_17_total_files + n18_files
+    n15_18_total_rows = n15_17_total_rows + n18_rows
 
     out: dict[str, Any] = {
         "schema": "wave32_universal_stat_engineering_vaults_v1",
@@ -788,8 +827,11 @@ def fuse_universal_sports_stat_engineering_vaults(
         "nov15_total_csv_rows_parsed": int(nov15["total_csv_rows_parsed"]),
         "nov16_csvs_indexed": n16_files,
         "nov17_csvs_indexed": n17_files,
+        "nov18_csvs_indexed": n18_files,
         "nov15_to_nov17_total_csvs_indexed": n15_17_total_files,
         "nov15_to_nov17_total_csv_rows_parsed": n15_17_total_rows,
+        "nov15_to_nov18_total_csvs_indexed": n15_18_total_files,
+        "nov15_to_nov18_total_csv_rows_parsed": n15_18_total_rows,
         "nov16_17_post_wk10_gated": bool(wk_cut < 11),
         "teams_indexed": len(team_stat_edges),
         "causal_pre_asof_counts": {
