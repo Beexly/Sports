@@ -51,6 +51,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from datetime import date
 from pathlib import Path
 from unittest.mock import patch
 
@@ -1737,8 +1738,13 @@ class TestTier5AdversarialM8GuardrailsAndPythonLedger(unittest.TestCase):
         import scripts.ops.enforce_stage0_roster_and_board_allowlist as stage0_mod
 
         # 1. Execute with pd = None (stdlib gzip.open + csv.DictReader fallback)
+        #    Week 9 is a settled fixture slate: pin the gate clock to the week-9
+        #    config's as_of (same convention as test_stage0_zero_hallucination_gate)
+        #    so calendar drift cannot fail the freshness gate.
         with patch.object(stage0_mod, "pd", None):
-            allowlist_stdlib = stage0_mod.load_stage0_game_roster_allowlist("JAX", "BAL", week=9)
+            allowlist_stdlib = stage0_mod.load_stage0_game_roster_allowlist(
+                "JAX", "BAL", week=9, today=date(2026, 11, 7)
+            )
             self.assertEqual(allowlist_stdlib["matchup"], "JAX@BAL")
             self.assertGreaterEqual(len(allowlist_stdlib["allowed_players"]), 15)
             self.assertIn("Trevor Lawrence", allowlist_stdlib["allowed_players"])
@@ -1767,7 +1773,9 @@ class TestTier5AdversarialM8GuardrailsAndPythonLedger(unittest.TestCase):
                 return_value=(board_data, "synthetic_contaminated_board.json"),
             ):
                 with self.assertRaises(stage0_mod.Stage0RosterContaminationError) as ctx:
-                    stage0_mod.load_stage0_game_roster_allowlist("JAX", "BAL", week=9)
+                    stage0_mod.load_stage0_game_roster_allowlist(
+                        "JAX", "BAL", week=9, today=date(2026, 11, 7)
+                    )
                 self.assertIn("Tank Bigsby", str(ctx.exception))
 
 

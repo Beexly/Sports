@@ -429,9 +429,11 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         self.assertEqual(s34.get("consolidated_research_signals_2026_11_09"), cons_sig)
 
     def test_t1_f6_f7_web_storefront_mnf_alignment_and_pricing_integrity(self) -> None:
-        """F6 & F7: Verify apps/web storefront files align with MNF BUF @ MIN.
+        """F6 & F7: Verify apps/web storefront files align with the current MNF slate.
 
-        Checks pricing/DFS/methodology defects and zero banned robotic phrases or XX% confidence.
+        The MNF matchup is discovered from the writeup engine and the bridge's
+        mnfMatchup field, never pinned to a settled week. Checks pricing/DFS/
+        methodology defects and zero banned robotic phrases or XX% confidence.
         """
         GUARD_MOD.verify_web_storefront_human_copy()
 
@@ -466,13 +468,19 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         self.assertRegex(mnf_block, r'"sideConfidence": "\d{1,3}/100"')
         self.assertNotIn("Justin Jefferson OVER 82.5", mnf_block)
 
-        # 2. engine-live-bridge.ts must serve the current primetime MNF matchup
+        # 2. engine-live-bridge.ts must serve the current primetime MNF matchup.
+        #    Discovered from the bridge's mnfMatchup field (never typed to a
+        #    settled week's literal) so the check survives the weekly slate
+        #    refresh instead of pinning Week-9 BUF @ MIN.
         bridge_text = bridge_path.read_text(encoding="utf-8")
         self.assertIn("Monday Night Football", bridge_text)
-        self.assertRegex(
-            bridge_text,
-            r"Monday Night Football \([A-Z]{2,3} @ [A-Z]{2,3}\)",
-            "engine-live-bridge.ts must name a primetime MNF matchup",
+        mnf_matchup_m = re.search(
+            r'mnfMatchup:\s*"([A-Z]{2,3} @ [A-Z]{2,3})"', bridge_text
+        )
+        self.assertIsNotNone(
+            mnf_matchup_m,
+            "engine-live-bridge.ts must declare mnfMatchup for the current "
+            "primetime MNF game",
         )
         self.assertNotIn("Justin Jefferson 80+ Rec Yds", bridge_text)
 

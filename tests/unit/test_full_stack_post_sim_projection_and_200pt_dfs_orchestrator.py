@@ -18,6 +18,7 @@ Covers all 4 phases of `/antigravity-skills:full-stack-orchestration-full-stack-
 from __future__ import annotations
 
 import copy
+import json
 from pathlib import Path
 
 import pytest
@@ -75,8 +76,31 @@ def test_phase1_database_schema_and_persistence_contract():
 
 def test_phase2_backend_pipeline_proprietary_metrics_and_two_wave_200pt_dfs(backend_bundle):
     assert backend_bundle["slate_id"] == "NFL_2026_WEEK9_MAIN_SLATE"
-    assert backend_bundle["official_ledger_of_record"]["season_record"] == "47-19-1"
-    assert backend_bundle["official_ledger_of_record"]["net_units"] == "+26.50u"
+    # The official record must be DERIVED from the single-source verified ledger
+    # artifact (recomputed from Neon by scripts/verify-ledger.ts), never re-typed
+    # here -- a ledger refresh must not strand this pin. Calibration law: the
+    # win rate stays sealed until the gate opens (200 CLV-backed settled plays).
+    ledger_artifact = json.loads(
+        (
+            Path(__file__).resolve().parents[2]
+            / "apps"
+            / "web"
+            / "lib"
+            / "ledger"
+            / "verified-ledger.json"
+        ).read_text(encoding="utf-8")
+    )
+    official = ledger_artifact["official"]
+    wlp = official["wlp"]
+    total = float(official["units"]["total"])
+    ledger = backend_bundle["official_ledger_of_record"]
+    assert ledger["season_record"] == f"{wlp['wins']}-{wlp['losses']}-{wlp['pushes']}"
+    assert ledger["net_units"] == f"{'+' if total >= 0 else ''}{total:.2f}u"
+    assert ledger["win_rate_published"] is bool(official["gate"]["unlocked"])
+    assert (
+        ledger["calibration_progress"]
+        == f"{official['gate']['clvBackedSettled']}/{official['gate']['target']}"
+    )
 
     # 22 proprietary GSE metrics verified
     prop_metrics = backend_bundle["proprietary_gse_metrics"]
