@@ -101,10 +101,15 @@ export async function loadActiveSealedSlate(): Promise<LoadedSealedSlate> {
     }
   }
 
+  const resolveBoardSeason = (board: SealedBoard): number =>
+    typeof board.season === "number" && Number.isFinite(board.season) ? board.season : 2026;
+  const resolveBoardWeek = (board: SealedBoard): number =>
+    typeof board.week === "number" && Number.isFinite(board.week) ? board.week : 11;
+
   const resolvedBoard = candidate ?? (bundledSlate as unknown as SealedBoard);
   const gate = evaluateCagePublicationPolicy({
-    season: 2026,
-    week: 10,
+    season: resolveBoardSeason(resolvedBoard),
+    week: resolveBoardWeek(resolvedBoard),
     windowSlot: "ALL",
     lockVersion: "v3.5",
     items: toCandidateItems(resolvedBoard),
@@ -113,8 +118,8 @@ export async function loadActiveSealedSlate(): Promise<LoadedSealedSlate> {
   if (gate.decision === "REFUSE" && candidate) {
     const fallbackBoard = bundledSlate as unknown as SealedBoard;
     const fallbackGate = evaluateCagePublicationPolicy({
-      season: 2026,
-      week: 10,
+      season: resolveBoardSeason(fallbackBoard),
+      week: resolveBoardWeek(fallbackBoard),
       windowSlot: "ALL",
       lockVersion: "v3.5",
       items: toCandidateItems(fallbackBoard),

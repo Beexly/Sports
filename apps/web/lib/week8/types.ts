@@ -16,6 +16,9 @@ export interface SealedRow {
 }
 
 export interface SealedBoard {
+  season?: number;
+  week?: number;
+  projection_source_sha256?: string;
   seal_digest: string;
   generated_at: string;
   counts: { evaluated: number; publish: number; abstain: number; pass: number };
