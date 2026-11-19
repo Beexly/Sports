@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   EVENT_CONTRACT_REGISTRY,
   EVENT_NAMES,
+  GCP_FREE_TIER_PUBSUB_TOPICS,
   buildEventIdempotencyKey,
   createEventEnvelope,
   createStatelessEventHandler,
@@ -153,5 +154,13 @@ describe("Google Cloud Pub/Sub and QStash versioned event contracts", () => {
     const res = validateEventEnvelope(broken);
     expect(res.valid).toBe(false);
     expect(res.errors.length).toBeGreaterThan(0);
+  });
+
+  it("exposes GCP Path 36 always-free Pub/Sub topic names and ceilings", () => {
+    expect(GCP_FREE_TIER_PUBSUB_TOPICS.oddsTicks).toBe("gse-odds-ticks");
+    expect(GCP_FREE_TIER_PUBSUB_TOPICS.injuryWire).toBe("gse-injury-wire");
+    expect(GCP_FREE_TIER_PUBSUB_TOPICS.intakeDlq).toBe("gse-intake-dlq");
+    expect(GCP_FREE_TIER_PUBSUB_TOPICS.monthlyFreeGib).toBe(10);
+    expect(GCP_FREE_TIER_PUBSUB_TOPICS.cloudRunMonthlyFreeRequests).toBe(2_000_000);
   });
 });

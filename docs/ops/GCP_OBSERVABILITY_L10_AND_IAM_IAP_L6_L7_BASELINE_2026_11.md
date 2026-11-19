@@ -1,8 +1,8 @@
 # GCP Observability (L10) and IAM/IAP (L6+L7) P0 Baseline (2026-11)
 
-**Date:** 2026-11-18
+**Date:** 2026-11-19
 **Status:** Active P0 Governance Baseline (Zero-Waste + Fail-Closed)
-**Compliance Anchor:** Incorporates Motif's Interim Google Skills Baseline. Contains zero unconfirmed lab IDs and zero primitive broad roles.
+**Compliance Anchor:** Incorporates Motif's Path 36 progress (`1,977` pts: C1-C2 `100%`, C3 `96%`, C4 `87%`; `GSP089` Monitoring; `X-Goog-IAP-JWT-Assertion`; Google AI Ultra `$100/mo` = `$1,200/yr` GCP credit + `35` monthly GDP lab credits). Contains zero unconfirmed lab IDs and zero primitive broad roles.
 
 ---
 
@@ -92,9 +92,9 @@ Strict rule: ZERO broad primitive roles granted to any human, CI runner, or serv
 | `sa-web-runtime@gse-prod.iam.gserviceaccount.com` | Secret Manager (`CRON_SECRET`, `OPS_READ_SECRET`, `STRIPE_SECRET_KEY`) | `roles/secretmanager.secretAccessor` (per-secret binding) | Reads runtime secrets without ability to list/edit other secrets |
 | `sa-web-runtime@gse-prod.iam.gserviceaccount.com` | Pub/Sub Topics (`gse.*.v1`) | `roles/pubsub.publisher` (topic-scoped) | Publishes domain events (`odds.updated.v1`, `slate.sealed.v1`, `clv.captured.v1`) |
 | `sa-web-runtime@gse-prod.iam.gserviceaccount.com` | Cloud Logging & Trace | `roles/logging.logWriter`, `roles/cloudtrace.agent` | Emits structured logs and traces (10% sampling) without log-delete permission |
-| `sa-worker-offload@gse-prod.iam.gserviceaccount.com` | Pub/Sub Subscriptions (`gse.*.sub` + `.dlq`) | `roles/pubsub.subscriber` (subscription-scoped) | Consumes async ingestion/settlement jobs and writes failed messages to DLQ |
+| `sa-worker-offload@gse-prod.iam.gserviceaccount.com` | Pub/Sub Subscriptions (`gse.*.sub` + `.dlq`; `gse-odds-ticks`, `gse-injury-wire`, `gse-intake-dlq`) | `roles/pubsub.subscriber` (subscription-scoped) | Consumes async ingestion/settlement jobs and writes failed messages to DLQ |
 | `sa-worker-offload@gse-prod.iam.gserviceaccount.com` | GCS Archive Bucket (`gs://gse-sealed-artifacts`) | `roles/storage.objectCreator` (bucket-scoped) | Writes immutable SHA-256 sealed artifacts without delete/overwrite rights |
-| `sa-worker-offload@gse-prod.iam.gserviceaccount.com` | BigQuery (`gse_data` dataset) | `roles/bigquery.jobUser` + `roles/bigquery.dataViewer` | Executes dry-run capped (`1 GiB`) analytical queries via `GcpWarehouseAdapter` |
+| `sa-worker-offload@gse-prod.iam.gserviceaccount.com` | BigQuery (`gse_data` & `gse_calibration` US datasets) | `roles/bigquery.jobUser` + `roles/bigquery.dataViewer` | Executes dry-run capped (`1 GiB`) & partition-filtered analytical queries via `GcpWarehouseAdapter` |
 | `sa-scheduler-invoker@gse-prod.iam.gserviceaccount.com` | Cloud Run Worker Services | `roles/run.invoker` (service-scoped) | Invokes scale-to-zero Cloud Run HTTP targets with OIDC identity token |
 | `sa-github-ci-deploy@gse-prod.iam.gserviceaccount.com` | Artifact Registry + Cloud Run Deploy | `roles/artifactregistry.writer`, `roles/run.developer` | Pushes container images via Workload Identity Federation (zero static JSON keys) |
 | `group:gse-operators@galaxysportsedge.com` | Internal Admin / Cockpit IAP Backend | `roles/iap.httpsResourceAccessor` | Grants human operators zero-trust HTTPS tunnel access to `/admin/*` and `/cockpit/*` |

@@ -67,4 +67,24 @@ describe("internal-LLM tier", () => {
     expect(dashCfg?.model).toBe("qwen2.5-coder-32b-instruct");
     expect(isInternalLlmConfigured({ ALIBABA_API_KEY: "ali-key" })).toBe(true);
   });
+
+  it("uses free Nous Portal qwen/qwen4-max:free promo when enabled and blocks PAYG models", () => {
+    const cfg = internalLlmConfig({
+      NOUS_API_KEY: "nous-test-key",
+      NOUS_QWEN4_MAX_FREE_PROMO_ENABLED: "true",
+      NOUS_MODEL: "qwen4-max",
+    });
+    expect(cfg).toEqual({
+      baseUrl: "https://inference-api.nousresearch.com/v1",
+      model: "qwen/qwen4-max:free",
+      apiKey: "nous-test-key",
+    });
+    expect(
+      internalLlmConfig({
+        NOUS_API_KEY: "nous-test-key",
+        NOUS_QWEN4_MAX_FREE_PROMO_ENABLED: "true",
+        NOUS_MODEL: "nousresearch/hermes-4-405b",
+      }),
+    ).toBeNull();
+  });
 });

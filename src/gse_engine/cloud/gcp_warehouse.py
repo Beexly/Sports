@@ -8,9 +8,34 @@ exhausting GCP billing credits.
 from __future__ import annotations
 
 import hashlib
+import re
 from typing import Any, Protocol
 
 DEFAULT_MAX_BYTES_BILLED = 1_073_741_824  # 1 GiB ceiling per query
+GSE_CALIBRATION_DATASET = "gse_calibration"
+GSE_CALIBRATION_REGION = "US"
+_SELECT_STAR_RE = re.compile(r"\bSELECT\s+\*", re.IGNORECASE)
+_PARTITION_PREDICATE_RE = re.compile(
+    r"\bWHERE\b.*\b(?:season|week|settled_date)\b",
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def validate_partitioned_calibration_sql(sql: str) -> None:
+    """Reject unpartitioned or `SELECT *` queries against BigQuery `gse_calibration`."""
+    stripped = sql.strip()
+    if not stripped:
+        raise ValueError("Calibration SQL must be non-empty.")
+    if _SELECT_STAR_RE.search(stripped):
+        raise ValueError(
+            "Unbounded `SELECT *` is disallowed against gse_calibration; "
+            "project explicit calibration columns."
+        )
+    if not _PARTITION_PREDICATE_RE.search(stripped):
+        raise ValueError(
+            "Calibration SQL must filter on a partition column "
+            "(`season`, `week`, or `settled_date`)."
+        )
 
 
 class BytesBilledLimitExceeded(RuntimeError):
@@ -68,10 +93,13 @@ class GcpWarehouseAdapter:
         sql: str,
         *,
         max_bytes_billed: int = DEFAULT_MAX_BYTES_BILLED,
+        require_calibration_partition: bool = False,
     ) -> tuple[int, list[dict[str, Any]]]:
         """Estimates byte cost via dry-run first and refuses runaway queries."""
         if max_bytes_billed <= 0:
             raise ValueError("max_bytes_billed must be positive.")
+        if require_calibration_partition:
+            validate_partitioned_calibration_sql(sql)
         if self._bq is None:
             raise RuntimeError("No BigQuery client configured on GcpWarehouseAdapter.")
 

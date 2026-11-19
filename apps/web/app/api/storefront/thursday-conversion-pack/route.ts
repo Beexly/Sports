@@ -10,12 +10,12 @@ import {
 export async function GET() {
   const hedonicFraming = computeThalerHedonicBundleFraming(
     [
-      { label: "Week 10 TNF (WSH @ NYG) Full-Board Matchup & Prop Call Sheet", standaloneValueUsd: 29 },
+      { label: "Week 11 TNF (IND @ HOU) Full-Board Matchup & Prop Call Sheet", standaloneValueUsd: 29 },
       { label: "Trench Protection, Blitz & Coverage Matchup Breakdown", standaloneValueUsd: 19 },
       { label: "DK/FD Showdown Captain & Optimal Lineup Packet", standaloneValueUsd: 15 },
       { label: "Active Injury Replacements & Pass Discipline Notes", standaloneValueUsd: 12 },
     ],
-    9.99,
+    9.0,
     49.0,
   );
 
@@ -28,14 +28,14 @@ export async function GET() {
 
   const emailDispatch = buildSahniPersonalizedEmailDispatch(
     "Member",
-    "WSH @ NYG",
+    "IND @ HOU",
     PUBLIC_RECORD_LINE,
-    "Mark Andrews OVER 2.5 Receptions (88/100 Free Teaser) + 9 Locked TNF Plays & 3-Leg SGP",
+    "Week 11 TNF IND @ HOU Matchup Environment + Member Props & 3-Leg SGP Inside Package",
   );
 
   return NextResponse.json({
     status: "LIVE_READY",
-    generatedAt: "2026-11-05T16:55:00-06:00",
+    generatedAt: "2026-11-18T22:00:00-06:00",
     officialRecord: {
       wins: verifiedLedger.official.wlp.wins,
       losses: verifiedLedger.official.wlp.losses,
@@ -44,38 +44,38 @@ export async function GET() {
       netUnits: verifiedLedger.official.units.total,
       recordDisplay: PUBLIC_RECORD_LINE,
     },
-    tnfMatchup: "WSH @ NYG",
+    tnfMatchup: "IND @ HOU",
     stage0ActiveStarters: {
-      balQb1: "Joe Fagnano / Jacoby Brissett",
-      balRb1: "Derrick Henry",
-      jaxQb1: "Trevor Lawrence",
-      jaxRb1: "Bhayshul Tuten",
-      blockedInactives: ["Lamar Jackson (Out)", "Tyler Huntley (Out)", "Travis Etienne Jr. (Out)"],
+      indQb1: "Daniel Jones",
+      indRb1: "Jonathan Taylor",
+      houQb1: "C.J. Stroud",
+      houWr1: "Nico Collins",
+      houWr2: "Tank Dell",
+      blockedInactives: ["Bernhard Raimann (Out)", "Luke Travis (Out)", "Woody Marks (Out)"],
     },
     decisivePlays: [
       {
-        market: "Player Receptions Prop (Free Teaser)",
-        selection: "Mark Andrews OVER 2.5 Receptions",
-        modelProb: 0.684,
-        devigMarketProb: 0.542,
-        edgePct: 14.2,
-        confidenceScore: "88/100",
-        publishAllowed: true,
+        market: "Week 11 TNF Environment Preview (Free)",
+        selection: "IND @ HOU Indoors Pace & Trench Protection Environment Brief",
+        modelProb: 0.501,
+        devigMarketProb: 0.5,
+        edgePct: 0.1,
+        confidenceScore: "50/100",
+        publishAllowed: false,
       },
       {
-        market: "9 Locked Top-Confidence TNF Plays (88/100)",
-        selection: "🔒 LOCKED BEHIND TNF PACK (9 Player Matchups + 3-Leg SGP + Showdown Captain Lineups)",
-        modelProb: 0.665,
-        devigMarketProb: 0.535,
-        edgePct: 13.0,
-        confidenceScore: "88/100",
-        publishAllowed: true,
+        market: "Week 11 TNF Pack ($9 Member Release)",
+        selection: "SEALED BEHIND WEEK 11 TNF PACK (Side/Total Gate, Player Props, SGP & Showdown Lineups)",
+        modelProb: 0.54,
+        devigMarketProb: 0.5,
+        edgePct: 4.0,
+        confidenceScore: "54/100",
+        publishAllowed: false,
       },
     ],
     conformalPassGrades: [
-      { selection: "WSH @ NYG Spread PASS at -7.5 (Steamed from -3.5)", decision: "PASS", publishAllowed: false },
-      { selection: "WSH @ NYG Full-Game Total (UNDER 44.5 PASS)", decision: "PASS", publishAllowed: false },
-      { selection: "Parker Washington Receiving Yards (PASS)", decision: "PASS", publishAllowed: false },
+      { selection: "IND @ HOU Full-Game Spread (HOU -12.5 / IND +12.5 PASS)", decision: "PASS", publishAllowed: false },
+      { selection: "IND @ HOU Full-Game Total (O/U 43.5 PASS)", decision: "PASS", publishAllowed: false },
     ],
     hedonicFraming,
     upliftDefault,

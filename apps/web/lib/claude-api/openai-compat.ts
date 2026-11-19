@@ -15,6 +15,7 @@ export interface OpenAiCompatRequest {
   readonly temperature?: number;
   readonly fetchImpl?: typeof fetch;
   readonly ledgerPrefix?: string;
+  readonly extraBody?: Readonly<Record<string, unknown>>;
 }
 
 interface ChatResponse {
@@ -62,6 +63,7 @@ export async function callOpenAiCompatMessages(
       method: "POST",
       headers,
       body: JSON.stringify({
+        ...(request.extraBody ?? {}),
         model: request.model,
         max_tokens: request.maxTokens,
         temperature: request.temperature,

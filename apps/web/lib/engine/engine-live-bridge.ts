@@ -37,7 +37,7 @@ export const WEEK11_UNIFIED_ENGINE_BRIDGE = {
   season: 2026,
   week: 11,
   gamesSimulated: 13,
-  projectionSourceSha256: "a2aca13a763e7fce3ab38d5ef5f996b7e41b3e0034ffebfd4f587faa2632c30b",
+  projectionSourceSha256: "ab30af438cfac08e66ed12fb8f545cb032ec3567d4a9160a95ff4237b24b1bd1",
   tnfMatchup: "IND @ HOU",
   tnfKickoffUtc: "2026-11-20T01:15Z",
   sundayMainMatchups: [

@@ -12,7 +12,7 @@ import { sanitizePlainFootballText } from "@/lib/writeups/coach-writeup-engine";
 export const metadata: Metadata = {
   title: { absolute: "Pricing & Plans | Galaxy Sports Edge" },
   description:
-    "No monthly subscription needed right now. One-time Week 10 NFL packs: Player Props & SGPs ($29), Sunday & MNF Best Bets ($39), RedZone Standalone DFS ($39.99), and All-Access Bundle ($49). Every settled result is recomputed from the database and published at /record.",
+    "No monthly subscription needed right now. One-time Week 11 NFL packs: TNF IND @ HOU ($9), Player Props & SGPs ($29), Sunday & MNF Best Bets ($39), RedZone Standalone DFS ($39.99), and All-Access Bundle ($49). Every settled result is recomputed from the database and published at /record.",
   alternates: { canonical: "/pricing" },
 };
 
@@ -58,7 +58,7 @@ export default async function PricingPage(): Promise<JSX.Element> {
               href="/packages#sgp-correlation-basket"
               className="inline-flex min-h-[46px] items-center justify-center rounded border border-[#FF4D2E] bg-[#12141C] px-6 text-xs font-bold uppercase tracking-wider text-[#EDE8E0] transition-colors hover:bg-[#FF4D2E] hover:text-white"
             >
-              MNF Props &amp; SGP Pack · $29 →
+              Week 11 Props &amp; SGP Pack · $29 →
             </Link>
             <Link
               href="/fantasy/dfs"

@@ -1209,8 +1209,9 @@ def synthesize_reasoned_game_environment(
     away_roster: Sequence[PlayerShare],
     home_roster: Sequence[PlayerShare],
     is_indoor: bool = False,
+    market: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Reason through audited signals and conserve player opportunity via Sinkhorn."""
+    """Reason through audited signals on Layer-1 market anchor and conserve via Sinkhorn."""
     ch = dict(audited_signals["channels"])
     away_ol = _clip(0.22 + float(ch["away_ol_disruption"]), 0.12, 0.48)
     home_ol = _clip(0.22 + float(ch["home_ol_disruption"]), 0.12, 0.48)
@@ -1224,12 +1225,26 @@ def synthesize_reasoned_game_environment(
         home_roster, opp_front7_outs=away_front7_outs
     )
 
+    aw_is_ind_hou = away_team == "IND" and home_team == "HOU"
+    mkt = dict(market) if market is not None else {}
+    mkt_total = float(mkt.get("total", 44.5 if aw_is_ind_hou else 45.5))
+    mkt_spread_home = float(mkt.get("home_spread", -12.5 if aw_is_ind_hou else -2.5))
+    away_mkt_pts = _clip(
+        float(mkt.get("away_team_total", 0.5 * (mkt_total + mkt_spread_home))),
+        10.5,
+        38.0,
+    )
+    home_mkt_pts = _clip(
+        float(mkt.get("home_team_total", 0.5 * (mkt_total - mkt_spread_home))),
+        10.5,
+        38.0,
+    )
+
     pace_sec = _clip(
         27.2 + float(ch["game_pace_sec_shift"]) + (0.0 if is_indoor else 0.4), 23.0, 31.5
     )
     base_plays = 62.5 + (27.2 - pace_sec) * 0.9
 
-    aw_is_ind_hou = away_team == "IND" and home_team == "HOU"
     aw_epa = _clip(
         (-0.055 if aw_is_ind_hou else 0.015)
         + float(ch["away_epa_shift"])
@@ -1247,23 +1262,56 @@ def synthesize_reasoned_game_environment(
         (0.525 if aw_is_ind_hou else 0.575) + float(ch["away_pass_rate_shift"]), 0.44, 0.68
     )
     hm_pass_rate = _clip(
-        (0.585 if aw_is_ind_hou else 0.585) + float(ch["home_pass_rate_shift"]), 0.44, 0.68
+        0.585 + float(ch["home_pass_rate_shift"]), 0.44, 0.68
     )
 
-    aw_td_rate = _clip(0.54 + float(ch["away_td_rate_shift"]), 0.40, 0.72)
-    hm_td_rate = _clip(0.60 + float(ch["home_td_rate_shift"]), 0.42, 0.75)
+    aw_td_rate_base = _clip(0.54 + float(ch["away_td_rate_shift"]), 0.40, 0.72)
+    hm_td_rate_base = _clip(0.60 + float(ch["home_td_rate_shift"]), 0.42, 0.75)
+
+    # THE STACK: Layer-1 market implied points + bounded Layer-2 situational residual.
+    heavy_shrink = 0.55 if abs(mkt_spread_home) >= 10.0 else 0.85
+    away_l2_pts = _clip(
+        heavy_shrink * (4.0 * aw_epa - 3.0 * (away_ol - 0.22) + 3.5 * (aw_td_rate_base - 0.56)),
+        -1.10,
+        1.10,
+    )
+    home_l2_pts = _clip(
+        heavy_shrink * (4.0 * hm_epa - 3.0 * (home_ol - 0.22) + 3.5 * (hm_td_rate_base - 0.58)),
+        -1.10,
+        1.10,
+    )
+    away_target_pts = _clip(away_mkt_pts + away_l2_pts, 10.0, 40.0)
+    home_target_pts = _clip(home_mkt_pts + home_l2_pts, 10.0, 40.0)
+
+    aw_plays = _clip(
+        base_plays - (1.0 if aw_is_ind_hou else 0.0) + 0.22 * (away_target_pts - 22.0),
+        54.0,
+        71.0,
+    )
+    hm_plays = _clip(
+        base_plays + (1.2 if aw_is_ind_hou else 0.5) + 0.22 * (home_target_pts - 22.0),
+        54.0,
+        71.0,
+    )
+    aw_td_rate = _clip(aw_td_rate_base + 0.007 * (away_target_pts - 22.0), 0.42, 0.75)
+    hm_td_rate = _clip(hm_td_rate_base + 0.007 * (home_target_pts - 22.0), 0.42, 0.75)
 
     return {
         "schema": "w47_reasoned_game_environment_v1",
         "matchup": f"{away_team} @ {home_team}",
         "is_indoor": bool(is_indoor),
         "pace_sec_per_play": round(pace_sec, 4),
+        "market_home_spread": round(mkt_spread_home, 2),
+        "market_total": round(mkt_total, 2),
         "away": {
-            "plays_mean": round(base_plays - (1.0 if aw_is_ind_hou else 0.0), 3),
+            "plays_mean": round(aw_plays, 3),
             "pass_rate": round(aw_pass_rate, 4),
             "epa_per_play": round(aw_epa, 5),
             "ol_disruption": round(away_ol, 4),
             "rz_td_rate": round(aw_td_rate, 4),
+            "market_implied_points": round(away_mkt_pts, 3),
+            "layer2_situational_pts": round(away_l2_pts, 4),
+            "target_points_mean": round(away_target_pts, 3),
             "named_target_attribution": away_conv.named_target_attribution,
             "named_carry_attribution": away_conv.named_carry_attribution,
             "residual_target_share": away_conv.residual_target_share,
@@ -1271,11 +1319,14 @@ def synthesize_reasoned_game_environment(
             "allocated_carries": dict(away_conv.allocated_carries),
         },
         "home": {
-            "plays_mean": round(base_plays + (1.2 if aw_is_ind_hou else 0.5), 3),
+            "plays_mean": round(hm_plays, 3),
             "pass_rate": round(hm_pass_rate, 4),
             "epa_per_play": round(hm_epa, 5),
             "ol_disruption": round(home_ol, 4),
             "rz_td_rate": round(hm_td_rate, 4),
+            "market_implied_points": round(home_mkt_pts, 3),
+            "layer2_situational_pts": round(home_l2_pts, 4),
+            "target_points_mean": round(home_target_pts, 3),
             "named_target_attribution": home_conv.named_target_attribution,
             "named_carry_attribution": home_conv.named_carry_attribution,
             "residual_target_share": home_conv.residual_target_share,
@@ -1318,6 +1369,9 @@ def _simulate_team_worlds(
     ).astype(np.int64)
     ints_thrown = rng.binomial(n=pass_att, p=np.clip(0.017 + 0.030 * (ol_dis - 0.18), 0.008, 0.045))
 
+    target_pts = float(team_env.get("target_points_mean", 22.0))
+    eff_scale = _clip(1.0 + 0.011 * (target_pts - 22.0), 0.86, 1.18)
+
     comp_prob = np.clip(
         0.655 + 0.25 * float(team_env["epa_per_play"]) - 0.12 * (ol_dis - 0.22),
         0.54,
@@ -1325,28 +1379,31 @@ def _simulate_team_worlds(
     )
     pass_comp = rng.binomial(n=pass_att, p=comp_prob).astype(np.int64)
     ypc_air = np.clip(
-        rng.normal(11.1 + 3.2 * float(team_env["epa_per_play"]), 1.35, size=n_worlds),
+        rng.normal((11.1 + 3.2 * float(team_env["epa_per_play"])) * eff_scale, 1.35, size=n_worlds),
         7.2,
-        16.2,
+        16.8,
     )
     pass_yds = np.round(pass_comp.astype(np.float64) * ypc_air, 1)
 
     rush_ypc = np.clip(
-        rng.normal(4.35 + 1.8 * float(team_env["epa_per_play"]), 0.65, size=n_worlds), 2.5, 7.2
+        rng.normal((4.35 + 1.8 * float(team_env["epa_per_play"])) * eff_scale, 0.65, size=n_worlds),
+        2.5,
+        7.4,
     )
     team_rush_yds = np.round(non_qb_carries_team.astype(np.float64) * rush_ypc, 1)
 
-    off_pts_raw = (
+    phys_raw = (
         0.042 * pass_yds
         + 0.046 * team_rush_yds
         - 2.6 * ints_thrown
         - 0.75 * sacks_taken
         + 10.5 * (0.28 + 0.45 * float(team_env["epa_per_play"]))
-        + rng.normal(0.0, 4.4, size=n_worlds)
     )
-    rz_drives = np.clip(np.rint(np.maximum(1.5, off_pts_raw / 6.2)), 1, 8).astype(np.int64)
-    tds = np.clip(rng.binomial(n=rz_drives, p=float(team_env["rz_td_rate"])), 0, 7).astype(np.int64)
-    fgs = np.clip(np.rint(np.maximum(0.0, (off_pts_raw - 7.0 * tds) / 3.0)), 0, 5).astype(np.int64)
+    phys_centered = phys_raw - float(np.mean(phys_raw))
+    off_pts_raw = target_pts + phys_centered + rng.normal(0.0, 5.0, size=n_worlds)
+    rz_drives = np.clip(np.rint(np.maximum(1.5, off_pts_raw / 6.2)), 1, 10).astype(np.int64)
+    tds = np.clip(rng.binomial(n=rz_drives, p=float(team_env["rz_td_rate"])), 0, 8).astype(np.int64)
+    fgs = np.clip(np.rint(np.maximum(0.0, (off_pts_raw - 6.96 * tds) / 3.0)), 0, 6).astype(np.int64)
     xpm = np.minimum(tds, rng.binomial(n=tds, p=0.96)).astype(np.int64)
     pts = (6 * tds + xpm + 3 * fgs).astype(np.int64)
 
@@ -1635,6 +1692,51 @@ def _gate_binary_surface(
     }
 
 
+def _gate_two_sided_surface(
+    *,
+    market_id: str,
+    sel_a: str,
+    prob_a: float,
+    fair_a: float,
+    sel_b: str,
+    prob_b: float,
+    fair_b: float,
+    n_worlds: int,
+    proj_sha: str,
+    min_clv: float = 0.025,
+) -> dict[str, Any]:
+    clv_a = float(prob_a) - float(fair_a)
+    clv_b = float(prob_b) - float(fair_b)
+    if clv_a >= clv_b:
+        return _gate_binary_surface(
+            market_id=market_id,
+            selection=sel_a,
+            model_prob=float(prob_a),
+            fair_market_prob=float(fair_a),
+            n_worlds=n_worlds,
+            proj_sha=proj_sha,
+            min_clv=min_clv,
+        )
+    return _gate_binary_surface(
+        market_id=market_id,
+        selection=sel_b,
+        model_prob=float(prob_b),
+        fair_market_prob=float(fair_b),
+        n_worlds=n_worlds,
+        proj_sha=proj_sha,
+        min_clv=min_clv,
+    )
+
+
+def _two_sided_win_probs(values: np.ndarray, threshold: float) -> tuple[float, float]:
+    over_m = values > threshold
+    under_m = values < threshold
+    non_push = float(np.mean(over_m | under_m))
+    if non_push <= 1e-6:
+        return 0.50, 0.50
+    return float(np.mean(over_m)) / non_push, float(np.mean(under_m)) / non_push
+
+
 def derive_all_plays_props_sgps_and_dfs_from_simulation(
     *,
     sim: Mapping[str, Any],
@@ -1643,6 +1745,8 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
     """Derive Game Plays, 12 Prop Markets, Correlated SGPs & DFS from 1 single simulation."""
     proj_sha = str(sim["projection_source_sha256"])
     n_worlds = int(sim["n_worlds"])
+    aw_team = str(sim["away"]["team"])
+    hm_team = str(sim["home"]["team"])
     aw_f = sim["away_final"]
     hm_f = sim["home_final"]
     margin = hm_f - aw_f
@@ -1654,72 +1758,111 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
     q1_total = aw_q[:, 0] + hm_q[:, 0]
 
     home_spread = float(market["home_spread"])
-    fair_ml_hm, _ = american_to_fair_prob_pair(
+    tot_line = float(market["total"])
+    h1_spread = float(market["h1_spread"])
+    h1_tot_line = float(market["h1_total"])
+    q1_tot_line = float(market["q1_total"])
+    aw_tt_line = float(market["away_team_total"])
+    hm_tt_line = float(market["home_team_total"])
+
+    fair_ml_hm, fair_ml_aw = american_to_fair_prob_pair(
         int(market["home_ml_american"]), int(market["away_ml_american"])
     )
+    p_fg_sp_hm, p_fg_sp_aw = _two_sided_win_probs(margin, -home_spread)
+    p_fg_ov, p_fg_un = _two_sided_win_probs(total_pts, tot_line)
+    p_ml_hm, p_ml_aw = _two_sided_win_probs(margin, 0.0)
+    p_h1_sp_hm, p_h1_sp_aw = _two_sided_win_probs(h1_margin, -h1_spread)
+    p_h1_ov, p_h1_un = _two_sided_win_probs(h1_total, h1_tot_line)
+    p_q1_ov, p_q1_un = _two_sided_win_probs(q1_total, q1_tot_line)
+    p_aw_ov, p_aw_un = _two_sided_win_probs(aw_f, aw_tt_line)
+    p_hm_ov, p_hm_un = _two_sided_win_probs(hm_f, hm_tt_line)
 
     game_plays = [
-        _gate_binary_surface(
+        _gate_two_sided_surface(
             market_id="full_game_spread",
-            selection=f"{sim['home']['team']} {home_spread:+.1f}",
-            model_prob=float(np.mean(margin > (-home_spread))),
-            fair_market_prob=0.50,
+            sel_a=f"{hm_team} {home_spread:+.1f}",
+            prob_a=p_fg_sp_hm,
+            fair_a=0.50,
+            sel_b=f"{aw_team} {-home_spread:+.1f}",
+            prob_b=p_fg_sp_aw,
+            fair_b=0.50,
             n_worlds=n_worlds,
             proj_sha=proj_sha,
         ),
-        _gate_binary_surface(
+        _gate_two_sided_surface(
             market_id="full_game_total",
-            selection=f"OVER {float(market['total']):.1f}",
-            model_prob=float(np.mean(total_pts > float(market["total"]))),
-            fair_market_prob=0.50,
+            sel_a=f"OVER {tot_line:.1f}",
+            prob_a=p_fg_ov,
+            fair_a=0.50,
+            sel_b=f"UNDER {tot_line:.1f}",
+            prob_b=p_fg_un,
+            fair_b=0.50,
             n_worlds=n_worlds,
             proj_sha=proj_sha,
         ),
-        _gate_binary_surface(
+        _gate_two_sided_surface(
             market_id="full_game_ml",
-            selection=f"{sim['home']['team']} ML",
-            model_prob=float(np.mean(hm_f > aw_f)),
-            fair_market_prob=fair_ml_hm,
+            sel_a=f"{hm_team} ML",
+            prob_a=p_ml_hm,
+            fair_a=fair_ml_hm,
+            sel_b=f"{aw_team} ML",
+            prob_b=p_ml_aw,
+            fair_b=fair_ml_aw,
             n_worlds=n_worlds,
             proj_sha=proj_sha,
         ),
-        _gate_binary_surface(
+        _gate_two_sided_surface(
             market_id="first_half_spread",
-            selection=f"1H {sim['home']['team']} {float(market['h1_spread']):+.1f}",
-            model_prob=float(np.mean(h1_margin > (-float(market["h1_spread"])))),
-            fair_market_prob=0.50,
+            sel_a=f"1H {hm_team} {h1_spread:+.1f}",
+            prob_a=p_h1_sp_hm,
+            fair_a=0.50,
+            sel_b=f"1H {aw_team} {-h1_spread:+.1f}",
+            prob_b=p_h1_sp_aw,
+            fair_b=0.50,
             n_worlds=n_worlds,
             proj_sha=proj_sha,
         ),
-        _gate_binary_surface(
+        _gate_two_sided_surface(
             market_id="first_half_total",
-            selection=f"1H OVER {float(market['h1_total']):.1f}",
-            model_prob=float(np.mean(h1_total > float(market["h1_total"]))),
-            fair_market_prob=0.50,
+            sel_a=f"1H OVER {h1_tot_line:.1f}",
+            prob_a=p_h1_ov,
+            fair_a=0.50,
+            sel_b=f"1H UNDER {h1_tot_line:.1f}",
+            prob_b=p_h1_un,
+            fair_b=0.50,
             n_worlds=n_worlds,
             proj_sha=proj_sha,
         ),
-        _gate_binary_surface(
+        _gate_two_sided_surface(
             market_id="first_quarter_total",
-            selection=f"1Q OVER {float(market['q1_total']):.1f}",
-            model_prob=float(np.mean(q1_total > float(market["q1_total"]))),
-            fair_market_prob=0.50,
+            sel_a=f"1Q OVER {q1_tot_line:.1f}",
+            prob_a=p_q1_ov,
+            fair_a=0.50,
+            sel_b=f"1Q UNDER {q1_tot_line:.1f}",
+            prob_b=p_q1_un,
+            fair_b=0.50,
             n_worlds=n_worlds,
             proj_sha=proj_sha,
         ),
-        _gate_binary_surface(
+        _gate_two_sided_surface(
             market_id="away_team_total",
-            selection=f"{sim['away']['team']} OVER {float(market['away_team_total']):.1f}",
-            model_prob=float(np.mean(aw_f > float(market["away_team_total"]))),
-            fair_market_prob=0.50,
+            sel_a=f"{aw_team} OVER {aw_tt_line:.1f}",
+            prob_a=p_aw_ov,
+            fair_a=0.50,
+            sel_b=f"{aw_team} UNDER {aw_tt_line:.1f}",
+            prob_b=p_aw_un,
+            fair_b=0.50,
             n_worlds=n_worlds,
             proj_sha=proj_sha,
         ),
-        _gate_binary_surface(
+        _gate_two_sided_surface(
             market_id="home_team_total",
-            selection=f"{sim['home']['team']} OVER {float(market['home_team_total']):.1f}",
-            model_prob=float(np.mean(hm_f > float(market["home_team_total"]))),
-            fair_market_prob=0.50,
+            sel_a=f"{hm_team} OVER {hm_tt_line:.1f}",
+            prob_a=p_hm_ov,
+            fair_a=0.50,
+            sel_b=f"{hm_team} UNDER {hm_tt_line:.1f}",
+            prob_b=p_hm_un,
+            fair_b=0.50,
             n_worlds=n_worlds,
             proj_sha=proj_sha,
         ),
@@ -2205,6 +2348,7 @@ def evaluate_unified_reasoning_simulation_projection_spine_suite(
         away_roster=ctx["away_roster"],
         home_roster=ctx["home_roster"],
         is_indoor=bool(ctx["is_indoor"]),
+        market=ctx["market"],
     )
     stage3 = simulate_coherent_10k_game_worlds(
         away_team=aw,

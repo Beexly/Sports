@@ -1,8 +1,8 @@
 # GCP P1/P2 Architecture Comparisons, API Registry, and Motif Conflict Log (2026-11)
 
-**Date:** 2026-11-18
+**Date:** 2026-11-19
 **Status:** Evaluation Decision Pack (Zero Unapproved Migrations / Zero Paid Cloud Spend)
-**Compliance Note:** Aligned with Motif's Interim Google Skills Baseline. Contains zero unconfirmed lab references.
+**Compliance Note:** Aligned with Motif's Path 36 progress (`1,977` pts: Course 1 `100%`, Course 2 `100%`, Course 3 `96%`, Course 4 `87%`; plus Google AI Ultra `$100/mo` = `$1,200/yr` GCP credit & `35` monthly GDP lab credits, Career Launchpad `$5K` GCSB recovery, Qwiklabs `640821` waiver). Contains zero unconfirmed lab references.
 
 ---
 
@@ -52,15 +52,15 @@ For any GCP-hosted backend or custom-domain reverse-proxy path, edge protection 
 
 | GCP API Service | Purpose | `dev` | `staging` | `prod` | Cost & Governance Guardrail |
 |---|---|---|---|---|---|
-| `run.googleapis.com` | Serverless worker offload containers | Enabled | Enabled | Enabled | `min-instances=0`, `max-instances=2`, zero idle spend |
-| `pubsub.googleapis.com` | Async event bus (`*.v1` + `.dlq` topics) | Emulator/Minimal | Enabled | Enabled | Deterministic SHA-256 idempotency + 7d retention cap |
+| `run.googleapis.com` | Serverless worker offload containers (`GSP644`, `2M` req/mo Always Free) | Enabled | Enabled | Enabled | `min-instances=0`, `max-instances=2`, zero idle spend |
+| `pubsub.googleapis.com` | Async event bus (`gse-odds-ticks`, `gse-injury-wire`, `gse-intake-dlq` + `.v1`/`.dlq`, `10 GB/mo` free, `GSP095`) | Emulator/Minimal | Enabled | Enabled | Deterministic SHA-256 idempotency + 7d retention cap (`GCP_FREE_TIER_PUBSUB_TOPICS`) |
 | `secretmanager.googleapis.com` | Runtime secret injection (`CRON_SECRET`, etc.) | Disabled (local `.env`) | Enabled | Enabled | Per-secret `secretAccessor` IAM only |
-| `monitoring.googleapis.com` | L10 uptime checks, 5 alerts, dashboard | Disabled | Enabled | Enabled | Custom metrics capped; zero high-cardinality labels |
+| `monitoring.googleapis.com` | L10 uptime checks, 5 alerts, dashboard (`GSP089`) | Disabled | Enabled | Enabled | Custom metrics capped; zero high-cardinality labels |
 | `logging.googleapis.com` | Cloud Run / ALB structured JSON logs | Disabled | Enabled | Enabled | Exclude `/api/health` noisy 200 pings from log sinks |
 | `cloudtrace.googleapis.com` | Distributed latency flamegraphs | Disabled | 10% sample | 10% sample | Matches `tracesSampleRate: 0.1` zero-waste rule |
-| `iap.googleapis.com` | Zero-trust access on `/admin` & `/cockpit` | Disabled | Enabled | Enabled | Server-side JWT assertion verification required |
+| `iap.googleapis.com` | Zero-trust access on `/admin` & `/cockpit` (`X-Goog-IAP-JWT-Assertion`) | Disabled | Enabled | Enabled | Server-side JWT assertion verification required |
 | `compute.googleapis.com` | External ALB + Cloud Armor WAF | Disabled | Enabled | Enabled | Strict egress rules; zero unneeded static VMs |
-| `bigquery.googleapis.com` | Cold analytical archive (`gse_data`) | Disabled | Dry-run gated | Dry-run gated | `GcpWarehouseAdapter` `1 GiB` `max_bytes_billed` hard stop |
+| `bigquery.googleapis.com` | Partitioned calibration & archive (`gse_calibration` US `1 TB/mo` + `10 GB` free, `gse_data`, `GSP071`, `GSP247`) | Disabled | Dry-run gated | Dry-run gated | `GcpWarehouseAdapter` `1 GiB` `max_bytes_billed` hard stop + `validate_partitioned_calibration_sql` (no `SELECT *`) |
 | `storage.googleapis.com` | Immutable SHA-256 artifact archive | Disabled | Enabled | Enabled | Lifecycle archive -> Nearline/Coldline after 30 days |
 | `artifactregistry.googleapis.com` | Signed container images for Cloud Run | Disabled | Enabled | Enabled | Vulnerability scanning on push + 5-tag cleanup policy |
 | `aiplatform.googleapis.com` | Vertex AI (`gemini-2.5-pro` / Claude Vertex grant) | Grant-gated | Grant-gated | Grant-gated | Tier 3B fallback only after Tier 0/1 free lanes |
@@ -86,9 +86,10 @@ GSE's active Tier-0 analytics and simulation pipeline (`10,000` worlds x `175` s
 | **Vertex AI (`aiplatform.googleapis.com` -- Gemini / Claude Partner Models)** | **CANDIDATE (Tier 3B Grant Lane)** | Approved under credit budget | Used via `apps/web/lib/claude-api/providers/vertex.ts` strictly when free local/NIM/OpenRouter lanes are exhausted |
 | **Vertex AI Batch Prediction / Vector Search** | **CANDIDATE (R&D Only)** | Hold until corpus > 1M embeddings | Local FAISS/DuckDB/JSONL indexes currently serve all corpus lookups at `$0.00` |
 | **Cloud Vision API (`vision.googleapis.com`)** | **NO-USE** | Rejected | Video/pose research runs offline via open weights (`YOLO`/`SkeleTrack`); commodity Vision OCR adds recurring per-image spend |
-| **Cloud Video Intelligence (`videointelligence.googleapis.com`)** | **NO-USE** | Rejected | Broadcast clips are never stored or processed via paid cloud video APIs |
-| **Cloud Speech-to-Text (`speech.googleapis.com`)** | **NO-USE** | Rejected | SiriusXM/audio capture is strictly blocked without legal ack; local Whisper covers permitted personal workflows at `$0.00` |
-| **Cloud Natural Language / Translation / AutoML Tables** | **NO-USE** | Rejected | Tabular NFL modeling uses causal FWL/Conformal/Sinkhorn mathematical engines (`src/gse_engine/`), never black-box AutoML |
+| **Cloud Video Intelligence (`videointelligence.googleapis.com`)** | **FREE-TIER CANDIDATE (`1,000 min/mo`, `GSP154`)** | Bounded to permitted internal Film-Room shot tags ONLY | Use strictly inside the `1,000 min/mo` Always-Free quota for internal non-broadcast shot-change tagging before custom GPU hours; broadcast redistribution remains banned |
+| **Cloud Speech-to-Text (`speech.googleapis.com`)** | **FREE-TIER CANDIDATE (`60 min/mo`, `GSP119`)** | Bounded to public Tuesday/Friday coach pressers ONLY | Legal-clean Tuesday/Friday coach presser transcription up to `60 min/mo` free quota feeding `beat_langextract`; SiriusXM audio remains strictly blocked without legal ack |
+| **Cloud Natural Language (`language.googleapis.com`)** | **FREE-TIER CANDIDATE (`5K units/mo`, `GSP097`)** | Pre-filter for `beat_langextract` entity extraction | Extracts injury/coach entities up to `5K units/mo` free tier before any LLM call; AutoML Tables remains NO-USE (tabular NFL uses causal FWL/Conformal/Sinkhorn math) |
+| **BigQuery ML (`bigquery.googleapis.com` `gse_calibration`, `GSP071`, `GSP247`)** | **FREE-TIER CANDIDATE (`1 TB/mo` query, `10 GB` storage)** | Baseline SQL CRPS/ECE/CLV audit | Partitioned US dataset `gse_calibration` guarded by `validate_partitioned_calibration_sql` (never unpartitioned `SELECT *`) |
 
 ---
 

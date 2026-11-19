@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import { NextResponse } from "next/server";
+import { HELPLINE } from "@/lib/brand";
 import { PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
 
 const CORS_HEADERS: Record<string, string> = {
@@ -14,7 +15,7 @@ export function buildGseAgentCard() {
   return {
     name: "Galaxy Sports Edge",
     description:
-      `Global multi-sport quantitative slate intelligence (NFL live; NCAAF, NBA, NCAAB, MLB, NHL, MLS, and international soccer expanding), player prop distributions, Daily Fantasy Sports cash and tournament builders, correlated same-game parlay evaluations, and cryptographic Proof-of-Record verification operated by Galaxy Sports Network LLC. Settled record status: ${PUBLIC_RECORD_LINE}. Sports wagering carries real risk; 21+ (18+ where applicable); call 1-800-GAMBLER.`,
+      `Global multi-sport quantitative slate intelligence (NFL live; NCAAF, NBA, NCAAB, MLB, NHL, MLS, and international soccer expanding), player prop distributions, Daily Fantasy Sports cash and tournament builders, correlated same-game parlay evaluations, and cryptographic Proof-of-Record verification operated by Galaxy Sports Network LLC. Settled record status: ${PUBLIC_RECORD_LINE}. Sports wagering carries real risk; 21+ (18+ where applicable); call ${HELPLINE.number}.`,
     version: "4.0.0",
     provider: {
       organization: "Galaxy Sports Network LLC",

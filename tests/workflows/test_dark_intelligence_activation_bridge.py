@@ -53,3 +53,7 @@ def test_dark_intelligence_pack_executes_cleanly_for_week11_tnf_with_ruo_and_sta
     assert out["skfolio_rd"]["calibration_adjustments_enabled"] is False
     assert out["clinical_ruo_sports_weight"] == 0.0
     assert len(out["activated_modules"]) >= 21
+    assert int(out["dfs_props_helpers"]["dfs19_equations_active"]) >= 19
+    assert float(out["dfs_props_helpers"]["rank_centrality_top"]) > 0.0
+    assert float(out["dfs_props_helpers"]["prop_mixture_p50"]) > 10.0
+    assert float(out["mmot_certificate"]["schrodinger_kl_cost"]) >= 0.0

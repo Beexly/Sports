@@ -141,8 +141,8 @@
       "detail": "continual learning and recalibration loop actively executes in the settlement cycle (4 live loop call sites)",
       "probe": "no self-improvement loop exists; continual-learning and recalibration are absent",
       "evidence": [
-        "apps/web/app/api/cron/settle-picks/route.ts:53:  runSettlementLearningLoop,",
-        "apps/web/app/api/cron/settle-picks/route.ts:351:      continualLearning = await runSettlementLearningLoop(observations);",
+        "apps/web/app/api/cron/settle-picks/route.ts:54:  runSettlementLearningLoop,",
+        "apps/web/app/api/cron/settle-picks/route.ts:375:      continualLearning = await runSettlementLearningLoop(observations);",
         "packages/ingestion-pipeline/src/settle-sport.ts:88:  runSettlementLearningLoop,",
         "packages/ingestion-pipeline/src/settle-sport.ts:1012:        learningReport = await runSettlementLearningLoop(settledPicksForLearning);"
       ],
@@ -328,13 +328,12 @@
       "detail": "the three surfaces (picks, signals, blog_posts) and copula SGP posture are explicitly documented on public-surface-truth",
       "probe": "props and copula SGPs are not on the board at all",
       "evidence": [
-        "apps/web/app/api/ops/public-surface-truth/route.ts:954:      /** GAP-22: Explicit posture for props-slate and copula SGPs across disparate storage layers. */",
-        "apps/web/app/api/ops/public-surface-truth/route.ts:957:          route: \"/api/ops/props-slate\",",
-        "apps/web/app/api/ops/public-surface-truth/route.ts:961:          operatorHint: \"props-slate writes player prop model_p_over to the signals table, not the picks table.\",",
-        "apps/web/app/api/ops/public-surface-truth/route.ts:963:        copulaSgp: {",
-        "apps/web/app/api/ops/public-surface-truth/route.ts:964:          surface: \"sgp-copula\",",
-        "apps/web/app/api/ops/public-surface-truth/route.ts:966:          distribution: \"bivariate-copula\",",
-        "apps/web/app/api/ops/public-surface-truth/route.ts:969:          operatorHint: \"copula SGPs are priced via APMM / Frank copula; published via content engine or static projections.\","
+        "apps/web/app/api/ops/public-surface-truth/route.ts:939:        route: \"/api/ops/props-slate\",",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:944:          \"props-slate writes player prop model_p_over to the signals table, not the picks table.\",",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:946:      copulaSgp: {",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:947:        surface: \"sgp-copula\",",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:949:        distribution: \"bivariate-copula\",",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:953:          \"copula SGPs are priced via APMM / Frank copula; published via content engine or static projections.\","
       ],
       "blocks_current_business_model": false
     },

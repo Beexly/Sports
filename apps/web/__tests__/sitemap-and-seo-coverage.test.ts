@@ -101,6 +101,45 @@ describe("Task 5: Sitemap, llms.txt, OG images, and revenue operating ledger", (
     expect(isPureAscii(body)).toBe(true);
   });
 
+  it("renders /llms-full.txt and /.well-known/ai-plugin.json with normalized +25.82u banner, Week 11 storefront, and zero stale Week 10 APIs", async () => {
+    const { GET: getLlmsFull } = await import("@/app/llms-full.txt/route");
+    const fullBody = await (await getLlmsFull()).text();
+    expect(fullBody).toContain(PUBLIC_RECORD_LINE);
+    expect(fullBody).toContain(PUBLIC_RECORD_NORMALIZED_BANNER);
+    expect(fullBody).toContain("+25.82u");
+    expect(fullBody).toContain("/record");
+    expect(fullBody).toContain("/props");
+    expect(fullBody).toContain("/dfs");
+    expect(fullBody).toContain("/parlay-mri");
+    expect(fullBody).toContain("/tools");
+    expect(fullBody).not.toMatch(/%/);
+    expect(fullBody).not.toContain("62-23-1");
+    expect(isPureAscii(fullBody)).toBe(true);
+
+    const { GET: getAiPlugin } = await import("@/app/.well-known/ai-plugin.json/route");
+    const pluginJson = await (await getAiPlugin()).json();
+    const serializedPlugin = JSON.stringify(pluginJson);
+    expect(serializedPlugin).toContain(PUBLIC_RECORD_LINE);
+    expect(serializedPlugin).toContain(PUBLIC_RECORD_NORMALIZED_BANNER);
+    expect(serializedPlugin).toContain("+25.82u");
+    expect(serializedPlugin).not.toMatch(/%/);
+    expect(serializedPlugin).not.toContain("62-23-1");
+    expect(isPureAscii(serializedPlugin)).toBe(true);
+
+    for (const rel of [
+      "app/packages/page.tsx",
+      "app/pricing/page.tsx",
+      "app/api/storefront/thursday-conversion-pack/route.ts",
+      "app/api/ask-edge/route.ts",
+    ]) {
+      const src = fs.readFileSync(path.join(WEB_ROOT, rel), "utf-8");
+      expect(src, `${rel} must target Week 11`).toContain("Week 11");
+      expect(src, `${rel} must not cite Week 10`).not.toContain("Week 10");
+      expect(src, `${rel} must not cite stale WSH @ NYG`).not.toContain("WSH @ NYG");
+      expect(src, `${rel} must not cite stale Mark Andrews`).not.toContain("Mark Andrews");
+    }
+  });
+
   it("provides OpenGraph images at /packages/opengraph-image.tsx and /record/opengraph-image.tsx", async () => {
     const pkgOgPath = path.join(WEB_ROOT, "app", "packages", "opengraph-image.tsx");
     const recOgPath = path.join(WEB_ROOT, "app", "record", "opengraph-image.tsx");

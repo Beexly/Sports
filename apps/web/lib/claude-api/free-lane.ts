@@ -21,10 +21,16 @@ import {
 import {
   FREE_LANE_SURFACES,
   isFreeLaneEnabled,
+  resolveNousPromoFreeLaneChain,
+  resolveNousPromoFreeLaneConfig,
   shouldUseFreeLane,
+  type NousPromoLaneConfig,
 } from "./free-lane-policy";
 
-export { FREE_LANE_SURFACES, isFreeLaneEnabled, shouldUseFreeLane };
+export { FREE_LANE_SURFACES, isFreeLaneEnabled, resolveNousPromoFreeLaneChain, shouldUseFreeLane };
+export const nousPromoFreeLaneConfig = resolveNousPromoFreeLaneConfig;
+export const nousPromoFreeLaneChain = resolveNousPromoFreeLaneChain;
+export type { NousPromoLaneConfig };
 
 type Env = Record<string, string | undefined>;
 
@@ -107,6 +113,25 @@ export async function generateContentMessages(
           });
         } catch (error) {
           if (!(error instanceof CerebrasMessagesError)) throw error;
+        }
+      }
+
+      for (const nousHop of resolveNousPromoFreeLaneChain(env)) {
+        try {
+          return await callOpenAiCompatMessages({
+            baseUrl: nousHop.baseUrl,
+            apiKey: nousHop.apiKey,
+            model: nousHop.model,
+            system: request.system,
+            user: request.user,
+            maxTokens: request.maxTokens,
+            temperature: request.temperature,
+            fetchImpl: request.fetchImpl,
+            ledgerPrefix: nousHop.ledgerPrefix,
+            extraBody: nousHop.extraBody,
+          });
+        } catch (error) {
+          if (!(error instanceof OpenAiCompatError)) throw error;
         }
       }
 

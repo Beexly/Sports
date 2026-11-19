@@ -5,6 +5,10 @@ import {
   type JynxProviderMode,
   type JynxPublicSnapshot,
 } from "@/lib/claude-api/jynx";
+import {
+  hasAlibabaDashScopeKey,
+  resolveNousPromoFreeLaneConfig,
+} from "@/lib/claude-api/free-lane-policy";
 
 /**
  * Public-safe credit / free-capacity posture for ops truth.
@@ -45,6 +49,12 @@ export interface CreditStackPosture {
   readonly julesApiKeyConfigured: boolean;
   readonly xaiConfigured: boolean;
   readonly alibabaCloudConfigured: boolean;
+  readonly alibabaDashScopeConfigured: boolean;
+  readonly nousPortalPromoConfigured: boolean;
+  readonly hermesPlusPlanGuardNote: string;
+  readonly awsAccount183295455211Reinstated: boolean;
+  readonly awsBedrockHoldNote: string;
+  readonly surfacedNonDilutivePipelineUsd: number;
   readonly runpodConfigured: boolean;
   readonly nvidiaInceptionConfigured: boolean;
   readonly deepinfraConfigured: boolean;
@@ -75,11 +85,23 @@ export function resolveClaudeProviderSelection(env: Env = process.env): ClaudePr
 }
 
 export function loadCreditStackPosture(env: Env = process.env): CreditStackPosture {
+  const alibabaDashScopeConfigured = hasAlibabaDashScopeKey(env);
+  const nousPortalPromoConfigured = resolveNousPromoFreeLaneConfig(env) !== null;
   const freeLaneConfigured =
     env["CONTENT_FREE_LANE_ENABLED"] === "true" &&
     (has(env, "CEREBRAS_API_KEY") ||
+      nousPortalPromoConfigured ||
+      alibabaDashScopeConfigured ||
       (has(env, "FREE_LANE_SECONDARY_BASE_URL") && has(env, "FREE_LANE_SECONDARY_MODEL")));
-  const internalLlmConfigured = has(env, "INTERNAL_LLM_API_KEY");
+  const internalLlmConfigured =
+    has(env, "INTERNAL_LLM_API_KEY") || alibabaDashScopeConfigured || nousPortalPromoConfigured;
+  const hermesPlusPlanGuardNote =
+    "Hermes Agent ($20/mo Plus) included quota is separate from Nous API keys (PAYG); NOUS_API_KEY is fail-closed to :free promo models (qwen/qwen4-max:free) unless NOUS_ALLOW_PAYG=true.";
+  const awsAccount183295455211Reinstated = env["AWS_ACCOUNT_183295455211_REINSTATED"] === "true";
+  const awsBedrockHoldNote = awsAccount183295455211Reinstated
+    ? "AWS Account 183295455211 reinstated and verified for Bedrock InvokeModel."
+    : "AWS Account 183295455211 suspended over Oct Invoice 2899922873 ($25.73); hold CLAUDE_PROVIDER=bedrock in production until $25.73 is paid and account email is updated from @gmail.com to hq@galaxysportsedge.com before submitting NVIDIA Inception Org ID.";
+  const surfacedNonDilutivePipelineUsd = 958000;
   const claudeProvider = resolveClaudeProviderSelection(env);
 
   const bedrockConfigured =
@@ -178,6 +200,12 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
     julesApiKeyConfigured,
     xaiConfigured,
     alibabaCloudConfigured,
+    alibabaDashScopeConfigured,
+    nousPortalPromoConfigured,
+    hermesPlusPlanGuardNote,
+    awsAccount183295455211Reinstated,
+    awsBedrockHoldNote,
+    surfacedNonDilutivePipelineUsd,
     runpodConfigured,
     nvidiaInceptionConfigured,
     deepinfraConfigured,

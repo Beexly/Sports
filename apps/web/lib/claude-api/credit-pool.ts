@@ -51,10 +51,10 @@ export const CREDIT_POOL_META: Record<CreditPool, CreditPoolMeta> = {
     note: "Qwen / DashScope OpenAI-compatible lane — offset by Alibaba Cloud credits.",
   },
   content_free: {
-    label: "Open free lane (Cerebras / Gemma / Nemotron hosts)",
+    label: "Open free lane (Nous qwen4-max:free / Cerebras / Gemma hosts)",
     provider: "cerebras",
     creditEligible: true,
-    note: "Content free-lane: Cerebras gpt-oss and/or secondary free OpenAI-compat hosts — $0 cash.",
+    note: "Content free-lane: Nous Portal qwen/qwen4-max:free promo, Cerebras gpt-oss, and secondary free OpenAI-compat hosts - $0 cash.",
   },
   anthropic_direct: {
     label: "Anthropic direct",
@@ -73,6 +73,7 @@ export function creditPoolForModel(modelName: string): CreditPool {
   if (id.startsWith("azure-foundry/")) return "azure_foundry";
   if (id.includes("@")) return "vertex_partner";
   if (/^(?:[a-z]{2,4}\.)?anthropic\./.test(id)) return "aws_activate";
+  if (id.startsWith("nous-free/") || /:free$/i.test(id)) return "content_free";
   if (id.startsWith("alibaba-qwen/") || id.startsWith("dashscope/") || /^qwen/i.test(id) || /^qwq/i.test(id)) {
     return "alibaba_credits";
   }

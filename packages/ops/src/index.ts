@@ -9,6 +9,7 @@ export {
   EVENT_SCHEMA_VERSION,
   EVENT_NAMES,
   EVENT_CONTRACT_REGISTRY,
+  GCP_FREE_TIER_PUBSUB_TOPICS,
   canonicalJsonString,
   buildEventIdempotencyKey,
   createEventEnvelope,

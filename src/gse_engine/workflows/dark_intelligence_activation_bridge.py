@@ -108,6 +108,12 @@ _CROWN_JEWEL_REGISTRY: tuple[str, ...] = (
 )
 
 
+_IMPORT_CACHE: dict[str, Any] = {}
+_IMPORT_MISSING = object()
+_GELO_COEF_CACHE: Any = None
+_FOUNDRY_INDEX_CACHE: dict[str, Any] | None = None
+
+
 def _ensure_repo_and_ot_paths() -> None:
     root_s = str(REPO_ROOT)
     ot_s = str(REPO_ROOT / "packages" / "galaxy-conformal-ot")
@@ -117,11 +123,33 @@ def _ensure_repo_and_ot_paths() -> None:
 
 
 def _safe_import(mod_name: str) -> Any | None:
+    cached = _IMPORT_CACHE.get(mod_name)
+    if cached is _IMPORT_MISSING:
+        return None
+    if cached is not None:
+        return cached
     _ensure_repo_and_ot_paths()
     try:
-        return importlib.import_module(mod_name)
+        mod = importlib.import_module(mod_name)
     except Exception:
+        _IMPORT_CACHE[mod_name] = _IMPORT_MISSING
         return None
+    _IMPORT_CACHE[mod_name] = mod
+    return mod
+
+
+def _load_foundry_primitives_count() -> int:
+    global _FOUNDRY_INDEX_CACHE
+    if _FOUNDRY_INDEX_CACHE is None:
+        idx_p = REPO_ROOT / "data" / "engine" / "foundry_compound_corpus_index_2026.json"
+        if idx_p.is_file():
+            try:
+                _FOUNDRY_INDEX_CACHE = json.loads(idx_p.read_text(encoding="utf-8"))
+            except Exception:
+                _FOUNDRY_INDEX_CACHE = {}
+        else:
+            _FOUNDRY_INDEX_CACHE = {}
+    return int(_FOUNDRY_INDEX_CACHE.get("primitives_extracted_total", 0))
 
 
 def list_activated_crown_jewels() -> tuple[str, ...]:
@@ -332,6 +360,7 @@ def evaluate_dark_intelligence_pack_for_matchup(
     activated.append("matchup_prose")
 
     _ = sweep_foundry_and_corpus_primitives
+    foundry_primitives_indexed = _load_foundry_primitives_count()
     activated.append("foundry_compound_miner")
 
     _host_mon = HostResourceMonitor()
@@ -400,12 +429,24 @@ def evaluate_dark_intelligence_pack_for_matchup(
     gcot_kwh = _safe_import("galaxy_conformal_ot.kinematic_workload_hazard")
     frechet_ok = False
     acwr_val = 1.0
+    schrodinger_kl_cost = 0.0
+    csd_bifurcation_score = 0.0
     if gcot_ccs is not None and gcot_sbh is not None and gcot_kwh is not None:
         frechet_ok, _ = gcot_ccs.check_frechet_hoeffding_bounds(
             p_legs[0],
             p_legs[1],
             rvine.joint_prob,
         )
+        sb_traj = gcot_sbh.solve_schrodinger_bridge_trajectory(
+            [0.30, 0.40, 0.30],
+            [0.25, 0.45, 0.30],
+            tau=0.35,
+        )
+        csd_out = gcot_sbh.compute_critical_slowing_down_index(
+            [0.10, -0.15, 0.20, -0.10, 0.25, -0.20],
+        )
+        schrodinger_kl_cost = float(sb_traj.get("control_drift_energy", 0.0))
+        csd_bifurcation_score = float(csd_out.get("csd_bifurcation_score", 0.0))
         acwr_val = float(gcot_kwh.compute_acwr_ratio(110.0, 100.0))
         activated.append("galaxy_conformal_ot")
 
@@ -422,20 +463,81 @@ def evaluate_dark_intelligence_pack_for_matchup(
 
     dfs19 = _safe_import("intelligence.dfs.dfs_19_equation_deep_research_engine")
     _safe_import("intelligence.dfs.gpp_architecture")
+    dfs19_equations_active = 0
     if dfs19 is not None:
+        curated_pool = [
+            {
+                "player": item.name,
+                "position": item.position,
+                "salary": item.salary,
+                "projection": item.projected_points,
+                "game_id": f"{aw}@{hm}",
+            }
+            for item in sample_pool[:6]
+        ]
+        dfs19_report = dfs19.evaluate_frontier_19_equations_on_curated_pool(
+            curated_pool,
+            portfolio_lineups=[
+                {"proj_sum": 95.0, "players": curated_pool[:3]},
+                {"proj_sum": 92.0, "players": curated_pool[3:]},
+            ],
+        )
+        dfs19_equations_active = int(dfs19_report.get("total_dfs_equations_active", 0))
         activated.append("intelligence_dfs_suite")
 
     rat_gelo = _safe_import("intelligence.ratings.gelo")
     rat_qb = _safe_import("intelligence.ratings.qb_decomp")
     rat_pd = _safe_import("intelligence.ratings.plusdc")
+    global _GELO_COEF_CACHE
+    gelo_expected_score = 0.5
+    rank_centrality_top = 0.0
+    qb_decomp_team_rating = 0.0
     if rat_gelo is not None and rat_qb is not None and rat_pd is not None:
+        if _GELO_COEF_CACHE is None:
+            _GELO_COEF_CACHE = rat_gelo.estimate_coefficients(
+                [0, 0, 1, 2, 2, 2, 1, 2, 0, 2],
+                2,
+            )
+        gelo_expected_score = float(
+            rat_gelo.expected_score(-spread_home / 13.0, _GELO_COEF_CACHE)
+        )
+        w_rc = np.zeros((32, 32), dtype=np.float64)
+        idx_32 = np.arange(32)
+        w_rc[idx_32, (idx_32 + 1) % 32] = 1.0
+        w_rc[(idx_32 + 1) % 32, idx_32] = 0.8
+        rc_dist = rat_pd.rank_centrality(w_rc, w_rc + w_rc.T, iters=30)
+        rank_centrality_top = float(np.max(rc_dist))
+        qb_model = rat_qb.QBDecomposedRating(lam=5.0)
+        qb_model.fit(
+            [
+                {
+                    "home": 0,
+                    "away": 1,
+                    "qb_home": f"{hm}_qb",
+                    "qb_away": f"{aw}_qb",
+                    "home_win": (-spread_home) >= 0.0,
+                    "tie": False,
+                },
+                {
+                    "home": 1,
+                    "away": 2,
+                    "qb_home": f"{aw}_qb",
+                    "qb_away": "lg_qb",
+                    "home_win": True,
+                    "tie": False,
+                },
+            ]
+        )
+        qb_decomp_team_rating = float(qb_model.team_rating(0))
         activated.append("intelligence_ratings_suite")
 
     aud_eff = _safe_import("intelligence.audit.totals_efficiency_model")
     aud_inj = _safe_import("intelligence.audit.totals_injury_model")
     aud_rw = _safe_import("intelligence.audit.totals_roleweighted_model")
     aud_pm = _safe_import("intelligence.audit.props_mixture_refinement")
+    prop_mixture_p50 = 0.0
     if aud_eff is not None and aud_inj is not None and aud_rw is not None and aud_pm is not None:
+        prop_mixture_p50 = float(aud_pm.mixture_quantile(0.50, 0.15, 3.0, 22.0))
         activated.append("intelligence_totals_audit_suite")
 
     w10_eq = _safe_import(
@@ -511,10 +613,18 @@ def evaluate_dark_intelligence_pack_for_matchup(
             "doctor_valid": bool(doctor_rep.ok),
             "rb_regime_mixture_yds": rb_mix_yds,
             "acwr_ratio": round(acwr_val, 4),
+            "dfs19_equations_active": dfs19_equations_active,
+            "gelo_expected_score": round(gelo_expected_score, 5),
+            "rank_centrality_top": round(rank_centrality_top, 5),
+            "qb_decomp_team_rating": round(qb_decomp_team_rating, 5),
+            "prop_mixture_p50": round(prop_mixture_p50, 4),
+            "foundry_primitives_indexed": foundry_primitives_indexed,
             "delta_margin_shadow": delta_margin_shadow,
         },
         "mmot_certificate": {
             "birkhoff_valid": bool(birkhoff_valid),
+            "schrodinger_kl_cost": round(schrodinger_kl_cost, 6),
+            "csd_bifurcation_score": round(csd_bifurcation_score, 5),
         },
         "ops_contracts": {
             "microtask_ok": bool(isinstance(micro_res, dict)),

@@ -55,6 +55,8 @@ const SECRET_RULES = [
   { id: "slack.token", re: /\bxox[baprs]-[A-Za-z0-9-]{20,}\b/ },
   { id: "neon.api-key", re: /\bnapi_[A-Za-z0-9]{40,}\b/ },
   { id: "alibaba.access-key", re: /\bLTAI[A-Za-z0-9]{16,24}\b/ },
+  { id: "alibaba.workspace-key", re: /\bsk-ws-[A-Za-z0-9._-]{24,}\b/ },
+  { id: "nous.portal-key", re: /\bsk-nous-[A-Za-z0-9_-]{20,}\b/ },
   { id: "huggingface.token", re: /\bhf_[A-Za-z0-9]{30,}\b/ },
   { id: "private-key-block", re: /-----BEGIN (?:RSA |EC |OPENSSH |DSA |PGP )?PRIVATE KEY-----/ },
   // A Postgres/Redis connection URL that embeds a password AND points at a

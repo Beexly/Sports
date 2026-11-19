@@ -77,11 +77,18 @@ describe("BS-040 — secret-scan pre-commit hook", () => {
     // while the temp file written below still contains the full token to detect.
     const fakeLive = "sk_live_" + "51AbcdEFGhijkLMNOpqrstuvwx";
     const fakeHook = "whsec_" + "abcdefghijklmnopqrstuvwxyz0123456789";
-    writeFileSync(f, `const k = "${fakeLive}";\nconst w = "${fakeHook}";\n`);
+    const fakeAliWs = "sk-ws-" + "AbCdEf12.GhIjKl34.MnOpQr56StUvWx78Yz90";
+    const fakeNous = "sk-nous-" + "AbCdEfGhIjKlMnOpQrStUvWxYz123456";
+    writeFileSync(
+      f,
+      `const k = "${fakeLive}";\nconst w = "${fakeHook}";\nconst a = "${fakeAliWs}";\nconst n = "${fakeNous}";\n`,
+    );
     const r = runScan([f]);
     expect(r.status).toBe(1);
     expect(r.stderr).toContain("stripe.secret.live");
     expect(r.stderr).toContain("stripe.webhook");
+    expect(r.stderr).toContain("alibaba.workspace-key");
+    expect(r.stderr).toContain("nous.portal-key");
   });
 
   it("does NOT flag placeholders or local dev credentials", () => {

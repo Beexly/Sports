@@ -3,6 +3,8 @@ import {
   FREE_LANE_SURFACES,
   alibabaCreditLaneConfig,
   generateContentMessages,
+  nousPromoFreeLaneChain,
+  nousPromoFreeLaneConfig,
   shouldUseFreeLane,
 } from "@/lib/claude-api/free-lane";
 import { creditPoolForModel } from "@/lib/claude-api/credit-pool";
@@ -124,5 +126,102 @@ describe("content free-lane dispatcher", () => {
     );
     expect(fallbackRes.text).toBe("Anthropic text");
     expect(failFetch).toHaveBeenCalledTimes(2);
+  });
+
+  it("routes free qwen/qwen4-max:free promo on Nous Portal at $0 and fail-closes non-free PAYG models", async () => {
+    const nousEnv = {
+      CONTENT_FREE_LANE_ENABLED: "true",
+      NOUS_API_KEY: "nous-test-key",
+      NOUS_MODEL: "qwen4-max",
+      NOUS_QWEN4_MAX_FREE_PROMO_ENABLED: "true",
+      NOUS_ALLOW_PAYG: "false",
+    } as const;
+    const cfg = nousPromoFreeLaneConfig(nousEnv);
+    expect(cfg?.model).toBe("qwen/qwen4-max:free");
+    expect(creditPoolForModel("nous-free/qwen/qwen4-max:free")).toBe("content_free");
+
+    const fetchImpl = vi.fn(async () => cerebrasResponse());
+    const res = await generateContentMessages({ ...base, fetchImpl, surface: "content" }, nousEnv);
+    expect(res.modelName).toBe("nous-free/qwen/qwen4-max:free");
+    expect(urls(fetchImpl)[0]).toBe("https://inference-api.nousresearch.com/v1/chat/completions");
+
+    // Non-free PAYG model must be blocked when NOUS_ALLOW_PAYG is false
+    expect(
+      nousPromoFreeLaneConfig({
+        ...nousEnv,
+        NOUS_MODEL: "nousresearch/hermes-4-405b",
+      }),
+    ).toBeNull();
+    // Expired promo fail-closes to null and empty chain
+    expect(
+      nousPromoFreeLaneConfig(
+        {
+          ...nousEnv,
+          NOUS_PROMO_EXPIRES_AT: "2026-11-18T00:00:00Z",
+        },
+        Date.parse("2026-11-19T00:00:00Z"),
+      ),
+    ).toBeNull();
+    expect(
+      nousPromoFreeLaneChain(
+        {
+          ...nousEnv,
+          NOUS_MODEL: "nousresearch/hermes-4-405b",
+        },
+      ),
+    ).toEqual([]);
+  });
+
+  it("cascades across 3 free Nous promo models (qwen4-max:free -> longcat-2.5:free -> step-3.7-flash:free) before Alibaba/Anthropic", async () => {
+    const chainEnv = {
+      CONTENT_FREE_LANE_ENABLED: "true",
+      NOUS_API_KEY: "nous-test-key",
+      NOUS_MODEL: "qwen/qwen4-max:free",
+      NOUS_QWEN4_MAX_FREE_PROMO_ENABLED: "true",
+      NOUS_ALLOW_PAYG: "false",
+      ALIBABA_API_KEY: "ali-test-key",
+    } as const;
+    const chain = nousPromoFreeLaneChain(chainEnv);
+    expect(chain.map((c) => c.model)).toEqual([
+      "qwen/qwen4-max:free",
+      "meituan/longcat-2.5:free",
+      "stepfun/step-3.7-flash:free",
+    ]);
+
+    const seenModels: string[] = [];
+    const fetchImpl = vi.fn(async (url: string, init?: RequestInit) => {
+      const parsed = JSON.parse(String(init?.body ?? "{}")) as { model?: string };
+      seenModels.push(`${url}#${parsed.model ?? ""}`);
+      if (seenModels.length <= 2) {
+        return new Response("rate limit on nous free model", { status: 429 });
+      }
+      return cerebrasResponse();
+    });
+    const res = await generateContentMessages({ ...base, fetchImpl, surface: "brief" }, chainEnv);
+    expect(res.modelName).toBe("nous-free/stepfun/step-3.7-flash:free");
+    expect(seenModels).toEqual([
+      "https://inference-api.nousresearch.com/v1/chat/completions#qwen/qwen4-max:free",
+      "https://inference-api.nousresearch.com/v1/chat/completions#meituan/longcat-2.5:free",
+      "https://inference-api.nousresearch.com/v1/chat/completions#stepfun/step-3.7-flash:free",
+    ]);
+
+    // When all 3 Nous :free hops return 429, it fails over cleanly to Alibaba DashScope before Anthropic
+    const fetchToAli = vi.fn(async (_url: string, _init?: RequestInit) => {
+      if (fetchToAli.mock.calls.length <= 3) {
+        return new Response("nous free rate limit", { status: 429 });
+      }
+      return cerebrasResponse();
+    });
+    const aliFallback = await generateContentMessages(
+      { ...base, fetchImpl: fetchToAli, surface: "content" },
+      chainEnv,
+    );
+    expect(aliFallback.modelName).toBe("alibaba-qwen/qwen-plus");
+    expect(urls(fetchToAli)).toEqual([
+      "https://inference-api.nousresearch.com/v1/chat/completions",
+      "https://inference-api.nousresearch.com/v1/chat/completions",
+      "https://inference-api.nousresearch.com/v1/chat/completions",
+      "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions",
+    ]);
   });
 });

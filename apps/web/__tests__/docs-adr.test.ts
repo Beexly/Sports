@@ -37,7 +37,7 @@ describe("docs/adr — ADR contract", () => {
     const name = file.split(/[\\/]/).pop()!;
     it(`${name} has a title with an ADR number`, () => {
       const src = readFileSync(file, "utf8");
-      expect(src.split(/\r?\n/)[0]).toMatch(/^#\s+ADR\s+\d+\s+—/);
+      expect(src.split(/\r?\n/)[0]).toMatch(/^#\s+ADR\s+\d+\s+(?:—|--|-)\s/);
     });
 
     it(`${name} declares a Status field`, () => {

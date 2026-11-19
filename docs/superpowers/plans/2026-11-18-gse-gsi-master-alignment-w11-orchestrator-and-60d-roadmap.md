@@ -49,7 +49,7 @@ Six highest-impact failure modes measured on live production and disk as of `202
 | Pillar | Verified Done | Missing / Broken Today | Underleveraged High-ROI Assets | Overleveraged / Risk |
 |---|---|---|---|---|
 | **Operations & Autonomy** | `/api/health` `200 OK` (`DB ok`, `ingestion 4m`). `15` GitHub Actions workflows exist (`7` scheduled). Wave 48 clean (`36` pytest, `114` strict mypy, `0` ruff). | 3-way Git split-brain; `/api/ops/public-surface-truth` **times out (>10s)**; `gse-site-wide-autonomous-fabric.yml` stuck on `--dry-run`; `gse-connected-5stage` calls legacy pipeline; `gse-ml-service` has no own `.git`. | `$0` unlimited **public-repo GitHub Actions** compute; **Upstash QStash** delayed game-clock choreography; **Cloudflare Workers** (`7` workers built); Motif `L2+L5` Pub/Sub + Cloud Run Functions scale-to-zero pattern; `L10` Monitoring/Alerts. | `39` Vercel crons polling every 10-15m (~1,100 invocations/day on idle weekdays) draining Neon compute-hours & Vercel quotas. |
-| **Credits & Startup Programs** | `$55,618.33` LIVE (`PostHog $50k`, `Sentry $5k`, `Pinecone $300`, `Deepgram $200`, `GCP $118.33`, `AWS $137.15`, **NVIDIA Inception ACTIVE**, `NVIDIA NIM`, `Google AI Ultra`, `Alibaba Qwen`, `Cerebras`, `Groq`). `24` grants submitted (`$256.5k`). Applied to **Google DeepMind** + **Google Launchpad**. | Credit-routing code sits unmerged on PR `#1291`; live Vercel env vars (`ALIBABA_API_KEY`, `CEREBRAS_API_KEY`, `CONTENT_FREE_LANE_ENABLED`, `CLAUDE_PROVIDER=bedrock`) not flipped yet; AWS Activate credits application on Acct `183295455211` not finalized with NVIDIA Inception Org ID. | **NVIDIA Inception Org ID -> Partner-tier AWS Activate (`$100k-$200k` for Bedrock Claude `InvokeModel`) + Google for Startups Cloud Scale AI Tier (up to `$350k` over 2 yrs) + NVIDIA DGX Cloud (up to `$100k`)**. Total unlockable non-dilutive runway: **`$350k-$650k+` at `0%` dilution**. | Claim-order traps: never use AWS Marketplace for Claude; never claim Stripe once-ever slot early; never trip Google's 31-day Workspace / anti-stacking rule; never cite 404 URLs in applications. |
+| **Credits & Startup Programs** | `$55,656.31` LIVE (`PostHog $50k`, `Sentry $5k`, `Pinecone $300`, `Deepgram $200`, `GCP $118.33`, **NVIDIA Inception ACTIVE** `#1086418431979798`, `NVIDIA NIM`, `Google AI Ultra` `$100/mo` GCP credit, `Alibaba Qwen 70M tokens`, `Nous :free 3-model cascade`, `Cerebras`, `Groq`). `24` grants submitted (`$256.5k`) + **`$958K` newly surfaced pipeline** (Mozilla `$500K` Human-Scale AI due Nov 20 + `$125K` Fellowship due Nov 30, DOE SBIR `$200K+`, NFL Big Data Bowl `$100K`, Anthropic `$46K + $10K`, Modal/E2B/LiveKit/Upstash `$81K+`). | Credit-routing code sits unmerged on PR `#1291`; live Vercel free/promo env vars (`ALIBABA_API_KEY`, `NOUS_API_KEY` + `NOUS_MODEL=qwen/qwen4-max:free`, `CEREBRAS_API_KEY`, `CONTENT_FREE_LANE_ENABLED`) not flipped yet; **AWS Account `183295455211` SUSPENDED since Nov 4 over `$25.73` Oct Invoice `2899922873`** and still on `@gmail.com`! | **3-Step AWS Recovery + Inception Multiplier:** (1) pay `$25.73` Invoice `2899922873`, (2) update AWS email off `@gmail.com` to `hq@galaxysportsedge.com` (avoids Activate auto-reject), (3) submit **NVIDIA Inception Org ID -> Partner-tier AWS Activate (`$25k-$200k` Bedrock `InvokeModel`) + Google Cloud Scale AI (`$350k`) + Mozilla `$500k` non-LLM math packet**. | **CRITICAL TRAP:** NEVER flip `CLAUDE_PROVIDER=bedrock` before reinstating AWS `183295455211` (causes `403` errors) and keep `NOUS_ALLOW_PAYG=false` so `NOUS_API_KEY` never burns credits outside `:free` promo models. |
 | **GSE Model & Dark Intelligence** | `147`-game W1-10 OOS: norm CRPS `7.0047`, raw CRPS `6.9065`, Margin MAE `9.6410`, Total MAE `10.2730`, Brier `0.21915`, ECE `0.07017`, `rliable_iqm 0.733567`. Showdown `1.5x` & Classic 9-man MILP, 7-Market Props, SGP Copula, `4.86x` speedup, `412` RLVR. | Spine `as_of_week <= 10` skips W11 injuries; `wave32` ignores `145` Nov 16-18 CSVs; `week11_ind_hou_dk_full_board` is 12 days stale. | **The Dark Intelligence Iceberg:** `12/97` unreachable `src/gse_engine/` modules (`rqmc_tilting_and_regimes` K02/K03/K10/K11, `rvine_sgp_copula`, `etkf_dma_bus`, `biomech_and_ballistics`, `skfolio_allocator`, `lineup_doctor`), `507/693` dark `intelligence/` modules (`dfs/`, `props/`, `ratings/`, `audit/`, `week10_engines`), `29` `galaxy-conformal-ot` modules, `kantorovich_mmot`, `1.65 GB` film room, `503` books & `21,419` equations (`data/mind_staging/` stale since Nov 6). | Linear additive scalar stacking (`w34..w48`) on the SAME 147 historical games hits diminishing returns & 4-bin ECE cliffs; real leap requires trajectory simulation + dark-module empirical bake-off + prospective W11-18 settlement (`N >= 250`). |
 | **GSI Dual-Use Intelligence** | Strict `0.0` sports-weight RUO isolation; MIMIC-IV `0.8050` AUROC; AlphaFold v6, HPA, GTEx, Reactome, UniProt; `412` zero-odds RLVR; `gsi_research_api_wrapper.py` & `mimic_iv_full_70k_streaming_pipeline.py` built. | Siloed in Python tests; no public GSI Research Brief; zero `galaxy-conformal-ot` CI benchmarks publishing artifacts for DeepMind / Launchpad / NVIDIA reviewers. | Dual-use clinical/biomechanics research credibility directly strengthens **Google DeepMind**, **NVIDIA Inception DGX**, and **Anthropic AI for Science** non-dilutive evaluations. | Expanding across 18 minor sports (Darts, Snooker, Cycling, AFL) before NFL Weeks 11-18 + Playoffs converts revenue. |
 | **Website, Perf, Security & Mobile** | Live `200 OK` on `/`, `/packages`, `/record`, `/props`, `/dfs`, `/partners`, `/llms.txt`, `/llms-full.txt`, `/news-sitemap.xml`, `/media-kit`, `/case-studies/aws-governed-sports-intelligence`, 9 free tools (`/parlay-mri`, `/optimizer`, `/tools/*`). `/admin` & `/cockpit` redirect anon to `/auth/signin`. Zero vault files in `apps/web/public/`. | Python <-> TS Chasm; `sealed-slate-store.ts` hard-codes `week: 10`; `/props` `1,306ms` TTFB + stale hype word; `/api/ops/public-surface-truth` times out (>10s); `/llms.txt` cites stale `+81.47u` (`2026-11-13`); `246` pages (`162` public + `84` internal `/admin`/`/cockpit`). | Fast `/parlay-mri` + 8 calculators + `/record` glass ledger as zero-CAC organic funnel; ISR edge caching (`TTFB < 350ms`); `apps/mobile` Expo SDK 57 Founding Member TestFlight beta. | Route sprawl (`246` pages: 7 competing record/ledger routes, 4 DFS routes) dilutes SEO authority and inflates uncached HTML (`180-187 KB`). |
@@ -67,7 +67,7 @@ Six highest-impact failure modes measured on live production and disk as of `202
 |---|---|---|---|---|
 | **T+14d (Dec 3, W11-13)** | 25 `$9/$14` packs + 8 Pro -> **$580 gross / $310 MRR** | 85 `$9/$14` packs + 25 Pro + 5 Elite -> **$2,350 gross / $1,370 MRR** | 200 `$9/$14` packs + 60 Pro + 15 Elite + 2 Bots -> **$5,980 gross / $3,823 MRR** | W11 TNF `$9` impulse + **W12 Thanksgiving `$14` 5-Game spike** + Whop Marketplace listing. |
 | **T+30d (Dec 18, W14-16)** | 15 Pro + 3 Elite + 1 Bot -> **$971 MRR** (12% churn) | 55 Pro + 15 Elite + 4 Bots -> **$3,926 MRR** (8% churn) | 130 Pro + 35 Elite + 10 Bots -> **$9,325 MRR** (6% churn) | 72h `$9 -> $39/mo` upgrade credit + 30-day Positive-CLV Pledge (`98.94%` retention) + first 5-10 `30%/40%` creator affiliates. |
-| **T+60d (Jan 17, NFL Playoffs)** | 28 Pro + 6 Elite + 2 Bots + Playoff Packs -> **$1,864 MRR** | 110 Pro + 30 Elite + 10 Bots + Playoff Packs -> **$8,150 MRR** | 260 Pro + 75 Elite + 22 Bots + Super Bowl Flagship -> **$19,343 MRR** | Peak NFL Divisional/Conference/Super Bowl LTV harvest + `$149` Rest-of-Season / Playoff upfront commitment. |
+| **T+60d (Jan 17, NFL Playoffs)** | 28 Pro + 6 Elite + 2 Bots + Playoff Packs -> **$1,864 MRR** | 110 Pro + 30 Elite + 10 Bots + Playoff Packs -> **$8,150 MRR** | 260 Pro + 75 Elite + 22 Bots + Super Bowl Flagship -> **$19.34k MRR** | Peak NFL Divisional/Conference/Super Bowl LTV harvest + `$149` Rest-of-Season / Playoff upfront commitment. |
 | **T+90d (Feb 16, Post-Super Bowl)** | Post-NFL cliff `-35%` -> **$1,210 MRR** | Multi-sport bridge (`NBA/NHL/UCL/MLB`) retains `78%` -> **$6,850 MRR** | Multi-sport + White-Label Bot servers retain `88%` -> **$17,800 MRR** | **Critical cliff defense:** transition NFL monthly users to All-Sports Pro & DFS tools BEFORE Feb 15! |
 | **T+12m (Nov 2027, 2027 NFL Peak)** | 80 Pro + 20 Elite + 5 Bots -> **$5,445 MRR** (`~$65k ARR`) | 320 Pro + 95 Elite + 28 Bots + 2 Non-Gambling Sponsors -> **$24,157 MRR** (`~$290k ARR`) | 750 Pro + 220 Elite + 65 Bots + B2B Data Licensing -> **$56,315 MRR** (`~$675k ARR`) | Verified 2026 full-season CLV ledger (`N >= 250` cleared), `30-40%` affiliate army, iOS app (`apps/mobile`), white-label server distribution. |
 
@@ -91,7 +91,8 @@ Six highest-impact failure modes measured on live production and disk as of `202
 |---|---|---|---|---|
 | **Already Live Credit Stack** | **LIVE (`9` programs)** | **$55,618.33** | Flip Vercel env vars (`ALIBABA_API_KEY`, `CEREBRAS_API_KEY`, `CONTENT_FREE_LANE_ENABLED=true`, `GROQ_API_KEY`) after PR `#1291` merges. | PostHog (`$50k`, bot/replay guarded), Sentry (`$5k`, `0.1` traces), Alibaba Qwen + Cerebras + Groq + NVIDIA NIM free/credit LLM lanes. |
 | **NVIDIA Inception** | **ACTIVE MEMBER** | **Org ID Multiplier + up to $100k DGX Cloud + DLI + Preferred Hardware** | Use **NVIDIA Inception Org ID** directly on AWS Activate Portfolio & Google Cloud Startup applications; apply for DGX Cloud credits for GSI MIMIC-IV / RLVR training bursts. | Partner-tier credit multiplier + zero-cost NVIDIA NIM inference (`40 RPM`) + GSI clinical/biomechanics GPU bursts. |
-| **AWS Activate (Acct `183295455211`)** | Enrolled (`$137.15` free tier left; credits app pending) | **$1,000 (Founders) -> $25,000-$200,000 (Portfolio via Inception Org ID)** | Submit credits app citing Inception Org ID; route `CLAUDE_PROVIDER=bedrock` via **Bedrock `InvokeModel` ONLY** (NEVER AWS Marketplace!). | Pays 100% of frontier Claude reasoning/synthesis inference for 12-24 months (`$0` cash AI burn). |
+| **AWS Activate (Acct `183295455211`)** | **SUSPENDED (Hold Bedrock Flip)** | **Pay `$25.73` Inv `2899922873` -> `$25k-$200k` Portfolio via Inception Org ID** | **STRICT 3-STEP SEQUENCE BEFORE `CLAUDE_PROVIDER=bedrock`:** (1) pay `$25.73` Oct Invoice `2899922873` to reinstate Acct `183295455211`, (2) switch account email off `@gmail.com` to `hq@galaxysportsedge.com` (Activate auto-rejects `@gmail.com`), (3) submit NVIDIA Inception Org ID `#1086418431979798` (`Bedrock InvokeModel` ONLY) & set `AWS_ACCOUNT_183295455211_REINSTATED=true`. Until reinstated, Nous `:free` cascade + Alibaba `70M` tokens + Cerebras + Groq + Google AI Ultra run W11 at `$0`. | Pays 100% of frontier Claude reasoning/synthesis inference for 12-24 months (`$0` cash AI burn) once reinstated. |
+| **Mozilla + DOE + Anthropic + Kaggle (`$958k` Newly Surfaced)** | **PACKET READY (Nov 19 -> Jan 6 Deadlines)** | **Mozilla `$500k` + `$125k` + DOE `$200k+` + Kaggle `$100k` + Infra `$81k+`** | Submit `docs/gsi/MOZILLA_HUMAN_SCALE_AI_PROPOSAL_2026_11_20.md` by **Fri Nov 20 11:59 PM PT** (`0%` dilution non-LLM conformal-OT math); attend DOE Office Hrs `Nov 19 2:00 PM CT` (`Dec 16` Pitch); queue `Nov 30` Mozilla `$125k` Fellowship, `Dec 3` TIPS-USA, `Dec 5` NVIDIA DLI codes, `Dec 7` Anthropic (`$46k` Startups + `$10k` Corps), `Dec 10` GSI TX SOS `#15043440630001` `$0` cure, `Jan 6` **NFL Big Data Bowl 2027 `$100k`**, and rolling Modal (`$25k`)/E2B (`$20k`)/LiveKit (`$23k`)/Upstash (`$12k`)/Tavily (`100k`, kill Firecrawl `$5` auto-reload). | Funds GSI non-LLM mathematical core, public Proof-of-Record accountability, and R&D GPUs with `0%` equity dilution. |
 | **Google DeepMind / Launchpad / Cloud Scale AI** | **APPLIED** (Garrett submitted DeepMind + Launchpad; Google AI Ultra active; Motif completing Paths 36->420->419->4525) | **$2,000 (Start) -> $200,000 (Scale) -> up to $350,000 (Scale AI: $250k Y1 + $100k Y2)** | Ensure all cited proof URLs (`galaxysportsedge.com/llms.txt`, `/record`, `/case-studies/aws-governed-sports-intelligence`) return `200 OK` with fresh data; scaffold Cloud Run Functions / Pub/Sub / Vertex AI / BigQuery interfaces per Motif baseline; respect 31-day Workspace & anti-stacking rules. | Powers GSI dual-use scientific computing, Gemini/Vertex multi-agent workflows (Path 4525 GEAR), scale-to-zero Cloud Run bursts, and BigQuery calibration warehouse (only after approval). |
 | **Public GitHub Actions + Cloudflare Workers/R2 + Neon** | **LIVE** | **$0/mo unlimited CI + $5.60/mo CF + $15/mo Neon** | Migrate idle Vercel polling to GitHub Actions game-window orchestrator + Cloudflare Workers + Upstash QStash; keep single Neon branch (`saves $102.49/mo`). | **Target Total Post-Credit Cash Burn: `$9.26 - $25.00/mo`** even at `10,000+` MAU (`>90%` gross margin!). |
 
@@ -177,16 +178,16 @@ Six highest-impact failure modes measured on live production and disk as of `202
 - Consumes: `origin/main` commits (`#1293`-`#1298`, including `145` Nov 16-18 CSVs), `0df6bd505` Wed Nov 18 W11 injury/slate JSONs & CSV, `stage0_truth_s2026_w11.json`.
 - Produces: Merged PR `#1291` branch (`0` behind `origin/main`), fresh Week 11 injury/slate truth, and `run_cadence_v20_wednesday_injury_advance.py` emitting `publishable=True` with `>= 13` Week 11 matchup overlap.
 
-- [ ] **Step 1: Fetch and merge `origin/main` cleanly into the PR `#1291` worktree branch**
+- [x] **Step 1: Fetch and merge `origin/main` cleanly into the PR `#1291` worktree branch**
 ```powershell
 git fetch origin main
 git rev-list --left-right --count origin/main...HEAD
 git merge origin/main --no-edit
 ```
-- [ ] **Step 2: Write failing test `tests/ops/test_w11_cadence_convergence.py`** verifying `>= 140` Nov 16-18 CSVs, Week 11 rows in `injuries_2026.csv`, `espn_nfl_injuries_2026-11-18.json`, `>= 13` games in `week11_slate_espn_2026-11-18.json`, and `stage0_truth_s2026_w11.json` (`week == 11`, `as_of >= 2026-11-18`).
-- [ ] **Step 3: Run `pytest tests/ops/test_w11_cadence_convergence.py -v`** (verify FAIL before porting `0df6bd505`).
-- [ ] **Step 4: Port Wed Nov 18 W11 injury/slate files & `run_cadence_v20_wednesday_injury_advance.py`, fix W11 Stage-0 default and 13-game overlap, refresh `stage0_truth_s2026_w11.json`.**
-- [ ] **Step 5: Run `pytest tests/ops/test_w11_cadence_convergence.py -v` (verify PASS) and commit.**
+- [x] **Step 2: Write failing test `tests/ops/test_w11_cadence_convergence.py`** verifying `>= 140` Nov 16-18 CSVs, Week 11 rows in `injuries_2026.csv`, `espn_nfl_injuries_2026-11-18.json`, `>= 13` games in `week11_slate_espn_2026-11-18.json`, and `stage0_truth_s2026_w11.json` (`week == 11`, `as_of >= 2026-11-18`).
+- [x] **Step 3: Run `pytest tests/ops/test_w11_cadence_convergence.py -v`** (verify FAIL before porting `0df6bd505`).
+- [x] **Step 4: Port Wed Nov 18 W11 injury/slate files & `run_cadence_v20_wednesday_injury_advance.py`, fix W11 Stage-0 default and 13-game overlap, refresh `stage0_truth_s2026_w11.json`.**
+- [x] **Step 5: Run `pytest tests/ops/test_w11_cadence_convergence.py -v` (verify PASS) and commit.**
 
 ---
 
@@ -201,10 +202,10 @@ git merge origin/main --no-edit
 - Consumes: `stage0_truth_s2026_w{wk}.json`, `injuries_2026.csv`, `espn_nfl_injuries_2026-11-18.json`, `week11_slate_espn_2026-11-18.json`, `espn_2026_week11_scoreboard.json`, `docs/research/2026-11-15..18/full-tables/*.csv`.
 - Produces: Dynamic `as_of_week` Stage-0, injury, and schedule hydration (Weeks 1-18, zero `<= 10` cap, zero synthetic `2.5 / 45.5` fallback for Week 11) + `load_all_analytics_sweep_tables_as_of(as_of_date)` with strict bitemporal cutoff.
 
-- [ ] **Step 1: Write failing test `tests/workflows/test_unified_spine_week11_hydration.py`** proving `hydrate_causal_matchup_context_from_vaults("IND", "HOU", as_of_week=11)` sets `stage0_week == 11`, `injury_rows_scanned > 0`, `schedule_source != "synthetic_default"`, and `load_all_analytics_sweep_tables_as_of("2026-11-18")` loads `>= 140` tables while `"2026-11-15"` preserves W1-10 bitemporal purity.
-- [ ] **Step 2: Run `pytest tests/workflows/test_unified_spine_week11_hydration.py -v`** (verify FAIL).
-- [ ] **Step 3: Implement dynamic Week `N` hydration in `unified_reasoning_simulation_projection_spine.py` and bitemporal multi-date CSV fusion in `wave32`.**
-- [ ] **Step 4: Run `pytest`, `mypy --strict`, `ruff` (verify PASS & Wave 48 OOS byte-identical `norm CRPS 7.0047`, `ECE 0.07017`) and commit.**
+- [x] **Step 1: Write failing test `tests/workflows/test_unified_spine_week11_hydration.py`** proving `hydrate_causal_matchup_context_from_vaults("IND", "HOU", as_of_week=11)` sets `stage0_week == 11`, `injury_rows_scanned > 0`, `schedule_source != "synthetic_default"`, and `load_all_analytics_sweep_tables_as_of("2026-11-18")` loads `>= 140` tables while `"2026-11-15"` preserves W1-10 bitemporal purity.
+- [x] **Step 2: Run `pytest tests/workflows/test_unified_spine_week11_hydration.py -v`** (verify FAIL).
+- [x] **Step 3: Implement dynamic Week `N` hydration in `unified_reasoning_simulation_projection_spine.py` and bitemporal multi-date CSV fusion in `wave32`.**
+- [x] **Step 4: Run `pytest`, `mypy --strict`, `ruff` (verify PASS & Wave 48 OOS byte-identical `norm CRPS 7.0047`, `ECE 0.07017`) and commit.**
 
 ---
 
@@ -223,10 +224,10 @@ git merge origin/main --no-edit
   2. Authorized Week 11 (`GSE_OPERATOR_APPROVED_SIM_WEEKS=11`) `13`-game slate (`IND @ HOU` + `12` Sun/Mon) x `10,000` worlds/game (`130,000` worlds / `~22.75M` snaps) + pre-computed Questionable-starter injury branches + Showdown `1.5x` & Classic 9-man MILP cores.
   3. GSI Dual-Use RUO check (`CLINICAL_RUO_*_SPORTS_WEIGHT == 0.0`, MIMIC-IV `>= 0.8050`, `412` zero-odds RLVR).
 
-- [ ] **Step 1: Write failing test `tests/ops/test_overnight_w1_to_w11_simulation_battery.py`.**
-- [ ] **Step 2: Run `pytest tests/ops/test_overnight_w1_to_w11_simulation_battery.py -v`** (verify FAIL).
-- [ ] **Step 3: Implement `scripts/ops/run_overnight_w1_to_w11_simulation_battery.py`.**
-- [ ] **Step 4: Run fast test (PASS), execute full `10,000`-world/game battery (`$env:GSE_OPERATOR_APPROVED_SIM_WEEKS="11"; python scripts/ops/run_overnight_w1_to_w11_simulation_battery.py --worlds 10000 --approved-weeks 11`), verify outputs & zero conservation/leak errors, and commit.**
+- [x] **Step 1: Write failing test `tests/ops/test_overnight_w1_to_w11_simulation_battery.py`.**
+- [x] **Step 2: Run `pytest tests/ops/test_overnight_w1_to_w11_simulation_battery.py -v`** (verify FAIL).
+- [x] **Step 3: Implement `scripts/ops/run_overnight_w1_to_w11_simulation_battery.py`.**
+- [x] **Step 4: Run fast test (PASS), execute full `10,000`-world/game battery (`$env:GSE_OPERATOR_APPROVED_SIM_WEEKS="11"; python scripts/ops/run_overnight_w1_to_w11_simulation_battery.py --worlds 10000 --approved-weeks 11`), verify outputs & zero conservation/leak errors, and commit.**
 
 ---
 
@@ -245,10 +246,10 @@ git merge origin/main --no-edit
 - Consumes: `week11_unified_sealed_projections_2026_11_18.json`, `revenue_orchestration_and_w11_tnf_readiness.py`, `whop-live-catalog.json`.
 - Produces: Deterministic Python->Web exporter with SHA-256 parity, dynamic week validation in `sealed-slate-store.ts`, Week 11 Whop 6-rung storefront, and zero `"Props withheld"` blackout tomorrow. (`PUBLIC_PICKS_ENABLED` remains untouched.)
 
-- [ ] **Step 1: Write failing Python exporter test and Web storefront/sealed-slate test.**
-- [ ] **Step 2: Run both tests to verify FAIL.**
-- [ ] **Step 3: Implement `export_sealed_slate_to_web.py`, run it, update `sealed-slate-store.ts`, `engine-live-bridge.ts`, `catalog.ts`, `two-door-offers.ts`, and `props/page.tsx`.**
-- [ ] **Step 4: Run Python tests, Web tests, `node scripts/trust-gate.mjs`, and `node apps/mobile/scripts/lint-rules.js` (verify PASS) and commit.**
+- [x] **Step 1: Write failing Python exporter test and Web storefront/sealed-slate test.**
+- [x] **Step 2: Run both tests to verify FAIL.**
+- [x] **Step 3: Implement `export_sealed_slate_to_web.py`, run it, update `sealed-slate-store.ts`, `engine-live-bridge.ts`, `catalog.ts`, `two-door-offers.ts`, and `props/page.tsx`.**
+- [x] **Step 4: Run Python tests, Web tests, `node scripts/trust-gate.mjs`, and `node apps/mobile/scripts/lint-rules.js` (verify PASS) and commit.**
 
 ---
 
@@ -266,10 +267,10 @@ git merge origin/main --no-edit
 - Consumes: `whop-live-catalog.json`, `public-record.ts`, `week11_unified_sealed_projections_2026_11_18.json`, `ai-agent-and-search-seo.ts`.
 - Produces: Complete commercial + proof + 9-tool + NFL matchup `sitemap.xml`, synced `/llms.txt`, bespoke OG cards, up-to-date revenue/affiliate ledger, and draft-verified Week 11 X/IG threads.
 
-- [ ] **Step 1: Write failing SEO/sitemap/`llms.txt` test and free-content compliance test.**
-- [ ] **Step 2: Run both tests to verify FAIL.**
-- [ ] **Step 3: Implement sitemap, `/llms.txt`, OG cards, `REVENUE_OPERATING_LEDGER.md`, and `generate_w11_free_environment_content_pack.py`.**
-- [ ] **Step 4: Run Web tests, Python tests, `node --test workers/twitter-bot/test/draft-only.test.mjs`, and `node scripts/trust-gate.mjs` (verify PASS) and commit.**
+- [x] **Step 1: Write failing SEO/sitemap/`llms.txt` test and free-content compliance test.**
+- [x] **Step 2: Run both tests to verify FAIL.**
+- [x] **Step 3: Implement sitemap, `/llms.txt`, OG cards, `REVENUE_OPERATING_LEDGER.md`, and `generate_w11_free_environment_content_pack.py`.**
+- [x] **Step 4: Run Web tests, Python tests, `node --test workers/twitter-bot/test/draft-only.test.mjs`, and `node scripts/trust-gate.mjs` (verify PASS) and commit.**
 
 ---
 
@@ -284,9 +285,9 @@ git merge origin/main --no-edit
 - Consumes: `manifest_877_pdfs.json`, `data/arxiv_2026_11_alphaxiv/*.json`, `thousand_equation_matrix_2026.json`, `equation_inventory_v2.json`, `complete_458_book_registry.json`, `foundry_compound_corpus_index_2026.json`, `docs/research/2026-11-16..18/full-tables/*.csv`, `week11_unified_sealed_projections_2026_11_18.json`, `apps/web/lib/slate/current-sealed-slate.json`.
 - Produces: Cryptographically hashed pre-flight receipt confirming 100% corpus wiring, Python-to-Web SHA-256 hash parity, and all repo guardrails green prior to PR `#1291` merge.
 
-- [ ] **Step 1: Write failing pre-flight & corpus audit test `tests/ops/test_corpus_wiring_and_preflight.py`.**
-- [ ] **Step 2: Run test (verify FAIL).**
-- [ ] **Step 3: Implement `verify_total_corpus_and_w11_preflight.py` and execute the ENTIRE verification suite:**
+- [x] **Step 1: Write failing pre-flight & corpus audit test `tests/ops/test_corpus_wiring_and_preflight.py`.**
+- [x] **Step 2: Run test (verify FAIL).**
+- [x] **Step 3: Implement `verify_total_corpus_and_w11_preflight.py` and execute the ENTIRE verification suite:**
 ```powershell
 pytest tests/ops/test_corpus_wiring_and_preflight.py -v
 python scripts/guardrails/verify_total_corpus_and_w11_preflight.py --write-receipt
@@ -298,7 +299,7 @@ node apps/mobile/scripts/lint-rules.js
 ruff check src/ scripts/ tests/
 mypy --strict src/gse_engine/
 ```
-- [ ] **Step 4: Commit pre-flight receipt and push branch.**
+- [x] **Step 4: Commit pre-flight receipt and push branch.**
 
 ---
 
@@ -313,10 +314,10 @@ mypy --strict src/gse_engine/
 - Create: `scripts/ops/audit_cron_and_ml_service_hygiene.py`
 - Test: `tests/ops/test_cron_and_service_hygiene.py`
 
-- [ ] **Step 1: Write failing hygiene & cron-budget test (`len(crons) <= 18`).**
-- [ ] **Step 2: Run test (verify FAIL against current 39 crons).**
-- [ ] **Step 3: Consolidate `vercel.json`, author canonical route IA & GSI grant brief, and document standalone `gse-ml-service` Git repo init & `/predict/etkf` + `/predict/tda` health contract.**
-- [ ] **Step 4: Run test (verify PASS) and commit.**
+- [x] **Step 1: Write failing hygiene & cron-budget test (`len(crons) <= 18`).**
+- [x] **Step 2: Run test (verify FAIL against current 39 crons).**
+- [x] **Step 3: Consolidate `vercel.json`, author canonical route IA & GSI grant brief, and document standalone `gse-ml-service` Git repo init & `/predict/etkf` + `/predict/tda` health contract.**
+- [x] **Step 4: Run test (verify PASS) and commit.**
 
 ---
 
@@ -333,10 +334,10 @@ mypy --strict src/gse_engine/
 - Consumes: `rqmc_tilting_and_regimes` (K02/K03/K10/K11), `rvine_sgp_copula` (5-regime R-Vine + Higham PSD), `skfolio_allocator` (R&D CVaR Kelly), `lineup_doctor` (late-swap repair), `etkf_dma_bus`, `biomech_and_ballistics`, `matchup_prose`, `kantorovich_mmot`, `galaxy_conformal_ot` (`schrodinger_bridge_hazard`, `kinematic_workload_hazard`, `conformal_copula_sizing`), `intelligence/{props,dfs,ratings,audit,week10_engines_2026_11_13}`.
 - Produces: Raises `src/gse_engine/` reachability from `85/97` to `>= 95/97`, empirically scores every activated dark module over `147` W1-10 games, promotes ONLY proven OOS winners (`5B backtest-or-cut`), and enforces `LIVE_STAKE_FRACTION == 0.0` and `CLINICAL_RUO_*_SPORTS_WEIGHT == 0.0`.
 
-- [ ] **Step 1: Write failing test `tests/workflows/test_dark_intelligence_activation_bridge.py`.**
-- [ ] **Step 2: Run test (verify FAIL).**
-- [ ] **Step 3: Implement activation bridge + bake-off arena and run full 147-game OOS + W11 evaluation.**
-- [ ] **Step 4: Run `pytest`, `mypy --strict`, `ruff`, and `verify_out_of_sample_calibration.py --enforce-gate` (verify zero regression or strict improvement) and commit.**
+- [x] **Step 1: Write failing test `tests/workflows/test_dark_intelligence_activation_bridge.py`.**
+- [x] **Step 2: Run test (verify FAIL).**
+- [x] **Step 3: Implement activation bridge + bake-off arena and run full 147-game OOS + W11 evaluation.**
+- [x] **Step 4: Run `pytest`, `mypy --strict`, `ruff`, and `verify_out_of_sample_calibration.py --enforce-gate` (verify zero regression or strict improvement) and commit.**
 
 ---
 
@@ -349,10 +350,10 @@ mypy --strict src/gse_engine/
 - Create: `docs/ops/WORKER_FLEET_OFFLOAD_AND_AIRWAVE_ACTIVATION_2026_11.md` (`workers/airwave-listener`, `immortal-orchestrator`, `content-publishing`, `data-refresh`, `twitter-bot`)
 - Test: `tests/ops/test_mind_staging_and_content_os_w11.py`
 
-- [ ] **Step 1: Write failing test `tests/ops/test_mind_staging_and_content_os_w11.py`.**
-- [ ] **Step 2: Run test (verify FAIL).**
-- [ ] **Step 3: Implement & execute exporter, refresh `data/content-os/` to Week 11 (zero paid picks, zero jargon), and document worker offload.**
-- [ ] **Step 4: Run test (verify PASS) and commit.**
+- [x] **Step 1: Write failing test `tests/ops/test_mind_staging_and_content_os_w11.py`.**
+- [x] **Step 2: Run test (verify FAIL).**
+- [x] **Step 3: Implement & execute exporter, refresh `data/content-os/` to Week 11 (zero paid picks, zero jargon), and document worker offload.**
+- [x] **Step 4: Run test (verify PASS) and commit.**
 
 ---
 
@@ -368,10 +369,10 @@ mypy --strict src/gse_engine/
 - Consumes: `@sports/db`, `loadCreditStackPosture`, `evaluateRevenueLadder`, `unified_reasoning_simulation_projection_spine.py`, `export_sealed_slate_to_web.py`, `verify_total_corpus_and_w11_preflight.py`.
 - Produces: Sub-1.5s `/api/ops/public-surface-truth` operator truth API ready for L10 1-minute uptime checks, and truly closed-loop `$0`-compute GitHub Actions game-week & overnight autonomous workflows.
 
-- [ ] **Step 1: Write failing latency/concurrency test for `/api/ops/public-surface-truth` and YAML contract test for both GitHub Actions workflows.**
-- [ ] **Step 2: Run tests (verify FAIL: sequential waterfall > budget; fabric YAML still hard-codes `--dry-run`).**
-- [ ] **Step 3: Parallelize `public-surface-truth/route.ts` with `Promise.allSettled` + per-read timeout budget, and upgrade both `.github/workflows/*.yml` files.**
-- [ ] **Step 4: Run Web & Python tests + YAML schema validation (verify PASS) and commit.**
+- [x] **Step 1: Write failing latency/concurrency test for `/api/ops/public-surface-truth` and YAML contract test for both GitHub Actions workflows.**
+- [x] **Step 2: Run tests (verify FAIL: sequential waterfall > budget; fabric YAML still hard-codes `--dry-run`).**
+- [x] **Step 3: Parallelize `public-surface-truth/route.ts` with `Promise.allSettled` + per-read timeout budget, and upgrade both `.github/workflows/*.yml` files.**
+- [x] **Step 4: Run Web & Python tests + YAML schema validation (verify PASS) and commit.**
 
 ---
 
@@ -387,10 +388,10 @@ mypy --strict src/gse_engine/
 - Consumes: Motif Interim Google Skills Baseline (`L2, L5, L6, L7, L9, L10`), `apps/web/app/**` route inventory, `apps/web/public/**`.
 - Produces: Production-grade TypeScript event schemas, complete L10/L6/L7 security & observability spec (usable today on Vercel+Neon and tomorrow on Cloud Run), and automated CI guard preventing vault leaks into `public/`.
 
-- [ ] **Step 1: Write failing tests for event schema validation/idempotency and `verify_public_root_zero_vault_leak.py`.**
-- [ ] **Step 2: Run tests (verify FAIL).**
-- [ ] **Step 3: Implement `google-cloud-event-contracts.ts`, `verify_public_root_zero_vault_leak.py`, and `GCP_OBSERVABILITY_L10_AND_IAM_IAP_L6_L7_BASELINE_2026_11.md`.**
-- [ ] **Step 4: Run tests (verify PASS: `0` vault files in `apps/web/public/`, all 5 event contracts validated) and commit.**
+- [x] **Step 1: Write failing tests for event schema validation/idempotency and `verify_public_root_zero_vault_leak.py`.**
+- [x] **Step 2: Run tests (verify FAIL).**
+- [x] **Step 3: Implement `google-cloud-event-contracts.ts`, `verify_public_root_zero_vault_leak.py`, and `GCP_OBSERVABILITY_L10_AND_IAM_IAP_L6_L7_BASELINE_2026_11.md`.**
+- [x] **Step 4: Run tests (verify PASS: `0` vault files in `apps/web/public/`, all 5 event contracts validated) and commit.**
 
 ---
 
@@ -401,17 +402,19 @@ mypy --strict src/gse_engine/
 - Create: `scripts/ops/verify_founder_program_evidence_urls.py` (automated pre-submission smoke check verifying every public URL cited to Google DeepMind, Google Launchpad, NVIDIA Inception, and AWS Activate -- `/`, `/llms.txt`, `/llms-full.txt`, `/news-sitemap.xml`, `/sitemap.xml`, `/record`, `/media-kit`, `/case-studies/aws-governed-sports-intelligence`, `/parlay-mri`, `/api/health`, `/api/ops/public-surface-truth` -- returns `200 OK` within SLA with zero stale `+81.47u` or voided `62-23-1` contradictions)
 - Test: `tests/ops/test_founder_program_evidence_and_p1_p2_docs.py`
 
-- [ ] **Step 1: Write failing test verifying P1/P2 required comparison sections exist (with explicit no-migration guardrails & unconfirmed GSP001/002/067/074 titles never invented) and `verify_founder_program_evidence_urls.py` validates URL lists cleanly in offline mock mode.**
-- [ ] **Step 2: Run test (verify FAIL).**
-- [ ] **Step 3: Author `GCP_P1_P2_ARCHITECTURE_COMPARISONS_AND_API_REGISTRY_2026_11.md` and `verify_founder_program_evidence_urls.py`.**
-- [ ] **Step 4: Run test (verify PASS) and commit.**
+- [x] **Step 1: Write failing test verifying P1/P2 required comparison sections exist (with explicit no-migration guardrails & unconfirmed GSP001/002/067/074 titles never invented) and `verify_founder_program_evidence_urls.py` validates URL lists cleanly in offline mock mode.**
+- [x] **Step 2: Run test (verify FAIL).**
+- [x] **Step 3: Author `GCP_P1_P2_ARCHITECTURE_COMPARISONS_AND_API_REGISTRY_2026_11.md` and `verify_founder_program_evidence_urls.py`.**
+- [x] **Step 4: Run test (verify PASS) and commit.**
 
 ---
 
 ## Founder-Only Manual Actions (The 10-15% Human Hard Gates -- Never Executed Autonomously)
 
-1. **Merge PR `#1291` to `origin/main`** once Tasks 1-6, 8-12 pass CI, then verify Vercel `READY` and run `python scripts/ops/verify_founder_program_evidence_urls.py --live`.
-2. **Create Whop SKUs & Flip Env Vars:** Provision `$9` TNF `IND @ HOU`, `$14` Thanksgiving 5-Game, `$39/mo` Pro, and `$79/mo` Elite on `biz_jzvuDvevsatKWi`; set `WHOP_CHECKOUT_*`, `ALIBABA_API_KEY`, `CEREBRAS_API_KEY`, `GROQ_API_KEY`, `CONTENT_FREE_LANE_ENABLED=true`, and `CLAUDE_PROVIDER=bedrock` on Vercel.
-3. **Public Gate Call:** Inspect tomorrow's sealed Week 11 TNF card and decide when to flip `PUBLIC_PICKS_ENABLED` (live `/api/picks` remains honestly `503` closed until you flip it).
-4. **Credit Multiplier Submissions:** Submit AWS Activate Portfolio credits on Account `183295455211` using your **NVIDIA Inception Org ID** (`$25k-$200k` Bedrock `InvokeModel` path); track Google DeepMind + Google Launchpad decisions and hold Google Cloud Startup credit claims aligned to the 31-day Workspace / anti-stacking rules.
-5. **Re-Sync After Motif's Final Write-Up:** When Motif finishes Path 36 Course 4 + Paths 420 / 419 / 4525, drop the final write-up into the repo to finalize P1/P2 build-vs-no-build calls (Dataflow/Spark, BigQuery, Security checklist, GEAR Agentic Architect upgrades).
+1. **Merge PR `#1291` to `origin/main`** once CI passes, verify Vercel `READY`, and run `python scripts/ops/verify_founder_program_evidence_urls.py --live`.
+2. **Create Whop SKUs & Flip Safe Free/Promo Env Vars:** Provision `$9` TNF `IND @ HOU`, `$14` Thanksgiving 5-Game, `$39/mo` Pro, and `$79/mo` Elite on `biz_jzvuDvevsatKWi`; set `WHOP_CHECKOUT_*`, `ALIBABA_API_KEY`, `NOUS_API_KEY`, `NOUS_MODEL=qwen/qwen4-max:free`, `NOUS_ALLOW_PAYG=false`, `CEREBRAS_API_KEY`, `GROQ_API_KEY`, and `CONTENT_FREE_LANE_ENABLED=true` on Vercel (**DO NOT set `CLAUDE_PROVIDER=bedrock` yet** -- hold until Step 4 reinstates AWS `183295455211`).
+3. **Public Gate Call & Immediate Cost Hygiene:** Inspect sealed Week 11 TNF card before deciding `PUBLIC_PICKS_ENABLED`; switch off Firecrawl `$5` auto-reload and use Tavily (`100K` free credits).
+4. **3-Step AWS `183295455211` Reinstatement & Non-Dilutive Capital Deadlines (`$958k` Stack):**
+   - **Today / Tomorrow (`Nov 19-20`):** Join DOE SBIR/STTR Office Hrs (`Nov 19, 2:00 PM CT`, Pitch due `Dec 16`); submit `docs/gsi/MOZILLA_HUMAN_SCALE_AI_PROPOSAL_2026_11_20.md` to Mozilla Human-Scale AI (`$300k-$500k`) before **Fri Nov 20, 11:59 PM PT**; pay `$25.73` Oct Invoice `2899922873` on AWS `183295455211` -> move account email off `@gmail.com` to `hq@galaxysportsedge.com` -> submit NVIDIA Inception Org ID `#1086418431979798` (`$25k-$200k` Portfolio), ONLY THEN flip `AWS_ACCOUNT_183295455211_REINSTATED=true` + `CLAUDE_PROVIDER=bedrock`.
+   - **Nov 26 -> Jan 6 Queue:** Thanksgiving `$14` 5-Game Pass (`Nov 26`), Mozilla `$125k` Fellowship (`Nov 30` cutoff / `Dec 17` LOI), TIPS-USA + `$600` recovery (`Dec 3`), 14 NVIDIA DLI codes (`Dec 5`), Anthropic `$50k` / `$46k` Startups / `$10k` Corps (`Dec 7`), New Caney ISD RFP `121.26` (`Dec 9`), **GSI TX SOS `#15043440630001` `$0` 30-day cure (`Dec 10`: Board of Directors, no members, Garrett Baxley Organizer)**, and **NFL Big Data Bowl 2027 `$100k` Kaggle (`Jan 6`)**.
+5. **Re-Sync After Motif's Final Write-Up:** When Motif finishes Path 36 (`1,977` pts -> `100%`) + Paths 420 / 419 / 4525, drop the final write-up into the repo to finalize P1/P2 build-vs-no-build calls (BigQuery `gse_calibration`, Always-Free Pub/Sub `gse-odds-ticks` / `gse-injury-wire` / `gse-intake-dlq`, Security checklist, GEAR Agentic Architect upgrades).

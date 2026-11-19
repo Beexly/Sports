@@ -228,6 +228,105 @@ WAVE47_CREDIT_RLVR_TRAJECTORIES: tuple[dict[str, Any], ...] = (
 )
 
 
+DEFAULT_NOUS_BASE_URL = "https://inference-api.nousresearch.com/v1"
+DEFAULT_NOUS_FREE_MODEL = "qwen/qwen4-max:free"
+
+NOUS_FREE_PROMO_ALLOWLIST: tuple[str, ...] = (
+    "qwen/qwen4-max:free",
+    "upstage/solar-mini4:free",
+    "tencent/hy4-flash:free",
+    "stepfun/step-3.7-flash:free",
+    "meituan/longcat-2.5:free",
+)
+
+NOUS_HERMES_PLUS_GUARDRAILS: dict[str, Any] = {
+    "plan_name": "Nous Portal Plus ($20/mo)",
+    "hermes_agent_included": True,
+    "cloud_agent_included_max_ram_gb": 4,
+    "cloud_agent_included_max_disk_gb": 25,
+    "extra_or_larger_cloud_agents_use_credits": True,
+    "api_keys_use_payg_credits_not_included_usage": True,
+    "free_promo_allowlist": NOUS_FREE_PROMO_ALLOWLIST,
+    "default_fail_closed_payg": True,
+}
+
+AWS_ACCOUNT_183295455211_SUSPENSION_GUARD: dict[str, Any] = {
+    "account_id": "183295455211",
+    "suspended_since": "2026-11-04",
+    "invoice_id": "2899922873",
+    "amount_due_usd": 25.73,
+    "required_corporate_email": "hq@galaxysportsedge.com",
+    "gmail_activate_rejection_trap_halted": True,
+    "hold_bedrock_until_reinstated": True,
+}
+
+
+def validate_aws_bedrock_reinstatement_guard(
+    env: Mapping[str, str] | None = None,
+) -> dict[str, Any]:
+    """Fail closed against flipping CLAUDE_PROVIDER=bedrock while AWS 183295455211 is suspended."""
+    active_env = env or {}
+    reinstated = (
+        active_env.get("AWS_ACCOUNT_183295455211_REINSTATED") or ""
+    ).strip().lower() == "true"
+    guard = AWS_ACCOUNT_183295455211_SUSPENSION_GUARD
+    return {
+        "account_id": guard["account_id"],
+        "invoice_id": guard["invoice_id"],
+        "amount_due_usd": guard["amount_due_usd"],
+        "required_corporate_email": guard["required_corporate_email"],
+        "reinstated": reinstated,
+        "status": "reinstated_ready" if reinstated else "suspended_invoice_2899922873_halted",
+        "bedrock_flip_allowed": reinstated,
+    }
+
+
+def validate_nous_portal_zero_payg_request(
+    model: str | None = None,
+    env: Mapping[str, str] | None = None,
+) -> dict[str, Any]:
+    """Fail closed if a Nous Portal API key request would hit pay-as-you-go credits."""
+    active_env = env or {}
+    promo_enabled = (
+        (active_env.get("NOUS_QWEN4_MAX_FREE_PROMO_ENABLED") or "true").strip().lower() != "false"
+    )
+    allow_payg = (active_env.get("NOUS_ALLOW_PAYG") or "false").strip().lower() == "true"
+    raw = (model if model is not None else active_env.get("NOUS_MODEL") or "").strip()
+    normalized = (
+        DEFAULT_NOUS_FREE_MODEL
+        if not raw or raw.lower() == "qwen4-max"
+        else raw
+    )
+    is_free_model = normalized in NOUS_FREE_PROMO_ALLOWLIST or normalized.lower().endswith(":free")
+
+    if is_free_model and promo_enabled:
+        return {
+            "allowed": True,
+            "lane": "nous_portal_free_promo",
+            "model": normalized,
+            "payg_protected": True,
+        }
+    if allow_payg:
+        return {
+            "allowed": True,
+            "lane": "nous_portal_payg_explicit_override",
+            "model": normalized,
+            "payg_protected": False,
+        }
+    reason = (
+        "NOUS_FREE_PROMO_DISABLED"
+        if is_free_model and not promo_enabled
+        else "NOUS_API_KEY_PAYG_HALTED"
+    )
+    return {
+        "allowed": False,
+        "lane": "halted",
+        "model": normalized,
+        "reason": reason,
+        "payg_protected": True,
+    }
+
+
 def resolve_zero_waste_workload_route(
     workload: str,
     env: Mapping[str, str] | None = None,
@@ -243,6 +342,11 @@ def resolve_zero_waste_workload_route(
         (active_env.get("ALIBABA_API_KEY") or "").strip()
         or (active_env.get("DASHSCOPE_API_KEY") or "").strip()
     )
+    nous_key_present = bool(
+        (active_env.get("NOUS_API_KEY") or "").strip()
+        or (active_env.get("NOUS_PORTAL_API_KEY") or "").strip()
+    )
+    nous_guard = validate_nous_portal_zero_payg_request(env=active_env)
     cerebras_key_present = bool((active_env.get("CEREBRAS_API_KEY") or "").strip())
     posthog_replay_opted_in = (
         (active_env.get("NEXT_PUBLIC_POSTHOG_SESSION_REPLAY_ENABLED") or "").strip().lower()
@@ -259,6 +363,9 @@ def resolve_zero_waste_workload_route(
         "cash_leak_avoided_usd_mo_est": float(spec["cash_leak_avoided_usd_mo_est"]),
         "env_signals_detected": {
             "alibaba_dashscope_key_present": alibaba_key_present,
+            "nous_portal_key_present": nous_key_present,
+            "nous_free_promo_active": bool(nous_key_present and nous_guard["allowed"]),
+            "nous_payg_guard_active": bool(nous_guard["payg_protected"]),
             "cerebras_key_present": cerebras_key_present,
             "posthog_session_replay_default_off": not posthog_replay_opted_in,
         },
@@ -291,11 +398,14 @@ def evaluate_executive_credit_and_zero_waste_alignment_suite(
         "all_11_workloads_credit_or_free_aligned": (len(resolved) == 11 and leak_count == 0),
         "unneeded_cash_leak_count": leak_count,
         "alibaba_qwen_lane_wired": True,
+        "nous_portal_qwen4_max_free_promo_wired": True,
+        "nous_payg_guard_active": validate_nous_portal_zero_payg_request(env=env)["payg_protected"],
         "posthog_bot_and_replay_guard_active": posthog_replay_default_off,
         "public_token_reseller_enabled": PUBLIC_TOKEN_RESELLER_ENABLED,
         "real_money_stake_cleared": REAL_MONEY_STAKE_CLEARED,
         "live_stake_fraction": LIVE_STAKE_FRACTION,
         "prohibited_traps_halted_count": len(PROHIBITED_SPEND_TRAPS),
+        "aws_bedrock_reinstatement_guard": validate_aws_bedrock_reinstatement_guard(env=env),
         "estimated_monthly_cash_waste_avoided_usd": monthly_savings_est,
         "workloads": resolved,
         "rlvr_trajectory_count": len(WAVE47_CREDIT_RLVR_TRAJECTORIES),

@@ -116,10 +116,25 @@ describe("loadCreditStackPosture", () => {
     const p = loadCreditStackPosture({
       AZURE_FOUNDRY_API_KEY: "super-secret-az",
       CEREBRAS_API_KEY: "super-secret-cb",
+      ALIBABA_API_KEY: "super-secret-ali",
+      NOUS_API_KEY: "super-secret-nous",
+      NOUS_QWEN4_MAX_FREE_PROMO_ENABLED: "true",
       CONTENT_FREE_LANE_ENABLED: "true",
       AZURE_FOUNDRY_RESOURCE: "r",
       AZURE_FOUNDRY_MODEL_MAP: "{}",
     });
+    expect(p.alibabaDashScopeConfigured).toBe(true);
+    expect(p.nousPortalPromoConfigured).toBe(true);
+    expect(p.hermesPlusPlanGuardNote).toContain("NOUS_ALLOW_PAYG=true");
+    expect(p.awsAccount183295455211Reinstated).toBe(false);
+    expect(p.awsBedrockHoldNote).toContain("2899922873");
+    expect(p.awsBedrockHoldNote).toContain("hq@galaxysportsedge.com");
+    expect(p.surfacedNonDilutivePipelineUsd).toBe(958000);
+    const reinstated = loadCreditStackPosture({
+      AWS_ACCOUNT_183295455211_REINSTATED: "true",
+    });
+    expect(reinstated.awsAccount183295455211Reinstated).toBe(true);
+    expect(reinstated.awsBedrockHoldNote).toMatch(/reinstated/i);
     const json = JSON.stringify(p);
     expect(json).not.toContain("super-secret");
   });

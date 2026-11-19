@@ -10,7 +10,7 @@ vi.mock("@sports/db", () => ({
 
 const WEB_ROOT = path.resolve(__dirname, "..");
 const EXPECTED_SOURCE_SHA256 =
-  "a2aca13a763e7fce3ab38d5ef5f996b7e41b3e0034ffebfd4f587faa2632c30b";
+  "ab30af438cfac08e66ed12fb8f545cb032ec3567d4a9160a95ff4237b24b1bd1";
 
 const TOUCHED_FILES = [
   "lib/slate/sealed-slate-store.ts",
