@@ -450,3 +450,12 @@ all dossier-grade and shortcode-keyed, 0 duplicates, 0 collisions,
 records). Strongest finds: Gemini 4 Neon reel (Df5nhTRRFbK),
 EvolvingInfra, Agent Substrate runtime, RustingStrata engine,
 QR Snip extension. Running feed total: 11,946 records.
+
+## Delta 2026-11-18 X For You AM (landed 2026-11-18)
+
+Source: ~/workspace/x-for-you-sweep/reports/2026-11-18-AM.md.
+Delta: 137 records (31 dossier + 31 inventoried with IDs + 75
+NO-ID slug-keyed), 4 duplicates skipped, 1 slug-collision skip,
+4 sportsbook/trading items excluded, 130,560 bytes appended to
+x-for-you-feed.jsonl (now 6,510 records). Running feed total:
+12,083 records.
