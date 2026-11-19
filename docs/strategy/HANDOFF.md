@@ -3,6 +3,22 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-19 (Hermes autonomous cycle — epistemic-gate tranche 3: the suite now actually runs end-to-end; 12 collection errors → 0)
+
+- **What changed** (PR [#1300](https://github.com/Beexly/Sports/pull/1300) → squash `9fcf0b71f`):
+  - `pyproject.toml` — declared `sympy` (nothing in any manifest had it, but `src/gse_engine/compute/corpus_situational_integrator.py` and `src/gse_engine/memory/wave24_theorem_ast_dependency_suite.py` import it; the GSI bridge test died on `ModuleNotFoundError`).
+  - `.github/workflows/epistemic_gate.yml` — added `sympy` to the pip step; added a **TypeScript install step** (`npm install --prefix "$RUNNER_TEMP/tsdeps" typescript@5.4.5`, isolated prefix so the monorepo's npm tree is never installed) and set `TYPESCRIPT_ROOT` on the pytest step.
+  - `tests/unit/test_fabric_philox_cross_lang_parity.py` — the 10,200-tuple bit-exact Python↔TypeScript test resolved `typescript` only from the repo root's `node_modules`, which a fresh checkout never has → guaranteed CI failure. It now resolves `TYPESCRIPT_ROOT` first with a repo-root fallback and **skips with a stated reason** when no compiler exists; assertions unchanged.
+- **What was proven** (real execution):
+  - Local: the two target tests pass (`8 passed` in 2:01 — real transpile + bit-exact parity; GSI bridge constructs its engine), and the skip path fires when `TYPESCRIPT_ROOT` is unset. Workflow YAML parses, 7 steps.
+  - CI run `44495128241` on the PR: **12 collection errors → 0**; the suite ran to completion for the first time — **1378 passed, 59 failed, 52 skipped** in 6:00. The previous `main` run (`44468357552`) died at 12 collection errors in 10s and never executed a single test.
+  - Every other PR check green (CodeQL, CodeRabbit, Codacy, Socket, GitGuardian, verify-frontier-bounds, Analyze, Devin). Merged `UNSTABLE` as with #1294 — the gate's red is pre-existing and now visible rather than masked.
+- **What was not proven / still red**: the 59 remaining failures are the previously-classified **B** (roster/injury freshness — `as_of 2026-11-07` max-5-days policy), **C** (stale value pins / artifact drift — wave33–48 ablation thresholds, `148 == 147`, `15477 == 15400`, week9 catalog/ledger shas) and **E** (Bazel) classes. None of them were touched this cycle.
+- **What the next role must do**:
+  - Take **C** first — it is the largest block (~40 of 59) and is mechanical: regenerate the pinned artifacts from the single-source ledger rather than editing the assertions. The wave33–48 ablation tests all pin `0.22038` against ever-lower thresholds; that is one regenerated artifact, not 16 fixes.
+  - Then **B** (needs a policy call on the freshness window) and **E** (already root-caused in the entry below).
+  - Note: the main checkout `C:/Users/Garrett/Sports` is still on `feat/hermes-research-wiring-2026-11-11` with ~36k dirty generated `data/` files — use `C:/c/wt-owner` (clean `main`) for main-branch work.
+
 ## 2026-11-19 (2026-11-19 CT) -- Wave 49 Live arXiv, OpenAlex, Kaggle BDB 2027 & Causal NGS/PFR AdvStats Engine (`400 + 24 = 424` RLVR)
 
 - **What changed**:
