@@ -11,8 +11,13 @@ build --local_cpu_resources=HOST_CPUS*.75
 build --local_ram_resources=HOST_RAM*.75
 
 # Local Disk & Repository Caching
-build --disk_cache=~/.cache/gse-bazel-disk
-build --repository_cache=~/.cache/gse-bazel-repo
+build --disk_cache=~/.cache/bazel-disk
+build --repository_cache=~/.cache/bazel-repo
+
+# Remote Cache & Remote Execution Profiles (disabled by default; activated via --config=)
+build:remote-cache --remote_cache=grpcs://cache.galaxysportsedge.internal
+build:remote-cache --remote_upload_local_results=true
+build:remote-exec --remote_executor=grpcs://remote.galaxysportsedge.internal
 
 # Platform-Specific AVX2 + OpenMP Flags for Native C11/C++20 Kernels
 build:linux --copt=-O3 --copt=-mavx2 --copt=-mfma --copt=-fopenmp --linkopt=-fopenmp
@@ -22,10 +27,12 @@ build:macos --copt=-O3
 # Optimization Profiles
 build:opt --compilation_mode=opt
 build:dbg --compilation_mode=dbg
+build:ci --config=remote-cache
 build:ci --compilation_mode=opt --test_output=errors --test_summary=detailed
 
 # Test Defaults
 test --test_output=errors
 test --test_summary=detailed
+coverage --combined_report=lcov
 
 try-import %workspace%/user.bazelrc
