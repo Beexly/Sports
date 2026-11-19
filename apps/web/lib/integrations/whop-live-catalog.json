@@ -1,0 +1,116 @@
+{
+  "accountId": "biz_jzvuDvevsatKWi",
+  "storefrontUrl": "https://whop.com/galaxy-sports-edge/",
+  "products": [
+    {
+      "key": "free_proof_room",
+      "gsePackSlug": "free-proof-room",
+      "title": "GSE Proof Room & Free Slate Preview",
+      "priceUsd": 0,
+      "billingType": "one_time",
+      "productId": "prod_62WWBPsQBESk7",
+      "variantId": "plan_vrJX4trKVp9Qs",
+      "checkoutUrl": "https://whop.com/checkout/plan_vrJX4trKVp9Qs",
+      "globalAffiliatePct": 30,
+      "memberAffiliatePct": 40
+    },
+    {
+      "key": "props_td_sgp_pack",
+      "gsePackSlug": "sgp-correlation-basket",
+      "title": "Props, Anytime TD & Correlated SGP Slate Pack",
+      "priceUsd": 29,
+      "billingType": "one_time",
+      "productId": "prod_kmm8wSrtDyoaZ",
+      "variantId": "plan_LPIZ56mbxu2sX",
+      "checkoutUrl": "https://whop.com/checkout/plan_LPIZ56mbxu2sX",
+      "globalAffiliatePct": 30,
+      "memberAffiliatePct": 40
+    },
+    {
+      "key": "main_slate_signals",
+      "gsePackSlug": "sunday-nfl-5pct-slate",
+      "title": "Main Slate Quantitative Game Signals Pack",
+      "priceUsd": 39,
+      "billingType": "one_time",
+      "productId": "prod_KrOhmnzYaBFBX",
+      "variantId": "plan_IyQZXkw65pgAz",
+      "checkoutUrl": "https://whop.com/checkout/plan_IyQZXkw65pgAz",
+      "globalAffiliatePct": 30,
+      "memberAffiliatePct": 40
+    },
+    {
+      "key": "redzone_dfs_pro",
+      "gsePackSlug": "redzone-dfs-pro-pack",
+      "title": "RedZone DFS Pro Pack (Cash, GPP & Showdown 1.5x)",
+      "priceUsd": 39.99,
+      "billingType": "one_time",
+      "productId": "prod_56tNywfOXu9D0",
+      "variantId": "plan_bETkfuLzudWoh",
+      "checkoutUrl": "https://whop.com/checkout/plan_bETkfuLzudWoh",
+      "globalAffiliatePct": 30,
+      "memberAffiliatePct": 40
+    },
+    {
+      "key": "weekly_all_access",
+      "gsePackSlug": "week8-all-access",
+      "title": "All-Access Weekly Bundle (Sides, Totals, Props, SGP & DFS)",
+      "priceUsd": 49,
+      "billingType": "one_time",
+      "productId": "prod_zaZTH81ry62xM",
+      "variantId": "plan_eTtNKm8CMa5tp",
+      "checkoutUrl": "https://whop.com/checkout/plan_eTtNKm8CMa5tp",
+      "globalAffiliatePct": 30,
+      "memberAffiliatePct": 40
+    },
+    {
+      "key": "global_multisport_vip",
+      "gsePackSlug": "global-multisport-pro",
+      "title": "Global Multi-Sport Pro Pass (NFL + NBA, MLB, NHL & Soccer)",
+      "priceUsd": 149,
+      "billingType": "renewal",
+      "productId": "prod_nZCodleRfIA18",
+      "variantId": "plan_lyi84loo2aMJ0",
+      "checkoutUrl": "https://whop.com/checkout/plan_lyi84loo2aMJ0",
+      "globalAffiliatePct": 30,
+      "memberAffiliatePct": 40
+    }
+  ],
+  "promoCodes": [
+    {
+      "id": "promo_gaAjZ5qORRBT",
+      "code": "GALAXY15",
+      "amountOffPct": 15,
+      "status": "active"
+    },
+    {
+      "id": "promo_ge7KwdDitOVJ",
+      "code": "SHARP20",
+      "amountOffPct": 20,
+      "status": "active"
+    },
+    {
+      "id": "promo_QH5pnrs0lso9",
+      "code": "REDZONE10",
+      "amountOffPct": 10,
+      "status": "active"
+    },
+    {
+      "id": "promo_9IOOaxL0D996",
+      "code": "CREATOR25",
+      "amountOffPct": 25,
+      "status": "active"
+    }
+  ],
+  "webhook": {
+    "id": "hook_IfoCqkZf54X6N",
+    "url": "https://www.galaxysportsedge.com/api/webhooks/whop",
+    "events": [
+      "payment.succeeded",
+      "payment.failed",
+      "payment.requires_action",
+      "membership.activated",
+      "membership.updated",
+      "refund.created"
+    ]
+  }
+}

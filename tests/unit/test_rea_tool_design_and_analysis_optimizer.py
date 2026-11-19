@@ -6,10 +6,8 @@ import json
 from pathlib import Path
 
 import pytest
-
 from intelligence.equations.equation_executor import (
     MAX_BATCH_CACHE_ENTRIES,
-    execute_all_279_equation_families,
     execute_layer_equation_family_batch,
     get_equation_executor_cache_diagnostics,
     invalidate_equation_executor_caches,
@@ -63,10 +61,14 @@ def test_rea_tool_design_session_evidence_views_and_unknown_concurrency() -> Non
     assert view_sum["parent_evidence_id"] == parent_id
     assert len(view_sum["normalized_result"]["sample_receipts"]) == 5
 
-    # Inventory view: omit logical_paths pages all; [] selects none; specific family selects match
-    view_all = session.inspect_analysis_view(parent_id, {"kind": "inventory", "offset": 0, "limit": 12})
+    # Inventory view: omit logical_paths pages all; [] selects none; specific family selects
+    view_all = session.inspect_analysis_view(
+        parent_id, {"kind": "inventory", "offset": 0, "limit": 12}
+    )
     assert len(view_all["normalized_result"]["occurrences"]) == 12
-    view_empty = session.inspect_analysis_view(parent_id, {"kind": "inventory", "logical_paths": []})
+    view_empty = session.inspect_analysis_view(
+        parent_id, {"kind": "inventory", "logical_paths": []}
+    )
     assert len(view_empty["normalized_result"]["occurrences"]) == 0
     assert view_empty["normalized_result"]["absence_established"] is True
     assert session.producer_invocation_count == count_before
@@ -200,7 +202,11 @@ def test_full_rea_suite_and_typescript_mcp_contracts() -> None:
     assert bench["cache_diagnostics"]["max_batch_cache_entries"] == MAX_BATCH_CACHE_ENTRIES
 
     ts_tools = (
-        REPO_ROOT / "packages" / "mcp-equations-server" / "src" / "rea-evidence-investigation-tools.ts"
+        REPO_ROOT
+        / "packages"
+        / "mcp-equations-server"
+        / "src"
+        / "rea-evidence-investigation-tools.ts"
     ).read_text(encoding="utf-8")
     ts_index = (
         REPO_ROOT / "packages" / "mcp-equations-server" / "src" / "index.ts"

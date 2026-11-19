@@ -1201,3 +1201,31 @@ def apply_sharp_pass_rush_chip_and_slide_adjustment(
         quick_release_sub2s_rate=quick_release_sub2s_rate,
     )
 
+
+def evaluate_k08_shared_frailty_pocket(
+    rusher_strain: Sequence[float],
+    blocker_clipp_eps: Sequence[float],
+    chip_indicators: Sequence[float],
+    voronoi_areas: Sequence[float] = (0.0, 0.0, 0.0, 0.0, 0.0),
+    disguise_dkl: float = 0.0,
+) -> Dict[str, Any]:
+    """Delegate K08 multiplicative shared-frailty clean-pocket survival to `biomech_and_ballistics`."""
+    from gse_engine.compute.biomech_and_ballistics import (
+        evaluate_shared_frailty_pocket_survival,
+    )
+
+    res = evaluate_shared_frailty_pocket_survival(
+        rusher_strain=rusher_strain,
+        blocker_clipp_eps=blocker_clipp_eps,
+        chip_indicators=chip_indicators,
+        voronoi_areas=voronoi_areas,
+        disguise_dkl=disguise_dkl,
+    )
+    return {
+        "s_pocket_2_5s": res.s_pocket_2_5s,
+        "naive_arithmetic_power_prob": res.naive_arithmetic_power_prob,
+        "am_gm_inequality_holds": res.am_gm_inequality_holds,
+        "pressure_prob": res.pressure_prob,
+        "sack_given_pressure_prob": res.sack_given_pressure_prob,
+    }
+

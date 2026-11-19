@@ -6,9 +6,11 @@
  * +0.0537 favorite correction, lands on the measured fair value.
  */
 
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   americanToImplied,
+  continuousLogitPowerDevig,
+  devigTotalToFairLineContinuous,
   impliedToAmerican,
   multiplicativeDevig,
   FAVORITE_RESIDUAL,
@@ -104,5 +106,26 @@ describe("multiplicative devig helper", () => {
     // Input object is not mutated.
     expect(input.favoriteOdds).toBe(-155);
     expect(input.underdogOdds).toBe(130);
+  });
+
+  it("continuousLogitPowerDevig removes the -110/-110 step jump and is monotone", () => {
+    const evenPair = continuousLogitPowerDevig(-110, -110);
+    expect(evenPair.fairA).toBe(0.5);
+    expect(evenPair.fairB).toBe(0.5);
+    expect(evenPair.fairA + evenPair.fairB).toBeCloseTo(1, 6);
+
+    const favPair = continuousLogitPowerDevig(-155, 130);
+    expect(favPair.fairA).toBeGreaterThan(0.5);
+    expect(favPair.fairB).toBeLessThan(0.5);
+    expect(favPair.fairA + favPair.fairB).toBeCloseTo(1, 6);
+
+    let prevA = evenPair.fairA;
+    for (const fav of [-115, -130, -155, -200]) {
+      const nxt = continuousLogitPowerDevig(fav, 100);
+      expect(nxt.fairA).toBeGreaterThan(prevA);
+      prevA = nxt.fairA;
+    }
+
+    expect(devigTotalToFairLineContinuous(-110, -110, 40, 56, 48.0)).toBe(48.0);
   });
 });

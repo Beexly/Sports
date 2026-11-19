@@ -1,0 +1,760 @@
+{
+  "book_id": "26a774f0dc457a95",
+  "source_status": "COMPLETE",
+  "source_note": "Scottish Intercollegiate Guidelines Network (SIGN), Brain injury rehabilitation in adults, SIGN publication no. 130, Edinburgh: SIGN, March 2013 (ISBN 978 1 905813 98 8). The local file is the publisher PDF of the full guideline (3,290,696 bytes; sha256 over str(size)+bytes = 26a774f0dc457a95581de67c20536b46fc0e5239c20800535cfae9a2ffd54135). Extracted text is clean and complete (3,905 lines) with minor OCR artefacts in headers and recommendation icons; all quoted passages were verified as contiguous strings in the extracted text. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "sign_evidence_hierarchy",
+      "name": "Evidence is graded on a fixed hierarchy from 1++ (high quality meta-analyses or RCTs at very low risk of bias) down to 4 (expert opinion)",
+      "verbatim_quote": "High quality meta-analyses, systematic reviews of RCTs, or RCTs with a very low risk of bias",
+      "page": "Key to evidence statements and grades of recommendation (front matter); extracted text line 13",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Study design and risk of bias are reliable proxies for how much a result should move practice",
+        "The hierarchy is applied uniformly across clinical questions"
+      ],
+      "breakdown_regime": "The hierarchy undervalues complex, unblindable interventions whose best achievable design ranks low even when the intervention works; it grades study architecture, not truth directly.",
+      "domain": "evidence methodology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine grades every incoming signal on the same ladder before it may move a projection: replicated randomised evidence at the top, single studies below, expert opinion at the floor, so confidence is computed from study architecture rather than from how loudly a source asserts a claim.",
+        "source_operator": "sign_evidence_hierarchy",
+        "telemetry": "Source type, study design, sample size and risk-of-bias markers for each research input"
+      }
+    },
+    {
+      "primitive_id": "grade_decoupled_from_importance",
+      "name": "The grade of a recommendation encodes strength of evidence only, and explicitly does not encode clinical importance",
+      "verbatim_quote": "The grade of recommendation relates to the strength of the evidence on which the recommendation is based. It does not reflect the clinical importance of the recommendation.",
+      "page": "Key to evidence statements and grades of recommendation (front matter); extracted text line 29",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Users can be trusted to hold effect size and confidence as separate quantities",
+        "A weak-evidence recommendation may still be clinically vital"
+      ],
+      "breakdown_regime": "Decoupling fails when downstream consumers collapse the two axes back into one score; the separation must be preserved at every hand-off or the grade is misread as unimportance.",
+      "domain": "evidence methodology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Impact size and confidence are stored as separate fields for every projection input; a large projected effect with grade D support is weighted and displayed differently from a small effect with grade A support, preventing importance from masquerading as certainty.",
+        "source_operator": "grade_decoupled_from_importance",
+        "telemetry": "Effect estimates paired with evidence grades in the signal store"
+      }
+    },
+    {
+      "primitive_id": "pico_question_framing",
+      "name": "Evidence is gathered by matching systematic searches to a PICO model (population, intervention, comparison, outcome) specified per key question",
+      "verbatim_quote": "Evidence was identified in accordance with standard SIGN methodology, which matches the results of systematic literature searches to a model for each key question that specifies the populations, interventions, comparisons and outcomes (PICO) of interest to each question",
+      "page": "Section 1.4.3; extracted text line 457",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Questions can be specified before results are known",
+        "The four PICO slots are sufficient to define the estimand of a clinical question"
+      ],
+      "breakdown_regime": "PICO framing breaks for questions whose population or outcome cannot be specified in advance, and it inherits any blind spots in the chosen databases and year range (here 1990-2011).",
+      "domain": "evidence methodology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Every research question the engine poses is framed as population, intervention, comparison, outcome before any search or data pull, so retrieval is driven by a specified estimand rather than by whatever data happens to be available.",
+        "source_operator": "pico_question_framing",
+        "telemetry": "Question registry with PICO fields per analysis"
+      }
+    },
+    {
+      "primitive_id": "abi_definition",
+      "name": "Acquired brain injury is defined as brain damage sudden in onset and occurring after birth and the neonatal period, excluding congenital and degenerative causes",
+      "verbatim_quote": "ABI implies damage to the brain that was sudden in onset and occurred after birth and the neonatal period.",
+      "page": "Section 1.3.1; extracted text line 279",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Sudden onset and post-neonatal timing separate ABI from birth injury, congenital abnormality and degenerative disease",
+        "Traumatic and non-traumatic causes (vascular, infection, hypoxic, toxic, metabolic) sit inside one category"
+      ],
+      "breakdown_regime": "The boundary is a convention: slowly evolving insults and mixed degenerative-plus-traumatic cases fall at the edge of the definition and need case-level judgement.",
+      "domain": "clinical definitions",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The ABI boundary is the inclusion rule the engine mirrors when it separates acute injury events from chronic or congenital conditions in player health records, so the two populations are never pooled in one rate.",
+        "source_operator": "abi_definition",
+        "telemetry": "Injury event coding with onset type and aetiology fields"
+      }
+    },
+    {
+      "primitive_id": "tbi_definition",
+      "name": "Traumatic brain injury is a traumatically induced structural injury and/or physiological disruption of brain function caused by an external force, recognised by any of a checklist of clinical signs",
+      "verbatim_quote": "Traumatic brain injury may be defined as a traumatically induced structural injury and/or physiological disruption of brain function as a result of an external force",
+      "page": "Section 1.3.2; extracted text line 291",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "At least one sign (loss of consciousness, amnesia, altered mental state, neurological deficit, intracranial lesion) must be new or worsened immediately after the event",
+        "The external force is the causal agent"
+      ],
+      "breakdown_regime": "Signs are non-specific and can be produced by other causes, so the definition classifies events, not mechanisms; transient signs may leave no measurable trace.",
+      "domain": "clinical definitions",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "TBI is recognised by a checklist of clinical signs rather than a single test; the engine likewise treats injury presence as a multi-sign classification problem where any one of several indicators can trigger the state.",
+        "source_operator": "tbi_definition",
+        "telemetry": "Game and practice incident reports, medical staff designations, imaging results"
+      }
+    },
+    {
+      "primitive_id": "gcs_severity_bands",
+      "name": "Injury severity is banded by Glasgow Coma Score: mild 13-15, moderate 9-12, severe 8 or less",
+      "verbatim_quote": "The most widely used index of injury severity is the Glasgow Coma Score (GCS) which classifies injuries into mild, moderate or severe categories based on level of consciousness post injury",
+      "page": "Section 1.3.3, Table 1; extracted text line 312",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Level of consciousness post injury is the banding variable",
+        "The thresholds 13 and 9 are the operative cut points"
+      ],
+      "breakdown_regime": "GCS is an ordinal consciousness scale, not a measure of damage volume; banding a continuum creates edge cases at 12/13 and 8/9, and the guideline warns the studies it cites do not all use identical severity definitions.",
+      "domain": "clinical definitions",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A single ordinal score is banded into mild, moderate and severe classes with hard thresholds; the engine uses the same pattern when it bands continuous player metrics into availability tiers, while remembering the bands are conventions imposed on a continuum.",
+        "source_operator": "gcs_severity_bands",
+        "telemetry": "Continuous health or performance metrics the engine bands into tiers"
+      }
+    },
+    {
+      "primitive_id": "severity_symptom_discordance",
+      "name": "Severity of symptoms does not correlate perfectly with severity of injury as defined by GCS, so the severity label cannot be read as the patient's symptom state",
+      "verbatim_quote": "It should be noted that severity of symptoms associated with an injury may not correlate perfectly with severity of injury as defined by GCS",
+      "page": "Section 1.3.3; extracted text line 313",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "GCS measures consciousness, not symptom burden",
+        "Patients at different GCS bands can share the same symptoms, differing in duration and disability"
+      ],
+      "breakdown_regime": "Discordance is stated qualitatively; the guideline gives no correlation coefficient, so the size of the mismatch must be estimated from other data.",
+      "domain": "clinical definitions",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The label and the lived state are different variables: the engine must not infer symptom burden, and therefore availability, directly from an injury severity grade, because the two correlate imperfectly.",
+        "source_operator": "severity_symptom_discordance",
+        "telemetry": "Severity designations paired with independent symptom and participation reports"
+      }
+    },
+    {
+      "primitive_id": "absence_of_evidence_rule",
+      "name": "A lack of evidence is not synonymous with evidence of no clinical effect; many questions simply have no evidence base sufficient for a firm recommendation either way",
+      "verbatim_quote": "while a lack of evidence is not synonymous with evidence for no clinical effect, in many cases the evidence base to make firm recommendations either in support or contrary to an intervention is not available",
+      "page": "Section 1.4.2; extracted text line 449",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Untested interventions occupy an unknown state, distinct from disproven ones",
+        "Anecdotal clinical success does not substitute for objective, repeatable measures in an evidence based guideline"
+      ],
+      "breakdown_regime": "The rule cuts both ways: it protects untested interventions from dismissal and also blocks their promotion; it offers no guidance on how long an unknown state should persist.",
+      "domain": "evidence methodology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A missing study is recorded as unknown, not as zero effect; the engine keeps untested signals in an explicit unknown state instead of silently treating absence of evidence as a negative result.",
+        "source_operator": "absence_of_evidence_rule",
+        "telemetry": "Coverage map of which signal families have any direct evidence at all"
+      }
+    },
+    {
+      "primitive_id": "stroke_only_evidence_excluded",
+      "name": "Evidence from stroke-only populations is excluded from this guideline outright, because stroke and non-stroke injury produce different impairment patterns that may respond differently to treatment",
+      "verbatim_quote": "it was decided not to use evidence in this guideline which described only stroke patients in the absence of any other diagnoses",
+      "page": "Section 1.4.3; extracted text line 478",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Mixed populations including some brain injury patients remain admissible where direct evidence is scarce",
+        "Etiology changes the impairment pattern and therefore the treatment response"
+      ],
+      "breakdown_regime": "The exclusion costs statistical power: the stroke literature far outnumbers the non-stroke literature, so the rule trades precision for validity.",
+      "domain": "evidence methodology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Evidence generated in a different population is excluded rather than downweighted when the impairment patterns differ; the engine applies the same transfer veto when a model trained on one league, era or position group is proposed for another.",
+        "source_operator": "stroke_only_evidence_excluded",
+        "telemetry": "Population descriptors attached to every external study or model"
+      }
+    },
+    {
+      "primitive_id": "who_mtbi_operational_definition",
+      "name": "Mild traumatic brain injury is defined by WHO operational criteria: mechanical energy to the head, confusion or loss of consciousness of 30 minutes or less, post-traumatic amnesia under 24 hours, and GCS 13-15, with confounders excluded",
+      "verbatim_quote": "Mild traumatic brain injury is an acute brain injury resulting from mechanical energy to the head from external force.",
+      "page": "Section 3.1; extracted text line 622",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Manifestations must not be due to drugs, alcohol, medications, other injuries, psychological trauma, language barrier or coexisting medical conditions",
+        "Skull fracture or substantive haematoma moves a case out of the mild category (complicated mild injury)"
+      ],
+      "breakdown_regime": "The definition imposes a category on a severity dimension for clinical convenience; cusp cases require separate consideration, and retrospective assessment of post-traumatic amnesia can be unreliable.",
+      "domain": "mild TBI prognosis",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Operational criteria with explicit exclusions define the case; the engine copies this pattern by requiring confounder exclusions before an event is coded as the target condition, so contaminated cases never enter the rate.",
+        "source_operator": "who_mtbi_operational_definition",
+        "telemetry": "Incident records with confounder flags"
+      }
+    },
+    {
+      "primitive_id": "pcs_label_rejected",
+      "name": "The diagnostic term post-concussional syndrome is rejected because it implies a mechanism of neuronal damage that the evidence does not support; a wider formulation of all relevant factors replaces it",
+      "verbatim_quote": "post-concussional syndrome' as a diagnostic term may imply a mechanism of neuronal damage",
+      "page": "Section 3.2; extracted text line 676",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The symptoms are non-specific and occur at similar rates after other physical trauma, chronic pain, chronic fatigue and mood disorders",
+        "Available evidence does not support neuronal damage as the main mechanism; pain and distress may be involved"
+      ],
+      "breakdown_regime": "Retiring the label does not retire the symptoms; clinicians still need a working formulation, and ICD-10 and DSM-IV definitions of the syndrome continue to exist outside this guideline.",
+      "domain": "mild TBI prognosis",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A syndrome label that smuggles in an unsupported mechanism is retired in favour of a wider formulation of all relevant factors; the engine likewise bans labels that imply causation the data do not support and decomposes them into their actual drivers.",
+        "source_operator": "pcs_label_rejected",
+        "telemetry": "Label audit of categorical fields used in projections"
+      }
+    },
+    {
+      "primitive_id": "mtbi_symptoms_settle_three_months",
+      "name": "After mild traumatic brain injury, symptoms remit within two to three months in the overwhelming majority of cases (grade B: patients should be reassured symptoms are benign and likely to settle within three months)",
+      "verbatim_quote": "In the overwhelming majority of cases symptoms will remit within two to three months of injury.",
+      "page": "Section 3.3 (key recommendation in Section 2.1); extracted text line 683",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The determinants of prolonged disability are personal and social factors rather than the injury itself",
+        "Litigation is consistently identified as a poor prognostic factor, and recall bias misattributes pre-existing symptoms to the injury"
+      ],
+      "breakdown_regime": "A small minority has prolonged symptoms; predictors of poor prognosis include persistent physical illness, prior neurological disease, prior head injury, mood and anxiety disorders, motor vehicle accident mechanism and age over 40.",
+      "domain": "mild TBI prognosis",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Most mild cases resolve on a two to three month clock and the persistent minority is explained mainly by personal and social factors; availability projections after head impacts should therefore use a fast-decaying baseline hazard with a fat, psychosocially driven tail.",
+        "source_operator": "mtbi_symptoms_settle_three_months",
+        "telemetry": "Return-to-play timelines, symptom duration reports, prior injury and mood history"
+      }
+    },
+    {
+      "primitive_id": "no_mtbi_cognitive_deficit_beyond_three_months",
+      "name": "In adults there are no MTBI-attributable cognitive deficits beyond three months after injury, except in complicated mild injury with skull fracture or intracranial lesions",
+      "verbatim_quote": "In adults, evidence consistently suggests there are no MTBI-attributable cognitive deficits beyond three",
+      "page": "Section 3.3.2; extracted text line 712",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Routine referral for cognitive (psychometric) assessment after MTBI is not recommended (grade B)",
+        "Complicated MTBI is carved out of the claim"
+      ],
+      "breakdown_regime": "False positives on cognitive testing are a known problem and results may be unreliable without effort testing; the claim is about attributable deficits at group level, not about any individual's test scores.",
+      "domain": "mild TBI prognosis",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Attribution has an expiry date: deficits claimed beyond the horizon the evidence supports are treated as belonging to another cause until proven otherwise, which disciplines how long the engine lets one event explain later performance changes.",
+        "source_operator": "no_mtbi_cognitive_deficit_beyond_three_months",
+        "telemetry": "Longitudinal performance data aligned to injury dates"
+      }
+    },
+    {
+      "primitive_id": "blood_markers_null_result",
+      "name": "No blood chemistry marker has evidence supporting its use as a prognostic tool after mild brain injury (systematic review, evidence level 2++)",
+      "verbatim_quote": "One systematic review identified no evidence to support use of any specific blood chemistry markers",
+      "page": "Section 3.3.7; extracted text line 791",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The null is a systematic-review level result, not a single failed study",
+        "Prognosis after mild injury is instead carried by clinical and psychosocial variables"
+      ],
+      "breakdown_regime": "A null at 2013 evidence does not prove no marker can ever work; it removes the feature family until positive evidence arrives.",
+      "domain": "mild TBI prognosis",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A systematic null result deletes a feature family: no blood chemistry marker earns a place in mild injury prognosis, so the engine removes candidate features with replicated nulls instead of keeping them at low weight forever.",
+        "source_operator": "blood_markers_null_result",
+        "telemetry": "Feature registry with null-result flags"
+      }
+    },
+    {
+      "primitive_id": "early_education_reassurance_effect",
+      "name": "Early, limited educational intervention with reassurance about the lack of brain damage and the high probability of good recovery, plus advice on gradual return to regular activities, reduces long term complaints after MTBI",
+      "verbatim_quote": "reassurance about the lack of brain damage and the high probability of a good recovery, coupled with advice and encouragement on gradual return to regular activities, reduce long term complaints",
+      "page": "Section 3.4.1; extracted text line 805",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Routine intensive assessment and treatment is not additionally beneficial",
+        "Programmes should start as soon as possible, be simple, precise, adaptable and preferably written"
+      ],
+      "breakdown_regime": "The trial base is mixed: of 10 RCTs in two reviews, six showed no benefit and three showed improvement, and the reviews note effectiveness has been previously overstated; the supporting evidence is partly non-randomised.",
+      "domain": "mild TBI treatment",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Information and reassurance are themselves interventions with measurable effects on long term complaints; the engine's analogue is that how uncertainty is communicated changes downstream behaviour, so explanations shipped with projections are part of the intervention, not packaging.",
+        "source_operator": "early_education_reassurance_effect",
+        "telemetry": "Explanation variants paired with subsequent decision and outcome data"
+      }
+    },
+    {
+      "primitive_id": "treadmill_not_preferred",
+      "name": "Patients with TBI receiving gait training should not undergo treadmill training in preference to conventional overground training (grade C); partial body weight supported treadmill training gave no added benefit over conventional gait training",
+      "verbatim_quote": "Patients with TBI receiving gait training should not undergo treadmill training in preference to conventional overground training.",
+      "page": "Section 4.1.1; extracted text line 911",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The comparison is against conventional overground gait training, not against no training",
+        "Evidence comes largely from heterogeneous mixed-diagnosis populations, with one small TBI study favouring conventional training for gait symmetry"
+      ],
+      "breakdown_regime": "Treadmill training is labour intensive to deliver; electromechanical gait devices may still reduce therapist numbers even where outcomes are equal.",
+      "domain": "physical rehabilitation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A more technological delivery mode does not beat the conventional mode it imitates; the engine treats new data feeds and model classes the same way, requiring them to beat the incumbent method on outcomes, not on novelty.",
+        "source_operator": "treadmill_not_preferred",
+        "telemetry": "Head-to-head benchmark results of new methods against incumbents"
+      }
+    },
+    {
+      "primitive_id": "repetitive_task_training",
+      "name": "Repetitive task-oriented activities are recommended for improving functional ability, such as sit-to-stand or fine motor control (grade B), and more intensive rehabilitation shows medium term functional benefits",
+      "verbatim_quote": "Repetitive task-oriented activities are recommended for improving functional ability",
+      "page": "Section 4.1.3; extracted text line 948",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Training is specific to the task being recovered; sit-to-stand retraining improved that task but not exercise capacity",
+        "Intensity is part of the intervention, not a side detail"
+      ],
+      "breakdown_regime": "Benefits are task-bound and medium term; transfer to untrained tasks or capacities is not demonstrated.",
+      "domain": "physical rehabilitation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Improvement comes from repeated practice of the actual target task, not from adjacent generic exercise; the engine's training regime mirrors this by fitting on the exact prediction task and horizon it will be scored on.",
+        "source_operator": "repetitive_task_training",
+        "telemetry": "Task-specific training sets matched to each prediction target"
+      }
+    },
+    {
+      "primitive_id": "fitness_gains_do_not_transfer",
+      "name": "Aerobic and fitness training improves cardiovascular fitness after moderate-severe TBI but the benefits do not translate into improved activity or participation levels",
+      "verbatim_quote": "Benefits in cardiovascular fitness following fitness or aerobic training for people with moderate-severe TBI were noted. However, these 1++ benefits did not translate to improved activity or participation levels.",
+      "page": "Section 4.1.4; extracted text line 960",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fitness training is safe and acceptable in this population",
+        "One large RCT (n=157) raised work rate without improving functional ability"
+      ],
+      "breakdown_regime": "A reduction in depression was also observed, so the null is specific to activity and participation outcomes, not to all outcomes.",
+      "domain": "physical rehabilitation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Gains on a proxy metric do not transfer automatically to the outcome that matters; the engine must validate on participation-level outcomes, because improving an intermediate metric can leave the real target unchanged.",
+        "source_operator": "fitness_gains_do_not_transfer",
+        "telemetry": "Proxy metric movements paired with outcome metric movements"
+      }
+    },
+    {
+      "primitive_id": "spasticity_prevalence_severe_tbi",
+      "name": "Spasticity incidence reaches up to 75 percent in people with severe TBI, and when problematic it is severe and difficult to manage, requiring multifocal multidisciplinary intervention",
+      "verbatim_quote": "Data regarding the prevalence of spasticity post TBI are limited, however incidence rates of up to 75% in people with severe TBI have been reported.",
+      "page": "Section 4.2; extracted text line 1005",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Spasticity does not always require treatment; some adaptive gait patterns rely on it for postural stability",
+        "Pain control and review of posture and seating are first considerations"
+      ],
+      "breakdown_regime": "Prevalence data are limited and the 75 percent figure is an upper reported rate for the severe subgroup, not a population rate.",
+      "domain": "physical rehabilitation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A complication can affect up to three quarters of the severe subgroup while remaining uncommon overall; the engine conditions complication priors on severity strata instead of using population-wide base rates.",
+        "source_operator": "spasticity_prevalence_severe_tbi",
+        "telemetry": "Severity-stratified outcome frequencies"
+      }
+    },
+    {
+      "primitive_id": "casting_benefit_decays",
+      "name": "The benefit of casting for contracture decays rapidly once treatment stops: a 22 degree improvement fell to 11 degrees one day later and had almost completely disappeared at four week follow up",
+      "verbatim_quote": "One day later this effect had decreased to 11 degrees (95% CI, 0 to 21 degrees; p=0.052). The effect had almost completely disappeared at the four-week follow up (mean 2 degrees, 95% CI -13 to 17 degrees; p=0.782).",
+      "page": "Section 4.2.1; extracted text line 1034",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The initial effect was real: mean 22 degrees, 95% CI 13 to 31, p<0.001, versus positioning control (n=26)",
+        "Casts, splints and passive stretching may still be considered where contracture and deformity are progressive (grade C)"
+      ],
+      "breakdown_regime": "Single small trial; the decay profile is for elbow flexion contracture and may differ by joint and by intervention, but the direction (benefits not preserved medium or long term) is reinforced across five systematic reviews.",
+      "domain": "physical rehabilitation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Treatment effects carry decay constants: a large immediate gain was nearly gone four weeks after treatment stopped, so the engine timestamps every intervention effect and decays it rather than treating improvements as permanent state changes.",
+        "source_operator": "casting_benefit_decays",
+        "telemetry": "Intervention dates with serial outcome measurements after cessation"
+      }
+    },
+    {
+      "primitive_id": "bont_focal_spasticity",
+      "name": "Botulinum neurotoxin therapy may be considered to reduce tone and deformity in patients with focal spasticity (grade B), delivered in a multidisciplinary setting",
+      "verbatim_quote": "BoNT may be considered to reduce tone and deformity in patients with focal spasticity.",
+      "page": "Section 4.2.2; extracted text line 1078",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Improvements in joint position and spasticity scores are the demonstrated outcomes",
+        "Physiotherapy, occupational therapy and orthotic inputs accompany the injections"
+      ],
+      "breakdown_regime": "Whether the score improvements are clinically important or cost effective has not been addressed in trials; much use is outside the product licence and the supporting RCTs are small (n=15, n=40, n=60, largely stroke populations).",
+      "domain": "physical rehabilitation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A focal, locally acting intervention can improve a targeted deficit inside a multidisciplinary programme; the engine analogously prefers narrow, well-aimed adjustments to a single weak component over global reweighting when the deficit is localised.",
+        "source_operator": "bont_focal_spasticity",
+        "telemetry": "Component-level error analysis localising projection failures"
+      }
+    },
+    {
+      "primitive_id": "compensation_beats_restitution",
+      "name": "Across cognitive domains, interventions that provide strategies or external aids compensating for an impairment improve everyday functioning more than interventions that aim to restore the impaired process itself",
+      "verbatim_quote": "In most domains, the evidence suggests that the most effective interventions are those that focus on provision of cognitive strategies or external aids that compensate for a cognitive impairment in order to improve everyday functioning. Those interventions that aim to reduce levels of impairment are less effective.",
+      "page": "Section 5.1.1; extracted text line 1247",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Compensation includes external aids (diaries, electronic reminders) and internal strategies (eg visual imagery for verbal memory)",
+        "There is no substantial evidence that repetitive practice improves memory impairment"
+      ],
+      "breakdown_regime": "Domain evidence volumes are small and quality variable even though the overall literature is large; restitution is less effective, not useless, and errorless learning is a cognitive exception for acquiring specific information.",
+      "domain": "cognitive rehabilitation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Working around a deficit beats trying to restore the damaged process directly; the engine applies the same choice architecturally, adding compensatory features and decision rules around a weak submodel instead of endlessly retraining the submodel itself.",
+        "source_operator": "compensation_beats_restitution",
+        "telemetry": "Submodel error profiles and the marginal value of workaround features"
+      }
+    },
+    {
+      "primitive_id": "compensatory_memory_training",
+      "name": "Patients with memory impairment after TBI should be trained in compensatory memory strategies focused on everyday functioning rather than the underlying impairment (grade D); severe impairment gets external compensations only",
+      "verbatim_quote": "Patients with memory impairment after TBI should be trained in the use of compensatory memory strategies with a clear focus on improving everyday functioning rather than underlying memory impairment.",
+      "page": "Section 5.3; extracted text line 572",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Mild-moderate impairment: both external aids and internal strategies may be used",
+        "Electronic aids such as NeuroPage and personal digital assistants have supporting evidence"
+      ],
+      "breakdown_regime": "Grade D signals the recommendation rests on low level evidence and group judgement; effect sizes for individual aids vary and adherence determines real world benefit.",
+      "domain": "cognitive rehabilitation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Training targets everyday functioning, not the underlying impairment score; engine optimisation likewise targets decision quality in real use rather than intermediate benchmark scores.",
+        "source_operator": "compensatory_memory_training",
+        "telemetry": "End-use outcome metrics rather than component scores"
+      }
+    },
+    {
+      "primitive_id": "metacognitive_strategy_training",
+      "name": "Patients with executive deficits should be trained in meta-cognitive strategies for planning, problem solving and goal management in personally relevant functional situations (grade B)",
+      "verbatim_quote": "Patients with TBI and deficits in executive functioning should be trained in meta-cognitive strategies relating to the management of difficulties with planning, problem solving and goal management in personally relevant functional situations.",
+      "page": "Section 5.5; extracted text line 1342",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Two systematic reviews and two RCTs converge on the same direction of effect",
+        "Strategies are trained in functional contexts, not as abstract drills"
+      ],
+      "breakdown_regime": "Treatment does not necessarily restore completely normal executive functioning; gains show on practical tasks and everyday-like tests rather than on normalisation of the faculty.",
+      "domain": "cognitive rehabilitation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Teaching a system to manage its own planning and problem solving improves function in novel situations; the engine's meta-layer, which allocates effort and selects strategies per matchup, is trained the same way, on personally relevant tasks rather than abstract drills.",
+        "source_operator": "metacognitive_strategy_training",
+        "telemetry": "Strategy selection logs with per-situation outcomes"
+      }
+    },
+    {
+      "primitive_id": "holistic_programme_context",
+      "name": "Cognitive interventions in the post-acute setting should be delivered inside a comprehensive/holistic neuropsychological rehabilitation programme run by an interdisciplinary, goal-focused team (grade D)",
+      "verbatim_quote": "In the post-acute setting interventions for cognitive deficits should be applied in the context of a comprehensive/holistic neuropsychological rehabilitation programme.",
+      "page": "Section 5.8; extracted text line 580",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The programme addresses cognitive, emotional and behavioural difficulties together, aimed at participation in meaningful activities",
+        "A systematic review found sufficient evidence to recommend such programmes after moderate or severe TBI"
+      ],
+      "breakdown_regime": "Component attribution is impossible inside a holistic programme: studies cannot identify which elements produce the change, so the recommendation is for the package, not for any ingredient.",
+      "domain": "cognitive rehabilitation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Cognitive interventions only count inside a programme that also handles emotion and behaviour; the engine likewise refuses to ship a signal as a standalone module and evaluates it only inside the full reasoning stack where interactions occur.",
+        "source_operator": "holistic_programme_context",
+        "telemetry": "Ablation results with and without the surrounding stack"
+      }
+    },
+    {
+      "primitive_id": "beta_blockers_for_aggression",
+      "name": "Beta-blockers (propranolol, pindolol) hold the best available evidence for reducing aggressive behaviour after brain injury and may be considered first line for moderate agitation/aggression (grade B)",
+      "verbatim_quote": "There was some evidence that the beta-blockers propranolol and pindolol can reduce aggressive behaviour.",
+      "page": "Section 6.1.2; extracted text line 1459",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Medically remediable causes of agitation (pain, retention, constipation, withdrawal, mood disorder) are excluded before drug treatment",
+        "Drug treatment is individually tailored, started at very low doses, and monitored for adverse effects"
+      ],
+      "breakdown_regime": "The evidence is six RCTs across several agents with very large doses used; there were no included trials of antipsychotics or anticonvulsants, and the review concluded evidence was insufficient for firm recommendations.",
+      "domain": "behavioural rehabilitation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Where evidence is thin, the best-supported option is named honestly as best of a weak field; the engine marks such choices as provisional and monitors them, rather than presenting the least-bad option as established.",
+        "source_operator": "beta_blockers_for_aggression",
+        "telemetry": "Intervention registry with evidence strength per option"
+      }
+    },
+    {
+      "primitive_id": "depression_burden_first_year",
+      "name": "Depression is a major sequela: 53.1 percent of a 559 person cohort met criteria at some point in the year after injury, almost eight times the rate in the general population, with 20-30 percent depressed at any one time",
+      "verbatim_quote": "They found that 53.1% of their sample met criteria for depression at some point in the year after injury, almost eight times the rate in the general population who did not have a brain injury.",
+      "page": "Section 6.2.1; extracted text line 1515",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Disability a year after head injury relates more to psychological disorder than to physical impairment",
+        "Most treatment studies cover mild-moderate injury, limiting generalisability to severe injury"
+      ],
+      "breakdown_regime": "Pharmacological and psychological treatment evidence for post-TBI depression is inconclusive; sertraline is suggested on weak evidence and expert opinion only.",
+      "domain": "behavioural rehabilitation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Over half of a followed cohort met depression criteria within a year, eight times the comparison rate; any long-horizon human system the engine models must carry psychological sequelae as a major state variable, not a footnote.",
+        "source_operator": "depression_burden_first_year",
+        "telemetry": "Longitudinal wellbeing and participation indicators after injury events"
+      }
+    },
+    {
+      "primitive_id": "slt_referral_for_communication",
+      "name": "Patients with communication deficits post TBI should be referred to speech and language therapy for assessment and management (grade D), despite the evidence base being too weak to recommend specific interventions",
+      "verbatim_quote": "Patients with communication deficits post TBI should be referred to speech and language therapy for assessment and management of their communication impairments.",
+      "page": "Section 7.1.8; extracted text line 1800",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Low quality evidence is not interpreted as evidence of no clinical value",
+        "Most communication evidence is extrapolated from stroke populations and may not transfer because TBI adds cognitive impairment"
+      ],
+      "breakdown_regime": "No specific communication intervention can be recommended; the referral recommendation is a routing decision under uncertainty, not an efficacy claim.",
+      "domain": "communication rehabilitation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The defensible action under weak evidence is referral to the specialist who can assess properly; the engine mirrors this by routing low-confidence cases to a deeper analysis path instead of forcing a projection.",
+        "source_operator": "slt_referral_for_communication",
+        "telemetry": "Confidence scores triggering escalation to deeper review"
+      }
+    },
+    {
+      "primitive_id": "instrumental_dysphagia_assessment",
+      "name": "Instrumental assessment (videofluoroscopy or FEES) diagnoses pharyngeal stage swallowing problems including aspiration and avoids silent aspiration risk that bedside assessment alone can miss",
+      "verbatim_quote": "Instrumental assessment allows diagnosis of pharyngeal stage swallowing problems including aspiration. It therefore allows more informed decision making about feeding and therapy, whilst helping to avoid the risk of silent aspiration, compared with bedside assessment alone.",
+      "page": "Section 7.2.1; extracted text line 1812",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Dysphagia incidence post ABI is estimated at 25 to 78 percent",
+        "Instrumental assessment is indicated where bedside findings suggest pharyngeal problems, where risk outweighs benefit, or where bedside evaluation cannot support an adequate therapy plan (grade D)"
+      ],
+      "breakdown_regime": "Direct comparative outcome evidence in TBI is limited to small non-comparative studies; videofluoroscopy carries radiation exposure and FEES is invasive, and both have resource constraints.",
+      "domain": "communication and swallowing",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "When a cheap bedside test can miss a dangerous hidden failure (silent aspiration), an instrumental test is warranted; the engine applies the same rule, escalating to expensive direct measurement when the cheap proxy has a known blind spot with high downside.",
+        "source_operator": "instrumental_dysphagia_assessment",
+        "telemetry": "Proxy failure modes with cost-of-miss estimates"
+      }
+    },
+    {
+      "primitive_id": "vr_return_to_work_effect",
+      "name": "Vocational rehabilitation speeds return to work: a synthesis of 26 studies (n=3,688) found mean adjusted successful return to work of 71 percent with VR versus 47 percent without",
+      "verbatim_quote": "A quantitative synthesis of 26 studies (n=3,688) which used a wide range of interventions indicated that patients who received VR returned to work quicker than patients who had no VR (mean percentage successful 3 adjusted return to work 71% v 47%).",
+      "page": "Section 8.2; extracted text line 1911",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Return to work is the most significant marker of return to pre-morbid function",
+        "Most evidence is from the US, Canada, Australia and New Zealand, so funding and legislation differences limit generalisation to Scotland"
+      ],
+      "breakdown_regime": "The wider VR evidence is scattered and inconclusive, return to work rates across studies range from 20 to 90 percent, and no recommendation on approach or intensity could be made.",
+      "domain": "vocational rehabilitation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Supported return to the real target activity beat no intervention by 24 percentage points on adjusted success; the engine treats graded return to full duty as an intervention with its own effect size when projecting post-injury performance ramps.",
+        "source_operator": "vr_return_to_work_effect",
+        "telemetry": "Return-to-work and return-to-play progression records"
+      }
+    },
+    {
+      "primitive_id": "vs_misdiagnosis_rate",
+      "name": "Up to 40 percent of patients considered to be in a chronic or persistent vegetative state actually show behavioural responses consistent with the minimally conscious state, indicating higher awareness and rehabilitation potential",
+      "verbatim_quote": "two studies which found that up to 40% of patients considered to be in a chronic or persistent vegetative state were actually demonstrating behavioural responses consistent with the MCS",
+      "page": "Section 9 (introduction); extracted text line 1971",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Reliable differentiation of disordered consciousness states requires close monitoring",
+        "The misclassified group has materially different prognosis and rehabilitation potential"
+      ],
+      "breakdown_regime": "The figure comes from two studies of referred, chronic populations; it is a warning about label quality in exactly the setting where labels drive life-sustaining treatment decisions.",
+      "domain": "disorders of consciousness",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Up to 40 percent of chronic vegetative labels were wrong on careful reassessment; the engine treats every consequential status label in its feeds as carrying a measured misclassification rate and re-derives critical states from behaviour-level data where possible.",
+        "source_operator": "vs_misdiagnosis_rate",
+        "telemetry": "Label audit samples comparing feed labels against gold-standard review"
+      }
+    },
+    {
+      "primitive_id": "vs_permanence_thresholds",
+      "name": "Permanence of the vegetative state may be raised only after more than 12 months following traumatic brain injury, or more than three months after non-traumatic injury; after that point recovery of consciousness is highly improbable but not impossible",
+      "verbatim_quote": "It has been proposed that the issue of permanence of the VS may be raised when a patient has remained in the VS for more than 12 months after a traumatic brain injury and more than three months after a brain injury of non-traumatic cause",
+      "page": "Section 9.1.1; extracted text line 1997",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Diagnosis of vegetative state itself requires a minimum of one month post injury and a full criteria set",
+        "Thresholds are cause-specific because recovery trajectories differ by mechanism"
+      ],
+      "breakdown_regime": "The thresholds are proposals from consensus criteria, not measurements; late recoveries, while highly improbable, are documented as possible.",
+      "domain": "disorders of consciousness",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Irreversibility is only declared after cause-specific time thresholds (12 months traumatic, three months non-traumatic); the engine likewise refuses to mark any state permanent before a mechanism-specific waiting period has elapsed.",
+        "source_operator": "vs_permanence_thresholds",
+        "telemetry": "State duration clocks with cause-specific thresholds"
+      }
+    },
+    {
+      "primitive_id": "crsr_assessment_standard",
+      "name": "The Coma Recovery Scale - Revised should be used to assess patients in states of disordered consciousness (grade B); competing scales carry moderate reservations over reliability or criterion validity",
+      "verbatim_quote": "The Coma Recovery Scale - Revised should be used to assess patients in states of disordered consciousness.",
+      "page": "Section 9.2; extracted text line 2047",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "CRS-R is usable with only minor reservations (unproven criterion validity)",
+        "Clinicians need training in administering disorders of consciousness tools"
+      ],
+      "breakdown_regime": "Even the mandated instrument has unproven criterion validity; standardisation buys comparability, not certainty.",
+      "domain": "disorders of consciousness",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "One standardised instrument is mandated for a high-stakes, error-prone assessment; the engine similarly fixes a single reference measurement protocol for each critical state so scores are comparable across time and sources.",
+        "source_operator": "crsr_assessment_standard",
+        "telemetry": "Assessment protocol identifiers attached to every status record"
+      }
+    },
+    {
+      "primitive_id": "amantadine_rate_not_endpoint",
+      "name": "Amantadine 200-400 mg/day speeds recovery of consciousness after severe TBI (n=184 RCT) but does not raise the endpoint: during washout the advantage disappeared and groups did not differ at six weeks",
+      "verbatim_quote": "The authors concluded that a dosage of 200-400 mg of amantadine can be used safely in patients following severe traumatic brain injury and may facilitate faster recovery of behaviours consistent with improved conscious level.",
+      "page": "Section 9.3; extracted text line 2091",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Both groups improved during the four week treatment period on the CRS-R; the active group improved faster",
+        "No increased risk of adverse side effects was found at this dosage"
+      ],
+      "breakdown_regime": "Rate and endpoint must not be conflated: by six weeks there was no significant between-group difference, so the claim is acceleration, not better final outcome; wider pharmacological evidence in VS/MCS rests on small case series.",
+      "domain": "disorders of consciousness",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An intervention can steepen the recovery curve without raising its endpoint, since the advantage disappeared after washout; the engine distinguishes rate effects from level effects whenever it models a return timeline.",
+        "source_operator": "amantadine_rate_not_endpoint",
+        "telemetry": "Serial recovery measurements during and after intervention windows"
+      }
+    },
+    {
+      "primitive_id": "specialist_mdt_early_intensive",
+      "name": "For optimal outcomes, higher intensity rehabilitation featuring early intervention should be delivered by specialist multidisciplinary teams (grade B); early rehabilitation is associated with shorter stay, higher discharge cognitive levels and better FIM scores",
+      "verbatim_quote": "For optimal outcomes, higher intensity rehabilitation featuring early intervention should be delivered by specialist multidisciplinary teams.",
+      "page": "Section 10.1 (key recommendation in Section 2.3); extracted text line 590",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Intensity is defined inconsistently across studies (duration, volume or frequency), so no threshold dose can be recommended",
+        "One RCT (n=68) found most patients tolerate more than two hours of therapy per day after week two, with early gains that did not change length of stay"
+      ],
+      "breakdown_regime": "Direct randomised evidence for specialist versus non-specialist units is limited by ethics; much support comes from reviews dominated by stroke populations and from observational data.",
+      "domain": "service delivery",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Earlier, more intensive input from a coordinated specialist team is the service-level effect with grade B support; the engine's operations mirror this by front-loading analysis effort on the highest-uncertainty cases rather than spreading it evenly.",
+        "source_operator": "specialist_mdt_early_intensive",
+        "telemetry": "Effort allocation logs against case uncertainty"
+      }
+    },
+    {
+      "primitive_id": "telerehab_no_extrapolation",
+      "name": "Telerehabilitation results from other conditions cannot be assumed to transfer to brain injury: younger TBI participants did worse than older stroke participants at learning a telemedicine intervention despite presumed digital familiarity",
+      "verbatim_quote": "It may be unsafe to assume that telerehabilitation strategies shown to be effective in other conditions could be extrapolated to be effective in patients with a brain injury.",
+      "page": "Section 10.3.2; extracted text line 2380",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Many brain injury patients have difficulties with new learning and concentration that interact with the delivery technology itself",
+        "Evidence from populations without a TBI majority was excluded from this section"
+      ],
+      "breakdown_regime": "The positive trial evidence is inconsistent: a larger multicentre replication of a positive telephone counselling RCT found no benefit and no dose-response effect.",
+      "domain": "service delivery",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A delivery channel validated in one population fails in another because the users' learning profile interacts with the channel; the engine tests every new delivery or interface change on the actual target population instead of importing validation from elsewhere.",
+        "source_operator": "telerehab_no_extrapolation",
+        "telemetry": "Population-specific usability and outcome tests for delivery channels"
+      }
+    },
+    {
+      "primitive_id": "planned_discharge_as_intervention",
+      "name": "Planned discharge from inpatient rehabilitation to home provides beneficial outcomes and should be an integrated part of treatment programmes (grade D), with pre-discharge, discharge and post-discharge phases",
+      "verbatim_quote": "Planned discharge from inpatient rehabilitation to home for patients who have experienced an ABI provides beneficial outcomes and should be an integrated part of treatment programmes.",
+      "page": "Section 10.4.1 (key recommendation in Section 2.3); extracted text line 594",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Planned discharge is associated with improved knowledge of disability, functional status, ADL scores and psychological re-integration, and slightly decreased mortality",
+        "Absence of planned discharge is associated with increased carer and patient stress and poorer community integration"
+      ],
+      "breakdown_regime": "The evidence base is limited by the ethics of randomising discharge; much randomised evidence comes from stroke studies, confirmed by observational brain injury studies.",
+      "domain": "service delivery",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The transition itself is an intervention: planned handover to the next setting improves outcomes independent of the treatment that preceded it; the engine treats every handoff between pipeline stages as a designed, checklisted step whose quality is measured, not an afterthought.",
+        "source_operator": "planned_discharge_as_intervention",
+        "telemetry": "Handoff completeness checklists and downstream error rates"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "26a774f0dc457a95-t1",
+      "think": "This guideline is SIGN 130, Brain injury rehabilitation in adults, published by the Scottish Intercollegiate Guidelines Network in March 2013 as the post-acute companion to SIGN 110, which covered only the first 72 hours after head injury. Its object is not a single treatment but an entire care pathway: how adults over 16 should be assessed and rehabilitated after acquired brain injury across physical, cognitive, behavioural, communicative and vocational domains, and how the services delivering that care should be organised. Understanding the work means understanding two machines that run in parallel. The first is an evidence machine. Each clinical question is framed in PICO form, population, intervention, comparison and outcome, and a systematic search of Medline, Embase, Cinahl, PsycINFO and the Cochrane Library for 1990 to 2011 is matched against that frame. Two reviewers appraise each paper with standard SIGN checklists. Evidence is then graded on a hierarchy that runs from 1++ for high quality meta-analyses and randomised trials at very low risk of bias down to 4 for expert opinion, and recommendations receive grades A to D that encode the strength of the supporting evidence while explicitly not encoding clinical importance. Where evidence is absent but practice must still be guided, the group issues good practice points and labels them as experience rather than evidence. The second machine is a clinical one, and its logic runs domain by domain. For mild traumatic brain injury the central finding is a natural history: non-specific symptoms are common, are not specific to brain injury, occur at similar rates after other trauma, and remit within two to three months in the overwhelming majority, so the first-line treatment is calibrated reassurance plus advice on gradual return to activity, with litigation standing out as a consistently identified poor prognostic factor and no MTBI-attributable cognitive deficit demonstrable beyond three months in uncomplicated cases. For physical rehabilitation the load-bearing findings are that repetitive task-specific practice improves functional ability, that more intensive rehabilitation yields medium term functional gains, that treadmill training should not displace overground gait training, that fitness gains do not automatically transfer to activity and participation, and that physical treatment effects decay rapidly once treatment stops, a 22 degree contracture improvement from casting effectively gone by four weeks. For cognition the organising result is that compensation beats restitution: strategies and external aids that improve everyday functioning outperform repetitive practice aimed at the impairment itself, errorless learning helps people with moderate to severe memory impairment acquire specific information, and metacognitive strategy training improves executive functioning in personally relevant situations, all of it delivered inside comprehensive holistic programmes rather than as isolated drills. For behaviour the sequence matters: exclude medically remediable causes of agitation first, then treat, with beta-blockers holding the best, still thin, pharmacological evidence for aggression. For disorders of consciousness the work is dominated by measurement error: up to 40 percent of patients labelled vegetative are actually minimally conscious, so a standardised instrument, the Coma Recovery Scale Revised, is mandated, vegetative state permanence is only raised after 12 months for traumatic and three months for non-traumatic causes, and amantadine at 200 to 400 milligrams per day speeds recovery of consciousness without raising the final endpoint, since the advantage washed out after treatment stopped. Around these domains sits a service layer: higher intensity rehabilitation delivered early by specialist multidisciplinary teams, planned discharge treated as an intervention in its own right, community rehabilitation that still produces gains many years after injury, and telerehabilitation that cannot simply be extrapolated from other conditions because brain injured patients learn new technology differently. The methodological chapters are not boilerplate; they are part of the machinery. Rehabilitation interventions usually cannot be blinded, because teaching, behaviour change and environmental manipulation are visible to patient and therapist alike. Outcomes are multidimensional, spanning impairment, activity and participation, and the goals that define success vary across participants, so a single primary outcome may be impossible or inappropriate. Randomised trials face ethical limits where multidisciplinary rehabilitation is already standard care, and observational studies carry selection bias that case-mix adjustment does not fully remove. The literature therefore leans on single-case designs and small series, which the guideline neither dismisses nor over-trusts: they are ranked low in the hierarchy yet recognised as optimal for exploring new treatments and for understanding why some patients respond to a therapy of known average effectiveness while others do not. Meta-analysis is permitted only where populations, interventions, outcomes and designs are consistent enough to pool, and long ordinal outcome scales resist both continuous treatment and dichotomisation. The guideline also polices its own extrapolations: mixed populations that include some patients with brain injury are admissible because direct evidence is scarce, but studies of stroke-only populations are excluded outright, because stroke and non-stroke injury produce different impairment patterns that may respond differently to the same treatment. What this changes for any reasoning system that consumes it is discipline about confidence. Claims arrive with grades, horizons and populations attached; null results, such as the absence of any prognostic blood marker after mild injury, are first-class findings that veto whole feature families; effects carry decay constants; labels carry measured misclassification rates; and severity scores are shown to be imperfect proxies for symptom burden, so a single index must never be read as the state of the patient. Where the work breaks is equally clear. Its evidence window closes in 2011, many recommendations rest on grade D evidence or consensus, the underlying trials are small and heterogeneous, blinding is structurally impossible for most rehabilitation interventions, and its service recommendations assume a Scottish NHS context that does not transfer automatically. It is a map of what was known, graded honestly, not a guarantee of what works.",
+      "retrocausal_genealogy": "The guideline descends from the evidence-based medicine movement as institutionalised by SIGN, a collaborative network of clinicians, other healthcare professionals and patient organisations that is part of Healthcare Improvement Scotland and works to a standard methodology codified in SIGN 50, the guideline developer's handbook. It is explicitly a companion document: SIGN 110 governed the first 72 hours after head injury, and SIGN 130 takes over from the post-acute period onward, borrowing discharge and dysphagia material from the stroke guidelines SIGN 118 and SIGN 119 and assessment synthesis from the Canadian ERABI review of moderate to severe acquired brain injury rehabilitation. Its evidence window, 1990 to 2011, and its multidisciplinary development group, chaired from Queen Margaret University and including a carer member, fix its lineage in time and in authorship.",
+      "theory_of_mind": "The development group models its reader as a practising clinician who must act under uncertainty and cannot wait for perfect evidence. The statement of intent insists the guideline is not a standard of care and that final judgement rests with the professional in discussion with the patient, which means the authors expect reasoning, not compliance. They also model the patient as an agent rather than a substrate: goal setting works better when patients and families are inside it, information must be supplied in formats matched to communication ability, and reassurance itself is treated as an active intervention in mild injury. Underneath sits a model of the domain as irreducibly individual, where heterogeneity is the normal case and standardisation is the exception that must justify itself.",
+      "cross_layer_veto": "Several findings in this guideline veto inferences that other layers might want to draw. The GCS severity label vetoes symptom-based reasoning, because symptom severity does not correlate perfectly with injury severity as scored. The evidence grade vetoes confidence inflation: a grade D recommendation or a good practice point must not be promoted into a fact downstream. The stroke-only exclusion vetoes cross-population transfer of treatment effects, and the telerehabilitation analysis vetoes extrapolating digital delivery results from other conditions to brain injured users. The rejection of the post-concussional syndrome label vetoes mechanism claims built on a diagnostic name, and the 40 percent vegetative state misdiagnosis rate vetoes any downstream decision that treats a consciousness label as ground truth without standardised reassessment."
+    }
+  ],
+  "universal_lens": "Read generally, this guideline is a template for converting a messy, heterogeneous, partly unblindable evidence base into auditable action rules without lying about confidence. Its moves are portable to any domain where interventions are complex and individual: frame questions before searching, grade evidence separately from importance, publish null results as findings, attach time horizons and populations to every claim, measure how fast effects decay after treatment stops, quantify how often your own labels are wrong, and state plainly where judgement replaces evidence. Any field that must act before its science is finished can run the same machinery.",
+  "gsi_mapping": "The Galaxy Sports Institute takes from this work a curriculum-grade model of how recovery science should be taught and audited. The evidence hierarchy and the separation of evidence strength from clinical importance give the Institute a rubric for grading every claim it teaches about concussion and brain injury. The rehabilitation findings supply content: compensation before restitution, task-specific repetitive practice, intensity with early starts, and honest decay curves for physical interventions. The prognosis material, symptom resolution inside three months for most mild injuries and the personal and social drivers of the persistent minority, gives the Institute a defensible baseline for return-to-learn and return-to-play education that resists both alarmism and dismissal.",
+  "gse_mapping": "The Galaxy Sports Edge engine takes reasoning constraints rather than plays. Player availability modelling inherits a natural-history prior: most mild brain injury symptoms settle within two to three months, and persistence is driven mainly by personal, social and psychological factors rather than injury severity, so return timelines should be distributions with wide tails, not points. The 40 percent vegetative state misdiagnosis rate becomes a general label-noise prior for any status feed the engine consumes. The null blood-marker result vetoes biomarker feature families after mild injury. Casting decay supplies a template for effect half-lives after any intervention stops. And the grade system maps directly onto signal weighting: engine inputs should carry an evidence grade that is stored separately from the size of their projected impact."
+}

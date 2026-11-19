@@ -14,6 +14,7 @@ describe("loadAutonomyPosture", () => {
     expect(p.safeCronTargets).toContain("/api/cron/refresh-odds");
     expect(p.safeCronTargets).toContain("/api/cron/generate-drafts");
     expect(p.safeCronTargets).toContain("/api/cron/calibration-metrics");
+    expect(p.safeCronTargets).toContain("/api/cron/compound-fabric-audit");
   });
 
   it("enables execute only when AUTONOMY_EXECUTE=true", () => {

@@ -1,0 +1,778 @@
+{
+ "book_id": "7b866135c1377aec",
+ "source_status": "COMPLETE",
+ "source_note": "Davis MW (senior editor), Borden Institute, US Army Medical Department Center and School, Fort Sam Houston. Combat Medic Specialist Fieldcraft: Fieldcraft II, First Edition, 2023 (Part 3 of the Combat Medic Specialist Fieldcraft series). LCCN 2023008581; ISBN 9781737131113. Chapters 22 to 30: head injuries and TBI, ocular injuries, abdominal trauma, burns, musculoskeletal trauma, casualty triage, suicide prevention, humanitarian and legal standards in war, environmental threats. The extracted text interleaves the printed two-column layout mid-sentence; every verbatim quote in this artifact was proven as a contiguous substring of the extracted text under the verifier normalization (whitespace collapse, dehyphenation, ligature and quote normalization). Glossary and Check on Learning answer sections are single column and quote cleanly; several body passages that the interleave breaks mid-phrase (the 468,424 count sentence pair, the hypoxia plus hypotension mortality sentence, the Hextend cap) are used only in prose fields, never as verbatim quotes.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "tbi_burden_landstuhl",
+   "name": "TBI was diagnosed in about 22 percent of surviving combat casualties from Iraq and Afghanistan who were treated at Landstuhl Regional Medical Center, and the actual percentage is believed to be higher",
+   "verbatim_quote": "TBI was diagnosed in about 22% of surviving combat casualties from Iraq and Afghanistan who were treated at Landstuhl Regional Medical Center, although the actual percentage is believed to be higher.",
+   "page": "Chapter 22, Introduction (printed p. 1); text line 547",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Denominator is surviving combat casualties treated at Landstuhl Regional Medical Center, not all deployed personnel",
+    "The chapter itself flags the 22 percent as an undercount of the true share"
+   ],
+   "breakdown_regime": "Does not transfer to civilian trauma populations or to casualties who died before reaching care; it is a rate inside an evacuated survivor cohort",
+   "domain": "traumatic brain injury",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A base rate with an explicit denominator: any screening or triage system must carry the cohort definition with the rate, because the same numerator means different things against different denominators",
+    "source_operator": "cohort_base_rate",
+    "telemetry": "rate value, cohort definition, diagnosis window, and cumulative count are logged with the primitive"
+   }
+  },
+  {
+   "primitive_id": "tbi_primary_secondary_injury",
+   "name": "Primary injury is the direct mechanical damage at impact (for example bruising of brain tissue); secondary injury is the delayed cascade that follows, such as edema and increased intracranial pressure",
+   "verbatim_quote": "bruising of brain tissue (primary injury), followed by edema and increased ICP (secondary injury)",
+   "page": "Chapter 22, Pathophysiology (printed p. 3); text line 641",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The initial mechanical event cannot be undone by field care",
+    "Secondary processes evolve over minutes to hours and are the part field care can influence"
+   ],
+   "breakdown_regime": "Breaks down when the primary injury is immediately lethal; also blurs in diffuse axonal injury where the cascade and the impact damage are hard to separate in the field",
+   "domain": "traumatic brain injury",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Two-phase damage model: an irreversible impulse term plus a controllable drift term. Intervention value concentrates entirely in the drift term, so monitoring cadence should be set by the drift rate, not by the size of the initial impact",
+    "source_operator": "impulse_plus_drift_decomposition",
+    "telemetry": "phase labels and example secondary processes are carried so downstream reasoning can separate fixed damage from evolving damage"
+   }
+  },
+  {
+   "primitive_id": "mild_tbi_criteria",
+   "name": "Mild TBI category bounds: confusion or disorientation lasting less than 24 hours, loss of consciousness for up to 30 minutes, and memory loss lasting less than 24 hours",
+   "verbatim_quote": "confusion or disorientation lasting less than 24 hours, • loss of consciousness for up to 30 minutes, and • memory loss lasting less than 24 hours.",
+   "page": "Chapter 22, Types of TBI (printed p. 4); text line 731",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Durations are casualty or witness reported and then classified against fixed thresholds",
+    "The same passage defines moderate and severe bands with longer durations on each axis"
+   ],
+   "breakdown_regime": "Thresholds are classification conventions, not biological discontinuities; a casualty just under a bound is managed by symptoms and trajectory, not by the label alone",
+   "domain": "traumatic brain injury",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A three-axis threshold classifier: each axis is a duration, each category is a box in that duration space. Any multi-axis severity grader has the same structure and the same edge behavior at the box walls",
+    "source_operator": "duration_box_classifier",
+    "telemetry": "the three duration bounds are stored as numbers with units so the classifier can be re-derived, not just quoted"
+   }
+  },
+  {
+   "primitive_id": "pupil_asymmetry_threshold",
+   "name": "A difference of greater than 1.0 mm in pupil size is considered abnormal, as is a sluggish or nonreactive pupil",
+   "verbatim_quote": "A difference of greater than 1.0 mm in pupil size is considered abnormal, as is a sluggish or nonreactive pupil.",
+   "page": "Chapter 22, Assessment of Head Trauma and Detailed Physical Exam (printed pp. 6 and 17)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Comparison is between the casualty's own two pupils under the same lighting",
+    "A reactivity abnormality counts even when sizes are equal"
+   ],
+   "breakdown_regime": "Medications, direct eye trauma, and pre-existing anisocoria can produce a difference without raised intracranial pressure; the sign is a trigger for escalation, not a diagnosis by itself",
+   "domain": "traumatic brain injury",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A paired-sensor asymmetry alarm: two matched channels are differenced and an absolute tolerance of 1.0 mm separates noise from signal. The same differencing pattern detects drift in any paired measurement",
+    "source_operator": "paired_channel_difference_alarm",
+    "telemetry": "tolerance value and unit are stored so the alarm threshold is auditable"
+   }
+  },
+  {
+   "primitive_id": "gcs_deterioration_alarm",
+   "name": "A Glasgow Coma Scale score that deteriorates by more than 2 points is a significant finding marking high risk of an ongoing pathologic process such as increased intracranial pressure",
+   "verbatim_quote": "A GCS score that deteriorates by more than 2 points is a significant finding",
+   "page": "Chapter 22, Assessment of Head Trauma (printed p. 6); text line 820",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "GCS is scored repeatedly during assessment and transport, so a delta exists to observe",
+    "The scale runs from a minimum of 3 to a maximum of 15"
+   ],
+   "breakdown_regime": "A single low score without a trend is a different signal than a falling score; sedation, intoxication, and intubation (scored with a T suffix) distort the delta",
+   "domain": "traumatic brain injury",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A rate-of-change alarm layered on a bounded ordinal scale: the derivative, not the level, carries the escalation signal. Bounded scales compress at the floor and ceiling, so the same 2 point drop means more mid-scale than at the edges",
+    "source_operator": "bounded_scale_derivative_alarm",
+    "telemetry": "delta threshold of 2 points is stored with the scale bounds so trend logic can be reproduced"
+   }
+  },
+  {
+   "primitive_id": "mace_origin",
+   "name": "The Military Acute Concussion Evaluation (MACE) was developed by the Defense and Veterans Brain Injury Center to evaluate a casualty for concussion; the updated MACE 2 adds vestibular and ocular motor screening",
+   "verbatim_quote": "The MACE was developed by the Defense and Veterans Brain Injury Center to evaluate a casualty",
+   "page": "Chapter 22, MACE 2 (printed p. 7); text line 904",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Provenance is institutional: a named defense center owns the instrument",
+    "First distributed in 2006 and updated in 2018 per the same chapter"
+   ],
+   "breakdown_regime": "The instrument is validated for acute military concussion evaluation, not for chronic symptom tracking or civilian sideline use without adaptation",
+   "domain": "traumatic brain injury",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Instrument provenance as a first-class field: who built the test and when it was revised determines how much trust a score carries and which version produced it",
+    "source_operator": "instrument_provenance_record",
+    "telemetry": "developer, original year, and revision year are retained alongside any score the instrument produces"
+   }
+  },
+  {
+   "primitive_id": "mace_mandatory_evaluation_radius",
+   "name": "Mandatory concussion evaluation triggers include any service member within 50 m of a blast, inside or outside a structure, plus vehicle blast, collision, or rollover involvement, a direct blow to the head, and command direction",
+   "verbatim_quote": "any service member within 50 m of a blast (inside or outside);",
+   "page": "Chapter 22, Requirements for MACE 2 (printed p. 8); text line 958",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The trigger is exposure based, not symptom based: evaluation is mandatory even without visible injury",
+    "A 24 hour rest period follows the mandated evaluation"
+   ],
+   "breakdown_regime": "A distance cutoff is a screening convenience; blast physics do not stop at 50 m, so symptoms beyond the radius still warrant evaluation on clinical judgment",
+   "domain": "traumatic brain injury",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An exposure-radius screening rule: a cheap geometric test decides who enters the expensive evaluation queue. Recall is bought with radius; precision is recovered by the evaluation itself",
+    "source_operator": "exposure_radius_screen",
+    "telemetry": "radius value and unit are stored, and the rule is logged as exposure triggered rather than symptom triggered"
+   }
+  },
+  {
+   "primitive_id": "voms_vor_protocol",
+   "name": "Vestibular ocular reflex testing in the MACE 2 rotates the head horizontally at 180 beats per minute through 20 degrees to each side, performed 10 times, with symptoms recorded 10 seconds after the test",
+   "verbatim_quote": "Rotation = 180 beats per minute (bpm). Perform 10 times.",
+   "page": "Chapter 22, MACE 2 card, VOMS section; text line 1528",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The stimulus is standardized: fixed tempo, fixed amplitude, fixed repetitions",
+    "Symptom provocation is scored, not just observed abnormality"
+   ],
+   "breakdown_regime": "Neck injury, severe nausea, or inability to fixate on the target invalidates the stimulus; a deferred result is recorded rather than a forced one",
+   "domain": "traumatic brain injury",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A calibrated stimulus-response probe: hold the input waveform constant so any change in response is attributable to the system under test. This is the same logic as a fixed test signal in any measurement discipline",
+    "source_operator": "fixed_stimulus_response_probe",
+    "telemetry": "tempo, amplitude, repetition count, and post-test scoring delay are stored as the stimulus specification"
+   }
+  },
+  {
+   "primitive_id": "morphine_contraindication_tbi",
+   "name": "Morphine is not recommended in suspected brain injury: respiratory depression and carbon dioxide retention can vasodilate and raise intracranial pressure, and its effects can mask pupil response",
+   "verbatim_quote": "The respiratory depressant effects of morphine and its potential to cause carbon dioxide retention may cause vasodilation, which increases",
+   "page": "Chapter 22, treatment notes (printed p. 17)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The objection is twofold: a physiological harm (raised ICP) and a measurement harm (masked pupils)",
+    "The caution applies to suspected brain injury, not to all analgesia in all casualties"
+   ],
+   "breakdown_regime": "Pain control still matters for other injury patterns; the veto is specific to the head injury context and to agents that cloud the neurological exam",
+   "domain": "traumatic brain injury",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A dual veto on an intervention: it is rejected both because it worsens the state and because it corrupts the sensor used to track the state. Interventions that blind the monitoring channel deserve a stronger veto than their direct harm alone suggests",
+    "source_operator": "state_and_sensor_dual_veto",
+    "telemetry": "both veto grounds are recorded separately so a future agent change can re-test each one"
+   }
+  },
+  {
+   "primitive_id": "tbi_urgent_surgical_evacuation",
+   "name": "A casualty with head injuries will require transport to a medical treatment facility with neurosurgical capabilities, and the casualty is an Urgent Surgical priority",
+   "verbatim_quote": "The casualty will require transport to a medical treatment facility with neurosurgical capabilities. The casualty is an Urgent Surgical priority.",
+   "page": "Chapter 22, Prepare for Transport (printed p. 18); text line 1735",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Definitive treatment for surgical head injury exists only at a neurosurgical facility",
+    "Priority category drives transport ordering across casualties"
+   ],
+   "breakdown_regime": "Evacuation priority competes with other Urgent Surgical casualties; tactical and weather constraints can delay movement regardless of category",
+   "domain": "traumatic brain injury",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Priority as a routing label: the category does not treat the casualty, it reorders the queue so the scarcest resource (surgical capability) is reached in time. The label must travel ahead of the casualty to be useful",
+    "source_operator": "priority_routing_label",
+    "telemetry": "category and its stated reason are transmitted before arrival, mirroring a header that precedes a payload"
+   }
+  },
+  {
+   "primitive_id": "ocular_foreign_body_shield",
+   "name": "A superficial ocular foreign body such as dirt or dust is managed by irrigating the eye and covering it with a rigid eye shield",
+   "verbatim_quote": "irrigate the eye and cover it with a rigid eye shield.",
+   "page": "Chapter 23, Foreign Bodies; text line 2187",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The foreign body is superficial, not embedded or penetrating",
+    "The shield protects without applying pressure to the globe"
+   ],
+   "breakdown_regime": "Embedded, penetrating, or chemical exposures follow different rules; a rigid shield is improvised from available material when the standard shield is absent",
+   "domain": "ocular trauma",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Remove the irritant, then isolate the sensor: irrigation clears the channel and the rigid shield prevents further mechanical input while adding no pressure of its own",
+    "source_operator": "clear_then_isolate",
+    "telemetry": "the pairing of a clearing action with a zero-pressure protective action is stored as one procedure"
+   }
+  },
+  {
+   "primitive_id": "ocular_embedded_object_no_removal",
+   "name": "An embedded or penetrating ocular foreign body is not removed in the field; it is stabilized in place and removed only under controlled surgical conditions",
+   "verbatim_quote": "penetrating, do not attempt to remove it, but instead,",
+   "page": "Chapter 23, Penetrating injuries; text line 2250",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Field removal risks extruding the contents of the globe",
+    "Stabilization prevents the object from moving during transport"
+   ],
+   "breakdown_regime": "The rule protects the globe at the cost of leaving a contaminated object in place; infection risk is accepted because the alternative is loss of the eye",
+   "domain": "ocular trauma",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A do-not-extract rule for embedded faults: when removal at the current layer would destroy the system, the correct action is to freeze the fault in place and escalate to the layer equipped to remove it",
+    "source_operator": "embedded_fault_freeze_and_escalate",
+    "telemetry": "the prohibition and the stabilization substitute are recorded together so the rule is not read as simple inaction"
+   }
+  },
+  {
+   "primitive_id": "penetrating_abdominal_surgery",
+   "name": "Immediate surgical intervention is needed for all penetrating abdominal injuries; blunt injuries are triaged by signs and mechanism because not all require operation",
+   "verbatim_quote": "Immediate surgical intervention is needed for all penetrating abdominal injuries.",
+   "page": "Chapter 24, Introduction; text line 2593",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Penetration of the abdominal cavity is treated as sufficient evidence of internal injury",
+    "The rule is categorical rather than symptom gated"
+   ],
+   "breakdown_regime": "Resource collapse in a mass casualty event can re-sequence even categorical surgical cases; the rule states the medical requirement, and triage states the order under scarcity",
+   "domain": "abdominal trauma",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A categorical trigger: one observed property (penetration) is sufficient to commit the scarcest resource without waiting for confirmatory signs, because the cost of a missed internal injury dwarfs the cost of a negative exploration",
+    "source_operator": "categorical_commit_trigger",
+    "telemetry": "the triggering property is binary and observable at first contact, which is what makes the rule field usable"
+   }
+  },
+  {
+   "primitive_id": "pregnancy_blood_volume_expansion",
+   "name": "By the 36th week of pregnancy the mother's blood volume has increased by about 50 percent, so a pregnant casualty can lose 30 to 35 percent of total blood volume before showing signs of hypovolemia",
+   "verbatim_quote": "By the 36th week of pregnancy, the mother's blood volume has increased by about 50%.",
+   "page": "Chapter 24, Abdominal Trauma in Pregnancy",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Baseline vital signs shift in pregnancy: heart rate rises and blood pressure falls modestly by the second trimester",
+    "The expanded volume masks early hemorrhage signs"
+   ],
+   "breakdown_regime": "Standard shock thresholds under-detect hemorrhage in pregnancy; assessment must discount the reassuring numbers by the known expansion",
+   "domain": "abdominal trauma",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A shifted baseline problem: when the reference range itself moves, fixed alarm thresholds silently lose sensitivity. The correction is to model the baseline shift, not to lower vigilance uniformly",
+    "source_operator": "shifted_baseline_correction",
+    "telemetry": "the magnitude and timing of the baseline shift are stored so thresholds can be re-based rather than guessed"
+   }
+  },
+  {
+   "primitive_id": "rule_of_nines",
+   "name": "Rule of Nines: burn size is estimated quickly by assigning percentages to major body parts as shown in the chapter figure, and adding the percentages for each burned body part",
+   "verbatim_quote": "The Rule of Nines describes a quick way to estimate burn size. When using the Rule of Nines, major body parts are assigned percentages as shown in Figure 25-5, and the percentages for each burned body part are added.",
+   "page": "Chapter 25, Rule of Nines (printed p. 45); text line 3113",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Percentages are assigned per Figure 25-5 in the chapter (head and neck 9 percent, each arm 9 percent, anterior trunk 18 percent, posterior trunk 18 percent, each leg 18 percent, perineum 1 percent)",
+    "Speed is valued over precision because the estimate drives the first fluid rate"
+   ],
+   "breakdown_regime": "Breaks down for children (the chapter gives adjusted proportions), and for scattered or irregular burns, where the Rule of Palm is the better estimator",
+   "domain": "burn care",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A coarse quantization scheme for a continuous quantity: the body is partitioned into fixed percentage cells so a usable estimate exists in seconds. Error is bounded by cell size and accepted in exchange for speed",
+    "source_operator": "fixed_cell_quantization",
+    "telemetry": "cell percentages are stored so the quantization error structure is explicit"
+   }
+  },
+  {
+   "primitive_id": "pediatric_tbsa_adjustment",
+   "name": "Pediatric burn assessment uses different proportions than adults: children have larger heads at 18 percent and smaller extremities at 14 percent for each leg",
+   "verbatim_quote": "Pediatric assessments are different than adult assessments; children have larger heads (18%) and smaller extremities (14% each leg).",
+   "page": "Chapter 25, Rule of Nines, pediatric note; text lines 3113 to 3125",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The adult Rule of Nines would misstate a child's burned area in both directions",
+    "The adjustment is age linked because proportions change as the child grows"
+   ],
+   "breakdown_regime": "A single pediatric correction is itself an approximation across a wide age range; borderline ages inherit error from whichever table is chosen",
+   "domain": "burn care",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Population-specific recalibration of a quantization table: the estimator structure is kept, the cell weights are swapped for the population actually being measured",
+    "source_operator": "population_weight_swap",
+    "telemetry": "both weight sets are retained so the estimator can declare which population table produced a number"
+   }
+  },
+  {
+   "primitive_id": "rule_of_ten_definition",
+   "name": "Rule of Ten: an adult burn fluid resuscitation protocol created by the US Army Institute of Surgical Research that rounds the casualty's TBSA up to the nearest 10 and then uses the casualty's body weight in calculating the amount of fluid to be administered",
+   "verbatim_quote": "Rule of Ten. An adult burn fluid resuscitation protocol created by the US Army Institute of Surgical Research that rounds up the casualty's total body surface area to the nearest 10 and then uses the casualty's body weight in calculating the amount of fluid to be administered.",
+   "page": "Chapter 25, Key Terms and Acronyms",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "This is the chapter glossary definition; the body text expresses the initial rate as TBSA to the nearest 10 percent multiplied by 10 mL per hour for adults of 40 to 80 kg",
+    "The protocol supplies a starting rate, not a final prescription"
+   ],
+   "breakdown_regime": "The estimate is open loop: it does not respond to the casualty's actual losses until titrated against urine output",
+   "domain": "burn care",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A deliberately simple open-loop estimator: one multiplication on a rounded input, computable under stress with no equipment. Its simplicity is the feature; feedback correction is a separate, later step",
+    "source_operator": "open_loop_seed_estimate",
+    "telemetry": "input rounding rule, weight band, and TBSA floor are stored as the estimator's domain of validity"
+   }
+  },
+  {
+   "primitive_id": "rule_of_ten_formula",
+   "name": "Rule of Ten formula as printed: percent TBSA burned times 10 equals the initial hourly IV fluid infusion rate",
+   "verbatim_quote": "% TBSA burned × 10 = initial hourly IV fluid infusion rate.",
+   "page": "Chapter 25, Rule of Ten (printed p. 49); text line 3361",
+   "latex": "R = 10 \\times \\mathrm{TBSA}_{\\%}",
+   "symbol_and_unit_ledger": {
+    "R": "initial hourly IV fluid infusion rate [mL/h]",
+    "TBSA_%": "total body surface area burned, rounded to the nearest 10 [percent]",
+    "10": "Rule of Ten multiplier [mL/h per percent TBSA]"
+   },
+   "assumptions": [
+    "Percent TBSA is rounded to the nearest 10 before multiplying",
+    "Rate is a starting value for adults in the 40 to 80 kg band"
+   ],
+   "breakdown_regime": "Outside the weight band the weight step rule modifies the rate; the formula alone overstates needs for small casualties and understates them for large ones",
+   "domain": "burn care",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The printed equation of the Rule of Ten estimator, kept in symbolic form so it can be executed and unit checked rather than paraphrased",
+    "source_operator": "linear_rate_equation",
+    "telemetry": "symbols carry units (percent, mL per hour) so dimensional checks can run on any computed rate"
+   }
+  },
+  {
+   "primitive_id": "rule_of_ten_initial_rate",
+   "name": "Rule of Ten initial rate step: multiply the TBSA, to the nearest 10 percent, by 10 mL per hour for adults weighing 88 to 175 lb (40 to 80 kg)",
+   "verbatim_quote": "For the initial rate, multiply the TBSA (to the nearest 10%) by 10 mL/h for adults weighing 88 to 175 lb (40-80 kg).",
+   "page": "Chapter 25, Rule of Ten steps (printed p. 49)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "This is step text from the chapter's Rule of Ten procedure",
+    "The chapter adds a weight adjustment above this band: 100 mL per hour more for each additional 10 kg over 80 kg"
+   ],
+   "breakdown_regime": "Band edges create small discontinuities; a casualty just over a boundary gets a full step increase for a marginal weight difference",
+   "domain": "burn care",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A piecewise linear extension: beyond the base domain, a fixed step per fixed weight increment preserves mental computability while tracking the underlying scaling",
+    "source_operator": "piecewise_linear_extension",
+    "telemetry": "step size and band width are stored so the full rate function can be reconstructed"
+   }
+  },
+  {
+   "primitive_id": "urine_output_titration",
+   "name": "Burn fluids are titrated until urine output is 30 to 50 mL per hour for catheterized patients, closing the loop that the Rule of Ten leaves open",
+   "verbatim_quote": "Titrate fluids until the urine output is 30 to 50 mL/h for catheterized patients.",
+   "page": "Chapter 25, burn resuscitation monitoring (printed p. 50); text line 3426",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Urine output is the field proxy for adequate perfusion",
+    "The target band, not a single value, defines acceptable control"
+   ],
+   "breakdown_regime": "Anuria from renal injury, obstruction, or a blocked catheter breaks the feedback signal; output then misleads titration in both directions",
+   "domain": "burn care",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Closed-loop correction of an open-loop estimate: a measured output is held inside a target band by adjusting the input rate. The seed formula sets the starting point; the band does the steering",
+    "source_operator": "band_feedback_titration",
+    "telemetry": "target band bounds and the adjusted variable are stored as the control specification"
+   }
+  },
+  {
+   "primitive_id": "white_phosphorus_air_exclusion",
+   "name": "White phosphorus burns are managed by excluding air: cover the area with water, saline, a wet cloth, or wet mud, and keep it covered so retained particles cannot reignite",
+   "verbatim_quote": "Cover the area with water, saline, a wet cloth, or wet mud. Keep the area covered to exclude air and prevent any retained particles from reigniting.",
+   "page": "Chapter 25, Check on Learning Answers; text line 3360",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The burning agent is embedded in the wound and reignites on air exposure",
+    "Smothering works because the reaction needs oxygen"
+   ],
+   "breakdown_regime": "Drying dressings during transport silently defeat the treatment; coverage must be maintained and rechecked, and particles must later be removed under controlled conditions",
+   "domain": "burn care",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Suppress a reaction by removing one required input: oxygen exclusion stops the burn without removing the fuel. The maintenance requirement (stay covered) is part of the treatment, not an afterthought",
+    "source_operator": "input_starvation_suppression",
+    "telemetry": "the excluded input and the reignition failure mode are recorded with the procedure"
+   }
+  },
+  {
+   "primitive_id": "traction_splint_realignment",
+   "name": "A traction splint applies pressure to realign a fractured femur, reducing pain, further tissue damage, and blood loss from the jagged bone ends",
+   "verbatim_quote": "pressure with a traction splint to realign the bone.",
+   "page": "Chapter 26, Traction Splints; text line 3675",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The fracture is a femoral shaft fracture without the chapter's contraindications",
+    "Realignment restores the limb toward its anatomical axis"
+   ],
+   "breakdown_regime": "Contraindicated with pelvic fracture and with suspected knee or vascular injury; traction on the wrong fracture pattern worsens the injury",
+   "domain": "musculoskeletal trauma",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Restore geometry to restore function: returning a displaced structure to its axis reduces secondary damage at every interface the displacement was stressing",
+    "source_operator": "axis_restoration",
+    "telemetry": "the contraindication set travels with the procedure so the geometry fix is never applied blind"
+   }
+  },
+  {
+   "primitive_id": "pelvic_binder",
+   "name": "A pelvic fracture is treated with a pelvic binder, which prevents movement of the pelvis and reduces the chance that jagged bone ends sever major vessels inside the pelvis",
+   "verbatim_quote": "Treat pelvic fracture with a pelvic binder (Figure 26-4), which prevents movement of the pelvis and reduces the possibility of the jagged ends of the bones severing major vessels within the pelvis.",
+   "page": "Chapter 26, Pelvic Fractures; text line 3687",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The lethal risk is internal hemorrhage, not the fracture itself",
+    "Immobilization is hemorrhage control in this pattern"
+   ],
+   "breakdown_regime": "A binder placed at the wrong level or left unmonitored can mask ongoing bleeding; it buys time for evacuation rather than treating the vessel injury",
+   "domain": "musculoskeletal trauma",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Stabilize the container to protect the contents: circumferential compression limits both motion and internal volume, addressing the bleeding mechanism rather than the visible injury",
+    "source_operator": "container_stabilization",
+    "telemetry": "the mechanism (vessel protection through immobilization) is stored as the reason, so the step is not skipped as mere splinting"
+   }
+  },
+  {
+   "primitive_id": "tourniquet_vascular_spasm",
+   "name": "A tourniquet is placed to control bleeding from an amputation even when bleeding seems stopped, because vascular spasm is temporary and bleeding resumes when the spasm subsides",
+   "verbatim_quote": "Always place a tourniquet to control bleeding because when spasms subside, bleeding will occur.",
+   "page": "Chapter 26, Amputations; text line 3722",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Apparent hemostasis from spasm is a transient state, not a resolved one",
+    "The cost of a precautionary tourniquet is lower than the cost of recurrent uncontrolled bleeding"
+   ],
+   "breakdown_regime": "The rule targets amputations and major limb hemorrhage; it is not a license to tourniquet minor bleeding that direct pressure controls",
+   "domain": "musculoskeletal trauma",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Act on the known transient, not the current reading: when a quiet state is mechanistically guaranteed to end, the intervention is scheduled by the mechanism, not by the next alarm",
+    "source_operator": "transient_state_preemption",
+    "telemetry": "the transient mechanism and its expected reversal are recorded as the trigger"
+   }
+  },
+  {
+   "primitive_id": "compartment_syndrome_definition",
+   "name": "Compartment syndrome is pressure exerted against the muscle fascia, the dense connective tissue enveloping the muscles, inside a compartment whose fascia has minimal ability to stretch",
+   "verbatim_quote": "In compartment syndrome, pressure is exerted against the muscle fascia (the dense connective tissue that envelops the muscles)",
+   "page": "Chapter 26, Compartment Syndrome",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The compartment is a fixed volume space, so swelling converts directly into pressure",
+    "Rising pressure crushes the tissue the compartment contains"
+   ],
+   "breakdown_regime": "The definition explains the mechanism but not the timing; pressure injury accumulates over hours, and late signs mean damage is already advanced",
+   "domain": "musculoskeletal trauma",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A fixed volume pressure trap: inflow or swelling inside a noncompliant boundary raises pressure until it destroys the contents. The same structure appears in the skull, which is why this chapter's two pressure syndromes mirror each other",
+    "source_operator": "fixed_volume_pressure_trap",
+    "telemetry": "boundary compliance (minimal stretch) is stored as the property that makes the trap dangerous"
+   }
+  },
+  {
+   "primitive_id": "compartment_syndrome_pain_signal",
+   "name": "Compartment syndrome is suspected when there is a causative mechanism of injury and the casualty's pain is out of proportion to the injury sustained; the earliest indicator is severe pain",
+   "verbatim_quote": "Consider compartment syndrome if there is a causative MOI and the patient's pain is out of proportion to the injury sustained.",
+   "page": "Chapter 26, Compartment Syndrome; text line 3752",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Pain is compared against the expected pain for the visible injury, a judgment call by the examiner",
+    "The classical Ps framework (pain, pressure, paresthesia, pallor, pulselessness, paralysis) structures the confirmatory exam, with late signs marking advanced injury"
+   ],
+   "breakdown_regime": "Pain reporting varies and analgesia blunts the signal; waiting for the late Ps (pallor, pulselessness, paralysis) waits until damage is done",
+   "domain": "musculoskeletal trauma",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A residual alarm: the observed value is compared to the model's prediction for the visible injury, and a large positive residual is itself the finding. Detection lives in the mismatch, not in the absolute level",
+    "source_operator": "prediction_residual_alarm",
+    "telemetry": "the comparison structure (observed versus expected for the injury) is stored so the signal is not reduced to a pain score"
+   }
+  },
+  {
+   "primitive_id": "triage_definition",
+   "name": "Triage is the medical sorting of casualties according to the type and seriousness of the injury, likelihood of survival, and the priorities of treatment and evacuation",
+   "verbatim_quote": "Triage. The medical sorting of casualties according to the type and seriousness of the injury, likelihood of survival, and the priorities of treatment and evacuation.",
+   "page": "Chapter 27, Key Terms and Acronyms",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Sorting is a function of injury, survivability, and priority together",
+    "The process is repeatable: casualties are re-evaluated as any input changes"
+   ],
+   "breakdown_regime": "When resources are sufficient for everyone, triage categories collapse into ordinary urgency ordering; the framework earns its keep only under scarcity",
+   "domain": "casualty triage",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Constrained allocation as an explicit function: priority is computed from need, capacity, and context together, never from need alone. Any queueing system under scarcity has the same three input structure",
+    "source_operator": "three_input_priority_function",
+    "telemetry": "the three input classes are named in the definition itself, which is what makes the function auditable"
+   }
+  },
+  {
+   "primitive_id": "mascal_definition",
+   "name": "MASCAL (mass casualty): when the number of casualties exceeds the available medical capacity to treat and evacuate them rapidly",
+   "verbatim_quote": "MASCAL. Mass casualty. When the number of casualties exceeds the available medical capacity to treat and evacuate them rapidly.",
+   "page": "Chapter 27, Key Terms and Acronyms",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The threshold is relational: demand against capacity, not an absolute casualty count",
+    "Declaring the condition changes the operating rules to triage logic"
+   ],
+   "breakdown_regime": "Capacity is elastic (reinforcements, evacuation throughput), so the condition can end while casualties remain; the declaration must be revisited as capacity moves",
+   "domain": "casualty triage",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An overload declaration: the system names the state where demand exceeds service capacity, because behavior must switch from first-come service to priority allocation the moment that state begins",
+    "source_operator": "overload_state_declaration",
+    "telemetry": "the declaration condition (demand greater than capability) is stored in relational form, not as a fixed number"
+   }
+  },
+  {
+   "primitive_id": "triage_four_categories",
+   "name": "Conventional battlefield triage sorts casualties into four categories: immediate, delayed, minimal, and expectant",
+   "verbatim_quote": "What are the four categories of triage used for conventional battlefield casualties? Immediate, delayed, minimal, and expectant.",
+   "page": "Chapter 27, Check on Learning Answers; text line 5330",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Categories are assigned by urgency and salvageability together",
+    "Category assignment is revisited as the casualty and the resource picture change"
+   ],
+   "breakdown_regime": "Four bins compress a continuous severity spectrum; borderline casualties are the known cost of a scheme simple enough to run under fire",
+   "domain": "casualty triage",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A four state classification for a scarce resource queue: act now, act later, self service, and do not spend. The states are defined by the action they command, not by diagnosis",
+    "source_operator": "action_defined_state_set",
+    "telemetry": "the state names are stored with their action meaning so the set is not mistaken for a severity scale"
+   }
+  },
+  {
+   "primitive_id": "expectant_category",
+   "name": "Expectant casualties are those so critically injured that even advanced and prolonged treatment is unlikely to save their lives; given the situation and resource constraints, the group is considered unsalvageable",
+   "verbatim_quote": "likely to save their lives. This group, given the situation",
+   "page": "Chapter 27, Expectant category",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The judgment is explicitly conditional on the situation and resources, not on the injury alone",
+    "The same casualty could leave the category if capability surged"
+   ],
+   "breakdown_regime": "This is the framework's hardest output: it is a resource decision wearing a medical label, and it must be re-examined whenever the resource picture changes",
+   "domain": "casualty triage",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "An explicit abandonment rule inside an allocation system: naming the class that will not receive scarce resources is what makes the remaining allocation honest and fast. Systems that refuse to name this class still have it; they just decide it slowly and invisibly",
+    "source_operator": "explicit_abandonment_class",
+    "telemetry": "the conditionality (given the situation and resources) is stored as part of the rule, not as a footnote"
+   }
+  },
+  {
+   "primitive_id": "ace_direct_ask",
+   "name": "The ACE suicide intervention (Ask, Care, Escort) begins by asking directly whether the person is thinking about suicide or taking their life, after removing or addressing means of harm",
+   "verbatim_quote": "Ask directly if they are thinking about suicide or taking their life.",
+   "page": "Chapter 28, ACE intervention; text line 5668",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Direct asking does not plant the idea; it surfaces information that indirect questions miss",
+    "The chapter's data show only a minority of those who died had communicated intent, so absence of a statement is weak evidence"
+   ],
+   "breakdown_regime": "A denial under observation pressure is not clearance; the escort and care steps exist because the ask alone cannot carry the risk",
+   "domain": "suicide prevention",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Measure the hidden state directly instead of inferring it from proxies: when the cost of a direct query is low and the cost of a missed state is catastrophic, the direct query is the correct instrument",
+    "source_operator": "direct_state_query",
+    "telemetry": "the query wording is preserved verbatim because phrasing is part of the instrument"
+   }
+  },
+  {
+   "primitive_id": "suicide_threat_response",
+   "name": "Every suicide threat and suspicion is taken seriously, without moral judgments, shock, or making light of the situation, and an imminently at-risk person is never left alone",
+   "verbatim_quote": "Take every threat and suspicion seriously and refrain from making moral judgments,",
+   "page": "Chapter 28, intervention guidance",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The responder's reaction shapes whether the person keeps disclosing",
+    "Continuous presence by a capable person is the safety mechanism until handoff"
+   ],
+   "breakdown_regime": "Seriousness without a path to care is incomplete; the rule governs the responder's conduct, and the ACE structure supplies the path",
+   "domain": "suicide prevention",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Channel discipline during a critical report: the receiver's conduct determines whether the signal keeps flowing. Judgment or ridicule closes the channel exactly when its information is most needed",
+    "source_operator": "receiver_channel_discipline",
+    "telemetry": "the prohibited receiver behaviors are named so the discipline is checkable, not aspirational"
+   }
+  },
+  {
+   "primitive_id": "geneva_conventions_framework",
+   "name": "The Geneva Conventions are a series of treaties, first signed in 1864 and expanded into the four conventions of 1949, that protect people who do not take part in fighting and those who can no longer fight; medical personnel are protected noncombatants under them",
+   "verbatim_quote": "The Geneva Conventions are a series of treaties",
+   "page": "Chapter 29, Geneva Conventions; text line 5837",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The obligations bind even when an opponent does not follow them",
+    "The International Committee of the Red Cross is the official protector of the conventions"
+   ],
+   "breakdown_regime": "The framework assumes parties can be identified and held to account; in fragmented conflicts the enforcement path, not the rule text, is the weak point",
+   "domain": "law of war",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A protocol layer for adversarial environments: the rules protect specified classes (the wounded, medical personnel, those out of the fight) regardless of which side they are on, and they bind unilaterally rather than by reciprocity",
+    "source_operator": "unilateral_protection_protocol",
+    "telemetry": "protected classes and the non-reciprocity property are stored as the protocol's core invariants"
+   }
+  },
+  {
+   "primitive_id": "hypothermia_definition",
+   "name": "Hypothermia is a systemic cold injury that generally occurs from prolonged exposure to low temperatures, often above freezing, or from immersion in cold water",
+   "verbatim_quote": "Hypothermia is a systemic cold injury. It generally occurs from prolonged exposure to low temperatures, often above freezing, or from immersion in cold water.",
+   "page": "Chapter 30, Hypothermia; text line 7540",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The injury is systemic, a whole body state, in contrast to local cold injuries such as frostbite",
+    "Wet, cold, and windy conditions are named in the chapter as the greatest threats"
+   ],
+   "breakdown_regime": "Prolonged exposure above freezing still produces the injury, so an air temperature reading alone does not clear a casualty",
+   "domain": "environmental medicine",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Scope classification for environmental injury: the same agent (cold) produces a systemic state when exposure is prolonged and whole body, and a local lesion when it is brief and peripheral. The treatment systems for the two scopes are entirely different, so the scope call is the decision that matters",
+    "source_operator": "exposure_scope_classifier",
+    "telemetry": "exposure route (air versus immersion) and the above-freezing caveat are stored with the definition"
+   }
+  },
+  {
+   "primitive_id": "hypothermia_degrees",
+   "name": "Hypothermia is graded in three degrees by core temperature: mild from 94 to 97 degrees F, moderate from 86 to 93 degrees F, and severe at 85 degrees F or lower",
+   "verbatim_quote": "There are three degrees of hypothermia: • mild hypothermia-core body temperature ranges between 94 and 97 °F,",
+   "page": "Chapter 30, Hypothermia; text line 7540",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Grading uses core temperature, not skin temperature or symptoms alone",
+    "The moderate and severe bands are stated in the same passage of the chapter"
+   ],
+   "breakdown_regime": "Field core temperature measurement is imperfect; shivering status and mental state cross-check the band when the number is unreliable",
+   "domain": "environmental medicine",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A banded severity scale on a single continuous variable: three labeled intervals partition the temperature axis so treatment intensity can key off the band",
+    "source_operator": "banded_severity_scale",
+    "telemetry": "band bounds and units are stored for all three degrees so the scale is complete, not sampled"
+   }
+  },
+  {
+   "primitive_id": "heatstroke_cooling_floor",
+   "name": "During heatstroke cooling, do not lower core temperature below 102 degrees F",
+   "verbatim_quote": "Do not lower core temperature below 102 °F.",
+   "page": "Chapter 30, Heatstroke treatment caution; text line 7505",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cooling is aggressive because heatstroke is immediately life threatening",
+    "The floor exists because overshoot into hypothermia is a real failure mode of aggressive cooling"
+   ],
+   "breakdown_regime": "The floor assumes cooling can be monitored; without temperature monitoring the margin must be managed by time and method instead",
+   "domain": "environmental medicine",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A hard lower bound on a corrective action: the treatment that fixes the excursion can itself overshoot, so the controller carries an explicit stop limit on the safe side of the target",
+    "source_operator": "correction_overshoot_floor",
+    "telemetry": "the floor value is stored as a hard limit attached to the cooling procedure"
+   }
+  },
+  {
+   "primitive_id": "heatstroke_defining_sign",
+   "name": "Altered mental status is the defining sign of heatstroke, separating it from heat exhaustion and the lesser heat illnesses",
+   "verbatim_quote": "altered mental status is the defining sign of this condition.",
+   "page": "Chapter 30, Heatstroke; text line 7491",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The discriminator is neurological, not the temperature reading alone",
+    "Heat illness categories share most other signs, which is why one defining sign carries the classification"
+   ],
+   "breakdown_regime": "Mental status changes have many causes in the field; the sign classifies within the heat illness context, after heat exposure is established",
+   "domain": "environmental medicine",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A single feature classifier at the decision point that matters: when sibling categories share almost every feature, the one feature that changes the treatment is promoted to defining status",
+    "source_operator": "defining_feature_promotion",
+    "telemetry": "the defining feature is stored with its role (category discriminator) so it is weighted above the shared features"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "trace_triage_constrained_allocation",
+   "think": "The triage chapter is a complete allocation system disguised as a sorting exercise. Its glossary definition sorts by the type and seriousness of the injury, the likelihood of survival, and the priorities of treatment and evacuation, and the chapter around it keeps the computation honest by tying it to available resources and the tactical situation. That multi input structure is the whole design. A priority computed from injuries alone would be a severity ranking, and severity rankings fail exactly when they are needed most, because they assume the resources exist. The MASCAL definition then names the state that switches the system on: a casualty-generating event in which the number of casualties exceeds the available medical capability and resources. The threshold is relational, demand against capacity, and the chapter's field rule makes it concrete, since more than one seriously wounded casualty per medic already creates the condition. Once that state is declared, the four categories take over: immediate, delayed, minimal, and expectant. Each category is defined by the action it commands rather than by a diagnosis, which is what makes the scheme runnable by a medic under fire with incomplete information. The stated goal exposes the objective function without embarrassment: treat and return to duty the greatest number of soldiers in the shortest possible time. The expectant category is where the system proves its honesty. Those casualties are so critically injured that even advanced and prolonged treatment is unlikely to save their lives, and given the situation and resource constraints the group is considered unsalvageable. The conditional phrasing matters. Expectant is not a property of the wound; it is a property of the wound inside a resource picture, and it must be revisited when the picture changes. A system that refuses to name this class still contains it, but decides it slowly, case by case, while the salvageable wait. Naming it is what makes the rest of the allocation fast enough to matter.",
+   "retrocausal_genealogy": "The genealogy of this system runs backward from its objective. Because the goal is the greatest number returned in the shortest time, the categories had to be action states rather than diagnoses; because action states had to be assignable in seconds, the inputs had to compress to injury urgency, resources, and situation; because compression loses borderline cases, re-evaluation had to be built into the process. Each design choice is explained by the constraint downstream of it. The expectant class, the feature modern readers find hardest, is the logical root: once the objective is stated in numbers and time, a class for the unsalvageable is not an addition to the system but the premise the rest of it stands on.",
+   "theory_of_mind": "The chapter models several minds at once. The medic is assumed to be overloaded, frightened, and working with partial information, so the system gives him four bins and three inputs instead of a scoring rubric. The commander is modeled as needing a flow of returned soldiers and honest expectations, which is why the goal is stated in his terms. The casualty is modeled as a changing state, not a fixed label, which is why categories are revisited. Even the expectant casualty is modeled with care: the text's conditional language shows the authors knew the reader would resist the category, and they answered the resistance in advance by tying the judgment to resources rather than to worth.",
+   "cross_layer_veto": "The veto structure runs in both directions. The medical layer can veto the tactical layer: a casualty whose injuries demand immediate surgery does not wait because the situation is inconvenient, and the head injury chapter's Urgent Surgical rule shows the same priority label forcing movement. The resource layer can veto the medical layer: under MASCAL conditions, a treatment that would be mandatory one-on-one is deferred or withheld because spending it would cost more lives elsewhere. Neither layer wins permanently. The system works because each veto is explicit, conditioned, and revisitable, rather than a silent habit of whoever is loudest at the litter."
+  },
+  {
+   "trace_id": "trace_burn_feedback_control",
+   "think": "The burn chapter quietly teaches control theory in two moves. The first move is estimation. The Rule of Nines quantizes the body into fixed percentage cells, head and each arm at 9 percent, trunk segments and legs at 18 percent, with pediatric weights swapped in for children whose heads are proportionally larger. On top of that estimate sits the Rule of Ten, the US Army Institute of Surgical Research method for the initial fluid rate: percent TBSA burned, rounded to the nearest 10, multiplied by 10 to give mL per hour for casualties of 40 to 80 kg with burns over 20 percent TBSA, plus 100 mL per hour for each additional 10 kg above the band. Every element of that formula is a concession to the environment: rounded inputs, one multiplication, a piecewise step instead of a curve. It is designed to be computed by a tired medic with a pen, and its error is accepted in advance. The second move is correction. The rate is then adjusted to maintain urine output between 30 and 50 mL per hour. That single sentence converts an open-loop guess into a closed-loop controller, with urine output as the field proxy for perfusion and a target band rather than a set point. The pairing is the lesson. Neither half works alone: the formula without feedback drifts with every estimation error the quantization introduced, and feedback without a seed rate starts from nothing while the casualty burns through the golden window. The chapter even prices its own approximations, noting that the Rule of Palm handles scattered burns the Nines cannot, and that resuscitation starts at the 20 percent TBSA threshold. Estimation, actuation, measurement, correction: the loop is complete and honest about which parts are crude.",
+   "retrocausal_genealogy": "Read backward, the feedback step explains the formula's crudeness. Because urine output titration would correct the rate anyway, the seed formula could afford rounding and banding that a one-shot calculation could never justify. The genealogy also runs through the estimators: the Rule of Palm exists because the Nines failed on scattered burns, and the pediatric weights exist because the adult table failed on children. Each tool in the chapter is a patch on a named failure of the tool before it, which is why the chapter teaches them as a kit rather than as rivals.",
+   "theory_of_mind": "The authors model the medic as a bounded computer. The Rule of Ten assumes stress, darkness, and arithmetic done in the head, so it spends accuracy to buy computability. The urine output band assumes the medic cannot measure cardiac output or central pressures, so it hands him a proxy he can read off a collection bag. The worked example in the chapter, a 47 percent burn at 180 lb producing a 600 mL per hour rate, shows the authors checking their own design against the reader's likely mistake points. The text trusts the medic with a real control loop but refuses to trust him with a complicated one.",
+   "cross_layer_veto": "The layers veto each other cleanly here. The estimation layer's output is vetoed by the measurement layer whenever urine output leaves the band, no matter how carefully the TBSA was computed. The physiology layer vetoes the estimator's domain: below 20 percent TBSA the whole apparatus does not start, and outside the weight band the step rule amends the formula. The agent layer vetoes too: Hextend carries a hard cap of 1,000 mL in the same passage family, a reminder that a fluid choice can be locally reasonable and globally limited. The design principle is that no single layer's number is ever final."
+  },
+  {
+   "trace_id": "trace_tbi_time_critical_cascade",
+   "think": "The head injury chapter is built around one asymmetry: the primary injury is finished before the medic arrives, and the secondary injury is still negotiable. Bruising of brain tissue happens at impact; edema and increased intracranial pressure unfold afterward, and the chapter's entire treatment structure aims at that unfolding. This is why its instruments are trend instruments. The Glasgow Coma Scale matters less as a level than as a delta, and the chapter warns plainly that a score deteriorating by more than 2 points is a significant finding pointing at an ongoing pathologic process. The pupil check is a differencing instrument, abnormal past 1.0 mm of asymmetry. The MACE 2 exists because concussion hides: it was developed by the Defense and Veterans Brain Injury Center, first distributed in 2006 and updated in 2018, and its mandatory triggers are exposure based, catching the service member within 50 m of a blast whether or not symptoms have declared themselves, because secondary processes can take up to 36 hours to present. The chapter's numbers frame the stakes: TBI in about 22 percent of surviving evacuated casualties at Landstuhl, hypoxia combined with hypotension carrying roughly 44 percent mortality, which is why oxygen saturation, ventilation rates near 20 breaths per minute when intracranial pressure rises, and a systolic target of at least 90 mmHg recur through the treatment steps. Against that background the morphine note is the chapter's sharpest judgment: an analgesic is refused not only because carbon dioxide retention can raise intracranial pressure, but because it masks the pupil exam the whole monitoring scheme depends on. The evacuation rule closes the loop. Head injuries move as Urgent Surgical priority because the definitive intervention lives at a neurosurgical facility, and every field action is explicitly a bridge to that door.",
+   "retrocausal_genealogy": "The chapter's structure is explained by its endpoint. Because definitive care is surgical and elsewhere, field care is organized as detection, stabilization, and transport priority, in that order. Because secondary injury is the only modifiable term, the instruments measure change rather than state. Because blast concussion presents late and hides behind a walking casualty, the screening trigger had to be exposure based rather than symptom based. Even the MACE's institutional genealogy, a named brain injury center revising the tool across a decade of war, follows from the endpoint: the instrument kept being rebuilt because the evacuation chain kept showing it cases the earlier version missed.",
+   "theory_of_mind": "The authors model the casualty's mind as evidence and the examiner's mind as a risk. The casualty's orientation, memory, and vestibular responses are treated as instruments that report on the brain from inside. The examiner is modeled as tempted: tempted to trust a casualty who looks fine, tempted to give morphine for obvious pain, tempted to wait for symptoms before screening. Each rule in the chapter answers one of those temptations with a mechanism, a radius, a threshold, or a veto. The commander is modeled too, since mandatory evaluation events must be reported upward and carry a 24 hour rest period, which only works if command treats the report as an order rather than a suggestion.",
+   "cross_layer_veto": "Three vetoes organize the chapter. The measurement layer vetoes comfort care: morphine is refused because it would blind the pupil channel and raise intracranial pressure, so analgesic instinct loses to monitoring integrity. The physiology layer vetoes positioning instinct: elevating the head past 30 degrees may lower pressure in the skull while jeopardizing cerebral perfusion, so the obvious move is capped. The logistics layer vetoes local completeness: vascular access and extended on-scene work do not delay transport, because the Urgent Surgical label means the scene was never where this casualty gets fixed. Each veto protects the one resource the chapter values above intervention: time inside the secondary injury window."
+  }
+ ],
+ "universal_lens": "This manual is a library of decision procedures built for operators who are tired, rushed, and working with partial information, and its recurring move is to trade precision for survivability of the procedure itself. Thresholds replace judgments (1.0 mm of pupil asymmetry, 2 points of GCS decline, 50 m of blast radius, 102 degrees F as a cooling floor), categories replace continua (four triage states, three TBI bands, three hypothermia degrees), and every estimate that matters is paired with a feedback channel that corrects it (Rule of Ten against urine output). Read as a general pattern, the book argues that under scarcity and time pressure, the quality of a system is measured by whether its rules stay executable and revisitable, not by whether its first number is exact.",
+ "gsi_mapping": "For the institute layer, this text is a provenance rich source of fielded measurement standards: a named screening instrument with a developer, a revision history, and mandated trigger conditions (MACE 2); severity taxonomies with explicit numeric bounds (TBI duration bands, hypothermia temperature degrees); and population scale burden counts with stated denominators and windows (the Landstuhl 22 percent and the 468,424 diagnoses through 2022 Quarter 3). It also documents how standards are maintained in practice, through answer keys, glossaries, and worked examples that pin the intended reading of each rule, which is the same apparatus any research program needs to keep its own definitions from drifting between operators.",
+ "gse_mapping": "For the engine, the transferable machinery is the decision architecture, not the medicine. Triage supplies a three input priority function (need, capacity, context) with an honestly named abandonment class and a relational overload declaration. The burn chapters supply the estimate then correct pattern: a crude open-loop seed formula whose errors are acceptable only because a banded feedback target steers it afterward. The TBI chapter supplies trend alarms on bounded scales, paired channel differencing, exposure based screening that does not wait for symptoms, and a dual veto pattern that rejects an intervention when it both worsens the state and blinds the sensor tracking it. Each pattern maps directly onto how a reasoning engine should rank signals under capacity limits, seed estimates it intends to revise, and refuse inputs that corrupt its own measurements."
+}

@@ -85,8 +85,12 @@ def test_base_url_override_is_warned(pf, tmp_path, monkeypatch, capsys):
     cfg = _config(tmp_path, body)
     monkeypatch.setattr(pf, "CONFIG", cfg)
     monkeypatch.setenv("OPENROUTER_API_KEY", "k" * 40)
-    monkeypatch.setattr(pf, "_get", lambda *a, **k: (200, {"data": [{"id": "stealth/crouton-alpha"}]}))
-    monkeypatch.setattr(pf, "_post", lambda *a, **k: (200, {"choices": [{"message": {"content": ""}}]}))
+    monkeypatch.setattr(
+        pf, "_get", lambda *a, **k: (200, {"data": [{"id": "stealth/crouton-alpha"}]})
+    )
+    monkeypatch.setattr(
+        pf, "_post", lambda *a, **k: (200, {"choices": [{"message": {"content": ""}}]})
+    )
     rc = pf.main([])
     out = capsys.readouterr().out
     assert rc == 0
@@ -121,7 +125,9 @@ def test_healthy_config_returns_0(pf, tmp_path, monkeypatch):
     cfg = _config(tmp_path, GOOD)
     monkeypatch.setattr(pf, "CONFIG", cfg)
     monkeypatch.setenv("OPENROUTER_API_KEY", "k" * 40)
-    monkeypatch.setattr(pf, "_get", lambda *a, **k: (200, {"data": [{"id": "stealth/crouton-alpha"}]}))
+    monkeypatch.setattr(
+        pf, "_get", lambda *a, **k: (200, {"data": [{"id": "stealth/crouton-alpha"}]})
+    )
     monkeypatch.setattr(pf, "_post", lambda *a, **k: (200, {"choices": []}))
     assert pf.main([]) == 0
 
@@ -130,6 +136,8 @@ def test_completion_401_returns_1(pf, tmp_path, monkeypatch):
     cfg = _config(tmp_path, GOOD)
     monkeypatch.setattr(pf, "CONFIG", cfg)
     monkeypatch.setenv("OPENROUTER_API_KEY", "k" * 40)
-    monkeypatch.setattr(pf, "_get", lambda *a, **k: (200, {"data": [{"id": "stealth/crouton-alpha"}]}))
+    monkeypatch.setattr(
+        pf, "_get", lambda *a, **k: (200, {"data": [{"id": "stealth/crouton-alpha"}]})
+    )
     monkeypatch.setattr(pf, "_post", lambda *a, **k: (401, "unauthorized"))
     assert pf.main([]) == 1

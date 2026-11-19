@@ -1,4 +1,5 @@
-"""Deep-read verification test suite for:
+"""Deep-read verification test suite.
+
 1. All 458 unique Mega-Sweep books across 5 lanes (`books-a-sports: 107`, `books-b-medical: 68`,
    `books-c-systems: 69`, `books-d-models: 93`, `books-must-have: 121`) with 6-field provenance
    in `docs/data-sources/research/2026-11-07/google-drive-and-docs-verified-manifest.json`.
@@ -19,45 +20,63 @@ from __future__ import annotations
 import hashlib
 import json
 import math
-import os
 import re
 import sys
 import time
 from collections import Counter
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from intelligence.equations.equation_executor import (
-    _PreNormalizedFeatureContext,
+import scripts.wiring.verify_google_drive_and_docs_corpus as verify_gdrive_mod  # noqa: E402
+from intelligence.equations.equation_executor import (  # noqa: E402
     _evaluate_equation_scalars_fast,
+    _PreNormalizedFeatureContext,
     compile_formula_spec_ast,
-    evaluate_equation_spec,
     execute_all_279_equation_families,
     execute_all_458_mega_sweep_books_and_472_provenance_entries,
     execute_equation,
     get_dynamic_equation_registry_counts,
     load_equation_registry,
 )
-from scripts.wiring.repair_and_audit_equation_registry import repair_and_audit
-import scripts.wiring.verify_google_drive_and_docs_corpus as verify_gdrive_mod
+from scripts.wiring.repair_and_audit_equation_registry import repair_and_audit  # noqa: E402
 
 GDRIVE_MANIFEST_PATH = (
-    REPO_ROOT / "docs" / "data-sources" / "research" / "2026-11-07" / "google-drive-and-docs-verified-manifest.json"
+    REPO_ROOT
+    / "docs"
+    / "data-sources"
+    / "research"
+    / "2026-11-07"
+    / "google-drive-and-docs-verified-manifest.json"
 )
 PROVENANCE_INDEX_PATH = (
-    REPO_ROOT / "docs" / "data-sources" / "research" / "2026-11-07" / "bk-dl-deduplicated-provenance-index.json"
+    REPO_ROOT
+    / "docs"
+    / "data-sources"
+    / "research"
+    / "2026-11-07"
+    / "bk-dl-deduplicated-provenance-index.json"
 )
 QUARANTINE_MANIFEST_PATH = (
-    REPO_ROOT / "docs" / "data-sources" / "research" / "2026-11-07" / "external-github-repos-quarantine-manifest.json"
+    REPO_ROOT
+    / "docs"
+    / "data-sources"
+    / "research"
+    / "2026-11-07"
+    / "external-github-repos-quarantine-manifest.json"
 )
 EQUATION_REGISTRY_PATH = REPO_ROOT / "data" / "equations" / "equation_execution_registry.jsonl"
 CATALOG_12304_PATH = REPO_ROOT / "data" / "equations" / "equation_executable_catalog_12304.json"
 RECEIPT_PATH = (
-    REPO_ROOT / "docs" / "engine" / "research" / "2026-11-07" / "deep-read-books-pdfs-21419-equations-receipt.json"
+    REPO_ROOT
+    / "docs"
+    / "engine"
+    / "research"
+    / "2026-11-07"
+    / "deep-read-books-pdfs-21419-equations-receipt.json"
 )
 
 REQUIRED_6_PROVENANCE_FIELDS = (
@@ -104,8 +123,8 @@ def _sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
-def generate_deep_read_verification_receipt() -> Dict[str, Any]:
-    """Compute and write the deep-read verification receipt JSON for 458 books, 472 provenance entries, and 21,419 equations."""
+def generate_deep_read_verification_receipt() -> dict[str, Any]:
+    """Compute and write deep-read verification receipt for books, provenance, & equations."""
     gdrive_manifest = json.loads(GDRIVE_MANIFEST_PATH.read_text(encoding="utf-8"))
     ms = gdrive_manifest["mega_sweep_2026_11_06_and_tonight_books"]
     ms_summary = ms["summary"]
@@ -117,7 +136,7 @@ def generate_deep_read_verification_receipt() -> Dict[str, Any]:
     quarantine_manifest = json.loads(QUARANTINE_MANIFEST_PATH.read_text(encoding="utf-8"))
 
     cat_data = json.loads(CATALOG_12304_PATH.read_text(encoding="utf-8"))
-    cat_eqs = cat_data["equations"]
+    _ = cat_data["equations"]
     records = load_equation_registry(EQUATION_REGISTRY_PATH)
     dyn_counts = get_dynamic_equation_registry_counts(EQUATION_REGISTRY_PATH)
 
@@ -126,9 +145,12 @@ def generate_deep_read_verification_receipt() -> Dict[str, Any]:
 
     audit_stats = repair_and_audit()
     copula_reg = [r for r in records if r.get("formula_type") == "copula_tail"]
-    copula_cat = [r for r in cat_eqs if r.get("formula_type") == "copula_tail"]
-    unsafe_copula = [r for r in copula_reg if "(1.0 + (x0 * x1) / 4.5)" in str(r.get("formula_spec", ""))]
-    held_reg = [r for r in records if int(r.get("sample_size_n", 100)) < int(r.get("min_sample_size", 30))]
+    unsafe_copula = [
+        r for r in copula_reg if "(1.0 + (x0 * x1) / 4.5)" in str(r.get("formula_spec", ""))
+    ]
+    held_reg = [
+        r for r in records if int(r.get("sample_size_n", 100)) < int(r.get("min_sample_size", 30))
+    ]
 
     mega_sweep_exec = execute_all_458_mega_sweep_books_and_472_provenance_entries()
 
@@ -139,14 +161,6 @@ def generate_deep_read_verification_receipt() -> Dict[str, Any]:
         "proe": 0.035,
         "pressure_rate": 0.34,
         "wind_mph": 11.0,
-    }
-    alt_features = {
-        "epa_per_play": -0.18,
-        "cpoe": -3.8,
-        "success_rate": 0.33,
-        "proe": -0.055,
-        "pressure_rate": 0.19,
-        "wind_mph": 2.0,
     }
     ctx_ast = _PreNormalizedFeatureContext(base_features, use_ast_executor=True)
     ctx_op = _PreNormalizedFeatureContext(base_features, use_ast_executor=False)
@@ -170,7 +184,7 @@ def generate_deep_read_verification_receipt() -> Dict[str, Any]:
         "wave8_football_books_and_github_repos_manifest_2026_11_05.json",
         "downloads_20_sovereign_artifacts_2026_11_07.jsonl",
     )
-    perturbation_stats: Dict[str, Dict[str, int]] = {}
+    perturbation_stats: dict[str, dict[str, int]] = {}
     for cat_name in book_catalogs:
         sub = [r for r in records if r["source_catalog"] == cat_name]
         responsive = 0
@@ -185,7 +199,9 @@ def generate_deep_read_verification_receipt() -> Dict[str, Any]:
         perturbation_stats[cat_name] = {"total": len(sub), "responsive": responsive}
 
     t0 = time.perf_counter()
-    fam_279_summary = execute_all_279_equation_families(base_features, registry_path=EQUATION_REGISTRY_PATH)
+    fam_279_summary = execute_all_279_equation_families(
+        base_features, registry_path=EQUATION_REGISTRY_PATH
+    )
     batch_sec = time.perf_counter() - t0
 
     intel_root = REPO_ROOT / "intelligence"
@@ -202,7 +218,10 @@ def generate_deep_read_verification_receipt() -> Dict[str, Any]:
         "generated_at_utc": "2026-11-08T05:22:00Z",
         "status": "VERIFIED_PASS",
         "mega_sweep_458_books_verification": {
-            "manifest_path": "docs/data-sources/research/2026-11-07/google-drive-and-docs-verified-manifest.json",
+            "manifest_path": (
+                "docs/data-sources/research/2026-11-07/"
+                "google-drive-and-docs-verified-manifest.json"
+            ),
             "manifest_sha256": _sha256_file(GDRIVE_MANIFEST_PATH),
             "raw_files_scanned_by_lane": dict(ms_summary["raw_files_scanned_by_lane"]),
             "raw_files_scanned_total": sum(ms_summary["raw_files_scanned_by_lane"].values()),
@@ -215,23 +234,37 @@ def generate_deep_read_verification_receipt() -> Dict[str, Any]:
             "runtime_execution_summary": mega_sweep_exec,
         },
         "provenance_472_entries_verification": {
-            "index_path": "docs/data-sources/research/2026-11-07/bk-dl-deduplicated-provenance-index.json",
+            "index_path": (
+                "docs/data-sources/research/2026-11-07/"
+                "bk-dl-deduplicated-provenance-index.json"
+            ),
             "index_sha256": _sha256_file(PROVENANCE_INDEX_PATH),
             "total_unique_entries": len(entries_472),
             "unique_sha256_digests_count": len({e["sha256"] for e in entries_472}),
             "downloads_submitted_files": prov_index["downloads_submitted_files_count"],
-            "downloads_deduplicated_unique_entries": len(prov_index["deduplicated_downloads_entries"]),
-            "downloads_duplicate_files_collapsed": prov_index["downloads_duplicate_files_collapsed"],
+            "downloads_deduplicated_unique_entries": len(
+                prov_index["deduplicated_downloads_entries"]
+            ),
+            "downloads_duplicate_files_collapsed": prov_index[
+                "downloads_duplicate_files_collapsed"
+            ],
             "google_drive_50_books_entries": len(prov_index["google_drive_50_books_entries"]),
             "origin_group_breakdown": dict(origin_group_counts),
             "quarantined_external_github_repos": {
-                "quarantine_manifest_path": "docs/data-sources/research/2026-11-07/external-github-repos-quarantine-manifest.json",
+                "quarantine_manifest_path": (
+                    "docs/data-sources/research/2026-11-07/"
+                    "external-github-repos-quarantine-manifest.json"
+                ),
                 "total_external_repos_indexed": quarantine_manifest["total_cataloged_repos_count"],
                 "new_and_prior_batch_107_count": int(quarantine_manifest["new_batch_34_count"])
                 + int(quarantine_manifest["prior_batch_73_count"]),
-                "install_permitted_in_prod": not bool(quarantine_manifest["all_install_permitted_in_prod_false"]),
+                "install_permitted_in_prod": not bool(
+                    quarantine_manifest["all_install_permitted_in_prod_false"]
+                ),
                 "quarantine_status": "RESEARCH_ONLY_QUARANTINE",
-                "explicitly_rejected_items": list(quarantine_manifest["rejected_security_policy_repos"]),
+                "explicitly_rejected_items": list(
+                    quarantine_manifest["rejected_security_policy_repos"]
+                ),
             },
         },
         "equations_21419_verification": {
@@ -400,7 +433,9 @@ def test_21419_equations_279_families_and_ast_execution_integrity() -> None:
     fam_ids = sorted({int(r.get("family_id", 0)) % 279 for r in records})
     assert fam_ids == list(range(279))
 
-    executor_src = (REPO_ROOT / "intelligence" / "equations" / "equation_executor.py").read_text(encoding="utf-8")
+    executor_src = (
+        REPO_ROOT / "intelligence" / "equations" / "equation_executor.py"
+    ).read_text(encoding="utf-8")
     assert "math.tanh(" not in executor_src
 
     cat_data = json.loads(CATALOG_12304_PATH.read_text(encoding="utf-8"))
@@ -422,7 +457,9 @@ def test_21419_equations_279_families_and_ast_execution_integrity() -> None:
         assert "(1.0 + (x0 * x1) / 4.5)" not in fspec_str
         assert "**2)/4.5)**(-2.75)" in fspec_str or "((x0 * x1) * (x0 * x1))" in fspec_str
 
-    held_reg = [r for r in records if int(r.get("sample_size_n", 100)) < int(r.get("min_sample_size", 30))]
+    held_reg = [
+        r for r in records if int(r.get("sample_size_n", 100)) < int(r.get("min_sample_size", 30))
+    ]
     assert len(held_reg) == 1400
     for r in held_reg[:25]:
         held_eval = execute_equation(r, {"epa_per_play": 0.25, "cpoe": 4.0})
@@ -470,9 +507,13 @@ def test_21419_equations_279_families_and_ast_execution_integrity() -> None:
             assert math.isfinite(v1) and math.isfinite(v2)
             assert -0.35 <= float(e1["log_odds_delta"]) <= 0.35
             assert -0.35 <= float(e2["log_odds_delta"]) <= 0.35
-            assert abs(v1 - v2) > 1e-12, f"Equation {r['equation_id']} in {cat_name} did not respond to perturbation"
+            assert abs(v1 - v2) > 1e-12, (
+                f"Equation {r['equation_id']} in {cat_name} did not respond to perturbation"
+            )
 
-    fam_summary = execute_all_279_equation_families(base_features, registry_path=EQUATION_REGISTRY_PATH)
+    fam_summary = execute_all_279_equation_families(
+        base_features, registry_path=EQUATION_REGISTRY_PATH
+    )
     assert fam_summary["total_equations_evaluated"] == 21419
     assert fam_summary["equations_active_above_min_sample"] == 20019
     assert fam_summary["equations_held_below_min_sample"] == 1400
@@ -502,7 +543,9 @@ def test_deep_read_verification_receipt_json() -> None:
 
     receipt = json.loads(RECEIPT_PATH.read_text(encoding="utf-8"))
     assert receipt["status"] == "VERIFIED_PASS"
-    assert receipt["mega_sweep_458_books_verification"]["manifest_sha256"] == _sha256_file(GDRIVE_MANIFEST_PATH)
+    assert receipt["mega_sweep_458_books_verification"]["manifest_sha256"] == _sha256_file(
+        GDRIVE_MANIFEST_PATH
+    )
     assert receipt["mega_sweep_458_books_verification"]["total_unique_mega_sweep_books"] == 458
     assert receipt["mega_sweep_458_books_verification"]["lanes"] == EXPECTED_MEGA_SWEEP_LANES
     assert receipt["mega_sweep_458_books_verification"]["synced_markdown_dossiers_count"] == 52
@@ -514,15 +557,24 @@ def test_deep_read_verification_receipt_json() -> None:
         is True
     )
 
-    assert receipt["provenance_472_entries_verification"]["index_sha256"] == _sha256_file(PROVENANCE_INDEX_PATH)
+    assert receipt["provenance_472_entries_verification"]["index_sha256"] == _sha256_file(
+        PROVENANCE_INDEX_PATH
+    )
     assert receipt["provenance_472_entries_verification"]["total_unique_entries"] == 472
     assert receipt["provenance_472_entries_verification"]["unique_sha256_digests_count"] == 472
     assert receipt["provenance_472_entries_verification"]["downloads_submitted_files"] == 48
-    assert receipt["provenance_472_entries_verification"]["downloads_deduplicated_unique_entries"] == 40
-    assert receipt["provenance_472_entries_verification"]["downloads_duplicate_files_collapsed"] == 8
+    assert (
+        receipt["provenance_472_entries_verification"]["downloads_deduplicated_unique_entries"]
+        == 40
+    )
+    assert (
+        receipt["provenance_472_entries_verification"]["downloads_duplicate_files_collapsed"] == 8
+    )
     assert receipt["provenance_472_entries_verification"]["google_drive_50_books_entries"] == 50
     assert (
-        receipt["provenance_472_entries_verification"]["quarantined_external_github_repos"]["install_permitted_in_prod"]
+        receipt["provenance_472_entries_verification"]["quarantined_external_github_repos"][
+            "install_permitted_in_prod"
+        ]
         is False
     )
 
@@ -539,12 +591,19 @@ def test_deep_read_verification_receipt_json() -> None:
     assert eq_ver["copula_tail_verification"]["unsafe_copula_tail_count"] == 0
     assert eq_ver["sample_size_gate_verification"]["sub_min_sample_size_gated_count"] == 1400
     assert eq_ver["sample_size_gate_verification"]["active_full_sample_count"] == 20019
-    assert eq_ver["execution_and_perturbation_verification"]["all_21419_ast_vs_operator_checked"] == 21419
-    assert eq_ver["execution_and_perturbation_verification"]["all_21419_ast_compilation_errors"] == 0
-    assert eq_ver["execution_and_perturbation_verification"]["ast_vs_operator_max_abs_diff"] < 1e-12
+    exec_pert = eq_ver["execution_and_perturbation_verification"]
+    assert exec_pert["all_21419_ast_vs_operator_checked"] == 21419
+    assert exec_pert["all_21419_ast_compilation_errors"] == 0
+    assert exec_pert["ast_vs_operator_max_abs_diff"] < 1e-12
 
-    assert receipt["intelligence_path_hygiene_verification"]["hardcoded_local_host_paths_found"] == 0
-    assert receipt["intelligence_path_hygiene_verification"]["status"] == "CLEAN_ZERO_HARDCODED_HOST_PATHS"
+    assert (
+        receipt["intelligence_path_hygiene_verification"]["hardcoded_local_host_paths_found"]
+        == 0
+    )
+    assert (
+        receipt["intelligence_path_hygiene_verification"]["status"]
+        == "CLEAN_ZERO_HARDCODED_HOST_PATHS"
+    )
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@
 Benchmarks candidate research hypotheses against a clean historical player-frequency baseline
 using out-of-sample Log-Loss, Brier Score, Bernoulli Continuous Ranked Probability Score (CRPS),
 and RMSE on real `data/nflverse/` historical game logs (`pennydata_2026_player_week_stats.csv`
-and `hf_karmane_weather_qb_zone1.parquet`) using strict walk-forward temporal splits (train on t < w,
+and `hf_karmane_weather_qb_zone1.parquet`) using walk-forward temporal splits (train on t < w,
 evaluate on week w).
 
 Any candidate model that fails to strictly reduce Log-Loss, Brier Score, and CRPS out-of-sample is
@@ -15,8 +15,9 @@ import argparse
 import json
 import math
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Dict, List, Sequence
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -32,7 +33,9 @@ from research.hypotheses.multi_game_glycogen_and_pinn_sandbox import (  # noqa: 
 )
 
 
-def calculate_log_loss(y_true: Sequence[int | float], y_prob: Sequence[float], eps: float = 1e-15) -> float:
+def calculate_log_loss(
+    y_true: Sequence[int | float], y_prob: Sequence[float], eps: float = 1e-15
+) -> float:
     yt = np.asarray(y_true, dtype=np.float64)
     yp = np.clip(np.asarray(y_prob, dtype=np.float64), eps, 1.0 - eps)
     return float(-np.mean(yt * np.log(yp) + (1.0 - yt) * np.log(1.0 - yp)))
@@ -59,7 +62,7 @@ def run_historical_backtest_eval(
     historical_actuals: Sequence[int | float],
     baseline_probs: Sequence[float],
     advanced_physics_probs: Sequence[float],
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     base_log_loss = calculate_log_loss(historical_actuals, baseline_probs)
     adv_log_loss = calculate_log_loss(historical_actuals, advanced_physics_probs)
 
@@ -73,7 +76,9 @@ def run_historical_backtest_eval(
     brier_delta = base_brier - adv_brier
     crps_delta = base_crps - adv_crps
 
-    is_approved_for_production = (log_loss_delta > 0.0) and (brier_delta > 0.0) and (crps_delta > 0.0)
+    is_approved_for_production = (
+        (log_loss_delta > 0.0) and (brier_delta > 0.0) and (crps_delta > 0.0)
+    )
 
     return {
         "baseline_log_loss": round(base_log_loss, 5),
@@ -93,9 +98,10 @@ def _normal_cdf(x: float) -> float:
     return 0.5 * (1.0 + math.erf(x / math.sqrt(2.0)))
 
 
-def run_real_nflverse_walk_forward_backtests() -> Dict[str, Dict[str, Any]]:
-    """Run genuine walk-forward backtests (training strictly on t < w, evaluating on week w)
-    across real `data/nflverse/pennydata_2026_player_week_stats.csv` and
+def run_real_nflverse_walk_forward_backtests() -> dict[str, dict[str, Any]]:
+    """Run walk-forward backtests (train on t < w, evaluate on week w).
+
+    Uses real `data/nflverse/pennydata_2026_player_week_stats.csv` and
     `data/nflverse/hf_karmane_weather_qb_zone1.parquet`.
     """
     pw_path = ROOT / "data" / "nflverse" / "pennydata_2026_player_week_stats.csv"
@@ -103,16 +109,18 @@ def run_real_nflverse_walk_forward_backtests() -> Dict[str, Dict[str, Any]]:
     pw_df = pd.read_csv(pw_path)
     wq_df = pd.read_parquet(wq_path)
 
-    results: Dict[str, Dict[str, Any]] = {}
+    results: dict[str, dict[str, Any]] = {}
 
-    # 1. Eager & Erickson (2023) Split Pass EPA Marcel Shrinkage & Poisson Passing TD (t < w -> week w)
-    qb_rows = pw_df[(pw_df["position"] == "QB") & (pw_df["attempts"] >= 12)].sort_values(["player_id", "season", "week"])
-    y_td_actual: List[int] = []
-    p_td_unshrunk: List[float] = []
-    p_td_eager: List[float] = []
-    epa_actual: List[float] = []
-    epa_unshrunk_pred: List[float] = []
-    epa_eager_pred: List[float] = []
+    # 1. Eager & Erickson (2023) Split Pass EPA Shrinkage & Poisson TD (t < w -> week w)
+    qb_rows = pw_df[(pw_df["position"] == "QB") & (pw_df["attempts"] >= 12)].sort_values(
+        ["player_id", "season", "week"]
+    )
+    y_td_actual: list[int] = []
+    p_td_unshrunk: list[float] = []
+    p_td_eager: list[float] = []
+    epa_actual: list[float] = []
+    epa_unshrunk_pred: list[float] = []
+    epa_eager_pred: list[float] = []
 
     for _, grp in qb_rows.groupby(["player_id", "season"]):
         grp_list = grp.to_dict("records")
@@ -126,11 +134,16 @@ def run_real_nflverse_walk_forward_backtests() -> Dict[str, Dict[str, Any]]:
                 continue
             deep_att = sum(int(r.get("passing_20", 0) or 0) * 2 for r in prior)
             short_att = max(1, tot_att - deep_att)
-            prior_epa_per_att = sum(float(r.get("passing_epa", 0.0) or 0.0) for r in prior) / max(1, tot_att)
+            prior_epa_per_att = (
+                sum(float(r.get("passing_epa", 0.0) or 0.0) for r in prior)
+                / max(1, tot_att)
+            )
             prior_tds_per_g = np.mean([float(r.get("passing_tds", 0.0) or 0.0) for r in prior])
             # Shrink raw TD rate toward league starter mean 1.48 TD/g
             n_g = len(prior)
-            shrunk_lam = (n_g / (n_g + 4.5)) * float(prior_tds_per_g) + (4.5 / (n_g + 4.5)) * 1.48
+            shrunk_lam = (
+                (n_g / (n_g + 4.5)) * float(prior_tds_per_g) + (4.5 / (n_g + 4.5)) * 1.48
+            )
 
             eager_out = compute_eager_split_pass_epa_shrinkage_and_poisson_td(
                 short_pass_epa_per_play=prior_epa_per_att * 0.85,
@@ -147,9 +160,13 @@ def run_real_nflverse_walk_forward_backtests() -> Dict[str, Dict[str, Any]]:
 
             y_td_actual.append(1 if float(curr.get("passing_tds", 0) or 0) > 1.5 else 0)
             p_td_unshrunk.append(max(0.02, min(0.98, raw_p_over)))
-            p_td_eager.append(max(0.02, min(0.98, float(eager_out["poisson_prob_over_td_line"]))))
+            p_td_eager.append(
+                max(0.02, min(0.98, float(eager_out["poisson_prob_over_td_line"])))
+            )
 
-            curr_epa_per_att = float(curr.get("passing_epa", 0.0) or 0.0) / max(1, int(curr.get("attempts", 1) or 1))
+            curr_epa_per_att = float(curr.get("passing_epa", 0.0) or 0.0) / max(
+                1, int(curr.get("attempts", 1) or 1)
+            )
             epa_actual.append(curr_epa_per_att)
             epa_unshrunk_pred.append(prior_epa_per_att)
             epa_eager_pred.append(float(eager_out["composite_regressed_pass_epa"]))
@@ -160,10 +177,10 @@ def run_real_nflverse_walk_forward_backtests() -> Dict[str, Dict[str, Any]]:
     eval_eager["advanced_rmse"] = round(calculate_rmse(epa_actual, epa_eager_pred), 5)
     results["eager_split_pass_epa_and_poisson_td"] = eval_eager
 
-    # 2. Veroulis / Eager Weak-Link O-Line Pocket Score vs. Arithmetic Mean for High-Sack Games (t < w -> week w)
-    y_sack_actual: List[int] = []
-    p_sack_arith: List[float] = []
-    p_sack_weaklink: List[float] = []
+    # 2. Veroulis / Eager Weak-Link O-Line Pocket Score vs. Arithmetic Mean (t < w -> week w)
+    y_sack_actual: list[int] = []
+    p_sack_arith: list[float] = []
+    p_sack_weaklink: list[float] = []
     for _, grp in qb_rows.groupby(["team", "season"]):
         grp_list = grp.sort_values("week").to_dict("records")
         if len(grp_list) < 3:
@@ -173,7 +190,10 @@ def run_real_nflverse_walk_forward_backtests() -> Dict[str, Dict[str, Any]]:
             curr = grp_list[idx]
             sack_rates = [
                 float(r.get("sacks_suffered", 0) or 0)
-                / max(1.0, float(r.get("attempts", 0) or 0) + float(r.get("sacks_suffered", 0) or 0))
+                / max(
+                    1.0,
+                    float(r.get("attempts", 0) or 0) + float(r.get("sacks_suffered", 0) or 0),
+                )
                 for r in prior
             ]
             mean_sr = float(np.mean(sack_rates))
@@ -182,10 +202,11 @@ def run_real_nflverse_walk_forward_backtests() -> Dict[str, Dict[str, Any]]:
             shrunk_wl_sr = 0.60 * weak_link_sr + 0.40 * 0.068
 
             curr_sr = float(curr.get("sacks_suffered", 0) or 0) / max(
-                1.0, float(curr.get("attempts", 0) or 0) + float(curr.get("sacks_suffered", 0) or 0)
+                1.0,
+                float(curr.get("attempts", 0) or 0) + float(curr.get("sacks_suffered", 0) or 0),
             )
             y_sack_actual.append(1 if curr_sr > 0.075 else 0)
-            # Raw unshrunk arithmetic mean overreacts to noise, whereas shrunk weak-link calibrates tail risk
+            # Raw arithmetic mean overreacts to noise; shrunk weak-link calibrates tail risk
             p_arith = max(0.03, min(0.97, _normal_cdf((mean_sr - 0.075) / 0.022)))
             p_wl = max(0.03, min(0.97, _normal_cdf((shrunk_wl_sr - 0.075) / 0.042)))
             p_sack_arith.append(p_arith)
@@ -195,11 +216,13 @@ def run_real_nflverse_walk_forward_backtests() -> Dict[str, Dict[str, Any]]:
     eval_wl["sample_size_n"] = len(y_sack_actual)
     results["veroulis_eager_weak_link_oline_sack_rate"] = eval_wl
 
-    # 3. Congelio (2023) Per-Carry YPC / RYOE Rate Shrinkage vs. Volume-Confounded Cumulative Rushing Yards
-    rb_rows = pw_df[(pw_df["position"] == "RB") & (pw_df["carries"] >= 6)].sort_values(["player_id", "season", "week"])
-    y_rb_eff: List[int] = []
-    p_rb_cum_vol: List[float] = []
-    p_rb_per_carry: List[float] = []
+    # 3. Congelio (2023) Per-Carry YPC / RYOE Shrinkage vs. Cumulative Rushing Yards
+    rb_rows = pw_df[(pw_df["position"] == "RB") & (pw_df["carries"] >= 6)].sort_values(
+        ["player_id", "season", "week"]
+    )
+    y_rb_eff: list[int] = []
+    p_rb_cum_vol: list[float] = []
+    p_rb_per_carry: list[float] = []
     for _, grp in rb_rows.groupby(["player_id", "season"]):
         grp_list = grp.to_dict("records")
         if len(grp_list) < 2:
@@ -212,10 +235,15 @@ def run_real_nflverse_walk_forward_backtests() -> Dict[str, Dict[str, Any]]:
             if tot_carries < 10:
                 continue
             ypc_prior = tot_yds / tot_carries
-            shrunk_ypc = (tot_carries / (tot_carries + 45.0)) * ypc_prior + (45.0 / (tot_carries + 45.0)) * 4.25
-            curr_ypc = float(curr.get("rushing_yards", 0) or 0) / max(1.0, float(curr.get("carries", 1) or 1))
+            shrunk_ypc = (
+                (tot_carries / (tot_carries + 45.0)) * ypc_prior
+                + (45.0 / (tot_carries + 45.0)) * 4.25
+            )
+            curr_ypc = float(curr.get("rushing_yards", 0) or 0) / max(
+                1.0, float(curr.get("carries", 1) or 1)
+            )
             y_rb_eff.append(1 if curr_ypc >= 4.30 else 0)
-            # Volume-confounded predictor mistakes high cumulative yards per game for per-carry efficiency
+            # Volume-confounded predictor mistakes cumulative yards/game for carry efficiency
             yds_per_g = tot_yds / len(prior)
             p_vol = max(0.05, min(0.95, _normal_cdf((yds_per_g - 58.0) / 18.0)))
             p_rate = max(0.05, min(0.95, _normal_cdf((shrunk_ypc - 4.30) / 0.85)))
@@ -226,16 +254,16 @@ def run_real_nflverse_walk_forward_backtests() -> Dict[str, Dict[str, Any]]:
     eval_congelio["sample_size_n"] = len(y_rb_eff)
     results["congelio_per_carry_ryoe_deconfounding"] = eval_congelio
 
-    # 4. Davidson-Pilon Conjugate Empirical Bayes Shrinkage vs. Raw Sample Mean on WR/TE Receiving Yards (t < w -> week w)
+    # 4. Davidson-Pilon Conjugate EB Shrinkage vs. Raw Mean on WR/TE Yards (t < w -> week w)
     rec_rows = pw_df[(pw_df["position"].isin(["WR", "TE"])) & (pw_df["targets"] >= 2)].sort_values(
         ["player_id", "season", "week"]
     )
-    y_rec_over: List[int] = []
-    p_rec_raw: List[float] = []
-    p_rec_eb: List[float] = []
-    rec_actual_yds: List[float] = []
-    rec_raw_pred: List[float] = []
-    rec_eb_pred: List[float] = []
+    y_rec_over: list[int] = []
+    p_rec_raw: list[float] = []
+    p_rec_eb: list[float] = []
+    rec_actual_yds: list[float] = []
+    rec_raw_pred: list[float] = []
+    rec_eb_pred: list[float] = []
     for _, grp in rec_rows.groupby(["player_id", "season"]):
         grp_list = grp.to_dict("records")
         if len(grp_list) < 2:
@@ -243,8 +271,12 @@ def run_real_nflverse_walk_forward_backtests() -> Dict[str, Dict[str, Any]]:
         for idx in range(1, len(grp_list)):
             prior = grp_list[:idx]
             curr = grp_list[idx]
-            obs_mean = float(np.mean([float(r.get("receiving_yards", 0.0) or 0.0) for r in prior]))
-            avg_tgt_share = float(np.mean([float(r.get("target_share", 0.12) or 0.12) for r in prior]))
+            obs_mean = float(
+                np.mean([float(r.get("receiving_yards", 0.0) or 0.0) for r in prior])
+            )
+            avg_tgt_share = float(
+                np.mean([float(r.get("target_share", 0.12) or 0.12) for r in prior])
+            )
             pos_prior = 185.0 * avg_tgt_share
             eb_res = optimize_bayesian_asymmetric_loss_action(
                 prior_mean=pos_prior,
@@ -273,16 +305,23 @@ def run_real_nflverse_walk_forward_backtests() -> Dict[str, Dict[str, Any]]:
     eval_dp["advanced_rmse"] = round(calculate_rmse(rec_actual_yds, rec_eb_pred), 4)
     results["davidson_pilon_empirical_bayes_receiving_props"] = eval_dp
 
-    # 5. Alam (2012) Crosswind Aerodynamic Drag Prior on Outdoor High-Wind Games (wind >= 15 mph in hf_karmane_weather_qb_zone1.parquet)
-    wind_rows = wq_df[(wq_df["outdoor_game"] == 1) & (wq_df["wind"] >= 15.0) & (wq_df["season_to_date_passing_yards_avg"].notna())]
-    y_wind_actual: List[int] = []
-    p_wind_naive: List[float] = []
-    p_wind_alam: List[float] = []
+    # 5. Alam (2012) Crosswind Aerodynamic Drag Prior on Outdoor High-Wind Games
+    #    (wind >= 15 mph in hf_karmane_weather_qb_zone1.parquet)
+    wind_rows = wq_df[
+        (wq_df["outdoor_game"] == 1)
+        & (wq_df["wind"] >= 15.0)
+        & (wq_df["season_to_date_passing_yards_avg"].notna())
+    ]
+    y_wind_actual: list[int] = []
+    p_wind_naive: list[float] = []
+    p_wind_alam: list[float] = []
     for r in wind_rows.to_dict("records"):
         std_avg = float(r.get("season_to_date_passing_yards_avg", 225.0) or 225.0)
         wind_mph = float(r.get("wind", 15.0) or 15.0)
         cleared_225 = int(r.get("cleared_225_passing_yards", 0) or 0)
-        alam = compute_alam_football_crosswind_drag(wind_speed_mph=wind_mph, ball_speed_mph=50.0, crosswind_angle_deg=75.0)
+        alam = compute_alam_football_crosswind_drag(
+            wind_speed_mph=wind_mph, ball_speed_mph=50.0, crosswind_angle_deg=75.0
+        )
         drag_penalty_yds = 14.0 * max(0.0, float(alam["drag_multiplier_vs_zero_yaw"]) - 1.0)
         adj_mean = 0.65 * (std_avg - drag_penalty_yds) + 0.35 * 212.0
         y_wind_actual.append(cleared_225)
@@ -293,10 +332,12 @@ def run_real_nflverse_walk_forward_backtests() -> Dict[str, Dict[str, Any]]:
     eval_alam["sample_size_n"] = len(y_wind_actual)
     results["alam_crosswind_drag_outdoor_15mph_plus"] = eval_alam
 
-    # 6. Quarantined Speculative Continuum-Mechanics / Unobservable Proxy Control (PINN Navier-Stokes & Ocular Latency)
-    # Verify that adding uncalibrated speculative PDE/ocular variance onto the Empirical Bayes baseline is REJECTED.
+    # 6. Quarantined Speculative Continuum-Mechanics / Unobservable Proxy Control
+    #    Verify adding uncalibrated PDE/ocular variance onto the EB baseline is REJECTED.
     rng = np.random.default_rng(20261103)
-    p_speculative_pinn = np.clip(np.asarray(p_rec_eb) + rng.normal(0.0, 0.14, size=len(p_rec_eb)), 0.02, 0.98)
+    p_speculative_pinn = np.clip(
+        np.asarray(p_rec_eb) + rng.normal(0.0, 0.14, size=len(p_rec_eb)), 0.02, 0.98
+    )
     eval_pinn = run_historical_backtest_eval(y_rec_over, p_rec_eb, p_speculative_pinn)
     eval_pinn["sample_size_n"] = len(y_rec_over)
     results["quarantined_pinn_navier_stokes_and_ocular_proxy"] = eval_pinn
@@ -305,11 +346,16 @@ def run_real_nflverse_walk_forward_backtests() -> Dict[str, Dict[str, Any]]:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Run genuine walk-forward calibration gate on data/nflverse/")
+    parser = argparse.ArgumentParser(
+        description="Run genuine walk-forward calibration gate on data/nflverse/"
+    )
     parser.add_argument(
         "--enforce-gate",
         action="store_true",
-        help="Exit with non-zero status code (1) if any production-targeted kernel is REJECTED or if --require-all-approved is set.",
+        help=(
+            "Exit with non-zero status code (1) if any production-targeted kernel is "
+            "REJECTED or if --require-all-approved is set."
+        ),
     )
     parser.add_argument(
         "--test-reject-exit-code",
@@ -331,7 +377,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     ]
 
     if args.test_reject_exit_code:
-        if suite["quarantined_pinn_navier_stokes_and_ocular_proxy"]["PROMOTION_GATE_STATUS"] == "REJECTED":
+        pinn_res = suite["quarantined_pinn_navier_stokes_and_ocular_proxy"]
+        if pinn_res["PROMOTION_GATE_STATUS"] == "REJECTED":
             return 1
         return 0
 
@@ -340,8 +387,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             if suite[k]["PROMOTION_GATE_STATUS"] != "APPROVED":
                 print(f"EPISTEMIC GATE FAILURE: {k} was REJECTED", file=sys.stderr)
                 return 1
-        if suite["quarantined_pinn_navier_stokes_and_ocular_proxy"]["PROMOTION_GATE_STATUS"] != "REJECTED":
-            print("EPISTEMIC GATE FAILURE: speculative PINN/ocular noise was not REJECTED", file=sys.stderr)
+        pinn_res = suite["quarantined_pinn_navier_stokes_and_ocular_proxy"]
+        if pinn_res["PROMOTION_GATE_STATUS"] != "REJECTED":
+            print(
+                "EPISTEMIC GATE FAILURE: speculative PINN/ocular noise was not REJECTED",
+                file=sys.stderr,
+            )
             return 1
 
     return 0

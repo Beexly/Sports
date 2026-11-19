@@ -1,0 +1,45 @@
+# CI Workflow Template: Polyglot Security, Python/TS Verification & Leapwork Storefront E2E
+# Copy to `.github/workflows/` once review hooks allow workflow updates.
+name: GSE Polyglot Audit & Leapwork Storefront E2E
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  polyglot-security-and-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: npm ci
+      - run: python -m pip install -e ".[dev]"
+      - name: Polyglot OSV Audit (npm + PyPI)
+        run: node scripts/ops/osv-polyglot-audit.mjs
+      - name: Python GSE Engine Tests
+        run: python -m pytest tests/ -q
+      - name: Workspace Typecheck & Guardrails
+        run: |
+          npm run typecheck
+          node scripts/guardrails/run-all.mjs
+
+  leapwork-checkout-unlock-e2e:
+    needs: polyglot-security-and-tests
+    if: ${{ secrets.LEAPWORK_API_KEY != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trigger Leapwork Checkout & Unlock Runlist
+        uses: leapwork/Github-action@v2
+        with:
+          leapworkControllerURL: ${{ vars.LEAPWORK_CONTROLLER_URL }}
+          leapworkApiKey: ${{ secrets.LEAPWORK_API_KEY }}
+          scheduleNames: "GSE-Storefront-Checkout-Unlock-Smoke"
+          executionTimeoutSeconds: 600

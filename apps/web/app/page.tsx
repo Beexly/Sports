@@ -38,52 +38,62 @@ export default async function HomePage(): Promise<JSX.Element> {
   const doctrine = await loadDoctrineBoard();
   return (
     <>
-      <RedlineWorld packs={packs} writeups={writeups} initialStage={2} />
-      <section
-        id="doctrine-board"
-        data-testid="homepage-doctrine-board"
-        className="relative z-10 border-t border-mineral bg-carbon px-6 py-16 text-ion-white"
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:border focus:border-plasma focus:bg-carbon focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:text-ion-white focus:outline-none focus:ring-2 focus:ring-plasma"
       >
-        <div className="mx-auto max-w-5xl">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-plasma">
-            The board / Plays and passes
-          </p>
-          <div className="mt-6">
-            <DoctrineBoardView board={doctrine} compact />
+        Skip to board &amp; slate packs
+      </a>
+      <main id="main-content" className="relative min-h-screen">
+        <RedlineWorld packs={packs} writeups={writeups} initialStage={2} />
+        <section
+          id="doctrine-board"
+          data-testid="homepage-doctrine-board"
+          aria-label="Doctrine board: plays and passes"
+          className="relative z-10 border-t border-mineral bg-carbon px-6 py-16 text-ion-white"
+        >
+          <div className="mx-auto max-w-5xl">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-plasma">
+              The board / Plays and passes
+            </p>
+            <div className="mt-6">
+              <DoctrineBoardView board={doctrine} compact />
+            </div>
           </div>
-        </div>
-      </section>
-      <section
-        id="responsible-close"
-        data-testid="homepage-responsible-close"
-        className="relative z-10 border-t border-mineral bg-carbon px-6 py-16 text-ion-white"
-      >
-        <div className="mx-auto max-w-5xl">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-plasma">
-            Close / Responsible Intelligence
-          </p>
-          <h2 className="mt-4 font-display text-3xl uppercase tracking-tight sm:text-4xl">
-            The math can point. The decision stays yours.
-          </h2>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ion-2">
-            Every number on this page is a probability, not a promise. The engine
-            reads the field and prices the risk. The stake, the pass, and the
-            decision stay with you.
-          </p>
-          <RiskDisclosure variant="card" includePastPerformance className="mt-8" />
-          <nav aria-label="Trust and disclosure" className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
-            {TRUST_LINKS.map(({ label, href }) => (
-              <a
-                key={href}
-                href={isPagePublic(href) ? href : "/engine"}
-                className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2 transition-colors hover:text-plasma"
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
-        </div>
-      </section>
+        </section>
+        <section
+          id="responsible-close"
+          data-testid="homepage-responsible-close"
+          aria-label="Responsible intelligence and disclosure"
+          className="relative z-10 border-t border-mineral bg-carbon px-6 py-16 text-ion-white"
+        >
+          <div className="mx-auto max-w-5xl">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-plasma">
+              Close / Responsible Intelligence
+            </p>
+            <h2 className="mt-4 font-display text-3xl uppercase tracking-tight sm:text-4xl">
+              The math can point. The decision stays yours.
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ion-2">
+              Every number on this page is a probability, not a promise. The engine
+              reads the field and prices the risk. The stake, the pass, and the
+              decision stay with you.
+            </p>
+            <RiskDisclosure variant="card" includePastPerformance className="mt-8" />
+            <nav aria-label="Trust and disclosure" className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
+              {TRUST_LINKS.map(({ label, href }) => (
+                <a
+                  key={href}
+                  href={isPagePublic(href) ? href : "/engine"}
+                  className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2 transition-colors hover:text-plasma focus:outline-none focus:ring-2 focus:ring-plasma"
+                >
+                  {label}
+                </a>
+              ))}
+            </nav>
+          </div>
+        </section>
+      </main>
       <Footer />
     </>
   );

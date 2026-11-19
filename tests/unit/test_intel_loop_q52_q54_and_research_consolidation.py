@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
-"""Unit tests for Milestone 4 (`F9` & `F10`):
-  - Canonical filing of `INTEL-LOOP-Q52-Q54-CONSOLIDATED-2026-11-09.md`,
-    `RESEARCH-CONSOLIDATION-2026-11-07-to-09.md`, and
-    `CONTENT-IDEAS-AND-SIGNALS-2026-11-07-to-09.md` into `docs/<bucket>/research/2026-11-09/`.
-  - `intelligence/metrics/intel_loop_q52_q54_and_research_consolidation_2026_11_09.py`
-    mathematical invariants (`Q52` defensive field-zone split, `Q53` point-in-time
-    QB opponent defensive tier split, `Q54` QB post-first-interception split).
-  - Emitted JSON artifact `data/metrics/intel_loop_q52_q54_and_nov7_9_research_signals_2026_11_09.json`
-    and TypeScript SHADOW expected-metrics modules.
+"""Unit tests for Milestone 4 (`F9` & `F10`).
+
+- Canonical filing of `INTEL-LOOP-Q52-Q54-CONSOLIDATED-2026-11-09.md`,
+`RESEARCH-CONSOLIDATION-2026-11-07-to-09.md`, and
+`CONTENT-IDEAS-AND-SIGNALS-2026-11-07-to-09.md` into `docs/<bucket>/research/2026-11-09/`.
+- `intelligence/metrics/intel_loop_q52_q54_and_research_consolidation_2026_11_09.py`
+mathematical invariants (`Q52` defensive field-zone split, `Q53` point-in-time
+QB opponent defensive tier split, `Q54` QB post-first-interception split).
+- Emitted JSON artifact
+`data/metrics/intel_loop_q52_q54_and_nov7_9_research_signals_2026_11_09.json`
+and TypeScript SHADOW expected-metrics modules.
 """
 
 from __future__ import annotations
 
 import json
 import unittest
-from pathlib import Path
 
 from intelligence.metrics.intel_loop_q52_q54_and_research_consolidation_2026_11_09 import (
     OUTPUT_JSON_PATH,
@@ -23,7 +24,6 @@ from intelligence.metrics.intel_loop_q52_q54_and_research_consolidation_2026_11_
     compute_q52_defensive_field_zone_split,
     compute_q53_qb_opponent_tier_efficiency_split,
     compute_q54_qb_post_first_int_efficiency_split,
-    is_successful_play,
 )
 
 
@@ -31,7 +31,7 @@ class TestIntelLoopQ52ToQ54AndResearchConsolidation(unittest.TestCase):
     """Tests for F9 research filing and F10 Q52-Q54 expected metrics + research signals."""
 
     def test_f9_canonical_docs_bucket_filings_exist_and_are_complete(self) -> None:
-        """Verify all three Nov 7-9 research docs are filed under dated docs/<bucket>/research/2026-11-09/."""
+        """Verify Nov 7-9 research docs are filed under dated docs/<bucket>/research/2026-11-09/."""
         engine_doc = (
             REPO_ROOT
             / "docs"
@@ -102,8 +102,10 @@ class TestIntelLoopQ52ToQ54AndResearchConsolidation(unittest.TestCase):
         self.assertIn("Brian Flores -0.11", pkt_txt)
 
     def test_f10_q52_defensive_field_zone_split_invariants(self) -> None:
-        """Verify Q52 Python evaluator enforces zone boundary (20 vs 21), pick-six exclusion
-        from redZoneTdRateAllowed, floors (30 RZ, 100 OF, 30 RZ EPA), and Seattle direction.
+        """Verify Q52 Python evaluator enforces zone boundary (20 vs 21).
+
+        Checks pick-six exclusion from redZoneTdRateAllowed, floors
+        (30 RZ, 100 OF, 30 RZ EPA), and Seattle direction.
         """
         plays = []
         # SEA: 30 RZ plays at yardline_100=20 (epa=+0.45, 7 offensive TDs, 1 pick-six)
@@ -120,7 +122,7 @@ class TestIntelLoopQ52ToQ54AndResearchConsolidation(unittest.TestCase):
                     "ydstogo": 10,
                     "yardsGained": 6 if i < 20 else 0,
                     "touchdown": 1 if i < 8 else 0,
-                    "turnover": 1 if i == 7 else 0,  # i==7 is pick-six (must not count as TD allowed)
+                    "turnover": 1 if i == 7 else 0,  # i==7 is pick-six (not TD allowed)
                     "epa": 0.45,
                 }
             )
@@ -172,8 +174,9 @@ class TestIntelLoopQ52ToQ54AndResearchConsolidation(unittest.TestCase):
         self.assertGreater(sea["successSplit"], 0.0)
 
     def test_f10_q53_point_in_time_qb_opponent_tier_split_invariants(self) -> None:
-        """Verify Q53 Python evaluator enforces >=100 prior ratable dropbacks for defense rank,
-        no lookahead, ordinal 1..10 TOP-10 vs 11+ REST, and n/(n+20) shrinkage.
+        """Verify Q53 Python evaluator enforces >=100 prior ratable dropbacks for defense rank.
+
+        Checks no lookahead, ordinal 1..10 TOP-10 vs 11+ REST, and n/(n+20) shrinkage.
         """
         plays = []
         # Seed 11 defenses in Week 1 with 100 dropbacks each; DEF_99 has only 99 -> unranked
@@ -241,8 +244,9 @@ class TestIntelLoopQ52ToQ54AndResearchConsolidation(unittest.TestCase):
         self.assertAlmostEqual(maye["rawSensitivityDelta"], -0.42, places=4)
 
     def test_f10_q54_qb_post_first_int_efficiency_split_invariants(self) -> None:
-        """Verify Q54 Python evaluator excludes the boundary INT play and INT-less games,
-        keeps 2nd+ INTs in the after arm, and enforces the 25-dropback aggregate floor.
+        """Verify Q54 Python evaluator excludes the boundary INT play and INT-less games.
+
+        Keeps 2nd+ INTs in the after arm, and enforces the 25-dropback aggregate floor.
         """
         plays = []
         # Game 1 (INT game): 25 before (+0.10), first INT (-4.0), 25 after (+0.26)
@@ -317,7 +321,9 @@ class TestIntelLoopQ52ToQ54AndResearchConsolidation(unittest.TestCase):
         self.assertEqual(allen["quadrant"], "bounce-back")
 
     def test_f10_compiled_signals_json_artifact_and_ts_modules_exist(self) -> None:
-        """Verify data/metrics/intel_loop_q52_q54_and_nov7_9_research_signals_2026_11_09.json
+        """Verify compiled Q52-Q54 signals JSON artifact and TS modules exist.
+
+        Checks data/metrics/intel_loop_q52_q54_and_nov7_9_research_signals_2026_11_09.json
         and the TypeScript Q52-Q54 modules exist and contain complete structured outputs.
         """
         payload = compile_intel_loop_and_nov7_9_research_signals(write_artifact=False)

@@ -148,6 +148,13 @@ None of these re-opens the week-2026-W44 seal.
 
 ---
 
+## 5c. Arithmetic Audit Note (2026-11-18) -- Continuous Power/Logit De-Vig vs Step FAVORITE_RESIDUAL
+
+- **Step discontinuity finding:** Applying the fixed additive `FAVORITE_RESIDUAL = 0.0537` in `multiplicativeDevig` / `devigTotalToFairLine` creates a `10.74` percentage-point step discontinuity around even markets (`-110 / -110` drops the chosen first side to `0.4463` vs `0.5537` on the mirror side, inverting near-50/50 totals).
+- **Resolution:** Legacy `multiplicativeDevig` and `devigTotalToFairLine` remain intact for backwards-compatible 45-market heavy-favorite sample tests; production/R&D near-50/50 total and side conversions use `continuousLogitPowerDevig` and `devigTotalToFairLineContinuous` (`power` de-vig solving `q_A^k + q_B^k = 1` with optional centered logit slope `flbGamma`, grounded in Goto et al. `arXiv:2604.17194` and Dmochowski `arXiv:2609.06739`), returning exact `(0.5, 0.5)` at `-110 / -110` and preserving `p_fav >= 0.50 >= p_dog` monotonically everywhere.
+
+---
+
 ## 6. Overnight-6 exhaustion note
 
 Two consecutive full searches over the gse-pre-seal module and the candidate

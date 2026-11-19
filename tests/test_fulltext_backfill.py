@@ -10,7 +10,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts" / "resear
 
 import fulltext_backfill as fb
 
-
 # -- extract_arxiv_id ------------------------------------------------------
 
 def test_extracts_new_style_from_arxiv_source_id():
@@ -76,7 +75,9 @@ def test_eligible_requires_missing_full_text_and_arxiv_id():
     ok = {"source": "arxiv", "source_id": "2403.14769v2", "full_text": ""}
     assert fb.is_eligible(ok) is True
     assert fb.is_eligible({**ok, "full_text": "already here"}) is False
-    assert fb.is_eligible({"source": "openalex", "source_id": "W1", "url": "https://openalex.org/W1"}) is False
+    assert fb.is_eligible(
+        {"source": "openalex", "source_id": "W1", "url": "https://openalex.org/W1"}
+    ) is False
     assert fb.is_eligible({"source": "arxiv", "source_id": "bad-id", "full_text": ""}) is False
 
 
@@ -84,7 +85,12 @@ def test_iter_eligible_skips_done_ids():
     rows = [
         {"source": "arxiv", "source_id": "2403.14769v2", "full_text": ""},
         {"source": "arxiv", "source_id": "1906.01760v3", "full_text": ""},
-        {"source": "openalex", "source_id": "W9", "url": "https://openalex.org/W9", "full_text": ""},
+        {
+            "source": "openalex",
+            "source_id": "W9",
+            "url": "https://openalex.org/W9",
+            "full_text": "",
+        },
     ]
     out = list(fb.iter_eligible(rows, {"2403.14769"}))
     assert [aid for _, aid in out] == ["1906.01760"]
@@ -151,7 +157,9 @@ def test_extract_text_empty_on_unknown_shape():
 def test_make_output_record_preserves_manifest_fields():
     rec = {"source": "arxiv", "source_id": "2403.14769v2", "title": "T",
            "abstract": "A", "full_text": "", "topics": ["x"]}
-    out = fb.make_output_record(rec, "2403.14769", "FULL", "download", now="2026-11-04T00:00:00+00:00")
+    out = fb.make_output_record(
+        rec, "2403.14769", "FULL", "download", now="2026-11-04T00:00:00+00:00"
+    )
     assert out["title"] == "T"
     assert out["full_text"] == "FULL"
     assert out["arxiv_id"] == "2403.14769"

@@ -1,0 +1,836 @@
+{
+ "book_id": "d8701dc22fb8889c",
+ "source_status": "COMPLETE",
+ "source_note": "Kochenderfer, Mykel J. and Wheeler, Tim A., Algorithms for Optimization, second edition, The MIT Press, 2026 (copyright 2026 Massachusetts Institute of Technology, licensed CC BY-NC-ND 4.0). The local file is the authors' 2026-09-05 timestamped full-text PDF of the second edition (24 chapters plus appendices on Julia, test functions, and mathematical concepts; new in this edition: chapters on duality, quadratic programming, and disciplined convex programming). PDF size 18967454 bytes; full sha256 (scan digest over str(size) plus file bytes) d8701dc22fb8889ce2c333f2ed5894b522a61ac8ce5ebfef826d8b8255356ab0; book_id is the first 16 hex chars and matches the expected id supplied in the task. Extracted text quality is high (born-digital LaTeX typesetting) but the text file interleaves margin sidenotes and figure captions in a second column, so every verbatim quote below was chosen inside one page span and machine-verified as a contiguous substring of the extracted text file under the fleet normalization (whitespace collapse, dehyphenation, ligature and quote normalization). Catalog note: the library scan's 2022 Algorithms for Decision Making by the same authors is a different work and a different book_id; this artifact covers only Algorithms for Optimization, second edition. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "optimization_problem_formulation",
+   "name": "An optimization problem is the minimization of an objective function f over a feasible set X of design points",
+   "verbatim_quote": "Here, x is a design point, which can be represented as a vector of values corresponding to different design variables.",
+   "page": "section 1.3, printed p. 5, text line ~745",
+   "latex": "\\min_{x}\\ f(x) \\quad \\text{subject to} \\quad x \\in X",
+   "symbol_and_unit_ledger": {
+    "x": "design point, a vector of n design variables (units set by the design domain)",
+    "f": "objective function mapping a design point to a scalar merit value (domain units)",
+    "X": "feasible set, the subset of design points that violate no constraint (dimensionless set membership)"
+   },
+   "assumptions": [
+    "The problem can be encoded as a vector of adjustable design variables plus a scalar objective",
+    "Maximization problems are converted to minimization by negating the objective, the book's standing convention"
+   ],
+   "breakdown_regime": "Fails as a complete description when merit cannot be collapsed to one scalar (multiobjective case) or when the design space is discrete or expression-valued, which later chapters handle separately",
+   "domain": "problem formulation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's calibration and signal-weighting problems are cast in exactly this shape: the design point is a vector of weights and hyperparameters, the objective is an out-of-sample scoring rule, and the feasible set is the constraint region imposed by data availability and stability requirements. Writing every tuning task in this canonical form is what lets one solver stack serve all of them.",
+    "source_operator": "optimization_problem_formulation",
+    "telemetry": "Objective evaluations logged per candidate design point: scoring-rule value, feasibility flags, evaluation cost per point"
+   }
+  },
+  {
+   "primitive_id": "no_free_lunch_theorems",
+   "name": "No optimization algorithm is preferable to another without assumptions about the distribution of objective functions",
+   "verbatim_quote": "As elaborated by the no free lunch theorems, there is no reason to prefer one algorithm over another unless we make assumptions about the distribution over the space of possible objective functions.",
+   "page": "section 1.3, printed pp. 6-7, text line ~838",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Performance is averaged over a distribution of possible objective functions",
+    "Algorithms gain their edge only from regularity in the objective, such as Lipschitz continuity or convexity"
+   ],
+   "breakdown_regime": "The theorem averages over all possible functions, most of which are unstructured noise; on the narrow, structured function families that occur in practice, algorithm choice matters greatly",
+   "domain": "algorithm selection theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Solver choice inside the engine is never justified by brand or habit; it is justified by naming the regularity the target objective actually has (smooth, convex, noisy, expensive, discrete) and matching the method family to that assumption. This primitive is the veto on generic optimizer recommendations.",
+    "source_operator": "no_free_lunch_theorems",
+    "telemetry": "Benchmark logs per problem family: which solver won, on which objective class, with what evaluation budget"
+   }
+  },
+  {
+   "primitive_id": "global_minimum_certification_difficulty",
+   "name": "Global minima are generally hard to certify; checking for a local minimum is usually the best available test",
+   "verbatim_quote": "that a given candidate point is at a global minimum. Often, the best we can do is check whether it is at a local minimum.",
+   "page": "section 1.5, printed p. 10, text line ~1030",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The objective may have multiple global minimizers and many local minima",
+    "Local checks (neighborhood comparisons, derivative conditions) are computationally available even when global proof is not"
+   ],
+   "breakdown_regime": "For convex problems a local minimum is global, so the difficulty disappears; the difficulty is a nonconvexity phenomenon",
+   "domain": "optimality theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine calibration runs report local optima honestly: a fitted parameter set is a local minimizer of the validation objective, not a certified global best. Promotion decisions therefore compare multiple restarts and basins instead of trusting a single run's endpoint.",
+    "source_operator": "global_minimum_certification_difficulty",
+    "telemetry": "Restart dispersion: spread of objective values and parameter vectors across independent runs from different starting points"
+   }
+  },
+  {
+   "primitive_id": "second_order_sufficient_condition",
+   "name": "A zero gradient plus a positive definite Hessian guarantees a strong local minimum; the necessary conditions alone do not",
+   "verbatim_quote": "While necessary for optimality, these conditions are not sufficient for optimality. For unconstrained optimization of a twice-differentiable function, a point is guaranteed to be at a strong local minimum if the first-order necessary condition is satisfied and ∇2 f (x) is positive definite. These conditions are collectively known as the second-order sufficient condition.",
+   "page": "section 1.6.2, printed p. 14, text line ~1215",
+   "latex": "\\nabla f(x) = 0, \\quad \\nabla^2 f(x) \\succ 0",
+   "symbol_and_unit_ledger": {
+    "\\nabla f(x)": "gradient of the objective at x (objective units per design-variable unit)",
+    "\\nabla^2 f(x)": "Hessian matrix of second derivatives at x (objective units per design-variable unit squared)",
+    "\\succ 0": "positive definiteness: all eigenvalues strictly positive (dimensionless sign condition)"
+   },
+   "assumptions": [
+    "The objective is twice differentiable at the candidate point",
+    "The problem is unconstrained; constrained analogues are the KKT conditions of chapter 10"
+   ],
+   "breakdown_regime": "When the Hessian is only positive semidefinite or singular, the test is inconclusive and higher-order or direct checks are needed; nonsmooth objectives fall outside the test entirely",
+   "domain": "optimality conditions",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Before a fitted parameter vector is accepted as a calibration result, the engine checks curvature: a near-zero gradient with an indefinite or singular Hessian marks the point as a saddle or a flat ridge, not a minimum, and the fit is rejected or regularized. This is the analytic form of the rule that a good score at one point is not evidence of a stable optimum.",
+    "source_operator": "second_order_sufficient_condition",
+    "telemetry": "Gradient norm and Hessian eigenvalue spectrum at accepted optima, logged per calibration run"
+   }
+  },
+  {
+   "primitive_id": "gradient_directional_derivative",
+   "name": "The directional derivative is highest in the gradient direction and lowest opposite it, via the gradient dot product",
+   "verbatim_quote": "The directional derivative is highest in the gradient direction, and it is lowest in the direction opposite the gradient.",
+   "page": "section 2.2, printed p. 26, text line ~1750",
+   "latex": "\\nabla_s f(x) = \\nabla f(x)^{\\top} s",
+   "symbol_and_unit_ledger": {
+    "\\nabla_s f(x)": "directional derivative of f at x along direction s (objective units per unit step)",
+    "\\nabla f(x)": "gradient vector at x (objective units per design-variable unit)",
+    "s": "direction vector of the step (same units as x, or dimensionless if normalized)"
+   },
+   "assumptions": [
+    "f is differentiable at x",
+    "The directional derivative is computed from the gradient by the dot product identity of equation (2.9)"
+   ],
+   "breakdown_regime": "At kinks and other nondifferentiable points the gradient does not exist and the identity fails; generalized gradients are needed",
+   "domain": "differential calculus",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sensitivity analysis in the reasoning engine is directional-derivative work: the predicted change from perturbing one input is the gradient component structure applied to that perturbation direction. Ranking which inputs a projection is most sensitive to is exactly ranking directional derivatives.",
+    "source_operator": "gradient_directional_derivative",
+    "telemetry": "Per-input sensitivity scores: directional derivative of the projection with respect to each input feature perturbation"
+   }
+  },
+  {
+   "primitive_id": "complex_step_method",
+   "name": "The complex step method gets an O(h^2) derivative from one complex evaluation, bypassing subtractive cancellation",
+   "verbatim_quote": "The complex step method bypasses the effect of subtractive cancellation by using a single function evaluation. We evaluate the function once after taking a step in the imaginary direction.",
+   "page": "section 2.3.2, printed p. 28, text line ~1860",
+   "latex": "f'(x) = \\frac{\\operatorname{Im}(f(x + ih))}{h} + O(h^2)",
+   "symbol_and_unit_ledger": {
+    "f'(x)": "derivative of f at x (objective units per input unit)",
+    "h": "imaginary step size (input units, can be extremely small without cancellation)",
+    "i": "imaginary unit (dimensionless)",
+    "O(h^2)": "error term quadratic in h (derivative units)"
+   },
+   "assumptions": [
+    "f is defined and analytic for complex inputs",
+    "The implementation of f properly supports complex arithmetic; nonsmooth functions like abs and norm are not analytic"
+   ],
+   "breakdown_regime": "Fails for non-analytic functions and for code that silently discards imaginary parts or uses non-complex-aware library calls",
+   "domain": "numerical differentiation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Where engine objectives are implemented in code that supports complex arithmetic, complex-step differentiation gives gradient checks accurate enough to validate automatic differentiation and hand-coded gradients, replacing fragile finite-difference step-size tuning in the test harness.",
+    "source_operator": "complex_step_method",
+    "telemetry": "Gradient-check residuals: max relative error between analytic and complex-step derivatives per objective implementation"
+   }
+  },
+  {
+   "primitive_id": "reverse_accumulation_gradient",
+   "name": "Reverse accumulation differentiates a function through its computational graph in a single backward pass, while forward accumulation traverses the graph from inputs to outputs",
+   "verbatim_quote": "There are two methods for automatically differentiating f using its computational graph. The forward accumulation method traverses the tree from inputs to outputs, whereas reverse accumulation requires a backward pass through the graph.",
+   "page": "section 2.4, printed p. 31, text line ~2050",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The function is represented as a computational graph of elementary operations",
+    "Reverse accumulation stores intermediate values from a forward pass, so memory grows with graph size"
+   ],
+   "breakdown_regime": "On memory-constrained systems with very large computational graphs, storing intermediates can dominate; forward mode or checkpointing may be preferable when only a few directional derivatives are needed",
+   "domain": "automatic differentiation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the cost law behind the engine's gradient infrastructure: any objective with many parameters and one scalar output gets its gradient by reverse accumulation (the same mechanism as backpropagation), never by n forward passes or n finite differences. It sets the evaluation budget for every gradient-based calibration.",
+    "source_operator": "reverse_accumulation_gradient",
+    "telemetry": "Gradient wall-clock and memory per objective evaluation, tracked against parameter count"
+   }
+  },
+  {
+   "primitive_id": "spsa_simultaneous_perturbation",
+   "name": "Simultaneous perturbation stochastic gradient approximation estimates gradients of very large objectives from paired random perturbations",
+   "verbatim_quote": "Simultaneous perturbation stochastic gradient approximation allows for the estimation of gradients for very large objective functions.",
+   "page": "section 2.7 summary (method in section 2.6), printed p. 38, text line ~2430",
+   "latex": "\\hat{\\nabla} = \\frac{1}{m} \\sum_{i=1}^{m} \\frac{f(x + \\delta z) - f(x - \\delta z)}{2\\delta} \\, z",
+   "symbol_and_unit_ledger": {
+    "\\hat{\\nabla}": "estimated gradient vector (objective units per design-variable unit)",
+    "z": "random perturbation vector with components drawn from {-1, +1} (dimensionless signs)",
+    "\\delta": "componentwise perturbation step size (design-variable units)",
+    "m": "number of perturbation pairs averaged (dimensionless count)"
+   },
+   "assumptions": [
+    "Perturbations are zero-mean with componentwise step size delta, per algorithm 2.4",
+    "Averaging m directional derivative estimates reduces the variance of the estimate"
+   ],
+   "breakdown_regime": "Estimates are noisy for small m and degrade when the objective itself is noisy or when delta is badly scaled relative to the curvature",
+   "domain": "stochastic gradient estimation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "For engine objectives too large or too simulation-bound for exact gradients, SPSA is the fallback estimator: two evaluations per perturbation pair regardless of dimension. It is the sanctioned route for tuning high-dimensional simulation parameters where reverse accumulation cannot reach inside the simulator.",
+    "source_operator": "spsa_simultaneous_perturbation",
+    "telemetry": "Perturbation-pair count, step size delta, and estimate variance per tuning run"
+   }
+  },
+  {
+   "primitive_id": "bracketing_unimodality",
+   "name": "Bracketing methods shrink an interval known to contain a minimum, and several assume the objective is unimodal on it",
+   "verbatim_quote": "A unimodal function f is one where there is a unique x ∗ , such that f is monotonically decreasing for x ≤ x ∗ and monotonically increasing for x ≥ x ∗ .",
+   "page": "section 3.1, printed p. 43, text line ~2560",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The objective is unimodal on the bracket: one minimizer, monotone decrease before it and monotone increase after it",
+    "Three points a < b < c with f(a) > f(b) < f(c) certify a bracket containing the minimum"
+   ],
+   "breakdown_regime": "On multimodal objectives a bracket can trap the search around a local valley and the shrinkage logic discards the region holding the global minimum",
+   "domain": "univariate search",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Single-parameter engine tuning (one threshold, one shrinkage weight, one temperature) uses bracketing logic: establish an interval that provably contains the best value under a unimodality check, then shrink it, instead of grid-searching blindly. The unimodality assumption must be verified from evaluations before the bracket is trusted.",
+    "source_operator": "bracketing_unimodality",
+    "telemetry": "Bracket endpoints and evaluation values per one-dimensional tuning run, with unimodality check results"
+   }
+  },
+  {
+   "primitive_id": "descent_direction_iteration",
+   "name": "Descent direction methods iterate x(k+1) = x(k) + alpha(k) d(k) from a local model until a termination condition fires",
+   "verbatim_quote": "A common approach to optimization is to incrementally improve a design point x by taking a step that attempts to minimize the objective value based on a local model.",
+   "page": "section 4.1, printed p. 61, text line ~3430",
+   "latex": "x^{(k+1)} \\leftarrow x^{(k)} + \\alpha^{(k)} d^{(k)}",
+   "symbol_and_unit_ledger": {
+    "x^{(k)}": "design point at iteration k (design-variable units)",
+    "d^{(k)}": "descent direction at iteration k (design-variable units, sometimes normalized)",
+    "\\alpha^{(k)}": "step factor at iteration k (dimensionless scale, or step length when d is a unit vector)"
+   },
+   "assumptions": [
+    "A local model (first- or second-order Taylor approximation) supplies the direction",
+    "A strict descent direction satisfies the directional derivative condition, though methods like momentum may relax it"
+   ],
+   "breakdown_regime": "Local models mislead far from the current point; without step control or trust regions the iteration can overshoot, oscillate, or stall, and it converges at best to a local minimum",
+   "domain": "iterative optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This iteration is the engine's universal update skeleton: every calibration and online-learning update is a choice of direction and step factor plugged into this form. Auditing any optimizer reduces to auditing its d and alpha choices, which makes optimizer behavior comparable across the codebase.",
+    "source_operator": "descent_direction_iteration",
+    "telemetry": "Iteration traces: objective value, step factor, and direction norm per step for every production optimizer"
+   }
+  },
+  {
+   "primitive_id": "wolfe_conditions_curvature",
+   "name": "The Wolfe conditions gate step acceptance; the second condition ensures the successor has shallower slope, i.e. positive curvature along the step",
+   "verbatim_quote": "The second Wolfe condition ensures that the chosen step results in a shallower successor.",
+   "page": "exercise 4.4 solution (conditions in section 4.4), printed p. 75, text line ~4180",
+   "latex": "f(x^{(k+1)}) \\le f(x^{(k)}) + \\beta \\alpha \\nabla_{d^{(k)}} f(x^{(k)})",
+   "symbol_and_unit_ledger": {
+    "\\beta": "sufficient-decrease fraction in [0, 1), typically 1e-4 (dimensionless)",
+    "\\alpha": "step factor (dimensionless scale)",
+    "\\nabla_{d^{(k)}} f(x^{(k)})": "directional derivative along the descent direction at the current point (objective units per unit step)"
+   },
+   "assumptions": [
+    "The direction is a genuine descent direction, so the directional derivative is negative",
+    "With beta = 1 no positive step may satisfy the first condition, so beta must be in [0, 1)"
+   ],
+   "breakdown_regime": "Exact line search satisfying both conditions can cost more evaluations than it saves; approximate backtracking search is the practical compromise the book implements",
+   "domain": "line search",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Step acceptance in engine optimizers is gated by sufficient decrease rather than by any decrease at all: a step that improves the objective by a negligible amount relative to the predicted first-order decrease is rejected and the step shrinks. This prevents slow crawling along flat valleys from masquerading as convergence.",
+    "source_operator": "wolfe_conditions_curvature",
+    "telemetry": "Accepted versus rejected step counts and realized versus predicted decrease per line search"
+   }
+  },
+  {
+   "primitive_id": "trust_region_ratio",
+   "name": "Trust region methods adapt the region radius by the ratio of actual to predicted improvement",
+   "verbatim_quote": "The ratio η is close to 1 when the predicted improvement matches the actual improvement.",
+   "page": "section 4.5, printed p. 71, text line ~4020",
+   "latex": "\\eta = \\frac{f(x) - f(x')}{f(x) - \\hat{f}(x')}",
+   "symbol_and_unit_ledger": {
+    "\\eta": "improvement ratio (dimensionless); near 1 means the local model predicted well",
+    "f(x) - f(x')": "actual improvement from the trial point (objective units)",
+    "f(x) - \\hat{f}(x')": "improvement predicted by the local model f-hat (objective units)",
+    "\\delta": "trust region radius bounding the step (design-variable units)"
+   },
+   "assumptions": [
+    "A local model of the objective is maintained inside the region where it is believed reliable",
+    "Radius is scaled down below a low ratio threshold and up above a high one, per algorithm 4.5"
+   ],
+   "breakdown_regime": "If the model class is wrong (for example a quadratic model of a kinked objective), the ratio stays low, the radius collapses, and progress crawls; elliptical regions need a norm matrix update instead of scalar scaling",
+   "domain": "local descent",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's model-trust decisions mirror this ratio: a sub-model's forecast is compared with realized outcomes, and the region (of inputs, of market states, of parameter space) where that model is allowed to act expands or contracts by the match. Predicted-versus-actual agreement is the single dial that sizes trust.",
+    "source_operator": "trust_region_ratio",
+    "telemetry": "Forecast-versus-realized improvement ratios per sub-model, with the trust radius history they induced"
+   }
+  },
+  {
+   "primitive_id": "gradient_descent_steepest_descent",
+   "name": "Gradient descent steps opposite the gradient; with exact step sizes successive directions are orthogonal, causing zig-zagging in narrow valleys",
+   "verbatim_quote": "Following the direction of steepest descent is guaranteed to lead to improvement, provided that the objective function is smooth, the step factor α is sufficiently small, and we are not already at a point where the gradient is zero.",
+   "page": "section 5.1, printed p. 77, text line ~4240",
+   "latex": "d^{(k)} = -\\frac{g^{(k)}}{\\|g^{(k)}\\|}",
+   "symbol_and_unit_ledger": {
+    "d^{(k)}": "unit descent direction at iteration k (dimensionless direction)",
+    "g^{(k)}": "gradient of f at the kth iterate (objective units per design-variable unit)"
+   },
+   "assumptions": [
+    "The objective is smooth and the step factor is sufficiently small",
+    "The gradient is not zero at the current point (a zero gradient is a stationary point)"
+   ],
+   "breakdown_regime": "In narrow valleys not aligned with the descent direction, steps zig-zag and progress along the valley floor is slow; performance is sensitive to the scaling of the design variables",
+   "domain": "first-order methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Steepest descent is the engine's baseline optimizer and its diagnostic: when a fancier method cannot beat plain gradient descent on a calibration objective, the objective's geometry (valley orientation, variable scaling) is the problem, and rescaling variables is the fix the book points to.",
+    "source_operator": "gradient_descent_steepest_descent",
+    "telemetry": "Per-variable scale factors and iteration counts for baseline versus accelerated optimizers on the same objective"
+   }
+  },
+  {
+   "primitive_id": "conjugate_gradient_method",
+   "name": "Conjugate gradient optimizes an n-dimensional quadratic in n steps using mutually conjugate directions built from gradients",
+   "verbatim_quote": "The conjugate gradient method can optimize n-dimensional quadratic functions in n steps as shown in figure 5.2.",
+   "page": "section 5.2, printed p. 79, text line ~4289",
+   "latex": "d^{(k)} = -g^{(k)} + \\beta^{(k)} d^{(k-1)}",
+   "symbol_and_unit_ledger": {
+    "d^{(k)}": "search direction at iteration k (design-variable units)",
+    "g^{(k)}": "gradient at the kth iterate (objective units per design-variable unit)",
+    "\\beta^{(k)}": "weight on the previous direction; Fletcher-Reeves sets it to the ratio of squared gradient norms (dimensionless)"
+   },
+   "assumptions": [
+    "For the n-step guarantee the objective is quadratic with symmetric positive definite A, giving a unique minimum",
+    "Directions are mutually conjugate with respect to A: d(i) transpose A d(j) equals 0 for i not equal j"
+   ],
+   "breakdown_regime": "On nonquadratic objectives A is unknown and beta updates (Fletcher-Reeves, Polak-Ribiere) are heuristics; Polak-Ribiere needs the max(beta, 0) reset to guarantee convergence",
+   "domain": "first-order methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Near a local minimum every smooth engine objective is approximately quadratic, so conjugate gradient is the cheap curvature-aware accelerator for large calibration problems where Hessians are unavailable: it captures valley geometry from gradient history alone, with no matrix storage.",
+    "source_operator": "conjugate_gradient_method",
+    "telemetry": "Beta update variant in use, restart frequency, and iterations to tolerance per calibration problem"
+   }
+  },
+  {
+   "primitive_id": "momentum_method",
+   "name": "Momentum tracks a velocity vector updated by the gradient; with beta equal to zero it reduces to gradient descent",
+   "verbatim_quote": "For β = 0, we recover gradient descent. Momentum can be interpreted as a ball rolling down a nearly horizontal incline.",
+   "page": "section 5.3, printed p. 81, text line ~4470",
+   "latex": "v^{(k+1)} = \\beta v^{(k)} - \\alpha g^{(k)}, \\quad x^{(k+1)} = x^{(k)} + v^{(k+1)}",
+   "symbol_and_unit_ledger": {
+    "v^{(k)}": "velocity (momentum) vector at iteration k (design-variable units per step)",
+    "\\beta": "momentum decay factor in [0, 1) (dimensionless)",
+    "\\alpha": "step factor (dimensionless scale)",
+    "g^{(k)}": "gradient at the kth iterate (objective units per design-variable unit)"
+   },
+   "assumptions": [
+    "Flat regions have small gradients, so accumulated velocity speeds traversal",
+    "The same step factor applies while velocity accumulates across iterations"
+   ],
+   "breakdown_regime": "Momentum overshoots at valley floors because steps do not slow down enough; Nesterov momentum corrects this by evaluating the gradient at the projected future position",
+   "domain": "first-order methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Online weight updates in the engine use momentum semantics: recent gradient evidence accumulates into a velocity so persistent signal moves parameters faster than one-off noise. The beta decay is the explicit half-life of evidence, and it is tuned and logged as such.",
+    "source_operator": "momentum_method",
+    "telemetry": "Velocity norm and gradient norm per update, with the effective evidence half-life implied by beta"
+   }
+  },
+  {
+   "primitive_id": "adam_bias_correction",
+   "name": "Adam keeps exponentially decaying first and second gradient moments, and bias correction is required because both are initialized at zero",
+   "verbatim_quote": "Initializing the gradient and squared gradient to zero introduces a bias. A bias correction step helps alleviate the issue.",
+   "page": "section 5.8, printed p. 86, text line ~4713",
+   "latex": "\\hat{v}^{(k+1)} = \\frac{v^{(k+1)}}{1 - \\gamma_v^{k}}",
+   "symbol_and_unit_ledger": {
+    "v^{(k)}": "biased first-moment (mean gradient) estimate at step k (objective units per design-variable unit)",
+    "\\gamma_v": "first-moment decay, default 0.9 in the original paper (dimensionless)",
+    "\\hat{v}": "bias-corrected first-moment estimate (same units as v)",
+    "k": "step counter (dimensionless)"
+   },
+   "assumptions": [
+    "Defaults from the original paper: step factor 0.001, decays 0.9 and 0.999, epsilon 1e-8",
+    "Per-parameter step adaptation via the corrected second moment, as in RMSProp and Adadelta"
+   ],
+   "breakdown_regime": "Early iterations without bias correction take badly scaled steps; Adam can still fail to converge on some convex problems where the second-moment estimate decreases too fast",
+   "domain": "first-order methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any engine component trained with Adam-style updates must implement the bias correction, or its first updates after every restart are systematically wrong in a known direction. This is a correctness gate in optimizer code review, not a tuning preference.",
+    "source_operator": "adam_bias_correction",
+    "telemetry": "Optimizer configuration audit: bias correction present, decay constants, and step counts since restart"
+   }
+  },
+  {
+   "primitive_id": "newtons_method_quadratic_convergence",
+   "name": "Newton's method steps to the stationary point of the local quadratic model and converges quadratically near a local minimum",
+   "verbatim_quote": "It has quadratic convergence, meaning the difference between the minimizer and the iterate is approximately squared with every iteration.",
+   "page": "section 6.1, printed p. 96, text line ~5240",
+   "latex": "x^{(k+1)} = x^{(k)} - (H^{(k)})^{-1} g^{(k)}",
+   "symbol_and_unit_ledger": {
+    "H^{(k)}": "Hessian of f at the kth iterate (objective units per design-variable unit squared)",
+    "g^{(k)}": "gradient at the kth iterate (objective units per design-variable unit)",
+    "x^{(k+1)}": "next iterate (design-variable units)"
+   },
+   "assumptions": [
+    "The iterate is sufficiently close to a local minimum in a bowl-like region",
+    "The second derivative (Hessian) is nonzero and well conditioned along the path"
+   ],
+   "breakdown_regime": "The update is undefined when the second derivative is zero and unstable when it is near zero; far from a minimum the quadratic model misleads, producing oscillation or overshoot (figure 6.3 failure cases)",
+   "domain": "second-order methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For low-dimensional engine calibrations with available Hessians, Newton steps are the fastest route to a verified optimum, and the quadratic-convergence property doubles as a diagnostic: if error is not squaring near the solution, the Hessian or gradient implementation is wrong.",
+    "source_operator": "newtons_method_quadratic_convergence",
+    "telemetry": "Error-versus-iteration curves per Newton run, checked for the quadratic regime before acceptance"
+   }
+  },
+  {
+   "primitive_id": "quasi_newton_bfgs",
+   "name": "Quasi-Newton methods approximate the inverse Hessian from gradient differences; BFGS is the standard update and L-BFGS bounds its memory",
+   "verbatim_quote": "Just as the secant method approximates f 00 in the univariate case, quasi-Newton methods approximate the inverse Hessian.",
+   "page": "section 6.5, printed p. 103, text line ~5604",
+   "latex": "x^{(k+1)} \\leftarrow x^{(k)} - \\alpha^{(k)} Q^{(k)} g^{(k)}",
+   "symbol_and_unit_ledger": {
+    "Q^{(k)}": "approximation to the inverse Hessian at iteration k (design-variable units squared per objective unit)",
+    "\\alpha^{(k)}": "step factor from line search (dimensionless)",
+    "g^{(k)}": "gradient at the kth iterate (objective units per design-variable unit)"
+   },
+   "assumptions": [
+    "Q starts at the identity and is updated from step differences delta and gradient differences gamma each iteration",
+    "The updates keep Q symmetric and positive definite"
+   ],
+   "breakdown_regime": "Full BFGS stores an n by n dense matrix, which is prohibitive for very large problems; L-BFGS keeps only the last m delta and gamma pairs and approximates the rest",
+   "domain": "second-order methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "L-BFGS is the engine's default for medium and large smooth calibrations: curvature information without Hessian code or dense storage. The history size m is the explicit trade between curvature fidelity and memory, and it is set per problem size class.",
+    "source_operator": "quasi_newton_bfgs",
+    "telemetry": "History size m, line search evaluations per iteration, and final gradient norm per calibration"
+   }
+  },
+  {
+   "primitive_id": "nelder_mead_simplex",
+   "name": "Nelder-Mead moves a simplex by reflection, expansion, contraction, and shrinkage rules driven only by vertex function values",
+   "verbatim_quote": "A simplex is a generalization of a tetrahedron to n-dimensional space. The Nelder-Mead method uses a series of rules that dictate how the simplex is updated based on evaluations of the objective function at its vertices.",
+   "page": "section 7.5, printed p. 119, text line ~6453",
+   "latex": "x_r = \\bar{x} + \\alpha(\\bar{x} - x_h)",
+   "symbol_and_unit_ledger": {
+    "x_r": "reflection point (design-variable units)",
+    "\\bar{x}": "centroid of all vertices except the worst (design-variable units)",
+    "x_h": "vertex with the highest function value (design-variable units)",
+    "\\alpha": "reflection coefficient, typically 1 (dimensionless)"
+   },
+   "assumptions": [
+    "The simplex has n+1 vertices in n dimensions and is initialized with reasonable spread",
+    "Convergence is judged by the standard deviation of vertex function values against a tolerance, not by movement in design space"
+   ],
+   "breakdown_regime": "The simplex can collapse or stagnate on nonsmooth or high-dimensional objectives, and it offers no convergence guarantee comparable to gradient methods; restarts with a fresh simplex are the standard remedy",
+   "domain": "direct methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For engine objectives that are discontinuous, simulation-based, or gradient-free (threshold rules, discrete feature switches), Nelder-Mead is the sanctioned derivative-free local search. Its convergence signal, spread of vertex values, is logged so a collapsed simplex is detected rather than mistaken for an optimum.",
+    "source_operator": "nelder_mead_simplex",
+    "telemetry": "Simplex vertex value spread and restart count per derivative-free tuning run"
+   }
+  },
+  {
+   "primitive_id": "simulated_annealing_metropolis",
+   "name": "Simulated annealing accepts uphill moves with probability exp(-delta y / t); the temperature parameter controls the acceptance probability",
+   "verbatim_quote": "The temperature parameter t controls the acceptance probability.",
+   "page": "section 8.4, printed p. 141, text line ~7480",
+   "latex": "P(\\text{accept}) = \\begin{cases} 1 & \\Delta y \\le 0 \\\\ e^{-\\Delta y / t} & \\Delta y > 0 \\end{cases}",
+   "symbol_and_unit_ledger": {
+    "\\Delta y": "change in objective value of the proposed transition (objective units)",
+    "t": "temperature at the current iteration (objective units, annealed toward 0)",
+    "P(accept)": "Metropolis acceptance probability (dimensionless, in (0, 1])"
+   },
+   "assumptions": [
+    "A transition distribution proposes candidate moves and an annealing schedule lowers t over time",
+    "A logarithmic schedule is guaranteed to reach the global optimum asymptotically under stated conditions, but is very slow in practice"
+   ],
+   "breakdown_regime": "Cooling too quickly quenches the search into a poor local minimum before the region containing the global minimum is covered; exponential schedules trade the guarantee for speed",
+   "domain": "stochastic methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Discrete and combinatorial engine searches (feature subsets, rule configurations) use annealing semantics: early exploration accepts worse configurations at a controlled rate, and the cooling schedule is the explicit exploration budget. The schedule, not luck, is what gets tuned and reported.",
+    "source_operator": "simulated_annealing_metropolis",
+    "telemetry": "Temperature schedule parameters, acceptance rate of uphill moves per temperature band, best value found per band"
+   }
+  },
+  {
+   "primitive_id": "cross_entropy_method",
+   "name": "The cross-entropy method fits a proposal distribution to elite samples each iteration; for a multivariate normal the fit is the maximum likelihood estimate",
+   "verbatim_quote": "Depending on the choice of distribution family, the process of fitting the distribution to the elite samples can be done analytically.",
+   "page": "section 8.5, printed p. 144, text line ~7674",
+   "latex": "\\mu^{(k+1)} = \\frac{1}{m_{\\text{elite}}} \\sum_{i=1}^{m_{\\text{elite}}} x^{(i)}",
+   "symbol_and_unit_ledger": {
+    "\\mu^{(k+1)}": "updated mean of the proposal distribution (design-variable units)",
+    "m_{elite}": "number of elite (best) samples used in the fit (dimensionless count)",
+    "x^{(i)}": "the ith elite sample (design-variable units)"
+   },
+   "assumptions": [
+    "A parametric family (commonly multivariate normal, parameterized by mean and covariance) is chosen for the proposal distribution",
+    "At convergence the proposal distribution concentrates on the global optima"
+   ],
+   "breakdown_regime": "A unimodal family like the multivariate normal can misfit elite samples from multimodal objectives (the book's example 8.4), collapsing onto one mode or an average of modes",
+   "domain": "stochastic methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Distribution-fitting search is how the engine tunes parameter vectors when the objective is a black-box simulation: sample, keep elites, refit. The elite fraction and family choice are the control knobs, and covariance collapse is monitored as the premature-convergence alarm.",
+    "source_operator": "cross_entropy_method",
+    "telemetry": "Elite fraction, proposal covariance trace per iteration, and sample budget per tuning run"
+   }
+  },
+  {
+   "primitive_id": "covariance_matrix_adaptation",
+   "name": "Covariance matrix adaptation splits the sampling covariance into a shape matrix C and a scalar scale sigma so scale learns faster than shape",
+   "verbatim_quote": "First, rather than operating on multivariate Gaussians of the form N (µ, Σ), covariance matrix adaptation uses N (µ, σ2 C), splitting the covariance into a matrix C that controls the shape of the distribution, and a scalar σ that controls the scale of the distribution.",
+   "page": "section 8.8, printed p. 154, text line ~8180",
+   "latex": "m_{\\text{eff}} = \\frac{1}{\\sum_{i=1}^{m} w_i^2}",
+   "symbol_and_unit_ledger": {
+    "C": "covariance shape matrix (design-variable units squared, normalized by scale)",
+    "\\sigma": "overall step-size scale (design-variable units)",
+    "m_{eff}": "effective sample size implied by the recombination weights (dimensionless)",
+    "w_i": "recombination weights for the ranked samples, summing to 1 (dimensionless)"
+   },
+   "assumptions": [
+    "Samples are drawn from a multivariate normal with mean mu and covariance sigma squared times C",
+    "A recommended covariance step factor is approximately m_eff divided by n squared"
+   ],
+   "breakdown_regime": "Step factors that are too large produce degenerate covariance matrices; too small makes learning slow, and the rank-m_elite update only incorporates information from the elite samples",
+   "domain": "stochastic methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "CMA-ES is the engine's heavy-duty black-box tuner for correlated parameter spaces: the shape matrix learns which parameter combinations matter (the valley orientation), while sigma separately learns how far to step. That separation is why it outperforms independent-coordinate search on coupled calibration parameters.",
+    "source_operator": "covariance_matrix_adaptation",
+    "telemetry": "Sigma trajectory, covariance condition number, and effective sample size per generation"
+   }
+  },
+  {
+   "primitive_id": "genetic_algorithm_operators",
+   "name": "Genetic algorithms pass fitter individuals' chromosomes to the next generation through crossover and mutation, with optional elitism",
+   "verbatim_quote": "At each generation, the chromosomes of the fitter individuals are passed on to the next generation after undergoing the genetic operations of crossover and mutation.",
+   "page": "section 9.2, printed p. 165, text line ~8790",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An individual's fitness for reproduction is inversely related to its objective function value",
+    "A gene corresponds to a design variable and a chromosome encodes a full design point"
+   ],
+   "breakdown_regime": "Selection pressure that is too strong collapses diversity and prematurely converges the population; too weak wastes evaluations, and performance is sensitive to the choice of selection, crossover, and mutation operators",
+   "domain": "population methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Population search is the engine's tool for discrete and mixed design spaces (rule sets, feature combinations) where gradients do not exist: fitness is the validation score, and elitism guarantees the best configuration found is never lost between generations.",
+    "source_operator": "genetic_algorithm_operators",
+    "telemetry": "Population diversity (distinct configurations), best and median fitness per generation, elite retention count"
+   }
+  },
+  {
+   "primitive_id": "constrained_problem_formulation",
+   "name": "Constrained problems restrict the feasible set to a subset of R^n expressed by equality constraints h(x) = 0 and inequality constraints g(x) <= 0",
+   "verbatim_quote": "In the previous chapters, the feasible set X was assumed to be Rn . In the constrained problems in this chapter, the feasible set is some subset of Rn .",
+   "page": "section 10.1, printed p. 183, text line ~9677",
+   "latex": "\\min_{x}\\ f(x) \\quad \\text{subject to} \\quad h_i(x) = 0, \\ g_j(x) \\le 0",
+   "symbol_and_unit_ledger": {
+    "h_i(x)": "ith equality constraint function, zero exactly on the feasible surface (constraint units)",
+    "g_j(x)": "jth inequality constraint function, nonpositive inside the feasible set (constraint units)",
+    "f(x)": "objective function (domain units)"
+   },
+   "assumptions": [
+    "Constraint functions, unlike bare set membership, report how far a point is from feasibility, which algorithms exploit",
+    "Greater-than inequalities are converted to less-than form by a sign flip"
+   ],
+   "breakdown_regime": "Strict inequalities can exclude the boundary and leave a problem with no attained solution; the book advises including the boundary in the feasible set",
+   "domain": "constrained optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine tuning problem with hard limits (parameter bounds, exposure caps, data-use restrictions) is written in this h and g form, so feasibility is a computed quantity with a distance, not a boolean afterthought. Constraint violation magnitude becomes a first-class logged signal.",
+    "source_operator": "constrained_problem_formulation",
+    "telemetry": "Per-constraint violation magnitudes at candidate and accepted solutions"
+   }
+  },
+  {
+   "primitive_id": "lagrange_multipliers_alignment",
+   "name": "The method of Lagrange multipliers optimizes a function subject to equality constraints by finding where objective and constraint gradients align",
+   "verbatim_quote": "The method of Lagrange multipliers is used to optimize a function subject to equality constraints.",
+   "page": "section 10.6, printed p. 189, text line ~10004",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "f and h have continuous partial derivatives",
+    "At a constrained optimum, small shifts along the constraint contour cannot improve f, so the gradients of f and h are aligned (one is a scalar multiple of the other)"
+   ],
+   "breakdown_regime": "Alignment is necessary, not sufficient: aligned points include maxima and saddles along the constraint, and constraint qualification failures (such as a vanishing constraint gradient) break the argument",
+   "domain": "constrained optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The multiplier is a price: in engine resource problems (compute budget, evaluation budget, data budget), the Lagrange multiplier on a binding constraint measures how much objective value one more unit of that resource would buy. Reporting multipliers alongside solutions turns constraint choices into quantified trade-offs.",
+    "source_operator": "lagrange_multipliers_alignment",
+    "telemetry": "Multiplier values per binding constraint at accepted solutions, tracked across runs"
+   }
+  },
+  {
+   "primitive_id": "kkt_stationarity_alignment",
+   "name": "KKT stationarity: at an optimum with an active constraint, the objective and constraint contour lines, equivalently their gradients, must be aligned",
+   "verbatim_quote": "When the constraint is active, we require that the contour lines of f and g be aligned, which is equivalent to saying that their gradients be aligned.",
+   "page": "section 10.7, printed p. 193, text line ~10250",
+   "latex": "\\nabla f(x^{*}) + \\sum_{i} \\mu_i \\nabla g_i(x^{*}) + \\sum_{j} \\lambda_j \\nabla h_j(x^{*}) = 0",
+   "symbol_and_unit_ledger": {
+    "\\nabla f(x^{*})": "objective gradient at the candidate optimum (objective units per design-variable unit)",
+    "\\mu_i": "Lagrange multiplier (dual variable) for inequality constraint i, required nonnegative (objective units per constraint unit)",
+    "\\lambda_j": "multiplier for equality constraint j, sign unrestricted (objective units per constraint unit)",
+    "g_i, h_j": "inequality and equality constraint functions (constraint units)"
+   },
+   "assumptions": [
+    "The four KKT conditions hold jointly: feasibility, dual feasibility (mu >= 0), complementary slackness, and stationarity",
+    "Complementary slackness: for each constraint, either the constraint value or its multiplier is zero"
+   ],
+   "breakdown_regime": "KKT conditions are necessary under constraint qualification; for nonconvex problems KKT points need not be global optima, and verifying all four conditions is the certificate, not any one of them",
+   "domain": "constrained optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Constrained calibration results in the engine ship with a KKT audit: feasibility residuals, multiplier signs, complementary slackness products, and the stationarity residual are computed and stored. A solution that fails any of the four is not reported as optimal, which is the constrained analogue of the gradient-zero check.",
+    "source_operator": "kkt_stationarity_alignment",
+    "telemetry": "KKT residuals per accepted constrained solution: primal feasibility, dual feasibility, slackness products, stationarity norm"
+   }
+  },
+  {
+   "primitive_id": "penalty_methods_conversion",
+   "name": "Penalty methods convert constrained problems into unconstrained ones by adding penalty terms for violated constraints to the objective",
+   "verbatim_quote": "We can use penalty methods to convert constrained optimization problems into unconstrained optimization problems by adding penalty terms to the objective function, allowing us to use the methods developed in previous chapters.",
+   "page": "section 10.9, printed p. 195, text line ~10336",
+   "latex": "p_{\\text{quadratic}}(x) = \\sum_{i} \\max(g_i(x), 0)^2 + \\sum_{j} h_j(x)^2",
+   "symbol_and_unit_ledger": {
+    "p_{quadratic}(x)": "quadratic penalty value, zero exactly on the feasible set (squared constraint units)",
+    "g_i(x)": "inequality constraint functions; only positive (violating) values are penalized (constraint units)",
+    "h_j(x)": "equality constraint functions (constraint units)",
+    "\\rho": "penalty magnitude weight balancing objective against feasibility (objective units per squared constraint unit)"
+   },
+   "assumptions": [
+    "The penalty weight rho is increased over successive unconstrained solves, warm-starting each from the previous point",
+    "The count penalty preserves the solution for large rho but is discontinuous; the quadratic penalty is smooth"
+   ],
+   "breakdown_regime": "Quadratic penalties near the boundary are very small and may require rho to approach infinity before violations cease; the count penalty gives no gradient information to guide the search toward feasibility",
+   "domain": "constrained optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Soft constraints in engine objectives (prefer feasible, tolerate small violations during search) are implemented as exactly these penalty terms, with rho schedules logged. The discontinuity warning governs the choice: count penalties are banned inside gradient-based search because they starve the optimizer of direction.",
+    "source_operator": "penalty_methods_conversion",
+    "telemetry": "Penalty weight schedule and final violation magnitudes per penalized solve"
+   }
+  },
+  {
+   "primitive_id": "weak_duality_lower_bound",
+   "name": "The dual problem's solution is a lower bound on the primal solution; the difference is the duality gap, and strong duality makes it zero",
+   "verbatim_quote": "The solution to the dual problem is thus a lower bound to the solution of the primal problem. That is, d∗ ≤ p∗ , where d∗ is the dual value and p∗ is the primal value.",
+   "page": "section 11.1, printed p. 209, text line ~11080",
+   "latex": "\\max_{\\mu \\ge 0, \\lambda} \\min_{x} L(x, \\mu, \\lambda) \\le \\min_{x} \\max_{\\mu \\ge 0, \\lambda} L(x, \\mu, \\lambda)",
+   "symbol_and_unit_ledger": {
+    "L(x, \\mu, \\lambda)": "generalized Lagrangian: objective plus multiplier-weighted constraint functions (objective units)",
+    "d^{*}": "optimal dual value (objective units)",
+    "p^{*}": "optimal primal value (objective units)",
+    "\\mu, \\lambda": "dual variables for inequality and equality constraints (objective units per constraint unit)"
+   },
+   "assumptions": [
+    "Weak duality holds for any problem by the max-min inequality",
+    "Strong duality (zero gap) is guaranteed when objective and constraints are convex and Slater's condition holds"
+   ],
+   "breakdown_regime": "For nonconvex problems the gap is generally positive, so the dual bound certifies suboptimality only up to the gap; a zero-gap claim without convexity and Slater's condition is unsupported",
+   "domain": "duality theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Dual bounds give the engine certificates: when a solver reports a candidate optimum for a convex subproblem, the dual value bounds how far from optimal it can possibly be. Optimality claims in reports cite the gap, not the solver's exit message.",
+    "source_operator": "weak_duality_lower_bound",
+    "telemetry": "Primal value, dual value, and duality gap per convex solve that feeds a published number"
+   }
+  },
+  {
+   "primitive_id": "admm_alternating_minimization",
+   "name": "ADMM replaces the joint augmented-Lagrangian minimization with alternating minimizations over separable variable blocks, then a dual update",
+   "verbatim_quote": "The alternating direction method of multipliers instead alternates between minimizing x1 and x2 in every iteration:",
+   "page": "section 11.4, printed p. 219, text line ~11653",
+   "latex": "L_{\\rho}(x_1, x_2, \\lambda) = f_1(x_1) + f_2(x_2) + \\lambda^{\\top}(A_1 x_1 + A_2 x_2 - b) + \\frac{\\rho}{2} \\|A_1 x_1 + A_2 x_2 - b\\|_2^2",
+   "symbol_and_unit_ledger": {
+    "f_1, f_2": "separable objective terms for the two variable blocks (objective units)",
+    "A_1 x_1 + A_2 x_2 = b": "affine coupling constraint between the blocks (constraint units)",
+    "\\lambda": "dual variable for the coupling constraint (objective units per constraint unit)",
+    "\\rho": "quadratic penalty parameter, greater than 0 (objective units per squared constraint unit)"
+   },
+   "assumptions": [
+    "The objective is separable across the blocks and the coupling constraint is affine; many general constrained problems can be reformulated into this form",
+    "The quadratic penalty term does not change the optimal value because feasible points have zero penalty"
+   ],
+   "breakdown_regime": "ADMM is not guaranteed to converge to a global optimum on nonconvex problems; it typically gives fast convergence to modest accuracy rather than high precision",
+   "domain": "duality and distributed optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "ADMM is the engine's pattern for splitting one big fitting problem across data shards or machines: each shard optimizes its block, and the dual update enforces agreement. It is the sanctioned decomposition when a calibration outgrows one process, with primal residuals as the agreement telemetry.",
+    "source_operator": "admm_alternating_minimization",
+    "telemetry": "Primal and dual residuals per ADMM iteration, block solve times, and agreement error at termination"
+   }
+  },
+  {
+   "primitive_id": "simplex_vertex_optimum",
+   "name": "The simplex method improves (or preserves) the objective at every vertex step, and a linear program has finitely many vertices, so the method must converge to an optimal vertex",
+   "verbatim_quote": "The simplex method is guaranteed either to improve with respect to the objective function with each step or to preserve the current value of the objective function. Any linear program will have a finite number of vertices.",
+   "page": "section 12.2, printed p. 255, text line ~13819",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The linear program is in equality form (Ax = b, x >= 0) with A of full row rank and m <= n",
+    "The program is feasible and bounded, which guarantees the method arrives at an optimal solution"
+   ],
+   "breakdown_regime": "Interior points are never optimal for a linear program and face or edge points are optimal only in perpendicular cases; degenerate vertices can cause cycling without anti-cycling rules, and the method is exponential in the worst case despite practical speed",
+   "domain": "linear programming",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Linear subproblems inside the engine (allocation, blending, scheduling relaxations) inherit the vertex theorem: the search only ever needs to consider vertices, so solution structure is sparse and auditable. A reported allocation with unnecessary interior slack signals a modeling error, not a solver quirk.",
+    "source_operator": "simplex_vertex_optimum",
+    "telemetry": "Active constraint count (n minus m zero components) and objective value per linear solve"
+   }
+  },
+  {
+   "primitive_id": "pareto_dominance_ranking",
+   "name": "In multiobjective optimization two designs can be objectively ranked only when one is better in at least one objective and no worse in any other (dominance)",
+   "verbatim_quote": "We can objectively rank two design points x and x0 only when one is better in at least one objective and no worse in any other.",
+   "page": "section 15.1.1, printed p. 326, text line ~17470",
+   "latex": "f_i(x) \\le f_i(x') \\ \\forall i \\in 1:m, \\quad \\text{and} \\quad f_i(x) < f_i(x') \\ \\text{for some } i",
+   "symbol_and_unit_ledger": {
+    "f_i": "the ith objective function of m objectives (each in its own domain units)",
+    "x, x'": "the two design points being compared (design-variable units)"
+   },
+   "assumptions": [
+    "The objective returns an m-dimensional vector of values, one per objective or criterion",
+    "A design is Pareto optimal when no other design dominates it; effort can focus on Pareto-optimal designs without committing to a trade-off"
+   ],
+   "breakdown_regime": "When each design wins on some objectives and loses on others, dominance is silent and the ambiguity must be resolved by weights, constraints, or preference elicitation, each of which imports a subjective trade-off",
+   "domain": "multiobjective optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine model comparison is dominance-first: a candidate model replaces an incumbent only if it is no worse on every tracked metric and better on at least one. Scalarized scoreboards are used only after dominance fails to decide, and the weights used are reported as the subjective step they are.",
+    "source_operator": "pareto_dominance_ranking",
+    "telemetry": "Per-metric comparison vectors for candidate versus incumbent models, with dominance verdicts logged before any weighted score"
+   }
+  },
+  {
+   "primitive_id": "surrogate_model_regression",
+   "name": "A surrogate model mimics the true objective and is fitted by minimizing the norm of prediction error at sampled points",
+   "verbatim_quote": "A surrogate model fˆ parameterized by θ is designed to mimic the true objective function f",
+   "page": "section 17.1, printed p. 365, text line ~19415",
+   "latex": "\\min_{\\theta} \\|y - \\hat{y}\\|_p",
+   "symbol_and_unit_ledger": {
+    "\\hat{f}_{\\theta}": "surrogate model with parameters theta (objective units)",
+    "y": "true function evaluations at the sampled design points (objective units)",
+    "\\hat{y}": "surrogate predictions at the same points (objective units)",
+    "\\|\\cdot\\|_p": "Lp norm of the error vector; L2 corresponds to mean squared error (objective units)"
+   },
+   "assumptions": [
+    "Samples are collected from the true objective, which is expensive enough to justify a model",
+    "The fitting criterion penalizes deviation only at the data points"
+   ],
+   "breakdown_regime": "There is no guarantee the model fits away from observed data; accuracy typically decreases the farther one goes from the sampled points, which is why surrogate optimization must keep sampling",
+   "domain": "surrogate modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Expensive engine simulations get surrogate stand-ins for search: the optimizer explores the cheap surrogate, and only promising points pay for true evaluations. The fit is always reported with its sampling footprint, because surrogate conclusions expire away from sampled regions.",
+    "source_operator": "surrogate_model_regression",
+    "telemetry": "Sample count and locations, surrogate-versus-true error at held-out points, distance of proposed optima from sampled regions"
+   }
+  },
+  {
+   "primitive_id": "gaussian_process_uncertainty",
+   "name": "A Gaussian process surrogate also quantifies prediction uncertainty; the posterior mean is a kernel-weighted correction of the prior mean",
+   "verbatim_quote": "The value of the Gaussian process beyond the surrogate models discussed previously is that it also quantifies our uncertainty in our predictions.",
+   "page": "section 18.3, printed p. 395, text line ~21130",
+   "latex": "\\hat{\\mu}(x) = m(x) + K(x, X) K(X, X)^{-1} (y - m(X))",
+   "symbol_and_unit_ledger": {
+    "\\hat{\\mu}(x)": "predicted posterior mean at x (objective units)",
+    "m(x)": "prior mean function (objective units)",
+    "K(x, X)": "covariance row between x and the observed points (objective units squared)",
+    "K(X, X)": "covariance matrix of the observed points (objective units squared)",
+    "y - m(X)": "residual of observations against the prior mean (objective units)"
+   },
+   "assumptions": [
+    "Function evaluations at any finite point set are jointly Gaussian under the prior, with mean function m and kernel k",
+    "The kernel controls the smoothness of the functions; the squared exponential kernel is a common choice"
+   ],
+   "breakdown_regime": "Exact GP inference scales cubically with the number of observations, and a misspecified kernel yields confident but wrong uncertainty bands; uncertainty grows away from data, by design",
+   "domain": "probabilistic surrogate models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's expensive-objective searches carry uncertainty, not just point predictions: candidate evaluations are chosen where the GP is uncertain and promising, and any conclusion drawn far from observed data is flagged by its own predictive variance. This is the formal version of not trusting extrapolation.",
+    "source_operator": "gaussian_process_uncertainty",
+    "telemetry": "Predictive mean and standard deviation per candidate point, kernel hyperparameters, and observation count per GP fit"
+   }
+  },
+  {
+   "primitive_id": "expected_improvement_exploration",
+   "name": "Expected improvement exploration samples where the GP-predicted expected gain over the current best is largest",
+   "verbatim_quote": "We can calculate the expected improvement using the distribution predicted by the Gaussian process:",
+   "page": "section 19.5, printed p. 415, text line ~22064",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A Gaussian process supplies a predicted mean and standard deviation at each candidate point",
+    "Improvement is measured against the current best observed function value, ymin"
+   ],
+   "breakdown_regime": "Probability of improvement alone tends to make very small gains each iteration; expected improvement balances gain size against likelihood, but both stall if the GP's uncertainty is miscalibrated",
+   "domain": "surrogate optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Experiment selection in the engine (which simulation to run next, which parameter region to probe) ranks candidates by expected improvement under the surrogate, not by predicted value alone. Pure exploitation of the current best guess is treated as a known failure mode with a named alternative.",
+    "source_operator": "expected_improvement_exploration",
+    "telemetry": "Expected improvement values per candidate evaluation, and realized improvement after the chosen evaluation"
+   }
+  },
+  {
+   "primitive_id": "branch_and_bound_pruning",
+   "name": "Branch and bound partitions the discrete solution space and prunes partitions whose LP-relaxation bounds cannot beat the best integral solution found",
+   "verbatim_quote": "Not placing solutions already known to be inferior to the best integral solution seen thus far allows branch and bound to prune the search space.",
+   "page": "section 22.4, printed p. 471, text line ~25061",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An LP relaxation of the mixed-integer program provides a lower bound for each partition",
+    "Branching splits on a nonintegral component by adding xi <= floor or xi >= ceiling constraints"
+   ],
+   "breakdown_regime": "Weak relaxations give weak bounds and little pruning, so the search can blow up combinatorially; the guarantee of optimality is exact but the runtime is not polynomial in the worst case",
+   "domain": "discrete optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Exact discrete decisions in the engine (small combinatorial selections) use bound-based pruning rather than exhaustive enumeration or pure heuristics: every discarded branch carries a bound proving it could not win. Heuristic answers without bounds are labeled as such and never reported as optimal.",
+    "source_operator": "branch_and_bound_pruning",
+    "telemetry": "Nodes explored versus pruned, incumbent value, and best bound (certified gap) per discrete solve"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "d8701dc22fb8889c-t1",
+   "think": "This book is a complete operating system for turning a design problem into a sequence of defensible numerical decisions, and its architecture matters as much as any single algorithm in it. It begins by fixing the object of study: a design point, an objective function, and a feasible set, with minimization as the standing convention and the frank admission, via the no free lunch theorems, that no method earns preference without assumptions about the objective's regularity. Everything after that is organized by what information the objective will surrender. Chapter 2 is about buying derivative information: exact symbolic or automatic differentiation when the function is code, finite differences with their step-size trade-off when it is not, the complex step trick that removes subtractive cancellation, and stochastic estimators such as regression gradients and simultaneous perturbation when the objective is noisy or enormous. Chapters 3 through 6 then spend that information in order of richness: bracketing spends only function values on one variable; descent direction methods spend a local model; first-order methods spend gradients and differ in how they remember them, from steepest descent's orthogonal zig-zag through conjugate directions, momentum, and per-parameter adaptation ending at Adam with its bias correction; second-order methods spend curvature, with Newton as the ideal, the secant and quasi-Newton updates as the practical approximation, and L-BFGS as the memory-bounded form. Chapters 7 through 9 handle the objectives that will not surrender derivatives at all: pattern search and Nelder-Mead move geometric probes, stochastic methods maintain distributions over designs and refine them (simulated annealing with its Metropolis acceptance, the cross-entropy method fitting elites, covariance matrix adaptation splitting shape from scale), and population methods evolve whole sets of designs. The second half of the book is about structure that changes the problem's type. Constraints convert the feasible set into functions whose violation distance is computable; Lagrange multipliers price the constraints; the KKT conditions give a four-part certificate for constrained optima; penalty methods trade exactness for unconstrained convenience. Duality then shows the same problem from below, with the dual value bounding the primal and ADMM exploiting separability to distribute the work. Linear and quadratic programming are the structured cases with vertex theorems and exact solvers, disciplined convex programming automates the recognition of convexity itself, and multiobjective optimization replaces ranking with dominance when no scalar objective exists. The final movement is about expensive and uncertain objectives: sampling plans spend evaluations wisely, surrogate models and Gaussian processes stand in for the true function while carrying their own uncertainty, acquisition rules like expected improvement decide where to sample next, and the uncertainty chapters propagate doubt through the design instead of pretending the objective is exact. Discrete and expression optimization close the loop for design spaces that are not continuous at all. For a reasoning engine, the transferable core is not any one update rule; it is the discipline of matching method to information and structure, of demanding certificates (KKT residuals, duality gaps, improvement ratios, simplex vertex counts) before calling a number optimal, and of treating every optimum as local and assumption-bound unless a theorem says otherwise. The book breaks where its assumptions break: smoothness, unimodality, convexity, analytic complex arithmetic, well-scaled variables, and objectives cheap enough to evaluate thousands of times. Each chapter names its own failure regime, which is what makes the collection usable as an engineering reference rather than a catalog of recipes. Two further structural lessons deserve emphasis because they decide whether optimization work compounds or stalls. The first is scaling. Chapter 1 warns that methods which do not use higher-order information are sensitive to how the design variables are scaled, and the whole first-order literature can be read as an attempt to buy back scale invariance cheaply: conjugate gradient infers it from direction history, momentum averages it away along persistent slopes, RMSProp and Adam estimate it per coordinate from squared gradients, and quasi-Newton methods approximate it as a full matrix. A practitioner who ignores variable scaling is not choosing a simpler method; they are choosing a slower and less reliable one. The second lesson is the division of labor between exact and heuristic guarantees. Linear programs, convex problems, and KKT systems admit certificates that settle optimality; stochastic and population methods admit only budgets and distributions over outcomes. The book keeps these epistemic classes visibly separate, which is what lets a reader plan a campaign: convexify what can be convexified, certify what can be certified, and for the remainder spend evaluations according to an explicit exploration policy such as an annealing schedule or an expected improvement ranking. The direct methods chapters add a third lesson: when the objective is a black box that returns only values, geometry still helps. A simplex, a pattern, or a fitted quadratic carries local shape information that pure random search discards, and the chapters on sampling plans show the same principle at the design stage, where factorial and space-filling designs extract interaction structure per evaluation instead of wasting evaluations on one-factor-at-a-time probing. Read as a whole, the book argues that optimization competence is mostly bookkeeping: bookkeeping of information (what each evaluation bought), of assumptions (what each guarantee rests on), and of certificates (what each reported number can actually claim). That is the habit an evidence-driven reasoning engine needs most, because its failures will rarely be arithmetic; they will be claims made one level stronger than the method that produced them.",
+   "retrocausal_genealogy": "The lineage runs from Euclid's extremal geometry and Heron's shortest path through Fermat's zero-derivative insight and the calculus of Leibniz and Newton, into Lagrange's multipliers, which first welded algebra to calculus for constrained problems. The computer era added Kantorovich and Dantzig's linear programming, Bellman's dynamic programming, and the descent methods of the 1950s and 1960s, then the quasi-Newton updates of Davidon, Fletcher, Powell, and Broyden's circle. The stochastic and population branches descend from Metropolis's 1953 acceptance rule and Holland-style evolution, formalized for continuous optimization by Hansen's CMA-ES line. The machine learning era contributed the adaptive first-order family (AdaGrad, RMSProp, Adam) and made reverse accumulation, Linnainmaa's 1970 idea popularized as backpropagation, the default gradient engine. The second edition's new chapters on duality, quadratic programming, and disciplined convex programming mark where the field's center of mass moved: toward structure recognition and certificates.",
+   "theory_of_mind": "The authors model the reader as an engineer with a real system to design and a finite evaluation budget, who needs working algorithms more than existence proofs. Their model of the domain is that optimization is one subject, not many: the same descent skeleton, the same optimality conditions, and the same constraint machinery recur from airfoil shaping to neural network training, so breadth across communities beats depth in any one. They believe implementations teach what theorems cannot, hence every method arrives as readable Julia code meant to be adapted rather than worshipped, and they are explicit that production solvers should replace the teaching code when robustness matters. They also assume the reader will meet objectives that are noisy, discontinuous, discrete, or ruinously expensive, and they budget entire chapters for each case instead of treating them as edge cases.",
+   "cross_layer_veto": "This work vetoes several tempting shortcuts in any larger reasoning system. It vetoes optimizer choice by fashion: the no free lunch theorems require a stated regularity assumption before any method is preferred. It vetoes global-optimality language: outside convexity, only local certificates exist, and a claimed optimum without KKT residuals, a duality gap, or a vertex argument is an anecdote. It vetoes gradient-free wandering when derivatives are available cheaply, and vetoes gradient methods when the objective is discontinuous, routing each problem to the information it can actually supply. It vetoes unbounded trust in local models: trust region ratios and Wolfe conditions exist because local approximations lie at a distance. Finally, it vetoes treating fitted surrogates as the objective itself, since surrogate error grows away from sampled points and only continued sampling keeps the search honest."
+  }
+ ],
+ "universal_lens": "Optimization is the general template for any system that must choose under scarcity: name the decision variables, the scalar or vector merit, and the feasible set; then match the search method to the information the merit function will surrender and the structure it provably has. The recurring moves (local models with trust limits, prices on constraints, distributions over candidates refined by elites, surrogates that carry their own uncertainty) transfer intact to scheduling, budgeting, experimentation, and policy design.",
+ "gsi_mapping": "The Institute takes the book as its methods core for teaching quantitative design: optimality conditions and KKT certificates as the standard of proof, duality as the standard for bounding claims, and the surrogate and uncertainty chapters as the standard for experimenting under expensive evaluations. Its algorithm taxonomy (by information used and structure assumed) becomes the vocabulary for reviewing any proposed method, and its Julia-first presentation models how the Institute expects methods to be published: as readable, adaptable code.",
+ "gse_mapping": "The engine takes its optimizer stack and its audit standards: reverse accumulation as the gradient cost law, L-BFGS and conjugate gradient for smooth calibrations, Nelder-Mead and CMA-ES for black-box and discrete tuning, penalty and KKT machinery for constrained fits, duality gaps as optimality certificates, and Gaussian process surrogates with expected improvement for expensive simulations. Equally important are the vetoes: no global-optimality claims without a certificate, and no method choice without a stated regularity assumption."
+}

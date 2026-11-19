@@ -1,0 +1,713 @@
+{
+  "schema": "wave46_66paper_picks_7props_and_stacked_dfs_benchmark_v1",
+  "generated_utc": "2026-11-18T19:40:37.773600+00:00",
+  "real_money_stake_cleared": false,
+  "live_stake_fraction": 0.0,
+  "clinical_ruo_sports_weight": 0.0,
+  "martingale_and_shortcut_audit": {
+    "schema": "wave46_martingale_and_shortcut_audit_v1",
+    "clean_checkout_fallback": false,
+    "games_audited": 147,
+    "total_games_audited": 148,
+    "margin_real_corr": 0.16422,
+    "margin_empirical_p_value": 0.02994,
+    "total_real_corr": 0.193996,
+    "total_empirical_p_value": 0.00599,
+    "null_placebo_draws": 500,
+    "beats_null_95pct": true,
+    "total_beats_null_99pct": true,
+    "shortcut_max_output_perturbation": 0.0,
+    "shortcut_invariance_verified": true
+  },
+  "walk_forward_7props_and_stacked_dfs": {
+    "schema": "wave46_7props_and_stacked_portfolio_dfs_harmony_v1",
+    "clean_checkout_fallback": false,
+    "slates_evaluated": 9,
+    "portfolio_lineups_per_slate": 3,
+    "total_stacked_portfolio_lineups": 27,
+    "player_dk_evaluations": 2784,
+    "overall_gated_prop_hit_rate": 0.6711,
+    "overall_tier1_prop_hit_rate": 0.7188,
+    "all_7_prop_markets_beat_naive": true,
+    "props_7_markets": {
+      "pass_yds": {
+        "n_eval": 258,
+        "naive_mae": 69.5897,
+        "gse_mae": 63.137,
+        "beats_naive": true,
+        "gated_n": 69,
+        "gated_hit_rate": 0.6087,
+        "tier1_n": 33,
+        "tier1_hit_rate": 0.5455
+      },
+      "rush_yds": {
+        "n_eval": 316,
+        "naive_mae": 30.0236,
+        "gse_mae": 28.2807,
+        "beats_naive": true,
+        "gated_n": 91,
+        "gated_hit_rate": 0.6593,
+        "tier1_n": 41,
+        "tier1_hit_rate": 0.7561
+      },
+      "rec_yds": {
+        "n_eval": 770,
+        "naive_mae": 29.4846,
+        "gse_mae": 26.6844,
+        "beats_naive": true,
+        "gated_n": 219,
+        "gated_hit_rate": 0.6758,
+        "tier1_n": 98,
+        "tier1_hit_rate": 0.7551
+      },
+      "receptions": {
+        "n_eval": 929,
+        "naive_mae": 1.9398,
+        "gse_mae": 1.7745,
+        "beats_naive": true,
+        "gated_n": 146,
+        "gated_hit_rate": 0.6781,
+        "tier1_n": 15,
+        "tier1_hit_rate": 0.6
+      },
+      "rush_rec_yds": {
+        "n_eval": 585,
+        "naive_mae": 34.74,
+        "gse_mae": 32.1029,
+        "beats_naive": true,
+        "gated_n": 153,
+        "gated_hit_rate": 0.6928,
+        "tier1_n": 69,
+        "tier1_hit_rate": 0.7536
+      },
+      "anytime_td": {
+        "n_eval": 950,
+        "naive_brier": 0.26601,
+        "gse_brier": 0.23436,
+        "beats_naive": true
+      },
+      "pass_tds_2plus": {
+        "n_eval": 253,
+        "naive_brier": 0.26438,
+        "gse_brier": 0.23453,
+        "beats_naive": true
+      }
+    },
+    "dfs_stacked_portfolio_backtest": {
+      "player_dk_mae_raw": 4.9598,
+      "player_dk_mae_gse": 4.7022,
+      "beats_raw_fppg_mae": true,
+      "mean_chalk_dk_pts": 106.8,
+      "mean_memtx_cash_dk_pts": 116.3,
+      "mean_primary_stack_dk_pts": 119.52,
+      "mean_portfolio3_avg_dk_pts": 118.15,
+      "mean_portfolio3_best_dk_pts": 129.31,
+      "cash_beats_chalk": true,
+      "stack1_beats_chalk": true,
+      "portfolio3_best_beats_chalk_weeks": 8,
+      "all_game_stacks_verified": true,
+      "max_salary_used": 50000,
+      "zero_cap_violations": true
+    },
+    "max_kkt_harmony_residual": 0.0
+  },
+  "sample_kc_at_den": {
+    "schema": "wave46_memtx_picks_7props_and_stacked_dfs_suite_v1",
+    "wired": true,
+    "matchup": "KC @ DEN",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "clinical_ruo_sports_weight": 0.0,
+    "alphaxiv_66paper_summary": {
+      "schema": "wave46_alphaxiv_66paper_memory_ci_upa_ledger_suite_v1",
+      "wired": true,
+      "clinical_ruo_sports_weight": 0.0,
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "vault_schema": "alphaxiv_66paper_persistent_memory_durable_ci_governance_and_spec_ledger_vault_v1",
+      "submitted_url_count": 66,
+      "unique_paper_count": 66,
+      "brand_new_wave46_count": 66,
+      "cross_wave_overlap_count": 0,
+      "vault_payload_sha256": "d8cc3aa79e402548f978da6e2088371746fe4a2ae04df650003d5c86b9cdd60e",
+      "pillar_counts": {
+        "pillar_a_transactional_persistent_memory_and_retention": 16,
+        "pillar_b_durable_workflow_self_healing_and_ci_safety": 15,
+        "pillar_c_upa_policy_governance_conformance_and_human_anchor": 17,
+        "pillar_d_spec_growth_ledger_evidence_trace_and_profiling": 18
+      },
+      "pillar_a_memtx_gatemem_retention": {
+        "schema": "wave46_memtx_gatemem_use_disuse_v1",
+        "paper_count": 16,
+        "memtx_commits_accepted": 7,
+        "memtx_aborts_rolled_back": 5,
+        "unguarded_corrupt_l2": 4.9982,
+        "memtx_corrupt_residue_l2": 0.0,
+        "complete_state_recovered": true,
+        "gatemem_unauthorized_attempts": 6,
+        "gatemem_leak_rate": 0.0,
+        "gatemem_authorized_recall": 1.0,
+        "fifo_retention_recall": 0.0,
+        "consolidated_retention_recall": 1.0,
+        "collusion_indep_corr": 0.006,
+        "collusion_flagged_corr": 0.8912,
+        "collusion_detected": true
+      },
+      "pillar_b_durable_ci_safety_resonact": {
+        "schema": "wave46_durable_workflow_ci_safety_resonact_v1",
+        "paper_count": 15,
+        "safe_upgrade_hazard": 0.0003,
+        "risky_upgrade_hazard": 0.4674,
+        "safe_upgrade_cleared": true,
+        "unsafe_replay_halted": true,
+        "meta_sprt_healthy_status": "PROMOTE_SAFE",
+        "meta_sprt_healthy_steps": 98,
+        "meta_sprt_regressed_status": "HALT_REGRESSION",
+        "meta_sprt_regressed_steps": 42,
+        "canary_regression_caught": true,
+        "healthy_release_passed": true,
+        "blind_restart_mean_mttr_steps": 19.6,
+        "resonact_mean_mttr_steps": 8.6,
+        "resonact_faster_recovery": true,
+        "ml_ci_tail_score_separation": 0.5772,
+        "ml_ci_tail_predictor_verified": true
+      },
+      "pillar_c_upa_escrow_human_anchor": {
+        "schema": "wave46_upa_escrow_conformance_human_anchor_v1",
+        "paper_count": 17,
+        "upa_policy_violation_rate": 0.0,
+        "escrow_best_utility": 0.86,
+        "conforming_trace_distance": 0.0005,
+        "bypassed_trace_distance": 0.209617,
+        "nonconforming_trace_flagged": true,
+        "chain_drift_l1": 0.06,
+        "chain_drift_l12": 0.5241,
+        "human_anchor_containment_rate": 1.0,
+        "human_anchor_enforced": true
+      },
+      "pillar_d_ledger_spec_consort_agentpprof": {
+        "schema": "wave46_ledger_spec_growth_consort_agentpprof_v1",
+        "paper_count": 18,
+        "ledger_backed_verified": 2,
+        "ledger_unbacked_recall": 1.0,
+        "ledger_false_verified_rate": 0.0,
+        "spec_pre_sync_jaccard": 0.6,
+        "spec_post_sync_jaccard": 1.0,
+        "spec_code_divergence_caught": true,
+        "agentpprof_tokens_before": 12000,
+        "agentpprof_tokens_after": 6560,
+        "agentpprof_waste_reduction_pct": 0.4533,
+        "agentpprof_verified": true
+      },
+      "rlvr_trajectory_count": 6,
+      "suite_sha256": "540e4fec2a0795121af54b3ddb925228acbb1d8eaeabea0022c6873d6b8695c6"
+    },
+    "max_prior_week_used": 9,
+    "quarantined_metrics_weights": {
+      "unfiltered_garbage_time_wp95_epa_spike": 0.0,
+      "raw_unregressed_dropped_int_box_mirage": 0.0,
+      "postgame_ftn_charting_future_week_leak": 0.0,
+      "unverified_agent_memory_poison_write": 0.0,
+      "ledger_unbacked_claim_confidence_boost": 0.0
+    },
+    "away_w46_memtx_profile": {
+      "punt_in20_norm": -0.046059,
+      "multi_read_autonomy_norm": 0.631718,
+      "lbox_space_norm": 0.739894,
+      "rpo_scr_norm": 1.167315,
+      "rush_1d_norm": 0.422219,
+      "pass_20_norm": -0.126657,
+      "ed_sr_net_norm": 0.380175,
+      "rush_10_norm": 0.38042,
+      "rush_ybc_norm": 0.459206,
+      "def_ypt_supp_norm": 0.300911,
+      "first_read_rate_norm": -0.631718,
+      "qb_non_fault_sack_norm": 0.090082
+    },
+    "home_w46_memtx_profile": {
+      "punt_in20_norm": 0.072863,
+      "multi_read_autonomy_norm": 0.458844,
+      "lbox_space_norm": 0.738795,
+      "rpo_scr_norm": 0.511049,
+      "rush_1d_norm": -0.06011,
+      "pass_20_norm": -0.276754,
+      "ed_sr_net_norm": -0.098773,
+      "rush_10_norm": -0.233498,
+      "rush_ybc_norm": -0.027122,
+      "def_ypt_supp_norm": 0.297805,
+      "first_read_rate_norm": -0.458844,
+      "qb_non_fault_sack_norm": 0.218037
+    },
+    "game_total_clock_drain_shift": {
+      "schema": "wave46_causal_game_total_clock_drain_shift_v1",
+      "as_of_week": 10,
+      "w46_tot_signal": -0.36636,
+      "total_shift_pts": -0.128226,
+      "is_indoor": false
+    },
+    "walk_forward_7props_and_stacked_dfs": {
+      "schema": "wave46_7props_and_stacked_portfolio_dfs_harmony_v1",
+      "clean_checkout_fallback": false,
+      "slates_evaluated": 9,
+      "portfolio_lineups_per_slate": 3,
+      "total_stacked_portfolio_lineups": 27,
+      "player_dk_evaluations": 2784,
+      "overall_gated_prop_hit_rate": 0.6711,
+      "overall_tier1_prop_hit_rate": 0.7188,
+      "all_7_prop_markets_beat_naive": true,
+      "props_7_markets": {
+        "pass_yds": {
+          "n_eval": 258,
+          "naive_mae": 69.5897,
+          "gse_mae": 63.137,
+          "beats_naive": true,
+          "gated_n": 69,
+          "gated_hit_rate": 0.6087,
+          "tier1_n": 33,
+          "tier1_hit_rate": 0.5455
+        },
+        "rush_yds": {
+          "n_eval": 316,
+          "naive_mae": 30.0236,
+          "gse_mae": 28.2807,
+          "beats_naive": true,
+          "gated_n": 91,
+          "gated_hit_rate": 0.6593,
+          "tier1_n": 41,
+          "tier1_hit_rate": 0.7561
+        },
+        "rec_yds": {
+          "n_eval": 770,
+          "naive_mae": 29.4846,
+          "gse_mae": 26.6844,
+          "beats_naive": true,
+          "gated_n": 219,
+          "gated_hit_rate": 0.6758,
+          "tier1_n": 98,
+          "tier1_hit_rate": 0.7551
+        },
+        "receptions": {
+          "n_eval": 929,
+          "naive_mae": 1.9398,
+          "gse_mae": 1.7745,
+          "beats_naive": true,
+          "gated_n": 146,
+          "gated_hit_rate": 0.6781,
+          "tier1_n": 15,
+          "tier1_hit_rate": 0.6
+        },
+        "rush_rec_yds": {
+          "n_eval": 585,
+          "naive_mae": 34.74,
+          "gse_mae": 32.1029,
+          "beats_naive": true,
+          "gated_n": 153,
+          "gated_hit_rate": 0.6928,
+          "tier1_n": 69,
+          "tier1_hit_rate": 0.7536
+        },
+        "anytime_td": {
+          "n_eval": 950,
+          "naive_brier": 0.26601,
+          "gse_brier": 0.23436,
+          "beats_naive": true
+        },
+        "pass_tds_2plus": {
+          "n_eval": 253,
+          "naive_brier": 0.26438,
+          "gse_brier": 0.23453,
+          "beats_naive": true
+        }
+      },
+      "dfs_stacked_portfolio_backtest": {
+        "player_dk_mae_raw": 4.9598,
+        "player_dk_mae_gse": 4.7022,
+        "beats_raw_fppg_mae": true,
+        "mean_chalk_dk_pts": 106.8,
+        "mean_memtx_cash_dk_pts": 116.3,
+        "mean_primary_stack_dk_pts": 119.52,
+        "mean_portfolio3_avg_dk_pts": 118.15,
+        "mean_portfolio3_best_dk_pts": 129.31,
+        "cash_beats_chalk": true,
+        "stack1_beats_chalk": true,
+        "portfolio3_best_beats_chalk_weeks": 8,
+        "all_game_stacks_verified": true,
+        "max_salary_used": 50000,
+        "zero_cap_violations": true
+      },
+      "max_kkt_harmony_residual": 0.0
+    },
+    "live_honest_ast": {
+      "schema": "wave46_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 8,
+      "equations_evaluated": [
+        {
+          "eq_id": "memtx_huber_bounded_consolidation",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.447049,
+          "operators": 6
+        },
+        {
+          "eq_id": "use_disuse_ebbinghaus_retention",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.356283,
+          "operators": 9
+        },
+        {
+          "eq_id": "durable_upgrade_hazard_bound",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.400225,
+          "operators": 6
+        },
+        {
+          "eq_id": "meta_sprt_log_likelihood_ratio",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 4.553877,
+          "operators": 3
+        },
+        {
+          "eq_id": "human_anchor_chain_drift",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.52408,
+          "operators": 2
+        },
+        {
+          "eq_id": "nfl_w46_7feat_margin_signal",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": -0.47336,
+          "operators": 14
+        },
+        {
+          "eq_id": "nfl_w46_total_clock_drain_shift",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": -0.128226,
+          "operators": 1
+        },
+        {
+          "eq_id": "memtx_scrimmage_combo_projection",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 83.5456,
+          "operators": 5
+        }
+      ]
+    },
+    "w46_close_residual_signal": -0.47336,
+    "stage2_deltas": {
+      "away_epa_delta": 0.000284,
+      "home_epa_delta": -0.000284,
+      "away_sack_prob_delta": -6.3e-05,
+      "home_sack_prob_delta": -0.000153
+    }
+  },
+  "sample_cin_at_buf": {
+    "schema": "wave46_memtx_picks_7props_and_stacked_dfs_suite_v1",
+    "wired": true,
+    "matchup": "CIN @ BUF",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "clinical_ruo_sports_weight": 0.0,
+    "alphaxiv_66paper_summary": {
+      "schema": "wave46_alphaxiv_66paper_memory_ci_upa_ledger_suite_v1",
+      "wired": true,
+      "clinical_ruo_sports_weight": 0.0,
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "vault_schema": "alphaxiv_66paper_persistent_memory_durable_ci_governance_and_spec_ledger_vault_v1",
+      "submitted_url_count": 66,
+      "unique_paper_count": 66,
+      "brand_new_wave46_count": 66,
+      "cross_wave_overlap_count": 0,
+      "vault_payload_sha256": "d8cc3aa79e402548f978da6e2088371746fe4a2ae04df650003d5c86b9cdd60e",
+      "pillar_counts": {
+        "pillar_a_transactional_persistent_memory_and_retention": 16,
+        "pillar_b_durable_workflow_self_healing_and_ci_safety": 15,
+        "pillar_c_upa_policy_governance_conformance_and_human_anchor": 17,
+        "pillar_d_spec_growth_ledger_evidence_trace_and_profiling": 18
+      },
+      "pillar_a_memtx_gatemem_retention": {
+        "schema": "wave46_memtx_gatemem_use_disuse_v1",
+        "paper_count": 16,
+        "memtx_commits_accepted": 7,
+        "memtx_aborts_rolled_back": 5,
+        "unguarded_corrupt_l2": 4.9982,
+        "memtx_corrupt_residue_l2": 0.0,
+        "complete_state_recovered": true,
+        "gatemem_unauthorized_attempts": 6,
+        "gatemem_leak_rate": 0.0,
+        "gatemem_authorized_recall": 1.0,
+        "fifo_retention_recall": 0.0,
+        "consolidated_retention_recall": 1.0,
+        "collusion_indep_corr": 0.006,
+        "collusion_flagged_corr": 0.8912,
+        "collusion_detected": true
+      },
+      "pillar_b_durable_ci_safety_resonact": {
+        "schema": "wave46_durable_workflow_ci_safety_resonact_v1",
+        "paper_count": 15,
+        "safe_upgrade_hazard": 0.0003,
+        "risky_upgrade_hazard": 0.4674,
+        "safe_upgrade_cleared": true,
+        "unsafe_replay_halted": true,
+        "meta_sprt_healthy_status": "PROMOTE_SAFE",
+        "meta_sprt_healthy_steps": 98,
+        "meta_sprt_regressed_status": "HALT_REGRESSION",
+        "meta_sprt_regressed_steps": 42,
+        "canary_regression_caught": true,
+        "healthy_release_passed": true,
+        "blind_restart_mean_mttr_steps": 19.6,
+        "resonact_mean_mttr_steps": 8.6,
+        "resonact_faster_recovery": true,
+        "ml_ci_tail_score_separation": 0.5772,
+        "ml_ci_tail_predictor_verified": true
+      },
+      "pillar_c_upa_escrow_human_anchor": {
+        "schema": "wave46_upa_escrow_conformance_human_anchor_v1",
+        "paper_count": 17,
+        "upa_policy_violation_rate": 0.0,
+        "escrow_best_utility": 0.86,
+        "conforming_trace_distance": 0.0005,
+        "bypassed_trace_distance": 0.209617,
+        "nonconforming_trace_flagged": true,
+        "chain_drift_l1": 0.06,
+        "chain_drift_l12": 0.5241,
+        "human_anchor_containment_rate": 1.0,
+        "human_anchor_enforced": true
+      },
+      "pillar_d_ledger_spec_consort_agentpprof": {
+        "schema": "wave46_ledger_spec_growth_consort_agentpprof_v1",
+        "paper_count": 18,
+        "ledger_backed_verified": 2,
+        "ledger_unbacked_recall": 1.0,
+        "ledger_false_verified_rate": 0.0,
+        "spec_pre_sync_jaccard": 0.6,
+        "spec_post_sync_jaccard": 1.0,
+        "spec_code_divergence_caught": true,
+        "agentpprof_tokens_before": 12000,
+        "agentpprof_tokens_after": 6560,
+        "agentpprof_waste_reduction_pct": 0.4533,
+        "agentpprof_verified": true
+      },
+      "rlvr_trajectory_count": 6,
+      "suite_sha256": "540e4fec2a0795121af54b3ddb925228acbb1d8eaeabea0022c6873d6b8695c6"
+    },
+    "max_prior_week_used": 9,
+    "quarantined_metrics_weights": {
+      "unfiltered_garbage_time_wp95_epa_spike": 0.0,
+      "raw_unregressed_dropped_int_box_mirage": 0.0,
+      "postgame_ftn_charting_future_week_leak": 0.0,
+      "unverified_agent_memory_poison_write": 0.0,
+      "ledger_unbacked_claim_confidence_boost": 0.0
+    },
+    "away_w46_memtx_profile": {
+      "punt_in20_norm": 0.243866,
+      "multi_read_autonomy_norm": -0.390327,
+      "lbox_space_norm": 1.030613,
+      "rpo_scr_norm": 0.13288,
+      "rush_1d_norm": 0.330034,
+      "pass_20_norm": -0.106681,
+      "ed_sr_net_norm": 0.267829,
+      "rush_10_norm": -0.007504,
+      "rush_ybc_norm": -0.013862,
+      "def_ypt_supp_norm": -0.108479,
+      "first_read_rate_norm": 0.390327,
+      "qb_non_fault_sack_norm": 0.103412
+    },
+    "home_w46_memtx_profile": {
+      "punt_in20_norm": -0.264424,
+      "multi_read_autonomy_norm": 0.385361,
+      "lbox_space_norm": 0.024242,
+      "rpo_scr_norm": 0.09768,
+      "rush_1d_norm": 0.392667,
+      "pass_20_norm": 0.599707,
+      "ed_sr_net_norm": 0.206998,
+      "rush_10_norm": 0.438995,
+      "rush_ybc_norm": 0.394833,
+      "def_ypt_supp_norm": 0.372394,
+      "first_read_rate_norm": -0.385361,
+      "qb_non_fault_sack_norm": -0.214665
+    },
+    "game_total_clock_drain_shift": {
+      "schema": "wave46_causal_game_total_clock_drain_shift_v1",
+      "as_of_week": 10,
+      "w46_tot_signal": -0.235963,
+      "total_shift_pts": -0.082587,
+      "is_indoor": false
+    },
+    "walk_forward_7props_and_stacked_dfs": {
+      "schema": "wave46_7props_and_stacked_portfolio_dfs_harmony_v1",
+      "clean_checkout_fallback": false,
+      "slates_evaluated": 9,
+      "portfolio_lineups_per_slate": 3,
+      "total_stacked_portfolio_lineups": 27,
+      "player_dk_evaluations": 2784,
+      "overall_gated_prop_hit_rate": 0.6711,
+      "overall_tier1_prop_hit_rate": 0.7188,
+      "all_7_prop_markets_beat_naive": true,
+      "props_7_markets": {
+        "pass_yds": {
+          "n_eval": 258,
+          "naive_mae": 69.5897,
+          "gse_mae": 63.137,
+          "beats_naive": true,
+          "gated_n": 69,
+          "gated_hit_rate": 0.6087,
+          "tier1_n": 33,
+          "tier1_hit_rate": 0.5455
+        },
+        "rush_yds": {
+          "n_eval": 316,
+          "naive_mae": 30.0236,
+          "gse_mae": 28.2807,
+          "beats_naive": true,
+          "gated_n": 91,
+          "gated_hit_rate": 0.6593,
+          "tier1_n": 41,
+          "tier1_hit_rate": 0.7561
+        },
+        "rec_yds": {
+          "n_eval": 770,
+          "naive_mae": 29.4846,
+          "gse_mae": 26.6844,
+          "beats_naive": true,
+          "gated_n": 219,
+          "gated_hit_rate": 0.6758,
+          "tier1_n": 98,
+          "tier1_hit_rate": 0.7551
+        },
+        "receptions": {
+          "n_eval": 929,
+          "naive_mae": 1.9398,
+          "gse_mae": 1.7745,
+          "beats_naive": true,
+          "gated_n": 146,
+          "gated_hit_rate": 0.6781,
+          "tier1_n": 15,
+          "tier1_hit_rate": 0.6
+        },
+        "rush_rec_yds": {
+          "n_eval": 585,
+          "naive_mae": 34.74,
+          "gse_mae": 32.1029,
+          "beats_naive": true,
+          "gated_n": 153,
+          "gated_hit_rate": 0.6928,
+          "tier1_n": 69,
+          "tier1_hit_rate": 0.7536
+        },
+        "anytime_td": {
+          "n_eval": 950,
+          "naive_brier": 0.26601,
+          "gse_brier": 0.23436,
+          "beats_naive": true
+        },
+        "pass_tds_2plus": {
+          "n_eval": 253,
+          "naive_brier": 0.26438,
+          "gse_brier": 0.23453,
+          "beats_naive": true
+        }
+      },
+      "dfs_stacked_portfolio_backtest": {
+        "player_dk_mae_raw": 4.9598,
+        "player_dk_mae_gse": 4.7022,
+        "beats_raw_fppg_mae": true,
+        "mean_chalk_dk_pts": 106.8,
+        "mean_memtx_cash_dk_pts": 116.3,
+        "mean_primary_stack_dk_pts": 119.52,
+        "mean_portfolio3_avg_dk_pts": 118.15,
+        "mean_portfolio3_best_dk_pts": 129.31,
+        "cash_beats_chalk": true,
+        "stack1_beats_chalk": true,
+        "portfolio3_best_beats_chalk_weeks": 8,
+        "all_game_stacks_verified": true,
+        "max_salary_used": 50000,
+        "zero_cap_violations": true
+      },
+      "max_kkt_harmony_residual": 0.0
+    },
+    "live_honest_ast": {
+      "schema": "wave46_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 8,
+      "equations_evaluated": [
+        {
+          "eq_id": "memtx_huber_bounded_consolidation",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.447049,
+          "operators": 6
+        },
+        {
+          "eq_id": "use_disuse_ebbinghaus_retention",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.356283,
+          "operators": 9
+        },
+        {
+          "eq_id": "durable_upgrade_hazard_bound",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.400225,
+          "operators": 6
+        },
+        {
+          "eq_id": "meta_sprt_log_likelihood_ratio",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 4.553877,
+          "operators": 3
+        },
+        {
+          "eq_id": "human_anchor_chain_drift",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.52408,
+          "operators": 2
+        },
+        {
+          "eq_id": "nfl_w46_7feat_margin_signal",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": -0.112142,
+          "operators": 14
+        },
+        {
+          "eq_id": "nfl_w46_total_clock_drain_shift",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": -0.082587,
+          "operators": 1
+        },
+        {
+          "eq_id": "memtx_scrimmage_combo_projection",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 83.5456,
+          "operators": 5
+        }
+      ]
+    },
+    "w46_close_residual_signal": -0.112142,
+    "stage2_deltas": {
+      "away_epa_delta": 6.7e-05,
+      "home_epa_delta": -6.7e-05,
+      "away_sack_prob_delta": -7.2e-05,
+      "home_sack_prob_delta": 0.00015
+    }
+  },
+  "benchmark_sha256": "1fe6a812c7e498c73a5bfa7c696915c0944bbfd865422175ca5d906002ea237f"
+}

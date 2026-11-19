@@ -1,10 +1,13 @@
-"""Unit Test Suite for Component 4:
-1. Canonical 120-Program Funding & Credit Architecture (`data/ops/funding_inventory_2026_11_06.json`,
-   `docs/ops/FUNDING-INVENTORY-2026-11-06.md`, `docs/ops/FAST-GRANTS-PACK-CORRECTED-2026-11-03.md`,
+"""Unit Test Suite for Component 4.
+
+1. Canonical 120-Program Funding & Credit Architecture
+   (`data/ops/funding_inventory_2026_11_06.json`, `docs/ops/FUNDING-INVENTORY-2026-11-06.md`,
+   `docs/ops/FAST-GRANTS-PACK-CORRECTED-2026-11-03.md`,
    `docs/ops/FUNDING_PARTNERSHIP_ALIGNMENT_MASTER.md`).
 2. Pinecone (`2025-04` API) Hybrid Dense + Sparse + BM25+ + Cross-Encoder Rerank + Backups Layer
-   (`intelligence/retrieval/pinecone_hybrid_corpus_index.py`, `data/engine/pinecone_hybrid_index_receipt_2026_11_06.json`)
-   with full uncompressed 210 books, 372 URLs/repos, 30 Morning Sweep CSVs, 10 Innovation Kernels, and NGS/commercial intel.
+   (`intelligence/retrieval/pinecone_hybrid_corpus_index.py`,
+   `data/engine/pinecone_hybrid_index_receipt_2026_11_06.json`) with full uncompressed 210 books,
+   372 URLs/repos, 30 Morning Sweep CSVs, 10 Innovation Kernels, and NGS/commercial intel.
 3. PostHog `$50,000` Cloud Context Layer (`intelligence/telemetry/posthog_cloud_context_layer.py`:
    Project `516325`, `DuckgresHoglakeEngine` 512MB cap, `ContextMillCompactor`).
 4. `elie222/inbox-zero` + `jev-mailbox` Grant & Operations Triage Engine
@@ -25,31 +28,23 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 sys.modules.pop("research", None)
 
-from intelligence.ops.inbox_zero_grant_and_ops_triage import (
+from intelligence.ops.inbox_zero_grant_and_ops_triage import (  # noqa: E402
     InboxMessage,
     InboxZeroGrantOpsTriageEngine,
 )
-from intelligence.retrieval.pinecone_hybrid_corpus_index import (
-    BM25PlusScorer,
-    CorpusDocument,
+from intelligence.retrieval.pinecone_hybrid_corpus_index import (  # noqa: E402
     MongoDBDossierArchiveAdapter,
     PineconeBM25HybridCorpusRetriever,
     build_uncompressed_full_corpus_documents,
 )
-from intelligence.telemetry.posthog_cloud_context_layer import (
+from intelligence.telemetry.posthog_cloud_context_layer import (  # noqa: E402
     POSTHOG_WAREHOUSE_TABLES,
-    ContextMillCompactor,
-    DuckgresHoglakeEngine,
     PostHogCloudContextClient,
     PostHogWarehouseSyncEngine,
 )
-from research.nfl_big_data_bowl_2027.open_track_pre_snap_motion_and_coverage_disguise import (
-    PlayerTrackingFrame10Hz,
+from research.nfl_big_data_bowl_2027.open_track_pre_snap_motion_and_coverage_disguise import (  # noqa: E402
     build_sample_bdb2027_submission_summary,
     compute_braking_efficiency_brk_plus,
-    compute_pre_snap_motion_impulse,
-    compute_shell_disguise_kl_divergence,
-    evaluate_bdb2027_play_frame,
 )
 
 
@@ -85,16 +80,22 @@ def test_canonical_120_program_funding_inventory() -> None:
     assert "2026-11-18" in watch["primary_sweep_timestamp_ct"]
 
     # Check markdown docs exist and are aligned
-    md_inventory = (REPO_ROOT / "docs" / "ops" / "FUNDING-INVENTORY-2026-11-06.md").read_text(encoding="utf-8")
+    md_inventory = (
+        REPO_ROOT / "docs" / "ops" / "FUNDING-INVENTORY-2026-11-06.md"
+    ).read_text(encoding="utf-8")
     assert "$55,656.31" in md_inventory
     assert "Pinecone Standard Trial" in md_inventory
     assert "https://www.linkedin.com/company/galaxy-sports-edge" in md_inventory
 
-    fast_grants = (REPO_ROOT / "docs" / "ops" / "FAST-GRANTS-PACK-CORRECTED-2026-11-03.md").read_text(encoding="utf-8")
+    fast_grants = (
+        REPO_ROOT / "docs" / "ops" / "FAST-GRANTS-PACK-CORRECTED-2026-11-03.md"
+    ).read_text(encoding="utf-8")
     assert "galaxy-conformal-ot" in fast_grants
     assert "38-13-1" in fast_grants
 
-    master_md = (REPO_ROOT / "docs" / "ops" / "FUNDING_PARTNERSHIP_ALIGNMENT_MASTER.md").read_text(encoding="utf-8")
+    master_md = (
+        REPO_ROOT / "docs" / "ops" / "FUNDING_PARTNERSHIP_ALIGNMENT_MASTER.md"
+    ).read_text(encoding="utf-8")
     assert "2026-11-06" in master_md
     assert "FUNDING-INVENTORY-2026-11-06.md" in master_md
 
@@ -114,7 +115,9 @@ def test_pinecone_bm25_plus_hybrid_corpus_retriever_and_uncompressed_corpus() ->
     assert len(ngs_intel) >= 2
     assert len(all_docs) == 624
 
-    retriever = PineconeBM25HybridCorpusRetriever(force_offline=True, alpha=0.65, k1=1.2, b=0.75, delta=1.0)
+    retriever = PineconeBM25HybridCorpusRetriever(
+        force_offline=True, alpha=0.65, k1=1.2, b=0.75, delta=1.0
+    )
     indexed_count = retriever.index_local_corpus(all_docs)
     assert indexed_count == 624
 
@@ -178,7 +181,9 @@ def test_posthog_cloud_context_layer() -> None:
     assert trace_event["event"] == "$ai_trace"
     assert trace_event["properties"]["conformal_passed"] is True
 
-    rows = client.duckgres.execute_query("SELECT 210 AS books, 372 AS repos, 30 AS csvs, 10 AS kernels")
+    rows = client.duckgres.execute_query(
+        "SELECT 210 AS books, 372 AS repos, 30 AS csvs, 10 AS kernels"
+    )
     assert len(rows) == 1
     if "books" in rows[0]:
         assert rows[0]["books"] == 210
@@ -199,7 +204,9 @@ def test_posthog_warehouse_sync_engine() -> None:
     assert set(schemas.keys()) == expected_tables
     assert set(POSTHOG_WAREHOUSE_TABLES.keys()) == expected_tables
 
-    bootstrap_summary = warehouse.bootstrap_default_pre_projection_warehouse(game_id="NFL-2026-W9-JAX-BAL")
+    bootstrap_summary = warehouse.bootstrap_default_pre_projection_warehouse(
+        game_id="NFL-2026-W9-JAX-BAL"
+    )
     assert bootstrap_summary["tables_bootstrapped"] == 5
     assert set(bootstrap_summary["receipts"].keys()) == expected_tables
 
@@ -221,7 +228,10 @@ def test_inbox_zero_grant_and_ops_triage() -> None:
             sender="startups@pinecone.io",
             recipient="hq@galaxysportsedge.com",
             subject="Pinecone for Startups — Submission successful!",
-            body="Your Pinecone for Startups application for GALAXY SPORTS NETWORK LLC has been received.",
+            body=(
+                "Your Pinecone for Startups application for GALAXY SPORTS NETWORK LLC "
+                "has been received."
+            ),
         ),
         InboxMessage(
             message_id="msg-techstars-02",
@@ -291,7 +301,11 @@ def test_nfl_big_data_bowl_2027_open_track_scaffold() -> None:
     assert sample_eval["pre_snap_motion_impulse"] > 0.0
     assert sample_eval["shell_disguise_kl_nats"] > 0.45
     assert sample_eval["disguise_classification"] == "LATE_SAFETY_ROTATION_DISGUISE"
-    assert sample_eval["conformal_lower_90"] < sample_eval["expected_epa_delta"] < sample_eval["conformal_upper_90"]
+    assert (
+        sample_eval["conformal_lower_90"]
+        < sample_eval["expected_epa_delta"]
+        < sample_eval["conformal_upper_90"]
+    )
 
     brk_plus, ktd = compute_braking_efficiency_brk_plus(8.8, 4.9, 0.35, 1.48)
     assert brk_plus > 100.0
@@ -308,20 +322,47 @@ def test_zero_secrets_and_zero_etc_in_component4_files() -> None:
         REPO_ROOT / "intelligence" / "retrieval" / "pinecone_hybrid_corpus_index.py",
         REPO_ROOT / "scripts" / "ops" / "pinecone_bulk_ingest_200_books.py",
         REPO_ROOT / "data" / "engine" / "pinecone_hybrid_index_receipt_2026_11_06.json",
-        REPO_ROOT / "packages" / "prediction-engine" / "src" / "retrieval" / "pinecone-corpus-retriever.ts",
+        (
+            REPO_ROOT
+            / "packages"
+            / "prediction-engine"
+            / "src"
+            / "retrieval"
+            / "pinecone-corpus-retriever.ts"
+        ),
         REPO_ROOT / "intelligence" / "telemetry" / "__init__.py",
         REPO_ROOT / "intelligence" / "telemetry" / "posthog_cloud_context_layer.py",
         REPO_ROOT / "apps" / "web" / "lib" / "analytics" / "posthog-context-layer.ts",
         REPO_ROOT / "intelligence" / "ops" / "__init__.py",
         REPO_ROOT / "intelligence" / "ops" / "inbox_zero_grant_and_ops_triage.py",
-        REPO_ROOT / "research" / "nfl_big_data_bowl_2027" / "open_track_pre_snap_motion_and_coverage_disguise.py",
+        (
+            REPO_ROOT
+            / "research"
+            / "nfl_big_data_bowl_2027"
+            / "open_track_pre_snap_motion_and_coverage_disguise.py"
+        ),
         REPO_ROOT / "research" / "nfl_big_data_bowl_2027" / "README.md",
         REPO_ROOT / "scripts" / "ops" / "reverse_interleaved_8step_5api_xai_cascade.py",
-        REPO_ROOT / "data" / "audits" / "reverse_interleaved_8step_5api_xai_omniscience_2026_11_06.json",
-        REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06" / "REVERSE_INTERLEAVED_8STEP_KAGGLE_XAI_ARXIV_OPENALEX_HF_BIBLE.md",
+        (
+            REPO_ROOT
+            / "data"
+            / "audits"
+            / "reverse_interleaved_8step_5api_xai_omniscience_2026_11_06.json"
+        ),
+        (
+            REPO_ROOT
+            / "docs"
+            / "engine"
+            / "research"
+            / "2026-11-06"
+            / "REVERSE_INTERLEAVED_8STEP_KAGGLE_XAI_ARXIV_OPENALEX_HF_BIBLE.md"
+        ),
     ]
     etc_pattern = re.compile(r"\betc\.", re.IGNORECASE)
-    secret_pattern = re.compile(r"(xai-[A-Za-z0-9]{20,}|pcsk_[A-Za-z0-9_]+|phx_[A-Za-z0-9_]+|phc_[A-Za-z0-9_]+|2Gs3eVvQZz8Tl4dOu905vrsMg3Qw5cFx83Y5eDEzfbE=)")
+    secret_pattern = re.compile(
+        r"(xai-[A-Za-z0-9]{20,}|pcsk_[A-Za-z0-9_]+|phx_[A-Za-z0-9_]+|"
+        r"phc_[A-Za-z0-9_]+|2Gs3eVvQZz8Tl4dOu905vrsMg3Qw5cFx83Y5eDEzfbE=)"
+    )
 
     for fpath in component4_files:
         assert fpath.is_file(), f"Missing Component 4 file: {fpath}"
@@ -331,8 +372,20 @@ def test_zero_secrets_and_zero_etc_in_component4_files() -> None:
 
 
 def test_reverse_interleaved_8step_5api_xai_cascade_artifacts() -> None:
-    json_path = REPO_ROOT / "data" / "audits" / "reverse_interleaved_8step_5api_xai_omniscience_2026_11_06.json"
-    md_path = REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06" / "REVERSE_INTERLEAVED_8STEP_KAGGLE_XAI_ARXIV_OPENALEX_HF_BIBLE.md"
+    json_path = (
+        REPO_ROOT
+        / "data"
+        / "audits"
+        / "reverse_interleaved_8step_5api_xai_omniscience_2026_11_06.json"
+    )
+    md_path = (
+        REPO_ROOT
+        / "docs"
+        / "engine"
+        / "research"
+        / "2026-11-06"
+        / "REVERSE_INTERLEAVED_8STEP_KAGGLE_XAI_ARXIV_OPENALEX_HF_BIBLE.md"
+    )
     assert json_path.is_file()
     assert md_path.is_file()
 

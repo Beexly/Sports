@@ -433,16 +433,20 @@ def allocate_stochastic_conserved_box_score(
     if fam_lower == "tackles":
         alpha = np.maximum(0.80, max(kappa_eff, 48.0) * share_vec)
         gamma_shape = 9.0
+        dir_draws = rng_eff.dirichlet(alpha, size=n_worlds_eff)
+        # Compound Gamma overdispersion (Negative-Binomial continuous mixture)
+        gamma_noise = rng_eff.gamma(shape=gamma_shape, scale=1.0, size=(n_worlds_eff, k_act))
+        weights = dir_draws * gamma_noise
+        row_sums = np.maximum(1e-12, np.sum(weights, axis=1, keepdims=True))
+        weights = weights / row_sums
     else:
-        alpha = np.maximum(0.35, kappa_eff * share_vec)
-        gamma_shape = 1.45 if "yd" in fam_lower else 1.85
-
-    dir_draws = rng_eff.dirichlet(alpha, size=n_worlds_eff)
-    # Compound Gamma overdispersion (Negative-Binomial continuous mixture)
-    gamma_noise = rng_eff.gamma(shape=gamma_shape, scale=1.0, size=(n_worlds_eff, k_act))
-    weights = dir_draws * gamma_noise
-    row_sums = np.maximum(1e-12, np.sum(weights, axis=1, keepdims=True))
-    weights = weights / row_sums
+        # Unbiased Dirichlet shares (E[w_j] == share_vec_j) so residual depth caps are preserved
+        # without Jensen / floor shrinkage inflating OTHER_TEAM_REC / OTHER_TEAM_RUSH above 5%.
+        kappa_dir = min(kappa_eff, 7.5 if "yd" in fam_lower else 10.5)
+        alpha = np.maximum(1e-3, kappa_dir * share_vec)
+        weights = rng_eff.dirichlet(alpha, size=n_worlds_eff)
+        row_sums = np.maximum(1e-12, np.sum(weights, axis=1, keepdims=True))
+        weights = weights / row_sums
 
     alloc = team_arr[:, None] * weights
 
@@ -455,26 +459,51 @@ def allocate_stochastic_conserved_box_score(
     else:
         min_std_floor = 1.15
 
-    # Identify absorber column (OTHER / OTHER_DEF if present, else highest-share active player)
+    # Identify absorber column (OTHER / OTHER_DEF / OTHER_TEAM_* if present, else highest-share active player)
     absorber_local_idx = int(np.argmax(share_vec))
     is_aggregate_absorber = False
     for local_i, orig_i in enumerate(active_indices):
-        if keys[orig_i].upper() in {"OTHER", "OTHER_DEF", "TEAM_RESIDUAL"}:
+        if keys[orig_i].upper() in {"OTHER", "OTHER_DEF", "TEAM_RESIDUAL", "OTHER_TEAM_REC", "OTHER_TEAM_RUSH"}:
             absorber_local_idx = local_i
             is_aggregate_absorber = True
             break
 
+    # Highest-share non-aggregate player (never transfer variance into a 2-5% OTHER_TEAM_* residual sink)
+    non_agg_candidates = [
+        i for i in range(k_act) if not (is_aggregate_absorber and i == absorber_local_idx)
+    ]
+    primary_partner_idx = (
+        max(non_agg_candidates, key=lambda idx: float(share_vec[idx]))
+        if non_agg_candidates
+        else absorber_local_idx
+    )
+
     if n_worlds_eff >= 4 and float(np.std(team_arr)) + float(np.mean(np.abs(team_arr))) > 0.0:
         for j in range(k_act):
-            if fam_lower == "tackles" and j == absorber_local_idx:
+            if j == absorber_local_idx and (fam_lower == "tackles" or is_aggregate_absorber):
                 continue
             col = alloc[:, j]
             cur_mean = max(1e-6, float(np.mean(np.abs(col))))
             cur_std = float(np.std(col))
             cur_cv = cur_std / cur_mean
-            req_std = max(min_std_floor, 0.36 * cur_mean)
-            if cur_std < req_std or cur_cv < 0.35:
-                partner = absorber_local_idx if j != absorber_local_idx else (1 if k_act > 1 else 0)
+            base_floor = min_std_floor
+            if float(share_vec[j]) < 0.05 and cur_mean < 10.0:
+                # Never inject +-12.25 yards of synthetic noise into tiny-role players (Jensen inflation)
+                base_floor = max(0.85 if "yd" in fam_lower else 0.45, 0.75 * cur_mean)
+            req_std = max(base_floor, 0.36 * cur_mean)
+            if cur_std < req_std or (float(share_vec[j]) >= 0.05 and cur_cv < 0.35):
+                if fam_lower == "tackles":
+                    partner = absorber_local_idx if j != absorber_local_idx else (1 if k_act > 1 else 0)
+                elif is_aggregate_absorber:
+                    if j != primary_partner_idx:
+                        partner = primary_partner_idx
+                    else:
+                        alt_list = [i for i in non_agg_candidates if i != j]
+                        partner = max(alt_list, key=lambda idx: float(share_vec[idx])) if alt_list else j
+                else:
+                    partner = absorber_local_idx if j != absorber_local_idx else (1 if k_act > 1 else 0)
+                if partner == j:
+                    continue
                 # Zero-sum game-script boom/bust transfer between player j and partner
                 z_raw = rng_eff.standard_normal(n_worlds_eff)
                 z_unit = (z_raw - float(np.mean(z_raw))) / max(1e-9, float(np.std(z_raw)))
@@ -483,12 +512,16 @@ def allocate_stochastic_conserved_box_score(
                 cov_cz = float(np.mean((col - float(np.mean(col))) * z_unit))
                 if cov_cz < 0.0:
                     z_unit = -z_unit
-                delta = z_unit * (add_std * 1.06)
+                delta = z_unit * (add_std * 1.12)
+                if np.all(team_arr >= 0.0):
+                    # Symmetric cap per world prevents directional bias between unequal-share partners
+                    sym_cap = 0.85 * np.minimum(np.maximum(0.0, col), np.maximum(0.0, alloc[:, partner]))
+                    delta = np.clip(delta, -sym_cap, sym_cap)
                 alloc[:, j] = col + delta
                 alloc[:, partner] = alloc[:, partner] - delta
 
-        # Second pass: ensure absorber didn't collapse below floor (skip aggregate tackle sinks)
-        if not (fam_lower == "tackles" and is_aggregate_absorber):
+        # Second pass: ensure primary non-aggregate absorber didn't collapse below floor
+        if not is_aggregate_absorber and not (fam_lower == "tackles" and is_aggregate_absorber):
             abs_col = alloc[:, absorber_local_idx]
             abs_mean = max(1e-6, float(np.mean(np.abs(abs_col))))
             abs_std = float(np.std(abs_col))
@@ -508,11 +541,14 @@ def allocate_stochastic_conserved_box_score(
                     alloc[:, non_abs_indices] = alloc[:, non_abs_indices] - delta[:, None] * na_shares[None, :]
                 else:
                     delta = z_unit * (req_abs_std * 1.08)
-                    alloc[:, absorber_local_idx] = abs_col + delta
                     alt_partner = 0 if absorber_local_idx != 0 else 1
+                    if np.all(team_arr >= 0.0):
+                        sym_cap = 0.85 * np.minimum(np.maximum(0.0, abs_col), np.maximum(0.0, alloc[:, alt_partner]))
+                        delta = np.clip(delta, -sym_cap, sym_cap)
+                    alloc[:, absorber_local_idx] = abs_col + delta
                     alloc[:, alt_partner] = alloc[:, alt_partner] - delta
 
-    # Exact world-by-world conservation on the absorber column
+    # Exact world-by-world conservation + strict non-negativity when team totals are non-negative
     non_abs = [i for i in range(k_act) if i != absorber_local_idx]
     if fam_lower == "tackles":
         team_pos = np.maximum(0.0, team_arr)
@@ -524,6 +560,16 @@ def allocate_stochastic_conserved_box_score(
             alloc[:, absorber_local_idx] = np.maximum(0.0, team_pos - np.sum(alloc[:, non_abs], axis=1))
         else:
             alloc[:, 0] = team_pos
+    elif np.all(team_arr >= 0.0):
+        alloc = np.maximum(0.0, alloc)
+        row_sum = np.sum(alloc, axis=1)
+        pos_mask = row_sum > 1e-12
+        if np.any(pos_mask):
+            alloc[pos_mask] = alloc[pos_mask] * (team_arr[pos_mask, None] / row_sum[pos_mask, None])
+        zero_mask = ~pos_mask
+        if np.any(zero_mask):
+            alloc[zero_mask, :] = 0.0
+            alloc[zero_mask, absorber_local_idx] = team_arr[zero_mask]
     elif non_abs:
         alloc[:, absorber_local_idx] = team_arr - np.sum(alloc[:, non_abs], axis=1)
     else:

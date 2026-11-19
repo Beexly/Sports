@@ -14,7 +14,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_odds_fixture_is_wellformed():
-    snap = json.loads((ROOT / "tests" / "fixtures" / "odds_fixture.json").read_text(encoding="utf-8"))
+    snap_path = ROOT / "tests" / "fixtures" / "odds_fixture.json"
+    snap = json.loads(snap_path.read_text(encoding="utf-8"))
     assert snap["lines"]["chi_ml"]["odds"] == 142
 
 
@@ -37,7 +38,12 @@ def test_card_schema_and_stakes(tmp_path):
         MNF_CARD_OUT=str(out),
         MNF_TELEMETRY_OUT=str(tele),
     )
-    subprocess.run([sys.executable, "scripts/ops/run_chi_sea_mnf_360_board_review.py"], env=env, cwd=ROOT, check=True)
+    subprocess.run(
+        [sys.executable, "scripts/ops/run_chi_sea_mnf_360_board_review.py"],
+        env=env,
+        cwd=ROOT,
+        check=True,
+    )
     card = json.loads(out.read_text(encoding="utf-8"))
     assert card["personal_40_dollar_dk_card"]["total_staked_usd"] == 40.0
     assert len(card["personal_40_dollar_dk_card"]["tickets"]) == 6
@@ -53,7 +59,12 @@ def test_spread_ml_model_p_is_devig(tmp_path):
         MNF_CARD_OUT=str(out),
         MNF_TELEMETRY_OUT=str(tele),
     )
-    subprocess.run([sys.executable, "scripts/ops/run_chi_sea_mnf_360_board_review.py"], env=env, cwd=ROOT, check=True)
+    subprocess.run(
+        [sys.executable, "scripts/ops/run_chi_sea_mnf_360_board_review.py"],
+        env=env,
+        cwd=ROOT,
+        check=True,
+    )
     card = json.loads(out.read_text(encoding="utf-8"))
     gen = importlib.import_module("scripts.ops.run_chi_sea_mnf_360_board_review")
     d = gen.devig_two_way(-105, -115)
@@ -74,7 +85,12 @@ def test_joint_equals_worlds_mean(tmp_path):
         MNF_CARD_OUT=str(out),
         MNF_TELEMETRY_OUT=str(tele),
     )
-    subprocess.run([sys.executable, "scripts/ops/run_chi_sea_mnf_360_board_review.py"], env=env, cwd=ROOT, check=True)
+    subprocess.run(
+        [sys.executable, "scripts/ops/run_chi_sea_mnf_360_board_review.py"],
+        env=env,
+        cwd=ROOT,
+        check=True,
+    )
     card_text = out.read_text(encoding="utf-8")
     assert "1.075" not in card_text
     card = json.loads(card_text)

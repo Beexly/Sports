@@ -1,0 +1,860 @@
+{
+ "book_id": "dd45df1faa0df898",
+ "gse_mapping": "For the Galaxy Sports Edge engine the book maps onto the full stack: least squares and ridge as the baseline projection layer, L1 sparsity as the feature demotion mechanism, walk-forward hold-out and blocked cross-validation as the only promotion evidence, bias-variance accounting on every error report, ensembles chosen by error decorrelation, kernel similarity over situations with Gaussian process style uncertainty that grows away from observed matchups, Bayesian posteriors over team strength that update game by game, generative typicality checks on incoming situations, and subgroup performance reports that respect the fairness impossibility constraint. Nothing in the mapping concerns wagering mechanics; it is entirely about how projections are built, evidenced and bounded.",
+ "gsi_mapping": "For the Galaxy Sports Institute this book is curriculum-grade foundations: it supplies the shared vocabulary (E_new, bias-variance, regularisation, kernels, posteriors) and the shared standards of evidence that let researchers in different lanes compare claims. Its teaching value is the insistence that evaluation design precedes model design, that leakage is a data crime rather than a modelling detail, and that impossibility results, like the fairness theorem, are knowledge to design around rather than obstacles to argue with. It belongs in the institute library as the reference against which new methods papers are checked for what they assume and what they actually prove.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "assumptions": [
+    "Training data consists of input-output pairs drawn as independent samples",
+    "The relationship between input and output is too complicated or unknown to be written as an explicit rule-based program"
+   ],
+   "breakdown_regime": "Fails when data points are not independent, for example time series where consecutive samples are correlated; the book explicitly restricts itself to independent data points",
+   "domain": "foundations",
+   "latex": "",
+   "layer2": {
+    "mapping": "The engine is a supervised learner over historical game examples: features are the input, outcomes and performance measures are the output, and every model in the stack inherits this contract of learning from examples instead of hand-coded rules",
+    "source_operator": "supervised_learning_from_examples",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Labelled historical game records with feature vectors and realised outcomes"
+   },
+   "name": "Supervised learning: learn an input-output relationship from labelled examples rather than from explicit rules",
+   "page": "Ch 2.1, printed p. 13; text line ~902",
+   "primitive_id": "supervised_learning_from_examples",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "In other words, supervised machine learning amounts to learning from examples."
+  },
+  {
+   "assumptions": [
+    "Closeness in the chosen distance implies similarity of outputs",
+    "Inputs are scaled so that Euclidean distance is meaningful across coordinates"
+   ],
+   "breakdown_regime": "Degrades in high dimensions where distances concentrate, and with k = 1 it is maximally sensitive to label noise; prediction cost grows with the full training set because nothing is compressed into parameters",
+   "domain": "foundations",
+   "latex": "\\hat{y}(x_\\star) = \\frac{1}{k} \\sum_{j \\in \\mathcal{N}_\\star} y_j",
+   "layer2": {
+    "mapping": "Analog and comparable-game retrieval in the reasoning engine is k-NN logic: a projection for a new matchup is anchored on the most similar historical situations, and the similarity metric choice is a modelling decision, not a default",
+    "source_operator": "knn_nonparametric_prediction",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Distance or similarity scores between the current matchup feature vector and historical matchup vectors"
+   },
+   "name": "k-nearest neighbours: predict by averaging (regression) or majority vote (classification) over the k closest training points; the training data is kept and used at prediction time",
+   "page": "Ch 2.2, printed p. 19; text line ~1242",
+   "primitive_id": "knn_nonparametric_prediction",
+   "symbol_and_unit_ledger": {
+    "N_star": "index set of the k training points closest to x_star under the chosen distance",
+    "k": "number of neighbours, dimensionless count",
+    "x_star": "test input vector, same units as training inputs",
+    "y_j": "output of neighbour j, output units"
+   },
+   "verbatim_quote": "Methods that explicitly use the training data when making predictions are referred to as nonparametric"
+  },
+  {
+   "assumptions": [
+    "Axis-aligned threshold rules on single variables are expressive enough for the problem",
+    "A constant per region is an adequate local model"
+   ],
+   "breakdown_regime": "Greedy recursive splitting makes early split choices that can be suboptimal later; deep trees overfit (high variance), shallow trees underfit, and smooth diagonal boundaries need many splits to approximate",
+   "domain": "foundations",
+   "latex": "\\hat{y}(x_\\star) = \\sum_{m=1}^{M} \\hat{y}_m \\, \\mathbb{1}\\{x_\\star \\in R_m\\}",
+   "layer2": {
+    "mapping": "Situational splits in the engine (rest differentials, surface, game script buckets) are tree regions: the reasoning layer should treat each region as carrying its own local base rate rather than one global rate",
+    "source_operator": "decision_tree_region_partition",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Counts and outcome rates per situational region or leaf bucket"
+   },
+   "name": "Decision trees partition the input space into disjoint axis-aligned regions by recursive binary splits, with a constant prediction in each leaf region",
+   "page": "Ch 2.3, printed p. 25; text line ~1668",
+   "primitive_id": "decision_tree_region_partition",
+   "symbol_and_unit_ledger": {
+    "1{.}": "indicator function, dimensionless",
+    "M": "number of leaf regions, dimensionless count",
+    "R_m": "m-th leaf region of the input space, defined by the split rules on the path from the root",
+    "y_m hat": "constant prediction in region m, output units"
+   },
+   "verbatim_quote": "The decision tree effectively divides the input space into multiple disjoint regions, and in each region, a constant value is used for the prediction"
+  },
+  {
+   "assumptions": [
+    "The output is an affine function of the inputs plus noise with mean zero independent of the input",
+    "X^T X is invertible, which requires more data points than parameters and no exact collinearity"
+   ],
+   "breakdown_regime": "Fails under collinearity or p >= n where the normal equations have no unique solution, and whenever the true relationship is strongly non-linear in the raw inputs",
+   "domain": "parametric models",
+   "latex": "\\hat{\\boldsymbol{\\theta}} = (X^\\top X)^{-1} X^\\top y",
+   "layer2": {
+    "mapping": "The engine's linear baseline layer: any projection model should be benchmarked against the closed-form least squares fit on the same features, because it is the cheapest exact optimum and exposes whether added complexity earns anything",
+    "source_operator": "linear_regression_least_squares",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Design matrices of matchup features and realised outcome vectors"
+   },
+   "name": "Linear regression models the output as an affine combination of inputs plus zero-mean noise, and least squares learning solves the normal equations in closed form",
+   "page": "Ch 3.1, printed p. 37; text line ~2428",
+   "primitive_id": "linear_regression_least_squares",
+   "symbol_and_unit_ledger": {
+    "X": "n by (p+1) design matrix of training inputs with a leading column of ones, input units",
+    "n": "number of training points, dimensionless count",
+    "p": "number of input variables, dimensionless count",
+    "theta hat": "learned parameter vector of length p+1, output units per input unit",
+    "y": "n-vector of training outputs, output units"
+   },
+   "verbatim_quote": "Regression is one of the two fundamental tasks of supervised learning (the other one is classification)."
+  },
+  {
+   "assumptions": [
+    "Squared error loss",
+    "Shrinking all parameters toward zero is an acceptable prior preference",
+    "The intercept handling follows the book's convention of penalising the full parameter vector"
+   ],
+   "breakdown_regime": "Lambda = 0 recovers unregularised least squares with its singularity problems; lambda too large forces all parameters to zero and destroys fit; lambda must be tuned, typically by cross-validation",
+   "domain": "regularisation",
+   "latex": "\\hat{\\boldsymbol{\\theta}} = (X^\\top X + n\\lambda I_{p+1})^{-1} X^\\top y",
+   "layer2": {
+    "mapping": "Shrinkage in the engine's rating updates is ridge logic: new evidence moves a rating only in proportion to a penalty on movement, which guarantees a stable unique update even when a team has few observations",
+    "source_operator": "ridge_regression_closed_form",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Per-team observation counts and feature collinearity diagnostics"
+   },
+   "name": "L2 regularisation (ridge) adds lambda times the squared parameter norm to the least squares cost and always yields a unique closed-form solution for lambda > 0",
+   "page": "Ch 5.3, printed p. 109; text line ~6712",
+   "primitive_id": "ridge_regression_closed_form",
+   "symbol_and_unit_ledger": {
+    "I_{p+1}": "(p+1) by (p+1) identity matrix, dimensionless",
+    "X, y, theta hat": "as in the least squares primitive",
+    "lambda": "regularisation parameter, dimensionless, >= 0",
+    "n": "number of training points, dimensionless count"
+   },
+   "verbatim_quote": "When XT X is not invertible, the ordinary normal equations (3.13) have no unique solution"
+  },
+  {
+   "assumptions": [
+    "Squared error loss",
+    "A sparse explanation is plausible for the problem",
+    "No closed form exists, so a numerical optimisation algorithm is required"
+   ],
+   "breakdown_regime": "Among strongly correlated inputs the LASSO choice of which one survives is unstable; lambda too large zeroes out genuinely informative inputs",
+   "domain": "regularisation",
+   "latex": "\\hat{\\boldsymbol{\\theta}} = \\arg\\min_{\\boldsymbol{\\theta}} \\frac{1}{n} \\|X\\boldsymbol{\\theta} - y\\|_2^2 + \\lambda \\|\\boldsymbol{\\theta}\\|_1",
+   "layer2": {
+    "mapping": "Feature pruning in the engine should be sparsity-driven: a signal family that an L1 penalty repeatedly switches off across validation windows is a candidate for demotion, with the zeroing itself recorded as the evidence",
+    "source_operator": "lasso_sparsity_feature_selection",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Per-feature coefficient paths as the penalty varies across validation folds"
+   },
+   "name": "L1 regularisation (LASSO) favours sparse solutions with many parameters exactly zero, so it performs input selection as a side effect of fitting",
+   "page": "Ch 5.3, printed p. 110; text line ~6712",
+   "primitive_id": "lasso_sparsity_feature_selection",
+   "symbol_and_unit_ledger": {
+    "X, y, n": "as in the least squares primitive",
+    "lambda": "regularisation parameter, dimensionless, >= 0",
+    "||theta||_1": "sum of absolute parameter values, mixed units by parameter"
+   },
+   "verbatim_quote": "and it can therefore be used as an input (or feature) selection method."
+  },
+  {
+   "assumptions": [
+    "The model is trained by an iterative numerical optimisation",
+    "A hold-out set is available and its error is monitored after each iteration",
+    "Hold-out error typically decreases first and then increases while training cost keeps decreasing"
+   ],
+   "breakdown_regime": "Noisy hold-out curves make the stopping point unstable; with very small hold-out sets the minimum is poorly located, and the method does nothing for closed-form models",
+   "domain": "regularisation",
+   "latex": "",
+   "layer2": {
+    "mapping": "Iterative calibration procedures in the engine need a stopping rule tied to held-out performance rather than to training fit; continued fitting past the hold-out minimum is overfitting by definition in this framework",
+    "source_operator": "early_stopping_implicit_regularisation",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Hold-out error trace per iteration of any iterative fitting procedure"
+   },
+   "name": "Early stopping is implicit regularisation: abort iterative optimisation when hold-out error stops decreasing, before the cost function reaches its minimum",
+   "page": "Ch 5.3, printed p. 111; text line ~6712",
+   "primitive_id": "early_stopping_implicit_regularisation",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "It amounts to aborting the optimisation before it has reached the minimum of the cost function."
+  },
+  {
+   "assumptions": [
+    "New data is drawn from the same distribution p(x, y) as the training data",
+    "An error function appropriate to the task has been fixed"
+   ],
+   "breakdown_regime": "E_new can never be computed exactly in practice because p(x, y) is unknown; under distribution shift between training and deployment it is not even the right target",
+   "domain": "evaluation theory",
+   "latex": "E_{new} \\triangleq \\mathbb{E}_\\star \\left[ E\\big(\\hat{y}(x_\\star; T), y_\\star\\big) \\right]",
+   "layer2": {
+    "mapping": "The engine's scoreboard is E_new thinking: only performance on games not used in fitting counts as evidence, and in-sample fit statistics are explicitly not performance claims",
+    "source_operator": "expected_new_data_error",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Out-of-sample prediction errors logged per game with the model version and training window recorded"
+   },
+   "name": "E_new, the expected error on new unseen data drawn from p(x, y), is the quantity supervised learning actually optimises; training error does not estimate it",
+   "page": "Ch 4.1, printed p. 64; text line ~4026",
+   "primitive_id": "expected_new_data_error",
+   "symbol_and_unit_ledger": {
+    "E(., .)": "error function comparing prediction and realised output",
+    "E_new": "expected new data error, error-function units (0-1 for misclassification, squared output units for squared error)",
+    "E_star": "expectation over test points drawn from p(x, y)",
+    "T": "the training dataset the model was learned from"
+   },
+   "verbatim_quote": "In the end, supervised machine learning amounts to designing a method which performs well when faced with an endless stream of new, unseen data."
+  },
+  {
+   "assumptions": [
+    "Training and hold-out points are drawn from the same distribution",
+    "The split is made randomly, since an ordered dataset can put one class in training and the other in validation"
+   ],
+   "breakdown_regime": "Large hold-out sets shrink training data and raise E_new itself; small hold-out sets give a high-variance estimate; repeated model selection on the same hold-out overfits it",
+   "domain": "evaluation theory",
+   "latex": "E_{hold\\text{-}out} \\triangleq \\frac{1}{n_v} \\sum_{j=1}^{n_v} E\\big(\\hat{y}(x'_j; T), y'_j\\big)",
+   "layer2": {
+    "mapping": "Walk-forward evaluation in the engine is the hold-out idea sequenced over time: each evaluation window is untouched by fitting, and the estimate's variance shrinks only with more evaluated games, which caps how fine a performance difference can be claimed",
+    "source_operator": "holdout_validation_estimate",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Per-window out-of-sample errors and window sizes"
+   },
+   "name": "Hold-out validation error is an unbiased estimate of E_new computed on data used neither for training nor, ideally, repeatedly for decisions",
+   "page": "Ch 4.2, printed p. 67; text line ~4190",
+   "primitive_id": "holdout_validation_estimate",
+   "symbol_and_unit_ledger": {
+    "T": "training data excluding the hold-out set",
+    "n_v": "number of hold-out points, dimensionless count",
+    "x'_j, y'_j": "j-th hold-out input and output"
+   },
+   "verbatim_quote": "A remedy is to set aside some hold-out validation data"
+  },
+  {
+   "assumptions": [
+    "Folds are formed randomly from data drawn from one distribution",
+    "A separate untouched test set is still required for a final unbiased performance estimate"
+   ],
+   "breakdown_regime": "Costs k full trainings; random folds leak information when data points are grouped or time-ordered, so grouped or blocked folds are required in those regimes; cross-validation does not remove overfitting risk in model selection",
+   "domain": "evaluation theory",
+   "latex": "\\hat{E}_{new} = \\frac{1}{K} \\sum_{k=1}^{K} E_{hold\\text{-}out}^{(k)}",
+   "layer2": {
+    "mapping": "Season-blocked cross-validation is the engine's hyperparameter selection mechanism: folds respect season and week boundaries so that no fold's evaluation games share a leakage path with its training games",
+    "source_operator": "kfold_cross_validation",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Per-fold out-of-sample errors for each candidate hyperparameter setting"
+   },
+   "name": "k-fold cross-validation estimates E_new by rotating the hold-out role across k folds, so all data is used for both training and evaluation without a permanent validation set",
+   "page": "Ch 11.1, printed p. 288; text line ~17872",
+   "primitive_id": "kfold_cross_validation",
+   "symbol_and_unit_ledger": {
+    "E_hold-out^(k)": "hold-out error of the model trained without fold k, evaluated on fold k, error units",
+    "K": "number of folds, dimensionless count"
+   },
+   "verbatim_quote": "validation instead of putting aside hold-out validation data; the idea of how to use it in the iterative procedure is unchanged."
+  },
+  {
+   "assumptions": [
+    "Squared error loss",
+    "Outputs are generated as a true function plus independent zero-mean noise",
+    "The decomposition is stated for regression; for classification it is intuition rather than an exact identity"
+   ],
+   "breakdown_regime": "The irreducible term cannot be reduced by any model; bias is roughly fixed by model class while variance grows as training data shrinks, so small-sample regimes are variance-dominated",
+   "domain": "evaluation theory",
+   "latex": "\\bar{E}_{new} = \\mathbb{E}_\\star \\big[ \\big(\\bar{f}(x_\\star) - f_0(x_\\star)\\big)^2 \\big] + \\mathbb{E}_\\star \\mathbb{E}_T \\big[ \\big(\\hat{y}(x_\\star; T) - \\bar{f}(x_\\star)\\big)^2 \\big] + \\sigma^2",
+   "layer2": {
+    "mapping": "Every engine error report should be decomposable in these terms: a systematic miss across many games is bias (model class problem), scatter across similar games is variance (data or flexibility problem), and the residual floor is the sport's inherent unpredictability, which no signal can remove",
+    "source_operator": "bias_variance_decomposition",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Signed error means and error variances per model family across evaluation windows"
+   },
+   "name": "Expected new data error decomposes into squared bias plus variance plus irreducible noise; model complexity trades the first two against each other",
+   "page": "Ch 4.4, printed p. 80; text line ~4942",
+   "primitive_id": "bias_variance_decomposition",
+   "symbol_and_unit_ledger": {
+    "E_T": "expectation over training sets drawn from p(x, y)",
+    "f bar": "average model over all possible training sets of size n, output units",
+    "f_0": "true input-output function, output units",
+    "sigma^2": "irreducible noise variance, squared output units"
+   },
+   "verbatim_quote": "The main point here is that to obtain a small expected squared error, we have to consider both the bias and the variance."
+  },
+  {
+   "assumptions": [
+    "Data points belong to identifiable groups within which points are correlated",
+    "Deployment data will contain new groups, not new points from training groups"
+   ],
+   "breakdown_regime": "Random point-level splits silently leak; the failure is invisible in validation numbers and only appears as a production drop, which is why the book insists the split unit must match the deployment unit",
+   "domain": "evaluation practice",
+   "latex": "",
+   "layer2": {
+    "mapping": "In the engine the group is the game and the team-season: plays or games from the same matchup must never straddle a train and validation split, and team identity itself is a grouping variable when estimating how the model treats unseen opponents",
+    "source_operator": "group_leakage_partitioning",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Split manifests showing group identifiers assigned wholly to one side of each split"
+   },
+   "name": "Group leakage: when data points come in correlated groups, splits must be made over groups, not points, or validation performance is optimistically biased",
+   "page": "Ch 11.1, printed p. 289; text line ~17872",
+   "primitive_id": "group_leakage_partitioning",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "Group leakage can occur if the data points are not really stochastically independent but are ordered into different groups."
+  },
+  {
+   "assumptions": [
+    "The input-output relationship is a composition of affine maps and scalar non-linearities",
+    "Enough data exists to fit a parameter count far larger than a linear model's"
+   ],
+   "breakdown_regime": "No closed-form training exists; optimisation is non-convex, parameter dimension is huge, and without regularisation or early stopping the model overfits small datasets",
+   "domain": "deep learning",
+   "latex": "q_k = h\\Big( \\sum_{j=1}^{p} W^{(1)}_{kj} x_j + b^{(1)}_k \\Big), \\quad \\hat{y} = \\sum_{k=1}^{U} W^{(2)}_k q_k + b^{(2)}",
+   "layer2": {
+    "mapping": "The engine's learned feature interactions are layered compositions: raw situational variables enter, hidden combinations form matchup-level features, and the output layer prices them; depth is justified only when the composed features beat the linear baseline out of sample",
+    "source_operator": "two_layer_neural_network",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Training and hold-out loss curves per architecture candidate"
+   },
+   "name": "A neural network stacks layers of generalised linear models: parallel units apply an activation to an affine combination, and layers compose these transformations",
+   "page": "Ch 6.1, printed p. 134; text line ~8131",
+   "primitive_id": "two_layer_neural_network",
+   "symbol_and_unit_ledger": {
+    "U": "number of hidden units, dimensionless count",
+    "W^(1), W^(2)": "first and second layer weight matrices, mixed units",
+    "b^(1), b^(2)": "offset vectors per layer",
+    "h": "activation function, maps real line to real line",
+    "q_k": "k-th hidden unit activation, dimensionless"
+   },
+   "verbatim_quote": "We first make use of several parallel generalised linear regression models to build a layer (which will lead us to the two-layer neural network) and then stack these layers in a sequential construction (which will result in a deep neural network)."
+  },
+  {
+   "assumptions": [
+    "Units share the same activation within a layer in the book's presentation",
+    "Inputs are scaled so pre-activations sit in a useful range of the activation"
+   ],
+   "breakdown_regime": "Saturating activations stall gradient-based learning at extreme inputs; ReLU units can die permanently at zero output; a network of purely linear activations collapses to a single linear model",
+   "domain": "deep learning",
+   "latex": "h(z) = \\frac{1}{1 + e^{-z}}, \\qquad h(z) = \\max(0, z)",
+   "layer2": {
+    "mapping": "Bounded versus unbounded response shapes matter in engine features: saturating transforms suit probability-like signals, while ReLU-style transforms suit accumulating counting signals; choosing the response shape is choosing how a signal is allowed to grow",
+    "source_operator": "activation_functions_relu_logistic",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Distributions of pre-activation values per feature transform"
+   },
+   "name": "Activation functions supply the non-linearity: the logistic function saturates between 0 and 1, while ReLU is the identity for positive inputs and zero otherwise and is the modern default",
+   "page": "Ch 6.1, printed p. 134; text line ~8131",
+   "primitive_id": "activation_functions_relu_logistic",
+   "symbol_and_unit_ledger": {
+    "h(z)": "unit output, in (0,1) for logistic and [0, infinity) for ReLU",
+    "z": "pre-activation affine combination, dimensionless after scaling"
+   },
+   "verbatim_quote": "Common choices of activation function are the logistic function and the rectified linear unit (ReLU)."
+  },
+  {
+   "assumptions": [
+    "Outputs are categorical with a known set of M classes",
+    "The model produces one logit per class and a softmax link"
+   ],
+   "breakdown_regime": "Cross-entropy is unbounded for confidently wrong predictions, so label noise and outliers dominate training unless the data is cleaned or the loss is modified",
+   "domain": "deep learning",
+   "latex": "L(x, y, \\boldsymbol{\\theta}) = -\\ln g_y\\big(f(x; \\boldsymbol{\\theta})\\big) = -z_y + \\ln \\sum_{j=1}^{M} e^{z_j}",
+   "layer2": {
+    "mapping": "Win-probability heads in the engine are trained and scored in log-loss terms: a confidently wrong probability is penalised far more than a hedged one, which is the correct incentive for calibrated probability output",
+    "source_operator": "cross_entropy_loss",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Per-game log loss of predicted probabilities against realised outcomes"
+   },
+   "name": "Multiclass classification is trained with the cross-entropy loss, the negative log of the softmax probability assigned to the true class",
+   "page": "Ch 6.2, printed p. 141; text line ~8599",
+   "primitive_id": "cross_entropy_loss",
+   "symbol_and_unit_ledger": {
+    "L": "loss in nats, dimensionless",
+    "M": "number of classes, dimensionless count",
+    "g_y": "softmax probability of the true class y, in (0,1)",
+    "z_j": "j-th logit, the raw output of the last layer for class j, dimensionless"
+   },
+   "verbatim_quote": "For the multiclass classification problem, we analogously use the cross-entropy loss function (3.44) as we did for multiclass logistic regression,"
+  },
+  {
+   "assumptions": [
+    "Input data lives on a grid (image, audio waveform, volume) where nearby entries are more related than distant ones",
+    "The same local pattern is worth detecting everywhere in the grid, justifying shared weights"
+   ],
+   "breakdown_regime": "Dense layers on vectorised grid data destroy locality and over-parameterise; convolutions are the wrong inductive bias when position in the grid carries no meaning",
+   "domain": "deep learning",
+   "latex": "",
+   "layer2": {
+    "mapping": "Structured inputs in the engine (drive sequences, play-by-play grids, formation diagrams) should be processed with structure-aware local operators rather than flattened into unstructured vectors, because locality and translation reuse are real properties of the data",
+    "source_operator": "cnn_sparse_interactions_parameter_sharing",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Grid-structured inputs such as play sequences indexed by field position and game clock"
+   },
+   "name": "Convolutional layers exploit grid structure through sparse interactions and parameter sharing, giving far fewer parameters than a dense layer on the same input",
+   "page": "Ch 6.3, printed p. 148; text line ~9088",
+   "primitive_id": "cnn_sparse_interactions_parameter_sharing",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "In contrast to a dense layer, a convolutional layer leverages two important concepts – sparse interactions and parameter sharing – to achieve such a parametrisation."
+  },
+  {
+   "assumptions": [
+    "Base models have low bias and high variance",
+    "Bootstrap resamples approximate drawing new training sets from the population"
+   ],
+   "breakdown_regime": "Variance reduction is floored by the correlation term rho sigma^2: perfectly correlated members gain nothing from averaging, and bagging does not fix a biased base model",
+   "domain": "ensembles",
+   "latex": "\\mathrm{Var}\\left( \\frac{1}{B} \\sum_{b=1}^{B} \\hat{y}^{(b)}(x_\\star) \\right) = \\rho \\sigma^2 + \\frac{1 - \\rho}{B} \\sigma^2",
+   "layer2": {
+    "mapping": "Engine ensembling follows the variance formula literally: adding another model helps only insofar as its errors are decorrelated from the existing members, so member selection is a correlation decision before it is an accuracy decision",
+    "source_operator": "bagging_variance_reduction",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Pairwise error correlations between candidate model families on shared evaluation windows"
+   },
+   "name": "Bagging averages models trained on bootstrap resamples, reducing the variance of a low-bias high-variance base model without increasing its bias",
+   "page": "Ch 7.1, printed p. 164; text line ~10132",
+   "primitive_id": "bagging_variance_reduction",
+   "symbol_and_unit_ledger": {
+    "B": "number of ensemble members, dimensionless count",
+    "rho": "average pairwise correlation between ensemble member predictions, dimensionless in [0,1]",
+    "sigma^2": "variance of a single member's prediction, squared output units"
+   },
+   "verbatim_quote": "By using them as base models in bootstrap aggregating, or bagging, we can reduce the variance of the base model without increasing its bias."
+  },
+  {
+   "assumptions": [
+    "The training set is a good representation of the population, so resampling it mimics collecting new data",
+    "Sampling is uniform over the n training points"
+   ],
+   "breakdown_regime": "Sampling without replacement would just permute the same dataset and produce identical models; the bootstrap understates uncertainty when the original sample is unrepresentative or when data are dependent",
+   "domain": "ensembles",
+   "latex": "",
+   "layer2": {
+    "mapping": "Resampling historical games with replacement is the engine's uncertainty instrument: refitting on bootstrap seasons gives the sampling distribution of any rating or edge estimate without new data collection",
+    "source_operator": "bootstrap_resampling",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Bootstrap replicate distributions of engine statistics over resampled game sets"
+   },
+   "name": "The bootstrap creates new datasets of size n by sampling the training data with replacement, so some points repeat and others are omitted",
+   "page": "Ch 7.1, printed p. 165; text line ~10132",
+   "primitive_id": "bootstrap_resampling",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "Note that the sampling is done with replacement, meaning that the resulting bootstrapped dataset may contain multiple copies of some of the original training data points, whereas other data points may not be included at all."
+  },
+  {
+   "assumptions": [
+    "Base models are decision trees grown by greedy recursive binary splitting",
+    "At each split only a random subset of q <= p inputs is eligible",
+    "Many trees are averaged or majority-voted"
+   ],
+   "breakdown_regime": "If one dominant variable exists, plain bagged trees all split on it first and stay correlated; too small a feature subset raises individual variance and bias faster than correlation falls",
+   "domain": "ensembles",
+   "latex": "",
+   "layer2": {
+    "mapping": "Deliberate feature restriction is a decorrelation tool for the engine's model zoo: forcing different model families to build from different signal subsets produces genuinely diverse errors, which is what makes their combination stronger than any member",
+    "source_operator": "random_forest_decorrelation",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Feature usage frequencies per ensemble member and member error correlations"
+   },
+   "name": "Random forests add per-split random feature subsets to bagged trees, lowering the correlation between trees at the cost of higher individual tree variance, with the correlation reduction usually dominating",
+   "page": "Ch 7.2, printed p. 171; text line ~10649",
+   "primitive_id": "random_forest_decorrelation",
+   "symbol_and_unit_ledger": {},
+   "verbatim_quote": "The idea is to inject additional randomness when constructing each tree, in order to further reduce the correlation among the base models."
+  },
+  {
+   "assumptions": [
+    "Each weak learner beats chance on its reweighted training distribution",
+    "Binary classification with labels in {-1, 1} in the book's presentation"
+   ],
+   "breakdown_regime": "The underlying exponential loss heavily penalises large negative margins, so AdaBoost deteriorates with label noise and outliers; it is a bias-reduction method and does not fix high-variance base learners",
+   "domain": "ensembles",
+   "latex": "\\alpha^{(b)} = \\frac{1}{2} \\ln \\frac{1 - \\epsilon^{(b)}}{\\epsilon^{(b)}}",
+   "layer2": {
+    "mapping": "Error-focused iteration in the engine mirrors AdaBoost weighting: the games and situations the current model misses most should receive the most analysis weight in the next development round, rather than uniform attention",
+    "source_operator": "adaboost_weak_to_strong",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Per-situation error concentrations from the latest evaluation window"
+   },
+   "name": "AdaBoost sequentially reweights training points toward those the current ensemble gets wrong, combining weak high-bias learners into a strong one with confidence-weighted votes",
+   "page": "Ch 7.3, printed p. 174; text line ~10876",
+   "primitive_id": "adaboost_weak_to_strong",
+   "symbol_and_unit_ledger": {
+    "alpha^(b)": "vote weight of the b-th weak learner, dimensionless",
+    "epsilon^(b)": "weighted training error of the b-th weak learner, dimensionless in (0, 1/2) for a useful learner"
+   },
+   "verbatim_quote": "Boosting is built on the idea that even a weak high-bias model can often capture some of the relationship between the inputs and the output."
+  },
+  {
+   "assumptions": [
+    "A differentiable loss function is chosen for the task",
+    "Each stage can approximately fit the negative gradient of the loss with respect to the current model"
+   ],
+   "breakdown_regime": "Too many stages overfit; the method inherits sensitivity to the chosen loss, and stage-wise greedy fitting is not jointly optimal",
+   "domain": "ensembles",
+   "latex": "f^{(B)}(x) = \\sum_{b=1}^{B} \\alpha^{(b)} f^{(b)}(x)",
+   "layer2": {
+    "mapping": "The engine's additive adjustments (base projection plus situational corrections) are a boosting-shaped object: each correction should be fit to the residual errors of the running total, not to the raw outcome, and the number of correction layers is itself a fit decision",
+    "source_operator": "gradient_boosting_additive_model",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Residual error of the running projection after each added adjustment layer"
+   },
+   "name": "Gradient boosting trains an additive model stage by stage, each new basis function fitting the negative gradient of a chosen loss, which generalises AdaBoost to robust losses and regression trees for classification",
+   "page": "Ch 7.4, printed p. 183; text line ~11493",
+   "primitive_id": "gradient_boosting_additive_model",
+   "symbol_and_unit_ledger": {
+    "B": "number of additive terms, dimensionless count",
+    "alpha^(b)": "coefficient of the b-th term, dimensionless",
+    "f^(B)": "the additive model after B stages, output units",
+    "f^(b)": "b-th basis function or weak learner, output units"
+   },
+   "verbatim_quote": "from a mathematical perspective, a perhaps more useful interpretation is that boosting is as a way to train an additive model."
+  },
+  {
+   "assumptions": [
+    "The kernel is positive semidefinite, so a feature map and Hilbert space exist",
+    "Predictions are influenced most by training points the kernel deems similar"
+   ],
+   "breakdown_regime": "A default kernel choice silently imposes the wrong function preference; performance still has to be established by cross-validation regardless of theoretical properties",
+   "domain": "kernel methods",
+   "latex": "\\kappa(x, x') = \\boldsymbol{\\phi}(x)^\\top \\boldsymbol{\\phi}(x')",
+   "layer2": {
+    "mapping": "Similarity definitions in the engine are priors in disguise: defining two game situations as similar is equivalent to declaring that the projection function should vary smoothly between them, so similarity design deserves the same scrutiny as model design",
+    "source_operator": "kernel_as_regularisation",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Similarity matrices over situation feature vectors and their induced neighbourhood outcome rates"
+   },
+   "name": "A kernel is simultaneously a similarity measure between inputs and a choice of regularisation functional: it encodes which functions are preferred, for example smooth ones for the squared exponential kernel",
+   "page": "Ch 8.4, printed p. 204; text line ~12674",
+   "primitive_id": "kernel_as_regularisation",
+   "symbol_and_unit_ledger": {
+    "kappa": "kernel function value, dimensionless similarity in the units of the feature inner product",
+    "phi": "feature map into a possibly infinite-dimensional space",
+    "x, x'": "two inputs, input units"
+   },
+   "verbatim_quote": "The choice of kernel corresponds to a choice of a regularisation functional. That is, the kernel implies a preference for certain functions in the space of all functions that are spanned by the feature vector."
+  },
+  {
+   "assumptions": [
+    "Squared error loss with L2 regularisation",
+    "The kernel is positive semidefinite so the Gram system is solvable"
+   ],
+   "breakdown_regime": "Every training point is needed at prediction time and the Gram matrix costs O(n^2) storage and O(n^3) factorisation, so the method does not scale to very large n without approximation",
+   "domain": "kernel methods",
+   "latex": "\\hat{\\boldsymbol{\\alpha}} = \\big(K(X, X) + n\\lambda I\\big)^{-1} y, \\qquad \\hat{y}(x_\\star) = \\hat{\\boldsymbol{\\alpha}}^\\top K(X, x_\\star)",
+   "layer2": {
+    "mapping": "A dual, example-based projection layer is viable for the engine at season scale: predictions become weighted sums over historical games with kernel weights, and the weights themselves are inspectable evidence for why a projection leans the way it does",
+    "source_operator": "kernel_ridge_regression_dual",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Gram matrices over historical game feature vectors and realised margins"
+   },
+   "name": "Kernel ridge regression rewrites regularised linear regression in dual parameters, one per training point, with all inner products replaced by kernel evaluations and a closed-form solution",
+   "page": "Ch 8.3, printed p. 199; text line ~12384",
+   "primitive_id": "kernel_ridge_regression_dual",
+   "symbol_and_unit_ledger": {
+    "K(X, X)": "n by n Gram matrix of kernel values between training inputs",
+    "K(X, x_star)": "vector of kernel values between training inputs and the test input",
+    "alpha hat": "dual parameter vector of length n, output units per kernel unit",
+    "lambda": "regularisation parameter, dimensionless"
+   },
+   "verbatim_quote": "Note that (8.19a) is identical to the corresponding expression for kernel ridge regression (8.14b)."
+  },
+  {
+   "assumptions": [
+    "The regulariser is a strictly increasing function of the L2 norm of the parameters",
+    "The loss depends on the parameters only through predictions at the training points"
+   ],
+   "breakdown_regime": "L1 regularisation breaks the theorem's conclusion, which is why kernel ridge regression could not be derived with an L1 penalty; existence of the dual form does not provide its solution",
+   "domain": "kernel methods",
+   "latex": "\\hat{\\boldsymbol{\\theta}} = \\Phi(X)^\\top \\hat{\\boldsymbol{\\alpha}}",
+   "layer2": {
+    "mapping": "Representation guarantees in the engine should be read with the same discipline: knowing a projection can be expressed through historical examples does not determine the weights; the weighting rule still has to be derived and validated separately",
+    "source_operator": "representer_theorem_scope",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Dual coefficient vectors attached to projections for audit"
+   },
+   "name": "The representer theorem guarantees that L2-regularised empirical risk minimisers over a feature space have a dual representation in terms of training-point coefficients, but it does not by itself give the dual optimisation problem",
+   "page": "Ch 8.5, printed p. 209; text line ~13032",
+   "primitive_id": "representer_theorem_scope",
+   "symbol_and_unit_ledger": {
+    "Phi(X)": "matrix of feature maps of the training inputs",
+    "alpha hat": "dual parameter vector of length n",
+    "theta hat": "primal parameter vector, possibly infinite-dimensional"
+   },
+   "verbatim_quote": "The representer theorem is a cornerstone of most kernel methods, since it tells us that we can express some models in terms of dual parameters"
+  },
+  {
+   "assumptions": [
+    "Errors smaller than epsilon are treated as free",
+    "L2 regularisation in the primal so the representer theorem applies"
+   ],
+   "breakdown_regime": "Epsilon too large leaves too few support vectors and an underfit model; epsilon too small removes the sparsity and robustness benefit; the dual problem is a constrained optimisation with no closed form",
+   "domain": "kernel methods",
+   "latex": "\\hat{\\boldsymbol{\\alpha}} = \\arg\\min_{\\boldsymbol{\\alpha}} \\frac{1}{2} \\boldsymbol{\\alpha}^\\top K(X, X) \\boldsymbol{\\alpha} - \\boldsymbol{\\alpha}^\\top y + \\epsilon \\|\\boldsymbol{\\alpha}\\|_1, \\quad |\\alpha_i| \\le \\frac{1}{2n\\lambda}",
+   "layer2": {
+    "mapping": "An epsilon tube is the right shape for noisy sports outcomes: projection errors inside a tolerance band should cost nothing in model updating, and only games missed by more than the band should drive parameter movement",
+    "source_operator": "support_vector_regression",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Counts of games falling outside the tolerance band per model and per situation"
+   },
+   "name": "Support vector regression uses the epsilon-insensitive loss, which makes the dual parameter vector sparse: only training points outside the epsilon tube, the support vectors, are needed for prediction",
+   "page": "Ch 8.3, printed p. 200; text line ~12384",
+   "primitive_id": "support_vector_regression",
+   "symbol_and_unit_ledger": {
+    "K(X, X)": "Gram matrix",
+    "alpha": "dual parameter vector of length n",
+    "epsilon": "half-width of the insensitivity tube, output units",
+    "lambda": "regularisation parameter, dimensionless"
+   },
+   "verbatim_quote": "All training data is indeed used at training time (that is, solving (8.19b)), but when making predictions (using (8.19a)), only the support vectors contribute."
+  },
+  {
+   "assumptions": [
+    "Binary labels in {-1, 1}",
+    "Hinge loss with L2 regularisation in the primal formulation"
+   ],
+   "breakdown_regime": "The predicted margin cannot be interpreted as a class probability, because of the asymptotic minimiser of the hinge loss; multiclass problems need one-versus-rest or one-versus-one constructions",
+   "domain": "kernel methods",
+   "latex": "\\hat{y}(x_\\star) = \\mathrm{sign}\\big( \\hat{\\boldsymbol{\\alpha}}^\\top K(X, x_\\star) \\big)",
+   "layer2": {
+    "mapping": "Margin-based classifiers in the engine must not have their raw scores read as probabilities: any score that will be presented as a probability needs a separate calibration step, because the training loss determines what the output number means",
+    "source_operator": "support_vector_classification",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Score distributions versus realised outcome frequencies for calibration checks"
+   },
+   "name": "Support vector classification replaces the logistic loss with the hinge loss, whose zero region beyond margin 1 makes the dual solution sparse; it outputs a hard classification, not a probability",
+   "page": "Ch 8.5, printed p. 209; text line ~13032",
+   "primitive_id": "support_vector_classification",
+   "symbol_and_unit_ledger": {
+    "K(X, x_star)": "kernel values between training inputs and the test input",
+    "alpha hat": "sparse dual parameter vector of length n",
+    "sign": "sign function returning -1 or 1, dimensionless"
+   },
+   "verbatim_quote": "Both support vector regression and classification are SVMs since they both have sparse dual parameter vectors."
+  },
+  {
+   "assumptions": [
+    "A prior p(theta) is postulated by the user; it cannot be computed from data",
+    "A likelihood p(y | theta) is specified",
+    "Sequential updating is valid: the old posterior becomes the new prior when more data arrives"
+   ],
+   "breakdown_regime": "Without a meaningful prior the posterior is not meaningful either; for most models the integrals are intractable and need variational or Monte Carlo approximation",
+   "domain": "bayesian methods",
+   "latex": "p(y_\\star | y) = \\int p(y_\\star | \\boldsymbol{\\theta}) \\, p(\\boldsymbol{\\theta} | y) \\, d\\boldsymbol{\\theta}",
+   "layer2": {
+    "mapping": "Ratings in the engine are distributions, not points: a team with three observed games carries a wide posterior and its projection should be shrunk and flagged accordingly, with each new game updating the distribution rather than replacing an estimate",
+    "source_operator": "bayesian_marginalisation_predictive",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Posterior means and spreads per team rating as games accumulate"
+   },
+   "name": "Bayesian learning replaces a point parameter estimate with the posterior distribution, and prediction marginalises over it, which is why the approach is less prone to overfitting on small datasets",
+   "page": "Ch 9.1, printed p. 218; text line ~13534",
+   "primitive_id": "bayesian_marginalisation_predictive",
+   "symbol_and_unit_ledger": {
+    "p(theta | y)": "posterior distribution over parameters given training outputs",
+    "p(y_star | theta)": "predictive distribution at a test input for fixed parameters",
+    "p(y_star | y)": "posterior predictive distribution, the Bayesian prediction"
+   },
+   "verbatim_quote": "An interesting and practically relevant consequence is that the Bayesian approach is less prone to overfitting, compared to using a maximum-likelihood based method."
+  },
+  {
+   "assumptions": [
+    "Gaussian likelihood with known noise variance sigma^2",
+    "Gaussian prior, chosen frankly because it simplifies the calculations",
+    "The predictive variance for a new output adds sigma^2 to the function variance"
+   ],
+   "breakdown_regime": "Closed form depends on Gaussian conjugacy; the noise variance and prior variance usually still need choosing, for example by maximising the marginal likelihood",
+   "domain": "bayesian methods",
+   "latex": "\\boldsymbol{\\Sigma}_n = \\left( \\frac{1}{\\sigma_0^2} I + \\frac{1}{\\sigma^2} X^\\top X \\right)^{-1}, \\qquad \\boldsymbol{\\mu}_n = \\boldsymbol{\\Sigma}_n \\left( \\frac{1}{\\sigma^2} \\boldsymbol{\\mu}_0 + \\frac{1}{\\sigma^2} X^\\top y \\right)",
+   "layer2": {
+    "mapping": "The engine's baseline rating model can be exactly this: a Gaussian posterior over team strengths whose width is an honest function of games played, giving projections with defensible uncertainty from the first week of a season",
+    "source_operator": "bayesian_linear_regression_posterior",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Posterior covariance traces per rating parameter across the season"
+   },
+   "name": "With a Gaussian prior and Gaussian noise, Bayesian linear regression has a Gaussian posterior and posterior predictive in closed form, with the prior acting as the Bayesian counterpart of regularisation",
+   "page": "Ch 9.2, printed p. 222; text line ~13874",
+   "primitive_id": "bayesian_linear_regression_posterior",
+   "symbol_and_unit_ledger": {
+    "X, y": "training design matrix and outputs",
+    "mu_0, sigma_0^2": "prior mean and prior variance scale",
+    "mu_n, Sigma_n": "posterior mean vector and covariance matrix of the parameters",
+    "sigma^2": "observation noise variance, squared output units"
+   },
+   "verbatim_quote": "Just as for plain linear regression, it is possible to use non-linear input transformations, such as polynomials, in Bayesian linear regression."
+  },
+  {
+   "assumptions": [
+    "Any finite set of function values is jointly Gaussian",
+    "The kernel is positive semidefinite so every finite covariance matrix is valid",
+    "The kernel encodes prior beliefs such as smoothness and how correlation decays with distance"
+   ],
+   "breakdown_regime": "Exact inference costs O(n^3); the predictive mean coincides with kernel ridge regression, so the added value is entirely in the variance, which is only as honest as the kernel and noise assumptions",
+   "domain": "bayesian methods",
+   "latex": "f \\sim \\mathcal{GP}(\\mu, \\kappa), \\qquad m_\\star = K(X, x_\\star)^\\top \\big(\\sigma^2 I + K(X, X)\\big)^{-1} y, \\qquad s_\\star = \\kappa(x_\\star, x_\\star) - K(X, x_\\star)^\\top \\big(\\sigma^2 I + K(X, X)\\big)^{-1} K(X, x_\\star)",
+   "layer2": {
+    "mapping": "Projection surfaces in the engine should carry a variance, not just a mean: the Gaussian process construction shows how a similarity kernel over situations induces both, with uncertainty growing away from observed situations, which is the correct geometry for confidence labels",
+    "source_operator": "gaussian_process_regression",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Predictive variances per projection as a function of distance to observed situations"
+   },
+   "name": "A Gaussian process puts a prior directly over functions, specified by a mean function and a covariance function (kernel); conditioning on observations yields a Gaussian posterior predictive with both a mean and a variance",
+   "page": "Ch 9.3, printed p. 226; text line ~14073",
+   "primitive_id": "gaussian_process_regression",
+   "symbol_and_unit_ledger": {
+    "kappa": "covariance function, equal to the kernel, squared output units",
+    "m_star, s_star": "posterior predictive mean and variance at the test input",
+    "mu": "mean function, output units",
+    "sigma^2": "observation noise variance, squared output units"
+   },
+   "verbatim_quote": "However, the Bayesian idea does not only apply to models with parameters but also to nonparametric models."
+  },
+  {
+   "assumptions": [
+    "Zero prior mean function in the book's construction",
+    "The marginal likelihood is computable in closed form for the Gaussian process"
+   ],
+   "breakdown_regime": "Multiple local maxima mean the optimiser's answer depends on initialisation, and different maxima can be practically different models; maximising the marginal likelihood does not estimate E_new and is not equivalent to cross-validation",
+   "domain": "bayesian methods",
+   "latex": "\\ln p_\\eta(y) = -\\frac{1}{2} y^\\top \\tilde{K}_\\eta(X, X)^{-1} y - \\frac{1}{2} \\ln \\det \\tilde{K}_\\eta(X, X) - \\frac{n}{2} \\log 2\\pi",
+   "layer2": {
+    "mapping": "Hyperparameter selection in the engine has two legitimate routes, marginal likelihood and cross-validation, and they can disagree; disagreement is information about model uncertainty and should be surfaced rather than silently resolved by whichever ran first",
+    "source_operator": "gp_marginal_likelihood_tuning",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Marginal likelihood values and cross-validation errors per hyperparameter candidate"
+   },
+   "name": "Gaussian process kernel hyperparameters can be selected by maximising the log marginal likelihood, whose surface can have several local maxima corresponding to different interpretations of the data",
+   "page": "Ch 9.4, printed p. 239; text line ~14713",
+   "primitive_id": "gp_marginal_likelihood_tuning",
+   "symbol_and_unit_ledger": {
+    "K tilde": "Gram matrix of the kernel including the noise term sigma^2 I",
+    "eta": "vector of kernel hyperparameters such as lengthscale and noise variance",
+    "p_eta(y)": "marginal likelihood of the training outputs under hyperparameters eta, density units"
+   },
+   "verbatim_quote": "It is therefore important to carefully choose the initialisation of the optimisation procedure."
+  },
+  {
+   "assumptions": [
+    "Class-conditional input distributions are Gaussian",
+    "In the supervised case the parameters have closed-form maximum likelihood estimates: class proportions, per-class sample means and covariances"
+   ],
+   "breakdown_regime": "If the Gaussian assumption is badly wrong the derived classifier inherits the error; modelling p(x) is wasteful or infeasible when x is very high-dimensional, such as raw images",
+   "domain": "generative models",
+   "latex": "p(x, y) = p(x | y) \\, p(y), \\qquad p(x | y) = \\mathcal{N}\\big(x \\,|\\, \\boldsymbol{\\mu}_y, \\boldsymbol{\\Sigma}_y\\big), \\qquad p(y = m) = \\pi_m",
+   "layer2": {
+    "mapping": "A generative layer over game situations lets the engine ask whether a situation is typical at all, not just what it predicts: atypical inputs get flagged as low-density before any conditional projection is trusted",
+    "source_operator": "gmm_generative_model",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Densities of incoming game situations under the fitted mixture over historical situations"
+   },
+   "name": "The Gaussian mixture model is generative: it models the joint distribution p(x, y) as class priors times class-conditional Gaussians, from which the conditional p(y | x) is derived rather than fitted directly",
+   "page": "Ch 10.1, printed p. 248; text line ~15321",
+   "primitive_id": "gmm_generative_model",
+   "symbol_and_unit_ledger": {
+    "M": "number of classes, dimensionless count",
+    "mu_y, Sigma_y": "mean vector and covariance matrix of the input distribution within class y",
+    "pi_m": "prior probability of class m, dimensionless, sums to 1 over classes"
+   },
+   "verbatim_quote": "This is a more ambitious goal than the discriminative classifiers encountered in previous chapters, which only attempt to model the conditional distribution"
+  },
+  {
+   "assumptions": [
+    "Per-class Gaussian input distributions",
+    "For LDA, one covariance matrix shared by all classes, estimated by pooling"
+   ],
+   "breakdown_regime": "QDA estimates a full covariance per class and is data-hungry; LDA and logistic regression often perform similarly but are not equivalent, because their parameters are learned by different criteria",
+   "domain": "generative models",
+   "latex": "p(y = m | x_\\star) = \\frac{\\hat{\\pi}_m \\, \\mathcal{N}\\big(x_\\star \\,|\\, \\hat{\\boldsymbol{\\mu}}_m, \\hat{\\boldsymbol{\\Sigma}}_m\\big)}{\\sum_{j=1}^{M} \\hat{\\pi}_j \\, \\mathcal{N}\\big(x_\\star \\,|\\, \\hat{\\boldsymbol{\\mu}}_j, \\hat{\\boldsymbol{\\Sigma}}_j\\big)}",
+   "layer2": {
+    "mapping": "Class-conditional modelling of team performance profiles (one distribution per outcome class) is a legitimate lightweight classifier for the engine, with the LDA versus QDA choice reducible to whether classes genuinely differ in spread or only in location",
+    "source_operator": "qda_quadratic_discriminant",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Per-class means and covariances of performance feature vectors"
+   },
+   "name": "Turning the Gaussian mixture model into a classifier gives quadratic discriminant analysis; forcing a shared covariance across classes cancels the quadratic terms and gives linear discriminant analysis",
+   "page": "Ch 10.1, printed p. 251; text line ~15516",
+   "primitive_id": "qda_quadratic_discriminant",
+   "symbol_and_unit_ledger": {
+    "mu_m hat, Sigma_m hat": "estimated per-class mean and covariance of inputs",
+    "pi_m hat": "estimated class proportion, dimensionless",
+    "x_star": "test input vector"
+   },
+   "verbatim_quote": "Since the logarithm of the Gaussian probability density function is a quadratic function in x, the decision boundary for this classifier is also quadratic, and the method is therefore referred to as quadratic discriminant analysis (QDA)."
+  },
+  {
+   "assumptions": [
+    "The model contains observed and unobserved (latent) random variables",
+    "The expectation and maximisation steps are each tractable"
+   ],
+   "breakdown_regime": "Convergence is to a stationary point, not necessarily the global maximum, so initialisation matters; in the unsupervised mixture case the cluster identities themselves are unobserved and may not correspond to interpretable classes",
+   "domain": "generative models",
+   "latex": "Q(\\boldsymbol{\\theta}) = \\mathbb{E}\\Big[ \\ln p(\\mathbf{X}, \\mathbf{y} \\mid \\boldsymbol{\\theta}) \\,\\Big|\\, \\mathbf{X}, \\hat{\\boldsymbol{\\theta}} \\Big], \\qquad \\hat{\\boldsymbol{\\theta}} \\leftarrow \\arg\\max_{\\boldsymbol{\\theta}} Q(\\boldsymbol{\\theta})",
+   "layer2": {
+    "mapping": "Latent state estimation in the engine (true team strength, hidden game script states) is an EM-shaped problem: alternate between inferring the hidden states given current parameters and refitting parameters given soft state assignments, with monotone likelihood as the sanity check on the implementation",
+    "source_operator": "em_algorithm_latent_variables",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Observed-data log-likelihood trace per EM iteration, required to be non-decreasing"
+   },
+   "name": "The EM algorithm maximises likelihood in models with latent variables by alternating an expectation step (expected complete-data log-likelihood under current parameters) and a maximisation step; the observed-data log-likelihood increases at every iteration",
+   "page": "Ch 10.2, printed p. 261; text line ~16026",
+   "primitive_id": "em_algorithm_latent_variables",
+   "symbol_and_unit_ledger": {
+    "Q(theta)": "expected complete-data log-likelihood, nats",
+    "X (bold)": "observed data matrix",
+    "theta hat": "current parameter estimate",
+    "y (bold)": "latent variable vector, here cluster indices"
+   },
+   "verbatim_quote": "The EM algorithm is a general tool for solving maximum likelihood problems in probabilistic models with latent variables, that is, models containing both observed and unobserved random variables."
+  },
+  {
+   "assumptions": [
+    "Data is centred by subtracting the mean",
+    "A linear low-rank representation is adequate",
+    "By the Eckart-Young-Mirsky theorem the truncated SVD is the best rank-q approximation in Frobenius norm"
+   ],
+   "breakdown_regime": "Variance is scale-dependent, so variables with dominant units dominate the axes unless standardised; PCA is linear and cannot capture curved structure, which needs the non-linear auto-encoder instead",
+   "domain": "representation learning",
+   "latex": "X_0 = U \\Sigma V^\\top",
+   "layer2": {
+    "mapping": "Dimensionality audits of engine feature blocks should start from the singular value spectrum: a feature block whose variance concentrates in two or three directions does not contain twenty independent signals, whatever the feature count says",
+    "source_operator": "pca_variance_directions",
+    "tag": "[DERIVED KERNEL]",
+    "telemetry": "Singular value spectra per feature block on standardised historical data"
+   },
+   "name": "Principal component analysis finds the orthogonal directions of largest variance in centred data; the solution is the SVD of the centred data matrix, equivalently the eigendecomposition of the sample covariance",
+   "page": "Ch 10.4, printed p. 284; text line ~17492",
+   "primitive_id": "pca_variance_directions",
+   "symbol_and_unit_ledger": {
+    "Sigma": "diagonal matrix of singular values in decreasing order, input units",
+    "U Sigma": "principal components or scores",
+    "U, V": "orthogonal matrices of left and right singular vectors, dimensionless",
+    "V columns": "principal axes",
+    "X_0": "n by p centred data matrix, input units"
+   },
+   "verbatim_quote": "Specifically, the first principal axis is the direction with the largest variance; the second principal axis is the direction with the largest variance, but under the constraint that it should be orthogonal to the first principal axis; and so on."
+  },
+  {
+   "assumptions": [
+    "Two groups with confusion matrices that the modeller can tune only through the classifier's false and true positive counts",
+    "Group base rates are determined by the real world, not by the modeller"
+   ],
+   "breakdown_regime": "The impossibility is structural, not a tuning failure: satisfying two of the three criteria forces the third to differ whenever base rates differ, so fairness claims must name which criterion was chosen",
+   "domain": "ethics and evaluation",
+   "latex": "\\frac{p_1}{n_1} = \\frac{p_2}{n_2}",
+   "layer2": {
+    "mapping": "Subgroup performance reporting in the engine inherits this constraint: accuracy, hit rate on flagged plays and false alarm rate cannot all be equal across conferences, market types or confidence tiers at once, so reports must state which metric was equalised and which was allowed to differ",
+    "source_operator": "fairness_impossibility_theorem",
+    "tag": "[ISOMORPHISM]",
+    "telemetry": "Per-subgroup confusion matrices for engine predictions on evaluation windows"
+   },
+   "name": "It is mathematically impossible for a classifier to simultaneously equalise precision, true positive rate and false positive rate across groups unless base rates are equal or the classifier is perfect on the positive class",
+   "page": "Ch 12.1 (Sumpter), printed p. 313; text line ~19032",
+   "primitive_id": "fairness_impossibility_theorem",
+   "symbol_and_unit_ledger": {
+    "equality condition": "the base-rate ratio condition under which all three fairness criteria can hold at once",
+    "n_i": "number of negative-class individuals in group i, dimensionless count",
+    "p_i": "number of positive-class individuals in group i, dimensionless count"
+   },
+   "verbatim_quote": "In general, the analysis above shows that it is impossible to achieve simultaneous equality in precision, true positive rate, and false positive rate."
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "cross_layer_veto": "The evaluation layer vetoes everything downstream: no model, however elegant, may be promoted on training performance, because E_train is proven not to estimate E_new. The loss-function layer vetoes interpretation: hinge-trained scores cannot be read as probabilities, and cross-entropy outputs cannot be read as margins. The data layer vetoes splitting choices: group leakage invalidates validation regardless of model quality. And the fairness result vetoes reporting: simultaneous equality of precision, recall and false positive rate across groups is impossible when base rates differ, so any report claiming all three is arithmetically wrong.",
+   "retrocausal_genealogy": "The lineage runs from classical statistics into modern machine learning: least squares and Fisher's discriminant from the early twentieth century, the bootstrap and bagging from Efron and Breiman in the 1990s, AdaBoost from Freund and Schapire, support vector machines from Vapnik's statistical learning theory, Gaussian processes from Rasmussen and Williams, and the Bayesian thread from Bayes and Laplace through modern variational and Monte Carlo practice. The authors, all at Linkoping and Uppsala in automatic control, import a systems-engineering sensibility: models are identified from data, validated on held-out data, and only then trusted.",
+   "theory_of_mind": "The authors model their reader as an engineer or scientist who knows calculus, linear algebra and basic probability and who will deploy models on real problems with limited time. They believe understanding means being able to derive, not just call, a method: nearly every algorithm is built from a stated model and a loss, and nearly every claim is paired with the regime where it fails. Their model of the domain is that machine learning is an empirical discipline governed by one quantity, expected error on new data, and that most practical failure is evaluation failure rather than algorithm failure.",
+   "think": "This book is a complete first course in supervised machine learning written by four systems-and-control researchers, and its architecture is itself a claim about how the field fits together. It begins with the problem statement: learn a mapping from inputs to outputs from labelled examples, because the true relationship is too complicated to program by hand. It then builds two families of machinery. The first family is discriminative and parametric: linear and logistic regression, generalised linear models, loss functions derived from likelihoods, regularisation in its explicit L1 and L2 forms and its implicit forms such as early stopping and dropout, and the optimisation stack of gradient descent, Newton's method and stochastic gradient descent that makes fitting possible at scale. The second family is structural: decision trees that partition space, ensembles that average or sequentially correct those partitions, kernels that replace explicit feature maps with similarity functions, and finally the Bayesian reformulation in which parameters and even whole functions become random variables with posteriors. Wrapped around both families is the evaluation theory of Chapter 4, which is arguably the book's centre of gravity: the expected new data error E_new is defined as the only quantity that matters, training error is shown to be a biased witness, hold-out and cross-validation are derived as estimators, and the bias-variance decomposition explains why flexibility must be tuned rather than maximised. Chapter 11 then converts the theory into an engineering loop: fix a single-number metric and a validation protocol before iterating, debug by overfitting a tiny subset, diagnose with the training error versus generalisation gap decomposition, and beware group leakage when splitting. For a reasoning engine, the deepest transfer is not any single algorithm but this discipline of evidence. Every engine claim should be traceable to an out-of-sample estimate with a known variance, every similarity definition should be recognised as a regularisation choice, and every probability output should be checked against what its training loss actually licenses it to mean, the hinge loss lesson. The kernel chapters contribute a second deep idea: the representer theorem means a model can be stored as weighted historical examples, which matches how sports reasoning actually talks, in comparable situations, while the Gaussian process chapters show how to attach an honest variance to such example-based predictions, growing with distance from observed situations. The Bayesian chapters contribute the third: parameters as distributions, updated sequentially, with marginalisation as the mechanism that resists overfitting on small samples, exactly the regime of a single sports season. The generative chapters add the ability to model the input distribution itself, enabling typicality checks, semi-supervised use of unlabelled data, and latent-variable fitting by EM. The failure modes are stated as plainly as the methods: E_new is unknowable exactly and shifts with the deployment distribution, grid search collapses combinatorially, marginal likelihood surfaces have multiple maxima with different interpretations, AdaBoost breaks under label noise, and the fairness chapter proves that some desiderata are jointly impossible rather than merely hard. An engine built on this book would therefore be conservative in the right places: aggressive about collecting out-of-sample evidence, explicit about every assumption a number depends on, and silent or hedged where the theory says certainty is unavailable. Chapter 5 deserves separate attention because it is where the book's statistical spine is laid bare: a loss function is not an arbitrary penalty but a modelling choice whose population minimiser determines what the fitted function converges to, so squared error targets the conditional mean, the logistic and cross-entropy losses target class probabilities, the hinge loss targets a margin whose asymptotic minimiser is not a probability, and the exponential loss behind AdaBoost explains its fragility under label noise. This is the book's quiet answer to a question practitioners rarely ask: what does my training objective entitle my output to mean. Chapter 3 makes the same point constructively through generalised linear models, where a link function and a noise distribution turn one linear predictor into regression, classification and count models, with Poisson regression as the worked example. Chapter 10 then shows the generative direction paying rent that discriminative models cannot: because the Gaussian mixture model describes the inputs themselves, unlabelled data becomes usable through the EM algorithm, first semi-supervised and then as clustering, and the same chapter's treatment of normalising flows and adversarial networks shows the transformation view of distributions that modern generative modelling is built on. Chapter 11 adds the practitioner's corrections to naive empiricism: try simple things first, establish baselines and an achievable performance level before iterating, use error analysis on misclassified validation examples to decide what to fix, and when more data cannot be collected, consider augmentation and transfer learning while understanding exactly what each assumes. Chapter 12, written by David Sumpter, closes the loop on the social side of evaluation: performance claims can mislead even without fraud when the test distribution or the metric choice is unrepresentative, training data limitations propagate into deployment harm, and fairness is a property of a chosen error function rather than of the model alone. Computationally, the book is honest about scaling walls: exact Gaussian process inference is cubic, grid search is exponential in the number of hyperparameters, and stochastic gradient descent with backpropagation is presented precisely as the pair of tricks, minibatch gradient estimates and chain-rule reuse, that makes large models fittable at all. What the book deliberately omits is also instructive: reinforcement learning, time series dependence and causal inference sit outside its scope, and its data points are assumed independent throughout, so any engine borrowing its machinery for sequential, dependent sports data must add the dependence handling itself, most urgently in how validation splits respect time and grouping. Taken as a whole, the work functions as a constitution rather than a toolbox: algorithms may be swapped, but the articles, honest out-of-sample evaluation, loss-aware interpretation of outputs, decorrelation as the source of ensemble gains, posteriors instead of points where data is scarce, and impossibility results respected rather than argued with, are meant to bind every later design decision.",
+   "trace_id": "dd45df1faa0df898-t1"
+  }
+ ],
+ "source_note": "Andreas Lindholm, Niklas Wahlstrom, Fredrik Lindsten and Thomas B. Schon, Machine Learning: A First Course for Engineers and Scientists, Cambridge University Press (print edition 2022). Chapter 12, Ethics in Machine Learning, is by David Sumpter and is cited in the book as Sumpter (2021). The local file is the authors' free pre-publication online draft, footer dated March 4, 2026, distributed via smlbook.org for personal use; it is not the publisher's typeset PDF. Local PDF: ~/workspace/full-library-2026-11-12/library/books-d-models/LindholmEtAl-2026-MachineLearningAFirstCourseForEngineersAndScientists-Draft.pdf, size 10446720 bytes, sha256 dd45df1faa0df898ad8488fce5639e38744782dff7c3f1ff3fd22cde30e48cdd, book_id is the first 16 hex chars of that digest. Extracted text: 20510 lines, clean born-digital extraction, math rendered as unicode italic glyphs; page anchors below use the printed book page numbers shown in the draft footers plus text-file line anchors. Catalog note: the filename says 2026 because the draft is the 2026 online printing; the underlying text is the 2022 Cambridge text. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "source_status": "COMPLETE",
+ "universal_lens": "Read as a general template, the book says: define the error you will be judged by on data you have not seen, build the simplest model that could work, and let held-out evidence, not fit, arbitrate every increase in complexity. Similarity is a prior, averaging decorrelated attempts reduces variance, sequential correction reduces bias, uncertainty is a distribution rather than a number, and some pairs of goals are jointly impossible for structural reasons. Any prediction system in any domain can be audited with these five questions: what is your E_new estimate, what is your similarity assumption, where does your variance come from, what does your loss license your output to mean, and which of your stated goals are in proven tension."
+}

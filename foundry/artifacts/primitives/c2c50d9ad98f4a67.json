@@ -1,0 +1,789 @@
+{
+ "book_id": "c2c50d9ad98f4a67",
+ "source_status": "COMPLETE",
+ "source_note": "An Introduction to Computer Networks, Release 2.0.11 (the second edition), by Peter L. Dordal, Department of Computer Science, Loyola University Chicago, dated Jul 20, 2023; open-access textbook published at intronetworks.cs.luc.edu under Creative Commons terms stated in the Preface. Local file is the publisher PDF, 7,540,229 bytes, full sha256 c2c50d9ad98f4a675359e46611859b4a107dbdca40f4b7fbf50fa5ed04e5c399, book_id c2c50d9ad98f4a67. The extracted text file (2,903,664 bytes, 46,406 lines) is clean born-digital text. Extraction flattens some glyphs: the multiplication sign appears as U+02C6, less-than-or-equal appears as a mangled character, and angle brackets appear as x...y; quotes were chosen from clean spans, and the one retained flattened glyph (in the bandwidth-delay product quote) is copied exactly as it appears in the text file. The assignment described the work as the 2023 2nd edition; the file itself identifies as Release 2.0.11 of the second edition. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "layered_architecture_model",
+   "name": "Networks are organized as a stack of layers, each talking only to the layers directly above and below it, like a programming interface",
+   "verbatim_quote": "A layer, in this context, corresponds strongly to the idea of a programming interface or library, with the understanding that a given layer communicates directly only with the two layers immediately above and below it.",
+   "page": "Section 1.1 Layers, book p.13, text line 893",
+   "latex": "",
+   "assumptions": [
+    "Each layer offers a service to the layer above and hides its internal mechanism",
+    "A layer communicates directly only with its immediate neighbors in the stack"
+   ],
+   "breakdown_regime": "The model is an ad hoc classification, not a formal hierarchy; real protocols blur layer boundaries, for example NAT forcing TCP checksum updates, and the seven-layer OSI completion adds obscure layers the Internet does not use.",
+   "domain": "network architecture",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine is itself layered: ingest, representation, inference and emission layers should exchange data only through narrow interfaces, so a change inside one layer cannot silently rewrite the semantics of another.",
+    "source_operator": "layered_architecture_model",
+    "telemetry": "Interface call traces between engine modules; counts of cross-layer shortcuts that bypass an interface."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "datagram_forwarding",
+   "name": "Datagram forwarding: each packet carries a destination address and every switch independently looks up the next hop, with no per-connection state",
+   "verbatim_quote": "In the datagram-forwarding model of packet delivery, packet headers contain a destination address. It is up to the intervening switches or routers to look at this address and get the packet to the correct destination.",
+   "page": "Section 1.4 Datagram Forwarding, book p.16, text line 1018",
+   "latex": "",
+   "assumptions": [
+    "Destination addresses are globally unique, or table entries match prefixes of them",
+    "Every switch holds a forwarding table mapping destinations to next hops",
+    "Each switch is responsible for only one step of the path"
+   ],
+   "breakdown_regime": "Breaks when forwarding tables are inconsistent across switches, which produces routing loops; the stateless design also cannot by itself honor per-connection quality-of-service demands, which is the virtual-circuit alternative.",
+   "domain": "packet switching",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A reasoning engine can route each incoming signal independently to the next processing stage using a lookup keyed on the signal type, keeping no per-item session state in the router itself; state lives at the endpoints, which makes the routing layer robust to stage failures.",
+    "source_operator": "datagram_forwarding",
+    "telemetry": "Per-key lookup counts, miss rates and reroute events in the signal routing table."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "ttl_routing_loop_bound",
+   "name": "The IP Time to Live field bounds packet circulation: set by the sender, decremented at each router, discarded at zero",
+   "verbatim_quote": "IP provides for a one-byte “Time to Live” (TTL) field in the IP header; it is set by the sender and decremented by 1 at each router; a packet is discarded if its TTL reaches 0.",
+   "page": "Section 1.6 Routing Loops, book p.20, text line 1233",
+   "latex": "",
+   "assumptions": [
+    "Forwarding is distributed with no global authority to detect table inconsistencies",
+    "Temporary loops can arise purely from notification delays during table updates"
+   ],
+   "breakdown_regime": "TTL does not prevent loops; it only caps the damage at the initial value, typically 64 hops. Legitimate paths longer than the TTL are also discarded.",
+   "domain": "packet switching",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any iterative propagation inside the engine, such as belief updates passing between modules, needs a hop budget decremented at each hand-off so a cyclic dependency degrades to a discard instead of consuming the whole compute budget.",
+    "source_operator": "ttl_routing_loop_bound",
+    "telemetry": "Hop counts on propagated updates; number of updates discarded at budget zero."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "congestion_knee_and_cliff",
+   "name": "Congestion has two distinct thresholds: the knee, where throughput stops growing with load, and the cliff, where loss collapses throughput",
+   "verbatim_quote": "In their paper [CJ89], Chiu and Jain refer to the first point as the knee; this is where the slope of the load vs throughput graph flattens. They refer to the second point as the cliff; this is where packet losses may lead to a precipitous decline in throughput.",
+   "page": "Section 1.7 Congestion, book p.20, text line 1276",
+   "latex": "",
+   "assumptions": [
+    "Load is offered to a shared output queue whose service rate is fixed",
+    "Throughput is measured against offered load on the same bottleneck"
+   ],
+   "breakdown_regime": "The knee and cliff are properties of a load-throughput curve for a given bottleneck; with many bottlenecks or adaptive senders the curve smears and the two points are harder to locate empirically.",
+   "domain": "congestion",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine load management should distinguish operating at the knee, where added input no longer adds output, from falling off the cliff, where added input actively destroys output; back-pressure signals should fire at the knee, long before loss appears.",
+    "source_operator": "congestion_knee_and_cliff",
+    "telemetry": "Offered load versus completed-work throughput curves per pipeline stage; queue occupancy near the flattening point."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "store_and_forward_delay",
+   "name": "Store-and-forward: a switch reads the whole packet before forwarding, and total delay decomposes into bandwidth, propagation, store-and-forward and queuing parts",
+   "verbatim_quote": "When a router or switch receives a packet, it (generally) reads in the entire packet before looking at the header to decide to what next node to forward it. This is known as store-and-forward, and introduces a forwarding delay equal to the time needed to read in the entire packet.",
+   "page": "Section 1.8 Packets Again, book p.21, text line 1321",
+   "latex": "",
+   "assumptions": [
+    "Packets are forwarded as units, not as streams of bits",
+    "Each hop repeats the full read-in cost, so delay sums over the path"
+   ],
+   "breakdown_regime": "Cut-through switching violates the model by forwarding before the packet fully arrives; queuing delay, the only component reducible by engineering, can dominate all the others at bad moments and exceed one second.",
+   "domain": "packet switching",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Pipeline latency in the engine decomposes the same way: serialization cost per stage, transit cost between stages, full-buffer hand-off cost, and queue waiting. Optimizing any term other than the dominant one is wasted effort, and the decomposition tells you which term dominates.",
+    "source_operator": "store_and_forward_delay",
+    "telemetry": "Per-stage latency histograms split into service time, transit time and queue wait time."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "ethernet_exponential_backoff",
+   "name": "CSMA/CD exponential backoff: after each collision the retry delay is drawn from a range that doubles with every successive collision",
+   "verbatim_quote": "Backoff here is called exponential because the range from which the backoff value is chosen is doubled after every successive collision involving the same packet.",
+   "page": "Section 2.1.6 Exponential Backoff Algorithm, book p.53, text line 2895",
+   "latex": "$0 \\le k < 2^N$",
+   "assumptions": [
+    "All contending stations follow the same algorithm",
+    "A sender can detect a collision while still transmitting, which requires the strict segment length and minimum packet size limits",
+    "Slot start times are effectively synchronized among contenders"
+   ],
+   "breakdown_regime": "The capture effect makes it unfair: a station that wins once tends to keep winning. The algorithm presumes collision detection is physically possible, which fails on long or heavily attenuated segments and does not exist at all in Wi-Fi, which uses collision avoidance instead.",
+   "domain": "link layer",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Retry logic for contended resources in the engine, such as external data fetches or writes to a shared store, should double its delay range after each failure rather than retrying on a fixed clock; fixed retries synchronize contenders and recreate the collision.",
+    "source_operator": "ethernet_exponential_backoff",
+    "telemetry": "Retry attempt counts and inter-retry delays per resource; collision or contention failure rates by attempt number."
+   },
+   "symbol_and_unit_ledger": {
+    "k": "chosen backoff, in slot times of 51.2 microseconds",
+    "N": "transmission attempt number, 1 to 10 uncapped doubling, range capped at 1024 slots for attempts 11 to 15, give up at 16"
+   }
+  },
+  {
+   "primitive_id": "ethernet_learning_algorithm",
+   "name": "Learning switches build forwarding tables passively: record the interface each source address arrives on, flood only unknown destinations",
+   "verbatim_quote": "A switch learns address locations as follows: for each interface, the switch maintains a table of physical (MAC) addresses that have appeared as source addresses in packets arriving via that interface.",
+   "page": "Section 2.4.1 Ethernet Learning Algorithm, book p.62, text line 3354",
+   "latex": "",
+   "assumptions": [
+    "Hosts eventually transmit, so their locations become observable from source addresses",
+    "The topology is loop-free, or loops are pruned by the spanning tree algorithm",
+    "Table entries can be aged out with timestamps when hosts move"
+   ],
+   "breakdown_regime": "A silent host is unreachable by directed forwarding until it speaks. The scheme is poisonable: MAC flooding with fake source addresses fills the table and forces fallback to flooding, destroying both efficiency and the privacy advantage of switching.",
+   "domain": "link layer",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine can build its routing and indexing tables from observed traffic instead of configuration: record which source each pattern of evidence arrived from, answer from the table when the key is known, and fall back to a broad scan only for unknown keys, with the fallback rate itself monitored as a health signal.",
+    "source_operator": "ethernet_learning_algorithm",
+    "telemetry": "Table hit rate versus fallback scan rate; table size growth and poisoning indicators such as sudden unique-key floods."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "spanning_tree_algorithm",
+   "name": "Spanning tree: switches elect a root and disable redundant ports so the active topology is a loop-free tree that still reaches every host",
+   "verbatim_quote": "Ethernet switches have incorporated a switch-to-switch protocol to construct a subset of the switch-connections graph that has no loops and yet allows reachability of every host, known in graph theory as a spanning tree.",
+   "page": "Section 3.1 Spanning Tree Algorithm and Redundancy, book p.69, text line 3653",
+   "latex": "",
+   "assumptions": [
+    "Every switch has a unique ID and exchanges BPDU hello messages carrying root identity and path cost",
+    "Ties are broken deterministically by path cost, then switch ID, then port number",
+    "Broadcast and fallback flooding must keep working, which is why loops cannot simply be tolerated"
+   ],
+   "breakdown_regime": "Disabled links may be the most efficient path between two nodes, so the tree trades throughput for safety. If the network partitions, each piece builds its own tree; convergence after a failure takes time during which delivery is disrupted.",
+   "domain": "link layer",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Dependency and citation graphs inside the engine need the same treatment: keep the full graph for reachability analysis, but activate a loop-free spanning structure for any propagation pass, with deterministic tie-breaking so every module computes the same active structure from the same inputs.",
+    "source_operator": "spanning_tree_algorithm",
+    "telemetry": "Graph cycle counts; the set of disabled edges per propagation pass; recomputation events after node or link changes."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "shannon_hartley_theorem",
+   "name": "Shannon-Hartley: maximum data rate over a channel of width W is W log2(1 + SNR); capacity grows only logarithmically in signal power",
+   "verbatim_quote": "The constant of proportionality is limited by the Shannon-Hartley theorem: the maximum data rate divided by the width of the frequency band is log2 (1+SNR), where SNR is the signal to noise power ratio.",
+   "page": "Section 4.1.4 Band Width, book p.94, text line 4839",
+   "latex": "$C = W \\log_2(1 + \\mathrm{SNR})$",
+   "assumptions": [
+    "Noise is Gaussian white noise",
+    "The encoding can be chosen optimally for the channel"
+   ],
+   "breakdown_regime": "For non-Gaussian or structured interference such as multipath, the limit is not strictly binding and real systems fall short of it by an encoding-dependent margin; OFDM comes reasonably close in many settings.",
+   "domain": "information theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every evidence channel feeding the engine has a capacity set by its bandwidth of distinct observations and its signal-to-noise ratio; because the return on raw signal power is logarithmic, widening the channel with more independent observations beats amplifying a single noisy one.",
+    "source_operator": "shannon_hartley_theorem",
+    "telemetry": "Per-source observation rates and estimated noise levels; marginal information gain per added source."
+   },
+   "symbol_and_unit_ledger": {
+    "C": "maximum data rate, bits per second",
+    "W": "width of the frequency band, hertz",
+    "SNR": "signal-to-noise power ratio, dimensionless"
+   }
+  },
+  {
+   "primitive_id": "internet_checksum",
+   "name": "Internet checksum: store the ones-complement of the ones-complement sum of 16-bit words, so the receiver's sum over the same range comes out zero",
+   "verbatim_quote": "What is stored in the packet’s checksum field is the complement of the sum above, or 0xFFFF – sum. This means that when the receiver calculates the checksum over the same range of bytes, the value obtained should be zero.",
+   "page": "Section 7.4 Error Detection, book p.168, text line 8299",
+   "latex": "$\\mathrm{checksum} = \\mathtt{0xFFFF} - \\mathrm{sum}$",
+   "assumptions": [
+    "Ones-complement addition folds overflow bits back in, so word order of addition does not matter and byte order of pairing does not matter",
+    "The covered byte range is identical at sender and receiver"
+   ],
+   "breakdown_regime": "Any sum-based code is blind to transposition: reordering words leaves the sum unchanged, so fragmented data reassembled in the wrong order passes undetected. A zero checksum field is also overloaded to mean checksum not calculated, for UDP over IPv4.",
+   "domain": "error detection",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Cheap integrity tags on engine records should be verified by re-summing to a known constant rather than comparing against a stored expected value, which makes verification stateless; but any order-insensitive tag must be paired with sequence information, because it cannot see reordering.",
+    "source_operator": "internet_checksum",
+    "telemetry": "Verification pass and fail counts per record class; fail rates for reordering-type versus corruption-type damage."
+   },
+   "symbol_and_unit_ledger": {
+    "sum": "ones-complement sum of the 16-bit words of the covered range, dimensionless bit pattern",
+    "checksum": "16-bit field stored in the packet, the complement of sum"
+   }
+  },
+  {
+   "primitive_id": "crc_polynomial_check",
+   "name": "CRC: treat the message as a polynomial over GF(2), append N zero bits, divide by a fixed degree-N divisor polynomial, and send the remainder",
+   "verbatim_quote": "The CRC error code is based on long division of polynomials, where the coefficients are integers modulo 2.",
+   "page": "Section 7.4.1 Cyclical Redundancy Check: CRC, book p.169, text line 8364",
+   "latex": "$r(X) = X^N m(X) \\bmod p(X)$",
+   "assumptions": [
+    "Sender and receiver agree on the divisor polynomial and on bit order within bytes",
+    "Addition and subtraction are both XOR because coefficients are modulo 2"
+   ],
+   "breakdown_regime": "CRC is a strong check against accidental corruption, including burst errors and changes of up to three bits for many polynomials, but it is worthless against intentional corruption: the last bytes of a message can be algebraically adjusted to force any desired CRC value.",
+   "domain": "error detection",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Integrity checking in the engine should use algebraic codes whose structure matches the expected damage model, and the choice must be explicit that such codes detect accidents, not adversaries; tamper detection needs a keyed construction instead.",
+    "source_operator": "crc_polynomial_check",
+    "telemetry": "Undetected-error estimates from code length; observed burst-error length distribution in ingested data."
+   },
+   "symbol_and_unit_ledger": {
+    "m(X)": "message as a polynomial with coefficients modulo 2",
+    "p(X)": "divisor polynomial of degree N",
+    "r(X)": "remainder, the CRC code, of degree at most N-1",
+    "N": "code length in bits, 32 for CRC-32"
+   }
+  },
+  {
+   "primitive_id": "arq_retransmit_on_timeout",
+   "name": "ARQ: reliability over an unreliable layer is built from retransmit-on-timeout; if no acknowledgment arrives within the timeout interval, resend",
+   "verbatim_quote": "This is achieved through a retransmit-on-timeout policy; that is, if a packet is transmitted and there is no acknowledgment received during the timeout interval then the packet is resent.",
+   "page": "Chapter 8 introduction, book p.179, text line 8745",
+   "latex": "",
+   "assumptions": [
+    "The lower layer may lose packets but delivers most of them",
+    "The receiver can acknowledge receipt, and packets carry sequence numbers so duplicates and losses are distinguishable"
+   ],
+   "breakdown_regime": "At least one side must implement retransmit-on-timeout or a single lost packet deadlocks both sides forever. A timeout does not prove loss: a merely delayed packet or ACK triggers spurious retransmission and duplicate delivery that the receiver must absorb.",
+   "domain": "transport reliability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every unreliable hand-off in the engine should follow the same contract: send, wait a bounded interval for acknowledgment, resend on expiry, and make the receiving side idempotent so duplicates are harmless. Reliability is an endpoint property, not something to assume from the transport underneath.",
+    "source_operator": "arq_retransmit_on_timeout",
+    "telemetry": "Timeout counts, retransmission counts and duplicate-arrival counts per hand-off channel."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "stop_and_wait",
+   "name": "Stop-and-wait: the sender keeps exactly one packet outstanding, sending the next only after the current one is acknowledged",
+   "verbatim_quote": "In the stop-and-wait version of retransmit-on-timeout, the sender sends only one outstanding packet at a time.",
+   "page": "Section 8.1 Building Reliable Transport: Stop-and-Wait, book p.179, text line 8764",
+   "latex": "",
+   "assumptions": [
+    "A single-bit sequence number suffices if the path never reorders packets",
+    "Timeout and retransmission machinery from the ARQ primitive is in place"
+   ],
+   "breakdown_regime": "Utilization collapses whenever the round-trip time is large relative to transmission time: the path sits idle most of the time, one packet per RTT regardless of bandwidth. It is the correct design only when simplicity matters more than throughput.",
+   "domain": "transport reliability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Serial request-response processing is stop-and-wait: safe and simple, but throughput is capped at one item per round trip no matter how much capacity exists. Any engine stage still working this way on a high-latency path is a named bottleneck, not a mystery.",
+    "source_operator": "stop_and_wait",
+    "telemetry": "Per-stage items in flight (mean and max) and idle fraction of the stage's service capacity."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "sliding_window",
+   "name": "Sliding windows: the sender may run ahead of the acknowledgments by a fixed window, and the window slides forward as cumulative ACKs arrive",
+   "verbatim_quote": "The sender picks a window size, winsize. The basic idea of sliding windows is that the sender is allowed to send this many packets before waiting for an ACK.",
+   "page": "Section 8.2 Sliding Windows, book p.184, text line 9012",
+   "latex": "",
+   "assumptions": [
+    "ACKs are cumulative: ACK[N] certifies receipt of every packet up to N, so a lost ACK is healed by a later one",
+    "The receiver buffers or discards out-of-order arrivals consistently with the sender's assumption",
+    "In this abstract chapter winsize is fixed; TCP varies it dynamically"
+   ],
+   "breakdown_regime": "Packets sent too far ahead of the bottleneck simply wait in queues or are dropped from them, and can also be dropped at a receiver whose buffers are overrun; the window bounds memory and queue exposure, it does not create capacity.",
+   "domain": "transport reliability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Bounded pipelining is the engine's core flow pattern: each stage may work on a window of items ahead of downstream confirmation, the window size is the explicit knob trading latency against buffer exposure, and cumulative progress signals let one confirmation retire many items at once.",
+    "source_operator": "sliding_window",
+    "telemetry": "Window occupancy per stage; items retired per confirmation signal; drop counts at full buffers."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "ack_self_clocking",
+   "name": "Self-clocking: returning ACKs arrive at exactly the bottleneck delivery rate, so a windowed sender automatically paces new sends to the available rate",
+   "verbatim_quote": "Note that the rate at which ACKs are returned will always be exactly equal to the rate at which the slowest link is delivering packets.",
+   "page": "Section 8.2 Sliding Windows, book p.184, text line 9042",
+   "latex": "",
+   "assumptions": [
+    "ACKs are generated on delivery at the receiver and return promptly",
+    "The sender releases new packets only as ACKs free window space"
+   ],
+   "breakdown_regime": "Self-clocking dies when the pipe drains, for example after a timeout, because no ACKs are in flight to pace new transmissions; it also degrades when ACKs are delayed, compressed or batched on the return path.",
+   "domain": "congestion control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Completion signals returning from a bottleneck stage are a free pacing clock for the whole engine: release new work on completions rather than on a timer, and the system inherits the bottleneck's rate automatically, slowing down exactly when the bottleneck slows.",
+    "source_operator": "ack_self_clocking",
+    "telemetry": "Inter-completion intervals at the bottleneck stage versus release times of new upstream work."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "bandwidth_delay_product",
+   "name": "The bandwidth times RTT product is the amount of data in transit before the first response, and is generally the optimum window size",
+   "verbatim_quote": "The bandwidth ˆ RTT product is generally the optimum value for the window size.",
+   "page": "Section 8.2.1 Bandwidth-Delay, book p.185, text line 9068",
+   "latex": "$\\mathrm{BDP} = \\mathrm{bandwidth} \\times \\mathrm{RTT}$",
+   "assumptions": [
+    "RTT should be the no-load RTT; the relevant product uses RTT before the sender's own traffic inflates it",
+    "Path bandwidth is set by the slowest link"
+   ],
+   "breakdown_regime": "Overshooting is self-defeating: a window larger than the product does not raise throughput, it inflates the measured RTT through queuing until bandwidth times RTT again equals the window. Undershooting leaves the path underutilized.",
+   "domain": "congestion control",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Window and buffer sizing anywhere in the engine should be computed from measured rate times measured round-trip latency of the stage pair, not guessed; and latency measured under self-inflicted queueing must be corrected back to the no-load value before sizing.",
+    "source_operator": "bandwidth_delay_product",
+    "telemetry": "Per-stage rate and round-trip latency measurements; computed product versus configured window sizes."
+   },
+   "symbol_and_unit_ledger": {
+    "bandwidth": "path bottleneck data rate, packets or bits per second",
+    "RTT": "round-trip time, seconds",
+    "BDP": "data in transit, packets or bits"
+   }
+  },
+  {
+   "primitive_id": "cidr_longest_match",
+   "name": "CIDR: forwarding entries are prefixes of any length, aggregation replaces blocks sharing a next hop, and overlapping matches resolve by the longest-match rule",
+   "verbatim_quote": "Instead, CIDR introduced the longest-match rule: if destination D matches both B1 /k1 and B2 /k2 , with k1 < k2 , then the longer match B2 /k2 match is to be used.",
+   "page": "Section 14.1 Classless Internet Domain Routing: CIDR, book p.320, text line 15712",
+   "latex": "$(D \\mathbin{\\&} M[i]) = B[i]$",
+   "assumptions": [
+    "Entries carry an explicit prefix length or mask; there is no fallback to address classes when CIDR information is missing",
+    "Multiple matches are expected and legal, unlike subnetting where avoiding them was the site's responsibility"
+   ],
+   "breakdown_regime": "Aggregation pressure cuts the other way under address scarcity: sites forced into many small blocks inflate backbone tables again. Longest-match also means a more specific rogue entry silently overrides a legitimate aggregate.",
+   "domain": "routing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Rule and pattern tables in the engine should be prefix-like: general rules aggregate many cases into one entry, specific exceptions override by longest match, and resolution is deterministic because specificity, not insertion order, decides.",
+    "source_operator": "cidr_longest_match",
+    "telemetry": "Table size over time; match-length distribution of resolved lookups; override events by more specific entries."
+   },
+   "symbol_and_unit_ledger": {
+    "D": "destination address, 32 bits for IPv4",
+    "M[i]": "bitmask of forwarding entry i",
+    "B[i]": "network prefix stored in entry i"
+   }
+  },
+  {
+   "primitive_id": "distance_vector_update",
+   "name": "Distance-vector routing: routers advertise destination costs to neighbors and relax their tables by the rule total cost equals reported cost plus link cost",
+   "verbatim_quote": "Costs are administratively assigned to each link, and the algorithm then calculates the total cost to a destination as the sum of the link costs along the path.",
+   "page": "Section 13.1 Distance-Vector Routing-Update Algorithm, book p.292, text line 14200",
+   "latex": "$c = c_D + c_N$",
+   "assumptions": [
+    "Both ends of a link agree on its cost; the routers form one interior routing domain with a common cost policy",
+    "Reports are exchanged periodically and neighbor loss is detected, setting that cost to infinity"
+   ],
+   "breakdown_regime": "Good news travels fast but bad news travels slowly: the next-hop-increase rule must accept cost increases from the current next hop, which is exactly the channel through which the slow-convergence failure enters.",
+   "domain": "routing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Distributed estimates in the engine can be maintained by the same relaxation: keep the best known cost per destination, adopt a neighbor's estimate plus the hand-off cost when it improves yours, and accept increases from the source you currently trust, knowing that is the dangerous direction that needs extra machinery.",
+    "source_operator": "distance_vector_update",
+    "telemetry": "Estimate change counts by direction (improvement versus forced increase); convergence time after a source failure."
+   },
+   "symbol_and_unit_ledger": {
+    "c": "total cost for A to reach D via neighbor N",
+    "c_D": "cost to reach D as reported by neighbor N",
+    "c_N": "administratively assigned cost of the link from A to N"
+   }
+  },
+  {
+   "primitive_id": "slow_convergence_to_infinity",
+   "name": "Distance-vector slow convergence: after a link break, two routers can ratchet each other's stale costs upward indefinitely through a persistent routing loop",
+   "verbatim_quote": "There is a significant problem with distance-vector table updates in the presence of broken links. Not only can routing loops form, but the loops can persist indefinitely!",
+   "page": "Section 13.2 Distance-Vector Slow-Convergence Problem, book p.296, text line 14423",
+   "latex": "",
+   "assumptions": [
+    "Updates are asynchronous; a neighbor may report stale reachability before hearing of the failure",
+    "Costs are unbounded integers, so the ratchet has room to run"
+   ],
+   "breakdown_regime": "This is the canonical failure of purely local information: each router's report is honestly derived from its table, yet the pair jointly manufacture reachability that does not exist. With one-minute reports it would take about 2,000 years for the costs to overflow a 32-bit integer.",
+   "domain": "routing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any pair of engine modules that update each other's confidence from the other's last report can manufacture phantom support the same way; provenance must travel with an estimate so a module can refuse to count its own earlier output returning to it as independent confirmation.",
+    "source_operator": "slow_convergence_to_infinity",
+    "telemetry": "Provenance chain length on estimates; cases where an estimate's ancestry includes the module now consuming it."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "split_horizon",
+   "name": "Split horizon: never advertise a route back to the neighbor you reach that destination through; poison reverse advertises it at cost infinity instead",
+   "verbatim_quote": "Under split horizon, if A uses N as its next_hop for destination D, then A simply does not report to N that it can reach D",
+   "page": "Section 13.2.1.1 Split Horizon, book p.296, text line 14463",
+   "latex": "",
+   "assumptions": [
+    "Routers know which neighbor is their next hop for each destination",
+    "Reports are the only channel through which reachability spreads"
+   ],
+   "breakdown_regime": "Split horizon provably prevents all two-node linear loops but not loops around triangles and larger cycles, where the ratchet circulates the long way around; poison reverse strengthens the statement but scenarios where it changes the outcome are not trivial to construct.",
+   "domain": "routing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Feedback hygiene for the engine: a module must not report a conclusion back to the source it derived that conclusion from, and where silence is ambiguous it should report an explicit null (the poison-reverse move) rather than letting the source keep a stale positive.",
+    "source_operator": "split_horizon",
+    "telemetry": "Suppressed-report counts per source pair; explicit-null reports issued; residual multi-module loop incidents."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "link_state_flooding",
+   "name": "Link-state routing: every router floods link status with sequence numbers, keeps the newest copy of each record, and builds a full network map locally",
+   "verbatim_quote": "In the link-state approach, each node keeps a maximum amount of network information: a full map of all nodes and all links. Routes are then computed locally from this map, using the shortest-path-first algorithm.",
+   "page": "Section 13.5 Link-State Routing-Update Algorithm, book p.306, text line 14934",
+   "latex": "",
+   "assumptions": [
+    "Link-state packets carry originator identity, the changed link, and a sequence number; only the largest sequence number is kept",
+    "Sequence numbers must not wrap ambiguously; OSPF uses lollipop numbering and records also carry a maximum lifetime requiring periodic renewal"
+   ],
+   "breakdown_regime": "Transient loops exist while an update is still propagating, because routers hold inconsistent maps; they vanish once flooding completes, unlike distance-vector's persistent loops. The cost is memory and flooding traffic proportional to the whole map at every node.",
+   "domain": "routing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The alternative engine topology to incremental gossip is full replication with versioned updates: every module keeps the whole map, updates carry originator and sequence, stale copies are discarded by version comparison, and each module derives its own decisions locally and identically.",
+    "source_operator": "link_state_flooding",
+    "telemetry": "Update propagation latency across modules; version skew (max minus min sequence held) per record class."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "shortest_path_first",
+   "name": "Shortest-path-first (Dijkstra): grow a set of finalized routes one destination at a time, always promoting the cheapest tentative route, which is then provably final",
+   "verbatim_quote": "At the end of this process, we choose the shortest path in T, and move the route and destination node to R.",
+   "page": "Section 13.5.1 Shortest-Path-First Algorithm, book p.307, text line 15029",
+   "latex": "",
+   "assumptions": [
+    "Link costs are nonnegative and agreed by all routers",
+    "The full map is available locally, supplied by link-state flooding",
+    "Ties may be resolved arbitrarily, but the promoted route must be a minimum-cost tentative route or the accurate-costs property fails"
+   ],
+   "breakdown_regime": "The greedy promotion is valid only because costs are nonnegative; negative edges would break the proof that the cheapest tentative route is final. Recomputation is from scratch per router, so very large maps make the local computation the bottleneck.",
+   "domain": "routing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Search and planning inside the engine inherit the same discipline: expand the cheapest tentative partial plan, finalize it permanently, and never reopen it, provided step costs are nonnegative; the moment a step can have negative cost, finalization must stop and a different algorithm takes over.",
+    "source_operator": "shortest_path_first",
+    "telemetry": "Nodes expanded versus finalized per search; any reopened finalized node is a defect signal."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "bgp_as_path",
+   "name": "BGP path-vector: advertisements carry the whole AS-path, and a router rejects any route whose path already contains its own AS, killing loops by inspection",
+   "verbatim_quote": "Paths including each router would be cumbersome; instead, BGP abbreviates the path to the list of ASes traversed. This is called the AS-path. This allows routers to make sure their routes do not traverse any AS more than once, and thus do not have loops.",
+   "page": "Section 15.1 AS-paths, book p.334, text line 16331",
+   "latex": "",
+   "assumptions": [
+    "Autonomous Systems are the unit of trust and policy; interior link costs are not exchanged between them",
+    "Speakers keep all received routes but advertise onward only routes they actually use"
+   ],
+   "breakdown_regime": "Loop freedom is bought with path blindness: a genuinely shortest path that traverses an AS twice is forbidden. Temporary loops still occur because a speaker may adopt a route before exporting the new path, and route selection is dominated by commercial policy, not by any technical metric.",
+   "domain": "routing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Inter-organization hand-offs in the engine, where no shared metric exists, should carry their provenance path with them: the receiver rejects any item whose path already contains itself, and selection among valid paths is an explicit policy decision, never disguised as a cost calculation.",
+    "source_operator": "bgp_as_path",
+    "telemetry": "Path length distribution on accepted items; rejection counts for self-inclusion; policy override counts."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "end_to_end_principle",
+   "name": "End-to-End Principle: functions belong at the endpoints, because only the endpoints have the knowledge to implement them completely and correctly",
+   "verbatim_quote": "The End-to-End Principle is spelled out in [SRC84]; it states in effect that transport issues are the responsibility of the endpoints in question and thus should not be delegated to the core network.",
+   "page": "Section 17.1 The End-to-End Principle, book p.393, text line 19310",
+   "latex": "",
+   "assumptions": [
+    "Endpoints hold application knowledge that the network core cannot have",
+    "An incomplete in-network version of the function may still be justified as a performance enhancement"
+   ],
+   "breakdown_regime": "Applied dogmatically it blocks useful in-network help; the principle itself allows partial core implementations for performance. It also concentrates complexity at endpoints, which is why TCP still runs its own checksum despite link-layer checksums everywhere below it.",
+   "domain": "network architecture",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Correctness checks in the engine belong at the endpoints of a pipeline, where the full context exists; intermediate stages may cache or pre-filter for performance, but no intermediate check may be treated as the correctness guarantee.",
+    "source_operator": "end_to_end_principle",
+    "telemetry": "Defects caught at final validation versus at intermediate stages; defects that escaped because an intermediate check was trusted as final."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "rtt_estimation_jacobson_karels",
+   "name": "Adaptive retransmission timeout: smooth RTT samples with an EWMA, track mean deviation, set Timeout to EstRTT plus four deviations, and refuse samples from retransmissions (Karn/Partridge)",
+   "verbatim_quote": "Jacobson and Karels ([JK88]) introduced a way of calculating the TimeOut value based on the statistical variability of EstRTT.",
+   "page": "Section 18.12 TCP Timeout and Retransmission, book p.429, text line 21027",
+   "latex": "$\\mathrm{EstRTT} = \\alpha \\cdot \\mathrm{EstRTT} + (1 - \\alpha) \\cdot \\mathrm{SampleRTT}; \\quad \\mathrm{Timeout} = \\mathrm{EstRTT} + 4 \\cdot \\mathrm{EstDeviation}$",
+   "assumptions": [
+    "RTT samples are ambiguous after retransmission, so the Karn/Partridge rule stops sampling on loss and doubles the timeout instead",
+    "Four mean deviations corresponds to about five standard deviations if samples were normal, which they are not",
+    "A single retransmission timer is maintained regardless of how many packets are outstanding"
+   ],
+   "breakdown_regime": "The fixed rule TimeOut = 2 x EstRTT proved too short under congestion and too long otherwise, which is what forced the variance term. Heavy-tailed RTT distributions still defeat the deviation estimate, and timer resets by slow ACK streams can postpone loss detection to a multiple of the timeout.",
+   "domain": "transport reliability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every timeout in the engine should be set from a smoothed latency estimate plus a multiple of its measured deviation, never from a fixed multiple of the mean; and latency samples taken after a retry are contaminated and must be excluded from the estimate, with the timeout backed off instead.",
+    "source_operator": "rtt_estimation_jacobson_karels",
+    "telemetry": "Per-channel latency sample streams, deviation estimates, timeout settings and spurious-timeout rates."
+   },
+   "symbol_and_unit_ledger": {
+    "EstRTT": "exponentially smoothed round-trip time estimate, seconds",
+    "SampleRTT": "one measured round-trip sample, seconds",
+    "alpha": "smoothing constant in (0,1), 7/8 typical",
+    "EstDeviation": "smoothed mean deviation of RTT samples, seconds",
+    "Timeout": "retransmission timeout (RTO), seconds"
+   }
+  },
+  {
+   "primitive_id": "aimd_congestion_avoidance",
+   "name": "AIMD congestion avoidance: add one packet to cwnd per loss-free windowful, halve cwnd on loss, producing the TCP sawtooth",
+   "verbatim_quote": "This strategy here is known as Additive Increase, Multiplicative Decrease, or AIMD; cwnd = cwnd+1 is the additive increase and cwnd = cwnd/2 is the multiplicative decrease.",
+   "page": "Section 19.1.1 The Somewhat-Steady State, book p.446, text line 21832",
+   "latex": "$\\mathrm{cwnd} \\leftarrow \\mathrm{cwnd} + 1 \\text{ per loss-free windowful}; \\quad \\mathrm{cwnd} \\leftarrow \\mathrm{cwnd}/2 \\text{ on loss}$",
+   "assumptions": [
+    "Loss is the congestion signal; a lost packet means the bottleneck queue filled",
+    "The sender can observe loss within about one RTT via timeout or duplicate ACKs"
+   ],
+   "breakdown_regime": "If transit capacity and queue capacity are each about N, loss occurs near cwnd = 2N and halving lands at N with an empty queue, but any other ratio between capacity and queue size breaks that neat landing. On timeout the pipe drains entirely and AIMD has nothing to pace, so slow start must restart the connection.",
+   "domain": "congestion control",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Load adaptation in the engine should be asymmetric in exactly this way: probe upward additively and slowly, retreat multiplicatively and immediately on the first loss signal. Symmetric adjustment oscillates or collapses; the asymmetry is what makes the probe safe.",
+    "source_operator": "aimd_congestion_avoidance",
+    "telemetry": "Window or rate settings per flow over time; loss event timestamps; queue occupancy at the bottleneck at each loss."
+   },
+   "symbol_and_unit_ledger": {
+    "cwnd": "congestion window, measured in packets (strictly in bytes, incremented by one maximum segment per windowful)"
+   }
+  },
+  {
+   "primitive_id": "aimd_fairness_convergence",
+   "name": "Chiu-Jain fairness: with synchronized losses, AIMD drives competing connections to equal shares because additive steps preserve the gap while multiplicative cuts halve it",
+   "verbatim_quote": "Chiu and Jain [CJ89] showed that the additive-increase/multiplicative-decrease algorithm does indeed converge to roughly equal bandwidth sharing when two connections have a common bottleneck link",
+   "page": "Section 19.1.1.1 A first look at fairness, book p.447, text line 21903",
+   "latex": "",
+   "assumptions": [
+    "Both connections share one bottleneck and have the same RTT",
+    "The synchronized-loss hypothesis: in any RTT, either both connections lose a packet or neither does"
+   ],
+   "breakdown_regime": "Unequal RTTs break the clean result, and real losses are not synchronized; fairness still holds in expectation when loss probability is equal per connection, but convergence can take much longer. The hypothesis has been debated since [GV02].",
+   "domain": "congestion control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Fair sharing among competing engine workloads does not need a central allocator if the workloads share one bottleneck and obey AIMD: equal additive probes and proportional cuts converge to equal shares on their own, provided the loss signal is genuinely shared.",
+    "source_operator": "aimd_fairness_convergence",
+    "telemetry": "Per-workload share of the bottleneck over time; correlation of loss events across workloads."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "slow_start",
+   "name": "Slow start: probe unknown capacity exponentially, incrementing cwnd by one per ACK so the window doubles every RTT until loss or threshold",
+   "verbatim_quote": "Assuming packets travel together in windowfuls, all this means cwnd doubles each RTT during slow start",
+   "page": "Section 19.2 Slow Start, book p.448, text line 21945",
+   "latex": "$\\mathrm{cwnd} \\leftarrow 2 \\cdot \\mathrm{cwnd} \\text{ per RTT}$",
+   "assumptions": [
+    "Packets travel in windowfuls and each ACK increments cwnd by one, which compounds to doubling per RTT",
+    "After a loss, threshold slow start stops at ssthresh, half the window at loss time, and hands over to AIMD"
+   ],
+   "breakdown_regime": "Exponential probing overshoots in bulk: in the book's worked example, by the time the first loss is discovered at least 100 further packets have already been lost behind it. Unbounded slow start is therefore used only once per connection, at startup.",
+   "domain": "congestion control",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Capacity discovery for a new channel should be exponential, not linear: start at one unit, double per round trip of clean results, and stop at the first failure, which guarantees landing within a factor of two of the true ceiling in logarithmic time.",
+    "source_operator": "slow_start",
+    "telemetry": "Probe sizes per round for new channels; overshoot measured as work issued past the first failure signal."
+   },
+   "symbol_and_unit_ledger": {
+    "cwnd": "congestion window, packets",
+    "RTT": "round-trip time, seconds"
+   }
+  },
+  {
+   "primitive_id": "fast_retransmit_fast_recovery",
+   "name": "Fast Retransmit: three duplicate ACKs signal a single lost packet, so resend immediately instead of waiting for the timeout; Fast Recovery uses further dupACKs to pace new sends at half window",
+   "verbatim_quote": "The Fast Retransmit strategy is to resend Data[N] when we have received three dupACKs for Data[N-1]; that is, four ACK[N-1]’s in all.",
+   "page": "Section 19.3 TCP Tahoe and Fast Retransmit, book p.453, text line 22169",
+   "latex": "",
+   "assumptions": [
+    "ACKs are cumulative, so out-of-order arrivals after a gap generate repeated ACKs for the last in-order packet",
+    "Three is the chosen threshold: enough to tolerate moderate reordering, few enough to beat the timeout, cutting loss delay from about 2 RTT to just over 1 RTT"
+   ],
+   "breakdown_regime": "Heavy reordering manufactures false dupACK triples and spurious retransmissions, which is why real routers avoid splitting one connection across paths of different delays. Multiple losses in one window strain the basic scheme and need SACK or partial-ACK extensions.",
+   "domain": "congestion control",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Repeated identical progress reports in the engine are a loss signal in their own right: when the same checkpoint is reported several times while later items complete, infer the missing item and redo it immediately rather than waiting for its deadline, with the trigger count set high enough to tolerate ordinary reordering.",
+    "source_operator": "fast_retransmit_fast_recovery",
+    "telemetry": "Duplicate progress reports per checkpoint; redo latency versus deadline-based detection latency."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "reno_loss_rate_formula",
+   "name": "TCP Reno throughput law: mean congestion window is 1.225 over the square root of the loss rate, so bandwidth falls as 1/(RTT sqrt(p))",
+   "verbatim_quote": "M = cwndmean = 1.225 p-1/2 where 1.225 is the square root of 3/2.",
+   "page": "Section 21.2 TCP Reno loss rate versus cwnd, book p.495, text line 24223",
+   "latex": "$M = \\mathrm{cwnd}_{mean} = 1.225 \\cdot p^{-1/2}$",
+   "assumptions": [
+    "All losses are caused by reaching a constant network ceiling, and one loss event occurs per sawtooth tooth",
+    "RTT is treated as constant for the bandwidth form bandwidth = cwnd/RTT"
+   ],
+   "breakdown_regime": "Timeouts are ignored in the basic formula; the PFTK98 refinement adds terms for coarse timeouts. Once the bottleneck queue is large enough for full utilization, bandwidth stops growing with queue size even though cwnd and 1/p keep growing.",
+   "domain": "congestion control",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any AIMD-controlled flow in the engine obeys the same square-root law: its sustainable rate is set by the loss rate it experiences, with exponent minus one half. Doubling throughput requires quartering the loss rate, which tells you whether to invest in loss reduction or in latency reduction.",
+    "source_operator": "reno_loss_rate_formula",
+    "telemetry": "Per-flow loss rates, mean windows and achieved rates, checked against the 1.225/sqrt(p) prediction."
+   },
+   "symbol_and_unit_ledger": {
+    "M": "mean congestion window, packets",
+    "p": "packet loss rate, dimensionless, losses per packet sent",
+    "1.225": "square root of 3/2, from the sawtooth tooth area 3/2 N^2 packets between losses"
+   }
+  },
+  {
+   "primitive_id": "fifo_tail_drop",
+   "name": "FIFO tail-drop: serve the outbound queue in arrival order, and drop any packet that arrives when the queue is full",
+   "verbatim_quote": "is in the order of arrival; technically, this is FIFO (First-In, First-Out) queuing. What happens to a packet that arrives at a router whose queue for the desired outbound interface is full? The conventional answer is that it is dropped; technically, this is known as tail-drop.",
+   "page": "Section 20.1 A First Look At Queuing, book p.471, text line 23077",
+   "latex": "",
+   "assumptions": [
+    "One physical queue per outbound interface, shared by all traffic classes",
+    "Queue capacity is fixed; arrival order is the only scheduling information used"
+   ],
+   "breakdown_regime": "Tail-drop synchronizes TCP senders: a full queue drops from many flows at once, they all back off together and then ramp together, wasting capacity in waves (phase effects). It also gives no isolation: one aggressive flow can fill the queue and starve the rest.",
+   "domain": "queuing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The default queue in any engine stage is FIFO tail-drop whether it was designed or not; naming it exposes its two known diseases, synchronized backoff among producers and zero isolation between well-behaved and aggressive producers, both of which must be treated deliberately.",
+    "source_operator": "fifo_tail_drop",
+    "telemetry": "Queue length time series; drop bursts correlated across producers; per-producer share during saturation."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "fair_queuing_wfq",
+   "name": "Fair queuing: keep a separate logical FIFO per class and serve classes round-robin, so K active classes each get 1/K of the output; WFQ generalizes the shares to assigned weights",
+   "verbatim_quote": "Recalling that all packets are the same size, the total bandwidth is then divided equally among the nonempty per-class subqueues; if there are K such queues, each will get 1/K of the output.",
+   "page": "Section 23.5 Fair Queuing, book p.556, text line 27034",
+   "latex": "$\\mathrm{share} = 1/K$",
+   "assumptions": [
+    "The equal-size analysis assumes identical packet sizes; variable sizes need virtual finishing times (bit-by-bit round robin or the GPS fluid model) or the deficit round robin approximation",
+    "An empty class consumes nothing, so shares are computed over active classes only and idle capacity is redistributed"
+   ],
+   "breakdown_regime": "Real-time fair queuing buys short-term delay guarantees at implementation cost that may be pointless when transmission times are microseconds and delay budgets are milliseconds. Weighted shares preserve ratios among active classes, so a class's absolute rate still floats with the number of active competitors.",
+   "domain": "queuing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Isolation between engine workloads should be structural, not hopeful: one logical queue per class with round-robin service guarantees each active class its fraction regardless of how aggressively another class submits, and idle shares recycle automatically to whoever is working.",
+    "source_operator": "fair_queuing_wfq",
+    "telemetry": "Per-class queue depths and served fractions; delay experienced by small urgent items behind bulk classes."
+   },
+   "symbol_and_unit_ledger": {
+    "K": "number of nonempty per-class subqueues",
+    "share": "fraction of output bandwidth received by each active class"
+   }
+  },
+  {
+   "primitive_id": "red_active_queue_management",
+   "name": "RED: drop packets probabilistically well before the queue fills, with base probability rising linearly in average queue size between two thresholds, signaling senders to slow down early",
+   "verbatim_quote": "The idea behind Random Early Detection (RED) routers, introduced in [FJ93], is that the router is allowed to drop an occasional packet much earlier, say when the queue is less than half full.",
+   "page": "Section 21.5.4 RED, book p.504, text line 24669",
+   "latex": "$p_{base} = p_{max} \\cdot \\dfrac{\\bar{q} - q_{min}}{q_{max} - q_{min}}$",
+   "assumptions": [
+    "Senders are TCP-like and treat a drop as a slow-down signal",
+    "Drops are spread by the second formula p_actual = p_base / (1 - count x p_base), so at most one packet per window per connection is usually dropped"
+   ],
+   "breakdown_regime": "Parameter choice is admittedly ad hoc: the right p_base scales like 1/winsize, but connection window sizes vary by orders of magnitude. RFC 7567 (2015) withdrew RFC 2309's blanket recommendation of RED in favor of manager-chosen AQM such as CoDel.",
+   "domain": "queuing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Back-pressure should be probabilistic and early, not binary and late: start shedding or signaling at a low rate while the queue is still shallow, scale the rate with queue depth, and space the signals so no single producer takes two hits in one control cycle.",
+    "source_operator": "red_active_queue_management",
+    "telemetry": "Average queue depth, signal or drop rate by depth band, and per-producer hits per control cycle."
+   },
+   "symbol_and_unit_ledger": {
+    "p_base": "base drop probability at the current average queue size",
+    "p_max": "maximum RED drop probability, 0.02 as proposed in [FJ93]",
+    "q_bar": "average queue size",
+    "q_min, q_max": "minimum and maximum queue thresholds, suggested at 40 and 80 percent of capacity"
+   }
+  },
+  {
+   "primitive_id": "token_bucket_filter",
+   "name": "Token bucket TB(r, Bmax): tokens accumulate at rate r up to depth Bmax; a packet of size S may pass only if it can withdraw S tokens, bounding long-term rate to r and bursts to Bmax",
+   "verbatim_quote": "More precisely, a token-bucket specification TB(r,Bmax ) includes a token fill rate of r tokens/sec, representing the rate at which the bucket fills with tokens, and also a bucket capacity (or depth) Bmax >0.",
+   "page": "Section 24.1 Token Bucket Definition, book p.586, text line 28417",
+   "latex": "$B = B - S$",
+   "assumptions": [
+    "Overflow tokens are discarded, so idle time banks at most Bmax of credit",
+    "Compliance is judged where the filter sits; a flow compliant at one router can become noncompliant downstream after queueing bunching"
+   ],
+   "breakdown_regime": "A token-bucket filter is not work-conserving: idle capacity reserved for a silent flow cannot be reclaimed by others, and at the downstream end of a link it cannot by itself reduce utilization of the upstream link unless senders react to the feedback.",
+   "domain": "traffic shaping",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Rate limits in the engine should be specified as a token bucket, never as a bare rate: the pair (sustained rate, burst depth) is the smallest contract that distinguishes a steady producer from a bursty one, and the same pair doubles as an admission-control test for new workloads.",
+    "source_operator": "token_bucket_filter",
+    "telemetry": "Token levels per flow over time; compliance and noncompliance counts; burst sizes actually used versus Bmax."
+   },
+   "symbol_and_unit_ledger": {
+    "B": "current token count in the bucket",
+    "S": "packet size in tokens, per packet or per byte in the byte variant",
+    "r": "token fill rate, tokens per second",
+    "Bmax": "bucket capacity or depth, tokens"
+   }
+  },
+  {
+   "primitive_id": "diffie_hellman_merkle_exchange",
+   "name": "Diffie-Hellman-Merkle exchange: public values g^a and g^b mod p combine into a shared secret g^ab mod p that an eavesdropper cannot derive without solving the discrete logarithm",
+   "verbatim_quote": "Alice then chooses a<p, and sends to Bob the value A = ga mod p. Similarly, Bob chooses b<p and sends to Alice the value B = gb mod p.",
+   "page": "Section 28.8 Diffie-Hellman-Merkle Exchange, book p.733, text line 35555",
+   "latex": "$A = g^a \\bmod p, \\quad B = g^b \\bmod p, \\quad K = g^{ab} \\bmod p$",
+   "assumptions": [
+    "Discrete logarithms modulo p are computationally intractable for suitable p and g",
+    "Exponentiation is done by repeated squaring, polynomial in the bit length of p",
+    "Both parties use the same published (p, g) pair"
+   ],
+   "breakdown_regime": "Unauthenticated, the exchange falls to a man in the middle who runs two exchanges and relays; the fix is signing the public values. Reused published (p, g) pairs invite precomputation: the logjam work showed 512-bit primes falling in about 90 seconds per logarithm after a large precomputed table, so p must be large.",
+   "domain": "cryptography",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Two engine components that have never met can still establish a shared secret over an observed channel if each contributes private randomness through a one-way mixing function; but the channel must authenticate the public contributions, or a relay in the middle owns both sessions.",
+    "source_operator": "diffie_hellman_merkle_exchange",
+    "telemetry": "Key exchange transcripts: public values seen, signature verification results, and negotiated parameter sizes."
+   },
+   "symbol_and_unit_ledger": {
+    "p": "large public prime, typically several hundred digits",
+    "g": "primitive root modulo p, of order p-1",
+    "a, b": "private exponents chosen by Alice and Bob, each less than p",
+    "A, B": "public values exchanged over the open network",
+    "K": "shared secret, computed as B^a mod p by Alice and A^b mod p by Bob"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "c2c50d9ad98f4a67-t1",
+   "think": "This book is a complete, self-contained account of how packet networks actually work, written from the mechanisms upward rather than from protocol trivia downward, and its machinery fits together as one long argument. The argument starts with layering and datagram forwarding: packets carry destination addresses, every switch decides one hop independently, and no switch keeps per-connection state. From that single decision almost everything else follows. Because forwarding is distributed and stateless, tables must be built somehow, which gives the book its routing core: Ethernet's passive learning with flooding fallback, the spanning tree that prunes loops so flooding stays safe, distance-vector relaxation with its elegant good-news behavior and its catastrophic slow-convergence failure, split horizon as a targeted patch, link-state flooding with sequence numbers feeding Dijkstra's algorithm run identically everywhere, and finally BGP, where the metric disappears entirely and the path itself becomes the loop check and policy the carrier of record. Because links are shared and queues are finite, congestion is structural rather than accidental, and the book treats it with unusual honesty: the knee and the cliff are different regimes, FIFO tail-drop synchronizes the very senders it serves, and the whole TCP edifice of slow start, AIMD, fast retransmit and fast recovery is one sustained negotiation between a sender that cannot see the bottleneck and a bottleneck that can only speak by dropping packets. The transport chapters make the negotiation quantitative. Sliding windows convert acknowledgments into a pacing clock, the bandwidth-delay product names the one window size that is neither starvation nor self-inflicted queueing, Jacobson and Karels turn timeout selection into applied statistics, and the sawtooth analysis closes the loop by deriving throughput from loss rate with a square-root law. The queuing chapters then hand the router its own instruments: fair queuing for isolation, token buckets for contracts, RED for early probabilistic signaling. The error-control and security chapters bookend the design: checksums and CRCs show what algebraic structure buys in detection, and Diffie-Hellman shows two parties manufacturing a secret out of public messages plus private randomness. For a reasoning engine, the transfer value is that every one of these mechanisms is a control loop operating under partial information with explicit failure modes, which is exactly the engine's own situation. The book's discipline is to name the signal (loss, duplicate ACK, queue depth, sequence number), name the estimator, name the update rule, and then name precisely where the rule breaks: synchronized losses, reordered packets, wrapped sequence numbers, poisoned tables, non-Gaussian noise. Where it breaks as a text is mostly at its boundaries. Its TCP is Reno-centric even in the second edition, with newer variants surveyed rather than analyzed at the same depth; its queuing theory deliberately avoids the stochastic machinery it gestures at; and its treatment of wireless, datacenter fabrics and programmable switches is thinner than its treatment of the classic Internet core. It is also a snapshot: parameter recommendations such as RED's are presented together with the later RFC retreat from them, which the book, to its credit, reports rather than hides. Several supporting analyses deserve separate note because they generalize beyond networking. The packet-size discussion ties error rates to unit size: the larger the unit, the more likely it contains an error and the more expensive its retransmission, which is the same trade that governs batch sizes in any pipeline. The delay decomposition in the opening chapter, bandwidth delay plus propagation delay plus store-and-forward delay plus queuing delay, is presented as bookkeeping but functions as a diagnostic method, since only one of the four terms responds to engineering effort. The treatment of timers is a small masterpiece of applied estimation: the naive doubling rule fails in both directions, the fix is to track a deviation and not just a mean, and the Karn/Partridge rule recognizes that some samples are contaminated by the very recovery process they would measure, a measurement-integrity problem that recurs in every adaptive system. The fairness proof for AIMD is similarly portable: it shows that a global property, equal sharing, can emerge from a local rule with no coordinator, but only under a synchronization hypothesis the author immediately flags as stronger than reality, which is the honest way to state an emergence result. The book's simulation chapters, on Mininet and on ns-2 and ns-3, complete the method: claims about dynamics are expected to survive contact with an executable model, and many of the text's graphs are simulation output rather than sketches. Its weaknesses as a source are the mirror of its strengths. Because it builds everything from first principles, it sometimes re-derives what a practitioner would look up, and its coverage of operational practice, configuration, and failure forensics is light. Its security chapters are sound but introductory. Its discussion of bufferbloat and newer congestion control is present but not at the depth of the Reno core. None of that reduces its value as the fleet's networking reference: it is the rare textbook that states its own assumptions loudly enough to be argued with, and a source that can be argued with can be built on. One more structural point matters for how this artifact should be used. The book is organized so that later mechanisms keep reusing earlier primitives: sliding windows reappear inside TCP, token buckets reappear inside quality of service, the learning algorithm reappears inside TRILL, and the Chiu-Jain analysis reappears inside the fairness chapters. The extraction therefore treats cross-references as load-bearing, and several primitives above are deliberately the reused kernel rather than any one protocol that happens to instantiate it.",
+   "retrocausal_genealogy": "The lineage runs from Baran's 1962 survivability work and Davies's independent invention of the packet, through the ARPANET and the 1974 to 1988 TCP design years, into the congestion collapse of 1986 that forced Jacobson's slow start and AIMD, the Chiu and Jain fairness analysis of 1989, Perlman's spanning tree, Floyd and Jacobson's RED in 1993, and the CIDR rescue of the routing system the same year. Dordal writes as a historian of this line: Saltzer, Reed and Clark's end-to-end argument of 1984 is presented as the design constitution, and each later mechanism is shown as an amendment forced by a measured failure of the previous settlement.",
+   "theory_of_mind": "The author's model of the reader is a working programmer who distrusts hand-waving: every mechanism is first stated as an algorithm a person could implement, then exercised on a concrete small network with real numbers, then pushed until it fails in a named way. His model of the domain is that networks are control systems under adversarial partial information, not plumbing; the recurring question is never what a protocol contains but what a node can legitimately infer from what it can observe, and what it must refuse to infer.",
+   "cross_layer_veto": "Several results in this book veto plausible designs elsewhere in any system built on it. The end-to-end principle vetoes trusting intermediate checks as correctness guarantees. Slow convergence vetoes any feedback scheme in which a node can hear its own earlier estimate return as if it were independent evidence. The bandwidth-delay product vetoes fixed buffer sizes chosen without measured rate and latency. Shannon-Hartley vetoes promising more information from a channel than its width and noise permit, and the CRC analysis vetoes using accident-detecting codes as if they were tamper evidence."
+  }
+ ],
+ "universal_lens": "Read generally, the book is a manual for building reliable, fair behavior out of unreliable parts that can only observe local signals: bound every circulation, version every update, make progress signals cumulative, pace work by completions rather than clocks, probe unknown capacity exponentially, retreat from failure multiplicatively, and isolate competitors structurally instead of trusting them to behave. Those rules transfer intact to any distributed system, technical or organizational.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the book's teaching method as much as its content: every mechanism is presented as an implementable algorithm, a worked numeric example, and a named failure mode, which is the shape rigorous technical instruction should take. Its estimation material, EWMA smoothing with deviation-based margins, its square-root throughput law, and its treatment of feedback contamination are directly reusable curriculum for quantitative reasoning under uncertainty.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes the operating system of this book as design law for its own data pipeline: stateless forwarding of signals between stages, provenance paths on every estimate so nothing counts its own echo as confirmation, windows sized by measured rate times measured latency, AIMD load adaptation at shared bottlenecks, fair queuing between competing workloads, token-bucket contracts for external sources, and timeouts set from smoothed latency plus deviation rather than fixed multiples."
+}

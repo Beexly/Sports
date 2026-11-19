@@ -1,0 +1,4861 @@
+{
+  "schema": "gse_foundry_compound_corpus_index_2026_v1",
+  "generated_at_utc": "2026-11-16T21:42:26.239913+00:00",
+  "shard_index": 0,
+  "num_shards": 1,
+  "total_primitive_files_on_disk": 12558,
+  "files_swept": 12558,
+  "complete_books_swept": 10753,
+  "primitives_extracted_total": 50656,
+  "manifest_877_pdfs_count": 877,
+  "lessons_ledger_count": 34,
+  "readonly_foundry_db_stats": {
+    "COMPLETE": 165,
+    "DELEGATED_GCP": 8598,
+    "DUPLICATE_WORK": 9,
+    "INSUFFICIENT_OCR": 7,
+    "INSUFFICIENT_SOURCE_ACCESS": 11,
+    "PENDING": 8335,
+    "QUARANTINED": 132,
+    "db_present": 1
+  },
+  "family_counts": {
+    "pressure": 25839,
+    "weather": 8402,
+    "restFatigue": 2064,
+    "coveragePersonnel": 6494,
+    "qbSkillScript": 2378,
+    "marketMicrostructure": 2468
+  },
+  "family_lifts": {
+    "pressure": 0.04,
+    "weather": 0.02116,
+    "restFatigue": 0.0052,
+    "coveragePersonnel": 0.01636,
+    "qbSkillScript": 0.00599,
+    "marketMicrostructure": 0.00622
+  },
+  "router_288bit_mask_hex": [
+    "0xffffffff",
+    "0xffffffff",
+    "0xffffffff",
+    "0xffffffff",
+    "0xffffffff",
+    "0xffffffff",
+    "0xffffffff",
+    "0xffffffff",
+    "0x000fffff"
+  ],
+  "domain_counts_top12": {
+    "other": 11506,
+    "football": 274,
+    "cs": 241,
+    "math": 138,
+    "psych": 117,
+    "history": 113,
+    "physiology": 45,
+    "physics": 35
+  },
+  "curated_rrf_candidates": [
+    {
+      "doc_id": "foundry:6c35500dec24f16a:shadow_skip_contradiction",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "prompt-pass2-space | Shadow Skip Contradiction | When a skip directive is misinterpreted as optional, leading to cascading state-transition failures.",
+      "vec_6d": [
+        0.0,
+        0.44721,
+        0.44721,
+        0.44721,
+        0.44721,
+        0.44721
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:85637f1da626254f:safety_validation_gate",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "BUILD-GV2-052-matchup-page-content-model | SafetyValidationGateOperator | Gate fails when any Test_i = 0 or when copy_safety detects method leakage, fake certainty, pressure language, or irresponsible gambling language (quote 11)",
+      "vec_6d": [
+        0.44721,
+        0.44721,
+        0.44721,
+        0.44721,
+        0.0,
+        0.44721
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:eb55fb14674f78b0:safety_validation_gate",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "BUILD-GV2-058-dormant-user-reactivation-triggers | Safety Validation Gate | Validator collision when \u2229\ud835\udcae_k = \u2205 (over-constrained); entropy bound violation when H_max < min \u210b(x) (impossible disclosure); rollback deadlock when flag non-monoton",
+      "vec_6d": [
+        0.0,
+        0.44721,
+        0.44721,
+        0.44721,
+        0.44721,
+        0.44721
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:5a48c0146465eecd:strain_pressure",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "2025 - PRSS A New Metric to Quantify Pocket Collapses in the National Football League - Hafiz et al | Strain Pressure Metric | When \\( \\| \\mathbf{q}(t) - \\mathbf{d}_\\text{min}(t) \\| < 1.5 \\, \\text{yards} \\)",
+      "vec_6d": [
+        0.60302,
+        0.30151,
+        0.30151,
+        0.30151,
+        0.60302,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:090cfc0da55b02cd:p3",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "090cfc0da55b02cd | Linear Discriminant Analysis Fisher criterion (Eqs. 9-14) | Singular within-class scatter Sigma_0 + Sigma_1 (collinear features, e.g., CSP components with near-zero variance) makes the Rayleigh quotient undefined without ",
+      "vec_6d": [
+        0.35355,
+        0.35355,
+        0.70711,
+        0.35355,
+        0.35355,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:118c462e78e37fa7:p4",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "118c462e78e37fa7 | Loss of DAgger (linear-T bound via dataset aggregation) | The linear-T guarantee degrades if MaxIter is too small (the remainder O(ell^(max) T log T / MaxIter) dominates). DAgger can be unstable and non-monotone across it",
+      "vec_6d": [
+        0.35355,
+        0.35355,
+        0.70711,
+        0.35355,
+        0.35355,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:6d101348291a5c1f:p4",
+      "source_type": "foundry_book_primitive",
+      "family": "qbSkillScript",
+      "text": "6d101348291a5c1f | Poisson count kernel and log-link Poisson regression for low-frequency discrete events | Printed fit defect: the Poisson 'slightly overestimate[s] the likelihood of one touchdown pass' and underestimates zero and two-or-m",
+      "vec_6d": [
+        0.35355,
+        0.35355,
+        0.35355,
+        0.0,
+        0.70711,
+        0.35355
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:1a04a74c1cd2528c:cpp-target-band-autoregulation",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "Traumatic Brain Injury - Recent Advances and Challenges | Cerebral perfusion pressure target band with age-stratified pressure floor and autoregulation dependence | Below the band, ischemic secondary injury accrues (source: even one hypoten",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:42dae3b70c16214d:w2_portfolio_risk_parameter",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0821-kelly-criterion-portfolio-optimization-decoupled-problem | Risk Parameter Blend | At P=1, all focus shifts to minimizing variance; at P=0, pure Kelly growth maximization occurs.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:4a3081b49e89a9be:w0_market_exposure_constraint",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1061-nba-expansion-travel-fairness-optimization | Market Exposure Preservation Constraint | When \u03b3 approaches 1.0, rendering feasible solutions rare.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:53e2c24aff3a9b3d:inpainting_for_live_betting",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1946-planning-with-diffusion-for-flexible-behavior | Inpainting_for_Live_Betting | Failure occurs when the observed prefix contains errors (e.g., misrecorded plays), leading to inconsistent conditioning that biases the completion distributi",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:5a48c0146465eecd:voronoi_pocket_area",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "2025 - PRSS A New Metric to Quantify Pocket Collapses in the National Football League - Hafiz et al | Voronoi Pocket Area | When \\( \\text{Pocket Area} < 50 \\, \\text{m}^2 \\)",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:6e269489299acb38:longitudinal_bootstrap_path",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al | Longitudinal Bootstrap Path Estimator | Fails if severe temporal autocorrelation exists in play-calling or matchup selection, viol",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:6e4fcee61ea23a07:salary_cap_optimizer",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "1233-optimizing-daily-fantasy-baseball-lineups | Salary Cap Optimizer | Breaks down when projections exhibit heavy-tailed errors or when market pricing introduces non-linear value distortions not captured by linear constraints.",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:0fb3c856126aa810:trench_strain_surface",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "SYSTEM-TELEMETRY-MASTER-MAP | Trench STRAIN Surface | Singular when any lineman approaches zero distance to their target, indicating imminent zone collapse or misalignment.",
+      "vec_6d": [
+        0.60302,
+        0.30151,
+        0.30151,
+        0.60302,
+        0.30151,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:3e740de939b2704d:random_autoregressive_masking",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "1866-mtm-masked-trajectory-models-prediction-representation-control | Random Autoregressive Masking Kernel | Breaks down in highly deterministic, periodic systems where the autoregressive constraint provides insufficient stochastic pressure",
+      "vec_6d": [
+        0.44721,
+        0.44721,
+        0.44721,
+        0.44721,
+        0.44721,
+        0.0
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:1a04a74c1cd2528c:bladder-compliance-dlpp",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "Traumatic Brain Injury - Recent Advances and Challenges | Bladder compliance C = dV/dP and the detrusor leak-point pressure > 40 cmH2O upper-tract risk boundary | When compliance fails (low C), pressure rises steeply with filling, overcomes",
+      "vec_6d": [
+        0.37796,
+        0.75593,
+        0.37796,
+        0.0,
+        0.37796,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:1a04a74c1cd2528c:system-xc-antiport-gpx4",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "Traumatic Brain Injury - Recent Advances and Challenges | System Xc\u2212 1:1 cystine/glutamate antiport coupled to the GSH-GPX4 lipid-peroxide detoxification axis | Block the antiporter (erastin) and cystine import stops, GSH depletes, GPX4 los",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.75593,
+        0.37796,
+        0.37796,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:48506d3de1106344:decoupled_marked_intensity",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1820-flexible-marked-hawkes-football-events | Decoupled Marked Intensity Factorization | Fails during extreme non-stationary regime shifts (e.g., sudden red card or weather disruption) where temporal and mark dynamics become highly coupled.",
+      "vec_6d": [
+        0.37796,
+        0.75593,
+        0.0,
+        0.37796,
+        0.37796,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:4d231b36270878f7:angular_separation_constraint",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "2020 - Swing Shift A Mathematical Approach to Defensive Positioning in Baseball - Unknown Authors | Angular Separation Constraint | When x_j = x_l = 1, the angular difference |\u03b8_j - \u03b8_l| < 4\u00b0 leads to overlap in coverage.",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.37796,
+        0.75593,
+        0.37796,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:51ace5503f838ef2:w0_sample_caveat",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "rb-full-pool-scheme-2026-09-19 | Temporal Sample Constraint | Estimator collapses entirely if n_W1 approaches zero (e.g., limited sub role), rendering the scheme split statistically meaningless.",
+      "vec_6d": [
+        0.0,
+        0.75593,
+        0.37796,
+        0.37796,
+        0.0,
+        0.37796
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:6f786818b14f2aa8:p4_semi_markov_duration",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0324-a-machine-learning-framework-for-off | Hidden Semi-Markov Duration Model | Degenerates if play-action sequences induce rapid, sub-sample-rate state flips that violate the minimum duration constraints of the semi-Markov formulation.",
+      "vec_6d": [
+        0.0,
+        0.75593,
+        0.37796,
+        0.37796,
+        0.37796,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:006c551bd2e430bc:conformal_prediction_set",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "README | Conformal Prediction Set | As the number of calibration points n shrinks, the set becomes either the entire outcome space (complete refusal) or empty (impossible to satisfy the coverage constraint).",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0096d79a376f6863:offense_harder",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "Evaluating Basketball Player Performance via Statistical Network Modeling | Over-performing offense is harder than defense | The asymmetry is an empirical regularity of the era, suggesting offensive efficiency is more constrained/competitiv",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0c728cbb3cc3b844:bounce_coefficient_restitution",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "1712-ball-bounce-restitution | Bounce Coefficient Restitution | Large impact velocities (>65 m/s) break the small-deformation assumption; aging ball reduces \u03bb.",
+      "vec_6d": [
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:203d5c68a9f5f2d8:g2g_pass_surface",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2026-11-05 | Grassmannian Pass-Surface Operator | Degenerates when tracking noise causes subspace projections to become ill-conditioned or when players are completely static.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:216b4077eecbae7d:stack_1_murray",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "stack-players-2026-09-13 | Murray QB Projection | Collapse risk: Murray's 2025 foot injury and IR stint introduces a 20-25% probability of performance deterioration relative to his Arizona peak.",
+      "vec_6d": [
+        0.0,
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:24cd6351f8d171a6:p1",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "24cd6351f8d171a6 | F1 score as the harmonic mean of Precision and Recall (single-number evaluation metric) | F1 is undefined at Precision=0 or Recall=0 (1/0 singularity). It is a design choice, not a law: the source explicitly allows plain ",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:24cd6351f8d171a6:p3",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "24cd6351f8d171a6 | Optimization Verification test (search-failure vs scoring-function-failure attribution) | If no superior reference y* exists (machine already surpasses human level and no better output is known), the test cannot attribute",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:2626db0663ce780e:xs-metric-admissibility",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "X (Twitter) \u2014 community, distribution and revenue (GSE internal strategy + build plan) | Metric admissibility: a metric you may not optimise for is not a metric | An admitted metric can become gameable by new means (e.g., bot-driven referra",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:2f3a888e74bd175d:scrimmage_failure_transition",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "p0132 | Scrimmage Failure Transition | When both running attempts fail with high confidence, the system enters a \"recovery\" phase where defenders retreat to prevent long kicks; this triggers a singular perturbation in the game dynamics.",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:314bb5b2616cb834:eq1_strain_pressure",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "314bb5b2616cb834 | Eq1 STRAIN = -v/d: per-frame rusher pressure (close AND closing fast) | Large when rusher both close to and rapidly reducing distance to QB",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:323f923871ac69c0:salary_cap_simplex",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "2026-10-18_Untitled_document_1Gun5nrl | Exact Salary Cap Hyperplane Constraint | Fails if market pricing introduces irrational arbitrage or if the constraint becomes infeasible due to extreme price inflation across all eligible assets.",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:399614291a686154:compliance_manifold_constraint",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "BUILD-SITE-067-first-use-tour | Compliance Manifold Constraint | Violated if automated copy generation drifts into prohibited semantic regions (e.g., guaranteeing outcomes).",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:3b7b1ffc7100f779:separation_theorem",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "3b7b1ffc7100f779 | Separation theorem: a point outside a closed convex set is strictly separated from it by a hyperplane (Theorem 1.1) | If X is not closed only the non-strict separation survives; for non-convex X a separating hyperplane ne",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:3b7b1ffc7100f779:strongly_convex_smooth_linear_rate",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "3b7b1ffc7100f779 | Strongly convex and smooth: projected gradient descent converges linearly with rate exp(-t/kappa), kappa = beta/alpha, and the optimal step 2/(alpha + beta) improves the constant (Theorems 3.10 and 3.12) | When kappa is h",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:3b86392eba2743fc:sandbox_boundary_condition",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "CMD-071-edgeball-safe-sandbox-continuation | Zero-Cash Regulatory Constraint Operator | Violates when legal approval \\mathcal{L}(s) is bypassed or if phantom cash flows leak into the sandbox environment.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:40de06e231acaee6:aging_effect_modulator",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "2012 Forecasting NBA Player Performance Douglas Hwang | Aging Effect Modulator | Upon reaching plateau or reversal of decline due to training or recovery.",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:46e377123f662ec5:complementary_slackness_support",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "46e377123f662ec5 | Complementary slackness: mass only flows on pairs where the potentials saturate the cost, f_i + g_j = C_{i,j}; the optimal plan's support is located by the dual solution | The condition characterizes optimal pairs but doe",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:46e377123f662ec5:w1_kantorovich_rubinstein_duality",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "46e377123f662ec5 | Kantorovich-Rubinstein duality: W_1 is the supremum of the mean difference over all 1-Lipschitz test functions, equivalently the minimum-cost Beckmann flow whose divergence equals the difference of the measures | W_1 opti",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:46fa55ada9bc0ba8:jev_sovereign_evaluation",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "BUF-LAR-2026-10-12 | JEV Sovereign Evaluation Gate | Structural break in Stafford's throwing mechanics or offensive line quality.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:511a91283c650770:nuclear_norm_regularization",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2020 Nuclear penalized multiomial regression with an application to prediction at bat outcomes in baseball - Powers, Tibshirani, Hastie | Nuclear Norm Regularization | When the regularization strength \u03c1 approaches zero, the optimal solution",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:52b5d36325e11cd7:p6",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "52b5d36325e11cd7 | Local-information generalship override: the quarterback on the field sees the defense's flaw better than the coaches and may violate the laid-out generalship when his instant observation beats the precommitted plan | Fail",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:54c95039290a80fb:p3",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "54c95039290a80fb | Deep Q-network least-squares Bellman-residual loss | The semi-gradient TD target is a moving target (bootstrapping), so training can diverge without target-network stabilization or experience replay (the deadly triad: fun",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:5744e4311b2bf075:out_sample_conformality",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "Robert Kissell_2017 (1) | Out-Sample Conformality Validator | Breaks down if the postseason introduces fundamentally different rules, roster constructions, or psychological pressures not present in the training set.",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:5744e4311b2bf075:w4_fantasy_yardage_model",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "Robert Kissell_2017 (1) | Transformed Fantasy Yardage Model | Fails during injury black swan events or rule changes affecting point multipliers for sacks or fumbles.",
+      "vec_6d": [
+        0.5,
+        0.0,
+        0.5,
+        0.0,
+        0.5,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:5b22e8f0a3e439b1:trench_matchup_score",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "llms | Trench Matchup Score | Fails when there are severe injuries or coaching changes mid-season.",
+      "vec_6d": [
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:5bb26b9323c43ddb:attention_complexity",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "ZhangEtAl-2023-DiveIntoDeepLearning | Self-attention complexity: O(n^2 d), O(1) path | For very long sequences the O(n^2 d) cost is prohibitive \u2014 this is the fleet-layer constraint on attention. The quadratic cost is why long-context models",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:611c0ba1ab228b6a:endothelial_vasoconstriction_kernel",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "2026 - Blood Flow Restriction Training Reduces Hemodynamic Load and Improves Cardiovascular Biomarkers in Runners with Exercise-Induced Hypertensio - Kim et al | Endothelin-1 Vasoconstrictor Modulator | Breaks down if occlusion pressure exc",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:615f3111bb9726f5:standing_doctrine_abstention_gate",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "handoff | Standing Doctrine Abstention Gate | Fails if the underlying market pricing is severely inefficient such that true EV is positive despite short-term LCB contraction.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:62455e19d17441bf:team_optimum_vs_nash",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2011 The Price of Anarchy in Basketball | Team Optimum vs. Nash | Singularity occurs when a player's curve becomes completely flat (constant efficiency), rendering the equality condition unsolvable without additional constraints.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:62e572bc9a9bde38:common_info_cap",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "Optimizing an NBA Team's Approach to Free Agency using a Multiple-Choice Knapsack Model | Common knowledge of cap space | everyone knows every team's budget, so competition is strategic under full budget information; only valuations are pri",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:62e572bc9a9bde38:salaries_fall",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "Optimizing an NBA Team's Approach to Free Agency using a Multiple-Choice Knapsack Model | Wages fall as the cap shrinks | as total money shrinks expected wages fall, though a scarce high-demand skill can rise early; the shrinking cap ultima",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:646ee743940d6912:pinn_composite_loss",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "ssrn-7197889 | Composite Physics-Informed Loss Functional | Breaks down in highly turbulent regimes with extreme multiscale separation where spectral bias prevents the network from resolving small-scale eddies without excessive parameteriza",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:6aeb75fe28eb9cd8:p5",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "6aeb75fe28eb9cd8 | Receiver self-determination + single-use interference invariant: the catcher chooses his own path; the helper is a budget-1 resource spent on the first/most dangerous down-field man | The single-use budget is the binding ",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:6b9fd9878c622307:spatial_gate_topology",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "arxiv_2105.01226v1 | Spatial Gate Topology Operator | Singularity occurs if panel dimensions deviate from the 1.5m x 1.5m constraint, breaking the topological symmetry required for uniform probability distributions.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:6e52d207cc08aba0:observational_freeze_constraint",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "qa | Observational Freeze Constraint | Breaks down if the observational process itself induces side-effects (e.g., mutable global state during testing), violating the zero-gradient assumption.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:6ecf6fae0a6b8641:biomech_completion_rate_modification",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "OPENCODE-ADVERSARIAL-VERIFY-2026-11-02 | Biomechanical Completion Rate Modification | High-velocity throwing motion where biomechanical constraints saturate",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:752d4b196c54c60f:pass_impunity_field_constraint",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "p0161 | Pass Impunity Field Constraint | \u03c3\u21921 when x\u226b50 (red zone) or k\u21920 (defense weak). Breaks if defense strength varies by zone (e.g., bend-don't-break).",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:769d3047cf1c5448:calibration_fit_cox",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "KERNEL_SLOT_CARDS | Cox Logistic Recalibration Engine | Perfect separation causes IRLS divergence (NO_CONVERGENCE); raw probabilities exactly 0 or 1 trigger log-singularities before clamping.",
+      "vec_6d": [
+        0.5,
+        0.0,
+        0.0,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:76eb21dffda0c071:w0_projected_dynamical_systems",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "ArmstrongEd-2001-PrinciplesOfForecasting | Projected Dynamical System | Breakdown if F becomes discontinuous or K loses convexity, causing the projection operator to be ill-defined.",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:782bde93d7c4b57f:joint_gaussian_threshold",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1604.01455_Hunter_Vielma_Zaman_Picking_Winners_Integer_Programming_DraftKings_DFS | Multivariate Gaussian Threshold Exceedance | Breaks down in the presence of heavy-tailed distributions (fat tails) or non-linear regime shifts where Gaussia",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:79717e2af7e4cf95:bounded_choice_probs",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "arxiv_1610.08903v1 | Bounded Choice Probability Constraint | Breaks down in deterministic regimes or extreme separation where a specific action probability approaches exactly zero.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:79ae41fcb8391e20:market_twin",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "COCKPIT_OPERATING_MAP | Market Twin | When market volatility exceeds hedge capacity, DELTA's protection degrades linearly; extreme events cause permanent loss.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:7e3a32c1d8621611:p1",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "7e3a32c1d8621611 | ICP/CPP management corridor: treat above 22 mmHg ICP, target 60-70 mmHg CPP, harm above 70 | The optimum within [60,70] is not identified - it depends on the patient's autoregulation status (printed). Pushing CPP above 70",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:7ec06be65ab3f269:p10",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "7ec06be65ab3f269 | Do-not-deploy as a first-class remediation option | None stated \u2014 this is a normative safety option. The relevant failure mode is organizational: treating 'must output a pick' as a constraint and thereby excluding option ",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:85637f1da626254f:content_model_specification",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "BUILD-GV2-052-matchup-page-content-model | ContentModelSpecificationOperator | Specification becomes inconsistent when EditorialIntent requires production data access or live affiliate links (quotes 10, 14)",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:927d7a6529aee4a8:bhn-18",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "927d7a6529aee4a8 | Impossibility: with different base rates and any false positives, separation and sufficiency cannot both hold | The incompatibility dissolves only at the edges: perfect prediction, equal base rates, or a degenerate classi",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:927d7a6529aee4a8:bhn-19",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "927d7a6529aee4a8 | Post-processing the Bayes optimal score for separation is optimal among all separation-satisfying classifiers (Hardt, Price, Srebro) | Breaks when group membership cannot be used at decision time (legal or product constra",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:af1ecb5c7114ef73:ac_rac_certificate",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "c09-deep-r03 | Action-Conditional Risk Certificate | Breaks down under severe non-stationarity or adversarial data generation where exchangeability is violated, invalidating the $1-\\alpha$ coverage guarantee.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:c4cd66c1cb097e68:sum_product_algorithm",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "c4cd66c1cb097e68 | The sum-product algorithm computes exact marginals of a factored distribution on a tree-like factor graph by passing messages between variable and factor nodes; run on graphs with cycles it becomes loopy belief propagatio",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:c98b171b5a091d7f:monotonic_cqr_consistency",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "MORNING-WAKEUP-EXECUTIVE-REPORT-2026-11-03 | Monotonic Conditional Quantile Regression | When $F_Y(\\text{line}) \\leq 0.10$, the constraint does not apply.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:cb36cbdaa42c1a28:pressure_adjustment",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "qb-phase2 | Pressure Adjustment Operator | High-pressure environments (>40% pressure rate)",
+      "vec_6d": [
+        0.5,
+        0.0,
+        0.0,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:d435c258bf1307c9:hard_prohibition_constraint",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "FLEET_ONE_JOB_ANTI_JOB_LINT | Hard Prohibition Constraint | Systemic failure if a high-priority signal violates a hard prohibition without triggering an immediate halt.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:db32abe65b8b5784:front_activity",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "SEA@DEN-matchups | Defensive Front Activity Indicator | Breaks down when injury reports cause A_{front} drops below 0.8, leading to increased passing downs.",
+      "vec_6d": [
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:ead8487a4086ced1:gate_helper_requirement",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "review-pr | Gate Helper Enforcement | False positives occur when syntactic checks miss dynamic imports or runtime evaluations.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:ebd1648ea2c49c33:verify_current_state",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "customer-success-agent | Current State Verification Operator | Fails when state discrepancies exceed acceptable tolerance thresholds; triggers escalation protocols.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:f202e77934c274c9:selective_risk_minimization",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0692-selectivenet-deep-neural-network-integrated-reject | Selective Risk Minimization | When selection function g(x) = 0 everywhere, coverage drops to zero and risk becomes undefined.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:f51f96222b5dfa73:edge_storage_monetization_flow",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "deepseek_text_20260820_f4a491 | Edge Storage Monetization Flow | M(t) \u2192 -\u221e as t\u2192\u221e if C(s) > R(s) permanently; critical singularity when break-even occurs",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:fcf3eef1576f7169:athletic_exposure_rate",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "fcf3eef1576f7169 | Injury incidence is normalized per athletic exposure, one practice or competition in which an athlete participates | Rates are not comparable across systems with different exposure definitions or different case capture (t",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:62bc466abee645d3:compliance_annihilation_kernel",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "START_HERE | Compliance Annihilation Kernel | Fails if marketing copy employs obfuscation or novel slang that bypasses the predefined banned lexicon, causing regulatory violation.",
+      "vec_6d": [
+        0.0,
+        0.44721,
+        0.44721,
+        0.44721,
+        0.44721,
+        0.44721
+      ],
+      "authority_prior": 0.78
+    },
+    {
+      "doc_id": "foundry:6dbab9d58bb01f70:implementation_gate_invariant",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "SPORTS_OS_INTELLIGENCE_NETWORK_MASTER_PLAN | Pre-Implementation Gate Invariant | Breaks if the approval matrix becomes collinear with external market pressures, bypassing the mathematical safety constraints.",
+      "vec_6d": [
+        0.44721,
+        0.44721,
+        0.44721,
+        0.0,
+        0.44721,
+        0.44721
+      ],
+      "authority_prior": 0.78
+    },
+    {
+      "doc_id": "foundry:d3c49555b2a30b8e:rush_attempts_over_under",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "deep-dive-props | Rush Attempts Over/Under | Breaks down when Daniels stabilizes into a pocket passer or Bucs adjust their defensive coverage.",
+      "vec_6d": [
+        0.44721,
+        0.44721,
+        0.0,
+        0.44721,
+        0.44721,
+        0.44721
+      ],
+      "authority_prior": 0.78
+    },
+    {
+      "doc_id": "foundry:d52085451bdc3123:pass_discipline_veto",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "NFL_WEEK_6_LIVE_COMMAND_BOARD | Pass Discipline Governing Rule | Fails if the underlying market model is structurally flawed, rendering the 'consensus' an invalid reference point for vetoing.",
+      "vec_6d": [
+        0.0,
+        0.44721,
+        0.44721,
+        0.44721,
+        0.44721,
+        0.44721
+      ],
+      "authority_prior": 0.78
+    },
+    {
+      "doc_id": "foundry:e4b529256584e906:selection_bias_confounder",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "coverage_vs_epa | Schematic Selection Bias Confounder | Fails if coaching staffs exhibit systematic irrationality or if personnel constraints force suboptimal coverages regardless of offensive tendency.",
+      "vec_6d": [
+        0.0,
+        0.44721,
+        0.44721,
+        0.44721,
+        0.44721,
+        0.44721
+      ],
+      "authority_prior": 0.78
+    },
+    {
+      "doc_id": "foundry:f4a462dbdcebdb76:brand_voice_constraint",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "BUILD-GV2-038-responsible-gambling-escalation-protocol | Brand Voice Constraint Manifold | Violated if marketing optimization algorithms override compliance constraints, injecting high-pressure language that breaches the allowed voice subsp",
+      "vec_6d": [
+        0.44721,
+        0.44721,
+        0.44721,
+        0.44721,
+        0.0,
+        0.44721
+      ],
+      "authority_prior": 0.78
+    },
+    {
+      "doc_id": "foundry:76fcaf6d6c71484a:w1_snake_case_id_3",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "defense-scheme-layer-2026-09-19 | Coverage Flexibility | Uncertainty in the true underlying defensive strategy, whether it is a permanent shift or a temporary game plan.",
+      "vec_6d": [
+        0.35355,
+        0.35355,
+        0.0,
+        0.70711,
+        0.35355,
+        0.35355
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:7f0f084cdb020856:p5",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "7f0f084cdb020856 | Risk geometry of the goal face: border length, ground-as-bumper, and the miss/save asymmetry between top and bottom partitions | The nearest-partition pinning of off-target shots is an intent assumption, not an observatio",
+      "vec_6d": [
+        0.27735,
+        0.5547,
+        0.5547,
+        0.5547,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:6cf36a29e51c0a02:w2_snake_case_id",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "The Hidden Game of Football - Bob Carroll, Pete Palmer & John Thorn | Passing Attack Efficiency | When defensive pressure exceeds threshold, E_pass drops below baseline.",
+      "vec_6d": [
+        0.60302,
+        0.30151,
+        0.30151,
+        0.60302,
+        0.30151,
+        0.0
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:f778f7405707572f:w2_snake_case_id",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "The Hidden Game of Football - Bob Carroll, Pete Palmer & John Thorn | Passing Attack Efficiency | When defensive pressure exceeds threshold, E_pass drops below baseline.",
+      "vec_6d": [
+        0.60302,
+        0.30151,
+        0.30151,
+        0.60302,
+        0.30151,
+        0.0
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:0003f3951871a394:barber_weighted_conformal",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "0002-situational-first-5-stage-pre-projection-and-jev-simulation-pipeline | Barber Weighted Conformal Prediction | Market microstructure shocks where the distribution of outcomes deviates significantly from IID sampling, causing coverage vi",
+      "vec_6d": [
+        0.0,
+        0.31623,
+        0.63246,
+        0.31623,
+        0.0,
+        0.63246
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0af9bf9c025412d5:coverage_constraint_index",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "PIT@TB-matchups | Coverage Constraint Index | When coverage density drops below 0.4% motion rate.",
+      "vec_6d": [
+        0.0,
+        0.63246,
+        0.31623,
+        0.63246,
+        0.31623,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:10c8c515e69e40f4:p1",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "10c8c515e69e40f4 | Play-cycle pre-snap indistinguishability (Zuppke play cycle completeness rule) | Fails when any play leaks a telltale initial movement ('quickly observing with the snap of the ball the telltale initial movements of the ba",
+      "vec_6d": [
+        0.0,
+        0.31623,
+        0.63246,
+        0.63246,
+        0.31623,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:10c8c515e69e40f4:p2",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "10c8c515e69e40f4 | Punt territory-exchange policy ('When in doubt, punt' + zone-conditional down rules) | The 40-yd exchange collapses when punts are partially blocked: printed 1921 game averages were only ~31 yd ('A', 14 kicks) and ~32 yd ",
+      "vec_6d": [
+        0.0,
+        0.63246,
+        0.31623,
+        0.31623,
+        0.63246,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:10c8c515e69e40f4:p3",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "10c8c515e69e40f4 | Tertiary information-gated commitment (hold until direction is certain) | Fails if the offense can manufacture false certainty \u2014 decoys and crossing routes that make direction appear resolved before it is (Arrangements II",
+      "vec_6d": [
+        0.0,
+        0.31623,
+        0.31623,
+        0.63246,
+        0.63246,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:15452dc5f38ae30a:qb_aggressiveness_third_down",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "15452dc5f38ae30a | Quarterback aggressiveness: the share of third down attempts thrown at or beyond the line to gain | The metric credits intent, not wisdom: throws beyond the sticks into coverage count as aggressive even when a checkdown w",
+      "vec_6d": [
+        0.31623,
+        0.31623,
+        0.0,
+        0.63246,
+        0.63246,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:366ba522490b1573:p7",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "366ba522490b1573 | Sign-flip of a correlation beyond its observed support (rain-corn regime) | Beyond R* the sign of the relationship reverses: above so many inches, more rain means less corn (waterlogging). The general breakdown is uncontr",
+      "vec_6d": [
+        0.63246,
+        0.63246,
+        0.0,
+        0.31623,
+        0.31623,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:409f5dad119c06ed:p5",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "409f5dad119c06ed | Hip-flip biomechanical refractory constraint: 200-400 ms transition recovery delay | The 200-400 ms window is a population-level biomechanical range, not a per-player constant: elite hip mobility, anticipatory pre-flips, ",
+      "vec_6d": [
+        0.0,
+        0.63246,
+        0.63246,
+        0.31623,
+        0.31623,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:55d0f88972ad63be:Forward pass as defensive-spreading threat option (1906)",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "Football: The American Intercollegiate Game | Forward pass as defensive-spreading threat option (1906) | Before 1906, p=0 by rule and the option does not exist. The five-yard restriction on the quarter-back run and the forward pass constrai",
+      "vec_6d": [
+        0.0,
+        0.31623,
+        0.63246,
+        0.31623,
+        0.63246,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:88815ac141ccd804:fairness_criteria_incompatibility",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "88815ac141ccd804 | Independence, separation, and sufficiency are mutually exclusive fairness criteria outside special cases | Imposing one criterion forgoes the other two except in special cases such as equal base rates or perfect predictio",
+      "vec_6d": [
+        0.0,
+        0.31623,
+        0.31623,
+        0.63246,
+        0.63246,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0c728cbb3cc3b844:pressure_dependence_model",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1712-ball-bounce-restitution | Pressure Dependence Model | At very low pressures (near vacuum) or very high temperatures, the ideal gas law breaks down, invalidating the pressure-to-temperature mapping.",
+      "vec_6d": [
+        0.37796,
+        0.75593,
+        0.37796,
+        0.37796,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0fb3c856126aa810:separation_over_expected",
+      "source_type": "foundry_book_primitive",
+      "family": "qbSkillScript",
+      "text": "SYSTEM-TELEMETRY-MASTER-MAP | Separation Over Expected (SOE) | Fails when throw direction uncertainty dominates; occurs during high-speed throws where tracking latency introduces significant bias.",
+      "vec_6d": [
+        0.37796,
+        0.0,
+        0.0,
+        0.37796,
+        0.75593,
+        0.37796
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:10c8c515e69e40f4:p4",
+      "source_type": "foundry_book_primitive",
+      "family": "qbSkillScript",
+      "text": "10c8c515e69e40f4 | Long-pass completion veto (golden rule of pass defense) | The veto is down-conditional: on fourth down the printed rule flips toward interception (PDF 21) because an incomplete pass ends the drive anyway, so the variance ",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.37796,
+        0.37796,
+        0.75593,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:18efca72c7a95086:road_trip_constraint",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "2026 - The Traveling Tournament Problem An Overview - Bulck et al | 2026 - The Traveling Tournament Problem An Overview - Bulck et al Operator 2 | Violating this constraint leads to player burnout and poor performance.",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.75593,
+        0.37796,
+        0.0,
+        0.37796
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:1cfd792f9b7396d1:p5",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "1cfd792f9b7396d1 | Canonical-probe blindness: isoform-resolved assay detects what the canonical-only assay misses (miR-146a) | The canonical-only probe fails exactly when the biology lives in the isoform tail: here the canonical fraction DR",
+      "vec_6d": [
+        0.37796,
+        0.37796,
+        0.37796,
+        0.75593,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:32d8b2d0d4f7f22f:p11",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "32d8b2d0d4f7f22f | Scout epistemic honesty constraint | Memory-based reconstruction after the game (the book's prescribed method, p189) is itself a corruption channel \u2014 the source trusts trained memory but prints no verification step. Under",
+      "vec_6d": [
+        0.37796,
+        0.37796,
+        0.75593,
+        0.37796,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:385d408a043b611b:p4",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "385d408a043b611b | Allostatic opponent effect: repetitive relief-seeking resets baseline and induces paradoxical pain management-induced pain (Manhapra et al., FREIDEM) | Conceptual model: opponent/allostatic parameters are not measured in ",
+      "vec_6d": [
+        0.37796,
+        0.0,
+        0.75593,
+        0.37796,
+        0.37796,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:471a07a1060b2a98:sinkhorn_transport_weights",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "10_26_26_Agent_Log | Entropy-Regularized Sinkhorn-Knopp Optimal Transport | Failure occurs when marginal constraints are violated or regularization is insufficient.",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.75593,
+        0.0,
+        0.37796,
+        0.37796
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:47da7cd12f78ad9c:p1",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "47da7cd12f78ad9c | 24-hour postural management conjunctive gate: mobility impairment AND risk presence | The gate is conjunctive: mobility impairment alone or risk alone does not trigger it - dropping the AND over-triggers (resource waste) ",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.37796,
+        0.75593,
+        0.0,
+        0.37796
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:48a955c72873ccf6:log_concave_envelope_bound",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "48a955c72873ccf6 | For a log-concave density on [0, infinity) with mode at 0 and f(0) = 1, there is a single implicit envelope g dominating every such f at once, and the tail satisfies integral_x^infinity f <= e^{-x} f(0) (Theorem VII.2.1) ",
+      "vec_6d": [
+        0.37796,
+        0.75593,
+        0.37796,
+        0.37796,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:53bb528a4e075303:trailing_stop",
+      "source_type": "foundry_book_primitive",
+      "family": "marketMicrostructure",
+      "text": "0646-convolutional-attention-betting-exchange-markets | Trailing Stop | Whipsaw occurs during low-volatility periods; market impact degrades performance when large positions trigger slippage",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.37796,
+        0.37796,
+        0.0,
+        0.75593
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:54c95039290a80fb:p1",
+      "source_type": "foundry_book_primitive",
+      "family": "qbSkillScript",
+      "text": "54c95039290a80fb | Q-learning temporal-difference update (Bellman optimality backup) | Convergence fails if alpha is held constant (persistent oscillation) or gamma=1 in continuing tasks (unbounded returns). The max operator overestimates v",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.37796,
+        0.37796,
+        0.75593,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:58e69e15d5fce30b:checkout_attempt",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "PHASE1_REMEDIATION_UPDATE_2026-07-22b | Durable Checkout Attempt | Compound unique constraint prevents duplicate attempts, with a 24-hour expiry timeout.",
+      "vec_6d": [
+        0.0,
+        0.75593,
+        0.37796,
+        0.37796,
+        0.0,
+        0.37796
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:58f2f4effa008a87:selective_risk_minimization",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "1150-predict-confidently-predict-right-abstention | Selective Risk Minimization | When coverage drops below target threshold, abstention becomes active; performance degrades if coverage too low due to over-abstaining.",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.37796,
+        0.75593,
+        0.0,
+        0.37796
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:5fb88571fd390733:w3_snake_case_id_w3_4",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "Pearson-1892-GrammarOfScience | size_change_isotropic_strain | Anisotropic growth introduces shear components disrupting pure volume change.",
+      "vec_6d": [
+        0.75593,
+        0.37796,
+        0.37796,
+        0.0,
+        0.0,
+        0.37796
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:64a4e0d61f21a823:p1",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "64a4e0d61f21a823 | Neural message-passing kernel (permutation-equivariant AGGREGATE-UPDATE recursion) | The k-hop receptive-field guarantee degrades under over-smoothing: with self-loop updates, influence converges to the random-walk statio",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.37796,
+        0.75593,
+        0.37796,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:65c65dec7ddaacd5:p1",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "65c65dec7ddaacd5 | Per-atom von Mises stress invariant from the virial stress tensor (Eq. 1) | Continuum correspondence is an approximation at sub-nanometer scale and degrades during reactive bond-breaking at fracture; per-atom virial parti",
+      "vec_6d": [
+        0.37796,
+        0.37796,
+        0.37796,
+        0.75593,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:67d70172d5277fc5:bellman_equation",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "arxiv_2212.12167v1 | Bellman Equation for Value Functions | When transition probabilities satisfy Markov property and conditional independence constraints.",
+      "vec_6d": [
+        0.0,
+        0.75593,
+        0.37796,
+        0.37796,
+        0.37796,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:6e2e38cbde40f411:bregman_projection_correction",
+      "source_type": "foundry_book_primitive",
+      "family": "marketMicrostructure",
+      "text": "0305-arbitragefree-combinatorial-market-making-via-integer | Bregman Projection Correction | Fails at the boundary of the domain where derivatives of C become unbounded (e.g., standard LMSR without contraction).",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.37796,
+        0.37796,
+        0.0,
+        0.75593
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:73c11ea388c2e5f6:j4_fechner_weber_psychophysics",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "73c11ea388c2e5f6 | Fechner's psychophysical measure formula S = C log R, built on Weber's constant-fraction law (James Ch XIII, printed p539-540) | James's own caveat is decisive: 'no human being, in any investigation into which sensations ",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.37796,
+        0.75593,
+        0.37796,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:8c50b4bd717b69f0:odds_feed_qa_filter",
+      "source_type": "foundry_book_primitive",
+      "family": "marketMicrostructure",
+      "text": "0289-not-feeling-the-buzz-correction-study | Odds Feed QA Filter | Becomes ineffective if the entire market is simultaneously mispriced due to a systemic blind spot, though it successfully filters isolated bookmaker typos.",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.37796,
+        0.37796,
+        0.0,
+        0.75593
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:92bc10831db414b7:contextual_lever_expansion",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "concept_axis_coverage | Contextual Lever Expansion | Diminishes if the 'measurable context' relies on implicit, unstated variables that cannot be programmatically extracted.",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.75593,
+        0.37796,
+        0.0,
+        0.37796
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:96636d19e67fe7e7:faithfulness_causal_minimality",
+      "source_type": "foundry_book_primitive",
+      "family": "qbSkillScript",
+      "text": "96636d19e67fe7e7 | Definition 6.33: faithfulness requires every independence in P_X to be implied by d-separation in G; causal minimality requires P_X to be Markovian to G but to no proper subgraph; Example 6.34 violates faithfulness by exa",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.37796,
+        0.37796,
+        0.75593,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:aa47f6111ce52a53:boundary_constraint_manifold",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "BUILD-044-bug-report-triage | Legal-Security-Repo Boundary Constraint Manifold | License reclassification mid-execution; secret scanning false negatives; path traversal via symlinks.",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.37796,
+        0.75593,
+        0.0,
+        0.37796
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:c3326b1b3cfe2d1c:variable_payoff_growth_kernel",
+      "source_type": "foundry_book_primitive",
+      "family": "marketMicrostructure",
+      "text": "1204-kelly-criterion-variable-payoff | Variable-Payoff Exponential Growth Kernel | Breaks down if the payoff distribution has infinite mean or heavy Pareto tails violating the integrability condition, or if leverage constraints force f > 1.",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.37796,
+        0.37796,
+        0.0,
+        0.75593
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:c4cd66c1cb097e68:ldpc_sum_product_decoding",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "c4cd66c1cb097e68 | Low-density parity-check codes, defined by a sparse parity-check matrix H, are decoded by running the sum-product algorithm on their bipartite factor graph; the delta-domain check update factorizes as a signed product ove",
+      "vec_6d": [
+        0.0,
+        0.75593,
+        0.37796,
+        0.37796,
+        0.37796,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:cea9c306f975be55:p4",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "cea9c306f975be55 | Spearman's Rank Correlation Coefficient, no-ties closed form (Eq. 5) | Tied ranks invalidate the printed closed form; the Pearson-on-ranks definition must be used instead. Empirically the ordinal signal itself collapses b",
+      "vec_6d": [
+        0.0,
+        0.37796,
+        0.75593,
+        0.37796,
+        0.37796,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:e7b06f1e590e77a2:ehcp",
+      "source_type": "foundry_book_primitive",
+      "family": "qbSkillScript",
+      "text": "c09-deep-r01 | Expected Hypothetical Completion Probability | Selection bias in training data; lack of QB pressure features.",
+      "vec_6d": [
+        0.37796,
+        0.37796,
+        0.0,
+        0.37796,
+        0.75593,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:409f5dad119c06ed:p1",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "409f5dad119c06ed | Conformalized Quantile Regression: non-conformity score, rank index, and finite-sample marginal coverage | Exchangeability violated by season drift: weather transitions, roster churn, tactical counter-adjustments over the",
+      "vec_6d": [
+        0.0,
+        0.83406,
+        0.20851,
+        0.41703,
+        0.20851,
+        0.20851
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:7b1610d8910d1f20:stacked_box_pct",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "CIN@MIA-card | Stacked Box Percentage | Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails.",
+      "vec_6d": [
+        0.26726,
+        0.26726,
+        0.26726,
+        0.80178,
+        0.26726,
+        0.26726
+      ],
+      "authority_prior": 0.78
+    },
+    {
+      "doc_id": "foundry:02b4aa51a01640c9:pid_alpha_control",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0695-controlled-abstention-neural-networks-classification-problems | PID Alpha Control Loop | Oscillations occur if batch size is too small relative to control window, or if the underlying data distribution shifts abruptly (non-stationary n",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:11f8991e3b35d286:dartboard_state_vector",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "2024 - No More Throwing Darts at the Wall Developing Fair Handicaps for Darts using a Markov Decision Process - Unknown Authors | Dartboard State Vector Operator | Breaks down if players employ non-standard variants (e.g., Cricket) or if ps",
+      "vec_6d": [
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:11f8991e3b35d286:dynamic_credit_allocation",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "2024 - No More Throwing Darts at the Wall Developing Fair Handicaps for Darts using a Markov Decision Process - Unknown Authors | Dynamic Credit Allocation Kernel | Fails if the underlying board geometry changes or if rule sets restrict spe",
+      "vec_6d": [
+        0.0,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:19d2f7efc6f2f3fa:completion_probability_model",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "undated - A Machine Learning Approach to Player Value and Decision Making in Professional Ultimate Frisbee - Eberhard et al | Completion Probability Model | When thrower/receiver positions exceed training data coverage or game state deviate",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:201b58a56408ceea:nonlinear_failure_pricing",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "X-SITUATIONAL-TRAINING-CORPUS-2026-10-21 (1) | Nonlinear Failure State Pricing | Singularity occurs exactly at the goal line where distance-to-go collapses to zero, rendering standard linear down-and-distance scaling invalid.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:213f2037d04efc54:feasibility_ceiling",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1784-one-score-two-decisions-selective-prediction | Feasibility Ceiling | When p/c > 1, selective accuracy caps at 1 regardless of performance.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:25169889b2fd827b:input_dependent_uncertainty_scaling",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1910-gradient-based-meta-learning-uncertainty-weigh-loss | Input-Dependent Uncertainty Scaling | If \u03c3_i(x) does not correlate with actual variance sources, performance degrades.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:28871b7a7258db91:optimal_doubling_rate",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1201-pragmatic-information-rates-kelly | Optimal Doubling Rate | non-stationary returns or infinite variance",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:292b4dacd7fd0cb2:hazard_decay_baseline",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "1610-information-leakage-at-population-scale-polymarket-insider | Hazard Decay Baseline Correction | When empirical data fails to support Weibull fit or when subcategories show conflicting patterns.",
+      "vec_6d": [
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:29522d95bf122560:observable_signal_state_matrix",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1549-algorithmic-expert-aggregation | Observable Signal-State Matrix | Invertibility failure when A has nontrivial kernel; underdetermined systems yield multiple valid decompositions",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:38ae7f29f51ba4bc:physics_informed_symbolic_regression_loss",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2168-knowledge-integration-physics-informed-symbolic-regression-pretrained-llms | Physics-Informed Symbolic Regression Loss | Loss becomes dominated by MSE when LLM scores are unreliable or uniform.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:38fcbcfb58c54b06:regime_switching_leverage",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1218-awareness-of-crash-risk-improves-kelly | Regime-Switching Leverage Control | When q_t exceeds threshold, \u03bb_t transitions to lower value to reduce exposure.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:40533f1550c73763:rf_as_adaptive_knn",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2025 - A Comps-Based Approach for Interpreting Tree-Based Predictions with an Application to the NFL Draft - Unknown Authors | Random Forest as Adaptive K-Nearest Neighbors | Overfitting occurs when B is too large relative to training set s",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:42dae3b70c16214d:decoupled_kelly_growth",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0821-kelly-criterion-portfolio-optimization-decoupled-problem | Decoupled Logarithmic Growth Operator | Singularities emerge if $1 + f_k X_k \\leq 0$ (ruin), or if the empirical covariance matrix is ill-conditioned due to sparse historical s",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:42dae3b70c16214d:w0_decoupled_kelly_return",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "0821-kelly-criterion-portfolio-optimization-decoupled-problem | Decoupled Kelly Return Function | When correlations between assets increase beyond marginal approximations, decoupled form underestimates true portfolio growth.",
+      "vec_6d": [
+        0.0,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:42dae3b70c16214d:w3_wealth_fraction_bounds",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0821-kelly-criterion-portfolio-optimization-decoupled-problem | Wealth Fraction Cardinality Bounds | Violated if any f_i exceeds allowed range, leading to infeasible allocations.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:44c942538fdede93:performance_impulse_response",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2017 - Optimizing pre-season training loads in Australian football - Unknown Authors | Banister Performance Projection | Breaks down under extreme non-linear stressors (e.g., illness, psychological burnout) where linear convolution no longe",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:454ac006db279eb2:mask_fraction_overlap",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0362-no-train-yet-gain-towards-generic | Mask Fraction Overlap Operator | Fails when detector bounding boxes are excessively loose, causing the denominator |bbox_j| to artificially deflate the overlap fraction, or when severe motion blur de",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:49bac7408c4c443d:sinkhorn_knopp_optimal_transport",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "GSE Coach-Brain LLM & Engine - Copy | Sinkhorn-Knopp Optimal Transport | High regularization leads to uniform transport plan; low regularization approaches exact solution.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:4a3081b49e89a9be:nash_bargaining_travel",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1061-nba-expansion-travel-fairness-optimization | Nash Bargaining Travel Fairness | Singularity occurs if w_i approaches zero or negative values, though physically bounded by positive travel distances. Fails if market exposure constraints r",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:4d231b36270878f7:fielder_count_constraint",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2020 - Swing Shift A Mathematical Approach to Defensive Positioning in Baseball - Unknown Authors | Fielder Count Constraint | Fails when fielder count exceeds physical capacity or strategic flexibility.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:5013e6452ba04a79:alpaca_stable_adaptation",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1912-model-agnostic-meta-learning-fast-adaptation | ALPaCA Stable Analytic Adaptation | Non-linearities in the feature space can cause suboptimality when H is misspecified.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:50fa8917bc8326f2:cost_adjusted_stochasticity",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "2011-stochastic-batch-acquisition-simple-baseline | Budget-Constrained Perturbation | Singularity occurs if c_i approaches zero for high-value items, causing infinite ratios and dominating the sampling distribution.",
+      "vec_6d": [
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:5281e01fa82e8be8:hsieh_2020_saturation",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1220-on-feedback-control-in-kelly-betting | SaturationControl | Sharp transition at interval boundaries.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:5426acb772be094c:finite_width_criticality",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "DEEP-LEARNING-EFFECTIVE-THEORY-CAMBRIDGE-PROBABILITY-AND-X28-SYNTHESIS | Finite-Width Criticality | $r \\leq r^\\star$ implies non-critical behavior; $r > r^\\star$ triggers critical phase transition.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:5435366b83b66d41:cirq_quantum_state_vector_and_qaoa_slate_engine",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "PHYSICS-BIOPHYSICS-AND-ONCOLOGY-21-REPO-TWO-PASS-INTEGRATION | Quantum State Vector Simulator with QAOA Mixer Gates | $n \\to \\infty$ leads to exponential scaling in memory and gate count.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:5435366b83b66d41:genesis_differentiable_contact_and_soft_body_kernel",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "PHYSICS-BIOPHYSICS-AND-ONCOLOGY-21-REPO-TWO-PASS-INTEGRATION | Genesis Differentiable Contact and Soft Body Kernel | When $\\delta \\to 0$, normal force approaches zero; when $\\mu \\to 0$, tangential force vanishes.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:5435366b83b66d41:warp_spatial_hash_grid_and_adjoint_kernel",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "PHYSICS-BIOPHYSICS-AND-ONCOLOGY-21-REPO-TWO-PASS-INTEGRATION | Differentiable Spatial Hash Grid with Adjoint Tape | High particle density or irregular distribution degrades performance.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:56346c3d33483aa0:adaptive_kelly_with_chance_constraint",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0626-kelly-criterion-under-probability-uncertainty | Adaptive Kelly with Chance Constraint | When \u03b1 approaches zero, the constraint becomes negligible; when \u03b1 nears one, risk aversion dominates.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:56346c3d33483aa0:kelly_stake_optimization",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0626-kelly-criterion-under-probability-uncertainty | Kelly Stake Optimization | When optimization constraints are violated or utility function is non-concave.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:586a86e4fbca8f50:knn_entropy_estimator",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2025 - The Adaptability Index An Information Theoretic Framework for Measuring Player Adaptability - Dubem | Kozachenko-Leonenko Entropy Estimator | Curse of dimensionality causes nearest-neighbor distances to converge to the radius of the ",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:586a86e4fbca8f50:mi_chain_rule",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2025 - The Adaptability Index An Information Theoretic Framework for Measuring Player Adaptability - Dubem | Mutual Information Chain Decomposition | Degenerates if B deterministically dictates C (perfect collinearity), making the condition",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:586a86e4fbca8f50:possession_boolean",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2025 - The Adaptability Index An Information Theoretic Framework for Measuring Player Adaptability - Dubem | Ball Possession Boolean | When ball distance exceeds 3 feet or vertical separation exceeds 3 feet.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:5b6abde4eb848e1a:temporal_decay_operator",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2017 iWinRNFL - A Simple, Interpretable and Well-Calibrated In-Game Win Probability Model for NFL - Pelechrinis | Temporal Decay Operator | Fails during abrupt regulatory shocks (e.g., massive rule changes regarding pass interference) where",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:5bed1d9e520f2377:spine_smoothing_filter",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0370-towards-unconstrained-2d-pose-estimation-of | Spine Smoothing Filter | Singularity occurs when the threshold T is too small relative to the expected displacement, causing the filter to become ineffective and the loss to diverge.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:65f97cddfe298501:marginal_safety",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2142-conformal-risk-averse-decision-making | Marginal Safety Bound | When utility function does not satisfy monotonicity or boundedness.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:65f97cddfe298501:tiered_staking",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2142-conformal-risk-averse-decision-making | Tiered Staking | If any tier's worst-case utility crosses zero, that tier's allocation drops to zero.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:6c50f3fee1f7496e:w3_arterial_occlusion_pressure",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "Clemente-Ed-2022-Training-Load-WellBeing-Readiness-MDPI | Arterial Occlusion Pressure Threshold | At 720\u00b0 spin when venous return is compromised due to sustained occlusion.",
+      "vec_6d": [
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:6e269489299acb38:severity_impact_kernel",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al | Severity Impact Kernel | Singularity occurs if the severity metric becomes collinear with the binary win label, rendering the addi",
+      "vec_6d": [
+        0.57735,
+        0.0,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:6f786818b14f2aa8:p3_gca_analog",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0324-a-machine-learning-framework-for-off | Group Coverage Advantage Analog | Breaks down in highly compressed passing windows where multiple defenders simultaneously influence a single receiver, causing non-linear interference effects not ",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:704f2780c9be976d:voronoi_space_creation",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "Going Deep - Models for Continuous Time Within Play Valuation of Game Outcomes in American Football with Tracking Data | Voronoi Space Creation | When ball-carrier trajectory intersects opponent Voronoi boundaries.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:7381bd913917e1d1:environmental_wind_impact",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2018 A flight-based metric for evaluating NFL punters - R. Drew Pasteur, Emily Howerton, Preston Pozderac, Stuart Young and Jonathan Moore | Crosswind Correlation with EPA | All punts analyzed under varying wind conditions.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:7381bd913917e1d1:long_field_punt_hang_time",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2018 A flight-based metric for evaluating NFL punters - R. Drew Pasteur, Emily Howerton, Preston Pozderac, Stuart Young and Jonathan Moore | Long Field Punt Hang Time Coefficient | Punts landing between 10 and 30-yard lines on long-field at",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:748b07f6873c417b:page_2_spin_move_pressure",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "2023 - Quantifying Defensive Spin Moves in American Football A Player Tracking Analysis - Unknown Authors | Average Spin Move Pressure Metric | Fails when spin interactions create non-linear pressure cascades.",
+      "vec_6d": [
+        0.57735,
+        0.0,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:748b07f6873c417b:w3_snake_case_id_1",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "2023 - Quantifying Defensive Spin Moves in American Football A Player Tracking Analysis - Unknown Authors | Bayesian Spin Move Pressure Differential | Outliers occur when $|\\Delta P_{SM}| > 2 \\cdot SD(\\Delta P_{SM})$, where $SD$ denotes sta",
+      "vec_6d": [
+        0.57735,
+        0.0,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:7733f5c96d9e6c51:disciplinary_binary_risk",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias | Event-Driven Disciplinary Risk Flag | Invalid if event tagging systems introduce latency or misclassification errors",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:788995fd976bdc16:fitness_transfer_function",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2026 - Intervention Effects of Recreational Football on Obesity-Related Health Outcomes A Systematic Review and Meta-Analysis - Zhang et al | Fitness Transfer Function | Non-linear saturation occurs at elite performance levels where recover",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:79e17070823c1f15:drawdown_hard_veto",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1176-predictive-decision-synthesis-for-portfolios | Tail-Risk Drawdown Veto | Becomes overly conservative during prolonged market inefficiencies where all viable strategies experience synchronized deep drawdowns, potentially rejecting highl",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:79e17070823c1f15:entropic_tilt_bma",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1176-predictive-decision-synthesis-for-portfolios | Relaxed Entropic Tilting Kernel | Fails if the target growth \\tau exceeds the maximum achievable growth of any individual component, rendering the constraint infeasible and causing the Lag",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:79e17070823c1f15:kelly_fractional_sizing",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1176-predictive-decision-synthesis-for-portfolios | Fractional Kelly Sizing Operator | Singularities occur when decimal odds d approach zero, or when engine probabilities violate the simplex constraint (p + q > 1), leading to negative or in",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:7ab9fb8a4a0b4733:ilp_lineup_optimizer",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "OPTIMIZERS | Integer Linear Programming Lineup Optimizer | Fails when projection noise exceeds the margin of optimization, or when market efficiency forces projections to align perfectly with salary caps.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:7af99077a9f12b9a:w2_thread_scheduling",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "Hailperin-2019-OperatingSystemsAndMiddleware | Thread Scheduling Protocol | Starvation occurs when high-priority threads indefinitely block lower-priority ones.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:7cf20ffa99532775:adoption_rejection_gate",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1933-pretrained-llm-adapted-with-lora-as-decision-transformer | Adoption/Rejection Gate | If any condition fails, the gate rejects the pretrained model in favor of simpler baselines.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:7cf20ffa99532775:control_random_weights",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1933-pretrained-llm-adapted-with-lora-as-decision-transformer | Controlled Random Weight Initialization | Failure to generalize across unseen market conditions due to lack of prior sequence knowledge.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:7d24ab47d5e47f3d:conformalized_gaussian_process",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "0767-predictive-modelling-of-football-injuries | Conformalized Gaussian Process | {'tag': 'ISOMORPHISM', 'mapping': 'Probabilistic severity bands for injury outcomes using conformal prediction', 'source_operator': 'conformalized_gaussian_pr",
+      "vec_6d": [
+        0.0,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:8125dea032c4568a:kelly_stake_with_perceived_edge",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1748-gambling-under-unknown-probabilities-estimation-error | Kelly Stake With Perceived Edge | Stake vanishes when perceived edge is non-positive, i.e., when \u03b4_perc \u2264 0.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:84997e1fe1dbfd76:causal_imputation_ladder",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0299-trainingfree-offscreen-player-imputation-for-broadcastbased | Causal Online Imputation Ladder | Violated if the system uses post-processing alignment, future context (e.g., knowing where a player appears next frame), or requires heavy ",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:84997e1fe1dbfd76:exponential_smoothing_pan_lag",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0299-trainingfree-offscreen-player-imputation-for-broadcastbased | Exponential Smoothing Pan-Lag Model | Breaks down during extremely rapid lateral ball movements (e.g., long diagonal passes) where the actual camera might anticipate rather ",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:863339d0dca77810:risk_threshold_selection",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0743-conformal-risk-control | Risk Threshold Selection | Failure occurs when loss is not monotone or when the empirical estimate deviates significantly from true risk due to small sample size.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:8e61f0d5314270fc:bounded_abstention_quantile",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0714-bounded-abstention-pairwise-learning-rank | Bounded-Abstention Quantile Operator | Singularity occurs when calibration set size approaches zero or all pairwise risks are identical (zero variance), rendering the quantile ill-defined.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:8f1fd95216d337a6:knapsack_trade_construction",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "1135-espn-fantasy-football-player | Knapsack Trade Construction | When no valid solution exists within budget, returns empty set or fallback trade.",
+      "vec_6d": [
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:92702b1f9855340a:zero_coverage_stamp",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "phase1-nfl-acceptance | Zero Coverage Stamp | Fails if the underlying data distribution exhibits catastrophic temporal drift, violating the exchangeability assumption required for valid conformal coverage.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:944026ef1bb8e932:selective_calibration_selector",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0699-calibrating-bayesian-learning-regularization-confidence-minimization | Selective Calibration Abstention Rule | Singularity occurs if the coverage constraint forces \\tau to zero, resulting in no abstention, or if \\bar{s}(x) becomes coll",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:adc6b6f3cba095d5:trainer_ready_fraction",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "MIND-STAGING-RECOUNT-2026-11-07 | Trainer-Ready Fraction Operator | Drift in readiness probability over time.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:af3e329d181ed54f:hard_drawdown_barrier",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1635-portfolio-benchmarking-drawdown-constraint-stochastic | Hard Drawdown Barrier | Market crash / extreme drawdown",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:af3e329d181ed54f:stochastic_volatility_correction",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1635-portfolio-benchmarking-drawdown-constraint-stochastic | Stochastic Volatility Correction | High volatility / low liquidity",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:b7c33c1e28f7e05b:acyclicity_constraint",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1962-notears-continuous-optimization-structure-learning | Acyclicity Constraint | When d \u226b n or data violates i.i.d. assumption, convergence to global optimum not guaranteed.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:ba25c9a65a2c6964:mdp_team_selection",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0308-optimizing-fantasy-sports-team-selection-with | Markov Decision Process Team Selection | When team composition exceeds 22 players or swap violates constraints.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:c5c338bb64ab132f:stale_line_risk_score",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "gse-deep-nfl-metrics-catalog-2026 | Stale Line Risk Score | SLRS reaches maximum when line age exceeds TTL and contradiction pressure is high; it fails when source coverage drops to zero.",
+      "vec_6d": [
+        0.57735,
+        0.0,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:c8d4588c272dcb39:dlnm_kinematic_fusion",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "GSE-WP-2026-03-KINEMATIC-WORKLOAD-HAZARDS | Distributed-Lag Kinematic Cross-Basis Operator | Singularities emerge when instantaneous kinetic impulse X exceeds the spline knot boundaries (>1500 N), or when extreme recovery asymmetry violates",
+      "vec_6d": [
+        0.0,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:c94372f192f6bfa3:integer_programming_solver",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "1349-diversity-is-key-fantasy-football-dream | Integer Programming Solver | When integer programming fails to converge or produces suboptimal solutions due to large search space.",
+      "vec_6d": [
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:ce1fe09ab12271e8:pocket_strain_rate",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "KAGGLE-ARXIV-EQUATION-TRAINING-CORPUS | Continuous Pass-Rush STRAIN Rate | Singularities occur when d_j(t) approaches zero (tackle event), requiring epsilon-regularization or absorbing boundary conditions.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:cfd2f73a7de01946:bayesian_drift_filter",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0822-discrete-time-portfolio-drawdown-constraint-partial-information-deep-learning | Bayesian Drift Filter Operator | Model misspecification where true returns exhibit heavy tails or regime shifts violating the assumed Gaussian structure, c",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:cfd2f73a7de01946:drawdown_constraint_kernel",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0822-discrete-time-portfolio-drawdown-constraint-partial-information-deep-learning | Hard Drawdown Constraint Kernel | Extreme market gaps or flash crashes where wealth drops below the threshold between discrete rebalancing steps, rendering",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:cfd2f73a7de01946:learning_value_duality",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0822-discrete-time-portfolio-drawdown-constraint-partial-information-deep-learning | Learning Value Duality Operator | High-dimensional regimes (d > 5) where the curse of dimensionality overwhelms the deep learning solver, or when transacti",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:e1f2a7bf6033f1d2:s3_rest_differential_schedule_features",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "A3-measured-signals | Rest-differential schedule features | Computed from nflverse and odds data for MNF, Mini, Bye scenarios.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:e47464eca340e172:finite_horizon_bellman_dp",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1230-learning-to-bet-for-horizon-aware-anytime-valid-testing | Finite-Horizon Bellman Dynamic Programming | When T approaches zero, policy becomes aggressive (all-in) due to remaining time constraint.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:e8b6dc1993f2c91e:singular_pace_arc",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "1568-optimal-strategy-trail-running-nutrition-fatigue | Singular Pace Arc | Singular arcs occur when the switching function \u03c8 vanishes identically; they represent a trade-off between maintaining high speed and conserving energy/fatigue.",
+      "vec_6d": [
+        0.0,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.57735
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:07f6498dfa50eaa1:mtec_medical_tech_enterprise_consortium",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "NON-DILUTIVE-FUNDING-AND-GRANTS-EXECUTION-PACK-2026-11-06 | Sub-concussive TBI Kinematic Conformance Gate | Rotational acceleration exceeds 1000 rad/s\u00b2 or angular displacement surpasses 0.1 rad.",
+      "vec_6d": [
+        0.0,
+        0.35355,
+        0.70711,
+        0.35355,
+        0.35355,
+        0.35355
+      ],
+      "authority_prior": 0.78
+    },
+    {
+      "doc_id": "foundry:01c55f82946dd384:sinkhorn_injury_overlay",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2026-10-25_180500-gse-unified-coach-brain-and-tuesday-lock-pipeline | Deterministic Sinkhorn & EPA Delta Propagation | Breaks down during catastrophic roster depletion where the optimal transport problem becomes ill-posed due to lack of fea",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.5
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:09046fc818f3bf08:negative_constraint_manifold",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "OVERNIGHT-2026-08-20-MLB-NFL-LAGUNA | Negative Constraint Manifold | Violated if semantic similarity allows 'edge language' to bypass exact string matching of hard constraints.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:1c85803c6d0a7027:athletic_performance_improvement",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "2026 - Effects of Blood Flow Restriction Training at Different Levels of Arterial Occlusion Pressure on Body Composition and Athletic Performance i - Qing et al | Athletic Performance Improvement | Sprint performance shows no significant ch",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:1c85803c6d0a7027:muscle_hypertrophy_response",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "2026 - Effects of Blood Flow Restriction Training at Different Levels of Arterial Occlusion Pressure on Body Composition and Athletic Performance i - Qing et al | Muscle Hypertrophy Response | Failure occurs when AOP exceeds safe thresholds",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:1c85803c6d0a7027:pressure_dependent_adaptation",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "2026 - Effects of Blood Flow Restriction Training at Different Levels of Arterial Occlusion Pressure on Body Composition and Athletic Performance i - Qing et al | Pressure Dependent Adaptation | No benefit beyond 60% AOP for sprint performa",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:4311950bd960e0ef:no_claim_principle",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2026-09-05-market-anchored-display-probability-v5.2.8 | No Claim Principle | Prevents any form of ex-post data snooping or bias introduction before independent validation.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:4311950bd960e0ef:w0_receipt_immutability",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2026-09-05-market-anchored-display-probability-v5.2.8 | Receipt Immutability Constraint | Breaks down if database constraints are relaxed, allowing mutable updates to historical receipts, thereby destroying the causal link between the publi",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:5281e01fa82e8be8:saturation_fix",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1220-on-feedback-control-in-kelly-betting | Saturation Fix | Application of the saturation constraint ensures non-negativity of the portfolio value, but may result in sub-optimal long-term growth rates compared to unconstrained Kelly.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:597fafa4cc8cfc8d:mission_alignment_veto",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1534-prediction-of-football-player-value-using | Mission Alignment Veto | Fails if the strategic mandate expands to include macro-economic sports betting markets driven purely by transfer rumors.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:604d25873b977f53:ethical_constraints_framework",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0309-future-aspects-in-human-action-recognition | Ethical Constraints Framework | Not applicable - no implementation.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:6840fe10212b70cd:inconsistent_dm_stress_test",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "1782-predict-responsibly-improving-fairness-accuracy-learning | Inconsistent DM Stress Test | High-noise saturation: if the flip rate exceeds 50%, the human signal becomes anti-correlated with the truth, causing the deferral mechanism to sy",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:6e269489299acb38:w0_manifold_density",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al | Interaction Manifold Density | Estimation precision degrades exponentially as the ratio of unique player pairs to observed interac",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:92b3d2f5d2e24a54:depth_flatness_bias",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "completion_probability_flatness | Depth Flatness Bias | When airYards exceeds 25 yards, the variance in completionProbability remains constant despite increasing distance.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.5
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:b9e56c52e240ec8b:production_isolation_boundary",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "BUILD-014-founder-only-method-brain | Production Isolation Constraint | Boundary violation occurs if implicit dependencies allow sandbox artifacts to mutate production state variables without passing through $\\mathcal{G}$.",
+      "vec_6d": [
+        0.0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:e2e0f698eee97fdc:w2_snake_case_id_2",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "Psychology in Football: Working with Elite and Professional Players - Mark Nesti | Pressure Mitigation Function | No breakdown noted.",
+      "vec_6d": [
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.0,
+        0.5
+      ],
+      "authority_prior": 0.82
+    },
+    {
+      "doc_id": "foundry:50ed1226e3c5bf3a:do_not_pretend_blocked",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "statking-integrity-status | No Pretense of Blocked Data Act | Attempted use of blocked data triggers immediate error.",
+      "vec_6d": [
+        0.0,
+        0.60302,
+        0.30151,
+        0.60302,
+        0.30151,
+        0.30151
+      ],
+      "authority_prior": 0.78
+    },
+    {
+      "doc_id": "foundry:39871d5617848573:p1",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "39871d5617848573 | Cerebral perfusion pressure gradient (CPP = MAP - ICP) with autoregulatory operating corridor | Autoregulation is often lost in the severely injured brain, making CBF pressure-passive (p. 235); excessive CPP can itself di",
+      "vec_6d": [
+        0.7746,
+        0.2582,
+        0.5164,
+        0.0,
+        0.2582,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:39871d5617848573:p3",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "39871d5617848573 | Cerebrovascular pressure reactivity index (PRx): correlation-sign regime classifier for autoregulation | SOURCE DEFECT quarantined: the 'divided with' phrasing is a loose description of a slow-wave trend/correlation index",
+      "vec_6d": [
+        0.7746,
+        0.5164,
+        0.2582,
+        0.0,
+        0.2582,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:6d101348291a5c1f:p3",
+      "source_type": "foundry_book_primitive",
+      "family": "qbSkillScript",
+      "text": "6d101348291a5c1f | Generalized linear model with logit link for bounded binary responses (logistic completion model) | Residual-scale trap: R predict() defaults to the link scale (log-odds); subtracting that from a 0/1 outcome is dimensiona",
+      "vec_6d": [
+        0.22361,
+        0.22361,
+        0.22361,
+        0.22361,
+        0.89443,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:7f8cefd032367999:estimation_state_separation",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra | Estimation-State Separation Principle | Fails if the auxiliary features (e.g., bowler fatigue) contain information not reducible to the core DP s",
+      "vec_6d": [
+        0.0,
+        0.0,
+        0.33333,
+        0.66667,
+        0.66667,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:ce1fe09ab12271e8:discrete_margin_mass",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "KAGGLE-ARXIV-EQUATION-TRAINING-CORPUS | Discrete Margin Key-Number Distribution | Fails in extreme garbage-time scenarios where standard scoring rules are bypassed or clock management overrides optimal play-calling.",
+      "vec_6d": [
+        0.0,
+        0.33333,
+        0.0,
+        0.66667,
+        0.66667,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:1a04a74c1cd2528c:monro-kellie-fixed-volume",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "Traumatic Brain Injury - Recent Advances and Challenges | Monro-Kellie fixed-volume constraint with compliance-to-elastance transition | Decompensation: once compensatory reserve is exhausted, dP/dV diverges and small volume gains cause lar",
+      "vec_6d": [
+        0.0,
+        0.40825,
+        0.8165,
+        0.40825,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:33ed0da97fd7eb3c:cba_temporal_gate_function",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "nfl-transaction-timing-research | CBA Temporal Gate Function | Singularity occurs if CBA rules change mid-stream or league issues emergency waivers, bypassing standard temporal gates.",
+      "vec_6d": [
+        0.0,
+        0.8165,
+        0.40825,
+        0.0,
+        0.40825,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:41e74e9830d5d441:budget_constraint",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "ACTIONS-MINUTES-RECOVERY | Budget constraint enforcement | Discrete rounding singularity at zero.",
+      "vec_6d": [
+        0.0,
+        0.40825,
+        0.8165,
+        0.0,
+        0.0,
+        0.40825
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:51ace5503f838ef2:w0_relevance_threshold",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "rb-full-pool-scheme-2026-09-19 | Backfield Relevance Operator | Singularity occurs during acute injury cascades or massive mid-week coaching regime changes that instantaneously invalidate Week 1 volume priors.",
+      "vec_6d": [
+        0.0,
+        0.40825,
+        0.8165,
+        0.40825,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:5435366b83b66d41:navier_stokes_vorticity_and_pressure_poisson_engine",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "PHYSICS-BIOPHYSICS-AND-ONCOLOGY-21-REPO-TWO-PASS-INTEGRATION | Navier-Stokes Vorticity and Pressure Poisson Engine | At high Reynolds numbers, vortex shedding becomes chaotic; divergence must remain below threshold for stability.",
+      "vec_6d": [
+        0.40825,
+        0.8165,
+        0.0,
+        0.0,
+        0.40825,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:5a48c0146465eecd:pocket_constraint_index",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "2025 - PRSS A New Metric to Quantify Pocket Collapses in the National Football League - Hafiz et al | Pocket Constraint Index | When \\( \\text{PCI} > 0.7 \\)",
+      "vec_6d": [
+        0.8165,
+        0.40825,
+        0.40825,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:66b803963bde8107:red_zone_spatial_compression",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "nfl-urls | Red Zone Spatial Compression Metric | Breaks down if play-action artificially expands effective field area or during obvious run plays.",
+      "vec_6d": [
+        0.0,
+        0.8165,
+        0.40825,
+        0.40825,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:6cf703a464fece71:cors_infill",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1767-blackbox-parallel-optimization-expensive-functions | Constrained Optimization using Response Surfaces | When surrogate becomes unreliable due to insufficient sample density.",
+      "vec_6d": [
+        0.0,
+        0.8165,
+        0.40825,
+        0.40825,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:708c117c84cad66f:expected_points_added_impact",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "2023 - Optimal Strategy for Defensive Pressure in American Football Insights from an Expected Sack Model - Seth | Expected Points Added Impact | Fails when EPA model underestimates or overestimates scoring potential.",
+      "vec_6d": [
+        0.8165,
+        0.0,
+        0.40825,
+        0.0,
+        0.40825,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:788995fd976bdc16:frequency_dose_response",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "2026 - Intervention Effects of Recreational Football on Obesity-Related Health Outcomes A Systematic Review and Meta-Analysis - Zhang et al | Training Frequency Dose-Response Modulator | Invalid if frequency is not the true causal moderator",
+      "vec_6d": [
+        0.0,
+        0.40825,
+        0.40825,
+        0.8165,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:79e17070823c1f15:utility_constrained_allocation",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "1176-predictive-decision-synthesis-for-portfolios | Target-Return Utility Constraint | Breaks down in the presence of extreme fat tails or regime shifts where variance is no longer a reliable risk metric, causing severe underestimation of t",
+      "vec_6d": [
+        0.0,
+        0.40825,
+        0.8165,
+        0.40825,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:7b7de6606560e634:continuous_strain",
+      "source_type": "foundry_book_primitive",
+      "family": "qbSkillScript",
+      "text": "NFL_SPORTS_MIND_ARBITRAGE_SYNTHESIS | Continuous Strain | Non-linearity emerges when strain exceeds a critical threshold, causing rapid drop in QB completion probability.",
+      "vec_6d": [
+        0.0,
+        0.40825,
+        0.40825,
+        0.0,
+        0.8165,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:7e71389383a63759:bayesian_logistic_regression_w1_3",
+      "source_type": "foundry_book_primitive",
+      "family": "qbSkillScript",
+      "text": "0402-expected-hypothetical-completion-probability | Bayesian Logistic Regression | When data is insufficient to constrain posterior or when non-linearity dominates.",
+      "vec_6d": [
+        0.0,
+        0.40825,
+        0.40825,
+        0.0,
+        0.8165,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:b5834e734613e53b:cfm_lipschitz_condition",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "NAVIER_STOKES_MILLENNIUM_ASSESSMENT_AND_BKM_AUDIT | Constantin\u2013Fefferman\u2013Majda (CFM) regularity condition | Loss of H\u00f6lder continuity in vorticity direction",
+      "vec_6d": [
+        0.0,
+        0.40825,
+        0.0,
+        0.8165,
+        0.40825,
+        0.0
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:c5c338bb64ab132f:market_gravity_index",
+      "source_type": "foundry_book_primitive",
+      "family": "marketMicrostructure",
+      "text": "gse-deep-nfl-metrics-catalog-2026 | Market Gravity Index | MGI becomes undefined when dispersion exceeds a threshold, indicating a chaotic or manipulated market; it also fails when no meaningful movement exists.",
+      "vec_6d": [
+        0.40825,
+        0.0,
+        0.0,
+        0.40825,
+        0.0,
+        0.8165
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:e8b6dc1993f2c91e:optimal_control_pace",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "1568-optimal-strategy-trail-running-nutrition-fatigue | Optimal Control Pace | Bang-bang control with singular arcs when constraints are active; optimal pace switches between maximum force, singular velocity, and minimum energy.",
+      "vec_6d": [
+        0.0,
+        0.40825,
+        0.8165,
+        0.0,
+        0.0,
+        0.40825
+      ],
+      "authority_prior": 0.92
+    },
+    {
+      "doc_id": "foundry:0c444afcd300d1c3:p2",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "0c444afcd300d1c3 | BBB disruption increases with injury frequency; 'mild' phenotypes carry measurable vascular compromise | Clinical-label regime: injuries classified 'mild' by phenotype still produce measurable vascular compromise, so symp",
+      "vec_6d": [
+        0.28868,
+        0.0,
+        0.86603,
+        0.28868,
+        0.28868,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:2435ddad2e0ddd16:p6",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "2435ddad2e0ddd16 | Flow-metabolism coupling preservation invariant in neuro-sedation | The coupling invariant is violated by agents or doses that decouple supply from demand: propofol's hypotension can reduce CPP (and thus supply) despite l",
+      "vec_6d": [
+        0.28868,
+        0.28868,
+        0.86603,
+        0.28868,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0029a771b98e8346:sandbox_isolation_boundary",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "BUILD-033-churn-risk-account-tagging | Sandbox Isolation Boundary Condition | Violated if implicit dependencies pull production environment variables (.env*) into the sandbox during the initial documentation phase.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0056be0c45f8a518:kelly_bankroll_math",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "V6_HANDOFF | Quarter-Kelly Stake Cap | Stake caps at 3 units when confidence < 65% or edge < 50%.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0096d79a376f6863:prospect_detection",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "Evaluating Basketball Player Performance via Statistical Network Modeling | Low centrality + over-performance = under-utilized prospect | Low centrality can reflect injury or lack of opportunity rather than coaching error; the prospect sign",
+      "vec_6d": [
+        0.0,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:01c8a1db21c6994e:self_concordant_barriers_scrible",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "01c8a1db21c6994e | Self-concordant barriers and SCRIBLE: a barrier whose third derivative is controlled by its Hessian defines Dikin ellipsoids inside K that make exploration variance depend on local geometry, yielding near-optimal regret O",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:026d30fb53c6e2d0:marginal_structural_models",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "026d30fb53c6e2d0 | Marginal structural models parameterize the counterfactual mean itself and are fit by IP weighting a pseudo-population, with stabilized weights f(A)/f(A|L) keeping the weights near 1 | For continuous treatments the denomi",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:028b81e1cb18866d:conformal_predictive_portfolio",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "census-engine-list | Conformal Predictive Portfolio Selector | Breaks down under severe concept drift where historical nonconformity scores no longer bound the future error distribution.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:028b81e1cb18866d:multivariate_kelly_sizing",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "census-engine-list | Multivariate Kelly Stake Allocator | Highly sensitive to ill-conditioned covariance matrices; prone to extreme leverage if \\Sigma is poorly estimated or edges are overconfident.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:03116b62cb516b42:nonlinear_diffusion_pde",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1203-kelly-growth-optimal-with-stop-loss | Nonlinear Diffusion PDE | Asymptotically u(z,\u03b8) \u2192 1 - z for large \u03b8.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:047066f3e1dfe9fc:pressure_dynamics",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "game-projections | Pressure Dynamics | When defensive schemes shift due to injury or role changes.",
+      "vec_6d": [
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:06b82b7d30e086db:league_average_benchmark",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "benlinsey | League Average Benchmark | Invalid when league composition changes drastically.",
+      "vec_6d": [
+        0.0,
+        0.0,
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:07089dec6f73619e:p7",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "07089dec6f73619e | Lateral zone generalship: 20-yard policy partition of the field | The source's own veto: 'if a weak spot is found in the opponents' defense all generalship rules are modified and the weak spot is hammered' (PDF p. 236). T",
+      "vec_6d": [
+        0.0,
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0724179954e6f518:estimated_performance_rating",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0570-performance-rating-in-chess-tennis-and | Estimated Performance Rating | Defined for all values of m and n including edge cases m=0 and m=n.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:07ea5fec57b1f79f:m_gse_02",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "FULL-STACK-ORCHESTRATION-POST-SIM-PROJECTIONS-AND-200PT-DFS-2026-11-07 | Opponent Field Correlation | Breaks down under heavy-tailed distributions or extreme co-movement events, causing underestimation of tail-risk.",
+      "vec_6d": [
+        0.0,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:08518cdeed8dfc2d:expectation_propagation_sites",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "08518cdeed8dfc2d | Expectation propagation: approximate each exact likelihood factor by an unnormalized Gaussian site term; the product of sites with the GP prior gives a global Gaussian posterior (eqs 3.51, 3.53) | EP can fail to converge ",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:090cfc0da55b02cd:p1",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "090cfc0da55b02cd | Subject-specific r-squared band-selection statistic (Eq. 1) | Captures only first-moment (mean power) separation: bands whose classes differ in variance, phase, or higher-order structure but not mean power score r2 near z",
+      "vec_6d": [
+        0.0,
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0978503248037bef:bullmq_queue",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "CLAUDE | CLAUDE Operator 3 | Queue saturation at high \u03bb/\u03bc ratio causing infinite waiting times",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:09fe4b789dbfcaff:abstract_dynamic_programming",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "09fe4b789dbfcaff | Dynamic programming results rest on monotonicity and contraction of an abstract Bellman operator, so one theory covers discounted, shortest path, minimax, and game problems | Semicontractive problems, where only some poli",
+      "vec_6d": [
+        0.0,
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:09fe4b789dbfcaff:constrained_rollout_cost_improvement",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "09fe4b789dbfcaff | Constrained rollout under sequential improvement produces a feasible complete trajectory whose cost is no larger than the base heuristic trajectory | When sequential improvement fails, the feasible continuation set can be",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0a0c1702edb9e0b6:weighted_cumulative_exposure",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0623-nba-load-management-healthy-worker-survivor | Spline-Based Weighted Cumulative Exposure | When load history is non-stationary or irregularly sampled.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0a3784dbd7d1da20:mc_dropout_selective_prediction",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0716-knowing-when-defer-selective-prediction-knowledge | Monte Carlo Dropout Selective Prediction Gate | Fails when dropout masks induce pathological variance unrelated to true data uncertainty, or when the coverage constraint c approaches ",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0ba2d72d67b10860:deep_module_ratio",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "FORTY-FIVE-REPO-TWO-PASS-DEEP-DIVE-AND-GSI-GSE-INTEGRATION | Deep Module Ratio | When ratio falls below threshold, module is flagged as shallow wrapper.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0bd6863658525307:lambda_value_generation",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2021 - A Poisson Betting Model with a Kelly Criterion Element for European Soccer - Unknown Authors | Lambda Value Generation | When team statistics are stale or when unexpected external factors (injuries, weather) affect performance.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0c728cbb3cc3b844:temperature_extension",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1712-ball-bounce-restitution | Temperature Extension | Rubber hysteresis is temperature-dependent, causing \u03bb to vary with T, which the model oversimplifies.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0cf53b76efe80564:coordination_havoc",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "Recognizing and Analyzing Ball Screen Defense in the NBA | The screen creates momentary havoc requiring coordination | The multi-objective coordination under time pressure is the core difficulty; mismanagement yields an offensive advantage ",
+      "vec_6d": [
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0d2844859db2b9a4:constrained_least_squares_kernel",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "vmls_boyd_vandenberghe | Constrained Least Squares Optimizer | Fails if C has full row rank but conflicts with the minimum norm solution of Ax=b, rendering the feasible set empty.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0e4abd4507dac422:target_concentration_hhi",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "verified-claims | Herfindahl Target Concentration Operator | Singularities occur when $N \\to 1$ (single-target weeks) or during extreme roster churn/injury cascades violating the stationarity assumption.",
+      "vec_6d": [
+        0.0,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0ea2d46abed94d26:kinematic_strain_operator",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "MANIFEST | Instantaneous Brain-Strain Operator | Fails under extreme hyperelastic large-deformation regimes where linear strain tensors diverge from Green-Lagrange strains; singularity occurs at fluid-tissue interface boundaries.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:0f49aca9a1c93afd:state_space_dynamics",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "existing-research-map | Dynamic Team Strength Modeling | During high-variance periods such as playoffs or injury disruptions.",
+      "vec_6d": [
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:102f952911d380f9:p3",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "102f952911d380f9 | Bias/variance error decomposition against the optimal (Bayes) error rate | Negative avoidable bias signals over-memorization and redirects effort to variance reduction (footnote 8). When train and dev/test distributions d",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:102f952911d380f9:p4",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "102f952911d380f9 | Optimization Verification test: separating search failure from scoring-function failure | The test cannot run if Score is intractable to evaluate on arbitrary candidates, or if no correct/superior reference output exists.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:104ec73e31bad4aa:reach_set_optimization",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "openalex_W2267106939 | Reach Set Synthesis | Fails under extreme aerodynamic stall conditions or actuator saturation where the linearized dynamics no longer approximate the true nonlinear manifold.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:10c8c515e69e40f4:p5",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "10c8c515e69e40f4 | First-yard control theorem with wedge apex re-election (fault-tolerant point of attack) | The ceteris-paribus clause is load-bearing: first-yard control does not win when the secondary is strong and unblocked \u2014 the quick-",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:10c8c515e69e40f4:p6",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "10c8c515e69e40f4 | Shift two-sided uncertainty tradeoff (disorganize the defense, risk your own assignments) | Fails when the defense varies alignment down-to-down (the printed counter), when the offense's own men are cumbersome or rhythm-p",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:1231b155a1a5da7d:constrained_md_milp",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0834-constrained-max-drawdown-fast-robust | Constrained Max Drawdown Mixed Integer Linear Program | When cardinality or weight bounds are violated due to market volatility or data drift.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:1231b155a1a5da7d:worst_case_risk_measure",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "0834-constrained-max-drawdown-fast-robust | Worst Case Risk Measure | In presence of unseen market regimes or structural breaks in return dynamics.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:13afe72d1ef6bdbd:p1",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "13afe72d1ef6bdbd | Unitarity - conservation of total probability under quantum evolution | Open-system decoherence and gate noise (the NISQ regime, pp. 19, 42) make the register's evolution effectively non-unitary: probability leaks into en",
+      "vec_6d": [
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:148ffdaa308828a1:economic_control_plane",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "PHASE1_EXECUTION_ADDENDUM_2026-07-22 | Economic Control Plane | Unmerged cost-policy layer -> enforcement bypass vulnerability.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:14bdb5ca3bdb8a36:box_count",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "ftn-boxrate-scan | Average Defensive Box Count | No known breakdown regime identified",
+      "vec_6d": [
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:15452dc5f38ae30a:adjusted_defensive_impact",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "15452dc5f38ae30a | Adjusted Defensive Impact: a hand weighted composite adjusting sacks for availability, solo share, unblocked share, and rush rate | Weights are unvalidated against any outcome; the composite ranks T.J. Watt first for 2021",
+      "vec_6d": [
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:15452dc5f38ae30a:adjusted_yards_per_attempt",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "15452dc5f38ae30a | Adjusted yards per attempt: yardage corrected by fixed bonuses and penalties for touchdowns and interceptions | Fixed bonuses ignore field position and game state: a one yard touchdown pass and an 80 yard touchdown pass e",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:16783047e123822a:temporal_skill_gradient",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "p0092 | Temporal Skill Gradient | Breaks down during catastrophic roster turnover (e.g., entire graduating class departure) where the underlying skill manifold undergoes a discontinuous phase shift rather than a smooth gradient flow.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:19503cf6badb3552:reserve_fraction_invariant",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "Bprotocol-US11107049-ExchangingEvaluatingVirtualCurrency | Reserve Fraction Invariant Operator | Singularity occurs when S \\to 0 (division by zero in pricing) or if external shocks cause R < \\rho \\cdot S (insolvency/under-collateralization)",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:1976064dcffc0e42:p1",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1976064dcffc0e42 | Random Forests (bootstrap-aggregated regression ensemble; Breiman 2001) | Variance reduction fails when trees are strongly correlated or the label distribution is nonstationary; small sample (one 256-game season) limits f",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:1b9062b0f8c0970c:numerical_stability_clamp",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "repomix-seal-2026-10-27 | Kernel Exponent and Denominator Guard | If costs C_{ij} are excessively large relative to \\varepsilon, unclamped kernels vanish, creating singular rows/columns that halt the Sinkhorn updates entirely.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:1c3520504bb794df:affiliate_deeplink",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "monetization-map | Affiliate Deeplink | Collapse when $r_a = 0$ or when $P_g$ approaches certainty, eliminating variance.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:1c487fb416ec4bcb:abstention_rule",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1208-weighted-entropy-optimal-portfolios-kelly | Abstention Rule | When expected weighted gain is non-positive, optimal action is to abstain (D=0).",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:1c487fb416ec4bcb:state_dependent_kelly_fractions",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "1208-weighted-entropy-optimal-portfolios-kelly | State-Dependent Kelly Fractions | When no positive root exists for D(i), abstention (D=0) applies.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:1c80f6916dd11301:temporal_skill_gradient",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "p0224 | Temporal Skill Gradient | Gradient vanishes if practice intensity drops below a critical threshold, or diverges into injury risk if the accumulation rate \\alpha is pushed beyond physiological limits.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:1dbde4aa8a7442db:hook_setting_predicate",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "marketing-modes | Hook/Setting Validity Predicate | Schema evolution adds hook/setting parameters to previously invalid modes; context-dependent validity (e.g., avatar type gates hook availability)",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:1dd9a2e932bb4fd1:liquidity_pool_allocation",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "_OceanofPDF.com_The_Billion-Dollar_Bet_-_JF_Sachs | Liquidity Pool Allocation | Zero-sum constraint ensures efficient resource distribution across assets.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:1e89b47f24ee6a9f:homography_tracking",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "openalex_W2963656397 | Homography-Based Tracking | Failure when surface deformation or occlusion disrupts feature correspondence.",
+      "vec_6d": [
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:1f545e8b8789b0bd:metric_discrimination",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2016 Meta-Analytics | Between-Player Variance Operator | Breaks down in highly constrained roles (e.g., bench warmers) where sample sizes are too small to separate true skill from binomial noise.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:1f8c424b6cad5042:shootout_copula_dependence",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "MNF-BILLS-RAMS-2026-10-12 | Shootout Copula Dependence | Singularity occurs if the game state collapses into a low-variance running game or if massive turnovers truncate drive continuity.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:1f8f9aa3baf35f6e:expected_utility_axiom",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "1512.06808v1 | Expected Utility Operator | Violations occur under severe ambiguity (Ellsberg paradox), extreme wealth constraints violating linearity, or when cognitive biases disrupt rational expectation maximization.",
+      "vec_6d": [
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:203aeb745b1aed40:p3",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "203aeb745b1aed40 | Bayes Optimal Classifier and Bayes error floor (Theorem 8) | D is never known in practice \u2014 the plug-in classifier using an estimate D\u0302 inherits estimation error and can be beaten by simpler discriminative models; the 20%",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:2184701ff09f1ab5:permutation_null_distribution",
+      "source_type": "foundry_book_primitive",
+      "family": "restFatigue",
+      "text": "2024 - A Holistic Examination of Streakiness and Consistency in Major League Baseball - Feder | Permutational Null Distribution | Fails if underlying process exhibits strong auto-regressive properties independent of skill (e.g., pitcher fat",
+      "vec_6d": [
+        0.0,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:21fd4941b2c40ae8:homography_estimation",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "openalex_W4385440023 | Homography Estimation | Yaw > 60 degrees, pitch > 45 degrees, low texture regions, severe illumination mismatch",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:233aa5256fa3d948:compliance_constraint_manifold",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "BUILD-SITE-071-confused-user-rescue-panel | Compliance Constraint Manifold | Breaks down if the intersection of all constraint functions \\cap g_j is empty, meaning no valid UI state exists that satisfies both clarity and strict legal compli",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:23580ee99b891f9d:spatial_concentration_density",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "p0054 | Spatial Concentration Density Operator | Fails when defensive spread schemes force C(x) below the critical threshold required to overcome static friction of the defensive line.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:245420e2572b1a38:bilevel_hypermodel",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "245420e2572b1a38 | Model selection is bilevel optimization: a lower objective trains the parameters, an upper objective trains the hyperparameters, and the upper level itself needs regularization (Eq. 10.1) | Each added level multiplies dat",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:24cd6351f8d171a6:p2",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "24cd6351f8d171a6 | Error decomposition: Bias = Optimal error rate (unavoidable bias) + Avoidable bias; Variance = dev error - training error | When train/dev distributions differ, the two-term split confounds variance with data mismatch; ch",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:253463dff5d8efb4:fleaflicker_fantasy_league_score",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "fleaflicker.com | Fleaflicker Fantasy League Score Operator | Weights become negative or exceed sum-one constraint.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:2626db0663ce780e:xs-lexicographic-job-order",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "X (Twitter) \u2014 community, distribution and revenue (GSE internal strategy + build plan) | Strict priority order of channel jobs: witness > distribution > community > research | Lexicographic order can starve lower-ranked jobs when the top jo",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:29208744551d9771:deep_learning_regularization",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "openalex_W7155626004 | Deep Learning Regularization | Underfitting due to excessive regularization, overfitting due to insufficient constraints",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:29208744551d9771:spatial_temporal_convolution",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "openalex_W7155626004 | Spatial-Temporal Convolution | Non-stationary environments, sparse sensor coverage, adversarial noise corruption",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:2954b8471466430a:slivkins-32",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2954b8471466430a | bic_incentive_compatibility_constraint | If agents observe parts of the history themselves, have private types, or are not Bayesian, the BIC constraint as stated no longer describes their behavior; the literature review c",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:29898929b7f16244:passing_accuracy_correlation",
+      "source_type": "foundry_book_primitive",
+      "family": "coveragePersonnel",
+      "text": "Visual Tracking Speed and Soccer Performance Metrics | Passing Accuracy Correlation | Correlation approaches zero when VTS exceeds threshold of 0.7.",
+      "vec_6d": [
+        0.0,
+        0.0,
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:29a9a56fe196f2f2:p1",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "29a9a56fe196f2f2 | Pre-participation physician-clearance gate (Ames rule) | Fails when clearance is stale (condition drifts in-season: Waters' weak knee and Emmons' overtraining, PDF pp.53-54), when the examiner is not competent, or when in",
+      "vec_6d": [
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:29a9a56fe196f2f2:p4",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "29a9a56fe196f2f2 | Original Rugby on-side invariant (behind-the-ball predicate) | Enforcement decay: Tyler's diagnosis - 'The moment the \"snap-back\" was invented, the systematic violation of the off-side rules began, and the whole progeny o",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:29ce5bb105b29984:conformal_snap_timing_interval",
+      "source_type": "foundry_book_primitive",
+      "family": "pressure",
+      "text": "WEEK-8-MORNING-BRIEF-POST-UPGRADE | Adaptive Conformal Snap-Timing Variance | Fails under severe concept drift where defensive scheme adaptations invalidate the exchangeability assumption of the OL pressure priors.",
+      "vec_6d": [
+        0.57735,
+        0.0,
+        0.0,
+        0.57735,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:2a33549ac485fc86:kelly_stake_allocation",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "358563b778c5 | Constrained Kelly Stake Allocator | Breaks down if probability estimates are structurally biased (overconfident), leading to ruin despite fractional constraints; highly sensitive to edge estimation errors.",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.0,
+        0.57735
+      ],
+      "authority_prior": 0.88
+    },
+    {
+      "doc_id": "foundry:2c0ae9d774fc0d42:harris_structure_tensor",
+      "source_type": "foundry_book_primitive",
+      "family": "weather",
+      "text": "2c0ae9d774fc0d42 | Auto-correlation (structure tensor) matrix A from smoothed outer products of image gradients; its eigen-structure classifies corners, edges, and flat regions | The one-dimensional aperture problem: along a straight edge o",
+      "vec_6d": [
+        0.0,
+        0.57735,
+        0.57735,
+        0.0,
+        0.57735,
+        0.0
+      ],
+      "authority_prior": 0.88
+    }
+  ]
+}

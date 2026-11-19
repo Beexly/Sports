@@ -1,32 +1,39 @@
 #!/usr/bin/env python3
-"""
-test_pre_sim_full_layer_gate.py
+"""test_pre_sim_full_layer_gate.py.
+
 Pytest suite asserting that pre_sim_gate_passed is True, all 5 layers are 100% present,
 and any missing layer raises a hard RuntimeError blocking simulation execution.
 """
 
-import os
 import json
+import os
 import pathlib
+
 import pytest
 
 # Ensure clean PYTHONPATH
 os.environ["PYTHONPATH"] = ""
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
-GATE_PATH = REPO_ROOT / "data" / "engine" / "tnf_pre_sim_full_layer_verification_gate_2026_11_05.json"
+GATE_PATH = (
+    REPO_ROOT / "data" / "engine" / "tnf_pre_sim_full_layer_verification_gate_2026_11_05.json"
+)
 
 def test_gate_manifest_exists():
-    from scripts.ops.verify_and_wire_all_layers_before_sim import assert_all_layers_wired_before_simulation
+    from scripts.ops.verify_and_wire_all_layers_before_sim import (
+        assert_all_layers_wired_before_simulation,
+    )
     manifest = assert_all_layers_wired_before_simulation()
     assert manifest["pre_sim_gate_passed"] is True
     assert GATE_PATH.exists()
 
 def test_gate_json_content():
-    from scripts.ops.verify_and_wire_all_layers_before_sim import assert_all_layers_wired_before_simulation
+    from scripts.ops.verify_and_wire_all_layers_before_sim import (
+        assert_all_layers_wired_before_simulation,
+    )
     assert_all_layers_wired_before_simulation()
     assert GATE_PATH.exists(), "Gate output JSON file must exist"
-    with open(GATE_PATH, 'r', encoding='utf-8') as f:
+    with open(GATE_PATH, encoding='utf-8') as f:
         data = json.load(f)
     
     assert data.get("pre_sim_gate_passed") is True or data.get("gate_status") == "PASSED"

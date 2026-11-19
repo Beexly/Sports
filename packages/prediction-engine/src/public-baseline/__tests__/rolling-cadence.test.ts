@@ -5,6 +5,9 @@ import {
   getPostGameFilmReviewWindow,
   getTMinus48hSimWindow,
   ROLLING_GAME_WINDOW_CADENCE,
+  NOON_MASTER_LOCKS,
+  getNoonMasterLockWindow,
+  getTMinus90AdjustmentWindow,
 } from "../cadence.js";
 import {
   buildWeeklyCadenceSnapshot,
@@ -18,7 +21,70 @@ describe("Rolling Game-Window Cadence", () => {
     expect(cadenceIndex("v2.0")).toBe(1);
     expect(cadenceIndex("v2.5")).toBe(2);
     expect(cadenceIndex("v3.0")).toBe(3);
-    expect(cadenceIndex("v4.0")).toBe(4);
+    expect(cadenceIndex("v3.5")).toBe(4);
+    expect(cadenceIndex("v4.0")).toBe(5);
+  });
+
+  describe("Three-Noon Content-Ready Master Locks (ADR-0010)", () => {
+    it("has 3 official noon master locks with required outputs", () => {
+      expect(NOON_MASTER_LOCKS).toHaveLength(3);
+      expect(NOON_MASTER_LOCKS.map((m) => m.version)).toEqual(["v2.0", "v3.0", "v3.5"]);
+      expect(NOON_MASTER_LOCKS.every((m) => m.hour === 12 && m.minute === 0 && m.ctTime === "12:00")).toBe(true);
+      expect(NOON_MASTER_LOCKS.every((m) => m.outputs.includes("CONTENT_OS_PACKET"))).toBe(true);
+    });
+
+    it("resolves noon master lock window by slot", () => {
+      const tnf = getNoonMasterLockWindow("TNF");
+      expect(tnf.slot).toBe("TNF");
+      expect(tnf.version).toBe("v2.0");
+      expect(tnf.dow).toBe("Wed");
+
+      const sunEarly = getNoonMasterLockWindow("SUN_EARLY");
+      expect(sunEarly.slot).toBe("SUNDAY_ALL");
+      expect(sunEarly.version).toBe("v3.0");
+      expect(sunEarly.dow).toBe("Fri");
+
+      const sunLate = getNoonMasterLockWindow("SUN_LATE");
+      expect(sunLate.version).toBe("v3.0");
+
+      const snf = getNoonMasterLockWindow("SNF");
+      expect(snf.version).toBe("v3.0");
+
+      const mnf = getNoonMasterLockWindow("MNF");
+      expect(mnf.slot).toBe("MNF");
+      expect(mnf.version).toBe("v3.5");
+      expect(mnf.dow).toBe("Sun");
+    });
+
+    it("throws when resolving unknown slot", () => {
+      expect(() => getNoonMasterLockWindow("INVALID" as any)).toThrow(/No Noon Content Cutoff/);
+    });
+  });
+
+  describe("T-90m Pre-Kickoff Adjustment Windows (ADR-0010)", () => {
+    it("resolves static T-90m adjustment windows for all game slots", () => {
+      const tnf = getTMinus90AdjustmentWindow("TNF");
+      expect(tnf.gameSlot).toBe("TNF");
+      expect(tnf.version).toBe("v2.5");
+      expect(tnf.ctTime).toBe("17:45");
+
+      const sunEarly = getTMinus90AdjustmentWindow("SUN_EARLY");
+      expect(sunEarly.gameSlot).toBe("SUN_EARLY");
+      expect(sunEarly.version).toBe("v4.0");
+      expect(sunEarly.ctTime).toBe("10:30");
+
+      const mnf = getTMinus90AdjustmentWindow("MNF");
+      expect(mnf.gameSlot).toBe("MNF");
+      expect(mnf.version).toBe("v4.0");
+      expect(mnf.ctTime).toBe("17:45");
+    });
+
+    it("calculates exact dynamic T-90m adjustment ISO timestamp when kickoff is provided", () => {
+      const kickoff = "2026-11-15T18:00:00.000Z";
+      const adj = getTMinus90AdjustmentWindow("SUN_EARLY", kickoff);
+      expect(adj.kickoffUtc).toBe(kickoff);
+      expect(adj.adjustmentUtc).toBe("2026-11-15T16:30:00.000Z");
+    });
   });
 
   describe("getPostGameFilmReviewWindow", () => {

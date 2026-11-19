@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-"""
-Unit & Integration Tests for `open_access_cs_math_ml_and_agent_library_engine.py`
-=================================================================================
+"""Unit & Integration Tests for `open_access_cs_math_ml_and_agent_library_engine.py`.
+
 Verifies all 10 domains of the 420+ Open-Access CS, Algorithms, ML, Convex/Bayesian
 Mathematics, Compilers, Distributed Systems, Security, and Agent Engineering Mega-Library,
 the structured JSON manifest, the Markdown summary, and path hygiene (`check_charge_9`).
@@ -12,13 +11,10 @@ from __future__ import annotations
 import json
 import math
 import re
-from pathlib import Path
 
 import numpy as np
 import pytest
-
 from intelligence.corpus_registry import (
-    DOMAIN_CATALOGS,
     FOUNDATIONAL_ARXIV_PAPERS_CATALOG,
     MEGA_LIBRARY_10_DOMAINS,
     QUARANTINED_GITHUB_REPOS_CATALOG,
@@ -104,7 +100,10 @@ def test_mega_library_catalog_and_quarantine_governance(generated_manifest: dict
     assert MANIFEST_JSON_PATH.exists()
     assert SUMMARY_MD_PATH.exists()
     disk_manifest = json.loads(MANIFEST_JSON_PATH.read_text(encoding="utf-8"))
-    assert disk_manifest["catalog_summary"]["total_cataloged_items"] == summary["total_cataloged_items"]
+    assert (
+        disk_manifest["catalog_summary"]["total_cataloged_items"]
+        == summary["total_cataloged_items"]
+    )
     md_text = SUMMARY_MD_PATH.read_text(encoding="utf-8")
     assert "INGEST-AND-LEARN" in md_text
     assert "EbookFoundation/free-programming-books" in md_text
@@ -139,24 +138,32 @@ def test_domain_1_algorithms_knapsack_pomdp_and_submodular() -> None:
     assert res_mc_tight["total_value"] == pytest.approx(170.0)
 
     # Edge cases: zero capacity, infeasible group requirement, negative cost, negative group req
-    empty_res = solve_knapsack_and_multichoice_salary_cap(items, capacity=0, group_requirements={"G1": 1})
+    empty_res = solve_knapsack_and_multichoice_salary_cap(
+        items, capacity=0, group_requirements={"G1": 1}
+    )
     assert empty_res["feasible"] is False
     infeasible_res = solve_knapsack_and_multichoice_salary_cap(
         items, capacity=100, group_requirements={"G1": 5}
     )
     assert infeasible_res["feasible"] is False
     with pytest.raises(ValueError):
-        solve_knapsack_and_multichoice_salary_cap([{"id": "X", "cost": -5, "value": 10}], capacity=20)
+        solve_knapsack_and_multichoice_salary_cap(
+            [{"id": "X", "cost": -5, "value": 10}], capacity=20
+        )
     with pytest.raises(ValueError):
-        solve_knapsack_and_multichoice_salary_cap(items, capacity=50, group_requirements={"G1": -1})
+        solve_knapsack_and_multichoice_salary_cap(
+            items, capacity=50, group_requirements={"G1": -1}
+        )
 
-    # Non-divisible item costs with cost_scale > 1 must preserve exact optimality via GCD scaling
+    # Non-divisible item costs with cost_scale > 1 preserve exact optimality via GCD scaling
     non_div_items = [
         {"id": "A", "cost": 48, "value": 50.0},
         {"id": "B", "cost": 48, "value": 50.0},
         {"id": "C", "cost": 4, "value": 10.0},
     ]
-    res_non_div = solve_knapsack_and_multichoice_salary_cap(non_div_items, capacity=100, cost_scale=10)
+    res_non_div = solve_knapsack_and_multichoice_salary_cap(
+        non_div_items, capacity=100, cost_scale=10
+    )
     assert res_non_div["feasible"] is True
     assert res_non_div["total_cost"] == 100
     assert res_non_div["total_value"] == pytest.approx(110.0)
@@ -168,7 +175,9 @@ def test_domain_1_algorithms_knapsack_pomdp_and_submodular() -> None:
         {"id": "P2", "cost": 1_250_002, "value": 48.0},
         {"id": "P3", "cost": 2_499_997, "value": 90.0},
     ]
-    res_bnb = solve_knapsack_and_multichoice_salary_cap(large_cap_items, capacity=3_750_000, cost_scale=1)
+    res_bnb = solve_knapsack_and_multichoice_salary_cap(
+        large_cap_items, capacity=3_750_000, cost_scale=1
+    )
     assert res_bnb["algorithm"] == "Martello-Toth Exact Branch-and-Bound"
     assert res_bnb["total_cost"] <= 3_750_000
     assert res_bnb["total_value"] == pytest.approx(138.0)  # P2(48) + P3(90) at cost 3,749,999
@@ -227,10 +236,18 @@ def test_domain_1_algorithms_knapsack_pomdp_and_submodular() -> None:
     )
     O_uninformative = np.full((3, 2, 2), 0.5, dtype=np.float64)
     pomdp_inf = pomdp_mdp_bellman_backup(
-        T_tiger, R_tiger, discount_gamma=0.95, observation_tensor=O_informative, belief_state=np.array([0.5, 0.5])
+        T_tiger,
+        R_tiger,
+        discount_gamma=0.95,
+        observation_tensor=O_informative,
+        belief_state=np.array([0.5, 0.5]),
     )
     pomdp_uninf = pomdp_mdp_bellman_backup(
-        T_tiger, R_tiger, discount_gamma=0.95, observation_tensor=O_uninformative, belief_state=np.array([0.5, 0.5])
+        T_tiger,
+        R_tiger,
+        discount_gamma=0.95,
+        observation_tensor=O_uninformative,
+        belief_state=np.array([0.5, 0.5]),
     )
     assert pomdp_inf["pomdp_best_action"] == 0
     assert pomdp_inf["pomdp_belief_value"] > pomdp_uninf["pomdp_belief_value"]
@@ -253,7 +270,9 @@ def test_domain_1_algorithms_knapsack_pomdp_and_submodular() -> None:
     assert len(submod["selected_elements"]) == 3
     assert submod["objective_value"] == pytest.approx(6.0)
     assert submod["diminishing_returns_verified"] is True
-    assert submod["theoretical_approximation_ratio"] == pytest.approx(1.0 - math.exp(-1.0), abs=1e-5)
+    assert submod["theoretical_approximation_ratio"] == pytest.approx(
+        1.0 - math.exp(-1.0), abs=1e-5
+    )
     assert submod["finite_k_guarantee"] >= submod["theoretical_approximation_ratio"]
 
 
@@ -285,7 +304,9 @@ def test_domain_2_ml_gpml_mackay_and_td_lambda_gae() -> None:
             X_test=[[0.5]],
         )
     with pytest.raises(ValueError):
-        gaussian_process_kernel_regression(X_train=X_tr, y_train=y_tr, X_test=[[1.0]], kernel_type="bogus")
+        gaussian_process_kernel_regression(
+            X_train=X_tr, y_train=y_tr, X_test=[[1.0]], kernel_type="bogus"
+        )
 
     # 2. MacKay Type-II ML Evidence Approximation
     xs = np.linspace(0.0, 4.0, 12)
@@ -324,7 +345,9 @@ def test_domain_3_chinchilla_dpo_and_react_validator() -> None:
     # 1. Chinchilla/Kaplan compute-optimal allocation
     flops = 6e20
     alloc = chinchilla_kaplan_compute_optimal_allocation(compute_flops=flops)
-    assert 6.0 * alloc["optimal_parameters_N"] * alloc["optimal_tokens_D"] == pytest.approx(flops, rel=1e-6)
+    assert 6.0 * alloc["optimal_parameters_N"] * alloc["optimal_tokens_D"] == pytest.approx(
+        flops, rel=1e-6
+    )
     assert alloc["predicted_chinchilla_loss"] < alloc["predicted_kaplan_loss_at_same_compute"]
     assert alloc["chinchilla_loss_reduction_vs_kaplan"] > 0.0
     with pytest.raises(ValueError):
@@ -367,16 +390,30 @@ def test_domain_3_chinchilla_dpo_and_react_validator() -> None:
             "action_input": "24mph wind triggers deep-pass penalty.",
         },
     ]
-    v_ok = validate_react_thought_action_observation_loop(valid_trace, allowed_tools=["fetch_weather"])
+    v_ok = validate_react_thought_action_observation_loop(
+        valid_trace, allowed_tools=["fetch_weather"]
+    )
     assert v_ok["valid"] is True
     assert v_ok["grounded_in_observations"] is True
 
     # Invalid trace with duplicate loop and disallowed tool
     bad_trace = [
-        {"thought": "Try hack", "action": "shell_exec", "action_input": "rm", "observation": "denied"},
-        {"thought": "Try hack", "action": "shell_exec", "action_input": "rm", "observation": "denied"},
+        {
+            "thought": "Try hack",
+            "action": "shell_exec",
+            "action_input": "rm",
+            "observation": "denied",
+        },
+        {
+            "thought": "Try hack",
+            "action": "shell_exec",
+            "action_input": "rm",
+            "observation": "denied",
+        },
     ]
-    v_bad = validate_react_thought_action_observation_loop(bad_trace, allowed_tools=["fetch_weather"])
+    v_bad = validate_react_thought_action_observation_loop(
+        bad_trace, allowed_tools=["fetch_weather"]
+    )
     assert v_bad["valid"] is False
     assert any("DISALLOWED_TOOL" in msg for msg in v_bad["violations"])
     assert any("DUPLICATE_CONSECUTIVE_ACTION" in msg for msg in v_bad["violations"])
@@ -406,10 +443,14 @@ def test_domain_4_agent_harness_pass_at_k_and_context_compaction() -> None:
     assert eval_res["capability_vs_reliability_gap"]["gap@4"] > 0.7
 
     # Edge cases: c = 0 and c = n
-    zero_res = evaluate_agent_harness_pass_at_k_and_pass_hat_k(n_trials=5, c_successes=0, k_values=(1, 3))
+    zero_res = evaluate_agent_harness_pass_at_k_and_pass_hat_k(
+        n_trials=5, c_successes=0, k_values=(1, 3)
+    )
     assert zero_res["pass_at_k"]["pass@3"] == 0.0
     assert zero_res["pass_hat_k"]["pass^3"] == 0.0
-    full_res = evaluate_agent_harness_pass_at_k_and_pass_hat_k(n_trials=5, c_successes=5, k_values=(1, 3))
+    full_res = evaluate_agent_harness_pass_at_k_and_pass_hat_k(
+        n_trials=5, c_successes=5, k_values=(1, 3)
+    )
     assert full_res["pass_at_k"]["pass@3"] == 1.0
     assert full_res["pass_hat_k"]["pass^3"] == 1.0
 
@@ -614,7 +655,7 @@ def test_domain_10_isolation_anomaly_and_kalshi_sportsbook_arbitrage() -> None:
     assert res_no_arb["quarantine_policy_enforced"] is True
 
     # Case 2: Dislocated cross-market pricing with synthetic Dutch-book arbitrage
-    # Kalshi YES ask = 42c (eff ~43.7c), Sportsbook Away = +115 (implied = 46.51%) -> total cost ~ 0.902 < 1.0
+    # Kalshi YES ask = 42c (~43.7c eff), Sportsbook Away = +115 (46.51%) -> cost ~ 0.902 < 1.0
     res_arb = detect_isolation_anomaly_and_kalshi_sportsbook_arbitrage(
         feature_observations=obs,
         kalshi_yes_ask_cents=42.0,
@@ -632,7 +673,9 @@ def test_all_10_domain_suites_and_zero_forbidden_host_paths() -> None:
     assert len(suites) == 10
 
     forbidden_re = re.compile(
-        r"(?:C:\\Users\\Garrett|C:/Users/Garrett|C:\\c\\wt-week8-forensic|C:/c/wt-week8-forensic|G:\\My Drive|G:/My Drive)",
+        r"(?:C:\\Users\\Garrett|C:/Users/Garrett"
+        r"|C:\\c\\wt-week8-forensic|C:/c/wt-week8-forensic"
+        r"|G:\\My Drive|G:/My Drive)",
         re.IGNORECASE,
     )
     registry_dir = REPO_ROOT / "intelligence" / "corpus_registry"

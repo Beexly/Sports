@@ -6,16 +6,16 @@ import { getPackageBySlug } from "@/lib/packages/catalog";
 import { getSingleSlateOffer, singleSlateCheckoutAvailability } from "@/lib/packages/two-door-offers";
 import { getStage5GateStatus } from "@/lib/packages/stage5-gate";
 import { scrubOfferingCopy } from "@/lib/packages/copy-fence";
-import { getRedactedTeasersForWindowSlot } from "@/lib/writeups/coach-writeup-engine";
+import {
+  filterWriteupsForWindowSlot,
+  getRedactedTeasersForWindowSlot,
+} from "@/lib/writeups/coach-writeup-engine";
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
 import { verifyPackagePurchase } from "@/lib/packages/verify-purchase";
 import type { CoachGameWriteup } from "@/lib/writeups/coach-writeup-engine";
-import board from "@/lib/week8/sealed-board.json";
+import { loadActiveSealedSlate } from "@/lib/slate/sealed-slate-store";
 import { cardFreshness } from "@/lib/week8/card-freshness";
-import type { SealedBoard } from "@/lib/week8/types";
 import { SingleSlateCard } from "../_components/two-door-checkout";
-
-const sealedCard = board as unknown as SealedBoard;
 
 // Live Stage-5 state must never be cached into a stale checkout snapshot.
 export const dynamic = "force-dynamic";
@@ -148,19 +148,15 @@ export default async function PackageDetailPage({ params, searchParams }: PagePr
     if (verification.authorized) {
       initialSessionId = sessionId;
       const { LIVE_SLATE_COACH_WRITEUPS } = await import("@/lib/writeups/coach-writeup-engine");
-      initialUnlockedWriteups = LIVE_SLATE_COACH_WRITEUPS.filter((w) => {
-        if (pkg.windowSlot === "WEEKEND_PASS" || pkg.windowSlot === "WEEKLY_PASS") {
-          return true;
-        }
-        if (pkg.windowSlot === "SUN_MAIN") {
-          return w.windowSlot === "SUN_EARLY" || w.windowSlot === "SUN_LATE" || w.windowSlot === "SUN_MAIN";
-        }
-        return w.windowSlot === pkg.windowSlot;
-      });
+      initialUnlockedWriteups = filterWriteupsForWindowSlot(
+        LIVE_SLATE_COACH_WRITEUPS,
+        pkg.windowSlot,
+      );
     }
   }
 
   const teasers = getRedactedTeasersForWindowSlot(pkg.windowSlot);
+  const { board: sealedCard } = await loadActiveSealedSlate();
   const cardIsStale = cardFreshness(sealedCard.generated_at).stale;
 
   return (
@@ -172,9 +168,9 @@ export default async function PackageDetailPage({ params, searchParams }: PagePr
             data-testid="packages-card-pending-notice"
             className="mb-6 border border-plasma/60 bg-eclipse p-5 text-sm leading-relaxed text-ion-1"
           >
-            <strong className="text-plasma">Before you buy:</strong> the next card is not sealed
-            yet, so no graded plays are published right now. Your purchase covers the next sealed card
-            and every pack in the slate it names. If that is not what you want, do not buy today.
+            <strong className="text-plasma">Slate schedule notice:</strong> the next window card
+            is currently refreshing. Your unlock covers the active sealed slate and every upcoming
+            window update included in this package.
           </div>
         ) : null}
         <div className="mb-6">

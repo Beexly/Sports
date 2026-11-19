@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 import math
-from pathlib import Path
 import re
+from pathlib import Path
 
 from intelligence.coaching.sovereign_openai_eyi_execution_engine import (
     evaluate_19rule_doctrine_and_1116_textbook_corpus,
     evaluate_doctrine_symphony_proof_of_work,
     evaluate_navier_stokes_32seed_hou_li_phase_entropy,
-    evaluate_sovereign_openai_eyi_execution_dossier,
     evaluate_universal_6domain_phase_transition_blueprint,
     evaluate_virtual_icp_and_sulcal_waveguide_step,
     evaluate_zone1_coach_mind_v2_and_7_gse_metrics,
@@ -147,7 +146,12 @@ def test_simulator_and_ts_wiring_plus_20m_blueprint_and_eyi_arsenal() -> None:
     assert "sovereign_openai_eyi_execution" in priors
     sov = priors["sovereign_openai_eyi_execution"]
     assert sov["all_sovereign_kernels_active"] is True
-    assert sov["eyi_viral_video_and_20m_capital_arsenal"]["non_dilutive_20m_patent_and_ota_portfolio_total_usd"] == 20000000
+    assert (
+        sov["eyi_viral_video_and_20m_capital_arsenal"][
+            "non_dilutive_20m_patent_and_ota_portfolio_total_usd"
+        ]
+        == 20000000
+    )
 
     cond = priors["trajectory_conditioners"]
     assert "sovereign_pocket_collapse_mult" in cond
@@ -159,15 +163,39 @@ def test_simulator_and_ts_wiring_plus_20m_blueprint_and_eyi_arsenal() -> None:
 
     vid_pkt = build_week9_video_social_dfs_and_revenue_packet()
     assert "eyi_viral_video_arsenal_spec" in vid_pkt
-    assert vid_pkt["eyi_viral_video_arsenal_spec"]["pillow_ffmpeg_build_video_pipeline"]["resolution"] == "1080x1920"
+    assert (
+        vid_pkt["eyi_viral_video_arsenal_spec"]["pillow_ffmpeg_build_video_pipeline"]["resolution"]
+        == "1080x1920"
+    )
 
     files_to_check = [
         REPO_ROOT / "intelligence" / "coaching" / "sovereign_openai_eyi_execution_engine.py",
         REPO_ROOT / "scripts" / "ops" / "gse_coach_mind_simulator.py",
-        REPO_ROOT / "packages" / "prediction-engine" / "src" / "engine" / "universal-nfl-metric-and-situational-engine.ts",
+        (
+            REPO_ROOT
+            / "packages"
+            / "prediction-engine"
+            / "src"
+            / "engine"
+            / "universal-nfl-metric-and-situational-engine.ts"
+        ),
         REPO_ROOT / "intelligence" / "ops" / "gse_video_social_and_revenue_growth_engine.py",
-        REPO_ROOT / "docs" / "dfs" / "research" / "2026-11-06" / "WEEK9_PLAYS_DFS_VIDEO_AND_REVENUE_EXECUTION_PACKET.md",
-        REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06" / "SOVEREIGN_20M_PATENT_AND_FEDERAL_OTA_EXECUTION_BLUEPRINT.md",
+        (
+            REPO_ROOT
+            / "docs"
+            / "dfs"
+            / "research"
+            / "2026-11-06"
+            / "WEEK9_PLAYS_DFS_VIDEO_AND_REVENUE_EXECUTION_PACKET.md"
+        ),
+        (
+            REPO_ROOT
+            / "docs"
+            / "engine"
+            / "research"
+            / "2026-11-06"
+            / "SOVEREIGN_20M_PATENT_AND_FEDERAL_OTA_EXECUTION_BLUEPRINT.md"
+        ),
     ]
     for path in files_to_check:
         assert path.is_file(), f"Missing {path}"

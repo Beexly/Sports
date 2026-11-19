@@ -1,0 +1,720 @@
+{
+  "book_id": "e7f633b9d9a36320",
+  "source_status": "COMPLETE",
+  "source_note": "O'Neil ME, Carlson KF, Storzbach D, Brenner LA, Freeman M, Quinones A, Motu'apuaka M, Ensley M, Kansagara D. Complications of Mild Traumatic Brain Injury in Veterans and Military Personnel: A Systematic Review. VA Evidence-based Synthesis Program (ESP) report, VA-ESP Project #05-225, Portland VA Medical Center ESP Center, prepared for the Department of Veterans Affairs, Veterans Health Administration; dated January 2013 (citation line gives 2012). Local file is the report PDF, 622588 bytes, sha256 over (str(size) + file bytes) = e7f633b9d9a3632011768fe807a2c0c333f47994f75f787591bb79f5a77d2d6a, book_id e7f633b9d9a36320. Extracted text is clean and complete for the report body (preface through references, report pages i to 54, 23349 words); the executive summary and appendices A to G listed in the table of contents are not present in this PDF copy, which does not affect the findings sections. Catalog title matches the document title; no correction needed. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "mtbi_population_prevalence",
+      "name": "Twelve to 23 percent of returning OEF/OIF/OND service members experienced a deployment TBI, the majority classifiable as mild",
+      "verbatim_quote": "Twelve to 23 percent of service members returning from Operations Enduring Freedom, Iraqi Freedom, and New Dawn (OEF/OIF/OND) experienced a TBI while deployed.",
+      "page": "Introduction, report p.8 (text lines ~240-244)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "VA/DoD criteria are the operative severity classification",
+        "Documented TBI events approximate true incidence in the returning population"
+      ],
+      "breakdown_regime": "Applies to documented deployment-related events in OEF/OIF/OND cohorts; undocumented or unreported injuries fall outside the estimate, and civilian mechanisms are not covered",
+      "domain": "tbi_epidemiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A base-rate anchor for any head-impact exposure model: before reasoning about an individual case, the engine should carry the population prior that deployment-era head injury was common and mostly mild, so single mild events are weak evidence of lasting damage on their own",
+        "source_operator": "mtbi_population_prevalence",
+        "telemetry": "Exposure counts and severity mix in any roster or cohort the engine ingests"
+      }
+    },
+    {
+      "primitive_id": "persistent_symptom_minority",
+      "name": "Most people recover within three months of mTBI; an estimated 10 to 20 percent report post-concussive symptoms beyond that window",
+      "verbatim_quote": "others estimate that 10 to 20 percent of individuals continue to experience post-concussive symptoms (e.g., headaches, dizziness, balance problems) beyond this time fame.",
+      "page": "Introduction, report p.8 (text lines ~246-249)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The three-month mark is the reference recovery horizon",
+        "The estimate may run higher where multiple TBI events and comorbid mental health conditions are frequent"
+      ],
+      "breakdown_regime": "The 10 to 20 percent band is a literature estimate, not a measurement from this review's included studies; combat cohorts with repeat injury may exceed it",
+      "domain": "tbi_prognosis",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A recovery prior with a named exception class: the engine's health layer should default to resolution for a single mild event and reserve persistent-effect weight for the minority pattern, which is identified by repeat events and comorbidity rather than by the mild label itself",
+        "source_operator": "persistent_symptom_minority",
+        "telemetry": "Days since injury, count of prior head-impact events, active comorbidity flags"
+      }
+    },
+    {
+      "primitive_id": "severity_classification_rule",
+      "name": "TBI severity is classified by the injury event and altered consciousness at the time, never by the severity of residual symptoms",
+      "verbatim_quote": "Severity of residual symptoms reported or observed should not be used to classify TBI severity.",
+      "page": "Methods, Study Selection, report p.10 (text lines ~336-338)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A structural injury or physiological disruption of brain function (alteration or loss of consciousness, post-traumatic amnesia) defines the event",
+        "The VA/DoD Clinical Practice Guideline definition is the reference standard"
+      ],
+      "breakdown_regime": "Breaks when event data are missing and only symptom reports survive; retrospective self-report of the event is itself recall-prone",
+      "domain": "clinical_classification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A labeling rule for the engine's health data: severity labels must be derived from event features (mechanism, consciousness change, amnesia) and never back-filled from later symptom burden, because symptom burden is contaminated by comorbidity and context",
+        "source_operator": "severity_classification_rule",
+        "telemetry": "Event-level injury records: mechanism, LOC/AOC presence and duration, PTA duration, imaging result"
+      }
+    },
+    {
+      "primitive_id": "minimum_sample_threshold",
+      "name": "Evidence inclusion required a minimum of 30 mTBI cases per study to reach an acceptable level of precision and confidence",
+      "verbatim_quote": "Sample size: All included studies must include a minimum of 30 mTBI cases, so that a better level of precision and confidence in the results can be achieved.",
+      "page": "Methods, Study Selection, report p.10 (text lines ~363-366)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Below roughly 30 cases, sampling noise dominates the effect estimates this review was willing to synthesize",
+        "Precision, not significance, is the stated reason for the floor"
+      ],
+      "breakdown_regime": "A floor of 30 is still small for subgroup or moderator claims; the review itself warns that single unreplicated studies cannot carry conclusions",
+      "domain": "evidence_synthesis_method",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A sample-size gate the engine can reuse whenever a signal is computed from a case series: estimates built on fewer than a floor number of cases are labeled low-precision and barred from driving conclusions until the count grows",
+        "source_operator": "minimum_sample_threshold",
+        "telemetry": "Case counts behind every computed rate or split the engine publishes internally"
+      }
+    },
+    {
+      "primitive_id": "newcastle_ottawa_quality_gate",
+      "name": "Observational-study quality was scored with Newcastle-Ottawa based criteria adapted to this literature, including blinding, confounding adjustment, and attrition",
+      "verbatim_quote": "we assessed quality using criteria based on the Newcastle-Ottawa quality assessment tools for observational studies7",
+      "page": "Methods, Quality Assessment, report p.11 (text lines ~378-390)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Quality in observational work is condition-specific, so generic scales must be adapted to the literature at hand",
+        "Accurate case definition, consecutive sampling, validated tools, assessor blinding, and confounder adjustment are the operative bias indicators here"
+      ],
+      "breakdown_regime": "Checklist scoring cannot rescue a body of evidence in which every study fails the same items; here all studies were high risk of bias, so no differential weighting was possible",
+      "domain": "evidence_synthesis_method",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A provenance scorecard template: any external study or dataset the engine absorbs gets rated on definition accuracy, sampling, measurement validity, blinding or independence, and confounder handling before its numbers are allowed to move a belief",
+        "source_operator": "newcastle_ottawa_quality_gate",
+        "telemetry": "Study metadata: design, sampling frame, instrument validity, adjustment set, attrition"
+      }
+    },
+    {
+      "primitive_id": "grade_evidence_ladder",
+      "name": "GRADE rates a body of evidence High, Moderate, Low, or Very Low by how likely further research is to change confidence in the effect estimate",
+      "verbatim_quote": "High = Further research is very unlikely to change our confidence on the estimate of effect.",
+      "page": "Methods, Rating the Body of Evidence, report p.12 (text lines ~420-432)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Confidence is a property of the whole body of evidence for an outcome, not of any single study",
+        "Every outcome in this review ultimately graded low because the underlying studies were uniformly high risk of bias"
+      ],
+      "breakdown_regime": "The ladder describes confidence, not effect size; a low grade means the estimate may change, not that the effect is absent",
+      "domain": "evidence_synthesis_method",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A confidence vocabulary the engine can attach to every absorbed claim: each signal carries a grade expressing how much future data could move it, and low-grade signals are presented as provisional rather than as facts",
+        "source_operator": "grade_evidence_ladder",
+        "telemetry": "Per-claim evidence grade, number and quality of supporting sources, replication status"
+      }
+    },
+    {
+      "primitive_id": "qualitative_synthesis_no_meta_analysis",
+      "name": "Heterogeneity of outcomes and study characteristics forced qualitative synthesis; studies were not combined quantitatively",
+      "verbatim_quote": "We did not combine the studies in a quantitative manner via meta-analysis because of the heterogeneity of outcomes and study characteristics.",
+      "page": "Methods, Data Synthesis, report p.12 (text lines ~403-408)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Pooling is only legitimate when outcomes and instruments are commensurable",
+        "Narrative comparison of characteristics, methods, and findings is the fallback when they are not"
+      ],
+      "breakdown_regime": "Qualitative synthesis cannot recover statistical power; real effects detectable only in aggregate stay invisible, a limitation the report states explicitly",
+      "domain": "evidence_synthesis_method",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A pooling veto for the engine: when incoming measures use incompatible instruments or definitions, the engine must compare them narratively and flag non-commensurability instead of averaging them into a false precision number",
+        "source_operator": "qualitative_synthesis_no_meta_analysis",
+        "telemetry": "Instrument and definition metadata for every measure considered for aggregation"
+      }
+    },
+    {
+      "primitive_id": "universal_high_risk_of_bias",
+      "name": "Every included study was rated high risk of bias, so the overall strength of evidence is low for all outcomes",
+      "verbatim_quote": "all of the included studies were rated as having high risk of bias for the following reasons",
+      "page": "Results, Methodologic Considerations, report p.13 (text lines ~449-460)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The recurring failures were inadequate accounting for time since injury, missing assessor blinding, unreported sampling procedures, and selective reporting risk",
+        "With no quality gradient, studies were not differentially weighted in synthesis"
+      ],
+      "breakdown_regime": "A uniformly weak base caps every downstream conclusion; the report repeats that conclusions are uncertain and likely to change with better research",
+      "domain": "evidence_appraisal",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A ceiling rule: the engine's confidence in any conclusion drawn from a corpus cannot exceed the quality of that corpus, and when the corpus is uniformly weak the correct output is an uncertainty statement, not a point claim",
+        "source_operator": "universal_high_risk_of_bias",
+        "telemetry": "Corpus-level quality distribution behind each synthesized claim"
+      }
+    },
+    {
+      "primitive_id": "literature_flow_funnel",
+      "name": "The search funnel ran from 2,664 screened titles and abstracts plus 4 manual finds to 354 full texts and 31 included primary studies",
+      "verbatim_quote": "We identified 31 primary studies that addressed the key questions.",
+      "page": "Results, Literature Flow, report p.13 (text lines ~462-470)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The dominant exclusion reason was failure to distinguish mild from moderate or severe TBI (131 full texts), followed by no primary data (73) and failure to meet the VA/DoD mTBI definition (60)",
+        "All 31 studies were U.S. Veteran or active-duty military samples"
+      ],
+      "breakdown_regime": "The funnel's strictness is also its narrowness: the report warns its window on mTBI is narrow and not comprehensive, and points readers to civilian reviews",
+      "domain": "evidence_synthesis_method",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An audit-trail pattern: every corpus the engine builds should keep its own flow counts (identified, screened, excluded by reason, included) so that the selectivity behind any conclusion is itself inspectable",
+        "source_operator": "literature_flow_funnel",
+        "telemetry": "Ingestion pipeline counts and exclusion-reason tallies per corpus build"
+      }
+    },
+    {
+      "primitive_id": "headline_null_result",
+      "name": "Headline finding: symptoms were frequently reported after mTBI, but there was little evidence they were more common than in comparable people without mTBI",
+      "verbatim_quote": "In general, we found that, though cognitive, physical, and mental health symptoms were frequently reported by Veterans/military members following mTBI, there was little evidence that symptoms were more common in those with mTBI than those without mTBI.",
+      "page": "Results, Summary of Findings, report p.23 (text lines ~917-924)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Comparison groups were similar Veteran or military populations without mTBI",
+        "The null is stated against a weak evidence base: inconsistent findings, methodologic shortcomings, and varied outcome measurement"
+      ],
+      "breakdown_regime": "Absence of demonstrated difference in low-quality studies is not proof of no effect; the report cautions that conclusions are uncertain and likely to change",
+      "domain": "tbi_outcomes",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The central calibration fact for the health layer: symptom presence after a mild head injury is, by itself, near-zero evidence that the injury caused the symptom, because the same symptoms are common in comparable uninjured populations; attribution requires a comparison, not a narrative",
+        "source_operator": "headline_null_result",
+        "telemetry": "Symptom rates in exposed and matched unexposed groups, not exposed-group rates alone"
+      }
+    },
+    {
+      "primitive_id": "cognitive_evidence_base",
+      "name": "Seventeen studies reported cognitive outcomes; few found an association between mTBI and cognitive deficits, and the strength of evidence is very low",
+      "verbatim_quote": "We found 17 studies reporting cognitive outcomes for those with mTBI. Overall, few studies found an association between mTBI and cognitive deficits.",
+      "page": "Results, Summary of Cognitive Functioning Results, report p.23 (text lines ~930-936)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Where deficits appeared (visuospatial ability, attention and concentration, composite scores), findings were inconsistent across studies",
+        "Nearly all subdomain scores fell within normal limits at group level"
+      ],
+      "breakdown_regime": "Very low strength: poor and incomplete reporting, missing time-since-injury data, unblinded and single-center designs dominate the base",
+      "domain": "neurocognition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sets the engine's prior for cognitive sequelae of a single mild event to small and inconsistent, so cognitive-decline reasoning needs case-specific evidence (timing, comorbidity, evaluation context) rather than the mTBI label alone",
+        "source_operator": "cognitive_evidence_base",
+        "telemetry": "Domain-level test results with time since injury and comparison-group status"
+      }
+    },
+    {
+      "primitive_id": "mean_scores_hide_impairment",
+      "name": "Studies reported group mean scores rather than proportions impaired, making prevalence of cognitive impairment impossible to estimate and masking impaired subgroups",
+      "verbatim_quote": "The studies reporting cognitive outcomes reported mean scores rather than proportions of individuals with impaired scores, making estimates of prevalence of cognitive impairment impossible.",
+      "page": "Results, Summary of Cognitive Functioning Results, report p.23 (text lines ~938-942)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A group mean inside normal limits is compatible with a minority of individuals scoring in the impaired range",
+        "Standardized scores can approximate impairment only against cutoffs, which the studies rarely reported"
+      ],
+      "breakdown_regime": "Any conclusion drawn from means alone inherits this blind spot; the report repeats the warning in the notes to its summary tables",
+      "domain": "measurement_method",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A reporting rule for the engine's own analytics: never let an average stand in for a distribution; whenever a rate or score is summarized, the share of cases beyond the meaningful cutoff must travel with it, because the actionable cases live in the tail",
+        "source_operator": "mean_scores_hide_impairment",
+        "telemetry": "Full score distributions and below-cutoff proportions, not means alone"
+      }
+    },
+    {
+      "primitive_id": "premorbid_baseline_requirement",
+      "name": "Cognitive impairment is most accurately assessed as intra-individual change from pre-morbid baseline, which none of the included studies could measure",
+      "verbatim_quote": "cognitive results should ideally be adjusted for pre-morbid functioning since the most accurate assessment of impairment reflects intra-individual change over time",
+      "page": "Results, Summary of Cognitive Functioning Results, report p.23 (text lines ~942-947)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Between-person comparison to normative means is a weaker substitute for within-person change",
+        "No included study provided pre-morbid functioning data"
+      ],
+      "breakdown_regime": "Without baselines, low post-injury scores cannot be separated from low pre-injury functioning, and high-functioning individuals can decline while staying in the normal range",
+      "domain": "measurement_method",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine should treat any performance metric as a delta against that individual's own baseline wherever a baseline exists, and mark cross-sectional comparisons as the weaker evidence class when it does not",
+        "source_operator": "premorbid_baseline_requirement",
+        "telemetry": "Individual baseline measurements and repeat measurements over time"
+      }
+    },
+    {
+      "primitive_id": "processing_speed_acute_window",
+      "name": "Processing-speed deficits on ANAM subtests were significant at 72 hours and 5 days post-injury but not at 10 days, marking a short acute window",
+      "verbatim_quote": "two studies report significant deficits in processing speed on the majority of ANAM subtests at 72 hours and 5 days following injury, but non-significant differences 10 days after injury.",
+      "page": "Results, Cognitive Functioning, Processing Speed Key Question 2, report p.28 (text lines ~1213-1217)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The two studies drew on the same patient population, so this is one evidence thread, not two independent replications",
+        "ANAM subtests (code substitution, procedural reaction time, simple reaction time) are the measurement vehicle"
+      ],
+      "breakdown_regime": "The window is instrument- and cohort-specific; other studies found no processing-speed differences, and single studies flagged low scores within 10 days and in disability-evaluation contexts",
+      "domain": "neurocognition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A time-decay shape for acute cognitive effects: measurable slowing concentrates in the first days after a mild event and washes out by about ten days, so the engine should weight very recent injuries differently from remote ones instead of using a flat injured-or-not flag",
+        "source_operator": "processing_speed_acute_window",
+        "telemetry": "Days since injury paired with reaction-time or processing-speed measures"
+      }
+    },
+    {
+      "primitive_id": "evaluation_context_effect",
+      "name": "Veterans tested in a compensation and pension (disability) evaluation context performed worse than research-context peers, including on effort and processing speed measures",
+      "verbatim_quote": "describing worse processing speed performance on all four tests examined by those obtaining a C & P evaluation.",
+      "page": "Results, Cognitive Functioning, Processing Speed Key Question 2, report p.28 (text lines ~1217-1221)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The comparison is one study of the same mTBI population split by evaluation context (Nelson et al. 2010)",
+        "Five of seven effort and motivation outcomes in that study also differed significantly by context"
+      ],
+      "breakdown_regime": "Context effects do not prove exaggeration in any individual case; they show measured performance is partly a function of the measurement situation, which is why the report urges blinded, objective assessment",
+      "domain": "measurement_bias",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A measurement-context correction: data collected where the subject has a stake in the outcome must be down-weighted or separately modeled, because the same person measures worse in a forensic context than in a neutral one",
+        "source_operator": "evaluation_context_effect",
+        "telemetry": "Context flag on every measurement: neutral, clinical, or compensation-linked; effort and validity indicators where available"
+      }
+    },
+    {
+      "primitive_id": "physical_symptom_association",
+      "name": "Seventeen studies reported physical outcomes; low strength evidence links self-reported physical symptoms to mTBI, but only two studies had non-mTBI comparison groups",
+      "verbatim_quote": "We found 17 studies reporting physical health outcomes for those with mTBI. Low strength evidence suggests that self-reported physical symptoms are associated with mTBI.",
+      "page": "Results, Summary of Physical Health Results, report p.30 (text lines ~1319-1324)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The symptom set spans headaches, pain, vestibular symptoms, hearing and vision problems, nausea or appetite loss, and neurologic symptoms",
+        "Most severity data come from single items of the Neurobehavioral Symptom Inventory, a general post-concussive inventory"
+      ],
+      "breakdown_regime": "Without comparison groups, association cannot be separated from base rates; severity ranges widely across individuals and the causal contribution of mTBI stays unclear",
+      "domain": "physical_health",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Self-reported symptom checklists are weak attribution instruments: the engine should treat single-item self-report severity as a screening signal that triggers objective follow-up, not as a measured effect of the injury",
+        "source_operator": "physical_symptom_association",
+        "telemetry": "Symptom inventory scores with comparison-group availability flagged"
+      }
+    },
+    {
+      "primitive_id": "headache_burden",
+      "name": "Headache is the most studied physical outcome (10 studies); one study found 33.3 percent of Veterans with mTBI were referred to neurology for headaches",
+      "verbatim_quote": "headaches was 33.3% for Veterans with mTBI, though no other physical health studies reported prevalence estimates for these outcomes.",
+      "page": "Results, Summary of Physical Health Results, report pp.30-31 (text lines ~1332-1336)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The 33.3 percent figure is a referral prevalence in one clinic population without a comparison group, not a population headache prevalence",
+        "Other estimates were average self-reported severity: NSI headache item 1.45 to 2.71 (moderate range) and mean pain 4.33 on a 0 to 10 scale"
+      ],
+      "breakdown_regime": "Most headache samples were selected because participants had headaches, so their prevalence numbers do not generalize to all mTBI patients",
+      "domain": "physical_health",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A selection-bias warning the engine can reuse: rates computed inside referred or symptomatic sub-populations describe the clinic, not the condition, and must be labeled with their sampling frame before they inform any burden estimate",
+        "source_operator": "headache_burden",
+        "telemetry": "Sampling frame metadata (general cohort vs referred clinic sample) attached to every prevalence figure"
+      }
+    },
+    {
+      "primitive_id": "pain_differential",
+      "name": "The one controlled pain comparison found median pain of 3.5 of 10 with mTBI versus 2.0 of 10 without, a statistically significant difference",
+      "verbatim_quote": "describing statistically significant differences in median pain scores of 3.5/10 for the participants with mTBI and 2.0/10 for those without mTBI.",
+      "page": "Results, Physical Health, Pain Key Question 1, report p.32 (text lines ~1408-1412)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Only two studies documented pain outcomes at all, and only one compared against a non-mTBI population",
+        "Pain was self-reported over the past 30 days or on a 0 to 10 scale"
+      ],
+      "breakdown_regime": "A single-study difference on a subjective scale; neither pain study reported risk or protective factor data, so no moderator conclusion exists",
+      "domain": "physical_health",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A worked example of the report's general pattern for the engine: where a controlled comparison exists the mTBI difference is real but modest (1.5 points on a 10 point scale), which is the size of effect to expect rather than dramatic separation",
+        "source_operator": "pain_differential",
+        "telemetry": "Paired exposed and control medians on identical scales"
+      }
+    },
+    {
+      "primitive_id": "vestibular_recovery_window",
+      "name": "Objective vestibular differences (DHI, DVAT) were significant in the first weeks after injury, with DVAT differences gone by 4 weeks",
+      "verbatim_quote": "reporting significantly more vestibular symptoms in mTBI groups at 1, 2, 3, and 4 weeks following injury for DHI and 1 week but not 4 weeks following injury for DVAT.",
+      "page": "Results, Physical Health, Vestibular Key Question 1, report p.32 (text lines ~1430-1436)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "One study (Gottshall et al. 2003) supplies the objective test comparison; the rest of the vestibular base is self-report",
+        "Self-reported vestibular severity on NSI items averaged 1.32 to 1.47, mild to moderate"
+      ],
+      "breakdown_regime": "PTSD and additional injury were associated with worse self-reported vestibular symptoms, so the self-report channel does not isolate the injury effect",
+      "domain": "physical_health",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Corroborates the acute-window shape from a second organ system: objective balance and gaze-stability effects concentrate in the first one to four weeks, so recency of injury is a first-class variable in any availability or readiness reasoning",
+        "source_operator": "vestibular_recovery_window",
+        "telemetry": "Weeks since injury paired with objective vestibular or balance measures"
+      }
+    },
+    {
+      "primitive_id": "mental_health_comorbidity_rates",
+      "name": "Axis I disorder rates in mTBI samples ranged from 50 to 78 percent across two studies, marking very high mental health comorbidity",
+      "verbatim_quote": "Rates of Axis I disorders ranged from 50-78% in two studies",
+      "page": "Results, Summary of Mental Health Results, report p.34 (text lines ~1508-1514)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Twenty studies reported mental health outcomes, with methods ranging from structured clinical interviews to single-item screeners",
+        "The same studies often found few significant differences versus non-mTBI military controls, so comorbidity is high in both groups"
+      ],
+      "breakdown_regime": "Rates come from treatment-seeking and clinic samples; they describe those populations, not every person with an mTBI history",
+      "domain": "mental_health",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In any post-deployment or post-injury population the engine reasons about, mental health comorbidity is the base case rather than the exception, so single-cause attribution to the head injury should be the hypothesis that has to earn its place",
+        "source_operator": "mental_health_comorbidity_rates",
+        "telemetry": "Comorbidity prevalence in the population under analysis, by condition"
+      }
+    },
+    {
+      "primitive_id": "condition_prevalence_cluster",
+      "name": "Single-study prevalence cluster in Veterans with mTBI: PTSD 45 percent, alcohol abuse or dependence 28 percent, drug abuse or dependence 9 percent",
+      "verbatim_quote": "the rate of PTSD was 45%, alcohol abuse/dependence was 28%, drug abuse/dependence was 9% suicidal ideation was 25%, suicidal intent was 7%, and past suicide attempts was 4% for Veterans with mTBI.",
+      "page": "Results, Summary of Mental Health Results, report p.34 (text lines ~1510-1516)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Each figure traces to a single study (Barnes et al. 2012, a PTSD-treatment-seeking sample for the suicide items), so the cluster is illustrative, not pooled",
+        "PTSD Checklist scores for mTBI groups ranged from 34.6 to 61.9 across studies, spanning clinical cutoffs"
+      ],
+      "breakdown_regime": "Single-study, selected-sample numbers; the review's own comparisons mostly found no significant excess versus non-mTBI controls",
+      "domain": "mental_health",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Gives the engine concrete magnitudes for the comorbidity cluster that travels with mTBI presentations (PTSD largest, then alcohol, then drugs, with a substantial suicidal-ideation minority), useful as priors when a case file is thin",
+        "source_operator": "condition_prevalence_cluster",
+        "telemetry": "Condition-specific prevalence observations with sample provenance"
+      }
+    },
+    {
+      "primitive_id": "ptsd_symptom_overlap",
+      "name": "PTSD and postconcussive syndrome share core symptoms (concentration and memory problems, sleep disturbance, irritability), confounding attribution",
+      "verbatim_quote": "core symptoms of both PTSD and postconcussive syndrome include problems with concentration/attention and memory, sleep disturbance, and irritability.",
+      "page": "Summary and Discussion, Summary of Evidence, report p.42 (text lines ~1932-1938)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Cognitive complaints and objective deficits also occur in PTSD without any TBI history",
+        "Event-related factors and shared neurocircuitry (prefrontal cortex, hippocampus, amygdala) are offered as reasons the two conditions travel together"
+      ],
+      "breakdown_regime": "Symptom checklists cannot separate the two conditions; the overlap is a stated reason the review cannot attribute outcomes uniquely to mTBI",
+      "domain": "mental_health",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "An identifiability constraint for the reasoning engine: when two candidate causes produce the same observable symptoms, symptom data alone cannot arbitrate between them, and the engine must say so and look for discriminating evidence (timing, mechanism, exposure history) instead of picking one",
+        "source_operator": "ptsd_symptom_overlap",
+        "telemetry": "Symptom profiles plus discriminating variables: injury event data, trauma exposure, onset timing"
+      }
+    },
+    {
+      "primitive_id": "ptsd_tbi_comorbidity_rate",
+      "name": "Among Veterans with TBI histories, PTSD rates range from 33 to 65 percent, and having both conditions may impair function more than either alone",
+      "verbatim_quote": "among Veterans with histories of TBI, rates of PTSD range from 33-65%.",
+      "page": "Summary and Discussion, Summary of Evidence, report p.42 (text lines ~1926-1932)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Figures are drawn from the prior systematic review literature the report cites (Carlson et al. 2011 and related work), with overall comorbid TBI and PTSD prevalence among OIF/OEF Veterans estimated at 5 to 7 percent",
+        "PTSD affects approximately 15 percent of Veterans of all eras as background rate"
+      ],
+      "breakdown_regime": "The 33 to 65 percent range is wide because samples and ascertainment differ; it is a literature range, not an estimate from this review's 31 studies",
+      "domain": "mental_health",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A conditional-probability anchor: given a TBI history in this population, co-occurring PTSD is a one-in-three to two-in-three proposition, so any engine reasoning about post-injury function should branch on the joint state, not on the injury alone",
+        "source_operator": "ptsd_tbi_comorbidity_rate",
+        "telemetry": "Joint condition status (injury history by PTSD status) in case data"
+      }
+    },
+    {
+      "primitive_id": "functional_burden_fifth_quarter",
+      "name": "Roughly one fifth to one quarter of Veterans with mTBI experienced unemployment, sleep disturbance, or lack of emotional support",
+      "verbatim_quote": "one fifth to one quarter of Veterans with mTBI experienced unemployment, sleep disturbance, or lack of emotional support.",
+      "page": "Summary and Discussion, Summary of Evidence, report p.42 (text lines ~1946-1952)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The functional and social evidence base is 12 low-quality studies; unemployment was about 20 percent in one study and 26 percent lacked emotional support in another",
+        "mTBI cases are often unidentified until after discharge, when work, school, and relationship problems surface"
+      ],
+      "breakdown_regime": "Comparisons were mixed: one of two employment studies found higher unemployment with mTBI, and the relationship finding was not significantly different from controls",
+      "domain": "functional_outcomes",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Supplies the functional-outcome base rates (work, sleep, social support each affecting roughly a fifth to a quarter) that the engine's health layer can use when estimating downstream impact instead of assuming full recovery or total disability",
+        "source_operator": "functional_burden_fifth_quarter",
+        "telemetry": "Employment status, sleep measures, and social-support indicators in follow-up data"
+      }
+    },
+    {
+      "primitive_id": "sleep_disturbance_range",
+      "name": "Self-reported sleep disturbance after mTBI spans mild to very severe (NSI 0.86 to 3.45) depending on subpopulation, with prevalence of 13 to 23 percent in the one estimating study",
+      "verbatim_quote": "self-reported sleep disturbance and fatigue on the NSI ranged from approximately “mild” (0.86) to approximately “very severe” (3.45)",
+      "page": "Results, Functional/Social, Sleep Key Question 1, report p.39 (text lines ~1796-1804)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Ten studies examined sleep; the prevalence estimate (13 percent under four hours per night, 23 percent losing over two hours) comes from active-duty personnel within 10 days of injury",
+        "PTSD status is the main axis along which severity varies"
+      ],
+      "breakdown_regime": "A headache intervention trial found significantly less sleep disturbance in the treated group, showing the symptom is modifiable through a comorbid condition rather than fixed by the injury",
+      "domain": "functional_outcomes",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sleep is a high-variance, comorbidity-driven channel: the engine should model sleep disruption as strongly conditioned on PTSD status and treatable comorbidity, not as a direct readout of brain injury severity",
+        "source_operator": "sleep_disturbance_range",
+        "telemetry": "Sleep duration and disturbance scores stratified by PTSD and treatment status"
+      }
+    },
+    {
+      "primitive_id": "utilization_null_and_cost_gap",
+      "name": "Seven studies found no significant service-utilization differences for mTBI versus controls, and zero studies reported costs, leaving Key Question 3 essentially unanswered",
+      "verbatim_quote": "We found seven studies that described service utilization by Veterans with mTBI, and no studies reported costs associated with mTBI.",
+      "page": "Results, Summary of Service Utilization/Costs Results, report p.40 (text lines ~1848-1854)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Utilization measures included counseling, medications, hospital and ICU stay length, and sick-call frequency",
+        "Current counseling prevalence was 4 to 6 percent and current mental health medication 4 to 5 percent in two studies of one population"
+      ],
+      "breakdown_regime": "An empty cell is not a zero effect: the report lists costs among outcomes with insufficient data to determine presence or absence of an effect",
+      "domain": "health_services",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A missing-data discipline for the engine: an outcome nobody measured must be carried as unknown with an explicit gap flag, never silently treated as no difference, and the gap itself is a finding worth surfacing",
+        "source_operator": "utilization_null_and_cost_gap",
+        "telemetry": "Coverage map of which outcome classes have any measurements at all"
+      }
+    },
+    {
+      "primitive_id": "civilian_convergence",
+      "name": "Civilian literature converges: objective cognitive deficits resolve within 2 to 3 months and physical consequences within the first days after mTBI",
+      "verbatim_quote": "objective cognitive deficits associated with mTBI resolve within 2-3 months and the physical consequences of mTBI are likely limited to those which resolve within the first few days following injury.",
+      "page": "Summary and Discussion, Findings from Civilian Populations, report p.43 (text lines ~1978-1986)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Drawn from the WHO Collaborating Centre Task Force review and a sports-concussion meta-analysis in which effects were gone by 7 days to 3 months",
+        "Subjective complaints may linger for years even as objective deficits resolve, and litigation or compensation evaluation worsens measured performance"
+      ],
+      "breakdown_regime": "Civilian mechanisms (sports, falls, vehicle crashes) are only indirect comparisons to blast-exposed military cohorts with repeat injuries and PTSD",
+      "domain": "tbi_prognosis",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Cross-population triangulation: two independent literatures (military observational, civilian prospective) land on the same recovery shape, which raises confidence in the shape itself even though each base is imperfect; the engine should borrow strength across populations while keeping the transfer caveat attached",
+        "source_operator": "civilian_convergence",
+        "telemetry": "Recovery-time estimates by population and mechanism, compared side by side"
+      }
+    },
+    {
+      "primitive_id": "biomarker_panel_principle",
+      "name": "No single biomarker discriminates mTBI; combining biomarkers across the injury cascade may raise sensitivity and specificity",
+      "verbatim_quote": "As no single biomarker with discriminative characteristics has been indentified, Sharma and Laskowitz (2012) suggest that combining biomarkers may increase sensitivity and specificity.",
+      "page": "Summary and Discussion, Use of Imaging and Biomarkers, report p.44 (text lines ~2022-2030)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Candidate markers are serum and cerebrospinal fluid measures sampled at different cascade stages (inflammation, neuronal injury)",
+        "The section is explicitly beyond the review's scope and summarizes outside literature (Sharma and Laskowitz 2012; Jeter et al. 2012)"
+      ],
+      "breakdown_regime": "As of this report the panel idea is a suggestion from review literature, not a validated diagnostic; biomarker evidence in mild injury was limited compared with moderate and severe TBI",
+      "domain": "diagnostics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A weak-signal combination principle: when no single indicator separates the classes, a panel of individually weak indicators measured at different stages can; the engine should prefer staged multi-signal panels over hunting for one decisive metric",
+        "source_operator": "biomarker_panel_principle",
+        "telemetry": "Multi-marker panels with per-marker stage and timing metadata"
+      }
+    },
+    {
+      "primitive_id": "cte_postmortem_only",
+      "name": "Chronic traumatic encephalopathy could at that time only be identified by direct tissue examination, so definitive diagnosis required autopsy",
+      "verbatim_quote": "At present, CTE can only be identified by direct tissue examination; as such, full autopsies and immunohistochemical brain analyses are necessary for definitive diagnosis.",
+      "page": "Summary and Discussion, Use of Imaging and Biomarkers, report p.44 (text lines ~2036-2044)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "CTE is defined by persistent cognitive and neuropsychiatric symptoms attributed to chronic neurodegeneration from multiple TBIs",
+        "The blast-exposure to CTE link had limited supporting data at the time of writing"
+      ],
+      "breakdown_regime": "A postmortem-only gold standard means all antemortem CTE claims in this era are unverifiable; clinical criteria and biomarkers were still being created",
+      "domain": "diagnostics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A verifiability classification for the engine: claims whose gold standard cannot be observed in living subjects belong in a speculative tier, clearly separated from claims that current measurement can confirm or refute",
+        "source_operator": "cte_postmortem_only",
+        "telemetry": "For each condition claim, whether a living-subject confirmatory test exists"
+      }
+    },
+    {
+      "primitive_id": "dti_sensitivity",
+      "name": "Diffusion tensor imaging detects white matter injury in mTBI that conventional CT and MRI miss, with abnormalities in long association pathways",
+      "verbatim_quote": "there is a growing body of evidence that they are more readily detectible with advanced research imaging technologies, particularly DTI,",
+      "page": "Summary and Discussion, Use of Imaging and Biomarkers, report p.44 (text lines ~2050-2058)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "DTI measures functional integrity of white matter interconnections; commonly affected tracts include corpus callosum, corticospinal tract, corona radiata, internal capsule, uncinate and superior longitudinal fasciculi",
+        "Some studies correlate aggregate DTI abnormality with executive function, memory, and processing speed"
+      ],
+      "breakdown_regime": "The imaging literature is cross-sectional, small-sample, and method-variable; some studies show increased fractional anisotropy and others decreased, an unresolved discrepancy the report names",
+      "domain": "diagnostics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A sensor-resolution lesson: a negative result from a coarse instrument (structural CT or MRI) does not bound what a finer instrument would find, so the engine should record which instrument produced a negative before treating it as evidence of absence",
+        "source_operator": "dti_sensitivity",
+        "telemetry": "Imaging modality attached to every negative or positive finding"
+      }
+    },
+    {
+      "primitive_id": "attribution_to_comorbidity",
+      "name": "Clinical bottom line: many symptoms patients ascribe to mTBI may stem from comorbid conditions, readjustment, or injury beliefs, so treat the comorbid conditions",
+      "verbatim_quote": "many symptoms that patients ascribe to mTBI may be related to comorbid mental or physical health concerns, or to other factors such as readjustment to civilian life following deployment or injury beliefs and perceptions.",
+      "page": "Summary and Discussion, Clinical Considerations, report p.45 (text lines ~2078-2086)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Policy guidance follows from the attribution problem: treat PTSD, substance use disorders, headaches, and sleep disorders with the best available evidence-based care",
+        "Persistent cognitive complaints after first-line comorbidity treatment are the trigger for further neuropsychological or imaging workup"
+      ],
+      "breakdown_regime": "Attribution caution cuts both ways: it must not become dismissal, since a minority do have persistent injury-related problems and the evidence base is low quality",
+      "domain": "clinical_reasoning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine's attribution order of operations: before assigning an outcome to the salient event, exhaust the standing alternative causes (comorbidity, context, expectations) that the evidence shows explain much of the observed burden, then attribute the residue",
+        "source_operator": "attribution_to_comorbidity",
+        "telemetry": "Competing-cause checklist status for every attributed outcome"
+      }
+    },
+    {
+      "primitive_id": "additional_injury_paradox",
+      "name": "Counterintuitive moderator: having an additional injury was a protective factor for headache severity and several other self-reported symptoms in one study",
+      "verbatim_quote": "additional injury is, in fact, a protective factor for experiencing headaches, reporting that those with additional injuries reported significantly lower NSI headache item severity than those without.",
+      "page": "Results, Physical Health, Headaches Key Question 2, report p.32 (text lines ~1400-1406)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The finding is from Kennedy et al. 2010 comparing mTBI with and without associated injuries on NSI items",
+        "The same direction appeared for anxiety, vestibular, and several PCL items in that study"
+      ],
+      "breakdown_regime": "Single study, self-report outcomes, and a plausible reporting or attribution artifact; the review does not elevate it beyond a reported association",
+      "domain": "tbi_outcomes",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A counterintuitive-sign guardrail: when a moderator's sign flips against intuition (more injury, fewer complaints), the engine should suspect measurement and attribution artifacts before building the flipped sign into its model",
+        "source_operator": "additional_injury_paradox",
+        "telemetry": "Moderator effect signs with study count and measurement type attached"
+      }
+    },
+    {
+      "primitive_id": "time_since_injury_gap",
+      "name": "The literature's failure to report or model time since injury makes the time course of mTBI consequences impossible to construct",
+      "verbatim_quote": "One of the major limitations of this literature is the inadequate reporting of and accounting for time since injury among Veterans and military members, and therefore it is not possible to construct an accurate picture of mTBI consequences over time for this population.",
+      "page": "Summary and Discussion, Limitations, report p.46 (text lines ~2108-2116)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Almost all included studies were cross-sectional and retrospective, adding recall bias about symptoms and timeframes",
+        "VA and DoD databases hold time-since-injury data and should be used at the individual level"
+      ],
+      "breakdown_regime": "Without the time variable, acute resolving effects and chronic persistent effects are averaged into a single misleading estimate",
+      "domain": "research_design",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Time since the event is a mandatory covariate, not an optional refinement: any engine dataset that cannot timestamp the exposure relative to the outcome is structurally unable to separate transient from persistent effects and must be labeled that way",
+        "source_operator": "time_since_injury_gap",
+        "telemetry": "Exposure timestamps and outcome timestamps on every case record"
+      }
+    },
+    {
+      "primitive_id": "prevalence_reporting_reform",
+      "name": "Future studies must report proportions with clinically significant impairment and intra-individual change, not only group mean scores",
+      "verbatim_quote": "Future research should not only report mean scores for subgroups, but also report proportions of individuals with clinically significant impairment for each outcome.",
+      "page": "Summary and Discussion, Limitations, report p.46 (text lines ~2124-2132)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Stakeholders need counts of affected individuals to plan services, which means cannot supply",
+        "For cognition, impairment should combine standardized-score range with comparison to pre-injury baseline"
+      ],
+      "breakdown_regime": "The reform is a recommendation, not a property of the existing base; all conclusions in the review remain limited by the old reporting style",
+      "domain": "research_design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The constructive twin of the mean-scores primitive: the engine's reporting standard should require cutoff-based proportions and within-subject deltas as first-class outputs whenever the underlying data allow them",
+        "source_operator": "prevalence_reporting_reform",
+        "telemetry": "Report templates carrying proportion-impaired and change-from-baseline fields"
+      }
+    },
+    {
+      "primitive_id": "compensation_bias",
+      "name": "Compensation-linked assessment is associated with worse outcomes, and unblinded self-report must be read with more caution than blinded objective findings",
+      "verbatim_quote": "Assessment for mTBI is often associated with potential financial compensation, which in turn has been commonly associated with worse outcomes.",
+      "page": "Summary and Discussion, Limitations, report p.47 (text lines ~2152-2160)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Participants are rarely blinded to study hypotheses, and many outcomes rest on single self-report items",
+        "The civilian literature independently found litigation or compensation evaluation to be a risk factor for worse cognitive performance"
+      ],
+      "breakdown_regime": "The association is about measurement conditions, not proof about any individual's honesty; the report frames it as a bias to design around with objective tools and blinded assessors",
+      "domain": "measurement_bias",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Extends the evaluation-context primitive into a general incentive audit: whenever the measured party gains from a particular result, the engine discounts unblinded self-report relative to blinded or objective measurement of the same quantity",
+        "source_operator": "compensation_bias",
+        "telemetry": "Incentive and blinding status attached to each measurement source"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e7f633b9d9a36320-t1",
+      "think": "This report is a systematic review, not a trial, and its real product is a disciplined statement about what a whole literature can and cannot support. The machinery starts with a strict case definition: only studies whose mTBI definition matched the VA/DoD Clinical Practice Guideline entered the synthesis, and severity had to come from the injury event, never from later symptoms. That single rule excluded 60 full texts outright and 131 more that failed to separate mild from moderate or severe injury, which tells you how much of the published noise in this field is definitional. On top of the definition gate sit a minimum sample floor of 30 cases, Newcastle-Ottawa style quality scoring adapted to this literature, and GRADE ratings for each outcome body. Every one of the 31 surviving studies was then rated high risk of bias, which collapsed the whole evidence base to low or very low strength and forced a qualitative synthesis instead of a meta-analysis, because the outcome instruments were too heterogeneous to pool. The headline result is a null with a caveat: cognitive, physical, and mental health symptoms are frequently reported after mTBI, yet there is little evidence they occur more often than in comparable military populations without mTBI. Inside that null, the texture matters. Cognitive scores sit within normal limits at group level, but studies reported means rather than proportions impaired, so a genuinely impaired minority could be hiding inside normal averages, and no study measured change from a pre-morbid baseline. Where objective effects do appear, they are time-boxed: processing speed deficits at 72 hours and five days that vanish by ten days, vestibular test differences that fade by four weeks, and a civilian literature that independently converges on resolution within days to three months. The mental health findings invert the naive story: comorbidity is enormous, with Axis I rates of 50 to 78 percent and PTSD in a third to two thirds of those with TBI histories, but the excess over non-mTBI controls is mostly not significant, and PTSD shares its core symptoms with postconcussive syndrome, so symptom checklists cannot arbitrate causation. Measurement context is a first-class variable throughout: people tested in compensation evaluations perform worse than research volunteers, and self-reported symptoms track PTSD, service connection, and evaluation context at least as much as injury parameters. For a reasoning engine, the transferable assets are the method and the calibration, in that order. The method assets are reusable anywhere evidence is absorbed: define the case before counting it, floor the sample size, grade the body of evidence, refuse to pool incommensurable measures, report proportions beyond cutoffs instead of means, demand time since the event as a covariate, and audit the incentives and blinding of whoever produced each measurement. The calibration assets set priors for head-injury reasoning: a single mild event usually resolves, persistent problems concentrate in a minority marked by repeat injury and psychiatric comorbidity, and attribution to the injury is the last step after competing causes are exhausted, not the first. The work breaks where its base breaks: cross-sectional retrospective designs, recall bias, missing time data, and single unreplicated studies for most moderators mean nearly every specific number here is a range with soft edges, and the report is honest that better prospective cohorts could move its conclusions. It also predates the modern biomarker and imaging era it only sketches, so its diagnostic sections are a snapshot of 2012, useful for the panel-combination principle and the verifiability warning about CTE rather than for current test performance. The search machinery deserves attention in its own right. The team adapted the WHO Collaborating Centre Task Force strategy, searched Medline, PsycINFO, and the Cochrane Register from inception to October 2012, expanded the terminology when a known relevant article escaped the preliminary strategy, and hand-checked reference lists and expert nominations. Abstracts were screened by the principal investigator with dual review on a portion, full texts were dually reviewed, disagreements went to team consensus, and one investigator abstracted each study while a second checked its accuracy. That process discipline is why the funnel numbers can be trusted even though the underlying studies cannot: thousands of abstracts screened down to 354 full texts, 323 excluded for named reasons, and 31 studies synthesized. The report also models how to handle an empty evidence cell: for costs, the recorded answer is not zero effect but no studies at all, and the limitations name costs among the outcomes where the data cannot determine the presence or absence of an effect. The functional and service sections add a second calibration. About a fifth to a quarter of Veterans with mTBI reported unemployment, sleep disturbance, or lack of emotional support, yet the comparisons behind those numbers are mixed, and service utilization barely separates the mTBI group from controls, with current counseling at 4 to 6 percent and current mental health medication at 4 to 5 percent in the studies of one population. Sleep shows the more instructive pattern: a real and wide severity range that moves with PTSD status and improves when a comorbid condition is treated, which makes it a comorbidity channel rather than a direct injury readout. Taken together, these sections teach a reasoning system to separate three questions that weaker reasoning merges into one: how much burden exists, how much of that burden is attributable to the event, and how much of the attributable part is modifiable by treating a companion condition.",
+      "retrocausal_genealogy": "The review descends from the WHO Collaborating Centre Task Force work on mTBI prognosis, whose search strategy it adapted, and from the VA/DoD 2009 clinical practice guideline that supplied its case definition. Its methods lineage is the evidence-based medicine stack: Newcastle-Ottawa quality scales for observational studies and the GRADE working group's confidence ladder. Substantively it answers a policy problem created by the Iraq and Afghanistan wars, where blast exposure made mild TBI and PTSD mass phenomena in returning service members and the VA needed to know what burden was actually attributable to the brain injury. Its findings echo and extend the earlier civilian syntheses by Carroll and colleagues and the sports concussion meta-analyses, which had already found rapid resolution of objective deficits.",
+      "theory_of_mind": "The authors write for VA managers, policymakers, and a TBI advisory committee who must allocate screening and treatment resources, and they assume that audience is tempted to attribute every post-deployment symptom to the documented brain injury. Their model of the reader is a decision maker who needs defensible uncertainty more than false precision, so they repeatedly separate what is frequently reported from what is demonstrably more common, and they pair every clinical suggestion with a warning about evidence quality. They also model the patient population realistically: symptoms are real and burdensome regardless of attribution, and the recommended response is to treat the treatable comorbid conditions rather than to litigate causation at the bedside.",
+      "cross_layer_veto": "This report vetoes any reasoning layer that treats symptom presence after a mild head injury as proof of injury caused damage: the controlled comparisons mostly do not separate mTBI from non-mTBI groups, so a downstream layer may not convert post-injury symptom reports into injury effects without a comparison group. It vetoes pooled averages built from incompatible instruments, severity labels back-filled from symptom burden, and conclusions drawn from samples below a precision floor. It also vetoes ignoring measurement context: data gathered under compensation incentives or without blinding cannot be weighted the same as blinded objective measurement, and any layer that does so inherits a known bias."
+    }
+  ],
+  "universal_lens": "Read outside medicine, this is a template for auditing any field where a salient event is blamed for common outcomes: fix the case definition before counting, demand a comparison group before attributing, grade the whole evidence body rather than cherry-picking studies, refuse to average incommensurable measures, and report how many individuals cross a meaningful threshold instead of hiding them inside a group mean. Its deepest lesson is that a literature can be simultaneously full of real suffering and nearly empty of attributable effect, and that honest synthesis has to hold both facts at once.",
+  "gsi_mapping": "For the Galaxy Sports Institute, the report is a teaching specimen for evidence literacy in athlete health: it shows how concussion discourse goes wrong when severity is inferred from symptoms, when clinic samples are read as population rates, and when group means conceal the impaired minority. Its recovery timelines, its insistence on baseline testing, and its moderator map (comorbidity, evaluation context, time since injury) translate directly into how the Institute should frame return-to-play evidence and design its own data collection, with proportions impaired and within-athlete change as the standard outputs.",
+  "gse_mapping": "For the Galaxy Sports Edge engine, the report calibrates the health layer on head injuries: a single mild event carries a strong resolution prior, effects concentrate in the first days to weeks, and persistent impact should be reasoned through repeat exposure and comorbidity rather than through the injury label alone. Its method primitives are equally valuable as engine governance: case definition before counting, sample floors, evidence grading, a pooling veto for incompatible measures, mandatory time-since-event covariates, and incentive audits on self-reported data all transfer to how the engine weighs any availability or performance signal."
+}

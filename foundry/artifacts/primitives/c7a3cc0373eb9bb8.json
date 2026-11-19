@@ -1,0 +1,720 @@
+{
+  "book_id": "c7a3cc0373eb9bb8",
+  "source_status": "COMPLETE",
+  "source_note": "A. Alonzo Stagg and Henry L. Williams, A Scientific and Practical Treatise on American Football, Hartford, Conn.: Press of The Case, Lockwood and Brainard Company, 1893. Local file: ~/workspace/full-library-2026-11-12/library/books-a-sports/Stagg-Williams-1893-Scientific-and-Practical-Treatise-on-American-Football.pdf, size 6701961 bytes, sha256 c7a3cc0373eb9bb864d83287b616c8c9cbf132e8afff2b3df874d838733953b3. Extracted text: 266,524 bytes, 6,749 lines, good quality in the prose chapters (Preface, Introductory, Training, Center, Guard, Tackle, End, Quarter-back, Half-backs and Full-back, Team Play, Field Tactics, Signals, Axioms, Rules); the Plays chapter (printed pp. 75-216) is diagram pages whose OCR is unusable glyph fragments, so no primitive is drawn from it and the diagrammed plays are recorded as a gap, not quoted. Catalog note: the printed contents page misorders the late chapters; the text itself runs Team Play, then Field Tactics (printed pp. 233-256), then Signals (pp. 257-261), then Axioms (pp. 262-264), then Rules (pp. 265-274). Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "overtraining_onset_signs",
+      "name": "Overtraining announces itself as a daily loss of dash and speed rather than as a single injury",
+      "verbatim_quote": "When a faithful worker finds himself coming upon the field day after day with a worn and tired feeling, no longer able to play with his former dash and energy, and his speed gradually decreasing, he should at once suspect that his muscles are becoming over-tired",
+      "page": "Training chapter, printed p. 14",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The player is a faithful worker whose baseline dash and speed are known to the captain",
+        "The decline is observed across successive days of practice, not after one bad session"
+      ],
+      "breakdown_regime": "Fails when a single acute injury, illness, or a bad night produces the same surface signs; the test needs a multi-day trend, not one observation",
+      "domain": "training-and-recovery",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A load monitor: track a player's dash and speed day over day, and flag a sustained decline as a fatigue state before it becomes a breakdown, exactly as the engine tracks a signal's decay before trusting it.",
+        "source_operator": "overtraining_onset_signs",
+        "telemetry": "Daily observed dash, speed, and self-reported weariness for each player across practice days"
+      }
+    },
+    {
+      "primitive_id": "sleep_nine_hours",
+      "name": "Nine hours of sleep from ten in the evening to seven in the morning is the recovery baseline",
+      "verbatim_quote": "a sleep from ten o'clock in the evening until seven the next morning, and a short walk before an early breakfast, will be found to be of the greatest benefit in all instances",
+      "page": "Training chapter, printed p. 13",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The player can keep regular hours across the season",
+        "A short walk before breakfast is available"
+      ],
+      "breakdown_regime": "Fails for players whose schedules or travel prevent a fixed ten-to-seven window; the principle is regularity and length, not the exact clock hours",
+      "domain": "training-and-recovery",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sleep is the engine's overnight consolidation pass: a fixed, sufficient recovery window between heavy compute days, with a light warm-up before the next load, maps directly onto training schedules and rest cycles in any learning system.",
+        "source_operator": "sleep_nine_hours",
+        "telemetry": "Sleep hours, wake time, and next-day performance for each player"
+      }
+    },
+    {
+      "primitive_id": "practice_dose_two_half_hours",
+      "name": "Practice is dosed as two sharp half hours with a five minute rest between",
+      "verbatim_quote": "About two half hours of sharp work, with a rest of five minutes between, will produce the best results",
+      "page": "Training chapter, printed p. 16",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Practice is sharp work, not a full ninety minute scrimmage each day",
+        "The five minute rest is actually taken"
+      ],
+      "breakdown_regime": "Fails late in the season when the team needs full-game conditioning, or when the sharpness of the work cannot be sustained across both blocks",
+      "domain": "training-and-recovery",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A batching rule for training load: short, intense, separated work blocks with a fixed recovery gap beat one long undifferentiated session, the same shape as interval training for a model or a team.",
+        "source_operator": "practice_dose_two_half_hours",
+        "telemetry": "Practice duration, intensity, and rest gaps per session"
+      }
+    },
+    {
+      "primitive_id": "no_water_during_game",
+      "name": "No water is swallowed during play; rinsing the mouth is the only permitted relief",
+      "verbatim_quote": "The practice of drinking water during the game is exceedingly bad, and never should be permitted, though rinsing the mouth is admissible",
+      "page": "Training chapter, printed p. 14",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The rule is enforced by the captain during games and practice",
+        "Players can wait more than an hour after practice before drinking"
+      ],
+      "breakdown_regime": "A period rule, not a physiological law: modern hydration science contradicts the ban, so the primitive is a historical discipline rule and a warning about trusting period practice over measurement",
+      "domain": "training-and-recovery",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A standing operating rule that is enforced as doctrine but is itself testable: the engine keeps such rules as candidates with a status, and revises them when measurement contradicts them, rather than treating them as settled law.",
+        "source_operator": "no_water_during_game",
+        "telemetry": "Player hydration practice and any cramping or fatigue reports in the game"
+      }
+    },
+    {
+      "primitive_id": "substitute_signal_knowledge",
+      "name": "A substitute who does not know the signals costs the team more than the man he replaces",
+      "verbatim_quote": "the replacing of a player in case of accident by one in the slightest degree unfamiliar with the signals will destroy team play and cause the side a loss much greater than the value of the man who has left the field",
+      "page": "Training chapter, printed pp. 15-16",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Substitutes are drilled on signals daily alongside the first eleven",
+        "Signals are the shared code of the whole team, not the starters' private knowledge"
+      ],
+      "breakdown_regime": "Fails if the signal system itself is so simple that a new man can learn it on the sideline; the cost scales with the complexity of the code",
+      "domain": "team-play",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Redundancy is only real when the backup shares the protocol: a spare component that does not speak the team's signal code degrades the system more than the outage it covers, the same failure mode as an untested failover in any fleet.",
+        "source_operator": "substitute_signal_knowledge",
+        "telemetry": "Substitute signal drills completed, and team-play quality after in-game replacements"
+      }
+    },
+    {
+      "primitive_id": "center_selection_fallacy",
+      "name": "Selecting the center by size alone is an axiomatic fallacy",
+      "verbatim_quote": "Every new team formed, as a rule, selects the center according to this axiomatic fallacy",
+      "page": "Center-rusher chapter, printed p. 18",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "New teams default to the largest available man at center",
+        "The old pushing style of game made size look sufficient"
+      ],
+      "breakdown_regime": "Fails where size genuinely is the binding constraint, for example a very light center who cannot hold his ground at all; the claim is that size alone is insufficient, not that size is irrelevant",
+      "domain": "position-selection",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A selection-bias warning for any role assignment: the obvious single attribute that everyone selects on is usually a proxy, and the role's real requirements (speed, steadiness, temper) must be scored separately before the proxy is trusted.",
+        "source_operator": "center_selection_fallacy",
+        "telemetry": "Center selections and their outcomes scored against size, speed, steadiness, and temper"
+      }
+    },
+    {
+      "primitive_id": "center_speed_quick_game",
+      "name": "A slow center makes a quick game impossible for either side",
+      "verbatim_quote": "It is impossible to play a quick game where the center lags, or to prevent one on the part of the opponents",
+      "page": "Center-rusher chapter, printed p. 19",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Quick play means the ball is put in play the instant it is down",
+        "The center must follow the ball closely from down to down"
+      ],
+      "breakdown_regime": "Fails if the team deliberately plays slow and the opponent cannot force tempo either; tempo is set by the slower of the two centers",
+      "domain": "tempo-and-initiative",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Tempo is set by the slowest node on the critical path: the center is the single serial bottleneck of every play, so system speed is bounded by that node's latency, exactly as a pipeline's throughput is bounded by its slowest stage.",
+        "source_operator": "center_speed_quick_game",
+        "telemetry": "Time from down to snap for each team, and opponent tempo when the center lags"
+      }
+    },
+    {
+      "primitive_id": "snap_ball_sixty_degrees",
+      "name": "A ball placed on end for the snap leans toward the opposing center at about sixty degrees",
+      "verbatim_quote": "In case the ball is placed on end, it is better to have it lean toward the opposing center at an angle of about sixty degrees",
+      "page": "Center-rusher chapter, printed p. 22",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The center snaps the ball on end rather than rolling it along the ground",
+        "The lean is held firmly and uniformly each time"
+      ],
+      "breakdown_regime": "Fails on wet or uneven ground where the lean cannot be held, and for centers who snap better by rolling the ball along the ground",
+      "domain": "technique",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A calibrated micro-parameter with a stated value: a sixty degree lean trades a little stability for speed of delivery, the same shape as a tuned constant in any delivery mechanism, where the number itself is the primitive.",
+        "source_operator": "snap_ball_sixty_degrees",
+        "telemetry": "Snap speed, snap accuracy, and fumbled snaps by ball angle"
+      }
+    },
+    {
+      "primitive_id": "tackle_before_the_line",
+      "name": "The chief point of defense is to tackle the runner before he reaches the line",
+      "verbatim_quote": "The chief point in defensive play is to tackle the runner before he reaches the line",
+      "page": "Guard chapter, printed p. 27",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The guards and tackles can break through before the runner reaches the line",
+        "A runner allowed to reach the line gains ground almost every time"
+      ],
+      "breakdown_regime": "Fails against a runner who is already past the line when the defense reads the play; the rule governs the first line of defense, not pursuit after it is beaten",
+      "domain": "defense",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Meet the threat before it crosses your boundary: early interception at the line of scrimmage is the defensive analogue of catching an error at ingestion, before it propagates through the system and costs yards.",
+        "source_operator": "tackle_before_the_line",
+        "telemetry": "Tackles made behind the line versus at or beyond it, and yards gained on each"
+      }
+    },
+    {
+      "primitive_id": "quick_power_principle",
+      "name": "Power must be applied quickly and hard in one initial effort, not pushed slowly",
+      "verbatim_quote": "The great point to remember is to apply the power quickly and hard, to summon all the strength for the initial effort, and to work desperately until free from interference",
+      "page": "Guard chapter, printed p. 27",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The guard is free to use hands and arms to clear his opponent",
+        "The opening for the runner exists only for a fraction of a second"
+      ],
+      "breakdown_regime": "Fails when the opponent is already off balance and a slow push would suffice; the rule is about the initial break, not about sustained driving after the line is won",
+      "domain": "defense",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Impulse beats sustained force when the window is short: a concentrated burst at the moment of contact opens a gap that slow pressure cannot, the same reason a short sharp probe beats a long slow scan when the target moves.",
+        "source_operator": "quick_power_principle",
+        "telemetry": "Time to break through the line and whether the runner reached the line untouched"
+      }
+    },
+    {
+      "primitive_id": "wedge_point_focus",
+      "name": "A wedge is attacked by focusing on its point so it cannot break through unseparated",
+      "verbatim_quote": "to focus as nearly as possible upon the point of the wedge, in order to check its advance and throw the forwards back on the runner",
+      "page": "Guard chapter, printed pp. 28-29",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The center trio meets the wedge low and together",
+        "The runner is hidden inside the mass and must be forced out"
+      ],
+      "breakdown_regime": "Fails against a revolving wedge, where the point moves and the defense must separate and penetrate the mass instead of meeting it head on",
+      "domain": "defense",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Attack the apex of a concentrated force, not its flanks: a wedge's power is in its point, so the defense concentrates there to split the mass, the same geometry as breaking a concentrated attack by striking its leading edge.",
+        "source_operator": "wedge_point_focus",
+        "telemetry": "Wedge gains, and whether the defense met the point low and together"
+      }
+    },
+    {
+      "primitive_id": "tackle_two_styles",
+      "name": "The tackle must check two different styles of play at once, center plunges and end runs",
+      "verbatim_quote": "On the side toward the center he is to help the guard in blocking the heavy plunges which are frequently aimed at that point of the line, while on the other side he has to work with the end-rusher against all plays between them and on all plays around the end",
+      "page": "Tackle chapter, printed p. 34",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The tackle stands between guard and end and can defend both sides",
+        "Plays come at both the inside gap and the outside edge"
+      ],
+      "breakdown_regime": "Fails when the tackle is drawn too close to the guard and loses the outside, or too far out and loses the inside; the position is a balance, not a fixed spot",
+      "domain": "position-selection",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A dual-front role: the tackle is the node that must cover two different attack surfaces at once, and its value is exactly its ability to hold the balance between them without being drawn out of position by either.",
+        "source_operator": "tackle_two_styles",
+        "telemetry": "Plays defended to the inside versus the outside of the tackle, and gains allowed on each"
+      }
+    },
+    {
+      "primitive_id": "tackle_must_go_through",
+      "name": "Waiting to see where the run goes before committing is disastrous defense for a tackle",
+      "verbatim_quote": "The plan of waiting until it is seen where the run will be made and then running behind his line to help, if the play appears to be on the other side, is disastrous to a good defensive game",
+      "page": "Tackle chapter, printed p. 38",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The tackle can read the first indications of the play at the snap",
+        "Going through the line puts the tackle in position to meet the runner or force a double pass wide"
+      ],
+      "breakdown_regime": "Fails when the play is a deliberate misdirection and the tackle's early commitment is exactly what the offense wants; the rule assumes the tackle reads real signs, not guesses",
+      "domain": "defense",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Commit on the first reliable signal rather than waiting for certainty: waiting for the play to declare itself hands the initiative to the attacker, the same reason a system must act on early evidence instead of waiting for the full picture.",
+        "source_operator": "tackle_must_go_through",
+        "telemetry": "Tackle penetration at the snap versus waiting, and the resulting gain or loss"
+      }
+    },
+    {
+      "primitive_id": "end_first_down_field",
+      "name": "The end-rusher's motto is to be the first man down the field on a kick",
+      "verbatim_quote": "Be the first man down the field on a kick is the motto early instilled in the would-be end-rusher",
+      "page": "End-rusher chapter, printed p. 46",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The end is free to start down the field the instant the kick is made",
+        "The punter gives the ends time by elevating the kick when needed"
+      ],
+      "breakdown_regime": "Fails when the end is drawn into blocking on the kick and cannot release, or when the kick is short and there is no field to run down",
+      "domain": "special-teams",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Coverage speed is a race to the landing point: the first defender down the field sets the boundary of what the returner can do, the same way the first responder to a new signal sets the boundary of what the opponent can exploit.",
+        "source_operator": "end_first_down_field",
+        "telemetry": "Time for ends to reach the catcher versus return yards allowed"
+      }
+    },
+    {
+      "primitive_id": "qb_calls_own_signals",
+      "name": "The quarter-back now commonly gives the signals for the play himself",
+      "verbatim_quote": "It is now a common practice for the quarter-back to give the signals for the play himself, whether he is captain or not",
+      "page": "Quarter-back chapter, printed p. 53",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The quarter-back is in the best position to observe the whole field",
+        "Calling his own signals removes one translation step and its errors"
+      ],
+      "breakdown_regime": "Fails when the quarter-back cannot also read the defense while calling the play, or when the captain's wider view of the game is needed more than speed",
+      "domain": "command-and-control",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Move the decision to the node with the best view and the fewest translation steps: the quarter-back calls the play because he sees the field and no longer needs to interpret another man's signal, the same argument for pushing decisions to the edge.",
+        "source_operator": "qb_calls_own_signals",
+        "telemetry": "Signal errors and delay when the captain calls versus when the quarter-back calls"
+      }
+    },
+    {
+      "primitive_id": "qb_short_pass_at_waist",
+      "name": "On dashes through the center the quarter-back passes short and at the runner's waist",
+      "verbatim_quote": "On all dashes through the center it is better for the quarter-back to make short passes of the ball at the runner's waist",
+      "page": "Quarter-back chapter, printed p. 55",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The runner is bent over for a plunge and cannot handle a high or fast pass",
+        "The pass is made at close range as the runner comes forward at full speed"
+      ],
+      "breakdown_regime": "Fails on longer passes to a runner in open space, where a higher, faster pass is appropriate; the rule is specific to the short plunge",
+      "domain": "technique",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Match the delivery to the receiver's posture: a bent-over runner at full speed needs a slow, low, accurate pass, and a pass that would be excellent at distance is a poor one here, the same reason a message must fit the receiver's state, not the sender's convenience.",
+        "source_operator": "qb_short_pass_at_waist",
+        "telemetry": "Fumbles by half-backs on center dashes, by pass height and speed"
+      }
+    },
+    {
+      "primitive_id": "qb_defensive_positioning",
+      "name": "On defense the quarter-back lines up behind one tackle and a half-back behind the other",
+      "verbatim_quote": "the quarter-back takes a position behind one of the tackles, while a half-back is brought up to a corresponding position behind the other tackle",
+      "page": "Quarter-back chapter, printed p. 57",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The defense waits to see which opening the attack uses, then dives into it",
+        "The center and guards help the quarter-back find his opening"
+      ],
+      "breakdown_regime": "Fails against a team that runs almost entirely, when both half-backs should be brought forward instead; the formation is a balance between line support and deep safety",
+      "domain": "defense",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A two-sided screen behind the line: two agile defenders stationed behind the tackles wait for the attack to declare its gap and then fill it, the same shape as a pair of sentinels covering two flanks while the front line holds.",
+        "source_operator": "qb_defensive_positioning",
+        "telemetry": "Runs stopped behind the line by the quarter-back or half-back filling the gap"
+      }
+    },
+    {
+      "primitive_id": "quick_starting_premium",
+      "name": "Quick starting is the difference between a first-rate and a second-rate half-back",
+      "verbatim_quote": "Too great emphasis can not be placed on quick starting",
+      "page": "Half-backs and Full-back chapter, printed p. 60",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The half-back must get under headway in a very short distance before the line",
+        "A fast runner who starts slowly is tackled before he passes the critical point"
+      ],
+      "breakdown_regime": "Fails for a heavy plunging back whose value is power after contact rather than the first step; quick starting is necessary but not sufficient for the position",
+      "domain": "running-technique",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Acceleration from rest matters more than top speed when the distance is short: the first step decides whether the runner reaches the critical point at all, the same reason startup latency dominates when the task is brief.",
+        "source_operator": "quick_starting_premium",
+        "telemetry": "Yards gained by half-backs against their time to reach full speed"
+      }
+    },
+    {
+      "primitive_id": "dodging_underlying_principle",
+      "name": "Dodging is the quick movement of the body away from where it would have continued",
+      "verbatim_quote": "The underlying principle is the quick movement of the body, or portion of the body, from a point where it would have been if it had continued in the same direction",
+      "page": "Half-backs and Full-back chapter, printed p. 61",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The runner must slacken speed slightly before the tackler to regain balance",
+        "The dodge is a change of direction, not a change of speed alone"
+      ],
+      "breakdown_regime": "Fails at top speed, where the runner cannot change direction without slowing; every dodge costs a little speed to buy a change of course",
+      "domain": "running-technique",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Evasion is a displacement from the predicted path: the defender aims at where the runner would have been, so the runner's value is the size of the deviation he can produce in the time the defender has committed, the same geometry as dodging a prediction.",
+        "source_operator": "dodging_underlying_principle",
+        "telemetry": "Missed tackles and the runner's change of direction just before contact"
+      }
+    },
+    {
+      "primitive_id": "ball_carry_held_forward",
+      "name": "The ball carried under the arm is held well forward, where the chest muscles can grip it",
+      "verbatim_quote": "In carrying the ball under the arm it should be held well forward, because it can be held more tightly in this position",
+      "page": "Half-backs and Full-back chapter, printed p. 65",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The runner carries the ball under one arm with the other free to ward off",
+        "The ball is squeezed against the body, not carried loose at the side"
+      ],
+      "breakdown_regime": "Fails when the runner must carry in both hands through the line, where no arm is free and the forward hold is replaced by a two-handed gather under the body",
+      "domain": "running-technique",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Hold the asset where your strongest grip is: a forward carry puts the ball against the chest muscles, and the same rule governs any carried value, that it should sit where the holder's strength actually is.",
+        "source_operator": "ball_carry_held_forward",
+        "telemetry": "Fumbles by ball position, forward under the arm versus carried back"
+      }
+    },
+    {
+      "primitive_id": "punt_full_leg_leverage",
+      "name": "The most powerful kick swings the leg at full length from the hips as an axis",
+      "verbatim_quote": "the leg should be extended at full length (with toes pointed) and should swing on the hips as an axis",
+      "page": "Half-backs and Full-back chapter, printed p. 69",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The kicker drops rather than tosses the ball, keeping its axis unchanged",
+        "The full-back has practiced the long swing and is not rushed"
+      ],
+      "breakdown_regime": "Fails when the kick must be made quickly under pressure, where a short half swing from the knee is the only kick that gets away in time",
+      "domain": "kicking-technique",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Use the longest available lever for power: swinging from the hip brings the large abdominal muscles into play, where swinging from the knee alone shortens the lever and weakens the blow, the same physics as choosing the longest effective lever in any mechanism.",
+        "source_operator": "punt_full_leg_leverage",
+        "telemetry": "Punt distance by leg swing, full hip swing versus knee-only swing"
+      }
+    },
+    {
+      "primitive_id": "team_play_eleven_as_one",
+      "name": "Team play is eleven men using individual strength, wit, and courage as one man",
+      "verbatim_quote": "To get eleven men to use their individual strength, agility, and speed, their wit, judgment, and courage, first in individual capacity, then working with one or two companion players, then as eleven men working as one, is a magnificent feat in organization and generalship",
+      "page": "Team Play chapter, printed p. 221",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Individual skill is made subservient to the play in hand",
+        "The eleven are drilled together so each man knows the others' weak and strong points"
+      ],
+      "breakdown_regime": "Fails when the plan is so rigid that no man can use individual judgment in a broken play; the doctrine needs room for the occasional unaided run",
+      "domain": "team-play",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Coordination is layered: individual capacity, then pairs, then the whole eleven as one unit, and the organization that can hold all three layers at once is the feat itself, the same layering as any system that must coordinate parts into a single action.",
+        "source_operator": "team_play_eleven_as_one",
+        "telemetry": "Plays executed with every man doing his particular work versus plays broken by one missed assignment"
+      }
+    },
+    {
+      "primitive_id": "tell_signs_short",
+      "name": "The defense reads the play from the offense's unconscious glances, muscle movements, and false starts",
+      "verbatim_quote": "unconscious glances in the direction they will take; by certain anticipative movements of the muscles; by false starts before the ball is put into play",
+      "page": "Team Play chapter, printed pp. 223-224",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The backs and rushers betray direction by stance, glance, and muscle tension",
+        "The signs are positive enough to act on, and are shared with the whole team"
+      ],
+      "breakdown_regime": "Fails against shrewd players who cultivate false motions to deceive, and against teams whose discipline hides every tell",
+      "domain": "reading-the-opponent",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Leakage is a signal: the offense cannot help broadcasting its intent through posture and glance, so the defense's job is to read the leak and spread it, the same way any system leaks its next move through timing and placement.",
+        "source_operator": "tell_signs_short",
+        "telemetry": "Plays correctly anticipated from pre-snap tells, and plays where false motions deceived"
+      }
+    },
+    {
+      "primitive_id": "interference_timely_extended",
+      "name": "Interference must be timely: a helper projected at the exact moment a difficulty arises",
+      "verbatim_quote": "Interference must be timely to be effective. It must be the projecting of a helper at the moment a point of difficulty arises",
+      "page": "Team Play chapter, printed p. 228",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Interferers arrive in sequence as the runner advances",
+        "A helper too far in advance of the runner is of no service"
+      ],
+      "breakdown_regime": "Fails when the runner outruns his interference or the helpers arrive late; timing is the whole of the skill and cannot be fixed by adding more helpers",
+      "domain": "team-play",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Help is a timed projection, not a presence: an interferer is useful only at the moment the difficulty arises, and a series of helpers in timely sequence is the mechanism, the same as staged support arriving exactly when each obstacle appears.",
+        "source_operator": "interference_timely_extended",
+        "telemetry": "Interference arrival time relative to the runner, and yards gained on the play"
+      }
+    },
+    {
+      "primitive_id": "kick_coverage_parallel_lines",
+      "name": "On a kick the rushers run down in parallel lines two or three yards apart, converging to pocket the catcher",
+      "verbatim_quote": "In running down the field on a kick the rushers should run in parallel lines two or three yards apart, for most of the distance, converging as they approach the man with the ball, in order to pocket him",
+      "page": "Team Play chapter, printed p. 229",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The ends start instantly and the tackles follow hard after them",
+        "The catcher is forced to run inside, toward the approaching rushers"
+      ],
+      "breakdown_regime": "Fails when the kick is short or to the side and the formation has no distance to form in; the parallel lines need most of the field to work",
+      "domain": "special-teams",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Coverage is a converging net: parallel lanes held for most of the distance, then closed together at the target, so the returner is pocketed rather than chased, the same geometry as a search that narrows as it closes.",
+        "source_operator": "kick_coverage_parallel_lines",
+        "telemetry": "Return yards allowed by coverage formation, parallel lanes versus scattered pursuit"
+      }
+    },
+    {
+      "primitive_id": "probe_plays_short",
+      "name": "Strong plays are tried two or three times early in the game to give them a fair test",
+      "verbatim_quote": "should be tried at least two or three times early in the game in order to give it a fair test, that the captain may know which will be his most effective plays",
+      "page": "Field Tactics chapter, printed pp. 233-234",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The trial is made at a well-chosen time, field position, and down",
+        "A play that fails twice may have failed from imperfect execution, not from weakness"
+      ],
+      "breakdown_regime": "Fails when the trial is made at the wrong down or field position and the result misleads the captain into discarding a good play or keeping a bad one",
+      "domain": "field-tactics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Test each candidate early and fairly before choosing: a strong play deserves two or three trials at well-chosen moments, because one failed trial usually measures execution, not the play, the same as any evaluation that needs a fair sample before it judges.",
+        "source_operator": "probe_plays_short",
+        "telemetry": "Plays tried early, trials given, and the captain's later reliance on each play"
+      }
+    },
+    {
+      "primitive_id": "variety_short",
+      "name": "The uncertainty of facing varied tactics weakens each defender considerably",
+      "verbatim_quote": "comes from combating a variety of tactics weakens each man's defense considerably, and puts him at his wit's end",
+      "page": "Field Tactics chapter, printed p. 235",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The offense executes many movements well, not just one",
+        "The defense cannot settle into a certain response to a known play"
+      ],
+      "breakdown_regime": "Fails against a defense so well drilled that variety does not slow it, or an offense whose variety is shallow and each play is executed poorly",
+      "domain": "field-tactics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Uncertainty is itself a weapon: when the defender cannot know what is coming, his attack through the line grows cautious and weak, so variety in the attack degrades the defense without any single play needing to beat it.",
+        "source_operator": "variety_short",
+        "telemetry": "Defensive hesitation and yards allowed as the offense varies its plays"
+      }
+    },
+    {
+      "primitive_id": "series_plays_virtue",
+      "name": "Series plays let each play be made in the quickest manner because every man knows what is coming next",
+      "verbatim_quote": "The great virtue in series plays lies in the fact that a certain signal starts the series and each play can be made in the quickest manner, because the players all know what is coming next",
+      "page": "Field Tactics chapter, printed pp. 235-236",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The series is four to six plays, perfectly learned",
+        "The series is stopped by a simple signal the moment conditions make the next play unwise"
+      ],
+      "breakdown_regime": "Fails when contingencies arise that injure the series, or when the sequence becomes predictable and the defense reads the pattern",
+      "domain": "field-tactics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A pre-committed sequence removes decision latency: when every player knows the next play, the whole series runs at maximum speed, the same reason a cached plan beats a fresh decision at each step, provided the plan can be stopped on a signal.",
+        "source_operator": "series_plays_virtue",
+        "telemetry": "Time between plays and yards gained on series plays versus called plays"
+      }
+    },
+    {
+      "primitive_id": "end_play_proportion",
+      "name": "End plays should be no more than one in three or four plays through the line",
+      "verbatim_quote": "the proportion of plays at the end to plays through the line should not be larger than one to three",
+      "page": "Field Tactics chapter, printed p. 246",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "End plays carry a larger risk of no gain or actual loss than center plays",
+        "The runner usually reaches the line on a center play and the gain is then a question of how far"
+      ],
+      "breakdown_regime": "Fails when the end runner seldom fails to reach the line and is usually good for a gain; then the risk element is gone and the proportion should follow measured gain per trial",
+      "domain": "field-tactics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A risk-weighted mix ratio: end plays are rarer because they carry more variance, and the one-to-three ceiling is a portfolio rule that should be re-set from measured gain per trial when the risk changes.",
+        "source_operator": "end_play_proportion",
+        "telemetry": "Gain and loss rates for end plays versus center plays, by trial"
+      }
+    },
+    {
+      "primitive_id": "drop_kick_short",
+      "name": "Even the best drop kickers score no more than one goal in four or five attempts",
+      "verbatim_quote": "more than one in every four or five attempts, with the best kickers in America, and the most certain way to score will be to strain every nerve to place the ball across the line",
+      "page": "Field Tactics chapter, printed p. 248",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The kick is attempted from a fair position inside the twenty-five yard line",
+        "The kicker is among the best in the country"
+      ],
+      "breakdown_regime": "Fails as a fixed rate if the kicker, the distance, or the wind changes the odds; the figure is a base rate for the best kickers, not a law",
+      "domain": "field-tactics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A stated base rate that disciplines the decision: a one-in-four-or-five chance from the best kicker means the drop kick is a last resource, not a plan, and the certain way to score is to carry the ball across the line.",
+        "source_operator": "drop_kick_short",
+        "telemetry": "Drop kick attempts and goals by distance, kicker, and wind"
+      }
+    },
+    {
+      "primitive_id": "safety_touchdown_trade",
+      "name": "Conceding a safety for two points can prevent a probable six",
+      "verbatim_quote": "by making a safety touchdown and allowing the opponents to score two, he could have brought the ball out to the twenty-five-yard line and prevented a probable six points",
+      "page": "Field Tactics chapter, printed p. 248",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Two downs are already used and ground lost under the team's own goal",
+        "Kicking is unwise because of wind or an unreliable punter, and the opponents would force the ball over anyway"
+      ],
+      "breakdown_regime": "Fails when the opponents would not in fact force the ball over, or when the ball can be carried out safely on the next trial; the trade is only good when the six points are probable",
+      "domain": "field-tactics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Accept a small certain loss to prevent a larger probable one: conceding two points to bring the ball out to the twenty-five is a deliberate trade of points for position, the same shape as any hedge that pays a premium to cap the downside.",
+        "source_operator": "safety_touchdown_trade",
+        "telemetry": "Points conceded by safeties taken deliberately versus points lost by forcing the ball out"
+      }
+    },
+    {
+      "primitive_id": "signal_code_design",
+      "name": "The best signal code indicates the play simply while staying unintelligible to opponents",
+      "verbatim_quote": "That code of signals will be best, then, which will indicate in the simplest manner the play intended, while at the same time being unintelligible to opponents",
+      "page": "Signals chapter, printed p. 257",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Every player has a special duty on each play and must know the evolution in advance",
+        "The opposing team must be kept in absolute ignorance of the intention"
+      ],
+      "breakdown_regime": "Fails when the code is so simple that the opponents learn it in one game, or so complicated that the players themselves hesitate; simplicity must be balanced against secrecy",
+      "domain": "signals-and-codes",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A code is a compression that must be simple for insiders and opaque to outsiders: the design goal is the shortest signal the team can execute instantly, with the key hidden from the opponent, the same goal as any shared protocol.",
+        "source_operator": "signal_code_design",
+        "telemetry": "Signal errors by the team versus signals read by the opponents"
+      }
+    },
+    {
+      "primitive_id": "number_code_openings_players",
+      "name": "A number code gives each opening and each player a number, and two numbers name the play",
+      "verbatim_quote": "A very simple code may be arranged, in which each opening is given a number, and each player a number",
+      "page": "Signals chapter, printed p. 259",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Openings are numbered as they radiate from the center, players by position",
+        "A third number is called for deception, or the first number means nothing"
+      ],
+      "breakdown_regime": "Fails once the opponents discover which number is the player and which is the opening; the whole system is then changed by a prearranged signal that swaps the meaning of the numbers",
+      "domain": "signals-and-codes",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "An addressing scheme for plays: number the openings and the players, and a short tuple names any combination, with a spare number for deception and a rekeying signal when the code is compromised, the same structure as any compact command encoding.",
+        "source_operator": "number_code_openings_players",
+        "telemetry": "Plays called and executed correctly under the number code, and plays read by opponents"
+      }
+    },
+    {
+      "primitive_id": "tackle_low_hips",
+      "name": "Always tackle low, aiming between knees and waist and watching the runner's hips",
+      "verbatim_quote": "Always tackle low. The region between the knees and waist is the place to be aimed at. When preparing to tackle, keep your eyes on the runner's hips, for they are the least changeable part of the body",
+      "page": "Axioms chapter, printed p. 263",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The tackler keeps his eyes on the runner's hips through the tackle",
+        "The tackle is made low, with the head down and the weight thrown forward"
+      ],
+      "breakdown_regime": "Fails against a runner who is already low and bent over, where a low tackle meets head against head; the axiom assumes the runner is upright enough to be got under",
+      "domain": "axioms",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Aim at the least changeable part of the target: the hips do not feint, so watching them defeats every dodge, the same principle as tracking the stable variable in a system while the noisy ones dance around it.",
+        "source_operator": "tackle_low_hips",
+        "telemetry": "Tackles made low at the hips versus high, and yards after contact"
+      }
+    },
+    {
+      "primitive_id": "downs_rule_intro_quoted",
+      "name": "Failing to gain five yards, or losing twenty, in three scrimmages forfeits the ball",
+      "verbatim_quote": "in three consecutive \"scrimmages\", the ball shall be forfeited to the other side at the spot where it was last down",
+      "page": "Introductory chapter, printed p. 10",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The side in possession has had three consecutive scrimmages",
+        "The aggregate gain is less than five yards and the loss is less than twenty"
+      ],
+      "breakdown_regime": "Fails as a statement of the modern rule, which is four downs for ten yards; this is the 1893 rule as printed, and is a historical record, not current law",
+      "domain": "rules",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A possession constraint with a stated threshold: five yards in three trials or the ball changes hands, which is the ancestor of the modern down-and-distance system, and the same shape as any bounded-attempt rule that forces progress or turnover.",
+        "source_operator": "downs_rule_intro_quoted",
+        "telemetry": "Possessions ending by the three-down rule, and the yards gained on each"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c7a3cc0373eb9bb8-t1",
+      "think": "This is the first systematic treatise on American football, written in 1893 by Amos Alonzo Stagg of Chicago and Henry L. Williams of Minnesota, two of the men who were inventing the game as they wrote about it. It is a coaching manual, not a history, and its value is that it records the game at the moment it stopped being a brawl and became a system. The authors say so in the preface: football among the larger eastern colleges has been raised to a definite science, and their aim is to carry that science westward to the smaller colleges and preparatory schools. The book is organized as a ladder. It begins with the field, the positions, and the rules for a beginner, then teaches training, then each position in turn from the center outward, then the half-backs and the full-back, then a long chapter of diagrammed plays, then team play, field tactics, signals, axioms, and the printed rules of the Intercollegiate Football Association for 1893. Every chapter is written the same way: first the qualities a man needs for the position, then the techniques, then the judgment. The authors never separate the physical from the mental. A center needs strong legs and back, but he also needs to be cool, combative without losing his temper, and never rattled. A quarter-back needs quick hands, but his brain must be as clear as his muscles are quick and steady. A tackle needs weight and speed, but above all he needs a master mind. The book's central doctrine is that football is a team game built out of individual capacities arranged in sequence. The center starts every play and sets the tempo. The guards and tackles make openings and break through. The quarter-back distributes the ball and increasingly calls the signals himself. The backs gain the ground. The ends are the last line against the long run and the first men down the field on a kick. No position is an island: the guard's opening depends on the tackle's block, the runner's gain depends on the interference arriving on time, and the whole play depends on the center's snap being steady, accurate, and uniform. Two ideas run through the entire book and give it its lasting interest. The first is tempo. Again and again the authors insist that the game is won by quickness, by lining up the instant the ball is down, by snapping before the defense is set, by series plays that run one after another without a pause. A slow center makes a quick game impossible. A guard who pushes slowly accomplishes little. A runner who starts slowly is tackled before he passes the critical point. The second idea is information. The captain must read the opponents' tells, the glances and muscle movements that betray the play, while his own men must hide theirs. The signal code must be simple for the team and opaque to the enemy. The captain must probe the defense with his strong plays early, must know the wind and the sun and the soft places in the field, and must choose his plays by what his men can actually do rather than by what his system says they should do. The book is also a record of a game that no longer exists, and that is part of its value. The field is 330 feet long. A touchdown is four points, a goal from the field is five, a goal after touchdown is two, and a safety is two. The team has three downs to gain five yards. The forward pass is illegal: the ball may be thrown in any direction except toward the opponents' goal. The wedge and the mass play dominate, and much of the defensive teaching is about how to meet a wedge low, how to focus on its point, how to dive at its feet. The training chapter belongs to its era as well: no water during the game, no fried food, no pies or cakes, sleep from ten to seven. Some of that is period error, and the artifact marks it as such. But the load management underneath it is sound: practice in two sharp half hours, absolute rest the day before the game, substitutes drilled on the signals, overtraining read from a daily decline in dash and speed. For a reasoning engine the book is a template for turning a contested field into a coordinated system. Its primitives are not equations but operating rules with stated thresholds: five yards in three downs, one end play in three, a sixty degree lean on the snap, two or three trials to test a strong play, one goal in four or five drop kicks. Each rule names its conditions and its failure mode, which is exactly what a reasoning layer needs to weigh a signal rather than merely receive it. The book's deepest lesson is its last one, in the axioms: do not be contented with a superficial reading, but study carefully, if you would master it. That is the whole doctrine in one line. The book therefore does double duty for any later system that inherits it. It is a manual for the game as it was actually played in 1893, with its own formations, its own scoring values, and its own rules, and it is also a study of how a group of men becomes a team: by assignment, by drill, by shared signals, by shared timing, and by a captain who has studied the field and his men well enough to command them as one. Both readings are kept in this artifact, the historical and the structural, because either one alone would misstate what the authors built.",
+      "retrocausal_genealogy": "The ideas in this book come from the first generation of American football coaches, and the lineage runs through the men who built the game in the 1880s and early 1890s. Stagg played end at Yale under Walter Camp, the man who invented the scrimmage, the snap, and the down-and-distance system, and who named Stagg to his All-America team. Williams coached at Minnesota. The book's center, guard, and tackle doctrines descend directly from Camp's Yale teams, and the wedge plays it teaches were the mass-momentum football of Princeton and Yale in that decade. The signal systems descend from the early Yale code books, including the 1889 numerical signals Stagg describes from his own playing days. The training doctrine comes from the rowing and track training tables of the 1870s and 1880s, softened from raw beef and water restriction toward the sumptuous training table the authors describe. The field tactics chapter is the first written statement of the captain as a general, reading tells and probing with strong plays, a doctrine that runs forward through every later coaching manual. The rules chapter is the Intercollegiate Football Association code for 1893, itself the descendant of the 1876 Massasoit convention rules and the 1880s Camp revisions.",
+      "theory_of_mind": "Stagg and Williams believe their reader is a schoolboy or a young coach in the west who has never seen first-class football and needs to be taught it from the ground up, clearly and precisely, in small steps. They believe the game is a science that can be learned by study, not only by playing, and that a book can raise the standard of play across the country if it is exact enough. They believe in order: begin with simple steps and advance by gradual stages to the most difficult evolutions. They believe the captain is a general and the players are soldiers who must obey without question, and that the captain's word on the field is absolute law. They also believe, and say plainly, that football rewards brains as much as bulk, that the smallest man can be the general of the game, and that the public, not only the players, should understand the game better. Their model of the domain is a machine of eleven parts, each with a defined duty, that succeeds when every part does its work at the right moment and fails when any one part is late.",
+      "cross_layer_veto": "This book vetoes any picture of football as a contest of individual stars or of brute force. A team of strong men who do not play together will lose to a weaker team that does, because the execution of a play depends on every player doing his particular work at the right moment, and no amount of cleverness afterward can atone for a bungling start. It vetoes the selection of players on a single attribute, size for the center or smallness for the quarter-back, and demands that each position be scored on its full set of requirements. It vetoes slow, cautious defense: waiting to see where the run goes is disastrous, and a daring, reckless defense beats a hesitant one. It vetoes the idea that a code can be complicated and still work under pressure, and it vetoes playing the same few successful plays until the opponent has read them. It also vetoes any engine that treats a period rule as eternal law: the no-water rule and the three-down rule are recorded as history, and the artifact marks them as superseded, so that no later layer can inherit them as fact."
+    }
+  ],
+  "universal_lens": "A treatise on turning eleven separate capacities into one coordinated action, in a fixed sequence, under time pressure, against an opponent who reads your tells. The template generalizes to any team system: define each role by its full requirements rather than one proxy attribute, make the handoff between roles the unit of quality, set the tempo by the slowest node on the critical path, read the opponent's leakage while hiding your own intent, probe with your strong moves early and fairly, and keep a small set of axioms that survive every change in the rules.",
+  "gsi_mapping": "The Institute takes this book as the founding document of football as a designed system, and as a source of first principles for team coordination: layered roles from center to backs, tempo set by the serial bottleneck, interference as timed projection, signal codes that are simple inside and opaque outside, and field tactics as probing, variety, and series play. Its quantified rules, five yards in three downs, one end play in three, a sixty degree snap lean, one goal in four or five drop kicks, are early examples of stated thresholds with named failure modes, and the Institute keeps them as historical baselines against which later tactics are measured.",
+  "gse_mapping": "The engine takes the book's operating rules as reasoning primitives: the down-and-distance constraint as a bounded-attempt rule, the tell-reading doctrine as a leakage signal, the series-play doctrine as a cached plan that removes decision latency, the probe-early rule as a fair evaluation protocol, and the end-play proportion as a risk-weighted mix ratio. The training chapter gives the engine its load-management template: dose work in sharp blocks, rest absolutely before the decisive event, and read fatigue from a sustained decline in output rather than a single bad observation. Nothing in the book is a pick, a score, or a wager; it is all mechanism and judgment."
+}

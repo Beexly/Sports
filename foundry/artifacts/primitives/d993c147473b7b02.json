@@ -1,0 +1,727 @@
+{
+ "book_id": "d993c147473b7b02",
+ "source_status": "COMPLETE",
+ "source_note": "Edited volume: Tsao J, Pryweller JR, Servatius RJ, Zetterberg H (eds.), Concussion, a Frontiers in Neurology Research Topic eBook, Frontiers Media SA, Lausanne, April 2021. ISBN 978-2-88966-700-0; DOI 10.3389/978-2-88966-700-0; ISSN 1664-8714. The local file is the publisher's compiled eBook PDF containing the Topic's 18 articles (originally published in Frontiers in Neurology 2018-2020). File size 17,879,582 bytes; full sha256 d993c147473b7b02065ed2d0495e35f809dfeb256dd4dcbfbd0381e4692508ad; book_id is the first 16 hex of that digest. Extracted text (124,378 words) is clean, complete, publisher two-column text; every verbatim quote in this artifact was verified as a contiguous substring of the extracted text file under gatekeeper normalization. Catalog filename TsaoEtAlEds-2021 is correct; the eBook compilation itself is dated April 2021. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "rpq_subtype_classification",
+   "name": "Early symptom-based subtyping of concussion predicts clinical trajectories and enables targeted treatment (Maruta et al.)",
+   "verbatim_quote": "Classifying concussion in key subtypes according to presenting symptomatology at an early post-injury stage is an emerging approach that may allow prediction of clinical trajectories and delivery of targeted treatments.",
+   "page": "Maruta et al. 2018, Abstract, book p.5 (text lines ~181-196)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Presenting symptoms within about 2 weeks carry information about the recovery trajectory, not only about current severity.",
+    "The six profiles are cognitive-fatigue, vestibular, oculomotor, anxiety/mood, post-traumatic migraine, and cervical, with sleep disturbance treated as a recovery modifier rather than a subtype; cervical attributes are extracranial and arguably an associated condition, not a concussion subtype.",
+    "The RPQ's 16 items plus three added items (balance problems, fogginess, drowsiness) can be partitioned into symptom classes that map onto the clinical profiles."
+   ],
+   "breakdown_regime": "Subtyping is symptom-based, not pathophysiology-based; the authors note it does not directly address root-cause pathophysiology, and objective measures are still needed to properly populate the classification.",
+   "domain": "concussion phenotyping",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A single injury label is replaced by a profile vector over latent subtypes, and downstream reasoning conditions on the profile rather than the label. The engine equivalent: classify the state into a small set of trajectory classes from early observable features before forecasting, instead of forecasting from the event label alone.",
+    "source_operator": "rpq_subtype_classification",
+    "telemetry": "Item-level symptom questionnaire responses at baseline and within 2 weeks post-injury."
+   }
+  },
+  {
+   "primitive_id": "rpq_severity_threshold_separability",
+   "name": "RPQ profiles are separable only at moderate-to-severe symptom elevation; at mild levels profiles overlap heavily (81.0% of at-least-moderate cases endorse at most two classes)",
+   "verbatim_quote": "All 89 concussed subjects reported at-least-mild post-concussion symptoms, of whom 59 (66.3%) reported symptoms with overlapping associations with at least four post-concussion profiles (Figure 4).",
+   "page": "Maruta et al. 2018, Results, book p.8 (text lines ~400-430)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Severity thresholds (severe = any item rated 4; at-least-moderate = any item rated 3 or more) define the classification operating point.",
+    "At the at-least-mild level, 66.3% of concussed subjects endorsed symptoms overlapping at least four profiles, so mild endorsement cannot delineate profiles."
+   ],
+   "breakdown_regime": "With only 89 concussed subjects, compartment counts are small; the separability claim is about this instrument and cohort, not a universal property of symptom data.",
+   "domain": "measurement resolution",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Classification confidence is a function of signal strength: the same feature vector yields a usable class assignment at high severity and an unusable one at low severity. The engine equivalent is a severity-gated classifier that abstains or widens its posterior when the input signal sits below the separability threshold.",
+    "source_operator": "rpq_severity_threshold_separability",
+    "telemetry": "Distribution of endorsed symptom classes per subject at each severity cut."
+   }
+  },
+  {
+   "primitive_id": "cognitive_fatigue_dominant_profile",
+   "name": "Cognitive-fatigue is the most prevalent post-concussion profile: 47.2% of concussed athletes at at-least-moderate severity versus 11.5% at baseline",
+   "verbatim_quote": "most prevalently endorsed by the concussed subjects, with as",
+   "page": "Maruta et al. 2018, Results, book p.7 (text lines ~360-390)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Prevalence contrast uses a binomial test of the concussed cohort against the probability established by the baseline cohort (n = 3,088).",
+    "The four defining items are fatigue, forgetfulness/poor memory, poor concentration, and taking longer to think."
+   ],
+   "breakdown_regime": "Baseline endorsement of the same items is already 11.5%, so the profile is an elevation over a noisy background, not a de novo signal; oculomotor symptoms by contrast barely separated from baseline.",
+   "domain": "concussion phenotyping",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Class priors shift measurably after the event: the dominant post-event class is cognitive-fatigue, and any trajectory model that keeps pre-event class priors will underweight it. The engine equivalent is updating class priors from a large baseline reference population rather than assuming uniform priors.",
+    "source_operator": "cognitive_fatigue_dominant_profile",
+    "telemetry": "Baseline and acute RPQ item endorsements in a 3,088-athlete prospective cohort, 89 concussed."
+   }
+  },
+  {
+   "primitive_id": "baseline_risk_enrichment",
+   "name": "Pediatric age and previous head injury are both associated with a higher likelihood of sustaining a concussion in a prospective athletic cohort",
+   "verbatim_quote": "in the pediatric group and a history of a previous head injury",
+   "page": "Maruta et al. 2018, Statistical Analysis, book p.7 (text lines ~370-385)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Previous head injury was self-reported and of unspecified severity.",
+    "Concussed subjects also endorsed more cognitive-fatigue, vestibular, migraine, and sleep items at baseline than the overall cohort, so baseline symptom load itself tracks risk."
+   ],
+   "breakdown_regime": "Association is observational within one cohort (89 events); the odds ratio for prior injury in pediatric versus adult concussed subjects was 0.41 (CI 0.17 to 0.99), so the risk structure differs by age band.",
+   "domain": "injury risk factors",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Risk is stateful: prior events and baseline symptom load change the prior probability of the next event. The engine equivalent is a hazard model whose covariates include event history and pre-event symptom burden, not only exposure counts.",
+    "source_operator": "baseline_risk_enrichment",
+    "telemetry": "Baseline head-injury history, age band, and baseline RPQ endorsements for concussed versus non-concussed athletes."
+   }
+  },
+  {
+   "primitive_id": "adhd_baseline_confounder",
+   "name": "Pre-existing ADHD shifts baseline neurocognitive scores and symptom totals, so baselines must be interpreted conditional on pre-existing conditions (Kaye et al.)",
+   "verbatim_quote": "concussion management in order to account for pre-existing conditions such as ADHD",
+   "page": "Kaye et al. 2019, Abstract, book p.12 (text lines ~690-730)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "ADHD status was self-reported and not physician-verified; 11.5% of the sample (n = 1,460) reported an ADHD diagnosis and 48.2% of them reported ADHD medication.",
+    "Athletes with ADHD scored worse on verbal memory (p = 0.001) and visual motor speed (p = 0.033) and reported more baseline symptoms."
+   ],
+   "breakdown_regime": "Cross-sectional baseline data only; the study does not measure post-injury change, so it cannot say how ADHD modifies recovery, only that it displaces the reference point.",
+   "domain": "neurocognitive baseline",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A baseline is a conditional distribution, not a constant: comparing a post-event measurement to a pooled baseline misattributes pre-existing displacement to the event. The engine equivalent is covariate-conditional baselines, where each subject's reference is drawn from the stratum matching their pre-existing conditions.",
+    "source_operator": "adhd_baseline_confounder",
+    "telemetry": "ImPACT composite scores and total symptom scores stratified by ADHD status and concussion history."
+   }
+  },
+  {
+   "primitive_id": "loc_history_symptom_burden",
+   "name": "A prior concussion with loss of consciousness leaves a higher baseline symptom burden than a prior non-LOC concussion or no concussion",
+   "verbatim_quote": "those with previous LOC concussion reported more symptoms than those with",
+   "page": "Printed journal p. 1 (Abstract, Conclusions; Kaye et al.)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Mean total symptoms: 9.4 (prior LOC) versus 5.7 (prior non-LOC) versus 4.7 (no history).",
+    "Paradoxically, the prior non-LOC group performed better on visual motor speed than both the LOC and no-history groups, so history effects are not monotone across measures."
+   ],
+   "breakdown_regime": "LOC occurs in only about 5 to 10% of sports concussions and self-reported history is subject to recall error; the LOC subgroup was 112 of 1,460 participants.",
+   "domain": "neurocognitive baseline",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Event severity grading persists in the baseline: the worst prior events leave the largest residual displacement. The engine equivalent is severity-weighted event history, where a prior high-severity event shifts the reference distribution more than a prior low-severity one.",
+    "source_operator": "loc_history_symptom_burden",
+    "telemetry": "Baseline total symptom score by three-level concussion history (none, non-LOC, LOC)."
+   }
+  },
+  {
+   "primitive_id": "neurometabolic_cascade",
+   "name": "The concussion neurometabolic cascade: membrane damage releases excitatory neurotransmitters and causes ionic imbalance, spreading depolarization, then an energy crisis (Tabor et al., after Giza and Hovda)",
+   "verbatim_quote": "contributing to a spread of depolarization and ionic flux in",
+   "page": "Tabor et al. 2019, Introduction, book p.18 (text lines ~1060-1090)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Membrane ion pumps work exhaustively to restore ionic balance, raising ATP demand; hyperglycolysis and increased mitochondrial activity are followed by a state of impaired metabolism.",
+    "The cascade description is a synthesis of the cited literature, not a measurement made in this article."
+   ],
+   "breakdown_regime": "The cascade is a qualitative mechanistic chain; its time constants and magnitudes vary by injury severity, region, and age, and it does not by itself predict individual outcomes.",
+   "domain": "injury pathophysiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A staged causal chain with an energy-budget bottleneck: an initial perturbation forces compensatory work, and the system passes through a hypermetabolic phase into a hypometabolic vulnerable phase. The engine equivalent is modeling post-event states as phases of a resource-depletion process rather than as a single damage scalar.",
+    "source_operator": "neurometabolic_cascade",
+    "telemetry": "Mechanistic literature chain; observable correlates in this volume include MRS metabolites, cortical excitability, and cerebral blood flow measures."
+   }
+  },
+  {
+   "primitive_id": "hpa_axis_disruption_post_rmtbi",
+   "name": "Repetitive mTBI disrupts the hypothalamic-pituitary adrenal axis via anterior pituitary dysfunction, lowering the cortisol response needed after injury",
+   "verbatim_quote": "hypothalamic-pituitary adrenal axis, lowering cortisol secretion that is needed to",
+   "page": "Tabor et al. 2019, Abstract, book p.17 (text lines ~990-1030)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Elevated cortisol after injury is treated as beneficial and protective; the deficit state follows repetitive, not single, injury in this framing.",
+    "Evidence here is from an adolescent rat model plus cited human pituitary literature."
+   ],
+   "breakdown_regime": "Rodent HPA responses do not transfer quantitatively to humans; human post-TBI pituitary dysfunction rates vary widely by study and assay.",
+   "domain": "neuroendocrine",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A controller failure mode: the injury damages the very feedback axis that would normally mount the recovery response, so the system's regulator is inside the blast radius. The engine equivalent is flagging signals whose generating mechanism is itself impaired by the event being measured.",
+    "source_operator": "hpa_axis_disruption_post_rmtbi",
+    "telemetry": "Serum corticosterone and testosterone, pituitary and brain-region mRNA expression in the rat model."
+   }
+  },
+  {
+   "primitive_id": "aas_cessation_worsens_rmtbi_outcomes",
+   "name": "Abrupt cessation of anabolic-androgenic steroids and exercise after repetitive mTBI exacerbated anxiety and memory outcomes in rats; maintained steroid treatment promoted glucocorticoid secretion after injury",
+   "verbatim_quote": "Interestingly, Met treatment promoted glucocorticoid secretion after injury, suggesting that maintained AAS may be more beneficial than abstaining after mTBI.",
+   "page": "Tabor et al. 2019, Abstract conclusions, book p.18 (text lines ~1035-1045)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Four-arm design in 47 adolescent male rats: Metandienone or placebo, exercise, with steroid and exercise cessation (SEC) after the third injury for half the animals.",
+    "RmTBI and SEC had cumulative effects on anxiety-like behavior and short-term working memory; SEC also shortened telomere length measures."
+   ],
+   "breakdown_regime": "Animal model, one AAS compound, males only, and cessation confounds steroid withdrawal with exercise withdrawal; the authors frame maintained AAS as a hypothesis about glucocorticoid support, not a clinical recommendation.",
+   "domain": "neuroendocrine",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Withdrawal is itself an intervention with a sign: removing a chronic input at the moment of injury adds a second perturbation that compounds the first. The engine equivalent is treating abrupt regime changes in any long-running input as events in their own right when forecasting post-event trajectories.",
+    "source_operator": "aas_cessation_worsens_rmtbi_outcomes",
+    "telemetry": "Behavioral battery (beam walk, open field, elevated plus maze), serum hormones, qRT-PCR, telomere length."
+   }
+  },
+  {
+   "primitive_id": "dti_detects_axonal_injury",
+   "name": "Diffusion tensor imaging detects traumatic axonal injury that standard clinical CT and MRI fail to detect after concussion (Mallott et al.)",
+   "verbatim_quote": "present, standard clinical imaging fails to reliably detect traumatic axonal injury associated",
+   "page": "Mallott et al. 2019, Abstract, book p.32 (text lines ~1890-1925)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "DTI is sensitive to white matter microstructural change through scalar metrics (FA, MD, RD, AD) computed from diffusion-weighted MRI.",
+    "Traumatic axonal injury may be inferred from CT or conventional MRI only indirectly, via associated small hemorrhages those modalities can detect."
+   ],
+   "breakdown_regime": "DTI abnormalities are group-level and region-heterogeneous; individual-patient diagnosis from DTI alone is not established, which is why the study adds individual tract-level analysis.",
+   "domain": "neuroimaging biomarker",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A negative standard test does not bound the injury: the sensitive instrument (DTI scalar metrics over white matter tracts) sees microstructural change invisible to the standard instrument. The engine equivalent is never treating a low-resolution channel's null result as evidence of no state change when a higher-resolution channel exists.",
+    "source_operator": "dti_detects_axonal_injury",
+    "telemetry": "FA, MD, RD, AD maps from 3T diffusion MRI in athletes, ER patients, and controls."
+   }
+  },
+  {
+   "primitive_id": "dti_metric_sign_reversal",
+   "name": "DTI scalar metrics reverse sign between acute and chronic phases: FA rises and RD/AD fall acutely; FA falls and RD/AD rise chronically",
+   "verbatim_quote": "In the acute phase, FA has been seen to increase",
+   "page": "Mallott et al. 2019, Introduction, book p.33 (text lines ~1960-1990)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The reversal is a literature-level pattern the study situates itself in; the study's own scans are early subacute (within 2 weeks).",
+    "Direction of a metric's deviation is uninterpretable without the post-injury time coordinate."
+   ],
+   "breakdown_regime": "Phase boundaries are not sharp and vary by tract and injury mechanism; a single scan cannot be assigned a phase from the metrics alone.",
+   "domain": "neuroimaging biomarker",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Time-varying sign flip: the same biomarker deviation means opposite things at different lags from the event. The engine equivalent is lag-conditioned interpretation of every feature, with the sign of an effect stored as a function of time since event rather than as a constant.",
+    "source_operator": "dti_metric_sign_reversal",
+    "telemetry": "Longitudinal FA, RD, AD by region and days since injury."
+   }
+  },
+  {
+   "primitive_id": "cerebellar_peduncle_athlete_signature",
+   "name": "Early subacute concussion in scholastic athletes shows regional axial diffusivity decreases concentrated in the cerebellar peduncles, more frequent than in ER patients",
+   "verbatim_quote": "in the cerebellar peduncles, and were more frequent in athletes compared to the ER",
+   "page": "Mallott et al. 2019, Abstract, book p.32 (text lines ~1905-1925)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Comparison groups: 18 scholastic athletes, 42 ER patients (18 age-matched to athletes), 38 controls (10 age-matched).",
+    "The authors interpret the athlete-ER difference as possibly reflecting impact mechanism differences plus cumulative subconcussive exposure in athletes."
+   ],
+   "breakdown_regime": "Small athlete sample and cross-sectional design; the subconcussive accumulation explanation is a hypothesis, not a measured dose relationship in this study.",
+   "domain": "neuroimaging biomarker",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Population membership changes the spatial signature of the same diagnosis: exposure history concentrates damage in the attention network mediated by the cerebellum. The engine equivalent is letting exposure-history strata modulate which features are expected to move, instead of pooling all cases into one signature.",
+    "source_operator": "cerebellar_peduncle_athlete_signature",
+    "telemetry": "Region-wise AD decrease rates by tract, athletes versus ER patients versus controls."
+   }
+  },
+  {
+   "primitive_id": "tms_cortical_inhibition_ppcs",
+   "name": "In children with persistent post-concussive symptoms, TMS cortical inhibition (cortical silent period and SICI) is reduced versus recovered peers and increases over time (King et al.)",
+   "verbatim_quote": "Cortical inhibition (cSP and SICI) was reduced in the symptomatic group",
+   "page": "King et al. 2019, Abstract Results, book p.40 (text lines ~2420-2450)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cohort: 107 children aged 8 to 18 (78 symptomatic PPCS, 29 asymptomatic mTBI) versus 26 controls, TMS at 1 and 2 months post-injury.",
+    "Symptomatic status was defined as a Post-Concussion Symptom Inventory increase of at least 10 points over the pre-injury score; facilitation measures (SICF, ICF) moved in the opposite pattern in the asymptomatic group."
+   ],
+   "breakdown_regime": "Motor cortex is a proxy window on cortical physiology, not necessarily the symptomatic substrate; TMS measures also vary with age and development in this 8 to 18 range.",
+   "domain": "neurophysiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An objective physiological channel separates the still-symptomatic from the recovered when both groups carry the same diagnosis label. The engine equivalent is a latent recovery state estimated from physiology, tracked longitudinally, instead of a binary recovered/not-recovered flag.",
+    "source_operator": "tms_cortical_inhibition_ppcs",
+    "telemetry": "cSP, SICI, SICF, LICI from paired-pulse TMS with EMG of the first dorsal interosseous."
+   }
+  },
+  {
+   "primitive_id": "physiology_outlasts_symptoms",
+   "name": "Altered cortical excitability after pediatric mTBI supports delaying return to contact sports even where clinical symptoms have resolved",
+   "verbatim_quote": "and is dependent on recovery trajectory. Our findings support delayed return to contact",
+   "page": "King et al. 2019, Abstract Conclusions, book p.40 (text lines ~2445-2455)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The claim rests on excitability being recovery-trajectory dependent: asymptomatic and symptomatic groups showed different inhibition and facilitation patterns over 1 to 2 months.",
+    "TMS was well tolerated with no serious adverse events in this pediatric cohort."
+   ],
+   "breakdown_regime": "The study does not randomize return timing or measure re-injury outcomes; the recommendation is an inference from physiological persistence, not an outcome trial.",
+   "domain": "return-to-play decision",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Symptom resolution is a leading, noisy indicator; the physiological state lags it. The engine equivalent is a clearance rule that requires the slowest relevant channel to normalize, not the fastest, before exposure resumes.",
+    "source_operator": "physiology_outlasts_symptoms",
+    "telemetry": "Symptom scores alongside TMS excitability at matched post-injury times."
+   }
+  },
+  {
+   "primitive_id": "rcbi_one_year_phenotype",
+   "name": "Three repetitive concussive injuries in mice produce motor, cognitive, and neuropsychiatric deficits plus microbleed and gliosis pathology still present one year later (Tucker et al.)",
+   "verbatim_quote": "a pathological phenotype with motor, cognitive, and neuropsychiatric symptoms can be observed in an animal model of rCBI for at least",
+   "page": "Tucker et al. 2019, Abstract, book p.51 (text lines ~3020-3060)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Injury: three impacts at 24-hour intervals via a Leica ImpactOne device (5 mm tip, 1.5 mm depth, 5.0 m/s) over parietal cortex in C57BL/6J mice.",
+    "At one year, Prussian blue staining (prior microbleeds) appeared primarily in cortex at the injury site and GFAP staining increased in perilesional cortex and axonal tracts."
+   ],
+   "breakdown_regime": "The model omits rotational acceleration, a major component of human concussion biomechanics, and mouse lifespan scaling makes 'one year' an imperfect analog of human chronicity.",
+   "domain": "preclinical model",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Damage compounds across repeated events and remains measurable long after the acute window closes; the tail of the effect distribution is long. The engine equivalent is carrying a persistent damage state variable that decays slowly, if at all, rather than resetting after each event window.",
+    "source_operator": "rcbi_one_year_phenotype",
+    "telemetry": "Rotarod, open field, y-maze, active place avoidance, marble burying, elevated zero maze, tail suspension; Prussian blue and GFAP histology."
+   }
+  },
+  {
+   "primitive_id": "rcbi_sex_differences",
+   "name": "In the chronic repetitive concussion mouse model, females are functionally less impaired than males; only injured males showed open-field hyperactivity",
+   "verbatim_quote": "study to include both sexes in a pre-clinical long-term rCBI model, and female mice are",
+   "page": "Tucker et al. 2019, Abstract, book p.51 (text lines ~3045-3060)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Both sexes showed significant cognitive deficits on active place avoidance and greater agitation in tail suspension; the sex difference is in degree and in specific domains, not presence versus absence.",
+    "Prior long-term rCBI studies (to one year or more) had used male mice only."
+   ],
+   "breakdown_regime": "Direction of sex effect here (females less impaired) sits in tension with several human studies reporting poorer outcomes in females, so the model result should not be read as a human prediction.",
+   "domain": "preclinical model",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sex is a first-class stratifier whose effect direction can flip between model systems and target populations. The engine equivalent is estimating sex-specific effects within each data source and never importing an effect direction across sources without re-estimation.",
+    "source_operator": "rcbi_sex_differences",
+    "telemetry": "Sex-stratified behavioral scores and histology at chronic time points."
+   }
+  },
+  {
+   "primitive_id": "adolescent_prolonged_recovery",
+   "name": "Adolescent concussion recovery averages about one month versus about ten days in adults, reflecting the developing brain's vulnerability (Narayana et al. review)",
+   "verbatim_quote": "in children average approximately 1 month while symptoms",
+   "page": "Narayana et al. 2019, Brain Development, book p.66 (text lines ~3900-3930)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The developing brain is still myelinating and pruning, with prefrontal maturation continuing into adulthood, so injury intersects an ongoing construction process.",
+    "Children with prior migraine, learning disability, or attention deficit may have an even more prolonged course."
+   ],
+   "breakdown_regime": "The one-month versus ten-day figures are review-level averages across heterogeneous studies and definitions of recovery; individual trajectories vary widely.",
+   "domain": "adolescent mTBI",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Recovery time constants are population parameters, not constants of nature: the same event has a roughly threefold longer expected course in the developing system. The engine equivalent is age-conditioned recovery curves with the developmental stage as an explicit covariate.",
+    "source_operator": "adolescent_prolonged_recovery",
+    "telemetry": "Symptom duration distributions by age group from the reviewed literature."
+   }
+  },
+  {
+   "primitive_id": "accelerometer_dosimetry",
+   "name": "Wearable accelerometers can measure impact exposure to establish mTBI thresholds and the cumulative effects of concussive and subconcussive hits",
+   "verbatim_quote": "thresholds for mTBI and cumulative effects of concussive and subconcussive injuries.",
+   "page": "Narayana et al. 2019, Abstract, book p.65 (text lines ~3850-3875)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The review frames accelerometry as a needed advancement because current clinical methods do not adequately measure the extent of injury an athlete sustains.",
+    "Dosimetry covers both diagnosed concussions and subconcussive impacts that never enter clinical records."
+   ],
+   "breakdown_regime": "Helmet and mouthguard sensors measure head kinematics at the sensor, not brain strain; thresholds relating kinematics to injury remain contested and sport-specific.",
+   "domain": "exposure telemetry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Instrument the exposure, not only the outcome: a continuous dose record converts a binary event history into a cumulative dose curve. The engine equivalent is a dose accumulator over all measured impacts, including sub-threshold ones, feeding the damage state.",
+    "source_operator": "accelerometer_dosimetry",
+    "telemetry": "Per-impact linear and rotational acceleration from wearable sensors, aggregated per athlete per season."
+   }
+  },
+  {
+   "primitive_id": "mrs_delayed_metabolite_shift",
+   "name": "Proton MRS shows no metabolite differences in the acute period after pediatric concussion, but glutamate+glutamine and myo-inositol changes emerge by the subacute and chronic periods (Meyer et al.)",
+   "verbatim_quote": "There are no differences in 1 H MRS measurements in the acute concussive",
+   "page": "Meyer et al. 2019, Abstract Conclusion, book p.75 (text lines ~4540-4560)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Pilot cohort: 9 patients aged 11 to 20 scanned within 72 hours, at 2 weeks, and at about 1 year; 9 matched controls scanned once.",
+    "Significant findings: total thalamus glutamate+glutamine/choline increased at subacute and chronic points (p = 0.010); total white matter myo-inositol/choline decreased at the chronic point (p = 0.030)."
+   ],
+   "breakdown_regime": "Very small pilot sample with attrition across time points (n = 8, 7, 7); metabolite ratios to choline assume choline stability, and null acute findings may reflect power rather than absence.",
+   "domain": "spectroscopy biomarker",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A biomarker can be silent at the time of the event and informative later: absence of an acute signal is not absence of process. The engine equivalent is scheduling feature reads at the lag where the feature actually moves, and recording acute nulls as uninformative rather than negative.",
+    "source_operator": "mrs_delayed_metabolite_shift",
+    "telemetry": "Multi-voxel 1H MRS metabolite concentrations and ratios (NAA, Cho, Cr, Glx, myo-inositol) across six regions of interest."
+   }
+  },
+  {
+   "primitive_id": "tcd_pulsatility_index",
+   "name": "Transcranial Doppler pulsatility index PI = (P1 - D)/VB, a waveform feature related to distal cerebrovascular resistance (Thibeault et al.)",
+   "verbatim_quote": "(P2R), showed a significant difference from controls. After 48 h",
+   "page": "Thibeault et al. 2019, Analysis, book p.83 (text lines ~5030-5060)",
+   "latex": "\\mathrm{PI} = \\frac{P_1 - D}{V_B}",
+   "symbol_and_unit_ledger": {
+    "P_1": "first systolic peak velocity of the cerebral blood flow velocity waveform (cm/s), as defined in the article's Figure 1",
+    "D": "diastolic minimum velocity of the waveform (cm/s)",
+    "V_B": "mean (baseline) flow velocity (cm/s); PI itself is dimensionless"
+   },
+   "assumptions": [
+    "P1, D, and VB are waveform landmarks defined in the article's Figure 1: first systolic peak, diastolic minimum, and mean flow velocity of the middle cerebral artery waveform.",
+    "Features are averaged across all extracted pulses in a 5-minute baseline recording.",
+    "The companion waveform feature P2R = P2/P1 (second peak over first peak) is hypothesized in the same article to reflect distal bed compliance; in the group's prior work PI and P2R differed from controls within the first 48 hours post-injury and then normalized."
+   ],
+   "breakdown_regime": "PI is an indirect composite influenced by several physiological processes, not a pure resistance measure; values depend on probe angle, vessel, and CO2 state.",
+   "domain": "cerebrovascular physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A ratio feature engineered from waveform landmarks compresses a physiological state into one comparable number. The engine equivalent is landmark-ratio features over any periodic physiological signal, with the caveat stored that the ratio is a composite, not a direct measurement of the named quantity.",
+    "source_operator": "tcd_pulsatility_index",
+    "telemetry": "Middle cerebral artery blood flow velocity waveforms from 2 MHz TCD probes."
+   }
+  },
+  {
+   "primitive_id": "tcd_breath_hold_index",
+   "name": "Breath-holding index estimates cerebrovascular reactivity after concussion, with reactivity and pulsatility normalizing by 72 h (Thibeault et al.)",
+   "verbatim_quote": "The CVR was estimated using the BHI. This was found by first",
+   "page": "Thibeault et al. 2019, Analysis, book p.83 (text lines ~5060-5085)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Protocol: 5-minute baseline, then four cycles of 25-second breath hold and 35-second normal breathing, with end-tidal CO2 collected concurrently.",
+    "In the group's prior work, BHI was significantly increased versus controls after 48 hours and stayed elevated through day seven, after the pulsatile features had normalized."
+   ],
+   "breakdown_regime": "Breath-hold performance varies with subject effort and lung capacity; BHI from a fixed protocol is a reactivity estimate, not a direct autoregulation measurement.",
+   "domain": "cerebrovascular physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A provocation test: the system's response to a standardized challenge reveals state that resting measurement hides, and different challenge features peak in different post-injury phases. The engine equivalent is challenge-response features with phase-specific windows, complementing resting-state features.",
+    "source_operator": "tcd_breath_hold_index",
+    "telemetry": "Peak and baseline mean CBFV across breath-hold cycles; end-tidal CO2."
+   }
+  },
+  {
+   "primitive_id": "subjective_objective_dissociation",
+   "name": "Sex-by-time interactions after adolescent mTBI appear in objective TCD features but not in self-reported symptoms, exposing the pitfall of relying on subjective measures alone",
+   "verbatim_quote": "It illustrates the pitfalls clinicians face when relying on subjective measures alone during diagnosis and tracking of mTBI patients.",
+   "page": "Thibeault et al. 2019, Abstract, book p.82 (text lines ~4955-4985)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cohort: 58 unique adolescents aged 14 to 19 with clinically diagnosed mTBI, measurements restricted to 13 days post-injury; linear mixed models account for within-subject variation.",
+    "Over the first 10 days, the female group showed significant sex-by-time interactions in TCD features that were not present in the symptom reports."
+   ],
+   "breakdown_regime": "Findings are interaction effects in one modest cohort; the direction and size of sex differences in concussion remain an open question in the wider literature, as the article itself states.",
+   "domain": "measurement validity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Channels disagree: the subjective channel can be flat while the physiological channel moves, and subgroup structure can exist in one channel only. The engine equivalent is cross-channel dissociation checks, where a null in the cheap channel never vetoes a signal in the objective channel.",
+    "source_operator": "subjective_objective_dissociation",
+    "telemetry": "Paired symptom ratings and TCD features (PI, P2R, BHI) over days since injury, by sex."
+   }
+  },
+  {
+   "primitive_id": "mtbi_incidence_norway",
+   "name": "Prospective MTBI incidence in a Norwegian region was 302 per 100,000 person-years (ages 16 to 59), peaking at ages 16 to 20 (Skandsen et al.)",
+   "verbatim_quote": "Overall incidence of MTBI in people between 16 and 59 years was 302",
+   "page": "Skandsen et al. 2019, Abstract Results, book p.91 (text lines ~5530-5560)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Case finding covered the hospital ED, the GP-run municipal outpatient ED, and GP referrals to CT over 81 weeks in 2014 and 2015; 732 MTBI patients identified in a catchment of about 229,000 residents.",
+    "Peak rates at ages 16 to 20: 835 per 100,000 person-years in males and 726 in females; MTBI constitutes 80 to 90 percent of all TBI."
+   ],
+   "breakdown_regime": "Incidence depends on case-ascertainment completeness and local CT referral practice; the authors note the rate is lower than expected from existing estimates, and rates including primary-care-only cases are rarely reported elsewhere.",
+   "domain": "epidemiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A rate is a function of the surveillance net: including primary care changes the count materially. The engine equivalent is recording the ascertainment channel as part of any incidence feature, so rates from different nets are never pooled naively.",
+    "source_operator": "mtbi_incidence_norway",
+    "telemetry": "Age- and sex-specific case counts over catchment population person-years."
+   }
+  },
+  {
+   "primitive_id": "mood_predicts_neurocognition",
+   "name": "In deployed service members without recent mTBI, negative mood state, not sleepiness, is the salient predictor of ANAM neurocognitive performance (Haran et al.)",
+   "verbatim_quote": "Negative mood states were the most salient predictors of",
+   "page": "Haran et al. 2019, Abstract, book p.96 (text lines ~5845-5880)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Sample: 72 active-duty deployed personnel with no TBI in the preceding 12 months, drawn from an archival ANAM database.",
+    "Chronic insufficient sleep is prevalent in this population (nightly average 6.25 hours), yet sleepiness did not carry the predictive weight mood did."
+   ],
+   "breakdown_regime": "Cross-sectional, retrospective, and in non-concussed personnel; it identifies a confounder of test interpretation, not a concussion effect.",
+   "domain": "military assessment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A test score is a joint function of the target faculty and the test-taker's state; mood is a measured confounder that must be partialled out before the score is read as cognition. The engine equivalent is regressing out recorded state covariates before any performance feature is compared to its baseline.",
+    "source_operator": "mood_predicts_neurocognition",
+    "telemetry": "ANAM subtest scores with its built-in sleepiness scale and mood scales."
+   }
+  },
+  {
+   "primitive_id": "tdp43_ftld_share",
+   "name": "About half of frontotemporal lobar degeneration cases are marked by TDP-43-positive protein inclusions (Heyburn et al. review)",
+   "verbatim_quote": "all cases of FTLD are marked by TAR-DNA binding protein (TDP-43)-positive protein",
+   "page": "Heyburn et al. 2019, Abstract/Introduction, book p.104 (text lines ~6430-6460)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "In its pathological form TDP-43 is hyperphosphorylated, ubiquitinated, cleaved into 25 and 35 kDa fragments, and mislocalized to cytoplasmic inclusions.",
+    "The remaining FTLD subtypes are mostly FTLD-tau, with about 10 to 15 percent FTLD-FUS."
+   ],
+   "breakdown_regime": "The 'about half' share is a literature-level estimate across FTLD cohorts; proportions vary by subtype classification and cohort ascertainment.",
+   "domain": "neurodegeneration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A disease category decomposes into molecular subtypes with different drivers; treating the category as one entity hides the mechanism. The engine equivalent is always asking which molecular or mechanistic subtype a case belongs to before applying category-level statistics.",
+    "source_operator": "tdp43_ftld_share",
+    "telemetry": "Post-mortem immunohistochemistry for TDP-43, tau, and FUS in FTLD cohorts."
+   }
+  },
+  {
+   "primitive_id": "tdp43_cte_stage_progression",
+   "name": "TDP-43 pathology progresses with the tau-defined stages of CTE, spreading from subcortical white matter in stage I to widespread cortical and subcortical involvement by stage IV",
+   "verbatim_quote": "They later found that TDP-43 pathology progresses with the",
+   "page": "Heyburn et al. 2019, Introduction, book p.105 (text lines ~6520-6560)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Anchor finding: in McKee et al. 2010, 10 of 12 CTE-diagnosed athletes showed widespread TDP-43 proteinopathy, in a disease previously framed as a pure tauopathy.",
+    "Stage descriptions: stage I neurites in subcortical white matter and fornix; stage IV neurites and inclusions across cortex, medial temporal lobe, diencephalon, basal ganglia, brainstem, and spinal cord."
+   ],
+   "breakdown_regime": "Staging is cross-sectional post-mortem inference, not longitudinal observation; whether blast exposure produces the same TDP-43 trajectory as impact is explicitly unresolved in the review.",
+   "domain": "neurodegeneration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A second pathology rides on the staging of the first: progression schemes built on one marker can silently carry another. The engine equivalent is checking whether a staging variable is proxying for multiple coupled processes before using it as a severity axis.",
+    "source_operator": "tdp43_cte_stage_progression",
+    "telemetry": "Stage-stratified TDP-43 immunostaining distribution in post-mortem CTE series."
+   }
+  },
+  {
+   "primitive_id": "concussion_diagnosis_disparity",
+   "name": "Black children are less likely than non-Hispanic white children to reach the ED for a head injury and, once there with a head injury, less likely to be diagnosed with concussion (Lyons et al.)",
+   "verbatim_quote": "children presenting to the ED with an injury to their head were less likely than non-Hispanic",
+   "page": "Lyons et al. 2019, Abstract Results, book p.110 (text lines ~6845-6880)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Population-weighted NEISS data 2008 to 2017: 11,529,994 ED visits for pediatric sports injuries, 13.0 percent head injuries, 5.4 percent concussion diagnoses; models adjusted for age, gender, sport, year, and injury location.",
+    "Upstream gaps are larger: OR 0.72 for the visit being for a head injury and OR 0.58 for the visit receiving a concussion diagnosis, versus non-Hispanic white children."
+   ],
+   "breakdown_regime": "NEISS lacks clinical detail (no imaging or exam findings), so the study cannot separate differences in injury occurrence, care-seeking, and clinician diagnosis; it establishes disparity, not its mechanism.",
+   "domain": "health disparities",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The measurement pipeline itself is group-dependent: identical underlying injuries pass through presentation and diagnosis filters at different rates by group. The engine equivalent is auditing every labeled dataset for group-dependent label generation before training on the labels.",
+    "source_operator": "concussion_diagnosis_disparity",
+    "telemetry": "Survey-weighted ED visit records with race/ethnicity, body region, and final diagnosis."
+   }
+  },
+  {
+   "primitive_id": "underreporting_themes",
+   "name": "Former athletes' concussion experiences organize into eight themes, including optimism bias, invisibility of the injury, and desire to play (Oddo et al.)",
+   "verbatim_quote": "Eight major themes were identified regarding the participants'",
+   "page": "Oddo et al. 2019, Results, book p.119 (text lines ~7420-7460)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Qualitative study of 25 former high school and collegiate athletes using structured interviews analyzed by the Long Table Approach.",
+    "84 percent (21/25) of subjects felt concussions were a real risk in their sport while many simultaneously believed it would not happen to them (optimism bias)."
+   ],
+   "breakdown_regime": "Small, self-selected, retrospective sample; themes describe this cohort's experience and are hypothesis-generating, not prevalence estimates.",
+   "domain": "reporting behavior",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Underreporting is structured, not random: it decomposes into named mechanisms (misperceived personal risk, invisible injury, motivational pressure). The engine equivalent is modeling missingness as a mechanism with covariates, never as missing-at-random noise.",
+    "source_operator": "underreporting_themes",
+    "telemetry": "Coded interview transcripts; theme frequencies across demographic strata."
+   }
+  },
+  {
+   "primitive_id": "diagnosis_self_report_dependence",
+   "name": "Concussion diagnosis is highly dependent on athlete self-reported symptoms, which is the channel that underreporting corrupts",
+   "verbatim_quote": "Clinical diagnosis of concussion is highly dependent on self-reported symptoms, including",
+   "page": "Oddo et al. 2019, Abstract/Introduction, book p.118 (text lines ~7340-7370)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The study's conclusion: underreporting relates to misperceived risk, lack of education, and the struggle between internal and external pressures to play through injury.",
+    "Athletes who did seek medical and academic support often received the necessary aid, so the failure is concentrated at the reporting step."
+   ],
+   "breakdown_regime": "Dependence on self-report varies by setting; where objective screening (baseline testing, spotters, video) exists, the dependence is partial rather than total.",
+   "domain": "measurement validity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The primary sensor for the event is the subject, and the subject has incentives to suppress the signal. The engine equivalent is treating self-reported event data as a censored channel and seeking an independent corroborating channel before clearing a case.",
+    "source_operator": "diagnosis_self_report_dependence",
+    "telemetry": "Interview reports of symptom disclosure decisions; sideline evaluation records where available."
+   }
+  },
+  {
+   "primitive_id": "menstrual_vulnerability_window",
+   "name": "A nine-day window (late luteal phase plus the first two days of menstruation) accounted for two-thirds of concussions in a prospective cohort of female collegiate athletes (La Fountaine et al.)",
+   "verbatim_quote": "The greatest number of concussions were sustained during the late luteal phase and",
+   "page": "La Fountaine et al. 2019, Abstract, book p.125 (text lines ~7850-7890)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cohort: 20 concussed female athletes, 18 eumenorrheic; phase assigned from recalled days since last menstruation with a standardized 28-day cycle (late luteal = days 22 to 28).",
+    "The hypothesis is hormonal: neuroprotective hormone concentrations are declining toward their nadir in the late luteal phase. Background rates cited: high school girls 2.64 versus boys 1.69 concussions per 10,000 athlete exposures in comparable sports."
+   ],
+   "breakdown_regime": "Very small descriptive study with no statistical testing, recall-based phase assignment, and no exposure denominator by phase, so the window is preliminary evidence, as the title states.",
+   "domain": "sex-specific risk",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Risk is phase-dependent within a cycle: a periodic covariate concentrates events into a fraction of the cycle. The engine equivalent is adding cycle phase as a time-varying risk covariate wherever a periodic physiological rhythm exists, instead of averaging risk over the cycle.",
+    "source_operator": "menstrual_vulnerability_window",
+    "telemetry": "Menstrual phase at injury from structured recall at 48 hours, 4 days, and 7 days post-injury; SCAT3 symptom characterization."
+   }
+  },
+  {
+   "primitive_id": "blast_gene_networks",
+   "name": "A single moderate blast exposure (peak at least 5 psi) dysregulates blood gene networks for cell death and survival and for cell structure, function, and metabolism within three days (Edwards et al.)",
+   "verbatim_quote": "were dysregulated; specifically, two highly significant networks: (1) Cell Death and",
+   "page": "Edwards et al. 2020, Abstract, book p.132 (text lines ~8310-8360)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Design: 29 breachers in a 10-day training program, baseline blood on day 1, moderate exposure on day 7, blood on day 10; RNA-sequencing with Ingenuity Pathway Analysis and NanoString validation.",
+    "Ubiquitination-related genes moved in both directions (UPF1 upregulated, UPF3B downregulated) and inflammation genes including AKT1 were upregulated.",
+    "Exposure was measured objectively: helmets with bilateral sensors recorded blast parameters above a 0.4 psi threshold, and the average of the two sensors approximated each participant's dose; other training days stayed at or below 2 psi."
+   ],
+   "breakdown_regime": "Peripheral blood expression is a proxy for brain processes; one exposure level, one post-exposure time point, and network scores are pathway-analysis constructs, not effect sizes.",
+   "domain": "blast genomics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A sub-clinical exposure leaves a network-level molecular fingerprint before any diagnosis exists. The engine equivalent is valuing high-dimensional molecular state reads as early evidence, aggregated at pathway level rather than gene level to control noise.",
+    "source_operator": "blast_gene_networks",
+    "telemetry": "Whole-blood RNA-seq differential expression and IPA network scores; NanoString copy numbers for validation panels."
+   }
+  },
+  {
+   "primitive_id": "delayed_symptom_onset_prevalence",
+   "name": "16.7 percent of pediatric sport-related concussion patients experience delayed symptom onset (at least 15 minutes post-injury), with median onset at 60 minutes (Olson et al.)",
+   "verbatim_quote": "Among these patients, 120 (83.3%) reported experiencing ESO while 24 (16.7%)",
+   "page": "Olson et al. 2020, Abstract Results, book p.145 (text lines ~9120-9160)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cohort: 144 patients (mean age 14.6 years) at a multidisciplinary pediatric concussion program, assessed a median of 5.0 days post-injury; early onset defined as under 15 minutes, delayed as 15 minutes or more.",
+    "Delayed onset was not associated with worse outcomes: no significant differences in initial symptom severity, recovery length (median 22 versus 24 days), or delayed-recovery proportion."
+   ],
+   "breakdown_regime": "Referral-clinic cohort, so prevalence is conditional on reaching the clinic; onset timing is self-reported retrospectively at the first visit.",
+   "domain": "clinical course",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The observable signal can arrive after the decision point: a sideline check at minute five structurally misses one in six cases. The engine equivalent is a mandatory re-screen at a later lag for any high-mechanism event with an initially negative screen.",
+    "source_operator": "delayed_symptom_onset_prevalence",
+    "telemetry": "Self-reported symptom onset latency; Post-Concussion Symptom Scale at initial assessment; physician-documented recovery dates."
+   }
+  },
+  {
+   "primitive_id": "dso_removal_gap",
+   "name": "Delayed-onset patients are far less likely to be removed from play immediately (29.2 percent) than early-onset patients (71.6 percent)",
+   "verbatim_quote": "experiencing ESO were significantly more likely to be immediately removed from play at",
+   "page": "Olson et al. 2020, Abstract Results, book p.145 (text lines ~9140-9170)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The authors' remedy: standardized protocols mandating immediate and permanent removal of all youth with a suspected concussion until medical assessment, regardless of symptom presence at the moment.",
+    "Continued participation during the asymptomatic interval exposes the athlete to additional head and body contact while already injured."
+   ],
+   "breakdown_regime": "Removal decisions also depend on whether the event was witnessed and on sport context, which the study describes but cannot fully adjust for.",
+   "domain": "clinical management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Process failure follows signal timing: the protective action is keyed to the symptom, so late signals get late protection. The engine equivalent is keying protective actions to the mechanism event (a recorded high-force impact) rather than to the symptom report.",
+    "source_operator": "dso_removal_gap",
+    "telemetry": "Removal-from-play status at injury, linked to onset class and subsequent contact exposure."
+   }
+  },
+  {
+   "primitive_id": "dana_brief_reliability_validity",
+   "name": "The DANA Brief neurocognitive battery shows low-to-moderate test-retest reliability (ICC 0.28 to 0.58) and significant correlations with the MACE cognitive score in non-concussed service members (Pryweller et al.)",
+   "verbatim_quote": "moderate reliability, as measured by intra-class correlation coefficient (ICC; values range:",
+   "page": "Pryweller et al. 2020, Abstract, book p.153 (text lines ~9620-9670)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The battery exists in three lengths: DANA Rapid (5 min), DANA Brief (15 min), DANA Standard (45 min); the Rapid is self-administered on a handheld device.",
+    "Strongest MACE correlations were in attention and working memory subtests (GNG R2 = 0.08, PRO R2 = 0.08); learning and memory subtests were weaker (CDS R2 = 0.10, CDD R2 = 0.05)."
+   ],
+   "breakdown_regime": "Validation is in non-concussed service members against another screening test, not against clinical diagnosis in concussed patients; explained variance is small (R2 at most 0.10), so the tool is a screen, not a diagnostic.",
+   "domain": "assessment technology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A portable, self-administered screen trades precision for reach: it exists to shrink time from injury to first measurement where no professional is present. The engine equivalent is a tiered measurement stack, cheap fast screens everywhere and expensive precise instruments at hubs, with each tier's reliability carried in the record.",
+    "source_operator": "dana_brief_reliability_validity",
+    "telemetry": "DANA Brief subtest scores, ICCs, and MACE cognitive scores in a deployed cohort."
+   }
+  },
+  {
+   "primitive_id": "mace_temporal_sensitivity_limit",
+   "name": "The MACE cognitive examination loses sensitivity and specificity when administered more than 12 hours after the concussive event",
+   "verbatim_quote": "if the MACE is administered more than 12 h after a concussive",
+   "page": "Pryweller et al. 2020, Introduction, book p.154 (text lines ~9710-9740)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "MACE cognitive score is out of 30 (orientation 5, immediate memory 15, concentration 5, delayed memory 5); military mean is 28 and below 25 is the abnormal cutoff.",
+    "Normal MACE values cannot rule out concussion; the diagnosis remains clinical and history-based. The MACE also requires a trained administrator, unlike the self-administered DANA."
+   ],
+   "breakdown_regime": "The 12-hour figure comes from the cited validation literature, not from data in this article; sensitivity decay is presumably graded rather than a cliff at 12 hours.",
+   "domain": "assessment technology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Instrument validity has a shelf life relative to the event: the same test is informative at hour two and weak at hour thirteen. The engine equivalent is stamping every measurement with its lag from the event and down-weighting or voiding measurements taken outside their validated window.",
+    "source_operator": "mace_temporal_sensitivity_limit",
+    "telemetry": "Time from injury to test administration, recorded alongside the MACE cognitive score."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "d993c147473b7b02-t1",
+   "think": "This volume is an eighteen-article Research Topic, and its collective machinery is best understood as an argument about measurement under heterogeneity. The opening move, in Maruta and colleagues, is that concussion is not one state but a bundle of trajectories: the same diagnosis decomposes into cognitive-fatigue, vestibular, oculomotor, anxiety and mood, migraine, and cervical profiles, and the Rivermead questionnaire can separate those profiles only when symptoms reach moderate-to-severe elevation. At mild elevation everything overlaps with everything else, which means the instrument has a resolution floor and any classification made below that floor is noise dressed as a label. The second strand is the baseline problem. Kaye and colleagues show that the reference point itself moves: ADHD displaces verbal memory, visual motor speed, and symptom totals before any injury, and a prior concussion with loss of consciousness leaves a higher standing symptom burden than a prior concussion without one. Haran and colleagues add that in deployed personnel the mood state on the day of testing predicts neurocognitive performance more strongly than sleepiness does, so a score is never a pure read of cognition. A baseline is therefore a conditional distribution indexed by pre-existing conditions and current state, and every post-injury comparison inherits whatever conditioning was skipped. The third strand is the search for objective channels that do not depend on the athlete's willingness or ability to report. Diffusion tensor imaging sees axonal injury that CT and conventional MRI miss, but its metrics reverse sign between the acute and chronic phases, so a deviation is uninterpretable without a time coordinate. Transcranial magnetic stimulation shows cortical inhibition still abnormal in symptomatic children and supports holding them out even when symptoms have cleared. Transcranial Doppler shows two phases of hemodynamic dysfunction and reveals sex-by-time structure that symptom reports do not contain. Magnetic resonance spectroscopy is silent acutely and only later shows metabolite movement. The pattern across all four modalities is identical: physiology and symptoms run on different clocks, null results are often window errors rather than absences, and the sign or meaning of a measurement is a function of lag from injury. The fourth strand is dose and accumulation. Tucker and colleagues show three injuries in mice still producing behavioral deficits and histological pathology a year later. Edwards and colleagues show a single moderate blast changing blood gene-network activity within days, measured against helmet-sensor dosimetry rather than recall. Narayana's review and La Fountaine's brief report add that dose sensitivity is itself state-dependent: the adolescent brain recovers more slowly, and concussions in female athletes clustered in a nine-day hormonal window. The fifth strand is the integrity of the label pipeline. Lyons and colleagues show that Black children are less likely to be diagnosed with concussion even after reaching an emergency department with a head injury, and Oddo's interviews show diagnosis resting on self-report that athletes have structured reasons to suppress, while Olson shows one in six pediatric cases declare symptoms too late for the sideline process to catch them. For a reasoning engine, the volume's lessons compose into design rules: condition every baseline, stamp every measurement with its lag and its validated window, keep subjective and objective channels separate and let neither veto the other, accumulate dose including sub-threshold exposures, model missingness as a mechanism, and audit labels for group-dependent generation before trusting them.  A closer look at the phenotyping work shows why the severity gate matters operationally. Maruta's cohort is unusually strong for this literature, more than three thousand baseline assessments with eighty-nine prospectively captured concussions, and even in that cohort the mild-symptom layer is nearly useless for classification: two-thirds of concussed athletes endorsed symptoms spanning at least four profiles at the mild level, while at moderate-to-severe levels four out of five endorsed at most two classes. Cognitive-fatigue dominates the acute picture at 47.2 percent moderate-to-severe prevalence against an 11.5 percent baseline, which also warns that the background rate of these symptoms in healthy athletes is high enough to swamp naive change detection. The epidemiology chapter makes the complementary point at population scale: Skandsen's prospective Norwegian capture, which unusually includes the GP-run municipal clinic and GP referrals to CT rather than only the hospital, yields 302 per 100,000 person-years with a sharp peak at ages sixteen to twenty, and the authors are explicit that the number is a property of the surveillance net as much as of the injury. The blast genomics work deserves separate weight because it is the only study in the volume with instrumented exposure and a pre-exposure baseline: blood drawn on day one, a measured moderate blast on day seven, blood again on day ten, with RNA sequencing followed by pathway analysis and NanoString validation. Its dysregulated networks are dominated by downregulation, fifty of seventy genes in the cell death and survival network, and the ubiquitination machinery moves in both directions at once, which reads less like generic damage and more like a specific proteostasis disturbance. The assessment-technology chapter closes the loop on instruments: the MACE, the military's standard screen, decays in sensitivity after twelve hours and cannot rule out concussion when normal, while the DANA's three battery lengths trade reliability, with intra-class correlations of only 0.28 to 0.58, for the ability to be self-administered on a handheld device at the point of injury. Every instrument in the volume, from a 1995 questionnaire to a gene panel, is thus characterized by the same triple: what it measures, the window in which the measurement is valid, and the population in which it was validated. Where the volume breaks is equally instructive: most human studies are small, several headline effects are interactions in single cohorts, the animal work omits rotational acceleration, and almost nothing here is a randomized outcome trial, so every primitive must carry its evidence grade with it.",
+   "retrocausal_genealogy": "The lineage runs from Martland's 1928 description of punch-drunk syndrome in boxers, through the grading era when loss of consciousness defined concussion severity, to the Giza and Hovda neurometabolic cascade that reframed concussion as a cellular energy crisis rather than a structural lesion. The Rivermead questionnaire dates to 1995 and was the first of its kind; the six-profile clinical subtyping approach is a recent attempt to replace the single-label model it served. On the chronic side, McKee's 2010 finding of TDP-43 proteinopathy in CTE brains connected the sports literature to the frontotemporal dementia literature, and the military blast experience of Iraq and Afghanistan supplied both the TDP-43 review and the gene-network and DANA studies in this volume.",
+   "theory_of_mind": "The editors and authors write as clinician-scientists who assume the reader manages real patients or real rosters and needs decision-grade evidence, not mechanism for its own sake. Their shared model of the domain is that concussion is under-measured rather than under-theorized: the recurring frustration is that diagnosis still rests on self-report, standard imaging is blind to the injury, and recovery is declared on symptoms that resolve before physiology does. Several groups write explicitly for military and school-sport settings where the evaluator may not be a specialist, which is why portable self-administered tools and simple questionnaires get so much attention.",
+   "cross_layer_veto": "This volume vetoes several tempting simplifications. It vetoes symptom-only clearance, because cortical excitability, hemodynamics, and metabolites all move after symptoms settle. It vetoes pooled baselines, because ADHD, prior loss of consciousness, mood, and baseline symptom load all displace the reference. It vetoes reading a biomarker without a time coordinate, because DTI metrics flip sign between phases and MRS is silent in the window where clinicians most want it. It vetoes treating recorded incidence and recorded diagnoses as ground truth, because presentation, diagnosis, and self-report are all demonstrably filtered by race, incentives, and symptom timing. Any layer of an engine that assumes clean labels, fixed baselines, or time-invariant features is contradicted by this evidence."
+  }
+ ],
+ "universal_lens": "This volume is a template for reasoning about any injury or shock that is diagnosed mainly by self-report and invisible to standard instruments. Its generalizable moves are: decompose the single label into trajectory subtypes; treat every baseline as conditional on pre-existing state; expect biomarker signs to flip across phases; instrument the exposure itself rather than trusting recall; and audit the label pipeline for who gets filtered out before the data ever reaches the model.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the volume supplies a teaching canon on concussion science: the six-profile phenotyping framework, the neurometabolic cascade, phase-dependent imaging signs, sex and developmental modifiers of recovery, and the disparities and reporting-bias literature. It is source material for curricula on athlete brain health, return-to-play governance, and measurement literacy for practitioners who rely on symptom reports and baseline testing.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the volume contributes injury-state estimation machinery: conditional baselines that account for prior injury and pre-existing conditions, lag-stamped physiological features whose signs depend on time since injury, cumulative dose accounting for concussive and subconcussive exposure, delayed-onset re-screening rules, and label-bias audits. These sharpen the engine's health and availability layer: who is actually recovered, whose baseline can be trusted, and which recorded absences are reporting artifacts rather than facts."
+}

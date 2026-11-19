@@ -33,6 +33,36 @@ export interface ContentMessagesRequest extends ClaudeMessagesRequest {
   readonly cacheStore?: ResponseCacheStore;
 }
 
+export const ALIBABA_DEFAULT_BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1";
+export const ALIBABA_DEFAULT_MODEL = "qwen-plus";
+
+export interface AlibabaCreditLaneConfig {
+  readonly baseUrl: string;
+  readonly model: string;
+  readonly apiKey: string;
+  readonly ledgerPrefix: string;
+}
+
+/** Resolve Alibaba Cloud Model Studio / DashScope OpenAI-compatible lane when enabled. */
+export function alibabaCreditLaneConfig(env: Env = process.env): AlibabaCreditLaneConfig | null {
+  if (env["CONTENT_FREE_LANE_ENABLED"] !== "true") return null;
+  const apiKey = env["ALIBABA_API_KEY"]?.trim() || env["DASHSCOPE_API_KEY"]?.trim();
+  if (!apiKey) return null;
+  const baseUrl = (
+    env["ALIBABA_BASE_URL"]?.trim() ||
+    env["DASHSCOPE_BASE_URL"]?.trim() ||
+    ALIBABA_DEFAULT_BASE_URL
+  ).replace(/\/+$/, "");
+  const model =
+    env["ALIBABA_MODEL"]?.trim() || env["DASHSCOPE_MODEL"]?.trim() || ALIBABA_DEFAULT_MODEL;
+  return {
+    baseUrl,
+    model,
+    apiKey,
+    ledgerPrefix: "alibaba-qwen/",
+  };
+}
+
 export function secondaryFreeLaneConfig(env: Env = process.env): {
   baseUrl: string;
   model: string;
@@ -77,6 +107,25 @@ export async function generateContentMessages(
           });
         } catch (error) {
           if (!(error instanceof CerebrasMessagesError)) throw error;
+        }
+      }
+
+      const alibaba = alibabaCreditLaneConfig(env);
+      if (alibaba) {
+        try {
+          return await callOpenAiCompatMessages({
+            baseUrl: alibaba.baseUrl,
+            apiKey: alibaba.apiKey,
+            model: alibaba.model,
+            system: request.system,
+            user: request.user,
+            maxTokens: request.maxTokens,
+            temperature: request.temperature,
+            fetchImpl: request.fetchImpl,
+            ledgerPrefix: alibaba.ledgerPrefix,
+          });
+        } catch (error) {
+          if (!(error instanceof OpenAiCompatError)) throw error;
         }
       }
 

@@ -1,0 +1,720 @@
+{
+ "book_id": "584e033ac3ef2725",
+ "source_status": "COMPLETE",
+ "source_note": "Walter Camp (editor), Spalding's How to Play Foot Ball: A Primer on the Modern College Game With Tactics Brought Down to Date, Spalding's Athletic Library, American Sports Publishing Co., 21 Warren Street, New York. New edition revised for 1905, copyright 1905 by American Sports Publishing Company; the work was first issued in 1902, which is the date the local catalog carries. Contributors: Walter Camp (introductory chapter, special plays, tackle back formations), W. T. Reid Jr. (play of the backs), John Longer deSaulles (how to play quarter back), William H. Lewis (defence), Rockwell and Hogan (signals), Michael Murphy (training for foot ball). Local file: scanned PDF of 18,327,413 bytes, full sha256 584e033ac3ef27250ee286427918149aae8218ec6cb9dd8903861b61aa6a5a50, book_id is the first 16 hex of the scan digest over str(size) plus file bytes. The extracted text is OCR of the scan: the body chapters are largely clean, while display pages, some plate sections and the long Spalding equipment catalog at the back are heavily garbled. Every quote in this artifact was taken from a clean body passage inside one printed page and verified as a contiguous substring of the extracted text file; a few OCR artifacts inside quoted passages are preserved exactly as printed (for example 'no ether' for 'no other' in the fair catch passage and 'sixfeet' in the extended line passage). Page anchors cite the printed page numbers visible in the text. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "field_and_goal_geometry",
+   "name": "The playing field is a fixed rectangle 330 feet long by 160 feet wide, with transverse lines every five yards and goal posts 18 feet 6 inches apart with a 10 foot crossbar",
+   "verbatim_quote": "The field should be marked out with ordinary lime lines, enclosing a space of 330 feet long and 160 feet wide.",
+   "page": "An Introductory Chapter for Beginners, printed p. 5",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Field dimensions and goal geometry are set by the rules and constant across matches",
+    "Five yard transverse lines make gains measurable by officials"
+   ],
+   "breakdown_regime": "no_equation_domain: geometry is stipulated by rule, not derived; it changes when the rules committee changes it (the field later standardized at 120 by 53 and one third yards)",
+   "domain": "rules_geometry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Supplies the engine with the fixed spatial state space of the early game: every later primitive in the book (downs, kicks, defence fronts) is indexed to this grid and its five yard lines, the same role field geometry plays as the coordinate frame for play by play state in the reasoning engine.",
+    "source_operator": "field_and_goal_geometry",
+    "telemetry": "Field dimensions and line spacing from the rule set in force; play by play yard line data."
+   }
+  },
+  {
+   "primitive_id": "three_downs_five_yards",
+   "name": "Possession is conditional: a side that does not gain five yards in three downs must surrender the ball",
+   "verbatim_quote": "This rule provides that in three \"downs\" or attempts to advance the ball, a side not having made five yards toward the opponents' goal must surrender possession of the ball.",
+   "page": "An Introductory Chapter for Beginners, printed p. 11",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The defence knows the same constraint and can plan against it",
+    "The required gain and number of downs are fixed by rule"
+   ],
+   "breakdown_regime": "Breaks when the rule changes (the modern game uses four downs and ten yards) and when penalties or turnovers interrupt the series",
+   "domain": "possession_rules",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the original down and distance constraint that turns football into a sequence of bounded possession trials. In the engine it maps to the series level state machine: each possession is a small number of attempts against a required gain, and failure transfers the asset, which is the structural ancestor of modern expected points and win probability state.",
+    "source_operator": "three_downs_five_yards",
+    "telemetry": "Down, distance, and yards gained per play from play by play records."
+   }
+  },
+  {
+   "primitive_id": "fair_catch_free_kick",
+   "name": "A fair catch, taken on the fly with no teammate touching the ball and the heel planted at the spot, entitles the catcher to an unopposed free kick with opponents held ten yards away",
+   "verbatim_quote": "This can be made from a kick by the opponents, provided the catcher takes the ball on the fly, and, no ether of his own side touching it, plants his heel in the ground at the spot where the catch is made.",
+   "page": "An Introductory Chapter for Beginners, printed p. 13",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The catch must be clean and on the fly",
+    "The heel mark fixes the spot of the kick"
+   ],
+   "breakdown_regime": "Vanishes where the fair catch rule is abolished or the catch is muffed; the option has no value if the kicking game is weak",
+   "domain": "possession_rules",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a protected state transition in the engine: a clean catch converts a contested punt return into a guaranteed kicking opportunity, a rule defined option whose value depends on field position, exactly the kind of discrete option the reasoning layer must price when modelling possession changes.",
+    "source_operator": "fair_catch_free_kick",
+    "telemetry": "Punt outcomes, fair catch flags, and ensuing kick type and field position."
+   }
+  },
+  {
+   "primitive_id": "scoring_values_kick_decision",
+   "name": "Scoring values make the captain's choice near the goal a computation: a touchdown counts 5, a converted touchdown 6, a field goal 4, and a missed kick inside the twenty five yard line costs only a ten yard kick out",
+   "verbatim_quote": "The touchdown itself will count 5 points, even if he afterward fail to convert it into a goal, by sending the ball over the bar and between the posts, while, if he succeed in converting it, the touchdown and goal together count 6 points.",
+   "page": "An Introductory Chapter for Beginners, printed p. 15",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Score values are those printed in this edition (touchdown 5, goal from touchdown 1 more, goal from field 4)",
+    "The captain can estimate his kicker's and runners' success chances"
+   ],
+   "breakdown_regime": "The arithmetic is only as good as the success estimates; the values themselves changed repeatedly in later rule revisions, so the kernel must be re-parameterized per era",
+   "domain": "decision_theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is explicit decision analysis under a scoring vector: the captain weighs a certain-ish 4 against a probabilistic 5 or 6, adjusted by the field position cost of failure. It maps directly onto the engine's decision layer, where play choices are ranked by point expectancy under the scoring rules in force rather than by habit.",
+    "source_operator": "scoring_values_kick_decision",
+    "telemetry": "Score values in force, success rates by play type and distance, resulting field position after each outcome."
+   }
+  },
+  {
+   "primitive_id": "safety_controlled_concession",
+   "name": "A team trapped near its own goal may concede a safety for two points and in exchange restart from the twenty five yard line with a kick out",
+   "verbatim_quote": "A player may at any time kick, pass or carry the ball across his own goal line, and there touch it down for safety. This, while it scores two points for his opponents, gives his side the privilege of bringing the ball out to the twenty-five-yard line",
+   "page": "An Introductory Chapter for Beginners, printed p. 17",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The two point cost is fixed by rule",
+    "The relief (ball out to the twenty five) is guaranteed once the touch down in own goal is made"
+   ],
+   "breakdown_regime": "Correct only when the alternative is genuinely worse; conceding when the defence could hold converts a free escape into donated points",
+   "domain": "decision_theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A controlled concession: pay a small fixed cost to escape a state whose downside is a touchdown against. The engine uses the same shape when it values avoiding catastrophic field position over protecting the score line, and when it prices desperation plays late in games.",
+    "source_operator": "safety_controlled_concession",
+    "telemetry": "Field position, score differential, and the expected points of the opponent's ensuing possession by start line."
+   }
+  },
+  {
+   "primitive_id": "fundamentals_before_trick_plays",
+   "name": "Master the rudiments first: a team that attempts strategic or trick plays before its individuals perform the ordinary duties of their positions almost by instinct works at a tremendous disadvantage",
+   "verbatim_quote": "A team which undertakes, to make strategic plays before mastering these primary points will always find itself working at a tremendous disadvantage, and the waste of power will be almost incalculable.",
+   "page": "How to Play Foot Ball (Camp), printed p. 19",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Individual duties are learnable to the level of instinct through practice",
+    "Trick plays depend on the same fundamentals for their execution"
+   ],
+   "breakdown_regime": "Breaks at the margin where an opponent is so predictable that a trick play wins despite shaky fundamentals; Camp treats that as the exception, not the plan",
+   "domain": "skill_acquisition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A sequencing law for capability building that maps onto how the engine should order its own development and how it should rate teams: advanced scheme value is multiplied by execution reliability, so a model that credits a team with complex plays it cannot execute cleanly will overrate it. Fundamentals are the base rate; tricks are variance added on top.",
+    "source_operator": "fundamentals_before_trick_plays",
+    "telemetry": "Error rates on basic actions (fumbles, missed tackles, bad snaps) versus success rates on designed trick plays."
+   }
+  },
+  {
+   "primitive_id": "guard_energy_conservation",
+   "name": "The guard is too valuable on defence to spend on running from his line position; taken back into the tackle back formation he does the same running work with far greater conservation of energy",
+   "verbatim_quote": "If he be taken back into what is known as the tackle back formation he does the same work, but with a far greater conservation of energy.",
+   "page": "How to Play Foot Ball (Camp), printed p. 21",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The guard's defensive work is scarcer than his running work",
+    "The tackle back formation preserves the run while removing the guard from the line start"
+   ],
+   "breakdown_regime": "Fails when the guard is in fact the best available runner and the defence can spare him; conservation is a means, not a rule",
+   "domain": "personnel_economics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A resource allocation kernel: a player's value is position and phase dependent, and formation design should route costly work to the configuration that delivers it cheapest. The engine uses this when it weighs two way usage, snap loads, and why moving a player changes both his output and his defensive price.",
+    "source_operator": "guard_energy_conservation",
+    "telemetry": "Snap counts by phase, player usage by formation, fatigue and performance decline within games."
+   }
+  },
+  {
+   "primitive_id": "tackle_run_on_the_fly",
+   "name": "The tackle run works by concealment and timing: the tackle holds an identical posture whether running or not, breaks away, takes the ball on the fly behind the quarter back, and dashes through his own guard and tackle gap",
+   "verbatim_quote": "But, breaking away, he runs closely behind the quarter-back, taking the ball on the fly as he passes, and making a short and sharp dash in between his own guard and tackle",
+   "page": "How to Play Foot Ball (Camp), printed p. 23",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The tackle can reach full speed on the path behind the quarter",
+    "The opposing tackle can be occupied long enough"
+   ],
+   "breakdown_regime": "Collapses if any tell separates the run look from the pass or kick look, or if the tackle is slow enough that the defence recovers",
+   "domain": "play_design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the engine's treatment of pre snap tells: a play's value depends on the defence's read, so identical pre play presentation across different plays is what keeps the defence's posterior flat. The on the fly handoff is a timing constraint that removes the pause a defence could key on.",
+    "source_operator": "tackle_run_on_the_fly",
+    "telemetry": "Pre snap alignment and posture data, handoff timing, defensive reaction and play outcomes by presentation similarity."
+   }
+  },
+  {
+   "primitive_id": "end_dropback_overhead_deception",
+   "name": "Repeat one play until the defence commits to it, then run the same picture and throw the ball over the committed man's head to a second runner in a free field",
+   "verbatim_quote": "then suddenly the same play was made, and the ball was passed directly over the head of this end-rusher to the half-back, who had crept out beyond, and who thus took the ball in a free field and made a free, long run.",
+   "page": "How to Play Foot Ball (Camp), printed p. 25",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The defence updates on repetition and overplays the known threat",
+    "The counter uses the identical early picture"
+   ],
+   "breakdown_regime": "Fails against a defence that does not adjust, or when the setup play is so costly that the counter cannot repay it",
+   "domain": "deception",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A setup and counter kernel: the first repetitions are an investment that buys a false defensive belief, and the counter play cashes it. The engine applies the same logic when it sequences plays, valuing a mediocre play that raises the value of its counter, and when it detects an opponent doing this to the defence it models.",
+    "source_operator": "end_dropback_overhead_deception",
+    "telemetry": "Play sequence history within a game, defensive alignment shifts by repetition count, counter play outcomes."
+   }
+  },
+  {
+   "primitive_id": "criss_cross_late_long_blocking",
+   "name": "In the criss cross, the decisive blocks on the opposing tackle and end must be delivered late but held long, so the runner is not taken as he starts and the hole stays shut behind him",
+   "verbatim_quote": "right tackle does not get the runner as he starts off to get the ball,and furthermore, that this right tackle and right end are blocked late but long.",
+   "page": "How to Play Foot Ball (Camp), printed p. 25",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The runner's start is the moment of maximum vulnerability",
+    "The opposing tackle and end are the two men who can kill the play"
+   ],
+   "breakdown_regime": "Breaks if the late block never arrives (runner taken at the start) or if officials or field position compress the play's wide path",
+   "domain": "play_design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A blocking timing specification: block arrival time and block duration are separate variables, and this play wants late arrival with long duration. The engine uses the same decomposition when it grades blocking schemes, since a block that arrives early but dies is worse than one that arrives at the runner's start and sustains.",
+    "source_operator": "criss_cross_late_long_blocking",
+    "telemetry": "Blocker and defender contact timing, block sustain duration, runner path and outcome."
+   }
+  },
+  {
+   "primitive_id": "interference_speed_matching",
+   "name": "Interference must be measured by the speed of the interferers and matched to the speed of the runner; copying a star's assignment to slower men makes the runner wait and be caught from behind",
+   "verbatim_quote": "he must measure his interference by the speed of his interferers, and match them with the speed of his runner with the ball in order to satisfactorily solve the equation for his own team.",
+   "page": "How to Play Foot Ball (Camp), printed p. 29",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Interferers who cannot reach the point before the runner only slow him",
+    "A fast guard or end can legitimately take the long interference path"
+   ],
+   "breakdown_regime": "The matching logic assumes honest speed knowledge; it degrades when coaches copy reputation (the Heffelfinger example) instead of measuring their own men",
+   "domain": "blocking_science",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Camp states it as solving an equation for one's own team: the blocking scheme is a matching problem between blocker speed and runner speed. It maps to the engine's personnel scheme fit layer, where a play's expected value is computed from the actual athletes assigned, not from the diagram; a scheme that is optimal for one roster is negative for another.",
+    "source_operator": "interference_speed_matching",
+    "telemetry": "Player speed measures, assignment level outcomes, gains on end runs by blocker runner pairing."
+   }
+  },
+  {
+   "primitive_id": "opening_type_by_interferer_weight",
+   "name": "Openings come in two physical types: light interferers spring a quick, sharp opening that cannot rely on steady pushing, while heavy interferers make a smaller opening that relies on accumulated force after the runner strikes the line",
+   "verbatim_quote": "An opening, on the other hand, made by two heavy men in this fashion can be much smaller and rely largely upon the accumulated force even after the runner strikes the line.",
+   "page": "How to Play Foot Ball (Camp), printed p. 31",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Interferer weight class is known and stable within a play",
+    "The runner times his strike to the opening type"
+   ],
+   "breakdown_regime": "Mixed personnel blur the regimes; a heavy runner behind light interferers also risks injuring his own men when the hole chokes, which Camp flags explicitly",
+   "domain": "blocking_science",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A two regime model of line play: burst openings versus sustained force openings, with different runner timing for each. The engine maps this onto distinguishing explosive from power rushing attacks and predicting which defensive fronts each type stresses, instead of treating all interior runs as one distribution.",
+    "source_operator": "opening_type_by_interferer_weight",
+    "telemetry": "Interior run outcomes by personnel weight class, yards before and after contact, defensive front type."
+   }
+  },
+  {
+   "primitive_id": "wedge_legs_not_weight",
+   "name": "Wedge and mass plays succeed through legs and practice, not pounds: a clever pushing team of average weight can move a heavier unskilled team almost at will by strength and precision of pushing",
+   "verbatim_quote": "In forming wedges the captain should always bear in mind that it is the legs of the wedge which count even more than the weight, and for this reason it is practice which makes the wedges successful and not merely the extra pounds in the team.",
+   "page": "How to Play Foot Ball (Camp), printed p. 33",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The wedge men start well back and join after the snap under the momentum mass rules",
+    "Pushing is a trainable, coordinated skill"
+   ],
+   "breakdown_regime": "The rules against momentum mass plays cap how much of the principle can be used; raw mass still matters when skill is equal",
+   "domain": "blocking_science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A skill over mass claim with a mechanism: coordinated leg drive, rehearsed until every man knows how to push, beats static weight. In the engine this is the wedge's warning against rating short yardage and mass situations by aggregate weight alone; coordination and repetition are separate inputs.",
+    "source_operator": "wedge_legs_not_weight",
+    "telemetry": "Short yardage success rates, team mass, practice and continuity measures for the interior line."
+   }
+  },
+  {
+   "primitive_id": "revolving_wedge",
+   "name": "The revolving wedge pushes straight until its impetus is checked, then rotates its entire force at right angles toward the other guard, against defenders whose resistance is still directed down the first line of push",
+   "verbatim_quote": "then turn their entire force in the direction of the guard on the other side, thus making it as nearly as possible at right angles to their former pushing, and keeping up a steady pressure there.",
+   "page": "How to Play Foot Ball (Camp), printed p. 35",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The defence commits its force along the first push direction",
+    "The wedge can hold together while rotating"
+   ],
+   "breakdown_regime": "Too complex for most teams of the era (Camp says end wedges had not yet succeeded); rotation fails if the mass loses cohesion",
+   "domain": "play_design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A force redirection kernel: when a mass attack stalls, rotate the vector rather than push harder, because the defence's committed force is directional. The engine uses the same idea when it values cutback and counter runs and any play that profits from defensive overcommitment to the first direction.",
+    "source_operator": "revolving_wedge",
+    "telemetry": "Mass play outcomes, defensive pursuit direction, second phase gains after redirection."
+   }
+  },
+  {
+   "primitive_id": "quarterback_run_five_yard_constraint",
+   "name": "The restored quarter back run is legal only if the quarter crosses the line of scrimmage at least five yards from the point where the ball was snapped",
+   "verbatim_quote": "Some two years since a rule was enacted again permitting the quarter-back to run, providing, however, he went out at least five yards from the point at which the ball was snapped.",
+   "page": "How to Play Foot Ball (Camp), printed pp. 35-37",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Officials can judge the five yard crossing point (the field's parallel lines exist partly for this)",
+    "The quarter can also pass or hand off from the same picture"
+   ],
+   "breakdown_regime": "A constraint of its era; later rules freed the quarter back run entirely, which changed the play's value and the defence's problem",
+   "domain": "rules_geometry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A rule shaped running lane: the constraint forces the quarter's run wide, which determines where the defence must honour it. The engine treats such constraints as part of the play's geometry, since a legal run's value comes from the width the rule imposes on both the runner and the coverage.",
+    "source_operator": "quarterback_run_five_yard_constraint",
+    "telemetry": "Quarter back run frequency and outcomes by exit point relative to the snap point."
+   }
+  },
+  {
+   "primitive_id": "tackle_back_attacking_machine",
+   "name": "The tackle back formation drops one lineman behind the line to join the three backs and quarter back as an attacking machine the quarter can direct at any part of the opposing line, or swing wide to deceive",
+   "verbatim_quote": "backs and quarter-back, completes a group which acts as an attacking machine and can be directed at the will of the quarter against any part of the opposing line.",
+   "page": "Tackle Back Formations: Modern Play (Camp), printed p. 45",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The extra man must be outside the end of the line under the rules then in force",
+    "The quarter reads the defence and chooses the point of attack"
+   ],
+   "breakdown_regime": "Fails when the extra man is used as a mere extra interferer without combining with the backs (Camp's criticism of imitators), or when rules force the extra man so wide that the machine loses its interior threat",
+   "domain": "formation_design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The book's central formation idea: a movable concentration of force with a single director, aimed after the defence declares itself. It maps to the engine's formation layer, where value comes from the option set a formation holds open (any gap, or outside) rather than from the one play finally called; Yale 1900 introduced it and by 1902 it produced repeated long touchdown runs in big games.",
+    "source_operator": "tackle_back_attacking_machine",
+    "telemetry": "Formation frequencies, play direction distribution by formation, explosive play rates, defensive alignment responses."
+   }
+  },
+  {
+   "primitive_id": "line_weight_center_trio",
+   "name": "Stars are not essential to a good line, but weight in the centre trio is: start with plenty of weight at centre and guards and teach them, rather than waste time on lighter men of early promise",
+   "verbatim_quote": "it is wiser to start out with plenty of weight in these positions and spend the time in teaching the men how to play them than to waste time on men who, while giving considerable early promise for the position on account of greater activity, are really too light to fill the place.",
+   "page": "Tackle Back Formations: Modern Play (Camp), printed p. 39",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A single light centre can sometimes be carried if flanked by two big guards and he is muscular, aggressive and experienced",
+    "Teaching time is the scarce resource being allocated"
+   ],
+   "breakdown_regime": "The threshold is era specific (mass play football); in a spacing and passing game the same logic must be re-derived for reach and movement instead of raw weight",
+   "domain": "personnel_selection",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A selection kernel with a floor constraint: below a mass threshold at the interior, no amount of activity compensates, because the position's job is absorbing and moving heavier opponents. The engine uses threshold thinking of this kind when it refuses to project interior line success from undersized personnel regardless of other traits.",
+    "source_operator": "line_weight_center_trio",
+    "telemetry": "Interior line weights, rushing and protection outcomes against heavier and lighter fronts."
+   }
+  },
+  {
+   "primitive_id": "strategic_placement_kicking",
+   "name": "American punters lag the English in safe, strategic kicking: the valuable skill is placing the ball high or low and just across the side line so no run back is possible",
+   "verbatim_quote": "There are many times when a punter on an American college team would be far more effective if he were sufficiently accurate to place the ball, as are some exceptional Englishmen, either high or low and land it just across the side line, so as to prevent a run back.",
+   "page": "Tackle Back Formations: Modern Play (Camp), printed p. 41",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The kicker can control placement with practice",
+    "Preventing the return is worth more than the yards a longer, returnable kick adds"
+   ],
+   "breakdown_regime": "Placement kicking trades distance for safety; with fast ends covering, a long returnable punt can be the better choice, which Camp concedes in the plays chapter",
+   "domain": "kicking",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Kicking as field position control rather than distance: placement removes the return, which is often worth more than extra yards. The engine maps this to valuing punt outcomes by net position after the return distribution, and to the modern coffin corner idea; Camp names Mitchell of Yale as the nearest American to the standard.",
+    "source_operator": "strategic_placement_kicking",
+    "telemetry": "Punt placement, return yards allowed, out of bounds rates, net field position by punter."
+   }
+  },
+  {
+   "primitive_id": "back_weight_bucking_shift",
+   "name": "Rule and defence changes shifted the backfield job to line bucking: backs should be compactly built, strong and quick, and weigh from 170 to 190 pounds, with heavy plungers now worth more than end runners",
+   "verbatim_quote": "Physically a back should be compactly built, strong and quick, never slow nor clumsy, and should weigh anywhere from 170 to 190 pounds.",
+   "page": "Play of the Backs (Reid), printed p. 57",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "End running is no longer practiced with old time success except as deception",
+    "The ball must now be carried over most of the field by a limited number of men"
+   ],
+   "breakdown_regime": "The repricing reverses if rules or defences change again (the forward pass, legalized the year after this edition, eventually did exactly that)",
+   "domain": "personnel_selection",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A market repricing of a position: when the defence masters the end run, the scarce skill becomes interior power, and the ideal body changes with it. The engine uses this when it revalues player traits as schemes and rules shift, instead of grading every era's backs against one fixed template.",
+    "source_operator": "back_weight_bucking_shift",
+    "telemetry": "Back weights and body types, success rates on end runs versus interior runs by era."
+   }
+  },
+  {
+   "primitive_id": "ball_grip_automatic",
+   "name": "Ball security is a trained reflex: the grip on the ball should be automatic and vise-like, with set carries for end runs (one end tucked under the arm, the other end covered by the hand) and for bucking (ball in the pocket formed by stomach and legs)",
+   "verbatim_quote": "The grip on the ball should be automatic and vise-like.",
+   "page": "Play of the Backs (Reid), printed p. 65",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The grip must not loosen when the runner attends to a particular opponent",
+    "Different carries suit end runs and line bucks"
+   ],
+   "breakdown_regime": "No grip survives every hit; the rule lowers fumble probability rather than eliminating it, and Reid pairs it with falling on the ball when it does come loose",
+   "domain": "ball_security",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Turnover prevention as motor automaticity: the carry is standardized so attention can go to opponents. The engine maps this to fumble propensity as a player trait built from carry technique and workload, not as random luck, and to Reid's companion rule that a back who cannot catch surely should never be asked to catch.",
+    "source_operator": "ball_grip_automatic",
+    "telemetry": "Fumble rates by player and carry type, touches, and defensive contact rates."
+   }
+  },
+  {
+   "primitive_id": "fumble_fall_immediately",
+   "name": "When a back fumbles he should fall on the ball at once and never attempt to pick it up unless it bounces high; possession is of the first importance",
+   "verbatim_quote": "If a back fumbles he should fall on the ball at once, never attempting to pick it up unless it bounces high.",
+   "page": "Play of the Backs (Reid), printed p. 75",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The fumbler is usually nearest the ball in the first instant",
+    "A bouncing high ball is the stated exception where pickup is feasible"
+   ],
+   "breakdown_regime": "Modern rules and coaching sometimes reward the scoop in open field with no opponent near; Reid's rule is written for contested balls in traffic",
+   "domain": "ball_security",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A recovery policy under uncertainty: the safe action (fall on it) dominates the greedy one (scoop and run) because a failed pickup usually loses the ball entirely. The engine uses the same dominance logic when it values conservative recovery and possession plays over low probability advancement.",
+    "source_operator": "fumble_fall_immediately",
+    "telemetry": "Fumble recovery rates by recovery attempt type, loose ball outcomes."
+   }
+  },
+  {
+   "primitive_id": "value_square_of_distance",
+   "name": "Forbes' law, quoted with approval: a man's value to his team varies as the square of his distance from the ball",
+   "verbatim_quote": "A man's value to his team varies as the square of his distance from the ball.",
+   "page": "Play of the Backs (Reid), printed p. 75",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The law is a coaching heuristic quoted from Forbes, not a fitted result",
+    "It is stated for the value of backs following play"
+   ],
+   "breakdown_regime": "As a literal square law it is unfitted and surely wrong in detail; its regime is motivational and directional, and the gatekeeper should keep it as a quoted heuristic rather than an equation of the work",
+   "domain": "effort_allocation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The book's one explicit quantitative law, offered as a heuristic for effort allocation: value concentrates near the ball superlinearly, so backs are told to keep their nose on the ball and follow it everywhere. The engine treats it as a period heuristic for pursuit and involvement value, useful as a prior for how sharply a player's relevance decays with distance from the play, not as a measured physical law.",
+    "source_operator": "value_square_of_distance",
+    "telemetry": "Player proximity to the ball by play phase; involvement and tackle participation by starting distance."
+   }
+  },
+  {
+   "primitive_id": "catcher_over_tackler_frequency",
+   "name": "Choose the goal tend for the common play, not the emergency: a sure catcher over an open field tackler, because he gets twenty chances to catch the ball for every one chance to make a touchdown saving tackle",
+   "verbatim_quote": "he is given twenty chances to catch the ball where any one catch, if missed, might mean a touchdown. Under these circumstances it is of course better to provide for the common play rather than for the emergency.",
+   "page": "Play of the Backs (Reid), printed p. 82",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The twenty to one opportunity ratio is Reid's stated estimate for the position",
+    "A missed catch and a missed tackle can each mean a touchdown"
+   ],
+   "breakdown_regime": "The ratio is position and era dependent; a defence that rarely punts or a returner used differently changes the count and can flip the choice",
+   "domain": "personnel_selection",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Frequency weighted selection: pick the skill by how often the game will test it multiplied by the cost of failure, not by the drama of the rare case. Twenty catch chances against one open field tackle chance settles the roster choice. The engine uses the same expected value accounting when it staffs roles and when it weighs a player's rare spectacular plays against his every snap reliability.",
+    "source_operator": "catcher_over_tackler_frequency",
+    "telemetry": "Opportunity counts by role (catches faced versus open field tackles faced), failure costs of each event."
+   }
+  },
+  {
+   "primitive_id": "catch_positioning_overhead_risk",
+   "name": "Backs should play close enough to catch kicks on the fly, accepting roughly one chance in fifty of a kick over the head, because balls handled on the bounce yield no return and the great majority of kicks are catchable",
+   "verbatim_quote": "It is better policy to take one chance in fifty or having a kick go over one's head for the sake of catching the great majority of them than it is to prevent a kick over one's head at the expense of having to handle them on the bounce",
+   "page": "Play of the Backs (Reid), printed p. 83",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "No ball should be allowed to bounce is the operating standard",
+    "Wind and kicker quality move the correct depth"
+   ],
+   "breakdown_regime": "Against an exceptional kicker with the wind, the one in fifty becomes much likelier and the depth must move back; the ratio is a default, not a constant",
+   "domain": "decision_theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "An explicit risk acceptance ratio for positioning: a small probability of the catastrophic outcome (kick over the head) is the price of securing the common good outcome (clean catch and return chance). The engine maps this to safety and returner depth decisions, where playing too deep is a hidden cost paid on every ordinary punt to insure against a rare one.",
+    "source_operator": "catch_positioning_overhead_risk",
+    "telemetry": "Returner depth, catch on fly rate, bounce rate, kicks over the head, return yards by depth."
+   }
+  },
+  {
+   "primitive_id": "last_man_tackling_control",
+   "name": "The lone back facing a runner should force him toward the side line to shrink the field, run fast until fifteen or twenty yards away, then slow under full body control and read the hips, which always give away the real direction",
+   "verbatim_quote": "the back should run fast toward his opponent until he gets within fifteen or twenty yards of him, when he should slow up and get ready to respond to dodging, which can only be done when the back has full control of his body.",
+   "page": "Play of the Backs (Reid), printed p. 82",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The side line acts as an extra defender when the runner can be steered to it",
+    "Upper body feints are deceptive; hip direction is not"
+   ],
+   "breakdown_regime": "A runner with blockers or a broken field full of teammates changes the problem from a duel to a numbers game, where this one on one doctrine does not apply",
+   "domain": "open_field_defence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Open field tackling as angle and information management: reduce the runner's option space with the boundary, arrive under control rather than at full speed, and key on the body part that cannot feint. The engine maps this to last defender value and missed tackle modelling, where approach speed and angle predict tackle success better than effort does.",
+    "source_operator": "last_man_tackling_control",
+    "telemetry": "Open field tackle attempts, approach angles, missed tackle rates, boundary proximity."
+   }
+  },
+  {
+   "primitive_id": "ball_not_mass_defensive_key",
+   "name": "Against concealed ball plays, the back must key on the ball itself, not the motion of any mass of players, since the ball alone indicates the true point of attack",
+   "verbatim_quote": "remember that the ball, not the motion of any mass, indicates the point of attack.",
+   "page": "Play of the Backs (Reid), printed p. 79",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Vigilance can be trained by watching straggling players and the ball",
+    "The back must also avoid going in too early or waiting too long"
+   ],
+   "breakdown_regime": "Where the ball is genuinely hidden (concealed ball plays were still legal in this era), the rule degrades to reading the mass's centre, which is why such plays were later legislated against",
+   "domain": "perception",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A perception rule for a deception rich environment: track the state variable that matters and ignore correlated motion designed to draw the eye. The engine uses the same discipline when it separates real play direction from formation motion and when it grades defenders who bite on fakes.",
+    "source_operator": "ball_not_mass_defensive_key",
+    "telemetry": "Defender first step direction versus actual play direction on fake and counter plays."
+   }
+  },
+  {
+   "primitive_id": "quarter_behind_center",
+   "name": "The quarter back stands directly behind the centre, feet in a straight line parallel to the rush line and neither advanced, rejecting the sideways stance that hides the ball but slows the start, blinds the right side, and dirties ball handling",
+   "verbatim_quote": "Neither foot should be advanced, but both should be in a straight line parallel to the rush line.",
+   "page": "How to Play Quarter Back (deSaulles), printed p. 91",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The backs behind can still see the ball with feet well separated (deSaulles' Fig. 2 argument)",
+    "The sideways stance's concealment gain is real but small"
+   ],
+   "breakdown_regime": "Stance doctrine is personnel dependent; deSaulles argues from the big university teams' results in one season, and a uniquely skilled quarter might still profit from the sideways look",
+   "domain": "technique",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A stance as an information and latency choice: the square stance costs a moment of concealment and buys clean handling, a quick start in any direction, and a full view of the defence. The engine maps this to pre snap posture evaluation generally, where a stance's value is its effect on execution speed and the quarterback's read, not its novelty.",
+    "source_operator": "quarter_behind_center",
+    "telemetry": "Snap handling errors, start quickness, and play success by quarterback stance."
+   }
+  },
+  {
+   "primitive_id": "quarter_generalship_repeat_success",
+   "name": "Generalship rule: if you are gaining at a certain place, work it for all it is worth until you cannot gain there any more; only then try another play",
+   "verbatim_quote": "If you are gaining at a certain place, do not be afraid to work it for all it is worth, until you cannot gain there any more",
+   "page": "How to Play Quarter Back (deSaulles), printed p. 95",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The quarter observes the opposing line closely enough to find the weak place",
+    "The best back is reserved for when a gain is imperative"
+   ],
+   "breakdown_regime": "Pure repetition becomes predictability if the defence adjusts faster than the caller notices; the rule assumes the caller reads the adjustment honestly",
+   "domain": "play_calling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "An exploitation first calling policy: keep attacking a proven weakness until the defence pays to stop it, which also sets up the change. Paired in the same chapter with giving the signal immediately after each play to raise tempo and with avoiding trick plays inside one's own forty. The engine uses this when it models play caller tendencies and the value of forcing a defence to declare its adjustment.",
+    "source_operator": "quarter_generalship_repeat_success",
+    "telemetry": "Play calling sequences, success rate by repeated target, defensive adjustment timing."
+   }
+  },
+  {
+   "primitive_id": "quarter_deep_defensive_anchor",
+   "name": "On defence the quarter back plays twenty to thirty yards behind the line as the last man and must never run up to make a tackle; he waits in front of the runner and lets the runner come to him",
+   "verbatim_quote": "The quarter, when the opposing team has the ball, should stand from twenty to thirty yards back of the line of scrimmage, and SHOULD NEVER UNDER ANY PRETEXT RUN UP TO MAKE A TACKLE.",
+   "page": "How to Play Quarter Back (deSaulles), printed p. 93",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The quarter also handles punts and coaches the line from the back field",
+    "The runner must be allowed to come to the waiting tackler"
+   ],
+   "breakdown_regime": "Against a short passing or quick kicking threat the deep anchor can be exploited underneath; the doctrine is written for the run and punt game of its era",
+   "domain": "open_field_defence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Last defender discipline: the deep man's value is positional insurance, and charging up converts a contained gain into a possible touchdown against. The engine maps this to safety depth and last man behaviour, and to the general principle that the final layer of a defence is priced by the catastrophe it prevents, not the plays it makes.",
+    "source_operator": "quarter_deep_defensive_anchor",
+    "telemetry": "Last defender depth, tackle attempts by depth, explosive plays allowed when the last man vacates."
+   }
+  },
+  {
+   "primitive_id": "defence_front_compression",
+   "name": "Defence is a covering problem: eleven men protect a front better the shorter it is, so the close line packs the ends eight to ten feet from the tackles, tackles three and one half to four feet from the guards, and guards a foot to a foot and a half from the centre",
+   "verbatim_quote": "it is fundamental that the smaller the territory through which it is possible for an opponent to advance on a given play or less the length of front through which an attack maybe made, the better eleven men can protect it",
+   "page": "Defence (Lewis), printed p. 99",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Attacks are of three kinds: frontal, flank, and concealed, and the system must answer all three",
+    "The ends' play makes the close system work; they are responsible for the outside and must not retreat"
+   ],
+   "breakdown_regime": "Compression concedes the outside and the quick game around the ends if the ends fail; it also assumes the centre trio holds firm so the wings can smother plays driven inward",
+   "domain": "defensive_design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Lewis derives the close line from a covering argument: attack arrives through intervals, smaller intervals mean mutual help and a shorter front to defend, and eleven men can protect ten feet far better than fifty. He pairs it with preferring a general defence with elasticity over special defences, which a heady attack evades. The engine maps this to front spacing choices and to the general lesson that a robust base structure beats opponent specific gimmicks over a season.",
+    "source_operator": "defence_front_compression",
+    "telemetry": "Defensive front spacings, gains by target interval, explosive play rates against close and extended fronts."
+   }
+  },
+  {
+   "primitive_id": "extended_line_system",
+   "name": "The rival extended line deploys men wide (end twelve to fifteen feet from tackle, tackle five to six feet from guard, guard two to two and a half feet from centre) so more men can shoot through into the opponents' territory, with end, tackle and half back working in a triangle",
+   "verbatim_quote": "In this system the end plays from twelve to fifteen feet from the tackle, the tackle five to sixfeet from the guard, the guard two to two and one-half feet from the centre",
+   "page": "Defence (Lewis), printed p. 103",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Playing wide gives better opportunity for avoiding blocking",
+    "Everything in this system depends upon the efficiency of the backs"
+   ],
+   "breakdown_regime": "If the backs cannot fill, the wide intervals are simply holes; Lewis presents both systems because personnel, not theory, decides between them",
+   "domain": "defensive_design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The alternative solution to Lewis' covering problem: trade interval safety for penetration, and let three trained backs fill the gaps the wide forwards leave. The engine maps the close versus extended choice to the modern penetration versus gap integrity trade, and Lewis' verdict that no system is stronger than its individuals is the model's reminder that scheme value is capped by personnel.",
+    "source_operator": "extended_line_system",
+    "telemetry": "Penetration rates, tackles for loss, and gap runs allowed by front width; back fill success."
+   }
+  },
+  {
+   "primitive_id": "signal_simplicity",
+   "name": "The first essential in any system of signals is simplicity; a complicated system troubles the quarter, kills the speed of play, and destroys the team's confidence that all eleven are on the same play",
+   "verbatim_quote": "The first essential in any system of signals is simplicity.",
+   "page": "Signals (Rockwell and Hogan), printed p. 107",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Opponents are unlikely to crack even a simple system while also playing the game",
+    "Confidence that everyone has the same play is itself a performance input"
+   ],
+   "breakdown_regime": "Simplicity has a floor: too few distinct signals makes the offence genuinely predictable, so the optimum is the simplest system that still covers the needed plays",
+   "domain": "signaling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A communication channel constraint: the code's value is bounded by the whole team's decode speed under noise and pressure, not by its cleverness. The engine maps this to any coded instruction system, including its own play calling models, where a richer code that decodes slowly or unevenly loses more than it gains; the authors add a change provision so a team that believes its signals are read can switch keys without rebuilding the system.",
+    "source_operator": "signal_simplicity",
+    "telemetry": "Decode errors, delay after signal, and play success by system complexity."
+   }
+  },
+  {
+   "primitive_id": "code_one_letter_key",
+   "name": "Code I encodes the offence in a key word of ten or eleven distinct letters (such as HANOVER CITY): each position takes a letter, the first letter called names the ball carrier and the next the hole or direction, with extra decoy letters padding the call",
+   "verbatim_quote": "For Code I a letter system is taken, having as a base a word, or combination of words, containing either ten or eleven letters, in which the same letter does not occur twice.",
+   "page": "Signals (Rockwell and Hogan), printed p. 111",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The key word's letters must not repeat, so each position's symbol is unique",
+    "Every player must know the whole code, not only his own letter"
+   ],
+   "breakdown_regime": "A stolen or guessed key compromises every play at once; the system's defence is rekeying, and its capacity is capped at the plays the letters can name",
+   "domain": "signaling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A complete early play calling cipher: a substitution key with no repeated symbols, a two symbol message (carrier, target), and chaff letters for concealment, plus a kick signalled by any letter outside the key. The engine maps this to how it should represent play calls compactly and to opponent modelling, since the system's security rests on key secrecy and can be rekeyed by shifting the start letter.",
+    "source_operator": "code_one_letter_key",
+    "telemetry": "Signal structure, play distribution by signal, and evidence of opponent decoding (defensive anticipation)."
+   }
+  },
+  {
+   "primitive_id": "sequence_plays",
+   "name": "A sequence is three or more plays committed to memory and run in quick succession with no signal at all, used about twenty five yards from the goal where crowd noise makes signals hard to hear, with the last play flipped to the opposite side once the defence braces the attacked spot",
+   "verbatim_quote": "Under such conditions a team should have a sequence of plays, i. e., three or more plays previously committed to memory, to be executed in quick succession without a signal.",
+   "page": "Signals (Rockwell and Hogan), printed p. 154",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "One dependable man anchors the sequence (the authors build it around a tackle who has outplayed every opponent)",
+    "All eleven must hold the whole series in memory"
+   ],
+   "breakdown_regime": "A script cannot react to an unexpected defensive look mid sequence; it trades adaptability for speed and certainty, and fails if the first plays do not gain",
+   "domain": "play_calling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Precomputation as a noise proof channel: when the communication channel degrades (noise, tempo), switch from transmitted instructions to a shared preloaded script whose trigger is a spoken remark. The flipped final play builds the defence's adjustment into the script. The engine maps this to tempo offence design and to any setting where a coordinated plan must survive a broken channel.",
+    "source_operator": "sequence_plays",
+    "telemetry": "Sequence usage by field position, success by play number within the sequence, defensive shift across the sequence."
+   }
+  },
+  {
+   "primitive_id": "training_energy_reserve",
+   "name": "Training manages a reserve: a player must keep a superfluous energy to draw on at match time, work should be short and snappy rather than long and slow, men are laid off individually as their condition requires, and practice length builds until the team can stand two thirty five minute halves by the big games",
+   "verbatim_quote": "A foot ball player beyond all else needs to have a sort of superfluous energy to draw upon at the time of his match and to exhaust this is to make a very serious mistake.",
+   "page": "Training for Foot Ball (Murphy), printed p. 157",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The trainer's opinion on work amount is in the main accepted as final",
+    "Nervous tension, concentrated in captain, coach and quarter back, is itself a load to be managed"
+   ],
+   "breakdown_regime": "The reserve is judged by eye in this era, with no measurement; the doctrine fails quietly when a player deceives the staff about his condition, which Murphy admits happens",
+   "domain": "training_load",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A load management kernel from the era's leading trainer: performance is a stock of energy that training must build without spending, individual response varies so one rule cannot govern all men, and short high quality work beats volume that teaches slow play. The engine maps this to workload and freshness inputs for players, and Murphy's trio of coach, trainer and captain deciding work mirrors how the engine should combine signals rather than trust one gauge.",
+    "source_operator": "training_energy_reserve",
+    "telemetry": "Practice duration and intensity, individual condition reports, late season and late game performance."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "584e033ac3ef2725-t1",
+   "think": "This book is the 1905 revised edition of Spalding's How to Play Foot Ball, Walter Camp's primer on the modern college game, first issued in 1902 and brought down to date after the 1904 rules. It is not one treatise but a working manual assembled from the era's authorities: Camp writes the introductory chapter for beginners, the chapter on special plays, and the chapter on tackle back formations; W. T. Reid Jr. of Harvard writes the play of the backs; John Longer deSaulles writes the quarter back chapter; William H. Lewis writes the defence chapter; Rockwell and Hogan of the Yale 1902 team write the signals chapter; and Michael Murphy, the Yale trainer, writes the training chapter. Read as one object, it is the earliest complete formalization of American football as a system: a fixed field geometry, a possession rule that rations attempts, a scoring vector, a catalogue of plays, two rival defensive systems, a coded communication layer, and a training doctrine, all fitted together. The machinery connects in a definite order. The geometry and the three downs for five yards rule create the game's basic scarcity: territory must be gained in bounded trials or the ball is surrendered, which immediately generates decision problems the book treats as computations. Camp's captain near the goal weighs a 4 point field goal against a 5 or 6 point touchdown, with the price of a missed kick softened by the ten yard kick out rule; the safety is priced as a two point purchase of a restart at the twenty five. These are expected value arguments before the term existed in sport, and they sit upstream of every play in the book. Given the constraint, play design becomes an information problem. The tackle must hold one posture for every intention; the end is dropped back and sent through the line repeatedly so that one overhead pass to a half back can cash the defence's learned commitment; the criss cross lives or dies on blocks that arrive late but last long. The tackle back formation generalizes the idea: pull one lineman into the backfield and you hold an attacking machine that can be pointed at any gap after the defence shows itself, which is why Camp insists the imitators who used the extra man as a mere interferer missed the principle. Underneath the design layer sits a physical layer with its own laws. Interference is a matching problem between blocker speed and runner speed, stated by Camp in the language of solving an equation for one's own team. Openings are of two physical types, the quick sharp opening of light men and the accumulated force opening of heavy men, and wedges succeed by legs and rehearsed pushing rather than by pounds. Personnel doctrine follows from the physics and from frequency. Reid re-prices the backfield when defences master the end run: 170 to 190 pound plungers over artists. His selection of a goal tend is the book's cleanest piece of reasoning, twenty chances to catch against one chance to tackle, so staff for the common play. His positioning rule accepts one kick over the head in fifty to secure every ordinary catch on the fly. DeSaulles gives the quarter back the same treatment: stance as a latency and vision choice, generalship as an exploitation policy (work a gaining place until it stops gaining), and defensive depth as catastrophe insurance that must never be spent by running up. Lewis then solves the defence as a covering problem with two coherent answers, the compressed close line and the penetrating extended line, and warns that a general defence outlasts special ones. Rockwell and Hogan close the system with its communication layer: simplicity first, then three complete codes, letter keys with decoy letters, parity tricks for side, and preloaded sequences for when noise kills the channel. Murphy's training chapter is the energy budget that all of it draws on. For a reasoning engine the book matters because it shows the sport's concepts being born as explicit, checkable claims rather than folklore: down and distance as a state machine, field position as a currency with stated exchange rates, deception as an investment with a payoff play, blocking as personnel dependent physics, and signals as a coding problem with a secrecy and a rekeying doctrine. Its claims can be lifted as structural priors and then re-parameterized, which is exactly how an engine should use a 1905 source: the shapes are durable, the constants are not. Where it breaks is equally clear. This is pre forward pass football; the pass was legalized in 1906, the year after this edition, and it eventually inverted several of the book's repricings, most obviously the backfield's. The scoring vector (touchdown 5, field goal 4) and the three downs for five yards rule are period constants. Mass and momentum play still dominate its imagination, the concealed ball is still legal enough to require a perception doctrine against it, and none of its quantitative claims, Forbes' square law included, rests on counted data; they are the distilled judgment of winning programmes, which is strong evidence about what worked and weak evidence about magnitudes. The correct use is the one the fleet applies to every era source: keep the mechanisms, re-derive the numbers. One more feature deserves emphasis, because it is easy to miss in a tactics manual: the book is unusually honest about the limits of its own advice. Camp reports that wedges formed at the end of the line have not proven successful and are not worth a team's practice time; Lewis presents two defensive systems without pretending the theory can choose between them, since the individuals decide; deSaulles argues his stance doctrine from one season of big game evidence and says so; Murphy admits that a determined player can deceive coach, trainer and captain about his condition. That habit of marking the boundary of each claim is part of what makes the volume extractable at all, and the artifact preserves those boundaries in each primitive's breakdown regime rather than flattening the book into certainties.",
+   "retrocausal_genealogy": "The book's lineage runs from rugby through Camp's own rules work. Camp had been on the intercollegiate rules committee since the 1880s and effectively edited the American game into existence: the line of scrimmage, the snap, eleven men, and the down and distance rule that this primer teaches were his instruments for turning rugby's continuous scrummage into a sequence of discrete, plannable plays. The flying wedge of 1892 and the 1894 legislation against momentum mass plays stand directly behind the plays chapter, which assumes wedges only from downs. The tackle back chapter descends from Yale's 1900 team, which first brought the formation out, through Harvard's tandem answer of 1901 and Yale's further development in 1902. The signals chapter is written by Yale's 1902 quarter and tackle, and the training chapter by Yale's trainer, so the volume is best read as the Yale centred establishment publishing its own operating system, with Harvard's Reid and Lewis admitted as authorities on the backs and on defence.",
+   "theory_of_mind": "The authors write for a reader who must decide under uncertainty with other men's bodies: the captain and the quarter back. Their model of that reader is respectful and unsentimental. He is assumed to be tempted by novelty (trick plays before fundamentals), by imitation (copying Heffelfinger's interference assignment to slower guards), by drama (staffing the goal tend for the rare open field tackle instead of the common catch), and by cleverness (intricate signal systems), and each chapter is built to correct one of those temptations with a mechanism or a count. The opponent in their model is an adaptive decoder who studies your postures, your repetitions and your signals, so concealment and rekeying are treated as necessities, not garnish. The player is modelled as a fallible executor whose errors, fumbles, tells and fatigue, dominate outcomes more often than design does, which is why so much of the book is about grips, stances, starts and reserves rather than diagrams.",
+   "cross_layer_veto": "Several doctrines in the book veto whole layers of any system built on top of it. The fundamentals doctrine vetoes scheme complexity: no formation or trick play may be credited beyond the execution reliability of the men running it. Ball security vetoes open field ambition: Reid's grip, fumble and never run back rules cap what a return or a run may attempt. The defence chapters veto offensive self deception, since Lewis shows every attack meets a covering structure whose intervals, not its intentions, decide where gains are possible. The signals chapter vetoes playbook size: a play the team cannot decode instantly does not exist, however good it looks. Murphy vetoes workload: any plan that spends the superfluous energy reserve before the match has consumed its own fuel. And the scoring and downs arithmetic vetoes style points altogether; a play is worth its points and its field position, nothing else."
+  }
+ ],
+ "universal_lens": "The primer is a template for any contest run in bounded trials over a fixed space with a coded command channel: define the geometry, ration the attempts, price every outcome in one currency, design actions that hide intent until commitment, match the physical capacities of the executors to the plan instead of copying a champion's plan, staff roles by how often the world will test them, build the defence as a covering problem with a robust general solution, keep the code simple enough to decode at full speed, and hold an energy reserve for the moment that decides. Any organization, from a trading desk to a response team, can be audited against those nine moves.",
+ "gsi_mapping": "For the Galaxy Sports Institute this book is a primary source for the pre forward pass stratum of football knowledge: the down and distance state machine, formation play as an option set, defence as interval covering, and signals as coding, all stated by the men who built them. It belongs in the teaching corpus as the baseline era against which later revolutions (the legal pass of 1906, the modern four down ten yard game) are measured, and its frequency and exchange rate arguments are ideal classroom examples of quantitative reasoning before statistics.",
+ "gse_mapping": "For the Galaxy Sports Edge engine the book contributes structural priors, not constants: series level possession logic, field position exchange rates (the safety as a priced concession, the missed kick discount inside the twenty five), deception sequencing where a setup play buys a counter, personnel dependent scheme values, and last defender depth priced as catastrophe insurance. Each primitive is tagged to the telemetry that would re-fit it on modern data, because the 1905 constants (three downs, five yards, touchdown 5, field goal 4) must never be carried into a modern projection; the mechanisms are what transfer."
+}

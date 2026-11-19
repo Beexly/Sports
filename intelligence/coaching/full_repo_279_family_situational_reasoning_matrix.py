@@ -12,6 +12,7 @@ coaching, tracking, and mathematical stack prior to Stage 3 JEV snap-by-snap sim
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import math
@@ -234,6 +235,10 @@ def evaluate_all_80_x_situational_rules(game_ctx: Dict[str, Any]) -> Dict[str, A
 # ============================================================================
 # 2. MEASURED REASONING PRIMITIVES (`intelligence/reasoning/primitives/*.json`)
 # ============================================================================
+_MEASURED_PRIMITIVES_CACHE: Optional[Tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any]]] = None
+_THOUSAND_EQ_COUNT_CACHE: Optional[int] = None
+
+
 def evaluate_measured_reasoning_primitives(game_ctx: Dict[str, Any]) -> Dict[str, Any]:
     """
     Loads and executes the 3 measured reasoning primitives from `intelligence/reasoning/primitives/`:
@@ -241,14 +246,19 @@ def evaluate_measured_reasoning_primitives(game_ctx: Dict[str, Any]) -> Dict[str
       2. `depth-chart-replacement.json` (10 seasons, 32,038 player-weeks: promotion into star vacancy regresses -74.97 yds)
       3. `route-depth-signature.json` (BDB 2025 10Hz tracking: AUC 0.8458 pre-throw route-depth classification)
     """
-    prim_dir = REPO_ROOT / "intelligence" / "reasoning" / "primitives"
-    wr1_abs_path = prim_dir / "wr1-absorption.json"
-    dc_rep_path = prim_dir / "depth-chart-replacement.json"
-    route_sig_path = prim_dir / "route-depth-signature.json"
+    global _MEASURED_PRIMITIVES_CACHE
+    if _MEASURED_PRIMITIVES_CACHE is None:
+        prim_dir = REPO_ROOT / "intelligence" / "reasoning" / "primitives"
+        wr1_abs_path = prim_dir / "wr1-absorption.json"
+        dc_rep_path = prim_dir / "depth-chart-replacement.json"
+        route_sig_path = prim_dir / "route-depth-signature.json"
 
-    wr1_abs = json.loads(wr1_abs_path.read_text(encoding="utf-8")) if wr1_abs_path.is_file() else {}
-    dc_rep = json.loads(dc_rep_path.read_text(encoding="utf-8")) if dc_rep_path.is_file() else {}
-    route_sig = json.loads(route_sig_path.read_text(encoding="utf-8")) if route_sig_path.is_file() else {}
+        _MEASURED_PRIMITIVES_CACHE = (
+            json.loads(wr1_abs_path.read_text(encoding="utf-8")) if wr1_abs_path.is_file() else {},
+            json.loads(dc_rep_path.read_text(encoding="utf-8")) if dc_rep_path.is_file() else {},
+            json.loads(route_sig_path.read_text(encoding="utf-8")) if route_sig_path.is_file() else {},
+        )
+    wr1_abs, dc_rep, route_sig = _MEASURED_PRIMITIVES_CACHE
 
     wr2_baseline_yds = float(game_ctx.get("wr2_baseline_yds", 34.0))
     wr3_baseline_yds = float(game_ctx.get("wr3_baseline_yds", 26.0))
@@ -297,6 +307,9 @@ def evaluate_measured_reasoning_primitives(game_ctx: Dict[str, Any]) -> Dict[str
 # ============================================================================
 # 3. 288-BIT / 279-SIGNAL-FAMILY / 12,304-EQUATION COGNITIVE ROUTER
 # ============================================================================
+_COGNITIVE_ROUTER_12K_CACHE: Dict[str, Dict[str, Any]] = {}
+
+
 def execute_288bit_12304_equation_cognitive_router(game_ctx: Dict[str, Any]) -> Dict[str, Any]:
     """
     Executes the 4-stage Cognitive Router (`packages/mcp-equations-server/src/mcp-cognitive-router.ts`
@@ -307,23 +320,32 @@ def execute_288bit_12304_equation_cognitive_router(game_ctx: Dict[str, Any]) -> 
       - Stage C: 25 orthogonalized spectral cluster representatives via Marchenko-Pastur whitening
       - Stage D: Cross-Equation Jacobian Coupling & Positive-Part James-Stein Shrinkage capped at |Δlog-odds| <= 0.35
     """
+    global _THOUSAND_EQ_COUNT_CACHE
     from intelligence.reasoning.equation_gate import evaluate_12304_equations_cognitive_router
 
-    eq_1k_path = REPO_ROOT / "data" / "engine" / "thousand_equation_matrix_2026.json"
-    total_1k = 1666
-    if eq_1k_path.is_file():
-        try:
-            with open(eq_1k_path, "r", encoding="utf-8") as fh:
-                raw_1k = json.load(fh)
-                if isinstance(raw_1k, dict) and "equations" in raw_1k:
-                    total_1k = len(raw_1k["equations"])
-                elif isinstance(raw_1k, list):
-                    total_1k = len(raw_1k)
-        except Exception:
-            total_1k = 1666
+    cache_key = json.dumps(game_ctx or {}, sort_keys=True, default=str)
+    if _THOUSAND_EQ_COUNT_CACHE is not None and cache_key in _COGNITIVE_ROUTER_12K_CACHE:
+        return copy.deepcopy(_COGNITIVE_ROUTER_12K_CACHE[cache_key])
+
+    if _THOUSAND_EQ_COUNT_CACHE is None:
+        eq_1k_path = REPO_ROOT / "data" / "engine" / "thousand_equation_matrix_2026.json"
+        total_1k = 1666
+        if eq_1k_path.is_file():
+            try:
+                with open(eq_1k_path, "r", encoding="utf-8") as fh:
+                    raw_1k = json.load(fh)
+                    if isinstance(raw_1k, dict) and "equations" in raw_1k:
+                        total_1k = len(raw_1k["equations"])
+                    elif isinstance(raw_1k, list):
+                        total_1k = len(raw_1k)
+            except Exception:
+                total_1k = 1666
+        _THOUSAND_EQ_COUNT_CACHE = total_1k
 
     routed = evaluate_12304_equations_cognitive_router(game_ctx)
-    routed["thousand_equation_matrix_count"] = total_1k
+    routed["thousand_equation_matrix_count"] = _THOUSAND_EQ_COUNT_CACHE
+    if len(_COGNITIVE_ROUTER_12K_CACHE) < 256:
+        _COGNITIVE_ROUTER_12K_CACHE[cache_key] = copy.deepcopy(routed)
     return routed
 
 
@@ -408,6 +430,56 @@ def execute_master_6family_cholesky_aggregator(
 # ============================================================================
 # 5. FULL REPO INVENTORY & LIVE EXECUTION ENGINE
 # ============================================================================
+_REPO_MODULE_CENSUS_CACHE: Optional[Tuple[int, int, int]] = None
+_LAST_REGISTRY_SHA256: Optional[str] = None
+
+
+def _get_cached_repo_module_census() -> Tuple[int, int, int]:
+    """Return cached `(ts_pred_count, ts_mcp_count, py_intel_count)` once per process."""
+    global _REPO_MODULE_CENSUS_CACHE
+    if _REPO_MODULE_CENSUS_CACHE is not None:
+        return _REPO_MODULE_CENSUS_CACHE
+    pred_src = REPO_ROOT / "packages" / "prediction-engine" / "src"
+    mcp_src = REPO_ROOT / "packages" / "mcp-equations-server" / "src"
+    intel_root = REPO_ROOT / "intelligence"
+
+    ts_pred_count = (
+        sum(
+            1
+            for _, _, files in os.walk(pred_src)
+            for f in files
+            if f.endswith(".ts") and not f.endswith((".test.ts", ".spec.ts"))
+        )
+        if pred_src.exists()
+        else 1220
+    )
+    ts_mcp_count = (
+        sum(
+            1
+            for _, _, files in os.walk(mcp_src)
+            for f in files
+            if f.endswith(".ts") and not f.endswith((".test.ts", ".spec.ts"))
+        )
+        if mcp_src.exists()
+        else 7
+    )
+    py_intel_count = (
+        sum(
+            1
+            for r, _, files in os.walk(intel_root)
+            for f in files
+            if f.endswith(".py")
+            and "__pycache__" not in r
+            and not f.startswith("test_")
+            and not f.endswith("_test.py")
+        )
+        if intel_root.exists()
+        else 377
+    )
+    _REPO_MODULE_CENSUS_CACHE = (ts_pred_count, ts_mcp_count, py_intel_count)
+    return _REPO_MODULE_CENSUS_CACHE
+
+
 def run_full_repo_situational_reasoning_engine(
     game_ctx: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
@@ -423,6 +495,7 @@ def run_full_repo_situational_reasoning_engine(
       8. Live census of all `1,221+` TS files in `packages/prediction-engine/src` & `packages/mcp-equations-server/src`
          and all `377+` Python intelligence files in `intelligence/*`.
     """
+    global _LAST_REGISTRY_SHA256
     ctx = dict(game_ctx or {})
     rules_80 = evaluate_all_80_x_situational_rules(ctx)
     primitives_3 = evaluate_measured_reasoning_primitives(ctx)
@@ -432,29 +505,7 @@ def run_full_repo_situational_reasoning_engine(
         market_prob=float(ctx.get("market_anchor_prob", 0.52)),
     )
 
-    # Fast file count verification across `packages/prediction-engine/src`, `packages/mcp-equations-server/src`, `intelligence/`
-    pred_src = REPO_ROOT / "packages" / "prediction-engine" / "src"
-    mcp_src = REPO_ROOT / "packages" / "mcp-equations-server" / "src"
-    intel_root = REPO_ROOT / "intelligence"
-
-    ts_pred_count = sum(
-        1
-        for r, _, files in os.walk(pred_src)
-        for f in files
-        if f.endswith(".ts") and not f.endswith((".test.ts", ".spec.ts"))
-    ) if pred_src.exists() else 1220
-    ts_mcp_count = sum(
-        1
-        for r, _, files in os.walk(mcp_src)
-        for f in files
-        if f.endswith(".ts") and not f.endswith((".test.ts", ".spec.ts"))
-    ) if mcp_src.exists() else 7
-    py_intel_count = sum(
-        1
-        for r, _, files in os.walk(intel_root)
-        for f in files
-        if f.endswith(".py") and "__pycache__" not in r and not f.startswith("test_") and not f.endswith("_test.py")
-    ) if intel_root.exists() else 377
+    ts_pred_count, ts_mcp_count, py_intel_count = _get_cached_repo_module_census()
 
     payload = {
         "status": "LIVE_FULL_REPO_SITUATIONAL_ENGINE_ACTIVE",
@@ -481,13 +532,22 @@ def run_full_repo_situational_reasoning_engine(
     payload["receipt_sha256"] = hashlib.sha256(
         json.dumps(payload, sort_keys=True, default=str).encode("utf-8")
     ).hexdigest()
+    structural_sha256 = hashlib.sha256(
+        json.dumps(
+            {k: v for k, v in payload.items() if k not in {"generated_at_utc", "receipt_sha256"}},
+            sort_keys=True,
+            default=str,
+        ).encode("utf-8")
+    ).hexdigest()
 
-    out_path = REPO_ROOT / "data" / "engine" / "full_repo_situational_and_equation_wiring_registry_2026_11_05.json"
-    try:
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-        out_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    except Exception:
-        pass
+    if structural_sha256 != _LAST_REGISTRY_SHA256:
+        out_path = REPO_ROOT / "data" / "engine" / "full_repo_situational_and_equation_wiring_registry_2026_11_05.json"
+        try:
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            out_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+            _LAST_REGISTRY_SHA256 = structural_sha256
+        except Exception:
+            pass
 
     return payload
 

@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""
-Verification suite for Track A (Formal MADR Architecture Decision Records `0001..0006` + `README.md`)
-and Track B (Multi-Channel Video, Social Follower Flywheel, Week 9 Plays, DraftKings/FanDuel DFS &
-Ad/Affiliate Revenue Engine).
+"""Verification suite for Track A (MADR ADRs `0001..0006` + `README.md`) and Track B.
+
+Track B covers Multi-Channel Video, Social Follower Flywheel, Week 9 Plays,
+DraftKings/FanDuel DFS, and the Ad/Affiliate Revenue Engine.
 """
 
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import re
+from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 ETC_RE = re.compile(r"\betc" + r"\.", re.IGNORECASE)
@@ -70,6 +70,8 @@ def test_madr_architecture_decision_records_complete() -> None:
 def test_video_social_dfs_and_revenue_engine_and_paywall_guardrails() -> None:
     from intelligence.ops.gse_video_social_and_revenue_growth_engine import (
         build_week9_video_social_dfs_and_revenue_packet,
+    )
+    from intelligence.ops.gse_video_social_and_revenue_growth_engine import (
         main as run_video_revenue_engine,
     )
 
@@ -98,16 +100,38 @@ def test_video_social_dfs_and_revenue_engine_and_paywall_guardrails() -> None:
         assert v["contains_internal_math_jargon"] is False
         blob = json.dumps(v)
         for banned in BANNED_PUBLIC_JARGON:
-            assert banned.lower() not in blob.lower(), f"Banned jargon '{banned}' in {v['video_id']}"
+            assert banned.lower() not in blob.lower(), (
+                f"Banned jargon '{banned}' in {v['video_id']}"
+            )
 
     streams = packet["revenue_stream_attribution_matrix"]
     assert len(streams) == 7
     stream_blob = json.dumps(streams)
-    for partner in ("ca-pub-8151105906877749", "8111208", "zwniodg", "whop.com", "CapperTek", "/packages"):
+    revenue_partners = (
+        "ca-pub-8151105906877749",
+        "8111208",
+        "zwniodg",
+        "whop.com",
+        "CapperTek",
+        "/packages",
+    )
+    for partner in revenue_partners:
         assert partner in stream_blob, f"Missing revenue partner {partner}"
 
-    out_json = REPO_ROOT / "data" / "engine" / "week9_video_social_dfs_and_revenue_master_packet_2026_11_06.json"
-    out_md = REPO_ROOT / "docs" / "dfs" / "research" / "2026-11-06" / "WEEK9_PLAYS_DFS_VIDEO_AND_REVENUE_EXECUTION_PACKET.md"
+    out_json = (
+        REPO_ROOT
+        / "data"
+        / "engine"
+        / "week9_video_social_dfs_and_revenue_master_packet_2026_11_06.json"
+    )
+    out_md = (
+        REPO_ROOT
+        / "docs"
+        / "dfs"
+        / "research"
+        / "2026-11-06"
+        / "WEEK9_PLAYS_DFS_VIDEO_AND_REVENUE_EXECUTION_PACKET.md"
+    )
     ts_mod = REPO_ROOT / "apps" / "web" / "lib" / "content-os" / "video-and-revenue-engine.ts"
 
     for fpath in (out_json, out_md, ts_mod):
@@ -115,4 +139,6 @@ def test_video_social_dfs_and_revenue_engine_and_paywall_guardrails() -> None:
         txt = fpath.read_text(encoding="utf-8")
         assert not ETC_RE.search(txt), f"Forbidden literal found in {fpath}"
         for banned in BANNED_PUBLIC_JARGON:
-            assert banned.lower() not in txt.lower(), f"Banned public jargon '{banned}' in {fpath.name}"
+            assert banned.lower() not in txt.lower(), (
+                f"Banned public jargon '{banned}' in {fpath.name}"
+            )

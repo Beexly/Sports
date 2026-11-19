@@ -11,7 +11,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from intelligence.vision import research_mindset_features as rmf
 
-
 # -- trajectory irreversibility -------------------------------------------
 
 def test_irreversibility_zero_for_static_path():

@@ -1,4 +1,4 @@
-r"""Comprehensive Multi-Pass Test Suite for the 33-Repository (Batch 2 -> 45 Total) Integration Engine.
+r"""Comprehensive Multi-Pass Test Suite for the 33-Repository Integration Engine (45 Total).
 
 Verifies all 33 new repositories + edge cases across:
   - Target A: Personal Hardware & Software Optimization (~)
@@ -13,7 +13,6 @@ import shutil
 
 import numpy as np
 import pytest
-
 from intelligence.ecosystem.thirty_three_repo_frontier_integration_engine import (
     REPO_ROOT,
     SKILLS_DIR,
@@ -74,7 +73,9 @@ def test_cluster1_worktrunk_tuios_chromiumoxide_clowder_and_rea() -> None:
         c1.update_tuios_pane_and_post_inbox("pane_1", "gse-worker", "crashed_unknown", "bad")
 
     # 3. mattsse/chromiumoxide: CDP multiplexing + tracker blocklist
-    cdp1 = c1.build_chromiumoxide_cdp_session_frame("tab_dk", "DOM.getDocument", block_trackers=True)
+    cdp1 = c1.build_chromiumoxide_cdp_session_frame(
+        "tab_dk", "DOM.getDocument", block_trackers=True
+    )
     cdp2 = c1.build_chromiumoxide_cdp_session_frame("tab_dk", "Page.reload", block_trackers=False)
     assert cdp1["id"] == 1
     assert cdp2["id"] == 2
@@ -126,7 +127,7 @@ def test_cluster1_worktrunk_tuios_chromiumoxide_clowder_and_rea() -> None:
 def test_cluster2_ruview_archify_agent_teams_and_unleash() -> None:
     c2 = RuViewArchifyAgentTeamsUnleashCluster()
 
-    # 6. ruvnet/RuView: RF CSI respiratory vs sprint gait frequency extraction + outlier spike rejection
+    # 6. ruvnet/RuView: RF CSI respiratory vs sprint gait frequency + outlier rejection
     t = np.linspace(0.0, 20.0, 400)
     resp_wave = (np.sin(2.0 * np.pi * 0.25 * t)).tolist()
     resp_wave[100] = 50.0  # synthetic Hampel outlier spike
@@ -174,7 +175,9 @@ def test_cluster2_ruview_archify_agent_teams_and_unleash() -> None:
 
     # 9. Unleash/unleash: deterministic stickiness & kill-switch
     u_on = c2.evaluate_unleash_feature_toggle("CALIBRATION_ADJUSTMENTS_ENABLED", "user_42", 100)
-    u_kill = c2.evaluate_unleash_feature_toggle("CALIBRATION_ADJUSTMENTS_ENABLED", "user_42", 100, kill_switch_tripped=True)
+    u_kill = c2.evaluate_unleash_feature_toggle(
+        "CALIBRATION_ADJUSTMENTS_ENABLED", "user_42", 100, kill_switch_tripped=True
+    )
     u_mismatch = c2.evaluate_unleash_feature_toggle(
         "CALIBRATION_ADJUSTMENTS_ENABLED",
         "user_42",
@@ -235,7 +238,9 @@ def test_cluster3_windmill_rustdesk_trivy_brew_magpie_and_nakama() -> None:
     assert brew["verified_bottle_count"] == 1
 
     # 14. yetone/magpie: model routing + held cooldown on 429
-    c3.mark_magpie_model_rate_limited("omniroute/auto/coding:free", cooldown_sec=60.0, now_ts=1000.0)
+    c3.mark_magpie_model_rate_limited(
+        "omniroute/auto/coding:free", cooldown_sec=60.0, now_ts=1000.0
+    )
     routed = c3.route_magpie_model_with_held_cooldown(
         "workhorse",
         ["omniroute/auto/coding:free", "mimo-v2.6-flash"],
@@ -277,13 +282,20 @@ def test_cluster4_mcp_memory_doop_dsh_tensorflow_and_system_design() -> None:
 
     # 17. kgoedecke/doop: LWW-Element-Set CRDT merge, equal-timestamp commutativity & bbox overlap
     c4.merge_doop_crdt_canvas_op("node_1", 10.0, {"x": 0.0, "y": 0.0, "w": 50.0, "h": 50.0})
-    c4.merge_doop_crdt_canvas_op("node_1", 5.0, {"x": 999.0, "y": 999.0, "w": 10.0, "h": 10.0})  # older timestamp ignored
-    state = c4.merge_doop_crdt_canvas_op("node_1", 20.0, {"x": 12.0, "y": 24.0, "w": 50.0, "h": 50.0})
+    # older timestamp ignored
+    c4.merge_doop_crdt_canvas_op("node_1", 5.0, {"x": 999.0, "y": 999.0, "w": 10.0, "h": 10.0})
+    state = c4.merge_doop_crdt_canvas_op(
+        "node_1", 20.0, {"x": 12.0, "y": 24.0, "w": 50.0, "h": 50.0}
+    )
     assert state["visible_elements"]["node_1"]["x"] == 12.0
-    overlap_state = c4.merge_doop_crdt_canvas_op("node_2", 20.0, {"x": 20.0, "y": 30.0, "w": 50.0, "h": 50.0})
+    overlap_state = c4.merge_doop_crdt_canvas_op(
+        "node_2", 20.0, {"x": 20.0, "y": 30.0, "w": 50.0, "h": 50.0}
+    )
     assert overlap_state["collision_free"] is False
     assert ("node_1", "node_2") in overlap_state["overlapping_pairs"]
-    tomb = c4.merge_doop_crdt_canvas_op("node_1", 30.0, {"x": 12.0, "y": 24.0, "w": 50.0, "h": 50.0}, tombstone=True)
+    tomb = c4.merge_doop_crdt_canvas_op(
+        "node_1", 30.0, {"x": 12.0, "y": 24.0, "w": 50.0, "h": 50.0}, tombstone=True
+    )
     assert "node_1" not in tomb["visible_elements"]
 
     # Equal-timestamp commutativity check (join-semilattice invariant: merge(A, B) == merge(B, A))
@@ -312,7 +324,7 @@ def test_cluster4_mcp_memory_doop_dsh_tensorflow_and_system_design() -> None:
     assert tf_out["brier_score"] < 0.10
     assert tf_out["focal_loss"] < 0.15
 
-    # 20. donnemartin/system-design-primer: consistent hash ring & Odds API token bucket circuit breaker
+    # 20. donnemartin/system-design-primer: consistent hash ring & Odds API circuit breaker
     sd_ok = c4.system_design_consistent_hash_and_token_bucket(
         ["game1", "game2"],
         ["nodeA", "nodeB"],
@@ -343,7 +355,11 @@ def test_cluster5_algorithms_ytdlp_autogpt_and_csnotes() -> None:
             {"name": "statsmodels", "license": "BSD-3-Clause", "native_c_or_rust": True},
         ],
         [
-            {"step": "pytest", "automated_command": "python -m pytest", "requires_manual_ui": False},
+            {
+                "step": "pytest",
+                "automated_command": "python -m pytest",
+                "requires_manual_ui": False,
+            },
         ],
     )
     assert ap_res["all_licenses_cleared"] is True
@@ -360,7 +376,10 @@ def test_cluster5_algorithms_ytdlp_autogpt_and_csnotes() -> None:
 
     # 24. yt-dlp/yt-dlp (Pass-2 Zero-Video-Disk coach cue extractor)
     cues = c5.extract_ytdlp_zero_video_coach_cues(
-        [{"ts": "00:45", "text": "We want 30 carries to establish the run and put a pitch count on WR1."}],
+        [{
+            "ts": "00:45",
+            "text": "We want 30 carries to establish the run and put a pitch count on WR1.",
+        }],
         {"neutral_pass_rate": 0.68},
     )
     assert "RUN_HEAVY_STATED" in cues["stated_cues"]
@@ -368,7 +387,7 @@ def test_cluster5_algorithms_ytdlp_autogpt_and_csnotes() -> None:
     assert cues["tuesday_vs_sunday_deception"] is True
     assert cues["video_bytes_written_to_disk"] == 0
 
-    # 25..27. AutoGPT perf_compare + CS-Notes Wait-For Graph deadlock cycle detection + HelloGitHub leverage
+    # 25..27. AutoGPT perf_compare + CS-Notes deadlock detection + HelloGitHub leverage
     no_cycle = c5.autogpt_perf_compare_and_wait_for_deadlock_check(
         [20.0, 21.0, 19.5],
         [5.0, 5.2, 4.9],
@@ -437,7 +456,7 @@ def test_cluster6_toolregistry_treg_deerflow_calibre_statsmodels_and_imageai() -
     assert sm_res["ortho_situational_coef"] > 0.0
     assert sm_res["fdr_bh_rejected_count"] == 3
 
-    # Collinear FWL edge case (situational_delta strictly proportional to market_implied_prob + empty p-values)
+    # Collinear FWL edge case (situational_delta ~ market_implied_prob + empty p-values)
     sm_collinear = c6.run_statsmodels_fwl_ols_and_fdr_calibration(
         market_implied_prob=[0.45, 0.50, 0.55, 0.40, 0.60, 0.52, 0.48, 0.58, 0.42, 0.51],
         situational_delta=[0.045, 0.050, 0.055, 0.040, 0.060, 0.052, 0.048, 0.058, 0.042, 0.051],
@@ -494,16 +513,22 @@ def test_end_to_end_forty_five_repo_receipt_ruff_and_deep_modules() -> None:
         assert (SKILLS_DIR / sk / "SKILL.md").exists(), f"Missing installed skill {sk}"
 
     # Verify Ruff native static + Bandit security check passes with 0 violations on both engines
+    eng33 = (
+        REPO_ROOT
+        / "intelligence"
+        / "ecosystem"
+        / "thirty_three_repo_frontier_integration_engine.py"
+    )
     ruff_res = RuffNativeStaticAndSecurityAuditor.audit_paths([
         REPO_ROOT / "intelligence" / "ecosystem" / "twelve_repo_frontier_integration_engine.py",
-        REPO_ROOT / "intelligence" / "ecosystem" / "thirty_three_repo_frontier_integration_engine.py",
+        eng33,
     ])
     assert ruff_res["passed"] is True, f"Ruff diagnostics: {ruff_res['diagnostics']}"
 
     # Verify Ousterhout Deep Module classification on both engine modules
     deep_res = SkillVaultAndDeepModuleAnalyzer.analyze_deep_module_ratios([
         REPO_ROOT / "intelligence" / "ecosystem" / "twelve_repo_frontier_integration_engine.py",
-        REPO_ROOT / "intelligence" / "ecosystem" / "thirty_three_repo_frontier_integration_engine.py",
+        eng33,
     ])
     assert deep_res["average_depth_ratio"] >= 40.0
     for mod in deep_res["modules"]:

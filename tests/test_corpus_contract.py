@@ -169,8 +169,11 @@ def test_audit_of_clean_manifest_is_ok(tmp_path):
 # --- the fix this contract guards -----------------------------------------
 
 def test_contract_catches_what_used_to_crash_the_index(tmp_path):
-    """Regression tie-in: every row the contract rejects is one that used to
-    either crash build_index or silently index as an empty document."""
+    """Regression tie-in for rejected rows.
+
+    Every row the contract rejects is one that used to either crash
+    build_index or silently index as an empty document.
+    """
     from intelligence.research import corpus_index as ci
 
     crashing = [

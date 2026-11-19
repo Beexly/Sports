@@ -95,13 +95,16 @@ export default async function PackagesPage(): Promise<JSX.Element> {
             {/* Live Stage-5 gate band */}
             <div
               data-testid="stage5-gate-band"
+              role="status"
+              aria-live="polite"
+              aria-label={`Stage-5 publication gate status: ${gate.checkoutEnabled ? "open" : "closed"}. ${gate.officialPlayCount} official ${gate.officialPlayCount === 1 ? "play" : "plays"} published.`}
               className={`mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border px-4 py-3.5 ${
                 gate.checkoutEnabled ? "border-mineral-hi bg-eclipse" : "border-plasma/60 bg-eclipse"
               }`}
             >
               <span className="flex items-center gap-2.5">
                 <span
-                  aria-hidden
+                  aria-hidden="true"
                   className={`gse-pulse inline-block h-2 w-2 ${gate.checkoutEnabled ? "bg-ion-white" : "bg-plasma"}`}
                 />
                 <span className={`${eyebrow} ${gate.checkoutEnabled ? "text-ion-white" : "text-plasma"}`}>
@@ -112,7 +115,7 @@ export default async function PackagesPage(): Promise<JSX.Element> {
                 {gate.officialPlayCount} official {gate.officialPlayCount === 1 ? "play" : "plays"} published
               </span>
               <span className="w-full text-sm leading-6 text-ion-1 sm:w-auto sm:flex-1">
-                {gate.reason} <Link href="/pricing" className="ml-3 text-xs font-semibold uppercase tracking-[0.12em] text-plasma underline hover:text-ion-white">Open Live Week 10 Slate Packs -&gt;</Link> <Link href="/board" className="ml-3 text-xs font-semibold uppercase tracking-[0.12em] text-ion-white underline hover:text-plasma">View 13 Live Board Plays -&gt;</Link>
+                {gate.reason} <Link href="/pricing" className="ml-3 text-xs font-semibold uppercase tracking-[0.12em] text-plasma underline hover:text-ion-white focus:outline-none focus:ring-2 focus:ring-plasma">Open Live Week 10 Slate Packs -&gt;</Link> <Link href="/board" className="ml-3 text-xs font-semibold uppercase tracking-[0.12em] text-ion-white underline hover:text-plasma focus:outline-none focus:ring-2 focus:ring-plasma">View 13 Live Board Plays -&gt;</Link>
               </span>
             </div>
           </header>
@@ -248,7 +251,7 @@ export default async function PackagesPage(): Promise<JSX.Element> {
                         </span>
                         <Link
                           href={`/packages/${pkg.slug}`}
-                          className="border border-plasma px-3 py-1.5 font-numerals text-xs uppercase tracking-[0.14em] text-plasma transition-colors hover:bg-plasma hover:text-plasma-ink"
+                          className="border border-plasma px-3 py-1.5 font-numerals text-xs uppercase tracking-[0.14em] text-plasma transition-colors hover:bg-plasma hover:text-plasma-ink focus:outline-none focus:ring-2 focus:ring-plasma"
                         >
                           View Pack
                         </Link>
@@ -304,7 +307,7 @@ export default async function PackagesPage(): Promise<JSX.Element> {
               </div>
               <Link
                 href="/record"
-                className="border border-plasma px-6 py-3.5 font-numerals text-sm uppercase tracking-[0.18em] text-plasma transition-colors hover:bg-plasma hover:text-plasma-ink"
+                className="border border-plasma px-6 py-3.5 font-numerals text-sm uppercase tracking-[0.18em] text-plasma transition-colors hover:bg-plasma hover:text-plasma-ink focus:outline-none focus:ring-2 focus:ring-plasma"
               >
                 See the verified record →
               </Link>
@@ -314,7 +317,7 @@ export default async function PackagesPage(): Promise<JSX.Element> {
           {/* ── Still browsing? Free surfaces ─────────────────────────── */}
           <p className="mt-10 text-sm leading-6 text-ion-2">
             Not ready to buy? The free board shows every published pass with its reasoning:{" "}
-            <Link href="/board" className="text-plasma transition-colors hover:text-plasma-glow">
+            <Link href="/board" className="text-plasma transition-colors hover:text-plasma-glow focus:outline-none focus:ring-2 focus:ring-plasma">
               open the board →
             </Link>
           </p>

@@ -1,0 +1,197 @@
+{
+  "biomarker_structures": [
+    {
+      "domain_ranges": [
+        "1-221"
+      ],
+      "gene_symbol": "UCHL1",
+      "global_plddt": 93.62,
+      "intrinsically_disordered_warning": false,
+      "molecular_summary": "Well-ordered 223-aa neuronal ubiquitin hydrolase forming a single rigid domain (1-221; mean PAE 3.56 A).",
+      "rigid_domain_count": 1,
+      "rule_in_only_doctrine": true,
+      "uniprot_id": "P09936",
+      "very_high_pct": 79.8,
+      "very_low_pct": 0.0
+    },
+    {
+      "domain_ranges": [
+        "62-219",
+        "227-376"
+      ],
+      "gene_symbol": "GFAP",
+      "global_plddt": 80.0,
+      "intrinsically_disordered_warning": true,
+      "molecular_summary": "Astroglial intermediate filament protein with two rigid domains (62-219, 227-376) and 19.2% disordered terminal tails (mean PAE 22.98 A).",
+      "rigid_domain_count": 2,
+      "rule_in_only_doctrine": true,
+      "uniprot_id": "P14136",
+      "very_high_pct": 58.3,
+      "very_low_pct": 19.2
+    },
+    {
+      "domain_ranges": [
+        "60-471"
+      ],
+      "gene_symbol": "MMP13",
+      "global_plddt": 88.62,
+      "intrinsically_disordered_warning": false,
+      "molecular_summary": "Collagenase-3 metalloproteinase folded across catalytic and hemopexin composite residues 60-471 (mean PAE 8.87 A).",
+      "rigid_domain_count": 1,
+      "rule_in_only_doctrine": true,
+      "uniprot_id": "P45452",
+      "very_high_pct": 74.7,
+      "very_low_pct": 7.9
+    }
+  ],
+  "clinical_trials": [
+    {
+      "completed_count": 7,
+      "condition_query": "concussion / sport-related concussion",
+      "phases_present": [
+        "PHASE1",
+        "PHASE2"
+      ],
+      "recruiting_count": 2,
+      "sampled_nct_ids": [
+        "NCT02661633",
+        "NCT01860755",
+        "NCT03914833",
+        "NCT02257749",
+        "NCT06239818",
+        "NCT01321151"
+      ],
+      "total_count": 785
+    },
+    {
+      "completed_count": 0,
+      "condition_query": "tendinopathy / recruiting Achilles tendinopathy",
+      "phases_present": [
+        "PHASE1",
+        "NA"
+      ],
+      "recruiting_count": 12,
+      "sampled_nct_ids": [
+        "NCT06969859",
+        "NCT07453485",
+        "NCT06774547",
+        "NCT07497217",
+        "NCT05241197",
+        "NCT07477860"
+      ],
+      "total_count": 915
+    }
+  ],
+  "generated_utc": "2026-11-16T19:00:00Z",
+  "literature_citations": [
+    "https://arxiv.org/pdf/2103.09763v3",
+    "https://doi.org/10.1136/bjsports-2017-097699",
+    "https://doi.org/10.1056/nejmoa072972",
+    "https://doi.org/10.1136/bjsports-2013-092313",
+    "https://doi.org/10.1212/wnl.58.3.349",
+    "https://doi.org/10.1097/nen.0b013e3181a9d503",
+    "https://doi.org/10.1186/s40798-026-01094-x",
+    "https://doi.org/10.1007/s11916-026-01571-8",
+    "https://doi.org/10.3390/brainsci16090998",
+    "https://doi.org/10.1007/s40279-026-02479-4",
+    "https://doi.org/10.3390/brainsci16101057"
+  ],
+  "multiomics_annotations": [
+    {
+      "canonical_tss": "chr11:102955732 (-)",
+      "encode_ccre_count": 0,
+      "ensembl_id": "ENSG00000137745",
+      "gene_symbol": "MMP13",
+      "gnomad_loeuf": 1.1078,
+      "gnomad_pli": 0.0,
+      "interpro_domain_count": 10,
+      "mane_select_transcript": "ENST00000260302",
+      "molecular_notes": "QuickGO experimental hits=11; JASPAR JUN bZIP motif MA0488.1; collagenase matrix remodeling.",
+      "ontology_id": "GO:0030574",
+      "ontology_label": "collagen catabolic process",
+      "open_targets_tractability": "Small Molecule Approved Drug & High-Quality Pocket",
+      "subcellular_location": "Extracellular matrix secreted endopeptidase",
+      "top_tissue": "Extracellular Matrix / Tendon-Cartilage",
+      "uniprot_id": "P45452"
+    },
+    {
+      "canonical_tss": "chr4:41256413",
+      "encode_ccre_count": 0,
+      "ensembl_id": "ENSG00000154277",
+      "gene_symbol": "UCHL1",
+      "gnomad_loeuf": 0.3154,
+      "gnomad_pli": 0.999947,
+      "interpro_domain_count": 1,
+      "mane_select_transcript": "ENSG00000154277.13",
+      "molecular_notes": "Constrained LoF gene (pLI=0.9999) peaking in Frontal Cortex BA9; GFAP absent in skeletal muscle.",
+      "ontology_id": "DOID:0081292",
+      "ontology_label": "traumatic brain injury",
+      "open_targets_tractability": "Biomarker / Non-small-molecule structural target",
+      "subcellular_location": "GFAP paired astroglial control: Intermediate filaments; cortex=medium",
+      "top_tissue": "Brain_Frontal_Cortex_BA9 (1232.69 TPM)",
+      "uniprot_id": "P09936"
+    }
+  ],
+  "progression_reports": [
+    {
+      "bootstrap_ci_high": 28.6135,
+      "bootstrap_ci_low": 2.0924,
+      "cohens_dz": 0.5948,
+      "mae_reduction": 15.0842,
+      "mae_reduction_pct": 18.97,
+      "metric_name": "week10_team_pass_yds_mae",
+      "n_samples": 12,
+      "ols_intercept": 12.043,
+      "ols_slope": 0.6588,
+      "paired_t_pvalue": 0.06382088503246298,
+      "paired_t_stat": 2.0604,
+      "pearson_pvalue": 0.06529333612697433,
+      "pearson_r": 0.5477,
+      "post_mae": 64.4242,
+      "pre_mae": 79.5083,
+      "spearman_pvalue": 0.04152149441031857,
+      "spearman_rho": 0.5944,
+      "wilcoxon_pvalue": 0.0771484375,
+      "wilcoxon_stat": 16.0
+    },
+    {
+      "bootstrap_ci_high": 8.292,
+      "bootstrap_ci_low": 2.4222,
+      "cohens_dz": 1.0117,
+      "mae_reduction": 5.4567,
+      "mae_reduction_pct": 16.98,
+      "metric_name": "week10_player_yds_game_mae",
+      "n_samples": 12,
+      "ols_intercept": 5.6869,
+      "ols_slope": 0.6532,
+      "paired_t_pvalue": 0.004931018797446399,
+      "paired_t_stat": 3.5045,
+      "pearson_pvalue": 0.03686436073701551,
+      "pearson_r": 0.6057,
+      "post_mae": 26.6767,
+      "pre_mae": 32.1333,
+      "spearman_pvalue": 0.018175123857074992,
+      "spearman_rho": 0.6655,
+      "wilcoxon_pvalue": 0.0048828125,
+      "wilcoxon_stat": 5.0
+    }
+  ],
+  "sar_benchmark": {
+    "cv_r2": 0.558,
+    "downsampled": false,
+    "evaluated_compounds": 81,
+    "holdout_r2": -0.027,
+    "holdout_rmse": 0.515,
+    "target_chembl_id": "CHEMBL280",
+    "target_name": "Collagenase 3 (MMP13)",
+    "top_attributed_features": [
+      "cLogP",
+      "Num_Arom_Rings",
+      "TPSA",
+      "Fsp3",
+      "MW"
+    ],
+    "total_compounds": 81,
+    "winning_model": "HoldoutRMSE: 2D Descriptors__ElasticNetCV | TrainCV: Gradient Boosting Full Hybrid"
+  }
+}

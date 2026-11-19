@@ -1,15 +1,10 @@
 #!/usr/bin/env python3
-"""
-Unit Tests for Competitor-Floor & Front-Office 92-Metric Superset Engine
+"""Unit Tests for Competitor-Floor & Front-Office 92-Metric Superset Engine.
+
 (`tests/unit/test_competitor_floor_and_front_office_micro_metrics_engine.py`).
 """
 
 from __future__ import annotations
-
-import json
-from pathlib import Path
-
-import pytest
 
 from intelligence.metrics.competitor_floor_and_front_office_micro_metrics_engine import (
     DOMAIN_8_METRIC_MAP,
@@ -173,8 +168,14 @@ def test_full_week9_evaluation_and_layer_workflow_wiring() -> None:
         },
         write_to_disk=False,
     )
-    assert "competitor_floor_92_metrics_l12" in pkt["layers"]["L12_trench_matchup_ol_vs_dl"]["signals"]
-    assert "competitor_floor_92_metrics_l21" in pkt["layers"]["L21_qb_processing_and_pressure"]["signals"]
+    assert (
+        "competitor_floor_92_metrics_l12"
+        in pkt["layers"]["L12_trench_matchup_ol_vs_dl"]["signals"]
+    )
+    assert (
+        "competitor_floor_92_metrics_l21"
+        in pkt["layers"]["L21_qb_processing_and_pressure"]["signals"]
+    )
 
     trace = execute_reasoning_workflow(pkt, write_to_disk=False)
     s3_priors = trace["stage3_pre_sim_situational_priors"]
@@ -184,7 +185,12 @@ def test_full_week9_evaluation_and_layer_workflow_wiring() -> None:
 
 
 def test_two_host_portability_no_hardcoded_host_paths() -> None:
-    src_path = REPO_ROOT / "intelligence" / "metrics" / "competitor_floor_and_front_office_micro_metrics_engine.py"
+    src_path = (
+        REPO_ROOT
+        / "intelligence"
+        / "metrics"
+        / "competitor_floor_and_front_office_micro_metrics_engine.py"
+    )
     text = src_path.read_text(encoding="utf-8")
     forbidden_win = "C:" + "\\Users\\Garrett"
     forbidden_posix = "/Users/" + "Garrett"

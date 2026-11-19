@@ -1,13 +1,17 @@
-r"""Unit Test Suite for Component 6A: `openai/math` 721 Manuscripts, 373 Result Families & 53,554 Lean Engine.
+r"""Unit Test Suite for Component 6A: `openai/math` 721 Manuscripts, 373 Families & Lean Engine.
 
 Verifies:
-1. All 721 manuscripts, 721 unique PDF links, and 373 result families (`001..378`, absent `045`, `061`, `070`, `123`, `163`)
-   are parsed and stored in `data/audits/openai_math_721_manuscripts_373_families_and_lean_audit_2026_11_06.json`.
-2. All 53,554 `.lean` files and 419 `ComparatorChallenges` (`418` top-level + `1` nested `Hodge`; `208` YAML main_results
-   across `192` unique configs) and Anchor A5 (`Family 378` / `ComparatorChallenges/SubexponentialSAT.json`) are verified.
-3. Both parallel `DeepSeek-V4.1-Flash-1017` synthesis worker streams (`DeepSeek-1017-Stream-A` & `DeepSeek-1017-Stream-B`)
-   and 30 Pinecone hybrid vectors (`namespace="gse-openai-math-721-manuscripts"`) are verified.
-4. All 7 exported functions in `intelligence/coaching/openai_math_721_manuscript_and_lean_engine.py`:
+1. All 721 manuscripts, 721 unique PDF links, and 373 result families (`001..378`, absent `045`,
+   `061`, `070`, `123`, `163`) are parsed and stored in
+   `data/audits/openai_math_721_manuscripts_373_families_and_lean_audit_2026_11_06.json`.
+2. All 53,554 `.lean` files and 419 `ComparatorChallenges` (`418` top-level + `1` nested `Hodge`;
+   `208` YAML main_results across `192` unique configs) and Anchor A5 (`Family 378` /
+   `ComparatorChallenges/SubexponentialSAT.json`) are verified.
+3. Both parallel `DeepSeek-V4.1-Flash-1017` synthesis worker streams (`DeepSeek-1017-Stream-A` &
+   `DeepSeek-1017-Stream-B`) and 30 Pinecone hybrid vectors
+   (`namespace="gse-openai-math-721-manuscripts"`) are verified.
+4. All 7 exported functions in
+   `intelligence/coaching/openai_math_721_manuscript_and_lean_engine.py`:
    - `sogge_local_smoothing_wave_focusing_kernel`
    - `bounded_treewidth_l1_graph_embedding_kernel`
    - `radial_pair_potential_temperature_singularity_kernel`
@@ -15,7 +19,8 @@ Verifies:
    - `fixed_width_cnf_exact_model_counter`
    - `lean_comparator_challenge_soundness_gate`
    - `evaluate_openai_math_721_pre_projection_overlay`
-5. TypeScript mirror `packages/mcp-equations-server/src/openai-math-721-catalog-and-kernels.ts` exports all required symbols.
+5. TypeScript mirror `packages/mcp-equations-server/src/openai-math-721-catalog-and-kernels.ts`
+   exports all required symbols.
 6. Zero raw secrets and zero literal `etc.` (`\betc\.`) across all Partition A files.
 """
 
@@ -30,7 +35,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from intelligence.coaching.openai_math_721_manuscript_and_lean_engine import (
+from intelligence.coaching.openai_math_721_manuscript_and_lean_engine import (  # noqa: E402
     ABSENT_FAMILY_IDS,
     ANCHOR_A5_COMPARATOR_CONFIG,
     ANCHOR_A5_SUBEXPONENTIAL_SAT_FAMILY_ID,
@@ -49,7 +54,12 @@ from intelligence.coaching.openai_math_721_manuscript_and_lean_engine import (
 
 
 def test_01_audit_json_721_manuscripts_373_families_and_reconciliation() -> None:
-    json_path = REPO_ROOT / "data" / "audits" / "openai_math_721_manuscripts_373_families_and_lean_audit_2026_11_06.json"
+    json_path = (
+        REPO_ROOT
+        / "data"
+        / "audits"
+        / "openai_math_721_manuscripts_373_families_and_lean_audit_2026_11_06.json"
+    )
     assert json_path.is_file()
     data = json.loads(json_path.read_text(encoding="utf-8"))
 
@@ -69,11 +79,19 @@ def test_01_audit_json_721_manuscripts_373_families_and_reconciliation() -> None
     assert rec["formalization_yaml_main_results_entries"] == 208
     assert rec["formalization_yaml_unique_comparator_configs"] == 192
     assert rec["anchor_a5_subexponential_sat"]["family_id"] == "378"
-    assert rec["anchor_a5_subexponential_sat"]["comparator_config"] == "ComparatorChallenges/SubexponentialSAT.json"
+    assert (
+        rec["anchor_a5_subexponential_sat"]["comparator_config"]
+        == "ComparatorChallenges/SubexponentialSAT.json"
+    )
 
 
 def test_02_lean_53554_files_and_419_comparator_challenges() -> None:
-    json_path = REPO_ROOT / "data" / "audits" / "openai_math_721_manuscripts_373_families_and_lean_audit_2026_11_06.json"
+    json_path = (
+        REPO_ROOT
+        / "data"
+        / "audits"
+        / "openai_math_721_manuscripts_373_families_and_lean_audit_2026_11_06.json"
+    )
     data = json.loads(json_path.read_text(encoding="utf-8"))
 
     assert data["counts"]["lean_files_count"] == 53554
@@ -84,15 +102,25 @@ def test_02_lean_53554_files_and_419_comparator_challenges() -> None:
 
 
 def test_03_parallel_deepseek_1017_streams_and_pinecone_30_vectors() -> None:
-    json_path = REPO_ROOT / "data" / "audits" / "openai_math_721_manuscripts_373_families_and_lean_audit_2026_11_06.json"
+    json_path = (
+        REPO_ROOT
+        / "data"
+        / "audits"
+        / "openai_math_721_manuscripts_373_families_and_lean_audit_2026_11_06.json"
+    )
     data = json.loads(json_path.read_text(encoding="utf-8"))
 
     streams = data["deepseek1017_worker_streams"]
     assert len(streams) == 2
     assert streams[0]["worker_id"] == "DeepSeek-1017-Stream-A"
     assert streams[1]["worker_id"] == "DeepSeek-1017-Stream-B"
-    assert streams[0]["families_processed_count"] + streams[1]["families_processed_count"] == 373
-    assert streams[0]["manuscripts_processed_count"] + streams[1]["manuscripts_processed_count"] == 721
+    assert (
+        streams[0]["families_processed_count"] + streams[1]["families_processed_count"] == 373
+    )
+    assert (
+        streams[0]["manuscripts_processed_count"] + streams[1]["manuscripts_processed_count"]
+        == 721
+    )
 
     p_rec = data["pinecone_upsert_receipt"]
     assert p_rec["index_name"] == "gse-200-book-hybrid-index"
@@ -115,7 +143,11 @@ def test_04_sogge_local_smoothing_wave_focusing_kernel() -> None:
 
 
 def test_05_bounded_treewidth_l1_graph_embedding_kernel() -> None:
-    res = bounded_treewidth_l1_graph_embedding_kernel(treewidth_k=6, active_factor_nodes=288, edge_density=0.20)
+    res = bounded_treewidth_l1_graph_embedding_kernel(
+        treewidth_k=6,
+        active_factor_nodes=288,
+        edge_density=0.20,
+    )
     assert res["treewidth_k"] == 6
     assert res["active_factor_nodes"] == 288
     assert res["treewidth_l1_distortion"] > 1.0
@@ -183,14 +215,27 @@ def test_10_evaluate_openai_math_721_pre_projection_overlay() -> None:
     assert overlay["lean_files_cataloged"] == CANONICAL_LEAN_FILES_COUNT == 53554
     assert overlay["comparator_challenges_wired"] == CANONICAL_COMPARATOR_CHALLENGES_COUNT == 419
     assert overlay["absent_family_numbers"] == list(ABSENT_FAMILY_IDS)
-    assert overlay["anchor_a5_subexponential_sat"]["family_id"] == ANCHOR_A5_SUBEXPONENTIAL_SAT_FAMILY_ID == "378"
-    assert overlay["anchor_a5_subexponential_sat"]["comparator_config"] == ANCHOR_A5_COMPARATOR_CONFIG
+    assert (
+        overlay["anchor_a5_subexponential_sat"]["family_id"]
+        == ANCHOR_A5_SUBEXPONENTIAL_SAT_FAMILY_ID
+        == "378"
+    )
+    assert (
+        overlay["anchor_a5_subexponential_sat"]["comparator_config"]
+        == ANCHOR_A5_COMPARATOR_CONFIG
+    )
     assert overlay["lean_soundness_verified"] is True
     assert -0.15 <= overlay["pre_projection_epa_delta"] <= 0.15
 
 
 def test_11_typescript_mirror_and_zero_secrets_or_etc() -> None:
-    ts_path = REPO_ROOT / "packages" / "mcp-equations-server" / "src" / "openai-math-721-catalog-and-kernels.ts"
+    ts_path = (
+        REPO_ROOT
+        / "packages"
+        / "mcp-equations-server"
+        / "src"
+        / "openai-math-721-catalog-and-kernels.ts"
+    )
     assert ts_path.is_file()
     ts_text = ts_path.read_text(encoding="utf-8")
     for required_export in [
@@ -212,8 +257,20 @@ def test_11_typescript_mirror_and_zero_secrets_or_etc() -> None:
         REPO_ROOT / "scripts" / "ops" / "harvest_and_wire_openai_math_721_manuscripts_and_lean.py",
         REPO_ROOT / "intelligence" / "coaching" / "openai_math_721_manuscript_and_lean_engine.py",
         ts_path,
-        REPO_ROOT / "data" / "audits" / "openai_math_721_manuscripts_373_families_and_lean_audit_2026_11_06.json",
-        REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06" / "OPENAI_MATH_721_MANUSCRIPTS_373_FAMILIES_AND_53554_LEAN_BIBLE.md",
+        (
+            REPO_ROOT
+            / "data"
+            / "audits"
+            / "openai_math_721_manuscripts_373_families_and_lean_audit_2026_11_06.json"
+        ),
+        (
+            REPO_ROOT
+            / "docs"
+            / "engine"
+            / "research"
+            / "2026-11-06"
+            / "OPENAI_MATH_721_MANUSCRIPTS_373_FAMILIES_AND_53554_LEAN_BIBLE.md"
+        ),
     ]
     for fpath in partition_a_files:
         assert fpath.is_file(), f"Missing Partition A file: {fpath}"

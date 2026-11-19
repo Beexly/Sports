@@ -32,6 +32,10 @@ def _get_dynamic_team_pbp_priors() -> Dict[str, Dict[str, float]]:
 
     priors: Dict[str, Dict[str, float]] = {}
     pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
+    if not pbp_path.is_file():
+        pbp_path = (
+            REPO_ROOT / "intelligence" / "coaching" / "data" / "play_by_play_2026.parquet"
+        )
     slim_csv_path = REPO_ROOT / "data" / "nflverse" / "pbp_2026_slim_clean_checkout.csv.gz"
     if pbp_path.is_file() or slim_csv_path.is_file():
         try:

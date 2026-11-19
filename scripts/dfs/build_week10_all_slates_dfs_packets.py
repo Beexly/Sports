@@ -278,52 +278,56 @@ def _dk_fpts_from_dossier_record(
     pos: str,
     td_prob: float,
 ) -> tuple[float, float, float]:
-    """Compute DraftKings (p50/mean, p25_floor, p90_ceiling) strictly from Stage 3/4 quantiles."""
+    """Compute DraftKings (mean, p25_floor, p90_ceiling) via RSS sub-Gaussian variance aggregation.
+
+    Avoids the comonotonic quantile-sum fallacy (summing independent category P90s).
+    """
     pr = rec.get("projections") or {}
 
-    def _compute(sf: str) -> float:
-        if pos == "K":
-            fg = _metric_val(pr, "fg_made", sf)
-            pat = _metric_val(pr, "pat_made", sf)
-            if fg > 0 or pat > 0:
-                return round(3.3 * fg + 1.0 * pat, 3)
-            return round(_metric_val(pr, "kicking_points", sf), 3)
+    if pos == "K":
+        fg_m = _metric_val(pr, "fg_made", "mean")
+        pat_m = _metric_val(pr, "pat_made", "mean")
+        med = round(3.3 * fg_m + 1.0 * pat_m, 3) if (fg_m > 0 or pat_m > 0) else round(_metric_val(pr, "kicking_points", "mean"), 3)
+        std_k = max(1.8, _metric_val(pr, "kicking_points", "std"))
+        p25 = round(max(0.5, med - 0.674 * std_k), 3)
+        p90 = round(max(med + 1.2, med + 1.282 * std_k), 3)
+        return med, p25, p90
 
-        pass_yds = _metric_val(pr, "pass_yds", sf)
-        pass_tds = _metric_val(pr, "pass_tds", sf)
-        ints = _metric_val(pr, "interceptions", sf)
-        rush_yds = _metric_val(pr, "rush_yds", sf)
-        rec_yds = _metric_val(pr, "rec_yds", sf)
-        recs = _metric_val(pr, "receptions", sf)
-        rec_tds = _metric_val(pr, "rec_tds", sf)
-        if "rush_tds" in pr and isinstance(pr.get("rush_tds"), Mapping):
-            rush_tds = _metric_val(pr, "rush_tds", sf)
-        else:
-            lam_td = -math.log(max(1e-6, 1.0 - min(0.92, max(0.0, td_prob)))) if td_prob > 0 else 0.0
-            rush_tds = max(0.0, lam_td - rec_tds)
-        if pos == "QB":
-            rush_tds = min(0.45, rush_tds)
+    pass_yds = _metric_val(pr, "pass_yds", "mean")
+    pass_tds = _metric_val(pr, "pass_tds", "mean")
+    ints = _metric_val(pr, "interceptions", "mean")
+    rush_yds = _metric_val(pr, "rush_yds", "mean")
+    rec_yds = _metric_val(pr, "rec_yds", "mean")
+    recs = _metric_val(pr, "receptions", "mean")
+    rec_tds = _metric_val(pr, "rec_tds", "mean")
+    if "rush_tds" in pr and isinstance(pr.get("rush_tds"), Mapping):
+        rush_tds = _metric_val(pr, "rush_tds", "mean")
+    else:
+        lam_td = -math.log(max(1e-6, 1.0 - min(0.92, max(0.0, td_prob)))) if td_prob > 0 else 0.0
+        rush_tds = max(0.0, lam_td - rec_tds)
+    if pos == "QB":
+        rush_tds = min(0.45, rush_tds)
 
-        def _metric_sigma(metric_name: str, mean_val: float) -> float:
-            s = _metric_val(pr, metric_name, "std")
-            if s > 1.0:
-                return s
-            p90_v = _metric_val(pr, metric_name, "p90")
-            p10_v = _metric_val(pr, metric_name, "p10")
-            if p90_v > p10_v:
-                return max(1.0, (p90_v - p10_v) / 2.563)
-            return max(1.0, 0.35 * max(mean_val, 1.0))
+    def _metric_sigma(metric_name: str, mean_val: float, rel: float = 0.35) -> float:
+        s = _metric_val(pr, metric_name, "std")
+        if s > 0.2:
+            return s
+        p90_v = _metric_val(pr, metric_name, "p90")
+        p10_v = _metric_val(pr, metric_name, "p10")
+        if p90_v > p10_v:
+            return max(0.25, (p90_v - p10_v) / 2.563)
+        return max(0.25, rel * abs(mean_val)) if mean_val > 0 else 0.0
 
-        def _tail_bonus_prob(metric_name: str, thresh: float, val: float) -> float:
-            if sf != "mean":
-                return 1.0 if val >= thresh else 0.0
-            if val <= 0.0:
-                return 0.0
-            sigma = _metric_sigma(metric_name, val)
-            z = (thresh - val) / (sigma * math.sqrt(2.0))
-            return min(1.0, max(0.0, 0.5 * math.erfc(z)))
+    def _tail_bonus_prob(metric_name: str, thresh: float, val: float) -> float:
+        if val <= 0.0:
+            return 0.0
+        sigma = max(1.0, _metric_sigma(metric_name, val))
+        z = (thresh - val) / (sigma * math.sqrt(2.0))
+        return min(1.0, max(0.0, 0.5 * math.erfc(z)))
 
-        pts = (
+    med = round(
+        max(
+            0.0,
             0.04 * pass_yds
             + 4.0 * pass_tds
             - 1.0 * ints
@@ -333,18 +337,36 @@ def _dk_fpts_from_dossier_record(
             + 6.0 * (rec_tds + rush_tds)
             + 3.0 * _tail_bonus_prob("pass_yds", 300.0, pass_yds)
             + 3.0 * _tail_bonus_prob("rush_yds", 100.0, rush_yds)
-            + 3.0 * _tail_bonus_prob("rec_yds", 100.0, rec_yds)
-        )
-        return round(max(0.0, pts), 3)
+            + 3.0 * _tail_bonus_prob("rec_yds", 100.0, rec_yds),
+        ),
+        3,
+    )
 
-    med = _compute("mean")
-    p25 = min(med, _compute("p25"))
-    p90 = max(med, _compute("p90"))
-    return round(med, 3), round(max(0.1, p25), 3), round(max(med, p90), 3)
+    std_py = _metric_sigma("pass_yds", pass_yds)
+    std_ptd = _metric_sigma("pass_tds", pass_tds, 0.55)
+    std_int = _metric_sigma("interceptions", ints, 0.70)
+    std_ry = _metric_sigma("rush_yds", rush_yds)
+    std_recy = _metric_sigma("rec_yds", rec_yds)
+    std_rec = _metric_sigma("receptions", recs)
+    std_rtd = _metric_sigma("rush_tds", rush_tds, 0.75)
+    std_rectd = _metric_sigma("rec_tds", rec_tds, 0.75)
+
+    sigma_fpts = math.sqrt(
+        (0.04 * std_py) ** 2
+        + (4.0 * std_ptd) ** 2
+        + (1.0 * std_int) ** 2
+        + (0.10 * std_ry) ** 2
+        + (0.10 * std_recy + 0.85 * std_rec) ** 2
+        + (6.0 * math.sqrt(std_rtd ** 2 + std_rectd ** 2)) ** 2
+    )
+    sigma_fpts = max(2.2, min(11.5, sigma_fpts))
+    p25 = round(max(0.1, med - 0.674 * sigma_fpts), 3)
+    p90 = round(max(med + 1.5, med + 1.282 * sigma_fpts), 3)
+    return round(med, 3), p25, p90
 
 
 def extract_active_decoy_keys(injury_decoy_audit: Mapping[str, Any] | None) -> set[str]:
-    """Return normalized keys strictly for flagged active decoy / over-blocked players."""
+    """Return normalized keys strictly for flagged active decoy / over-gated players."""
     out: set[str] = set()
     if not isinstance(injury_decoy_audit, Mapping):
         return out
@@ -505,6 +527,147 @@ def _load_slate_dossiers(
     return out, provenance, slate_sha
 
 
+def _apply_vacated_volume_and_trench_conservation(
+    pool_df: pd.DataFrame,
+    team_bundles: Mapping[str, Mapping[str, Any]],
+    cfg: Mapping[str, Any],
+) -> None:
+    """Conserve team pass/rush yards, completions, and TDs across active Stage-0 survivors after IR/OUT exclusions."""
+    front7_pos = {"DE", "DT", "NT", "DL", "LB", "ILB", "OLB", "MLB"}
+    front7_outs_by_team: dict[str, set[str]] = {}
+    wr_outs_by_team: dict[str, set[str]] = {}
+    te_outs_by_team: dict[str, set[str]] = {}
+    rb_outs_by_team: dict[str, set[str]] = {}
+
+    for p in cfg.get("excluded_players") or []:
+        if not isinstance(p, Mapping):
+            continue
+        tm = _normalize_team(p.get("team"))
+        pos = str(p.get("position") or "").upper()
+        nm = _norm_player_key(str(p.get("name") or ""))
+        if not tm or not nm:
+            continue
+        if pos in front7_pos:
+            front7_outs_by_team.setdefault(tm, set()).add(nm)
+        elif pos == "WR":
+            wr_outs_by_team.setdefault(tm, set()).add(nm)
+        elif pos == "TE":
+            te_outs_by_team.setdefault(tm, set()).add(nm)
+        elif pos == "RB":
+            rb_outs_by_team.setdefault(tm, set()).add(nm)
+
+    for tm, b in team_bundles.items():
+        s34 = b["s34"]
+        opp = b["opponent"]
+        t_proj = (s34.get("team_post_sim_projections") or {}).get(tm) or {}
+        ap = s34.get("athlete_post_sim_projections") or {}
+        qb_name = str(t_proj.get("qb1_starter") or "").strip()
+        qb_rec = ap.get(qb_name) or {}
+        qb_pr = qb_rec.get("projections") or {}
+
+        team_pass_yds = _metric_val(qb_pr, "pass_yds", "mean")
+        team_comps = _metric_val(qb_pr, "pass_completions", "mean")
+        if team_comps <= 0.0:
+            team_comps = _metric_val(qb_pr, "completions", "mean")
+        team_pass_tds = _metric_val(qb_pr, "pass_tds", "mean")
+        team_rush_yds = _metric_val(t_proj, "rush_yds", "mean")
+        team_pts = _metric_val(t_proj, "points", "mean")
+        est_total_tds = max(team_pass_tds + 0.35, (team_pts - 4.2) / 6.6)
+        team_rush_tds = max(0.30, est_total_tds - team_pass_tds)
+
+        sub_idx = list(
+            pool_df[(pool_df["team"] == tm) & (pool_df["position"].isin(["QB", "RB", "WR", "TE"]))].index
+        )
+        if not sub_idx:
+            continue
+
+        raw_rush: dict[int, float] = {}
+        raw_rec: dict[int, float] = {}
+        raw_recs: dict[int, float] = {}
+        for idx in sub_idx:
+            nm = str(pool_df.loc[idx, "name"])
+            hit = b["ap_by_norm"].get(_norm_player_key(nm))
+            pr = (hit[1].get("projections") or {}) if hit else {}
+            raw_rush[idx] = _metric_val(pr, "rush_yds", "mean")
+            raw_rec[idx] = _metric_val(pr, "rec_yds", "mean")
+            raw_recs[idx] = _metric_val(pr, "receptions", "mean")
+
+        rb_idxs = [i for i in sub_idx if pool_df.loc[i, "position"] == "RB"]
+        pass_idxs = [i for i in sub_idx if pool_df.loc[i, "position"] in ("RB", "WR", "TE")]
+
+        opp_f7_outs = len(front7_outs_by_team.get(opp, set()))
+        wr_ir_cnt = len(wr_outs_by_team.get(tm, set()))
+        te_ir_cnt = len(te_outs_by_team.get(tm, set()))
+        rb_ir_cnt = len(rb_outs_by_team.get(tm, set()))
+
+        # Team rushing & passing totals in connected dossiers ALREADY incorporate Stage 2/3
+        # opposing front-7 injury priors -- do NOT re-multiply team_rush_yds by opp_f7_outs.
+        effective_team_rush = team_rush_yds
+
+        vac_rush = max(0.0, effective_team_rush - sum(raw_rush.values()))
+        vac_rec = max(0.0, team_pass_yds - sum(raw_rec.values()))
+        vac_recs = max(0.0, team_comps - sum(raw_recs.values()))
+
+        rb_rush_sum = sum(raw_rush[i] for i in rb_idxs) or 1.0
+        rec_weights: dict[int, float] = {}
+        for i in pass_idxs:
+            pos = str(pool_df.loc[i, "position"])
+            w = max(1.0, raw_rec[i])
+            if pos == "TE" and wr_ir_cnt >= 2:
+                w *= 1.0 + 0.35 * min(2, wr_ir_cnt) + 0.15 * min(2, te_ir_cnt)
+            elif pos == "RB" and (len(rb_idxs) == 1 or rb_ir_cnt >= 2):
+                w *= 1.25
+            rec_weights[i] = w
+        rec_w_sum = sum(rec_weights.values()) or 1.0
+
+        for i in sub_idx:
+            pos = str(pool_df.loc[i, "position"])
+            if pos == "QB":
+                continue
+            r_share = min(0.68, (raw_rush[i] / rb_rush_sum)) if (pos == "RB" and rb_idxs) else 0.0
+            c_share = min(0.34, rec_weights.get(i, 0.0) / rec_w_sum)
+
+            new_rush = raw_rush[i] + vac_rush * r_share
+            new_rec = raw_rec[i] + vac_rec * c_share
+            new_recs = raw_recs[i] + vac_recs * c_share
+            rush_td = (
+                team_rush_tds * (0.78 * r_share)
+                if pos == "RB"
+                else 0.0
+            )
+            rec_td = team_pass_tds * c_share
+
+            bonus_100_rush = 1.5 * max(0.0, min(1.0, (new_rush - 70.0) / 55.0))
+            bonus_100_rec = 1.5 * max(0.0, min(1.0, (new_rec - 70.0) / 55.0))
+            conserved_med = round(
+                0.1 * new_rush
+                + 0.1 * new_rec
+                + 1.0 * new_recs
+                + 6.0 * (rush_td + rec_td)
+                + bonus_100_rush
+                + bonus_100_rec,
+                3,
+            )
+            old_med = float(pool_df.loc[i, "median_fpts"])
+            if conserved_med > old_med:
+                # Cap post-conserved uplift to avoid compounding single-RB saturation
+                adj_med = round(min(conserved_med, old_med + max(3.5, 0.25 * old_med)), 3)
+                delta_med = adj_med - old_med
+                sigma_est = max(
+                    3.2,
+                    min(10.5, (float(pool_df.loc[i, "p90_ceiling_fpts"]) - old_med) / 1.282),
+                )
+                pool_df.loc[i, "median_fpts"] = adj_med
+                pool_df.loc[i, "projection"] = adj_med
+                pool_df.loc[i, "p25_floor_fpts"] = round(
+                    max(0.5, adj_med - 0.674 * sigma_est), 3
+                )
+                pool_df.loc[i, "p90_ceiling_fpts"] = round(
+                    max(adj_med + 1.5, adj_med + 1.282 * (sigma_est + 0.20 * max(0.0, delta_med))),
+                    3,
+                )
+
+
 def load_and_gate_slate_pool(
     slate_key: str,
     today: date | None = None,
@@ -593,6 +756,8 @@ def load_and_gate_slate_pool(
         })
 
     out_df = pd.DataFrame(hydrated_rows).reset_index(drop=True)
+    if not out_df.empty and slate_key != "munich_ne_det":
+        _apply_vacated_volume_and_trench_conservation(out_df, team_bundles, cfg)
     return out_df, {
         "removed_count": len(removal_log),
         "removal_log": removal_log,
@@ -893,40 +1058,62 @@ def _format_classic_lineup(df_lu: pd.DataFrame, mode: str, lineup_index: int, sa
     by_pos: dict[str, list[dict[str, Any]]] = {"QB": [], "RB": [], "WR": [], "TE": [], "DST": []}
     for rec in recs:
         by_pos[str(rec["position"]).upper()].append(rec)
-    for plist in by_pos.values():
-        plist.sort(key=lambda r: float(r["median_fpts"]), reverse=True)
 
-    if len(by_pos["QB"]) != 1 or len(by_pos["TE"]) != 1 or len(by_pos["DST"]) != 1:
+    # Validate Classic 9-man roster positional counts (1 QB, 2..3 RB, 3..4 WR, 1..2 TE, 1 DST, sum == 9)
+    if (
+        len(by_pos["QB"]) != 1
+        or len(by_pos["DST"]) != 1
+        or len(by_pos["RB"]) not in (2, 3)
+        or len(by_pos["WR"]) not in (3, 4)
+        or len(by_pos["TE"]) not in (1, 2)
+        or (len(by_pos["RB"]) + len(by_pos["WR"]) + len(by_pos["TE"])) != 7
+        or len(recs) != 9
+    ):
         raise ValueError(f"Invalid Classic lineup positional counts: { {k: len(v) for k, v in by_pos.items()} }")
 
-    # Late-swap FLEX optimization: put latest-kickoff eligible RB/WR/TE in FLEX slot (zero projection loss).
-    def _window_rank(team_code: str) -> int:
-        t = str(team_code or "").upper()
+    # Late-swap FLEX optimization: positional starters by earliest kickoff first,
+    # leaving the latest-kickoff eligible extra RB/WR/TE in FLEX (maximizing EQ-DFS-07 recourse optionality).
+    def _player_kickoff_rank(r: Mapping[str, Any]) -> float:
+        if "kickoff_epoch" in r and r["kickoff_epoch"] is not None:
+            try:
+                return float(r["kickoff_epoch"])
+            except (ValueError, TypeError):
+                pass
+        t = str(r.get("team") or "").upper()
         if t in {"LAC", "BAL"}:
-            return 3
+            return 4.0
         if t in {"PIT", "CIN"}:
-            return 2
+            return 3.0
         if t in {"SEA", "LV", "LAR", "LA", "ARI", "SF", "DAL"}:
-            return 1
-        return 0
+            return 2.0
+        return 1.0
 
     rbs = list(by_pos["RB"])
     wrs = list(by_pos["WR"])
+    tes = list(by_pos["TE"])
+
     if len(rbs) == 3:
-        rbs.sort(key=lambda r: (_window_rank(str(r.get("team", ""))), -float(r["median_fpts"])))
-        rb_primary = sorted(rbs[:2], key=lambda r: -float(r["median_fpts"]))
-        wr_primary = sorted(wrs[:3], key=lambda r: -float(r["median_fpts"]))
-        flex_candidates = [rbs[2]]
+        # 3-RB build: 2 RB starters by earliest kickoff, 3rd (latest kickoff) in FLEX
+        rbs_sorted = sorted(rbs, key=lambda r: (_player_kickoff_rank(r), -float(r.get("median_fpts", 0.0) or 0.0)))
+        rb_primary = rbs_sorted[:2]
+        flex_candidate = rbs_sorted[2]
+        wr_primary = sorted(wrs, key=lambda r: (_player_kickoff_rank(r), -float(r.get("median_fpts", 0.0) or 0.0)))
+        te_primary = tes[:1]
     elif len(wrs) == 4:
-        wrs.sort(key=lambda r: (_window_rank(str(r.get("team", ""))), -float(r["median_fpts"])))
-        rb_primary = sorted(rbs[:2], key=lambda r: -float(r["median_fpts"]))
-        wr_primary = sorted(wrs[:3], key=lambda r: -float(r["median_fpts"]))
-        flex_candidates = [wrs[3]]
+        # 4-WR build: 3 WR starters by earliest kickoff, 4th (latest kickoff) in FLEX
+        wrs_sorted = sorted(wrs, key=lambda r: (_player_kickoff_rank(r), -float(r.get("median_fpts", 0.0) or 0.0)))
+        wr_primary = wrs_sorted[:3]
+        flex_candidate = wrs_sorted[3]
+        rb_primary = sorted(rbs, key=lambda r: (_player_kickoff_rank(r), -float(r.get("median_fpts", 0.0) or 0.0)))
+        te_primary = tes[:1]
+    elif len(tes) == 2:
+        # 2-TE build: TE1 starter by earlier kickoff, 2nd TE (latest kickoff) in FLEX
+        tes_sorted = sorted(tes, key=lambda r: (_player_kickoff_rank(r), -float(r.get("median_fpts", 0.0) or 0.0)))
+        te_primary = tes_sorted[:1]
+        flex_candidate = tes_sorted[1]
+        rb_primary = sorted(rbs, key=lambda r: (_player_kickoff_rank(r), -float(r.get("median_fpts", 0.0) or 0.0)))
+        wr_primary = sorted(wrs, key=lambda r: (_player_kickoff_rank(r), -float(r.get("median_fpts", 0.0) or 0.0)))
     else:
-        rb_primary = rbs[:2]
-        wr_primary = wrs[:3]
-        flex_candidates = [*rbs[2:], *wrs[3:]]
-    if len(rb_primary) != 2 or len(wr_primary) != 3 or len(flex_candidates) != 1:
         raise ValueError(f"Could not assign Classic FLEX deterministically: { {k: len(v) for k, v in by_pos.items()} }")
 
     ordered: list[tuple[str, dict[str, Any]]] = [
@@ -936,8 +1123,8 @@ def _format_classic_lineup(df_lu: pd.DataFrame, mode: str, lineup_index: int, sa
         ("WR", wr_primary[0]),
         ("WR", wr_primary[1]),
         ("WR", wr_primary[2]),
-        ("TE", by_pos["TE"][0]),
-        ("FLEX", flex_candidates[0]),
+        ("TE", te_primary[0]),
+        ("FLEX", flex_candidate),
         ("DST", by_pos["DST"][0]),
     ]
     roster: list[dict[str, Any]] = []
@@ -1097,7 +1284,7 @@ def build_classic_packet(
         covariance_bonuses={},
         min_salary=48000.0,
         max_per_team=4,
-        max_tes=1,
+        max_tes=2,
     )
     if not cash_dfs:
         raise RuntimeError(f"Cash optimizer failed to find a valid Classic lineup for {slate_key}")
@@ -1114,7 +1301,7 @@ def build_classic_packet(
     omega = build_default_covariance_bonus_matrix(gpp_opt_df)
     gpp_dfs = optimize_dfs_portfolio(
         gpp_opt_df,
-        num_lineups=20,
+        num_lineups=30,
         max_overlap=6,
         salary_cap=50000.0,
         min_teams=3,
@@ -1123,13 +1310,13 @@ def build_classic_packet(
         covariance_bonuses=omega,
         min_salary=48000.0,
         max_per_team=4,
-        max_tes=1,
+        max_tes=2,
         max_exposure=0.55,
     )
-    if len(gpp_dfs) < 20:
+    if len(gpp_dfs) < 25:
         gpp_dfs = optimize_dfs_portfolio(
             gpp_opt_df,
-            num_lineups=20,
+            num_lineups=30,
             max_overlap=7,
             salary_cap=50000.0,
             min_teams=3,
@@ -1138,13 +1325,45 @@ def build_classic_packet(
             covariance_bonuses=omega,
             min_salary=48000.0,
             max_per_team=4,
-            max_tes=1,
+            max_tes=2,
             max_exposure=0.70,
         )
-    if len(gpp_dfs) != 20:
-        raise RuntimeError(f"GPP optimizer produced {len(gpp_dfs)}/20 Classic lineups for {slate_key}")
 
-    gpp_lus = [_format_classic_lineup(df_k, mode="gpp", lineup_index=idx + 1) for idx, df_k in enumerate(gpp_dfs)]
+    def _flex_late_swap_valid(lu_dict: Mapping[str, Any]) -> bool:
+        def _win_rank(team_str: str) -> int:
+            tu = str(team_str or "").upper()
+            if tu in {"LAC", "BAL"}:
+                return 3
+            if tu in {"PIT", "CIN"}:
+                return 2
+            if tu in {"SEA", "LV", "LAR", "LA", "ARI", "SF", "DAL"}:
+                return 1
+            return 0
+
+        slots = lu_dict.get("roster") or []
+        flex_items = [s for s in slots if str(s.get("slot") or "").upper() == "FLEX"]
+        if not flex_items:
+            return True
+        flex_item = flex_items[0]
+        flex_pos = str(flex_item.get("pos") or flex_item.get("position") or "").upper()
+        same_pos_starters = [
+            s for s in slots
+            if str(s.get("slot") or "").upper() == flex_pos
+        ]
+        if not same_pos_starters:
+            return True
+        return _win_rank(str(flex_item.get("team") or "")) >= max(
+            _win_rank(str(s.get("team") or "")) for s in same_pos_starters
+        )
+
+    raw_gpp_lus = [_format_classic_lineup(df_k, mode="gpp", lineup_index=idx + 1) for idx, df_k in enumerate(gpp_dfs)]
+    valid_gpp = [lu for lu in raw_gpp_lus if _flex_late_swap_valid(lu)][:20]
+    if len(valid_gpp) < 20:
+        raise RuntimeError(f"GPP optimizer produced {len(valid_gpp)}/20 late-swap-valid Classic lineups for {slate_key}")
+    gpp_lus = [
+        {**lu, "lineup_index": idx + 1}
+        for idx, lu in enumerate(valid_gpp)
+    ]
     cfg = require_week(10, today=today)
     for lu in [cash_lu, *gpp_lus]:
         assert_lineup_clean(
@@ -1205,7 +1424,7 @@ def _render_week10_dfs_markdown(packets: Mapping[str, Mapping[str, Any]]) -> str
         "> HOLD STATUS: HOLD_INTERNAL_CALIBRATION_ONLY_DO_NOT_STAKE_OR_ENTER (`publish_allowed: False`). Wire-first calibration build held prior to official NFL 90-minute inactives and late-swap checks.",
         "",
         "- Scope: All 5 Week 10 DraftKings slates (DG 156422, DG 156416, DG 156418, DG 156433, DG 156434)",
-        "- Cash vs GPP Separation: Cash optimizes 0.60 * median + 0.40 * p25 floor with zero-decoy blocks; 20-Max GPP optimizes ceiling, correlation stacks, and overlap diversity.",
+        "- Cash vs GPP Separation: Cash optimizes 0.60 * median + 0.40 * p25 floor with zero-decoy prevents; 20-Max GPP optimizes ceiling, correlation stacks, and overlap diversity.",
         "- Direct DraftKings CSVs: Each slate emits both an audit CSV (`data/dfs/week10_*_dk_upload.csv`) and pure DraftKings upload CSVs (`*_dk_cash_1up.csv` 1 lineup, `*_dk_20max_gpp.csv` 20 lineups) containing only official slot columns and Name (ID) tokens.",
         "- Email Delivery Policy: auto_email_sent: False (dry-staged locally in data/dfs/ until morning kickoff confirmation).",
         "",

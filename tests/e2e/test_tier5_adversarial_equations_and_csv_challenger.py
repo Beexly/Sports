@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Tier 5 White-Box Adversarial Challenger Suite (`test_tier5_adversarial_equations_and_csv_challenger.py`).
+"""Tier 5 White-Box Adversarial Challenger Suite for equations and CSVs.
 
+File: `test_tier5_adversarial_equations_and_csv_challenger.py`.
 Authored by `teamwork_preview_challenger_r1_1` to white-box stress-test:
   1. Perturbation sensitivity of each of the 9 symbolic operator kernels (`bilinear_interaction`,
      `rational_pade`, `exponential_survival`, `bellman_advantage`, `copula_tail`,
      `conformal_quantile`, `sheaf_laplacian`, `python_callable`, `linear_logit`) under
      extreme, zero, negative, and NaN/Inf-boundary inputs.
   2. Strict enforcement that the `1,400` held equations (`sample_size_observed < min_sample_size`)
-     contribute `0.0` weight while the `20,019` active equations respect `clip_bounds` `[-0.35, 0.35]`.
+     contribute `0.0` weight while the `20,019` active equations stay in `[-0.35, 0.35]`.
   3. Zero fabrication on all `18` `PARTIAL` CSV tables and both `HEALTH-UNRESOLVED` items
      (`Patrick Mahomes` MRI truncated & `CLE vs NO` concussion player).
   4. Exact mathematical conservation of team passing/rushing yards and TDs across player
@@ -23,7 +24,7 @@ import math
 import sys
 import unittest
 from pathlib import Path
-from typing import Any, Dict, List, Set, Tuple
+from typing import Any
 
 import numpy as np
 
@@ -31,24 +32,18 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from intelligence.dfs.conserved_nfl_projection_and_equation_optimizer import (
-    _empirical_bayes_within_group_weights,
+from intelligence.dfs.conserved_nfl_projection_and_equation_optimizer import (  # noqa: E402
     build_conserved_week9_player_projections,
     compute_conserved_team_environments,
     project_full_nfl_game_box_score_from_dossier,
 )
-from intelligence.equations.equation_executor import (
-    _evaluate_operator_kernel,
+from intelligence.equations.equation_executor import (  # noqa: E402
     evaluate_equation_spec,
-    normalize_feature_vector,
 )
-from intelligence.ingestion.nov7_9_sweep_and_112_csv_ingestor import (
+from intelligence.ingestion.nov7_9_sweep_and_112_csv_ingestor import (  # noqa: E402
     M5_FEATURE_KEYS_CATALOG,
-    NFL_32_TEAMS,
-    normalize_team_code,
 )
-from intelligence.metrics.book_equations_to_stats_compiler import (
-    BOOK_DOMAIN_CROSSWALK_PATH,
+from intelligence.metrics.book_equations_to_stats_compiler import (  # noqa: E402
     BOOK_DOMAINS_6,
     EQUATION_INVENTORY_V2_PATH,
     M5_FEATURE_STORE_PATH,
@@ -61,9 +56,10 @@ from intelligence.metrics.book_equations_to_stats_compiler import (
 def _evaluate_compiler_vectorized_kernels_directly(
     compiler: BookEquationsToStatsCompiler,
     f_vals: np.ndarray,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """White-box helper executing the compiler's exact vectorized 9-kernel equations
-    on an arbitrary 15-element feature vector `f_vals` to inspect raw, shrunk, and
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Execute the compiler's exact vectorized 9-kernel equations on `f_vals`.
+
+    Accepts an arbitrary 15-element feature vector `f_vals` to inspect raw, shrunk, and
     clipped per-equation outputs across all 21,419 equations.
     """
     assert compiler._feat1_idx_vec is not None
@@ -158,8 +154,9 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
     def test_01_all_9_symbolic_operator_kernels_isolated_vectorized_perturbation_sensitivity(
         self,
     ) -> None:
-        """White-box stress-test each of the 9 symbolic operator kernels in isolation across
-        zero, negative, positive, and extreme finite inputs in the 21,419-equation array.
+        """White-box stress-test each of the 9 symbolic operator kernels in isolation.
+
+        Tests zero, negative, positive, and extreme finite inputs in the 21,419-equation array.
         """
         self.assertEqual(len(OPERATOR_KERNELS_9), 9)
         assert self.compiler._kernel_id_vec is not None
@@ -219,28 +216,34 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
                 )
                 self.assertTrue(
                     np.all((k_slice >= -0.35 - 1e-12) & (k_slice <= 0.35 + 1e-12)),
-                    f"Kernel {k_name} violated [-0.35, 0.35] clip bounds under {regime_name} inputs",
+                    f"Kernel {k_name} violated [-0.35, 0.35] bounds under {regime_name} inputs",
                 )
 
             # 2. Perturbation sensitivity: negative vs positive and zero vs positive must differ
-            diff_pos_neg = float(np.max(np.abs(clip_pos[mask_k_active] - clip_neg[mask_k_active])))
-            diff_pos_zero = float(np.max(np.abs(clip_pos[mask_k_active] - clip_zero[mask_k_active])))
-            diff_neg_zero = float(np.max(np.abs(clip_neg[mask_k_active] - clip_zero[mask_k_active])))
+            diff_pos_neg = float(
+                np.max(np.abs(clip_pos[mask_k_active] - clip_neg[mask_k_active]))
+            )
+            diff_pos_zero = float(
+                np.max(np.abs(clip_pos[mask_k_active] - clip_zero[mask_k_active]))
+            )
+            diff_neg_zero = float(
+                np.max(np.abs(clip_neg[mask_k_active] - clip_zero[mask_k_active]))
+            )
 
             self.assertGreater(
                 diff_pos_neg,
                 1e-4,
-                f"Kernel {k_name} is insensitive between negative and positive perturbations: max diff={diff_pos_neg}",
+                f"Kernel {k_name} is insensitive (neg vs pos): max diff={diff_pos_neg}",
             )
             self.assertGreater(
                 diff_pos_zero,
                 1e-4,
-                f"Kernel {k_name} is insensitive between zero and positive perturbations: max diff={diff_pos_zero}",
+                f"Kernel {k_name} is insensitive (zero vs pos): max diff={diff_pos_zero}",
             )
             self.assertGreater(
                 diff_neg_zero,
                 1e-4,
-                f"Kernel {k_name} is insensitive between zero and negative perturbations: max diff={diff_neg_zero}",
+                f"Kernel {k_name} is insensitive (zero vs neg): max diff={diff_neg_zero}",
             )
 
             # 3. Verify zero input yields exact mathematical expectation for each kernel
@@ -248,7 +251,10 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
                 # All kernels except copula_tail (-0.15 * g * log(2)) evaluate to 0.0 at x1=x2=0.0
                 self.assertTrue(
                     np.allclose(raw_zero[mask_k_active], 0.0, atol=1e-12),
-                    f"Kernel {k_name} expected 0.0 at zero input, got {raw_zero[mask_k_active][:5]}",
+                    (
+                        f"Kernel {k_name} expected 0.0 at zero input, "
+                        f"got {raw_zero[mask_k_active][:5]}"
+                    ),
                 )
             else:
                 # copula_tail at x1=x2=0.0 has -0.15 * g * ln(1 + exp(0)) = -0.15 * g * ln(2) < 0
@@ -260,10 +266,11 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
     def test_02_all_9_kernels_in_equation_executor_under_nan_inf_extreme_zero_and_negative_inputs(
         self,
     ) -> None:
-        """Stress-test `evaluate_equation_spec` and `_evaluate_operator_kernel` across all 9
-        operator kernels under NaN, +Inf, -Inf, 0.0, negative, and extreme inputs.
+        """Stress-test `evaluate_equation_spec` and `_evaluate_operator_kernel`.
+
+        Covers all 9 operator kernels under NaN, +Inf, -Inf, 0.0, negative, and extreme inputs.
         """
-        adversarial_inputs_list: List[Tuple[str, Dict[str, float]]] = [
+        adversarial_inputs_list: list[tuple[str, dict[str, float]]] = [
             ("all_zeros", {"x0": 0.0, "x1": 0.0, "x2": 0.0}),
             ("negative", {"x0": -2.4, "x1": -1.3, "x2": -0.7}),
             ("positive", {"x0": 2.4, "x1": 1.3, "x2": 0.7}),
@@ -281,7 +288,7 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
         bindings = ["x0", "x1", "x2"]
 
         for k_name in OPERATOR_KERNELS_9:
-            outputs_by_regime: Dict[str, float] = {}
+            outputs_by_regime: dict[str, float] = {}
             for regime_label, inp in adversarial_inputs_list:
                 res = evaluate_equation_spec(
                     equation_id=f"ADV_TEST_{k_name.upper()}",
@@ -323,7 +330,7 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
                 outputs_by_regime["negative"],
                 outputs_by_regime["positive"],
                 places=5,
-                msg=f"Kernel {k_name} failed perturbation sensitivity check in evaluate_equation_spec",
+                msg=f"Kernel {k_name} failed perturbation sensitivity in evaluate_equation_spec",
             )
             # Verify NaN/Inf inputs sanitize cleanly to deterministic finite zero-input behavior
             self.assertEqual(
@@ -345,8 +352,9 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
     def test_03_compiler_domain_signals_perturbation_across_extreme_zero_and_negative_regimes(
         self,
     ) -> None:
-        """Verify `BookEquationsToStatsCompiler._compute_6_domain_equation_signals` responds
-        sensitively across negative, zero, positive, and extreme feature vectors while keeping
+        """Verify `_compute_6_domain_equation_signals` sensitivity and bounds.
+
+        Checks negative, zero, positive, and extreme feature vectors while keeping
         all 6 domain signals strictly inside `[-0.35, 0.35]`.
         """
         fv_zero = {
@@ -407,7 +415,12 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             fv_extreme, team="BUF", position="TEAM", seed_offset=0
         )
 
-        for tot, act, held in ((tot_0, act_0, held_0), (tot_n, act_n, held_n), (tot_p, act_p, held_p), (tot_e, act_e, held_e)):
+        for tot, act, held in (
+            (tot_0, act_0, held_0),
+            (tot_n, act_n, held_n),
+            (tot_p, act_p, held_p),
+            (tot_e, act_e, held_e),
+        ):
             self.assertEqual(tot, 21419)
             self.assertEqual(act, 20019)
             self.assertEqual(held, 1400)
@@ -439,8 +452,10 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
     def test_04_held_1400_equations_contribute_exact_zero_weight_under_whitebox_perturbation(
         self,
     ) -> None:
-        """White-box proof that the 1,400 held equations (`sample_size_n < min_sample_size`)
-        contribute literally 0.0 weight to `BookEquationsToStatsCompiler` and `equation_executor`.
+        """White-box proof that the 1,400 held equations contribute 0.0 weight.
+
+        Verifies (`sample_size_n < min_sample_size`) rows contribute literally 0.0 weight
+        to `BookEquationsToStatsCompiler` and `equation_executor`.
         """
         # 1. Verify exact counts in equations.jsonl and equation_inventory_v2.json
         self.assertEqual(len(self.equations_records), 21419)
@@ -462,7 +477,7 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
         self.assertEqual(inv_v2.get("active_above_min_sample"), 20019)
         self.assertEqual(inv_v2.get("held_below_min_sample"), 1400)
 
-        # 2. Verify all 20,019 active equations in equations.jsonl carry clip_bounds == [-0.35, 0.35]
+        # 2. Verify all 20,019 active equations carry clip_bounds == [-0.35, 0.35]
         for rec in active_records:
             ast_obj = rec.get("formula_ast", {})
             self.assertEqual(
@@ -474,7 +489,7 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             self.assertGreater(lam, 0.0)
             self.assertLessEqual(lam, 1.0)
 
-        # 3. White-box mutation test: multiply coefficients of all 1,400 held equations by 1,000,000x
+        # 3. Multiply coefficients of all 1,400 held equations by 1,000,000x
         # and verify compiler outputs are 100% bit-for-bit unchanged!
         assert self.compiler._active_mask_vec is not None
         assert self.compiler._alpha_vec is not None
@@ -520,7 +535,7 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
                 "Held equations (< min_sample_size) leaked non-zero weight into domain signals!",
             )
 
-            # Also verify directly on the vectorized array that all 1,400 held entries are exactly 0.0
+            # Also verify on the vectorized array that all 1,400 held entries are 0.0
             _, shrunk_arr, clipped_arr = _evaluate_compiler_vectorized_kernels_directly(
                 self.compiler, np.ones(15, dtype=np.float64) * 5.0
             )
@@ -533,7 +548,8 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             self.compiler._shrink_vec = orig_shrink
 
         # 4. Verify `evaluate_equation_spec` enforces 0.0 weight for sample validation boundary
-        for n_obs, n_min, expect_held in ((0, 30, True), (29, 30, True), (30, 30, False), (31, 30, False)):
+        sample_cases = ((0, 30, True), (29, 30, True), (30, 30, False), (31, 30, False))
+        for n_obs, n_min, expect_held in sample_cases:
             res = evaluate_equation_spec(
                 equation_id="BOUNDARY_SAMPLE_EQ",
                 family="boundary_test",
@@ -562,17 +578,22 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
     # =========================================================================
 
     def test_05_all_112_csvs_and_18_partial_tables_zero_fabrication_disk_oracle(self) -> None:
-        """Cross-verify all 112 CSV tables and all 18 PARTIAL tables against raw files on disk
-        (SHA-256 hashes, headers, row counts, and zero fabricated/interpolated rows).
+        """Cross-verify all 112 CSV tables and 18 PARTIAL tables against disk files.
+
+        Checks SHA-256 hashes, headers, row counts, and zero fabricated/interpolated rows.
         """
         summary = self.m5_store["summary"]
         audit = self.m5_store["anti_fabrication_audit"]
         tables = self.m5_store["tables"]
 
         self.assertEqual(summary["total_csv_tables_ingested"], 112)
-        self.assertEqual(summary["tables_by_date"], {"2026-11-07": 35, "2026-11-08": 39, "2026-11-09": 38})
+        self.assertEqual(
+            summary["tables_by_date"], {"2026-11-07": 35, "2026-11-08": 39, "2026-11-09": 38}
+        )
         self.assertEqual(summary["total_data_rows_ingested"], 1790)
-        self.assertEqual(summary["rows_by_date"], {"2026-11-07": 444, "2026-11-08": 862, "2026-11-09": 484})
+        self.assertEqual(
+            summary["rows_by_date"], {"2026-11-07": 444, "2026-11-08": 862, "2026-11-09": 484}
+        )
         self.assertEqual(summary["partial_tables_count"], 18)
         self.assertEqual(audit["partial_tables_count"], 18)
         self.assertEqual(audit["fabricated_rows_count"], 0)
@@ -602,11 +623,16 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             )
             with csv_path.open("r", encoding="utf-8", errors="replace", newline="") as f:
                 rows = list(csv.reader(f))
-            non_empty_data_rows = [r for r in rows[1:] if any(c.strip() for c in r)] if len(rows) > 1 else []
+            non_empty_data_rows = (
+                [r for r in rows[1:] if any(c.strip() for c in r)] if len(rows) > 1 else []
+            )
             self.assertEqual(
                 t["data_rows_count"],
                 len(non_empty_data_rows),
-                f"Row count mismatch for {t['relpath']}: store={t['data_rows_count']} vs disk={len(non_empty_data_rows)}",
+                (
+                    f"Row count mismatch for {t['relpath']}: "
+                    f"store={t['data_rows_count']} vs disk={len(non_empty_data_rows)}"
+                ),
             )
             self.assertFalse(
                 t["fabricated"],
@@ -620,20 +646,21 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
 
         self.assertEqual(disk_total_rows, 1790)
 
-        # Verify that none of the 18 PARTIAL subset/top-10/top-5 tables were fabricated up to 32 rows
+        # Verify none of the 18 PARTIAL subset/top-10/top-5 tables were padded up to 32 rows
         for pt in partial_tables:
             fname = pt["filename"].lower()
             if "top5" in fname or "top10" in fname or "partial" in fname:
                 self.assertLess(
                     pt["data_rows_count"],
                     32,
-                    f"Partial table {pt['filename']} was suspiciously padded to {pt['data_rows_count']} rows",
+                    f"Partial table {pt['filename']} padded to {pt['data_rows_count']} rows",
                 )
 
     def test_06_both_health_unresolved_items_strict_anti_fabrication_verification(self) -> None:
-        """Verify both `HEALTH-UNRESOLVED` items (`Patrick Mahomes` MRI truncated and
-        `Unresolved CLE vs NO Concussion-Protocol Player`) are preserved with `fabricated=False`
-        and zero guessed diagnoses or fabricated player names.
+        """Verify both `HEALTH-UNRESOLVED` items have zero fabricated diagnoses.
+
+        Covers `Patrick Mahomes` MRI truncated and `Unresolved CLE vs NO Concussion-Protocol
+        Player`, preserved with `fabricated=False` and zero guessed diagnoses or names.
         """
         summary = self.m5_store["summary"]
         audit = self.m5_store["anti_fabrication_audit"]
@@ -658,7 +685,14 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
         self.assertIn("MRI", mahomes["raw_note"])
         self.assertIn("truncated", mahomes["raw_note"].lower())
         # Must not fabricate a specific MRI outcome
-        for forbidden_guess in ("acl tear", "mcl sprain", "high ankle", "out for season", "cleared to play"):
+        forbidden_guesses = (
+            "acl tear",
+            "mcl sprain",
+            "high ankle",
+            "out for season",
+            "cleared to play",
+        )
+        for forbidden_guess in forbidden_guesses:
             self.assertNotIn(forbidden_guess, mahomes["raw_note"].lower())
 
         cle_no = by_id["M5-HEALTH-02"]
@@ -672,7 +706,9 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
 
         # Verify all health items have fabricated == False
         for item in health_list:
-            self.assertIs(item.get("fabricated"), False, f"Health item {item} has fabricated != False")
+            self.assertIs(
+                item.get("fabricated"), False, f"Health item {item} has fabricated != False"
+            )
 
     # =========================================================================
     # CHALLENGE 4: Exact Mathematical Conservation of Team & Player Projections
@@ -681,10 +717,12 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
     def test_07_exact_mathematical_conservation_on_mnf_buf_min_calibrated_and_uncalibrated(
         self,
     ) -> None:
-        """Verify exact mathematical conservation of team passing yards (`sum(player_rec_yds) == team_pass_yds`),
-        completions (`sum(player_receptions) == team_completions`), rushing yards
-        (`sum(player_rush_yds) == team_total_rush_yds`), and passing/rushing TDs across both
-        calibrated and uncalibrated MNF `BUF @ MIN` projections.
+        """Verify exact conservation of passing, rushing, and TD totals for `BUF @ MIN`.
+
+        Checks team passing yards (`sum(player_rec_yds) == team_pass_yds`), completions
+        (`sum(player_receptions) == team_completions`), rushing yards
+        (`sum(player_rush_yds) == team_total_rush_yds`), and passing/rushing TDs across
+        both calibrated and uncalibrated MNF `BUF @ MIN` projections.
         """
         for apply_cal in (True, False):
             box = project_full_nfl_game_box_score_from_dossier(
@@ -710,12 +748,18 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
                 self.assertEqual(
                     sum_rec_yds,
                     team_pass_yds,
-                    f"[{tm} cal={apply_cal}] sum(player_rec_yds)={sum_rec_yds} != team_pass_yds={team_pass_yds}",
+                    (
+                        f"[{tm} cal={apply_cal}] sum(player_rec_yds)={sum_rec_yds} "
+                        f"!= team_pass_yds={team_pass_yds}"
+                    ),
                 )
                 self.assertEqual(
                     qb_pass_yds,
                     team_pass_yds,
-                    f"[{tm} cal={apply_cal}] qb_pass_yds={qb_pass_yds} != team_pass_yds={team_pass_yds}",
+                    (
+                        f"[{tm} cal={apply_cal}] qb_pass_yds={qb_pass_yds} "
+                        f"!= team_pass_yds={team_pass_yds}"
+                    ),
                 )
 
                 # 2. Exact Receptions == Team Conserved Completions == QB Completions
@@ -725,12 +769,18 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
                 self.assertEqual(
                     sum_recs,
                     team_comps,
-                    f"[{tm} cal={apply_cal}] sum(player_receptions)={sum_recs} != team_completions={team_comps}",
+                    (
+                        f"[{tm} cal={apply_cal}] sum(player_receptions)={sum_recs} "
+                        f"!= team_completions={team_comps}"
+                    ),
                 )
                 self.assertEqual(
                     qb_comps,
                     team_comps,
-                    f"[{tm} cal={apply_cal}] qb_completions={qb_comps} != team_completions={team_comps}",
+                    (
+                        f"[{tm} cal={apply_cal}] qb_completions={qb_comps} "
+                        f"!= team_completions={team_comps}"
+                    ),
                 )
 
                 # 3. Exact Rushing Yards == Team Conserved Total Rush Yards (RB + QB)
@@ -744,17 +794,26 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
                 self.assertEqual(
                     sum_all_rush_yds,
                     team_total_rush_yds,
-                    f"[{tm} cal={apply_cal}] sum(player_rush_yds)={sum_all_rush_yds} != team_total_rush_yds={team_total_rush_yds}",
+                    (
+                        f"[{tm} cal={apply_cal}] sum(player_rush_yds)={sum_all_rush_yds} "
+                        f"!= team_total_rush_yds={team_total_rush_yds}"
+                    ),
                 )
                 self.assertEqual(
                     sum_rb_rush_yds,
                     team_rb_rush_yds,
-                    f"[{tm} cal={apply_cal}] sum(rb_rush_yds)={sum_rb_rush_yds} != team_rb_rush_yds={team_rb_rush_yds}",
+                    (
+                        f"[{tm} cal={apply_cal}] sum(rb_rush_yds)={sum_rb_rush_yds} "
+                        f"!= team_rb_rush_yds={team_rb_rush_yds}"
+                    ),
                 )
                 self.assertEqual(
                     qb_rush_yds,
                     team_qb_rush_yds,
-                    f"[{tm} cal={apply_cal}] qb_rush_yds={qb_rush_yds} != team_qb_rush_yds={team_qb_rush_yds}",
+                    (
+                        f"[{tm} cal={apply_cal}] qb_rush_yds={qb_rush_yds} "
+                        f"!= team_qb_rush_yds={team_qb_rush_yds}"
+                    ),
                 )
 
                 # 4. Exact Receiving TDs == Team Conserved Pass TDs == QB Pass TDs
@@ -764,12 +823,18 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
                 self.assertEqual(
                     sum_rec_tds,
                     team_pass_tds,
-                    f"[{tm} cal={apply_cal}] sum(player_rec_tds)={sum_rec_tds} != team_pass_tds={team_pass_tds}",
+                    (
+                        f"[{tm} cal={apply_cal}] sum(player_rec_tds)={sum_rec_tds} "
+                        f"!= team_pass_tds={team_pass_tds}"
+                    ),
                 )
                 self.assertEqual(
                     qb_pass_tds,
                     team_pass_tds,
-                    f"[{tm} cal={apply_cal}] qb_pass_tds={qb_pass_tds} != team_pass_tds={team_pass_tds}",
+                    (
+                        f"[{tm} cal={apply_cal}] qb_pass_tds={qb_pass_tds} "
+                        f"!= team_pass_tds={team_pass_tds}"
+                    ),
                 )
 
                 # 5. Rushing TDs & Total Offensive TDs Conservation
@@ -778,26 +843,34 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
                 self.assertLessEqual(
                     abs(sum_rush_tds - team_rush_tds),
                     0.005,
-                    f"[{tm} cal={apply_cal}] sum(player_rush_tds)={sum_rush_tds} != team_rush_tds={team_rush_tds}",
+                    (
+                        f"[{tm} cal={apply_cal}] sum(player_rush_tds)={sum_rush_tds} "
+                        f"!= team_rush_tds={team_rush_tds}"
+                    ),
                 )
                 sum_total_tds = sum_rec_tds + sum_rush_tds
                 team_total_tds = float(b["conserved_total_tds"])
                 self.assertLessEqual(
                     abs(sum_total_tds - team_total_tds),
                     0.005,
-                    f"[{tm} cal={apply_cal}] sum(total_tds)={sum_total_tds} != team_total_tds={team_total_tds}",
+                    (
+                        f"[{tm} cal={apply_cal}] sum(total_tds)={sum_total_tds} "
+                        f"!= team_total_tds={team_total_tds}"
+                    ),
                 )
 
     def test_08_week9_slate_wide_team_and_player_projection_conservation_invariants(self) -> None:
-        """Verify conservation invariants across all active Week 9 teams in
-        `compute_conserved_team_environments()` and `build_conserved_week9_player_projections()`.
+        """Verify slate-wide Week 9 team and player projection conservation invariants.
+
+        Checks `compute_conserved_team_environments()` and
+        `build_conserved_week9_player_projections()`.
         """
         team_envs = compute_conserved_team_environments()
         pool = build_conserved_week9_player_projections()
         self.assertGreaterEqual(len(team_envs), 28)
         self.assertGreaterEqual(len(pool), 120)
 
-        by_team: Dict[str, List[Dict[str, Any]]] = {}
+        by_team: dict[str, list[dict[str, Any]]] = {}
         for p in pool:
             by_team.setdefault(p["team"], []).append(p)
 
@@ -805,8 +878,13 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             env = team_envs[tm]
 
             # 1. Macro team environment simplex & additive identities
+            rec_share_sum = (
+                float(env["wr_rec_share"])
+                + float(env["te_rec_share"])
+                + float(env["rb_rec_share"])
+            )
             self.assertAlmostEqual(
-                float(env["wr_rec_share"]) + float(env["te_rec_share"]) + float(env["rb_rec_share"]),
+                rec_share_sum,
                 1.0,
                 places=4,
                 msg=f"Team {tm} receiving yardage shares do not sum to 1.0",
@@ -830,7 +908,7 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
                 msg=f"Team {tm} pass_tds + rush_tds != conserved_total_tds",
             )
 
-            # 2. Player-level sums vs conserved team budgets (within per-player 0.1 rounding tolerance)
+            # 2. Player-level sums vs conserved team budgets (0.1 rounding tolerance)
             skill = [p for p in tm_players if p["position"] in {"RB", "WR", "TE"}]
             qbs = [p for p in tm_players if p["position"] == "QB"]
             rbs = [p for p in tm_players if p["position"] == "RB"]
@@ -846,35 +924,50 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             self.assertLessEqual(
                 abs(sum_rec_yds - float(env["conserved_pass_yds"])),
                 0.5,
-                f"Team {tm} sum(player_rec_yds)={sum_rec_yds} drifts from conserved_pass_yds={env['conserved_pass_yds']}",
+                (
+                    f"Team {tm} sum(player_rec_yds)={sum_rec_yds} drifts from "
+                    f"conserved_pass_yds={env['conserved_pass_yds']}"
+                ),
             )
 
             sum_rb_rush_yds = sum(float(p["proj_rush_yds"]) for p in rbs)
             self.assertLessEqual(
                 abs(sum_rb_rush_yds - float(env["conserved_rb_rush_yds"])),
                 0.4,
-                f"Team {tm} sum(rb_rush_yds)={sum_rb_rush_yds} drifts from conserved_rb_rush_yds={env['conserved_rb_rush_yds']}",
+                (
+                    f"Team {tm} sum(rb_rush_yds)={sum_rb_rush_yds} drifts from "
+                    f"conserved_rb_rush_yds={env['conserved_rb_rush_yds']}"
+                ),
             )
 
             sum_all_rush_yds = sum(float(p["proj_rush_yds"]) for p in qbs + rbs)
             self.assertLessEqual(
                 abs(sum_all_rush_yds - float(env["conserved_total_rush_yds"])),
                 0.4,
-                f"Team {tm} sum(player_rush_yds)={sum_all_rush_yds} drifts from conserved_total_rush_yds={env['conserved_total_rush_yds']}",
+                (
+                    f"Team {tm} sum(player_rush_yds)={sum_all_rush_yds} drifts from "
+                    f"conserved_total_rush_yds={env['conserved_total_rush_yds']}"
+                ),
             )
 
             sum_rec_tds = sum(float(p["proj_rec_tds"]) for p in skill)
             self.assertLessEqual(
                 abs(sum_rec_tds - float(env["conserved_pass_tds"])),
                 0.02,
-                f"Team {tm} sum(player_rec_tds)={sum_rec_tds} drifts from conserved_pass_tds={env['conserved_pass_tds']}",
+                (
+                    f"Team {tm} sum(player_rec_tds)={sum_rec_tds} drifts from "
+                    f"conserved_pass_tds={env['conserved_pass_tds']}"
+                ),
             )
 
             sum_rush_tds = sum(float(p["proj_rush_tds"]) for p in qbs + rbs)
             self.assertLessEqual(
                 abs(sum_rush_tds - float(env["conserved_rush_tds"])),
                 0.02,
-                f"Team {tm} sum(player_rush_tds)={sum_rush_tds} drifts from conserved_rush_tds={env['conserved_rush_tds']}",
+                (
+                    f"Team {tm} sum(player_rush_tds)={sum_rush_tds} drifts from "
+                    f"conserved_rush_tds={env['conserved_rush_tds']}"
+                ),
             )
 
     # =========================================================================
@@ -884,10 +977,11 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
     def test_09_manifest_skeleton_books_and_503_book_crosswalk_medical_quarantine_oracle(
         self,
     ) -> None:
-        """Verify `MANIFEST.md` has zero `_(pending wave merges)_` placeholders,
-        `SKELETON-BOOKS-2026-11-06.md` documents all 13 skeleton books (`11` `DRIVE_VERIFIED`
-        + `2` honest failures: `Barber` & `Goodfellow`), and `book_domain_crosswalk_2026.json`
-        maps all 503 books while quarantining all 68 `books-b-medical` books at 0.0 spine weight.
+        """Verify `MANIFEST.md`, `SKELETON-BOOKS-2026-11-06.md`, and 503-book crosswalk.
+
+        Checks zero `_(pending wave merges)_` placeholders, all 13 skeleton books
+        (`11` `DRIVE_VERIFIED` + `2` honest failures: `Barber` & `Goodfellow`), and
+        all 68 `books-b-medical` books quarantined at 0.0 spine weight.
         """
         primary_manifest = (
             REPO_ROOT
@@ -957,12 +1051,13 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             self.assertEqual(nmb["sports_spine_weight"], 1.0)
 
     def test_10_all_21419_symbolic_ast_invariants_and_128_player_distinctness(self) -> None:
-        """Verify all 21,419 equations in `data/mind/equations.jsonl` have unique IDs, valid
-        non-empty `formula_ast` dicts, and distinct M5 primary/secondary feature bindings,
-        and that `compile_full_week9_dataset` produces distinct 92-stat vectors across players.
+        """Verify all 21,419 equations in `data/mind/equations.jsonl` and 128-player vectors.
+
+        Checks unique IDs, valid non-empty `formula_ast` dicts, distinct M5 primary/secondary
+        feature bindings, and distinct 92-stat vectors from `compile_full_week9_dataset`.
         """
         self.assertEqual(len(self.equations_records), 21419)
-        seen_ids: Set[str] = set()
+        seen_ids: set[str] = set()
         valid_kernels = set(OPERATOR_KERNELS_9)
         valid_m5_keys = set(M5_FEATURE_KEYS_CATALOG)
 
@@ -993,15 +1088,14 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             self.assertEqual(ast_obj.get("clip_bounds"), [-0.35, 0.35])
 
         # Verify 128 compiled players have distinct 92-stat vectors across teams and positions
-        compiled_payload = json.loads(
-            (REPO_ROOT / "data" / "metrics" / "week9_book_equations_compiled_stats_2026.json").read_text(
-                encoding="utf-8"
-            )
+        compiled_path = (
+            REPO_ROOT / "data" / "metrics" / "week9_book_equations_compiled_stats_2026.json"
         )
+        compiled_payload = json.loads(compiled_path.read_text(encoding="utf-8"))
         players_128 = compiled_payload["players_128_compiled_stats"]
         self.assertEqual(len(players_128), 128)
-        stat_signatures: Set[Tuple[float, ...]] = set()
-        for pid, pkt in players_128.items():
+        stat_signatures: set[tuple[float, ...]] = set()
+        for _pid, pkt in players_128.items():
             self.assertEqual(pkt["books_bound_count"], 435)
             self.assertEqual(pkt["equations_evaluated_count"], 21419)
             self.assertEqual(pkt["equations_active_count"], 20019)
@@ -1014,7 +1108,7 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
         self.assertEqual(
             len(stat_signatures),
             128,
-            f"Expected all 128 compiled players to have distinct 92-stat vectors, got {len(stat_signatures)}",
+            f"Expected 128 distinct 92-stat player vectors, got {len(stat_signatures)}",
         )
 
     # =========================================================================
@@ -1024,10 +1118,12 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
     def test_11_f16_uncompressed_624_corpus_zero_synthetic_repos_and_bm25_nov7_9_retrieval_oracle(
         self,
     ) -> None:
-        """White-box verify `build_uncompressed_full_corpus_documents()` produces exactly 624
-        uncompressed documents (210 books, 372 GitHub repos, 30 Morning Sweep CSVs, 10 Innovation
-        Kernels, 2 NGS/Commercial feeds) with zero synthetic repo placeholders (`gse-gsi-verified-url-repo-*`
-        or `github.com/gse-atlas/repo-*`) and positive BM25+ lexical retrieval on Nov 7-9 repos.
+        """White-box verify `build_uncompressed_full_corpus_documents()` produces 624 docs.
+
+        Checks 210 books, 372 GitHub repos, 30 Morning Sweep CSVs, 10 Innovation Kernels,
+        2 NGS/Commercial feeds with zero synthetic repo placeholders
+        (`gse-gsi-verified-url-repo-*` or `github.com/gse-atlas/repo-*`) and positive
+        BM25+ lexical retrieval on Nov 7-9 repos.
         """
         from intelligence.retrieval.pinecone_hybrid_corpus_index import (
             BM25PlusScorer,
@@ -1037,10 +1133,10 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
         docs = build_uncompressed_full_corpus_documents()
         self.assertEqual(len(docs), 624)
 
-        by_cat: Dict[str, int] = {}
-        by_src_type: Dict[str, int] = {}
-        seen_doc_ids: Set[str] = set()
-        repo_titles_lower: Set[str] = set()
+        by_cat: dict[str, int] = {}
+        by_src_type: dict[str, int] = {}
+        seen_doc_ids: set[str] = set()
+        repo_titles_lower: set[str] = set()
 
         for d in docs:
             self.assertNotIn(d.doc_id, seen_doc_ids, f"Duplicate doc_id: {d.doc_id}")
@@ -1097,15 +1193,17 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             scores = scorer.score_all(query)
             self.assertGreater(max(scores), 0.0, f"BM25+ returned 0.0 max score for query: {query}")
 
-    def test_12_f16_49_nov7_self_added_gdrive_books_manifests_and_503_book_registry_provenance_oracle(
+    def test_12_f16_49_nov7_self_added_gdrive_books_manifests_and_503_book_registry_provenance_oracle(  # noqa: E501
         self,
     ) -> None:
-        """White-box verify all 49 Nov 7 self-added Google Drive books (`A2-NV7-01`..`A2-NV7-49`
-        in folder `1n3K5UDjVxpKbdW1I1o4yo_StuzvyGd-p`) are inventoried with per-file Drive IDs
-        and SHA-256 provenance across `MANIFEST.md` and `INDEX-BOOKS-A-2.md`, and verify the
-        Wayback retry closures and 503-book registry structure.
+        """White-box verify all 49 Nov 7 self-added Google Drive books and 503-book registry.
+
+        Verifies (`A2-NV7-01`..`A2-NV7-49` in folder `1n3K5UDjVxpKbdW1I1o4yo_StuzvyGd-p`)
+        are inventoried with per-file Drive IDs and SHA-256 provenance across `MANIFEST.md`
+        and `INDEX-BOOKS-A-2.md`, plus Wayback retry closures and 503-book registry structure.
         """
         import re
+
         from intelligence.metrics.book_equations_to_stats_compiler import (
             COMPLETE_458_BOOK_REGISTRY_PATH,
             GDRIVE_VERIFIED_MANIFEST_PATH,
@@ -1146,13 +1244,13 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
 
         for nv_idx in range(1, 50):
             code = f"A2-NV7-{nv_idx:02d}"
-            self.assertIn(code, primary_manifest, f"Missing {code} in mega-sweep-primary/MANIFEST.md")
-            self.assertIn(code, extended_manifest, f"Missing {code} in mega-sweep-extended/MANIFEST.md")
-            self.assertIn(code, index_a2_text, f"Missing {code} in books-a-sports/INDEX-BOOKS-A-2.md")
+            self.assertIn(code, primary_manifest, f"Missing {code} in primary MANIFEST.md")
+            self.assertIn(code, extended_manifest, f"Missing {code} in extended MANIFEST.md")
+            self.assertIn(code, index_a2_text, f"Missing {code} in INDEX-BOOKS-A-2.md")
 
         # Verify specific Nov 7 self-added artifacts and Wayback retry Drive IDs
         for expected_drive_id in (
-            "11AzEMohIjNNa55kmSnWDsXNTe-irUhOs_EwddM2XNTI",  # DRAFTKINGS-DFS-THE-DEEP-DIVE-2026-11-07 (1).md
+            "11AzEMohIjNNa55kmSnWDsXNTe-irUhOs_EwddM2XNTI",  # DRAFTKINGS-DFS-THE-DEEP-DIVE
             "1zQWY6FFJsoCfOYOOqeKJ03X_0b26Abg6",  # Unconfirmed 740066.crdownload
             "1Yrd4Q37pF1tMZdT37Rv94KZ19uYyTyQn",  # Dixon & Coles (1997)
             "1CfeDQZwue_hFElMl5Hsf0azeV2LuSayf",  # Shalev-Shwartz & Ben-David (2014)
@@ -1165,14 +1263,21 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             index_a2_text,
         )
         self.assertEqual(len(nv7_drive_urls), 49)
-        self.assertEqual(len(set(nv7_drive_urls)), 49, "Expected 49 distinct Drive file IDs for A2-NV7-01..49")
+        self.assertEqual(
+            len(set(nv7_drive_urls)), 49, "Expected 49 distinct Drive file IDs for A2-NV7-01..49"
+        )
 
-        # Verify canonical Google Drive verified manifest has all 458 Mega-Sweep books + 14 GSN DOCX with drive_cloud_id
+        # Verify canonical Google Drive verified manifest has 458 books + 14 GSN DOCX
         gdrive_manifest = json.loads(GDRIVE_VERIFIED_MANIFEST_PATH.read_text(encoding="utf-8"))
-        ms_458 = gdrive_manifest["mega_sweep_2026_11_06_and_tonight_books"]["verified_books_with_6field_provenance"]
+        ms_458 = gdrive_manifest["mega_sweep_2026_11_06_and_tonight_books"][
+            "verified_books_with_6field_provenance"
+        ]
         self.assertEqual(len(ms_458), 458)
         for b in ms_458:
-            self.assertTrue(str(b.get("drive_cloud_id", "")).strip(), f"Empty drive_cloud_id on {b.get('filename')}")
+            self.assertTrue(
+                str(b.get("drive_cloud_id", "")).strip(),
+                f"Empty drive_cloud_id on {b.get('filename')}",
+            )
             self.assertEqual(len(str(b.get("sha256", ""))), 64)
 
         reg_data = json.loads(COMPLETE_458_BOOK_REGISTRY_PATH.read_text(encoding="utf-8"))
@@ -1182,7 +1287,9 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
     def test_13_f16_week9_dk_upload_20_archetypes_csv_lineup_integrity_and_player_id_oracle(
         self,
     ) -> None:
-        """White-box verify `data/dfs/Garrett_20_Archetypes_250k_StressTested_DK_Upload_Week9_2026_11_08.csv`
+        """White-box verify Week 9 DK 20-archetype upload CSV integrity and player IDs.
+
+        Checks `data/dfs/Garrett_20_Archetypes_250k_StressTested_DK_Upload_Week9_2026_11_08.csv`
         has 20 distinct 9-man lineups, valid `<Name> (<DK_ID>)` formatting across all 180 slots,
         and zero duplicate players or DK IDs within any lineup.
         """
@@ -1203,13 +1310,13 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
         self.assertEqual(rows[0][:9], ["QB", "RB", "RB", "WR", "WR", "WR", "TE", "FLEX", "DST"])
 
         slot_re = re.compile(r"^(.+?)\s+\((\d{7,9})\)$")
-        lineup_signatures: Set[Tuple[str, ...]] = set()
+        lineup_signatures: set[tuple[str, ...]] = set()
 
         for line_idx, row in enumerate(rows[1:], start=1):
             slots = [c.strip() for c in row[:9]]
             self.assertEqual(len(slots), 9, f"Lineup {line_idx} does not have 9 slots")
-            names_in_lineup: Set[str] = set()
-            ids_in_lineup: Set[str] = set()
+            names_in_lineup: set[str] = set()
+            ids_in_lineup: set[str] = set()
             for slot_val in slots:
                 m = slot_re.match(slot_val)
                 self.assertIsNotNone(
@@ -1218,13 +1325,21 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
                 )
                 assert m is not None
                 p_name, p_id = m.group(1).strip(), m.group(2).strip()
-                self.assertNotIn(p_name, names_in_lineup, f"Duplicate player {p_name} in lineup {line_idx}")
-                self.assertNotIn(p_id, ids_in_lineup, f"Duplicate DK ID {p_id} in lineup {line_idx}")
+                self.assertNotIn(
+                    p_name, names_in_lineup, f"Duplicate player {p_name} in lineup {line_idx}"
+                )
+                self.assertNotIn(
+                    p_id, ids_in_lineup, f"Duplicate DK ID {p_id} in lineup {line_idx}"
+                )
                 names_in_lineup.add(p_name)
                 ids_in_lineup.add(p_id)
             lineup_signatures.add(tuple(sorted(names_in_lineup)))
 
-        self.assertEqual(len(lineup_signatures), 20, "All 20 GPP archetype lineups must be distinctplayer combinations")
+        self.assertEqual(
+            len(lineup_signatures),
+            20,
+            "All 20 GPP archetype lineups must be distinct player combinations",
+        )
 
     # =========================================================================
     # CHALLENGE 7 (Round 2 M8 / F17 & F18): Exponential Tanh, SEAL Router & _StdlibDataFrame
@@ -1233,10 +1348,12 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
     def test_14_f17_universal_nfl_metric_engine_exponential_tanh_identity_extreme_beta_h_oracle(
         self,
     ) -> None:
-        """White-box stress-test `universal-nfl-metric-and-situational-engine.ts` (`evaluateSovereignOpenAiEyiExecutionOverlay`)
-        exponential `tanh` replacement `(exp(2x)-1)/(exp(2x)+1)` under extreme `beta * h`
-        (`0`, `±1e-12`, `±19.9`, `±20`, `±40`, `±1e6`, `±1e308`, `±Infinity`), verifying
-        exact algebraic equivalence to `Math.tanh`, odd symmetry, and zero `NaN` overflow.
+        """White-box stress-test `universal-nfl-metric-and-situational-engine.ts` tanh replacement.
+
+        Tests `evaluateSovereignOpenAiEyiExecutionOverlay` exponential `tanh` replacement
+        `(exp(2x)-1)/(exp(2x)+1)` under extreme `beta * h` (`0`, `±1e-12`, `±19.9`, `±20`,
+        `±40`, `±1e6`, `±1e308`, `±Infinity`), verifying exact algebraic equivalence to
+        `Math.tanh`, odd symmetry, and zero `NaN` overflow.
         """
         import subprocess
 
@@ -1306,13 +1423,15 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
         self.assertEqual(proc.returncode, 0, f"Exponential tanh node oracle failed:\n{proc.stderr}")
         self.assertIn("EXP_TANH_ORACLE_OK", proc.stdout)
 
-    def test_15_f17_seal_pot_quad_frontier_router_wasserstein_abstention_and_james_stein_bounds_oracle(
+    def test_15_f17_seal_pot_quad_frontier_router_wasserstein_abstention_and_james_stein_bounds_oracle(  # noqa: E501
         self,
     ) -> None:
-        """White-box stress-test `seal-pot-cognitive-router.ts` (`runSealPotQuadFrontierRouter`
-        and `evaluateSealPotSelfEditCandidate`) across Wasserstein-1 drift boundaries
-        (`W1 = 0.0`, `0.08`, `0.0801`, `0.18`, `0.50`), extreme pillar log-odds (`±100.0`),
-        zero variance, and boundary `marketDeVigProb` (`0.0`, `1.0`).
+        """White-box stress-test `seal-pot-cognitive-router.ts` drift and shrinkage bounds.
+
+        Covers `runSealPotQuadFrontierRouter` and `evaluateSealPotSelfEditCandidate` across
+        Wasserstein-1 drift boundaries (`W1 = 0.0`, `0.08`, `0.0801`, `0.18`, `0.50`),
+        extreme pillar log-odds (`±100.0`), zero variance, and boundary `marketDeVigProb`
+        (`0.0`, `1.0`).
         """
         import subprocess
 
@@ -1323,7 +1442,7 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
         self.assertIn("export const QUAD_FRONTIER_PILLARS", router_src)
         self.assertIn("export function runSealPotQuadFrontierRouter", router_src)
 
-        # Strip TypeScript type annotations via node --experimental-strip-types or execute equivalent JS oracle
+        # Execute equivalent JS oracle for seal-pot router
         node_router_probe = """
         const crypto = require('node:crypto');
         const QUAD_FRONTIER_MODELS = [
@@ -1336,21 +1455,38 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
           const kDim = Math.max(3, params.rawDeltaLogOdds.length);
           const normSq = params.rawDeltaLogOdds.reduce((acc, v) => acc + v * v, 0);
           const traceTerm = Math.max(1e-9, (kDim - 2) * params.covarianceTraceSigma2);
-          const jamesSteinFactor = Number(Math.max(0, 1 - traceTerm / Math.max(traceTerm, normSq)).toFixed(6));
+          const jamesSteinFactor = Number(
+            Math.max(0, 1 - traceTerm / Math.max(traceTerm, normSq)).toFixed(6)
+          );
           const unscaledShrunk = params.rawDeltaLogOdds.map((v) => v * jamesSteinFactor);
           const l2Norm = Math.sqrt(unscaledShrunk.reduce((acc, v) => acc + v * v, 0));
           const capMult = l2Norm > 0.35 ? 0.35 / l2Norm : 1.0;
-          const shrunkJamesSteinDeltaLogOdds = unscaledShrunk.map((v) => Number((v * capMult).toFixed(6)));
-          const restEmRewardDelta = Number((params.baselineProperScore - params.candidateProperScore).toFixed(6));
+          const shrunkJamesSteinDeltaLogOdds = unscaledShrunk.map(
+            (v) => Number((v * capMult).toFixed(6))
+          );
+          const restEmRewardDelta = Number(
+            (params.baselineProperScore - params.candidateProperScore).toFixed(6)
+          );
           const gammaStep = 0.025;
+          const rawAlphaT = (
+            params.targetMiscoverageAlpha
+            + gammaStep * (params.targetMiscoverageAlpha - params.empiricalWeightedMiscoverage)
+          );
           const aciCrcMiscoverageAlphaT = Number(
-            Math.max(0.01, Math.min(0.25, params.targetMiscoverageAlpha + gammaStep * (params.targetMiscoverageAlpha - params.empiricalWeightedMiscoverage))).toFixed(6)
+            Math.max(0.01, Math.min(0.25, rawAlphaT)).toFixed(6)
           );
           const acceptedForStaging =
             restEmRewardDelta > 0 &&
             params.empiricalWeightedMiscoverage <= params.targetMiscoverageAlpha + 0.015 &&
             params.wassersteinShiftW1 <= 0.08;
-          return { shrunkJamesSteinDeltaLogOdds, jamesSteinFactor, restEmRewardDelta, aciCrcMiscoverageAlphaT, wassersteinShiftW1: Number(params.wassersteinShiftW1.toFixed(6)), acceptedForStaging };
+          return {
+            shrunkJamesSteinDeltaLogOdds,
+            jamesSteinFactor,
+            restEmRewardDelta,
+            aciCrcMiscoverageAlphaT,
+            wassersteinShiftW1: Number(params.wassersteinShiftW1.toFixed(6)),
+            acceptedForStaging,
+          };
         }
         function runSealPotQuadFrontierRouter(params) {
           const etaBrierTemperature = 6.0;
@@ -1369,14 +1505,25 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             rawDeltas.push(d);
             rawWeightedLogOddsDelta += w * d;
           });
-          const meanDelta = rawDeltas.reduce((acc, d) => acc + d, 0) / Math.max(1, rawDeltas.length);
-          const empiricalVar = rawDeltas.reduce((acc, d) => acc + (d - meanDelta) * (d - meanDelta), 0) / Math.max(1, rawDeltas.length - 1);
-          const covarianceTraceSigma2 = params.covarianceTraceSigma2 ?? Math.max(1e-4, empiricalVar);
-          const empiricalWeightedMiscoverage = params.recentMiscoverageErrors.length > 0
-            ? params.recentMiscoverageErrors.reduce((acc, e) => acc + e, 0) / params.recentMiscoverageErrors.length
+          const nDeltas = Math.max(1, rawDeltas.length);
+          const meanDelta = rawDeltas.reduce((acc, d) => acc + d, 0) / nDeltas;
+          const sqDiffs = rawDeltas.reduce((acc, d) => acc + (d - meanDelta) * (d - meanDelta), 0);
+          const empiricalVar = sqDiffs / Math.max(1, rawDeltas.length - 1);
+          const covarianceTraceSigma2 = (
+            params.covarianceTraceSigma2 ?? Math.max(1e-4, empiricalVar)
+          );
+          const errs = params.recentMiscoverageErrors;
+          const empiricalWeightedMiscoverage = errs.length > 0
+            ? errs.reduce((acc, e) => acc + e, 0) / errs.length
             : params.targetMiscoverageAlpha;
-          const baselineProperScore = QUAD_FRONTIER_MODELS.reduce((acc, m) => acc + (params.priorBrierLosses[m.id] ?? 0.25), 0) / QUAD_FRONTIER_MODELS.length;
-          const candidateProperScore = QUAD_FRONTIER_MODELS.reduce((acc, m) => acc + pillarWeights[m.id] * (params.priorBrierLosses[m.id] ?? 0.25), 0);
+          const baselineProperScore = QUAD_FRONTIER_MODELS.reduce(
+            (acc, m) => acc + (params.priorBrierLosses[m.id] ?? 0.25),
+            0
+          ) / QUAD_FRONTIER_MODELS.length;
+          const candidateProperScore = QUAD_FRONTIER_MODELS.reduce(
+            (acc, m) => acc + pillarWeights[m.id] * (params.priorBrierLosses[m.id] ?? 0.25),
+            0
+          );
           const ledgerEntry = evaluateSealPotSelfEditCandidate({
             rawDeltaLogOdds: rawDeltas,
             covarianceTraceSigma2,
@@ -1387,16 +1534,31 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             wassersteinShiftW1: params.wassersteinShiftW1,
           });
           const wassersteinDriftAbstained = params.wassersteinShiftW1 > 0.08;
-          const weightedShrunk = QUAD_FRONTIER_MODELS.reduce((acc, m, idx) => acc + pillarWeights[m.id] * (ledgerEntry.shrunkJamesSteinDeltaLogOdds[idx] ?? 0), 0);
+          const weightedShrunk = QUAD_FRONTIER_MODELS.reduce(
+            (acc, m, idx) => (
+              acc + pillarWeights[m.id] * (ledgerEntry.shrunkJamesSteinDeltaLogOdds[idx] ?? 0)
+            ),
+            0
+          );
           const cappedDelta = Math.max(-0.35, Math.min(0.35, weightedShrunk));
-          const shrunkLogOddsDelta = wassersteinDriftAbstained ? 0 : Number(cappedDelta.toFixed(6));
+          const shrunkLogOddsDelta = (
+            wassersteinDriftAbstained ? 0 : Number(cappedDelta.toFixed(6))
+          );
           const clampedBaseProb = Math.max(1e-6, Math.min(1 - 1e-6, params.marketDeVigProb));
           const baseLogit = Math.log(clampedBaseProb / (1 - clampedBaseProb));
-          const postRoutingProb = Number((1 / (1 + Math.exp(-(baseLogit + shrunkLogOddsDelta)))).toFixed(6));
-          return { pillarWeights, shrunkLogOddsDelta, wassersteinDriftAbstained, postRoutingProb, ledgerEntry };
+          const postRoutingProb = Number(
+            (1 / (1 + Math.exp(-(baseLogit + shrunkLogOddsDelta)))).toFixed(6)
+          );
+          return {
+            pillarWeights,
+            shrunkLogOddsDelta,
+            wassersteinDriftAbstained,
+            postRoutingProb,
+            ledgerEntry,
+          };
         }
 
-        // Test 1: Extreme positive & negative raw deltas (+-100.0) are strictly capped to [-0.35, 0.35]
+        // Test 1: Extreme positive & negative raw deltas (+-100.0) are capped to [-0.35, 0.35]
         for (const sign of [1, -1]) {
           const r = runSealPotQuadFrontierRouter({
             eventId: "EXTREME",
@@ -1417,7 +1579,9 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             targetMiscoverageAlpha: 0.10,
             wassersteinShiftW1: 0.02,
           });
-          if (Math.abs(r.shrunkLogOddsDelta) > 0.35 || r.shrunkLogOddsDelta * sign <= 0) process.exit(2);
+          if (Math.abs(r.shrunkLogOddsDelta) > 0.35 || r.shrunkLogOddsDelta * sign <= 0) {
+            process.exit(2);
+          }
           if (r.wassersteinDriftAbstained !== false) process.exit(3);
         }
 
@@ -1442,7 +1606,12 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             targetMiscoverageAlpha: 0.10,
             wassersteinShiftW1: w1,
           });
-          if (r.wassersteinDriftAbstained !== true || r.shrunkLogOddsDelta !== 0 || r.postRoutingProb !== 0.54 || r.ledgerEntry.acceptedForStaging !== false) {
+          if (
+            r.wassersteinDriftAbstained !== true ||
+            r.shrunkLogOddsDelta !== 0 ||
+            r.postRoutingProb !== 0.54 ||
+            r.ledgerEntry.acceptedForStaging !== false
+          ) {
             console.error("Failed W1 abstention at", w1, r);
             process.exit(4);
           }
@@ -1469,7 +1638,13 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             targetMiscoverageAlpha: 0.1,
             wassersteinShiftW1: 0.01,
           });
-          if (!Number.isFinite(r.postRoutingProb) || r.postRoutingProb < 0 || r.postRoutingProb > 1) process.exit(5);
+          if (
+            !Number.isFinite(r.postRoutingProb) ||
+            r.postRoutingProb < 0 ||
+            r.postRoutingProb > 1
+          ) {
+            process.exit(5);
+          }
         }
         console.log("SEAL_ROUTER_ORACLE_OK");
         """
@@ -1487,18 +1662,51 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
     def test_16_f18_stage0_stdlib_dataframe_pd_none_parity_and_corruption_stress_oracle(
         self,
     ) -> None:
-        """White-box stress-test `_StdlibDataFrame`, `_StdlibSeries`, `_StdlibMask`, and
-        `load_stage0_game_roster_allowlist` when `pd = None` in
+        """White-box stress-test `_StdlibDataFrame`, `_StdlibSeries`, and `_StdlibMask`.
+
+        Also checks `load_stage0_game_roster_allowlist` when `pd = None` in
         `scripts/ops/enforce_stage0_roster_and_board_allowlist.py`.
         """
         import scripts.ops.enforce_stage0_roster_and_board_allowlist as stage0_mod
 
         # 1. Direct unit stress-test of _StdlibDataFrame, _StdlibSeries, and _StdlibMask edge cases
         raw_rows = [
-            {"posteam": "LA", "defteam": "SF", "game_id": "2026_09_SF_LA", "passer_player_name": "M.Stafford", "passing_yards": "285.0", "complete_pass": "1", "epa": "0.42"},
-            {"posteam": "LA", "defteam": "SF", "game_id": "2026_09_SF_LA", "passer_player_name": "M.Stafford", "passing_yards": "", "complete_pass": None, "epa": "invalid_float"},
-            {"posteam": "BUF", "defteam": "MIN", "game_id": "2026_09_BUF_MIN", "passer_player_name": "J.Allen", "passing_yards": "312.5", "complete_pass": "1", "epa": "0.58"},
-            {"posteam": None, "defteam": "", "game_id": "   ", "passer_player_name": "", "passing_yards": None, "complete_pass": "0", "epa": None},
+            {
+                "posteam": "LA",
+                "defteam": "SF",
+                "game_id": "2026_09_SF_LA",
+                "passer_player_name": "M.Stafford",
+                "passing_yards": "285.0",
+                "complete_pass": "1",
+                "epa": "0.42",
+            },
+            {
+                "posteam": "LA",
+                "defteam": "SF",
+                "game_id": "2026_09_SF_LA",
+                "passer_player_name": "M.Stafford",
+                "passing_yards": "",
+                "complete_pass": None,
+                "epa": "invalid_float",
+            },
+            {
+                "posteam": "BUF",
+                "defteam": "MIN",
+                "game_id": "2026_09_BUF_MIN",
+                "passer_player_name": "J.Allen",
+                "passing_yards": "312.5",
+                "complete_pass": "1",
+                "epa": "0.58",
+            },
+            {
+                "posteam": None,
+                "defteam": "",
+                "game_id": "   ",
+                "passer_player_name": "",
+                "passing_yards": None,
+                "complete_pass": "0",
+                "epa": None,
+            },
         ]
         df = stage0_mod._StdlibDataFrame(raw_rows).copy()
         self.assertEqual(len(df), 4)
@@ -1516,7 +1724,7 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
         self.assertEqual(empty_df["passing_yards"].sum(), 0.0)
         self.assertEqual(empty_df["epa"].mean(), 0.0)
 
-        # 2. Verify load_stage0_game_roster_allowlist when pd = None produces valid allowlists & catches contamination
+        # 2. Verify load_stage0_game_roster_allowlist when pd = None catches contamination
         orig_pd = getattr(stage0_mod, "pd", None)
         try:
             stage0_mod.pd = None
@@ -1524,20 +1732,28 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
             al_buf_min = stage0_mod.load_stage0_game_roster_allowlist("BUF", "MIN", 9)
 
             self.assertEqual(al_jax_bal["matchup"], "JAX@BAL")
-            self.assertEqual(al_jax_bal["confirmed_qb1"], {"JAX": "Trevor Lawrence", "BAL": "Joe Fagnano"})
+            self.assertEqual(
+                al_jax_bal["confirmed_qb1"], {"JAX": "Trevor Lawrence", "BAL": "Joe Fagnano"}
+            )
             self.assertGreaterEqual(al_jax_bal["verified_board_athletes_count"], 20)
             self.assertEqual(len(al_jax_bal["stage0_receipt_sha256"]), 64)
 
             self.assertEqual(al_buf_min["matchup"], "BUF@MIN")
-            self.assertEqual(al_buf_min["confirmed_qb1"], {"BUF": "Josh Allen", "MIN": "Carson Wentz"})
+            self.assertEqual(
+                al_buf_min["confirmed_qb1"], {"BUF": "Josh Allen", "MIN": "Carson Wentz"}
+            )
             self.assertGreaterEqual(al_buf_min["verified_board_athletes_count"], 15)
             self.assertEqual(len(al_buf_min["stage0_receipt_sha256"]), 64)
 
             # Verify self-check passes
-            stage0_mod.assert_zero_roster_contamination(al_jax_bal, al_jax_bal, "jax_bal_self_check")
-            stage0_mod.assert_zero_roster_contamination(al_buf_min, al_buf_min, "buf_min_self_check")
+            stage0_mod.assert_zero_roster_contamination(
+                al_jax_bal, al_jax_bal, "jax_bal_self_check"
+            )
+            stage0_mod.assert_zero_roster_contamination(
+                al_buf_min, al_buf_min, "buf_min_self_check"
+            )
 
-            # Verify off-roster hallucination and excluded-player positive projection are caught when pd = None
+            # Verify off-roster hallucination and excluded-player positive projection are caught
             with self.assertRaises(stage0_mod.Stage0RosterContaminationError):
                 stage0_mod.assert_zero_roster_contamination(
                     {"athlete": "Tank Bigsby", "proj": 42.5},

@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import math
-from pathlib import Path
 import sys
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -13,7 +13,7 @@ _REPO_ROOT = str(Path(__file__).resolve().parents[1])
 if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 
-from intelligence.coaching.pm_sweep_convergence_kernels import (
+from intelligence.coaching.pm_sweep_convergence_kernels import (  # noqa: E402
     COVERAGE_SHELL_NAMES,
     EMPIRICAL_COACH_GO_COMPLIANCE,
     LEAGUE_INT_PER_TWP_PRIOR,
@@ -38,9 +38,9 @@ from intelligence.coaching.pm_sweep_convergence_kernels import (
 
 
 def test_qb_breakdown_convergence_kernel_weights_and_throwaway_table() -> None:
-    assert TIMO_OL_PRESSURE_WEIGHT == pytest.approx(0.72, abs=1e-6)
-    assert TIMO_QB_P2S_WEIGHT == pytest.approx(0.68, abs=1e-6)
-    assert TIMO_BEHIND_LOS_INFLATION_RATIO == pytest.approx(0.4370 / 0.3211, rel=1e-5)
+    assert pytest.approx(0.72, abs=1e-6) == TIMO_OL_PRESSURE_WEIGHT
+    assert pytest.approx(0.68, abs=1e-6) == TIMO_QB_P2S_WEIGHT
+    assert pytest.approx(0.4370 / 0.3211, rel=1e-5) == TIMO_BEHIND_LOS_INFLATION_RATIO
 
     # Verified PFR throwaway rates from 7-Signal Pack
     assert VERIFIED_PFR_THROWAWAY_RATES_2026["Bo Nix"] == pytest.approx(0.097, abs=1e-6)
@@ -141,7 +141,8 @@ def test_hierarchical_fg_make_prob_exact_calibration_and_physics() -> None:
 
     # Denver altitude (5,280 ft) increases 55-yd FG probability via EQ-PHYSICS-001 drag reduction
     fg55_den = hierarchical_fg_make_prob(55.0, altitude_ft=5280.0)
-    assert fg55_den["drag_reduction_frac"] == pytest.approx(1.0 - math.exp(-5280.0 / 27800.0), abs=1e-5)
+    expected_drag = 1.0 - math.exp(-5280.0 / 27800.0)
+    assert fg55_den["drag_reduction_frac"] == pytest.approx(expected_drag, abs=1e-5)
     assert fg55_den["fg_make_prob"] > fg55["fg_make_prob"] + 0.04
 
     # High wind (20 mph) & freezing temp (25°F) outdoors lowers make probability vs dome
@@ -151,8 +152,8 @@ def test_hierarchical_fg_make_prob_exact_calibration_and_physics() -> None:
 
 
 def test_coach_fourth_down_behavioral_fork_29pct_compliance_and_tau() -> None:
-    assert EMPIRICAL_COACH_GO_COMPLIANCE == pytest.approx(0.29, abs=1e-6)
-    assert TAU_WALKFORWARD_ACC_DELTA == pytest.approx(0.111585, abs=1e-6)
+    assert pytest.approx(0.29, abs=1e-6) == EMPIRICAL_COACH_GO_COMPLIANCE
+    assert pytest.approx(0.111585, abs=1e-6) == TAU_WALKFORWARD_ACC_DELTA
 
     # Spot where GO is WP-optimal (+4.5% over FG), but average coach (tau_hat=0) kicks FG
     fork_avg = coach_fourth_down_behavioral_fork(
@@ -183,7 +184,7 @@ def test_coach_fourth_down_behavioral_fork_29pct_compliance_and_tau() -> None:
 
 
 def test_eb_interception_shrinkage_and_multilevel_snap_timing() -> None:
-    assert LEAGUE_INT_PER_TWP_PRIOR == pytest.approx(0.52, abs=1e-6)
+    assert pytest.approx(0.52, abs=1e-6) == LEAGUE_INT_PER_TWP_PRIOR
 
     # Denver benchmark: 13 INTs on 17 TWP (~76.5% / 77%) shrinks to ~55%
     den_eb = eb_interception_catch_rate_shrinkage(13, 17)

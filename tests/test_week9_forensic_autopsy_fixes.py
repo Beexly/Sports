@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-tests/test_week9_forensic_autopsy_fixes.py
+"""tests/test_week9_forensic_autopsy_fixes.py.
 
 Comprehensive Week 9 Forensic Autopsy & Situational Engine Verification Suite (21 Tests).
 Verifies SG-1 through SG-10, RunPod Serverless & Zero-Waste Routing, Wave 10 GCP Catalog &
@@ -24,53 +23,53 @@ if str(REPO_ROOT) not in sys.path:
 if str(REPO_ROOT / "intelligence") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "intelligence"))
 
-from intelligence.coaching.gcp_ml_design_patterns_and_agent_workbench_engine import (
+from intelligence.coaching.gcp_ml_design_patterns_and_agent_workbench_engine import (  # noqa: E402
     gcp_cloud_run_mcp_and_agent_starter_telemetry,
     gcp_healthcare_data_engine_fhir_mimic_bridge,
     ml_pattern_model_armor_invariant_shield,
     run_gcp_ml_design_patterns_and_agent_workbench_suite,
 )
-from intelligence.coaching.x_situational_layer2_compiler import (
+from intelligence.coaching.x_situational_layer2_compiler import (  # noqa: E402
     build_jax_at_bal_week9_forensic_context,
     compile_x_situational_layer2_overlay,
     evaluate_q1_to_q51_feature_registry,
 )
-from intelligence.routing.runpod_gpu_orchestrator import (
+from intelligence.routing.runpod_gpu_orchestrator import (  # noqa: E402
     build_nvidia_nim_on_runpod_deployment_spec,
     dispatch_runpod_serverless_burst,
     mask_api_key,
 )
-from intelligence.routing.zero_waste_model_router import (
+from intelligence.routing.zero_waste_model_router import (  # noqa: E402
     TaskTier,
     build_constitutional_gatekeeper_prompt,
     get_cloud_credit_lanes_summary,
     route_zero_waste_task,
 )
-from scripts.ops.gse_coach_mind_simulator import (
+from scripts.ops.gse_coach_mind_simulator import (  # noqa: E402
     compute_qb_tier_adjusted_epa,
     load_sealed_object_readonly,
     simulate_matchup_pbp,
     verify_jev_spine_freshness_and_qb1,
 )
-from scripts.ops.gse_connected_game_workflow import (
+from scripts.ops.gse_connected_game_workflow import (  # noqa: E402
     compile_stage1_to_stage2_simulation_priors,
 )
-from scripts.ops.render_tnf_social_cards import (
+from scripts.ops.render_tnf_social_cards import (  # noqa: E402
     verify_stage5_publish_permission,
 )
-from scripts.ops.run_halftime_live_simulator import (
+from scripts.ops.run_halftime_live_simulator import (  # noqa: E402
     simulate_halftime_live_2h,
     verify_pregame_receipt_direction_integrity,
 )
-from scripts.ops.runpod_serverless_sim_handler import (
+from scripts.ops.runpod_serverless_sim_handler import (  # noqa: E402
     handler as runpod_serverless_handler,
 )
-from scripts.ops.solve_showdown_dfs_milp import (
+from scripts.ops.solve_showdown_dfs_milp import (  # noqa: E402
     build_jax_bal_showdown_pool,
     solve_dk_classic_milp,
     solve_dk_showdown_milp,
 )
-from scripts.ops.week8_forensic_kernels import (
+from scripts.ops.week8_forensic_kernels import (  # noqa: E402
     allocate_stochastic_conserved_box_score,
     assert_prop_distribution_invariants,
     detect_injury_decoy_or_pitch_count_trap,
@@ -131,11 +130,10 @@ def test_01b_sg1_fresh_jev_spine_and_matching_qb1_accepted() -> None:
 # TEST 2 (SG-2): Stage 1 -> Stage 2 Situational Parameter Coupling
 # ============================================================================
 def test_02a_sg2_compile_stage1_to_stage2_uncompressed_situational_stack() -> None:
-    """
-    SG-2: Verifies compile_stage1_to_stage2_simulation_priors executes the full
-    uncompressed situational stack (X-Situational Layer-2 12 laws, Q1-Q51 features,
-    GCP ML Design Pattern gates, and Agent 6/7 situational overlays) and exposes all
-    coupled parameter deltas.
+    """SG-2: Verify compile_stage1_to_stage2_simulation_priors runs the situational stack.
+
+    Executes X-Situational Layer-2 12 laws, Q1-Q51 features, GCP ML Design Pattern
+    gates, and Agent 6/7 situational overlays and exposes all coupled parameter deltas.
     """
     priors = compile_stage1_to_stage2_simulation_priors(
         stage1a_receipt={"base_away_off_epa": 0.015, "base_home_off_epa": 0.134},
@@ -188,7 +186,11 @@ def test_02b_sg2_simulate_matchup_pbp_dynamic_parameter_coupling() -> None:
     priors_healthy = compile_stage1_to_stage2_simulation_priors(
         stage1a_receipt={"base_away_off_epa": 0.015, "base_home_off_epa": 0.134},
         stage1b_receipt={"weather_wind_mph": 6.5},
-        qb_status_override={"away_qb_tier": "QB1", "home_qb_tier": "QB1_STARTER", "home_qb1": "Lamar Jackson"},
+        qb_status_override={
+            "away_qb_tier": "QB1",
+            "home_qb_tier": "QB1_STARTER",
+            "home_qb1": "Lamar Jackson",
+        },
     )
     sim_emerg = simulate_matchup_pbp(
         away="JAX",
@@ -224,10 +226,11 @@ def test_02b_sg2_simulate_matchup_pbp_dynamic_parameter_coupling() -> None:
 # TEST 3 (SG-3): Emergency QB3 / UDFA EPA Cliff & Completion Floor
 # ============================================================================
 def test_03_sg3_emergency_qb3_udfa_epa_cliff_and_completion_floor() -> None:
-    """
-    SG-3: Verifies compute_qb_tier_adjusted_epa(0.134, 'EMERGENCY_QB3_UDFA') drops
-    Baltimore's EPA from +0.134 to -0.246 EPA/play, lowers completion_floor to 0.34,
-    sets execution_multiplier = 0.62, and sets lambda_margin = 0.25.
+    """SG-3: Verify compute_qb_tier_adjusted_epa drops Baltimore EPA on UDFA QB3.
+
+    Checks compute_qb_tier_adjusted_epa(0.134, 'EMERGENCY_QB3_UDFA') lowers EPA to
+    -0.246 EPA/play, completion_floor to 0.34, execution_multiplier to 0.62, and
+    lambda_margin to 0.25.
     """
     res = compute_qb_tier_adjusted_epa(0.134, "EMERGENCY_QB3_UDFA")
     assert res["qb_tier"] == "EMERGENCY_QB3_UDFA"
@@ -243,10 +246,10 @@ def test_03_sg3_emergency_qb3_udfa_epa_cliff_and_completion_floor() -> None:
 # TEST 4 (SG-4): Stochastic Dirichlet-Multinomial Box Score Conservation & Variance Floor
 # ============================================================================
 def test_04a_sg4_stochastic_dirichlet_box_score_conservation_and_variance_floor() -> None:
-    """
-    SG-4: Verifies allocate_stochastic_conserved_box_score conserves sum_k Y_{w,k} = T_w
-    across 10,000 worlds while guaranteeing std >= 1.15 on tackles/receptions and
-    max(p_over, p_under) <= 0.780.
+    """SG-4: Verify allocate_stochastic_conserved_box_score conserves team totals.
+
+    Conserves sum_k Y_{w,k} = T_w across 10,000 worlds while guaranteeing std >= 1.15
+    on tackles/receptions and max(p_over, p_under) <= 0.780.
     """
     rng = np.random.default_rng(20261105)
     n_worlds = 10000
@@ -283,7 +286,7 @@ def test_04a_sg4_stochastic_dirichlet_box_score_conservation_and_variance_floor(
 
 
 def test_04b_sg4_assert_prop_distribution_invariants_rejects_collapsed_variance() -> None:
-    """SG-4: Verifies assert_prop_distribution_invariants raises ValueError on collapsed std < 1.10."""
+    """SG-4: Verify assert_prop_distribution_invariants rejects collapsed std < 1.10."""
     collapsed_samples = np.full(10000, 5.0, dtype=np.float64)
     with pytest.raises(ValueError, match="VARIANCE_COLLAPSE_DETECTED"):
         assert_prop_distribution_invariants(
@@ -296,10 +299,11 @@ def test_04b_sg4_assert_prop_distribution_invariants_rejects_collapsed_variance(
 # TEST 5 (SG-5): Simulated QB Attempts, Completions, Scrambles & Kneeldown Exclusion
 # ============================================================================
 def test_05_sg5_simulated_qb_attempts_completions_scrambles_and_kneeldowns() -> None:
-    """
-    SG-5: Verifies simulate_matchup_pbp(..., return_vectors=True) returns integer vectors
-    for home_pass_att, away_pass_att, home_pass_comp, away_pass_comp, home_qb_scrambles,
-    away_qb_scrambles, home_sacks, away_sacks, home_ints, away_ints.
+    """SG-5: Verify simulate_matchup_pbp(..., return_vectors=True) returns integer vectors.
+
+    Covers home_pass_att, away_pass_att, home_pass_comp, away_pass_comp,
+    home_qb_scrambles, away_qb_scrambles, home_sacks, away_sacks, home_ints, and
+    away_ints.
     """
     sealed_obj, sealed_hash = load_sealed_object_readonly()
     sim = simulate_matchup_pbp(
@@ -343,11 +347,11 @@ def test_05_sg5_simulated_qb_attempts_completions_scrambles_and_kneeldowns() -> 
 # TEST 6 (SG-6): Real MILP DraftKings Showdown & Classic Optimizer
 # ============================================================================
 def test_06a_sg6_real_milp_dk_showdown_cash_and_gpp() -> None:
-    """
-    SG-6: Verifies solve_dk_showdown_milp (mode='cash' and mode='gpp') satisfies
-    total_salary <= 50000, 1 CPT + 5 FLEX, excludes Brian Thomas Jr. (is_decoy_trap=True)
-    from Cash, and selects healthy Parker Washington, Jakobi Meyers, Travis Etienne,
-    Trevor Lawrence.
+    """SG-6: Verify solve_dk_showdown_milp (cash and gpp) satisfies showdown constraints.
+
+    Checks total_salary <= 50000, 1 CPT + 5 FLEX, excludes Brian Thomas Jr.
+    (is_decoy_trap=True) from Cash, and selects healthy Parker Washington,
+    Jakobi Meyers, Travis Etienne, and Trevor Lawrence.
     """
     pool = build_jax_bal_showdown_pool()
     cash_res = solve_dk_showdown_milp(pool, mode="cash", salary_cap=50000)
@@ -369,22 +373,64 @@ def test_06a_sg6_real_milp_dk_showdown_cash_and_gpp() -> None:
 
 
 def test_06b_sg6_real_milp_dk_classic_9_roster_constraints() -> None:
-    """SG-6: Verifies solve_dk_classic_milp satisfies 1 QB, 2 RB, 3 WR, 1 TE, 1 FLEX, 1 DST <= $50,000."""
+    """SG-6: Verify solve_dk_classic_milp satisfies 9-slot classic constraints <= $50,000."""
     classic_pool = [
-        {"name": "Jared Goff", "team": "DET", "pos": "QB", "salary": 6300, "median_fpts": 20.5, "p90_ceiling_fpts": 27.0, "p25_floor_fpts": 15.5},
-        {"name": "Josh Allen", "team": "BUF", "pos": "QB", "salary": 7600, "median_fpts": 24.8, "p90_ceiling_fpts": 33.0, "p25_floor_fpts": 18.8},
-        {"name": "Jahmyr Gibbs", "team": "DET", "pos": "RB", "salary": 6800, "median_fpts": 19.2, "p90_ceiling_fpts": 27.5, "p25_floor_fpts": 14.1},
-        {"name": "De'Von Achane", "team": "MIA", "pos": "RB", "salary": 6900, "median_fpts": 20.1, "p90_ceiling_fpts": 29.0, "p25_floor_fpts": 14.5},
-        {"name": "Aaron Jones", "team": "MIN", "pos": "RB", "salary": 5800, "median_fpts": 15.8, "p90_ceiling_fpts": 22.0, "p25_floor_fpts": 11.9},
-        {"name": "Amon-Ra St. Brown", "team": "DET", "pos": "WR", "salary": 7200, "median_fpts": 21.0, "p90_ceiling_fpts": 29.5, "p25_floor_fpts": 15.2},
-        {"name": "Justin Jefferson", "team": "MIN", "pos": "WR", "salary": 7500, "median_fpts": 22.4, "p90_ceiling_fpts": 31.5, "p25_floor_fpts": 16.8},
-        {"name": "Jameson Williams", "team": "DET", "pos": "WR", "salary": 5500, "median_fpts": 14.5, "p90_ceiling_fpts": 21.5, "p25_floor_fpts": 10.2},
-        {"name": "Khalil Shakir", "team": "BUF", "pos": "WR", "salary": 5100, "median_fpts": 13.8, "p90_ceiling_fpts": 19.5, "p25_floor_fpts": 10.4},
-        {"name": "Josh Downs", "team": "IND", "pos": "WR", "salary": 4800, "median_fpts": 13.2, "p90_ceiling_fpts": 19.0, "p25_floor_fpts": 9.8},
-        {"name": "Tucker Kraft", "team": "GB", "pos": "TE", "salary": 4300, "median_fpts": 11.8, "p90_ceiling_fpts": 17.5, "p25_floor_fpts": 8.4},
-        {"name": "Travis Kelce", "team": "KC", "pos": "TE", "salary": 5400, "median_fpts": 14.9, "p90_ceiling_fpts": 21.0, "p25_floor_fpts": 11.0},
-        {"name": "Vikings", "team": "MIN", "pos": "DST", "salary": 3100, "median_fpts": 8.9, "p90_ceiling_fpts": 14.0, "p25_floor_fpts": 5.8},
-        {"name": "Chiefs", "team": "KC", "pos": "DST", "salary": 3300, "median_fpts": 8.5, "p90_ceiling_fpts": 13.5, "p25_floor_fpts": 5.6},
+        {
+            "name": "Jared Goff", "team": "DET", "pos": "QB", "salary": 6300,
+            "median_fpts": 20.5, "p90_ceiling_fpts": 27.0, "p25_floor_fpts": 15.5,
+        },
+        {
+            "name": "Josh Allen", "team": "BUF", "pos": "QB", "salary": 7600,
+            "median_fpts": 24.8, "p90_ceiling_fpts": 33.0, "p25_floor_fpts": 18.8,
+        },
+        {
+            "name": "Jahmyr Gibbs", "team": "DET", "pos": "RB", "salary": 6800,
+            "median_fpts": 19.2, "p90_ceiling_fpts": 27.5, "p25_floor_fpts": 14.1,
+        },
+        {
+            "name": "De'Von Achane", "team": "MIA", "pos": "RB", "salary": 6900,
+            "median_fpts": 20.1, "p90_ceiling_fpts": 29.0, "p25_floor_fpts": 14.5,
+        },
+        {
+            "name": "Aaron Jones", "team": "MIN", "pos": "RB", "salary": 5800,
+            "median_fpts": 15.8, "p90_ceiling_fpts": 22.0, "p25_floor_fpts": 11.9,
+        },
+        {
+            "name": "Amon-Ra St. Brown", "team": "DET", "pos": "WR", "salary": 7200,
+            "median_fpts": 21.0, "p90_ceiling_fpts": 29.5, "p25_floor_fpts": 15.2,
+        },
+        {
+            "name": "Justin Jefferson", "team": "MIN", "pos": "WR", "salary": 7500,
+            "median_fpts": 22.4, "p90_ceiling_fpts": 31.5, "p25_floor_fpts": 16.8,
+        },
+        {
+            "name": "Jameson Williams", "team": "DET", "pos": "WR", "salary": 5500,
+            "median_fpts": 14.5, "p90_ceiling_fpts": 21.5, "p25_floor_fpts": 10.2,
+        },
+        {
+            "name": "Khalil Shakir", "team": "BUF", "pos": "WR", "salary": 5100,
+            "median_fpts": 13.8, "p90_ceiling_fpts": 19.5, "p25_floor_fpts": 10.4,
+        },
+        {
+            "name": "Josh Downs", "team": "IND", "pos": "WR", "salary": 4800,
+            "median_fpts": 13.2, "p90_ceiling_fpts": 19.0, "p25_floor_fpts": 9.8,
+        },
+        {
+            "name": "Tucker Kraft", "team": "GB", "pos": "TE", "salary": 4300,
+            "median_fpts": 11.8, "p90_ceiling_fpts": 17.5, "p25_floor_fpts": 8.4,
+        },
+        {
+            "name": "Travis Kelce", "team": "KC", "pos": "TE", "salary": 5400,
+            "median_fpts": 14.9, "p90_ceiling_fpts": 21.0, "p25_floor_fpts": 11.0,
+        },
+        {
+            "name": "Vikings", "team": "MIN", "pos": "DST", "salary": 3100,
+            "median_fpts": 8.9, "p90_ceiling_fpts": 14.0, "p25_floor_fpts": 5.8,
+        },
+        {
+            "name": "Chiefs", "team": "KC", "pos": "DST", "salary": 3300,
+            "median_fpts": 8.5, "p90_ceiling_fpts": 13.5, "p25_floor_fpts": 5.6,
+        },
     ]
     res = solve_dk_classic_milp(classic_pool, mode="cash", salary_cap=50000, min_salary=40000)
     assert res["status"] == "OPTIMAL"
@@ -396,10 +442,10 @@ def test_06b_sg6_real_milp_dk_classic_9_roster_constraints() -> None:
 # TEST 7 (SG-7): Stage 5 Conjunction Gate & Card Renderer Circuit Breaker
 # ============================================================================
 def test_07_sg7_stage5_conjunction_gate_and_card_renderer_circuit_breaker() -> None:
-    """
-    SG-7: Verifies evaluate_empirical_prop_probability returns publishAllowed: False
-    when market_over_american is None and verify_stage5_publish_permission halts
-    rendering when publishAllowed is False.
+    """SG-7: Verify Stage 5 conjunction gate blocks unpriced markets and PASS receipts.
+
+    Checks evaluate_empirical_prop_probability returns publishAllowed: False when
+    market_over_american is None and verify_stage5_publish_permission halts rendering.
     """
     rng = np.random.default_rng(42)
     samples = rng.normal(loc=48.0, scale=16.0, size=10000).clip(min=0.0)
@@ -430,10 +476,11 @@ def test_07_sg7_stage5_conjunction_gate_and_card_renderer_circuit_breaker() -> N
 # TEST 8 (SG-8): Injury Decoy / Pitch-Count Detector
 # ============================================================================
 def test_08_sg8_injury_decoy_or_pitch_count_detector() -> None:
-    """
-    SG-8: Verifies detect_injury_decoy_or_pitch_count_trap('Brian Thomas Jr.',
-    'Questionable', 12.5, 58.0, ...) flags is_decoy_trap: True, block_over_bets: True,
-    block_cash_dfs: True, and reallocates 65% of vacated target share to healthy teammates.
+    """SG-8: Verify injury decoy / pitch-count trap detection and share reallocation.
+
+    Checks detect_injury_decoy_or_pitch_count_trap('Brian Thomas Jr.', 'Questionable',
+    12.5, 58.0, ...) sets is_decoy_trap: True, block_over_bets: True, block_cash_dfs: True,
+    and reallocates 65% of vacated target share to healthy teammates.
     """
     res = detect_injury_decoy_or_pitch_count_trap(
         player_name="Brian Thomas Jr.",
@@ -460,10 +507,10 @@ def test_08_sg8_injury_decoy_or_pitch_count_detector() -> None:
 # TEST 9 (SG-9): Live Halftime Simulator Rules H1, H2, H3
 # ============================================================================
 def test_09a_sg9_halftime_live_simulator_rules_h1_and_h2() -> None:
-    """
-    SG-9: Verifies simulate_halftime_live_2h clamps 2H pass rate to 0.34 (Rule H1
-    for Joe Fagnano 2.4 YPA) and decays Questionable Bhayshul Tuten 2H carry share by
-    -45% when up >= 10 (Rule H2).
+    """SG-9: Verify simulate_halftime_live_2h applies Rules H1 and H2.
+
+    Clamps 2H pass rate to 0.34 (Rule H1 for Joe Fagnano 2.4 YPA) and decays
+    Questionable Bhayshul Tuten 2H carry share by -45% when up >= 10 (Rule H2).
     """
     state_1h = {
         "away": "JAX",
@@ -475,26 +522,46 @@ def test_09a_sg9_halftime_live_simulator_rules_h1_and_h2() -> None:
         "qb_tier_map": {"JAX": "QB1_STARTER", "BAL": "EMERGENCY_QB3_UDFA"},
         "injury_status_map": {"Bhayshul Tuten": "Questionable", "Travis Etienne": "Active"},
         "1h_player_stats": {
-            "Bhayshul Tuten": {"team": "JAX", "carry_share": 0.42, "target_share": 0.08, "rush_yds_1h": 28.0, "rec_yds_1h": 6.0},
-            "Travis Etienne": {"team": "JAX", "carry_share": 0.48, "target_share": 0.14, "rush_yds_1h": 41.0, "rec_yds_1h": 18.0},
+            "Bhayshul Tuten": {
+                "team": "JAX", "carry_share": 0.42, "target_share": 0.08,
+                "rush_yds_1h": 28.0, "rec_yds_1h": 6.0,
+            },
+            "Travis Etienne": {
+                "team": "JAX", "carry_share": 0.48, "target_share": 0.14,
+                "rush_yds_1h": 41.0, "rec_yds_1h": 18.0,
+            },
         },
     }
     res = simulate_halftime_live_2h(state_1h, n_sims=2000, seed=20261105)
     assert res["rule_h1_white_flag_run_clamp"]["BAL"]["active"] is True
-    assert res["rule_h1_white_flag_run_clamp"]["BAL"]["clamped_2h_pass_rate"] == pytest.approx(0.34, abs=1e-4)
-    assert res["rule_h2_questionable_starter_blowout_preservation"]["Bhayshul Tuten"]["share_decay_2h"] == pytest.approx(-0.45, abs=1e-4)
+    assert (
+        res["rule_h1_white_flag_run_clamp"]["BAL"]["clamped_2h_pass_rate"]
+        == pytest.approx(0.34, abs=1e-4)
+    )
+    assert (
+        res["rule_h2_questionable_starter_blowout_preservation"]["Bhayshul Tuten"]["share_decay_2h"]
+        == pytest.approx(-0.45, abs=1e-4)
+    )
     assert res["player_2h_projections"]["Bhayshul Tuten"]["rule_h2_preserved"] is True
-    assert res["player_2h_projections"]["Bhayshul Tuten"]["share_multiplier_2h"] == pytest.approx(0.55, abs=1e-4)
+    assert (
+        res["player_2h_projections"]["Bhayshul Tuten"]["share_multiplier_2h"]
+        == pytest.approx(0.55, abs=1e-4)
+    )
 
 
 def test_09b_sg9_halftime_rule_h3_pregame_direction_flip_raises() -> None:
+    """SG-9 (Rule H3): Verify direction flip detection raises RuntimeError.
+
+    Checks verify_pregame_receipt_direction_integrity and simulate_halftime_live_2h
+    raise RuntimeError('PREGAME_DIRECTION_FLIP_DETECTED') if a pregame UNDER is
+    flipped to an OVER receipt.
     """
-    SG-9 (Rule H3): Verifies verify_pregame_receipt_direction_integrity and
-    simulate_halftime_live_2h raise RuntimeError('PREGAME_DIRECTION_FLIP_DETECTED')
-    if a pregame UNDER is flipped to an OVER receipt.
-    """
-    pregame = [{"player": "Brenton Strange", "market": "receiving_yards", "direction": "UNDER", "line": 31.5}]
-    mutated = [{"player": "Brenton Strange", "market": "receiving_yards", "claimed_direction": "OVER", "line": 31.5}]
+    pregame = [
+        {"player": "Brenton Strange", "market": "receiving_yards", "direction": "UNDER", "line": 31.5}  # noqa: E501
+    ]
+    mutated = [
+        {"player": "Brenton Strange", "market": "receiving_yards", "claimed_direction": "OVER", "line": 31.5}  # noqa: E501
+    ]
 
     with pytest.raises(RuntimeError, match="PREGAME_DIRECTION_FLIP_DETECTED"):
         verify_pregame_receipt_direction_integrity(pregame, mutated)
@@ -519,13 +586,16 @@ def test_09b_sg9_halftime_rule_h3_pregame_direction_flip_raises() -> None:
 # TEST 10 (SG-10): Overnight Shift Orchestrator & Official 47-19-1 Ledger
 # ============================================================================
 def test_10_sg10_overnight_shift_orchestrator_and_official_62_23_1_ledger() -> None:
-    """
-    SG-10: Verifies data/engine/new_engine_official_ledger_2026.json and
-    data/engine/overnight_20h_shift_master_receipt_2026_11_05.json preserve
-    the official verified ledger with zero TNF contamination.
+    """SG-10: Verify official ledger and overnight receipt preserve verified record.
+
+    Checks data/engine/new_engine_official_ledger_2026.json and
+    data/engine/overnight_20h_shift_master_receipt_2026_11_05.json have zero TNF
+    contamination.
     """
     ledger_path = REPO_ROOT / "data" / "engine" / "new_engine_official_ledger_2026.json"
-    overnight_path = REPO_ROOT / "data" / "engine" / "overnight_20h_shift_master_receipt_2026_11_05.json"
+    overnight_path = (
+        REPO_ROOT / "data" / "engine" / "overnight_20h_shift_master_receipt_2026_11_05.json"
+    )
     assert ledger_path.is_file()
     assert overnight_path.is_file()
 
@@ -554,9 +624,9 @@ def test_10_sg10_overnight_shift_orchestrator_and_official_62_23_1_ledger() -> N
 # TEST 11: RunPod Live GraphQL Orchestrator & Zero-Waste Router
 # ============================================================================
 def test_11_runpod_live_graphql_orchestrator_and_zero_waste_router() -> None:
-    """
-    Verifies zero_waste_model_router.py and runpod_gpu_orchestrator.py +
-    runpod_serverless_sim_handler.py execute 't85m_injury_resim' and
+    """Verify zero_waste_model_router.py and runpod orchestrator/handler execution.
+
+    Checks runpod_serverless_sim_handler.py executes 't85m_injury_resim' and
     'halftime_live_slate_burst' with zero raw API key leaks.
     """
     route_w = route_zero_waste_task("pbp_tendency_parse", TaskTier.TIER_1_FREE_OR_LOCAL)
@@ -606,7 +676,11 @@ def test_11_runpod_live_graphql_orchestrator_and_zero_waste_router() -> None:
 
     burst_dispatch = dispatch_runpod_serverless_burst(
         endpoint_id="local",
-        payload={"job_type": "t85m_injury_resim", "game_id": "NFL_2026_W09_DET_GB", "n_worlds": 500},
+        payload={
+            "job_type": "t85m_injury_resim",
+            "game_id": "NFL_2026_W09_DET_GB",
+            "n_worlds": 500,
+        },
     )
     serialized_burst = json.dumps(burst_dispatch)
     assert not re.search(r"rpa_[A-Za-z0-9]{15,}", serialized_burst)
@@ -619,9 +693,10 @@ def test_11_runpod_live_graphql_orchestrator_and_zero_waste_router() -> None:
 # TEST 12: Wave 10 GCP 188 Products, 34 GitHub Repos & ML Design Patterns Engine
 # ============================================================================
 def test_12_wave10_gcp_188_products_34_github_repos_and_ml_design_patterns() -> None:
-    """
-    Verifies gcp_ml_design_patterns_and_agent_workbench_engine.py and
-    mind_wave10_gcp_catalog_and_34_github_repos_2026_11_05.jsonl (240 trainer-ready rows).
+    """Verify GCP ML design patterns engine and Wave 10 JSONL feed.
+
+    Checks gcp_ml_design_patterns_and_agent_workbench_engine.py and
+    mind_wave10_gcp_catalog_and_34_github_repos_2026_11_05.jsonl (240 rows).
     """
     jsonl_path = (
         REPO_ROOT
@@ -653,9 +728,9 @@ def test_12_wave10_gcp_188_products_34_github_repos_and_ml_design_patterns() -> 
 # TEST 13: Wave 11 27-Downloads Situational Layer-2 Compiler & All 51 Q1-Q51 Features
 # ============================================================================
 def test_13_wave11_situational_layer2_compiler_12_laws_and_51_q_features() -> None:
-    """
-    Verifies compile_x_situational_layer2_overlay (12/12 laws) and
-    evaluate_q1_to_q51_feature_registry (51/51 features) in x_situational_layer2_compiler.py.
+    """Verify compile_x_situational_layer2_overlay and 51 Q1-Q51 feature registry.
+
+    Checks 12/12 laws and 51/51 features in x_situational_layer2_compiler.py.
     """
     ctx = build_jax_at_bal_week9_forensic_context()
     overlay = compile_x_situational_layer2_overlay(ctx)
@@ -674,11 +749,11 @@ def test_13_wave11_situational_layer2_compiler_12_laws_and_51_q_features() -> No
 # TEST 14: Storefront Quarantine Verification
 # ============================================================================
 def test_14_storefront_quarantine_verification() -> None:
-    """
-    Verifies apps/web/lib/packages/catalog.ts, apps/web/app/packages/page.tsx, and
-    apps/web/components/redline/redline-world.tsx have tnf-all-in-pack set to
-    forSale: false, zero 'Mark Andrews OVER 2.5 Rec' teasers, and active Week 9
-    Sunday/MNF (DET @ GB, MIA @ BUF, IND @ MIN, TB @ KC) content.
+    """Verify storefront quarantine across catalog.ts, packages/page.tsx, and redline-world.tsx.
+
+    Checks tnf-all-in-pack has forSale: false, zero 'Mark Andrews OVER 2.5 Rec'
+    teasers, and no stale 2024 Week 9 matchups (DET @ GB, MIA @ BUF, IND @ MIN,
+    TB @ KC).
     """
     catalog_path = REPO_ROOT / "apps" / "web" / "lib" / "packages" / "catalog.ts"
     packages_page_path = REPO_ROOT / "apps" / "web" / "app" / "packages" / "page.tsx"
@@ -713,16 +788,22 @@ def test_14_storefront_quarantine_verification() -> None:
 
     # 4. Zero stale 2024 Week 9 matchups (DET @ GB, MIA @ BUF, IND @ MIN, TB @ KC) in storefront
     for stale_matchup in ("DET @ GB", "MIA @ BUF", "IND @ MIN", "TB @ KC"):
-        assert stale_matchup not in catalog_text, f"Stale 2024 matchup {stale_matchup} in catalog.ts"
-        assert stale_matchup not in packages_text, f"Stale 2024 matchup {stale_matchup} in packages/page.tsx"
-        assert stale_matchup not in redline_text, f"Stale 2024 matchup {stale_matchup} in redline-world.tsx"
+        assert stale_matchup not in catalog_text, (
+            f"Stale 2024 matchup {stale_matchup} in catalog.ts"
+        )
+        assert stale_matchup not in packages_text, (
+            f"Stale 2024 matchup {stale_matchup} in packages/page.tsx"
+        )
+        assert stale_matchup not in redline_text, (
+            f"Stale 2024 matchup {stale_matchup} in redline-world.tsx"
+        )
 
 
 # ============================================================================
 # BONUS TESTS 15 & 16: Healthcare FHIR Rough-Path & Model Armor Violation Shield
 # ============================================================================
 def test_15_wave10_model_armor_shield_blocks_sg4_and_sg7_violations() -> None:
-    """Verifies ml_pattern_model_armor_invariant_shield blocks props violating std < 1.15 or max_prob > 0.78."""
+    """Verify ml_pattern_model_armor_invariant_shield blocks std < 1.15 or max_prob > 0.78."""
     bad_props = [
         {"player": "Roquan Smith", "std": 0.42, "max_prob": 0.968},
     ]
@@ -732,7 +813,7 @@ def test_15_wave10_model_armor_shield_blocks_sg4_and_sg7_violations() -> None:
 
 
 def test_16_wave10_fhir_mimic_rough_path_and_otel_coupling_span() -> None:
-    """Verifies gcp_healthcare_data_engine_fhir_mimic_bridge and gcp_cloud_run_mcp_and_agent_starter_telemetry."""
+    """Verify healthcare FHIR rough-path bridge and Cloud Run MCP OTel telemetry."""
     fhir = gcp_healthcare_data_engine_fhir_mimic_bridge(vital_stream_hz=500.0, rough_path_depth=3)
     assert fhir["full_signature_dimension"] == 155
     assert fhir["log_signature_lyndon_dimension"] == 55
@@ -751,12 +832,14 @@ def test_16_wave10_fhir_mimic_rough_path_and_otel_coupling_span() -> None:
 # TEST 17: Full-Repo 279-Family, 83-Rule, 12,304-Equation & 25K Monorepo/Books Bridge
 # ============================================================================
 def test_17_full_repo_25k_books_papers_routes_and_83_rules_live_bridge() -> None:
-    """
-    Verifies full_repo_279_family_situational_reasoning_matrix.py (83 X-Situational rules,
-    3 measured primitives, 6-family Cholesky aggregator, 288-bit / 279-family / 12,304-equation
-    router, 1,221+ TS modules, 377+ Python modules) and uncompressed_25k_repo_books_papers_routes_bridge.py
-    (24,957+ repo files, 11,078+ docs, 1,791 arxiv papers, 25 packages, 35 intelligence domains,
-    12 canonical textbooks) execute live inside compile_stage1_to_stage2_simulation_priors().
+    """Verify 279-family situational matrix and 25K monorepo/books bridge execute live.
+
+    Checks full_repo_279_family_situational_reasoning_matrix.py (83 X-Situational
+    rules, 3 measured primitives, 6-family Cholesky aggregator, 288-bit / 279-family /
+    12,304-equation router, 1,221+ TS modules, 377+ Python modules) and
+    uncompressed_25k_repo_books_papers_routes_bridge.py (24,957+ repo files, 11,078+
+    docs, 1,791 arxiv papers, 25 packages, 35 intelligence domains, 12 canonical
+    textbooks) execute live inside compile_stage1_to_stage2_simulation_priors().
     """
     from intelligence.coaching.full_repo_279_family_situational_reasoning_matrix import (
         run_full_repo_situational_reasoning_engine,
@@ -795,16 +878,20 @@ def test_17_full_repo_25k_books_papers_routes_and_83_rules_live_bridge() -> None
     assert "full_repo_279_family_situational_matrix" in priors
     assert "google_drive_and_onedrive_omni_overlay" in priors
     assert "uncompressed_25k_repo_books_papers_routes_bridge" in priors
-    assert priors["uncompressed_25k_repo_books_papers_routes_bridge"]["monorepo_census_summary"]["total_repo_files_indexed"] >= 24900
+    census_25k = priors["uncompressed_25k_repo_books_papers_routes_bridge"][
+        "monorepo_census_summary"
+    ]
+    assert census_25k["total_repo_files_indexed"] >= 24900
 
 
 # ============================================================================
 # TEST 18: Wave 12 Entire Google Drive & OneDrive Omni-Situational Engine
 # ============================================================================
 def test_18_wave12_entire_google_drive_and_onedrive_omni_situational_engine() -> None:
-    """
-    Verifies google_drive_and_onedrive_omni_situational_engine.py and
-    mind_wave12_entire_google_drive_and_onedrive_2026_11_05.jsonl (169 trainer-ready records).
+    """Verify Google Drive & OneDrive omni-situational engine and Wave 12 feed.
+
+    Checks google_drive_and_onedrive_omni_situational_engine.py and
+    mind_wave12_entire_google_drive_and_onedrive_2026_11_05.jsonl (169 records).
     """
     from intelligence.coaching.google_drive_and_onedrive_omni_situational_engine import (
         run_google_drive_and_onedrive_omni_situational_overlay,
@@ -817,7 +904,11 @@ def test_18_wave12_entire_google_drive_and_onedrive_omni_situational_engine() ->
         / "mind_wave12_entire_google_drive_and_onedrive_2026_11_05.jsonl"
     )
     assert w12_jsonl.is_file()
-    rows = [json.loads(line) for line in w12_jsonl.read_text(encoding="utf-8").splitlines() if line.strip()]
+    rows = [
+        json.loads(line)
+        for line in w12_jsonl.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
     assert len(rows) >= 150
     assert all(r.get("trainer_ready") is True for r in rows)
 
@@ -832,17 +923,19 @@ def test_18_wave12_entire_google_drive_and_onedrive_omni_situational_engine() ->
 # TEST 19: Workstreams 1-6 Zero-Idle Load-Bearing Math & Full 15-Game Week 9 Slate
 # ============================================================================
 def test_19_workstreams_1_to_6_load_bearing_math_ts_spine_and_all_15_week9_games() -> None:
+    """Verify Workstreams 1-6 load-bearing math, corpus gate, and 15-game Week 9 slate.
+
+    - IDLE-1A..1D: combined_load_bearing_priors in compile_stage1_to_stage2_simulation_priors()
+      and all 15 official 2026 Week 9 NFL games + 4 featured showcase matchups registered in
+      WEEK9_MATCHUP_ENVIRONMENT_REGISTRY with zero 'etc.' omissions.
+    - PY-3A: validate_corpus_and_equation_gate enforces gate_status == 'VALIDATED'.
+    - PY-3B & Workstream 5: mind_and_corpus_consolidation_receipt_2026_11_06.json and
+      corpus_pdf_extraction_audit_2026_11_06.json (877/877 PDFs = 100.0% extracted).
+    - Workstream 4 & 6: turbo.json, apps/web/turbo.json, and
+      .github/workflows/gse-connected-5stage-gameday-orchestrator.yml.
     """
-    Verifies:
-      - IDLE-1A..1D: combined_load_bearing_priors in compile_stage1_to_stage2_simulation_priors()
-        and all 15 official 2026 Week 9 NFL games + 4 featured showcase matchups registered in
-        WEEK9_MATCHUP_ENVIRONMENT_REGISTRY with zero 'etc.' omissions.
-      - PY-3A: validate_corpus_and_equation_gate enforces gate_status == 'VALIDATED'.
-      - PY-3B & Workstream 5: mind_and_corpus_consolidation_receipt_2026_11_06.json and
-        corpus_pdf_extraction_audit_2026_11_06.json (877/877 PDFs = 100.0% extracted).
-      - Workstream 4 & 6: turbo.json, apps/web/turbo.json, and
-        .github/workflows/gse-connected-5stage-gameday-orchestrator.yml.
-    """
+    from intelligence.reasoning.engine import validate_corpus_and_equation_gate
+    from intelligence.reasoning.interfaces import DataContext
     from scripts.ops.gse_connected_game_workflow import (
         WEEK9_MATCHUP_ENVIRONMENT_REGISTRY,
         compile_stage1_to_stage2_simulation_priors,
@@ -851,19 +944,24 @@ def test_19_workstreams_1_to_6_load_bearing_math_ts_spine_and_all_15_week9_games
         FEATURED_WEEK9_SLATE,
         OFFICIAL_WEEK9_15_GAME_SLATE,
     )
-    from intelligence.reasoning.engine import validate_corpus_and_equation_gate
-    from intelligence.reasoning.interfaces import DataContext
 
     # 1. All 15 official 2026 Week 9 NFL games + 4 featured showcase games explicitly registered
     assert len(OFFICIAL_WEEK9_15_GAME_SLATE) == 15
     for away, home in OFFICIAL_WEEK9_15_GAME_SLATE + FEATURED_WEEK9_SLATE:
-        assert (away, home) in WEEK9_MATCHUP_ENVIRONMENT_REGISTRY, f"Missing {(away, home)} in WEEK9_MATCHUP_ENVIRONMENT_REGISTRY"
+        assert (away, home) in WEEK9_MATCHUP_ENVIRONMENT_REGISTRY, (
+            f"Missing {(away, home)} in WEEK9_MATCHUP_ENVIRONMENT_REGISTRY"
+        )
         env = WEEK9_MATCHUP_ENVIRONMENT_REGISTRY[(away, home)]
         assert "posted_home_spread" in env and "posted_total" in env and "stadium" in env
 
     # 2. Load-bearing math priors in compile_stage1_to_stage2_simulation_priors
     priors = compile_stage1_to_stage2_simulation_priors(
-        stage1a_receipt={"away": "DET", "home": "GB", "away_qb1_starter": "Jared Goff", "home_qb1_starter": "Jordan Love"},
+        stage1a_receipt={
+            "away": "DET",
+            "home": "GB",
+            "away_qb1_starter": "Jared Goff",
+            "home_qb1_starter": "Jordan Love",
+        },
         stage1b_receipt={"weather_wind_mph": 16.5},
     )
     lb = priors["combined_load_bearing_priors"]
@@ -872,7 +970,10 @@ def test_19_workstreams_1_to_6_load_bearing_math_ts_spine_and_all_15_week9_games
     assert "away_comp_rate_adj" in lb and "home_comp_rate_adj" in lb
     assert "cqr_interval_width_mult" in lb and lb["cqr_interval_width_mult"] >= 1.0
     assert "student_t_copula_df_nu" in lb and lb["student_t_copula_df_nu"] > 0.0
-    assert "afml_meta_label_kelly_multiplier" in lb and 0.10 <= lb["afml_meta_label_kelly_multiplier"] <= 1.0
+    assert (
+        "afml_meta_label_kelly_multiplier" in lb
+        and 0.10 <= lb["afml_meta_label_kelly_multiplier"] <= 1.0
+    )
 
     # 3. PY-3A: validate_corpus_and_equation_gate filters unvalidated equations
     ctx = DataContext(
@@ -887,7 +988,9 @@ def test_19_workstreams_1_to_6_load_bearing_math_ts_spine_and_all_15_week9_games
     assert ctx.corpus_hits, "Expected corpus_hits to be auto-populated"
 
     # 4. PY-3B & Workstream 5 receipts
-    mind_rcpt_path = REPO_ROOT / "data" / "engine" / "mind_and_corpus_consolidation_receipt_2026_11_06.json"
+    mind_rcpt_path = (
+        REPO_ROOT / "data" / "engine" / "mind_and_corpus_consolidation_receipt_2026_11_06.json"
+    )
     pdf_rcpt_path = REPO_ROOT / "data" / "engine" / "corpus_pdf_extraction_audit_2026_11_06.json"
     assert mind_rcpt_path.is_file()
     assert pdf_rcpt_path.is_file()
@@ -896,16 +999,21 @@ def test_19_workstreams_1_to_6_load_bearing_math_ts_spine_and_all_15_week9_games
     assert pdf_sum["verified_full_text"] == 877
     assert pdf_sum["coverage_pct"] == 100.0
 
-    # 5. Workstream 4 & 6 Turborepo + GitHub Actions workflow + 15-game Week 9 master dossier (0 duplicate teams)
+    # 5. Workstream 4 & 6 Turborepo + GitHub Actions workflow + 15-game Week 9 master dossier
     from intelligence.data_sources.firecrawl_alexandria_live_sync import (
         assert_zero_duplicate_teams_or_players_on_slate,
     )
 
     assert (REPO_ROOT / "turbo.json").is_file()
     assert (REPO_ROOT / "apps" / "web" / "turbo.json").is_file()
-    assert (REPO_ROOT / ".github" / "workflows" / "gse-connected-5stage-gameday-orchestrator.yml").is_file()
+    wf_yml = (
+        REPO_ROOT / ".github" / "workflows" / "gse-connected-5stage-gameday-orchestrator.yml"
+    )
+    assert wf_yml.is_file()
 
-    w9_slate_path = REPO_ROOT / "data" / "engine" / "week9_full_slate_connected_dossiers_2026_11_06.json"
+    w9_slate_path = (
+        REPO_ROOT / "data" / "engine" / "week9_full_slate_connected_dossiers_2026_11_06.json"
+    )
     assert w9_slate_path.is_file()
     w9_slate = json.loads(w9_slate_path.read_text(encoding="utf-8"))
     assert w9_slate["official_15_week9_games_count"] == 15
@@ -918,8 +1026,15 @@ def test_19_workstreams_1_to_6_load_bearing_math_ts_spine_and_all_15_week9_games
     )
     for away, home in OFFICIAL_WEEK9_15_GAME_SLATE:
         key = f"{away} @ {home}"
-        assert key in w9_slate["dossiers"], f"Missing {key} in week9_full_slate_connected_dossiers_2026_11_06.json"
-        indiv_path = REPO_ROOT / "data" / "engine" / f"connected_workflow_dossier_{away.lower()}_{home.lower()}_week9.json"
+        assert key in w9_slate["dossiers"], (
+            f"Missing {key} in week9_full_slate_connected_dossiers_2026_11_06.json"
+        )
+        indiv_path = (
+            REPO_ROOT
+            / "data"
+            / "engine"
+            / f"connected_workflow_dossier_{away.lower()}_{home.lower()}_week9.json"
+        )
         assert indiv_path.is_file(), f"Missing individual dossier: {indiv_path}"
 
 
@@ -927,25 +1042,31 @@ def test_19_workstreams_1_to_6_load_bearing_math_ts_spine_and_all_15_week9_games
 # TEST 20: Semantic Data-Truth, L1-L5 Specialist Reasoning & Cross-Game Uniqueness Audit
 # ============================================================================
 def test_20_semantic_data_truth_and_cross_game_uniqueness_audit() -> None:
-    """
-    Enforces that all 15 official Week 9 NFL games in `week9_full_slate_connected_dossiers_2026_11_06.json`
-    have:
+    """Enforce semantic data-truth and cross-game uniqueness across all 15 Week 9 games.
+
+    Checks `week9_full_slate_connected_dossiers_2026_11_06.json` has:
       1. 30 distinct teams (every active Week 9 team playing once; PIT & TEN on bye).
-      2. Exact `confirmed_qb1` alignment with `week9_live_roster_transactions_and_starters_2026.json`.
+      2. Exact `confirmed_qb1` alignment with
+         `week9_live_roster_transactions_and_starters_2026.json`.
       3. Real 32-team 2026 PBP + FTN coaching/trench metrics with cross-game uniqueness
          (zero copy-pasted JAX@BAL constants across non-JAX@BAL games).
       4. Real L1-L5 Specialist Reasoning Trace (`depth_reached == "L5"`, `hierarchy_ok is True`,
          validated corpus hits & validated equations) executed on every game.
       5. Dynamic 6-family Cholesky overlay with `weather.raw_z == 0.0` on all indoor stadiums
          and `weather.raw_z != 0.0` on all outdoor stadiums, plus cross-game vector uniqueness.
-      6. Zero excluded players (`Travis Etienne Jr.`, `Lamar Jackson`, `Tyler Huntley`, `Isaiah Likely`)
-         in `roster_truth_player_adjustments["player_adjustments"]` on any game.
-      7. Zero self-contradictory Stage 5 `NEGATIVE_EV` `<` strings or `circuit_breaker_status` mismatches.
+      6. Zero excluded players (`Travis Etienne Jr.`, `Lamar Jackson`, `Tyler Huntley`,
+         `Isaiah Likely`) in `roster_truth_player_adjustments["player_adjustments"]` on any game.
+      7. Zero self-contradictory Stage 5 `NEGATIVE_EV` `<` strings or `circuit_breaker_status`
+         mismatches.
     """
     from scripts.ops.run_week9_full_slate_connected_workflow import OFFICIAL_WEEK9_15_GAME_SLATE
 
-    w9_slate_path = REPO_ROOT / "data" / "engine" / "week9_full_slate_connected_dossiers_2026_11_06.json"
-    roster_truth_path = REPO_ROOT / "data" / "nflverse" / "week9_live_roster_transactions_and_starters_2026.json"
+    w9_slate_path = (
+        REPO_ROOT / "data" / "engine" / "week9_full_slate_connected_dossiers_2026_11_06.json"
+    )
+    roster_truth_path = (
+        REPO_ROOT / "data" / "nflverse" / "week9_live_roster_transactions_and_starters_2026.json"
+    )
     assert w9_slate_path.is_file()
     assert roster_truth_path.is_file()
 
@@ -991,12 +1112,16 @@ def test_20_semantic_data_truth_and_cross_game_uniqueness_audit() -> None:
         assert l5_tr.get("depth_reached") == "L5", f"Expected L5 reasoning depth on {key}"
         assert l5_tr.get("hierarchy_ok") is True, f"Hierarchy check failed on {key}"
         assert l5_tr.get("validated_corpus_hits_count", 0) >= 1, f"Missing corpus hits on {key}"
-        assert l5_tr.get("validated_equations_count", 0) >= 1, f"Missing validated equations on {key}"
+        assert l5_tr.get("validated_equations_count", 0) >= 1, (
+            f"Missing validated equations on {key}"
+        )
 
         # 5. Stage 2 Load-Bearing Priors uniqueness & zero excluded players
         lb = d["combined_load_bearing_priors"]
         epa_adj_pairs.add((float(lb["away_off_epa_adj"]), float(lb["home_off_epa_adj"])))
-        player_adj = (lb.get("roster_truth_player_adjustments") or {}).get("player_adjustments") or {}
+        player_adj = (
+            (lb.get("roster_truth_player_adjustments") or {}).get("player_adjustments") or {}
+        )
         for p_name in player_adj:
             assert not any(b in p_name.lower() for b in banned_adj_substrings), (
                 f"Excluded player {p_name} found in roster_truth_player_adjustments on {key}"
@@ -1007,59 +1132,88 @@ def test_20_semantic_data_truth_and_cross_game_uniqueness_audit() -> None:
         chol = d["situational_6family_cholesky_overlay"]
         weather_rz = float(chol["weather"]["raw_z"])
         if env.get("is_indoor"):
-            assert weather_rz == 0.0, f"Indoor game {key} ({env.get('stadium')}) must have weather.raw_z == 0.0, got {weather_rz}"
+            assert weather_rz == 0.0, (
+                f"Indoor game {key} ({env.get('stadium')}) must have weather.raw_z == 0.0, "
+                f"got {weather_rz}"
+            )
         else:
-            assert weather_rz != 0.0, f"Outdoor game {key} ({env.get('stadium')}) must have non-zero weather.raw_z"
+            assert weather_rz != 0.0, (
+                f"Outdoor game {key} ({env.get('stadium')}) must have non-zero weather.raw_z"
+            )
 
         vec = tuple(
             float(chol[fam]["raw_z"])
-            for fam in ("pressure", "weather", "restFatigue", "coveragePersonnel", "qbSkillScript", "marketMicrostructure")
+            for fam in (
+                "pressure",
+                "weather",
+                "restFatigue",
+                "coveragePersonnel",
+                "qbSkillScript",
+                "marketMicrostructure",
+            )
         )
         cholesky_vectors.add(vec)
 
         # 7. Stage 5 gate_reason & circuit_breaker_status consistency
         for gl in d["stage5_game_line_evaluations"]:
             reason = str(gl.get("gate_reason") or "")
-            if "NEGATIVE_EV" in reason or "<" in reason.split(";")[0]:
-                if "conf" not in reason.split("<")[0]:
-                    assert float(gl["post_sim_prob"]) < float(gl["market_prob_devig"]), (
-                        f"Inverted NEGATIVE_EV gate_reason on {key} {gl['selection']}: {reason}"
-                    )
+            if (
+                ("NEGATIVE_EV" in reason or "<" in reason.split(";")[0])
+                and "conf" not in reason.split("<")[0]
+            ):
+                assert float(gl["post_sim_prob"]) < float(gl["market_prob_devig"]), (
+                    f"Inverted NEGATIVE_EV gate_reason on {key} {gl['selection']}: {reason}"
+                )
 
         bs = d["stage5_board_summary"]
         if int(bs["approved_plays_count"]) > 0:
-            assert bs["circuit_breaker_status"] != "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES", (
-                f"Contradictory circuit_breaker_status on {key} with {bs['approved_plays_count']} approved plays"
+            assert (
+                bs["circuit_breaker_status"]
+                != "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES"
+            ), (
+                f"Contradictory circuit_breaker_status on {key} with "
+                f"{bs['approved_plays_count']} approved plays"
             )
 
-    assert len(ol_press_pairs) == 15, f"Expected 15 unique OL pressure pairs across 15 games, got {len(ol_press_pairs)}"
-    assert len(blitz_pairs) == 15, f"Expected 15 unique blitz pairs across 15 games, got {len(blitz_pairs)}"
-    assert len(epa_adj_pairs) == 15, f"Expected 15 unique EPA adj pairs across 15 games, got {len(epa_adj_pairs)}"
-    assert len(cholesky_vectors) == 15, f"Expected 15 unique 6-family Cholesky vectors across 15 games, got {len(cholesky_vectors)}"
+    assert len(ol_press_pairs) == 15, (
+        f"Expected 15 unique OL pressure pairs across 15 games, got {len(ol_press_pairs)}"
+    )
+    assert len(blitz_pairs) == 15, (
+        f"Expected 15 unique blitz pairs across 15 games, got {len(blitz_pairs)}"
+    )
+    assert len(epa_adj_pairs) == 15, (
+        f"Expected 15 unique EPA adj pairs across 15 games, got {len(epa_adj_pairs)}"
+    )
+    assert len(cholesky_vectors) == 15, (
+        f"Expected 15 unique 6-family Cholesky vectors across 15 games, "
+        f"got {len(cholesky_vectors)}"
+    )
 
 
 # ============================================================================
 # TEST 21: Wave 13 Beexly/Project-Tree Sheaf CRC, Navier-Stokes & Phase-Transition
 # ============================================================================
 def test_21_wave13_project_tree_sheaf_crc_navier_stokes_and_phase_transition() -> None:
-    """
-    Verifies Wave 13 integration:
-      1. Vendored `intelligence/sheaf_integrity/` (Beexly/Project-Tree Cellular Sheaf
-         Cohomology & Certified Repair Class `CRC` engine) executes natively with zero fallback.
-      2. `intelligence/coaching/universal_phase_transition_navier_stokes_sheaf_engine.py`
-         computes Project-Tree Sheaf CRC, Navier-Stokes Laboratory Phase Resultant R + BKM
-         integral + Constantin-Fefferman direction curvature + Hou-Li 36th-order filter,
-         Theorem 9 1-RSB Mezard-Parisi Spin-Glass Cavity Susceptibility, Theorem 12 Mahler-Dual
-         Conformal Score + Pade [3/3] & [4/4] rational approximants, and 19-Rule Honesty Doctrine
-         + Glicko-2 idle step + Shin closed-form de-vigging.
-      3. All 4 prototypes (`doctrine-symphony-supervisor.ts`, `mezard-parisi-mahler-kernel.py`,
-         `gsi_virtual_icp_mahler_kernel.hpp`, `gse_gsi_phase_gym.py`), all 5 archived research
-         docs in `docs/engine/research/2026-11-06/`, and the 114 staged mind records in
-         `mind_wave13_project_tree_sheaf_navier_stokes_phase_transition_2026_11_06.jsonl` exist and pass self-checks.
-      4. `compile_stage1_to_stage2_simulation_priors()` wires `wave13_universal_phase_transition_navier_stokes_sheaf`
-         live into the Stage 2 simulation priors.
+    """Verify Wave 13 sheaf CRC, Navier-Stokes, and phase-transition integration.
+
+    1. Vendored `intelligence/sheaf_integrity/` (Beexly/Project-Tree Cellular Sheaf
+       Cohomology & Certified Repair Class `CRC` engine) executes natively with zero fallback.
+    2. `intelligence/coaching/universal_phase_transition_navier_stokes_sheaf_engine.py`
+       computes Project-Tree Sheaf CRC, Navier-Stokes Laboratory Phase Resultant R + BKM
+       integral + Constantin-Fefferman direction curvature + Hou-Li 36th-order filter,
+       Theorem 9 1-RSB Mezard-Parisi Spin-Glass Cavity Susceptibility, Theorem 12 Mahler-Dual
+       Conformal Score + Pade [3/3] & [4/4] rational approximants, and 19-Rule Honesty Doctrine
+       + Glicko-2 idle step + Shin closed-form de-vigging.
+    3. All 4 prototypes (`doctrine-symphony-supervisor.ts`, `mezard-parisi-mahler-kernel.py`,
+       `gsi_virtual_icp_mahler_kernel.hpp`, `gse_gsi_phase_gym.py`), all 5 archived research
+       docs in `docs/engine/research/2026-11-06/`, and the 114 staged mind records in
+       `mind_wave13_project_tree_sheaf_navier_stokes_phase_transition_2026_11_06.jsonl` exist and
+       pass self-checks.
+    4. `compile_stage1_to_stage2_simulation_priors()` wires
+       `wave13_universal_phase_transition_navier_stokes_sheaf` live into Stage 2 priors.
     """
     import math
+
     from intelligence.coaching.universal_phase_transition_navier_stokes_sheaf_engine import (
         pade44_exp_neg,
         pade_exp_neg,
@@ -1082,11 +1236,18 @@ def test_21_wave13_project_tree_sheaf_crc_navier_stokes_and_phase_transition() -
     assert ctrl["two_opposed_halves"]["R"] == 0.250
     assert ctrl["random_phases"]["R"] == 0.007
 
-    # 3. Verify live execution of Wave 13 engine with vendored Beexly/Project-Tree sheaf_integrity
+    # 3. Verify live execution of Wave 13 engine with vendored sheaf_integrity
     w13 = run_universal_phase_transition_navier_stokes_sheaf_engine(
         away_tm="JAX",
         home_tm="BAL",
-        env={"spread": -7.5, "total": 48.5, "open_spread": -7.0, "open_total": 47.5, "away_qb_tier": 1, "home_qb_tier": 2},
+        env={
+            "spread": -7.5,
+            "total": 48.5,
+            "open_spread": -7.0,
+            "open_total": 47.5,
+            "away_qb_tier": 1,
+            "home_qb_tier": 2,
+        },
         family_raw_z={
             "pressure": 0.85,
             "weather": -0.20,
@@ -1095,11 +1256,28 @@ def test_21_wave13_project_tree_sheaf_crc_navier_stokes_and_phase_transition() -
             "qbSkillScript": -0.55,
             "marketMicrostructure": 0.40,
         },
-        away_pbp={"off_epa": 0.02, "def_epa": 0.04, "pa_rate": 0.25, "motion_rate": 0.54, "dc_blitz_rate": 0.29, "sack_rate_allowed": 0.068},
-        home_pbp={"off_epa": 0.11, "def_epa": -0.06, "pa_rate": 0.31, "motion_rate": 0.62, "dc_blitz_rate": 0.33, "sack_rate_allowed": 0.052},
+        away_pbp={
+            "off_epa": 0.02,
+            "def_epa": 0.04,
+            "pa_rate": 0.25,
+            "motion_rate": 0.54,
+            "dc_blitz_rate": 0.29,
+            "sack_rate_allowed": 0.068,
+        },
+        home_pbp={
+            "off_epa": 0.11,
+            "def_epa": -0.06,
+            "pa_rate": 0.31,
+            "motion_rate": 0.62,
+            "dc_blitz_rate": 0.33,
+            "sack_rate_allowed": 0.052,
+        },
     )
     assert w13["status"] == "WAVE13_PROJECT_TREE_SHEAF_NAVIER_STOKES_PHASE_TRANSITION_ACTIVE"
-    assert w13["project_tree_sheaf_crc"]["engine"] == "Beexly/Project-Tree/sheaf_integrity (vendored live)"
+    assert (
+        w13["project_tree_sheaf_crc"]["engine"]
+        == "Beexly/Project-Tree/sheaf_integrity (vendored live)"
+    )
     assert w13["project_tree_sheaf_crc"]["dim_H0"] == 2
     assert w13["navier_stokes_lab_diagnostics"]["reconciled_audit_clean_rising_draws_count"] == 32
     assert 0.0 <= w13["navier_stokes_lab_diagnostics"]["phase_resultant_R"] <= 1.0
@@ -1107,29 +1285,56 @@ def test_21_wave13_project_tree_sheaf_crc_navier_stokes_and_phase_transition() -
 
     # 4. Verify Stage 1 -> Stage 2 compilation includes Wave 13
     priors = compile_stage1_to_stage2_simulation_priors(
-        stage1a_receipt={"away": "CIN", "home": "ATL", "away_qb1_starter": "Joe Burrow", "home_qb1_starter": "Kirk Cousins"},
+        stage1a_receipt={
+            "away": "CIN",
+            "home": "ATL",
+            "away_qb1_starter": "Joe Burrow",
+            "home_qb1_starter": "Kirk Cousins",
+        },
         stage1b_receipt={"weather_wind_mph": 0.0},
     )
     assert "wave13_universal_phase_transition_navier_stokes_sheaf" in priors
     assert (
-        priors["wave13_universal_phase_transition_navier_stokes_sheaf"]["project_tree_sheaf_crc"]["engine"]
+        priors["wave13_universal_phase_transition_navier_stokes_sheaf"][
+            "project_tree_sheaf_crc"
+        ]["engine"]
         == "Beexly/Project-Tree/sheaf_integrity (vendored live)"
     )
 
     # 5. Verify prototypes, archived research docs, and staged mind records
-    assert (REPO_ROOT / "packages" / "epistemic-twin" / "src" / "doctrine-symphony-supervisor.ts").is_file()
-    assert (REPO_ROOT / "packages" / "mcp-equations-server" / "src" / "mezard-parisi-mahler-kernel.py").is_file()
-    assert (REPO_ROOT / "packages" / "genesis-kernel" / "include" / "gsi_virtual_icp_mahler_kernel.hpp").is_file()
+    assert (
+        REPO_ROOT / "packages" / "epistemic-twin" / "src" / "doctrine-symphony-supervisor.ts"
+    ).is_file()
+    assert (
+        REPO_ROOT / "packages" / "mcp-equations-server" / "src" / "mezard-parisi-mahler-kernel.py"
+    ).is_file()
+    assert (
+        REPO_ROOT / "packages" / "genesis-kernel" / "include" / "gsi_virtual_icp_mahler_kernel.hpp"
+    ).is_file()
     assert (REPO_ROOT / "packages" / "epistemic-twin" / "src" / "gse_gsi_phase_gym.py").is_file()
     research_2026_11_06 = REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06"
     assert (research_2026_11_06 / "GSE-GSI-OpenAI-Breakthroughs-Theorems-9-to-12.md").is_file()
-    assert (research_2026_11_06 / "Universal-Phase-Transition-Engine-GSE-Revenue-GSI-Grant-Blueprint-Theorems-4-to-8.md").is_file()
-    assert (research_2026_11_06 / "GSE-GSI-FULL-DRIVE-AND-MONOREPO-MANIFEST-2026-11-05.md").is_file()
+    assert (
+        research_2026_11_06
+        / "Universal-Phase-Transition-Engine-GSE-Revenue-GSI-Grant-Blueprint-Theorems-4-to-8.md"
+    ).is_file()
+    assert (
+        research_2026_11_06 / "GSE-GSI-FULL-DRIVE-AND-MONOREPO-MANIFEST-2026-11-05.md"
+    ).is_file()
     assert (research_2026_11_06 / "navier-stokes-session-full.md").is_file()
     assert (research_2026_11_06 / "GSE_Full_Session_2026-10-09_to_11-05.md").is_file()
-    w13_jsonl = REPO_ROOT / "data" / "mind_staging" / "mind_wave13_project_tree_sheaf_navier_stokes_phase_transition_2026_11_06.jsonl"
+    w13_jsonl = (
+        REPO_ROOT
+        / "data"
+        / "mind_staging"
+        / "mind_wave13_project_tree_sheaf_navier_stokes_phase_transition_2026_11_06.jsonl"
+    )
     assert w13_jsonl.is_file()
-    w13_rows = [json.loads(line) for line in w13_jsonl.read_text(encoding="utf-8").splitlines() if line.strip()]
+    w13_rows = [
+        json.loads(line)
+        for line in w13_jsonl.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
     assert len(w13_rows) >= 110
 
 
@@ -1137,13 +1342,16 @@ def test_21_wave13_project_tree_sheaf_crc_navier_stokes_and_phase_transition() -
 # TEST 22 (Workstream 1): Git Archeology Across 11,559 Commits & Restored Modules
 # ============================================================================
 def test_22_workstream1_git_archeology_11559_commits_and_reconciliation_wiring() -> None:
-    """
-    Workstream 1: Verifies `data/engine/git_commit_archeology_reconciliation_2026_11_06.json`
-    inspected all 11,559 commits across 2,032 refs and 1,471 mainline/feature commits,
-    restored 64 orphaned side-branch modules/signals, and wires them live into
+    """Workstream 1: Verify git archeology reconciliation receipt and Stage 2 wiring.
+
+    Checks `data/engine/git_commit_archeology_reconciliation_2026_11_06.json` scanned
+    11,559 commits across 2,032 refs and 1,471 mainline/feature commits, restored 64
+    orphaned modules/signals, and wires them live into
     `compile_stage1_to_stage2_simulation_priors`.
     """
-    recon_path = REPO_ROOT / "data" / "engine" / "git_commit_archeology_reconciliation_2026_11_06.json"
+    recon_path = (
+        REPO_ROOT / "data" / "engine" / "git_commit_archeology_reconciliation_2026_11_06.json"
+    )
     assert recon_path.is_file()
     recon = json.loads(recon_path.read_text(encoding="utf-8"))
     assert recon["total_repo_commits_scanned"] >= 11559
@@ -1153,7 +1361,12 @@ def test_22_workstream1_git_archeology_11559_commits_and_reconciliation_wiring()
     assert all(rec["wired_live"] is True for rec in recon["reconciled_commits_and_modules"])
 
     priors = compile_stage1_to_stage2_simulation_priors(
-        stage1a_receipt={"away": "DAL", "home": "IND", "away_qb1_starter": "Dak Prescott", "home_qb1_starter": "Daniel Jones"},
+        stage1a_receipt={
+            "away": "DAL",
+            "home": "IND",
+            "away_qb1_starter": "Dak Prescott",
+            "home_qb1_starter": "Daniel Jones",
+        },
         stage1b_receipt={"weather_wind_mph": 0.0},
     )
     ws1 = priors["restored_ws1_python_receipt"]
@@ -1168,16 +1381,19 @@ def test_22_workstream1_git_archeology_11559_commits_and_reconciliation_wiring()
 # TEST 23 (Workstream 2): Page-by-Page Zero-Skip PDF/Book Audit & 10 Textbook Algorithms
 # ============================================================================
 def test_23_workstream2_zero_skipped_pdf_book_pages_and_10_textbook_algorithms_mutation() -> None:
-    """
-    Workstream 2: Verifies 0 skipped pages across all 877 PDFs (17,040 pages, 39.25M+ chars),
-    1,791 arXiv files, Downloads, OneDrive (1,014 files), and Google Drive (3,558+ files),
-    and verifies all 10 Textbook Algorithms actively mutate Stage 2 simulation priors.
+    """Workstream 2: Verify 0 skipped pages across all 877 PDFs and 10 textbook algorithms.
+
+    Covers 17,040 pages (39.25M+ chars), 1,791 arXiv files, Downloads, OneDrive
+    (1,014 files), Google Drive (3,558+ files), and verifies all 10 Textbook
+    Algorithms actively mutate Stage 2 simulation priors.
     """
     from intelligence.coaching.uncompressed_25k_repo_books_papers_routes_bridge import (
         run_all_10_textbook_algorithms,
     )
 
-    audit_path = REPO_ROOT / "data" / "corpus_parsed_full" / "page_by_page_zero_skip_audit_2026_11_06.json"
+    audit_path = (
+        REPO_ROOT / "data" / "corpus_parsed_full" / "page_by_page_zero_skip_audit_2026_11_06.json"
+    )
     assert audit_path.is_file()
     audit = json.loads(audit_path.read_text(encoding="utf-8"))
     assert audit["zero_pages_skipped_verified"] is True
@@ -1200,12 +1416,19 @@ def test_23_workstream2_zero_skipped_pdf_book_pages_and_10_textbook_algorithms_m
     assert dl["zip_archives_count"] == 8
     flagship = dl["key_flagship_documents"]
     assert flagship["EYI Package_11-06-2026_1793956103.zip"]["zip_entries_count"] == 1514
-    assert flagship["Machine Learning A Probabilistic Perspective by Kevin P. Murphy (z-lib.org).zip"]["inner_pdf_pages_verified"] == 1098
+    murphy_zip = (
+        "Machine Learning A Probabilistic Perspective by Kevin P. Murphy (z-lib.org).zip"
+    )
+    assert flagship[murphy_zip]["inner_pdf_pages_verified"] == 1098
     assert flagship["175a7503-2ced-4d50-8494-b61b9c313b9d.zip"]["grok_conversations_indexed"] == 225
     assert flagship["Updates 10_28.docx"]["paragraphs_count"] >= 45
 
-    tb_a = run_all_10_textbook_algorithms({"off_epa": 0.14, "def_epa": -0.08, "posted_home_spread": -6.5})
-    tb_b = run_all_10_textbook_algorithms({"off_epa": -0.12, "def_epa": 0.09, "posted_home_spread": 4.5})
+    tb_a = run_all_10_textbook_algorithms(
+        {"off_epa": 0.14, "def_epa": -0.08, "posted_home_spread": -6.5}
+    )
+    tb_b = run_all_10_textbook_algorithms(
+        {"off_epa": -0.12, "def_epa": 0.09, "posted_home_spread": 4.5}
+    )
     assert tb_a["algorithms_executed_count"] >= 10
     assert "murphy_probabilistic_ml" in tb_a
     assert tb_a["composite_epa_delta"] != 0.0
@@ -1216,10 +1439,11 @@ def test_23_workstream2_zero_skipped_pdf_book_pages_and_10_textbook_algorithms_m
 # TEST 24 (Workstream 3): 12,304 Equations Catalog & Dynamic Non-Constant Cognitive Router
 # ============================================================================
 def test_24_workstream3_12304_equations_catalog_and_dynamic_router_non_constant() -> None:
-    """
-    Workstream 3: Verifies `data/equations/equation_executable_catalog_12304.json` has
-    12,304 equations across 279 families with 0 dead/stubbed evaluation paths, and proves
-    the 288-bit / 12,304-equation router computes distinct game-dependent log-odds deltas.
+    """Workstream 3: Verify 12,304-equation catalog and non-constant cognitive router.
+
+    Checks `data/equations/equation_executable_catalog_12304.json` has 12,304
+    equations across 279 families with 0 dead/stubbed evaluation paths, and proves
+    the 288-bit / 12,304-equation router computes distinct game-dependent deltas.
     """
     from intelligence.reasoning.equation_gate import (
         audit_12304_equation_catalog_integrity,
@@ -1234,10 +1458,22 @@ def test_24_workstream3_12304_equations_catalog_and_dynamic_router_non_constant(
     assert audit["invalid_parameter_bindings_count"] == 0
 
     r_cin_atl = evaluate_12304_equations_cognitive_router(
-        {"away_team": "CIN", "home_team": "ATL", "wind_mph": 0.0, "is_indoor": True, "posted_home_spread": 3.0}
+        {
+            "away_team": "CIN",
+            "home_team": "ATL",
+            "wind_mph": 0.0,
+            "is_indoor": True,
+            "posted_home_spread": 3.0,
+        }
     )
     r_tb_chi = evaluate_12304_equations_cognitive_router(
-        {"away_team": "TB", "home_team": "CHI", "wind_mph": 14.5, "is_indoor": False, "posted_home_spread": -6.0}
+        {
+            "away_team": "TB",
+            "home_team": "CHI",
+            "wind_mph": 14.5,
+            "is_indoor": False,
+            "posted_home_spread": -6.0,
+        }
     )
     assert r_cin_atl["total_equations_routed"] == 12304
     assert r_cin_atl["clamped_log_odds_delta"] != -0.1842
@@ -1249,11 +1485,12 @@ def test_24_workstream3_12304_equations_catalog_and_dynamic_router_non_constant(
 # TEST 25 (Workstream 4): 360-Degree X/IG Charting for All 32 Teams & Zero JAX@BAL Leakage
 # ============================================================================
 def test_25_workstream4_360_x_and_ig_charting_32teams_and_zero_jax_bal_leakage() -> None:
-    """
-    Workstream 4: Verifies all 32 NFL teams have real 2026 PBP (21,191 plays) + FTN (18,019 plays)
-    360-degree X & Instagram charting metrics, non-JAX@BAL games have zero JAX@BAL player/coach
-    constants leaking into `x_situational_layer2_overlay`, and `gse_connected_game_workflow.py`
-    contains zero `.normal(` calls and zero literal `"etc."` strings.
+    """Workstream 4: Verify 32-team 2026 PBP + FTN charting and zero JAX@BAL leakage.
+
+    Checks all 32 NFL teams have real 2026 PBP (21,191 plays) + FTN (18,019 plays)
+    360-degree X & Instagram charting metrics, non-JAX@BAL games have zero JAX@BAL
+    player/coach constants leaking into `x_situational_layer2_overlay`, and
+    `gse_connected_game_workflow.py` contains zero `.normal(` calls or `"etc."`.
     """
     from intelligence.situational.x_and_ig_360_charting_32teams import (
         ALL_32_NFL_TEAMS,
@@ -1274,24 +1511,48 @@ def test_25_workstream4_360_x_and_ig_charting_32teams_and_zero_jax_bal_leakage()
         assert td["koalaty_stats"]["xfp_per_game"] > 0.0
         assert td["wide_left_coverage"]["cover_1_rate"] > 0.0
 
-    # Verify non-JAX@BAL game (CIN @ ATL) has zero JAX@BAL player/coach leakage in x_situational_layer2_overlay
+    # Verify non-JAX@BAL game (CIN @ ATL) has zero JAX@BAL leakage
     priors_cin_atl = compile_stage1_to_stage2_simulation_priors(
-        stage1a_receipt={"away": "CIN", "home": "ATL", "away_qb1_starter": "Joe Burrow", "home_qb1_starter": "Kirk Cousins"},
+        stage1a_receipt={
+            "away": "CIN",
+            "home": "ATL",
+            "away_qb1_starter": "Joe Burrow",
+            "home_qb1_starter": "Kirk Cousins",
+        },
         stage1b_receipt={"weather_wind_mph": 0.0},
         game_context={"away": "CIN", "home": "ATL"},
     )
     priors_gb_ne = compile_stage1_to_stage2_simulation_priors(
-        stage1a_receipt={"away": "GB", "home": "NE", "away_qb1_starter": "Jordan Love", "home_qb1_starter": "Drake Maye"},
+        stage1a_receipt={
+            "away": "GB",
+            "home": "NE",
+            "away_qb1_starter": "Jordan Love",
+            "home_qb1_starter": "Drake Maye",
+        },
         stage1b_receipt={"weather_wind_mph": 11.5},
         game_context={"away": "GB", "home": "NE"},
     )
     overlay_str = json.dumps(priors_cin_atl["x_situational_layer2_overlay"]["law_evaluations"])
-    for jax_bal_only_name in ("Parker Washington", "Cam Little", "Anthony Campanile", "Bhayshul Tuten"):
-        assert jax_bal_only_name not in overlay_str, f"JAX@BAL constant {jax_bal_only_name} leaked into CIN@ATL overlay"
-    assert priors_cin_atl["q1_to_q51_feature_registry"]["features"] != priors_gb_ne["q1_to_q51_feature_registry"]["features"]
+    for jax_bal_only_name in (
+        "Parker Washington",
+        "Cam Little",
+        "Anthony Campanile",
+        "Bhayshul Tuten",
+    ):
+        assert jax_bal_only_name not in overlay_str, (
+            f"JAX@BAL constant {jax_bal_only_name} leaked into CIN@ATL overlay"
+        )
+    assert (
+        priors_cin_atl["q1_to_q51_feature_registry"]["features"]
+        != priors_gb_ne["q1_to_q51_feature_registry"]["features"]
+    )
 
-    wf_src = (REPO_ROOT / "scripts" / "ops" / "gse_connected_game_workflow.py").read_text(encoding="utf-8")
-    assert ".normal(" not in wf_src, "Forbidden Gaussian shortcut (.normal) found in gse_connected_game_workflow.py"
+    wf_src = (
+        REPO_ROOT / "scripts" / "ops" / "gse_connected_game_workflow.py"
+    ).read_text(encoding="utf-8")
+    assert ".normal(" not in wf_src, (
+        "Forbidden Gaussian shortcut (.normal) found in gse_connected_game_workflow.py"
+    )
     assert "etc." not in wf_src, "Forbidden literal 'etc.' found in gse_connected_game_workflow.py"
 
 
@@ -1299,11 +1560,12 @@ def test_25_workstream4_360_x_and_ig_charting_32teams_and_zero_jax_bal_leakage()
 # TEST 26 (Workstream 5): Official New Engine Ledger Lock & Single-Writer Mind Rule
 # ============================================================================
 def test_26_workstream5_revenue_storefront_62_23_1_record_lock_and_guardrails() -> None:
-    """
-    Workstream 5: Verifies `data/engine/new_engine_official_ledger_2026.json` and
+    """Workstream 5: Verify official ledger lock, storefront record, and mind feed.
+
+    Checks `data/engine/new_engine_official_ledger_2026.json` and
     `apps/web/lib/packages/catalog.ts` lock the Official New Engine Verified Record
-    (Base `36-13-1` / All-4-Buckets `47-19-1` · `+24.92u`, with voided Nov 5 batch (`VOIDED_NOV_5_BATCH_SUPERSEDED`) excluded
-    from standing claims), and verifies the consolidated mind feed in `brain/feeds/`.
+    (Base `36-13-1` / All-4-Buckets `47-19-1` +24.92u, excluding
+    `VOIDED_NOV_5_BATCH_SUPERSEDED`), and verifies the consolidated mind feed.
     """
     ledger_path = REPO_ROOT / "data" / "engine" / "new_engine_official_ledger_2026.json"
     assert ledger_path.is_file()
@@ -1315,11 +1577,15 @@ def test_26_workstream5_revenue_storefront_62_23_1_record_lock_and_guardrails() 
     assert vr["net_units"] == "+20.14u"
     assert any(v.get("record") == "47-19-1" for v in ledger.get("secondary_views", []))
 
-    catalog_ts = (REPO_ROOT / "apps" / "web" / "lib" / "packages" / "catalog.ts").read_text(encoding="utf-8")
+    catalog_ts = (REPO_ROOT / "apps" / "web" / "lib" / "packages" / "catalog.ts").read_text(
+        encoding="utf-8"
+    )
     assert "47-19-1" in catalog_ts
     assert "+24.92u" in catalog_ts
 
-    mind_receipt_path = REPO_ROOT / "data" / "engine" / "mind_and_corpus_consolidation_receipt_2026_11_06.json"
+    mind_receipt_path = (
+        REPO_ROOT / "data" / "engine" / "mind_and_corpus_consolidation_receipt_2026_11_06.json"
+    )
     assert mind_receipt_path.is_file()
     mind_receipt = json.loads(mind_receipt_path.read_text(encoding="utf-8"))
     assert mind_receipt["single_writer_doctrine_respected"] is True
@@ -1331,17 +1597,20 @@ def test_26_workstream5_revenue_storefront_62_23_1_record_lock_and_guardrails() 
 # TEST 27 (Task 1): Exhaustive 308 Branch Modules & 415+ Intelligence Modules Audit
 # ============================================================================
 def test_27_exhaustive_308_branch_modules_and_415_intelligence_modules_audit() -> None:
-    """
-    Pins Review Focus #2 and #4: Verifies all 308+ branch-only code files across
-    all git refs are restored to disk, all 199 functions in engine_plan_recovered_equations.py
-    are executed live, and 0 Python files in intelligence/ are unindexed orphans.
+    """Pins Review Focus #2 and #4: Verify 308+ branch modules and 450+ intelligence files.
+
+    Checks all git refs are restored to disk, all 199 functions in
+    engine_plan_recovered_equations.py are executed live, and 0 Python files in
+    intelligence/ are unindexed orphans.
     """
     from intelligence.reasoning.full_branch_and_repo_module_registry import (
         audit_all_intelligence_and_recovered_modules,
         evaluate_recovered_branch_and_repo_python_modules,
     )
 
-    recon_path = REPO_ROOT / "data" / "engine" / "git_commit_archeology_reconciliation_2026_11_06.json"
+    recon_path = (
+        REPO_ROOT / "data" / "engine" / "git_commit_archeology_reconciliation_2026_11_06.json"
+    )
     recon = json.loads(recon_path.read_text(encoding="utf-8"))
     assert recon["total_repo_commits_scanned"] >= 11559
     assert recon["reconciled_commits_and_modules_count"] >= 340
@@ -1365,10 +1634,24 @@ def test_27_exhaustive_308_branch_modules_and_415_intelligence_modules_audit() -
     assert audit["named_equations_executed"] >= 199
 
     ev_a = evaluate_recovered_branch_and_repo_python_modules(
-        {"away": "CIN", "home": "ATL", "off_epa": 0.12, "def_epa": -0.05, "spread_home": 3.0, "total_line": 48.5}
+        {
+            "away": "CIN",
+            "home": "ATL",
+            "off_epa": 0.12,
+            "def_epa": -0.05,
+            "spread_home": 3.0,
+            "total_line": 48.5,
+        }
     )
     ev_b = evaluate_recovered_branch_and_repo_python_modules(
-        {"away": "TB", "home": "CHI", "off_epa": -0.09, "def_epa": 0.07, "spread_home": -6.0, "total_line": 41.0}
+        {
+            "away": "TB",
+            "home": "CHI",
+            "off_epa": -0.09,
+            "def_epa": 0.07,
+            "spread_home": -6.0,
+            "total_line": 41.0,
+        }
     )
     assert ev_a["engine_plan_199_functions_evaluated"] >= 199
     assert ev_a["composite_branch_signal_delta"] != 0.0
@@ -1379,13 +1662,15 @@ def test_27_exhaustive_308_branch_modules_and_415_intelligence_modules_audit() -
 # TEST 28 (Task 2): Uncapped Page-by-Page Extraction Across All 2,712+ PDFs & 148+ DOCXs
 # ============================================================================
 def test_28_uncapped_2712_pdfs_148_docxs_across_all_6_roots_spot_check() -> None:
+    """Pins Review Focus #1 and #4: Verify uncapped page-by-page extraction across 6+ roots.
+
+    Covers SRP_Cache, Downloads, GDrive_Vault, GDrive_GSN, GDrive_MegaSweep, Repo,
+    and OneDrive (total >= 2,710 PDFs, >= 60,000 pages), and that theorem extraction
+    has zero artificial `< 400` or `< 700` caps.
     """
-    Pins Review Focus #1 and #4: Verifies that all 6+ roots (SRP_Cache, Downloads,
-    GDrive_Vault, GDrive_GSN, GDrive_MegaSweep, Repo, OneDrive) have every non-PII PDF
-    and DOCX opened and verified page-by-page (total >= 2,710 PDFs, >= 60,000 pages),
-    and that theorem extraction has zero artificial `< 400` or `< 700` caps.
-    """
-    audit_path = REPO_ROOT / "data" / "corpus_parsed_full" / "page_by_page_zero_skip_audit_2026_11_06.json"
+    audit_path = (
+        REPO_ROOT / "data" / "corpus_parsed_full" / "page_by_page_zero_skip_audit_2026_11_06.json"
+    )
     audit = json.loads(audit_path.read_text(encoding="utf-8"))
 
     roots = audit.get("six_roots_page_by_page_verification") or {}
@@ -1415,13 +1700,12 @@ def test_28_uncapped_2712_pdfs_148_docxs_across_all_6_roots_spot_check() -> None
 # TEST 29 (Task 3): Adversarial Spot-Check of 12,304 Real Corpus & Mega-Sweep Equations
 # ============================================================================
 def test_29_adversarial_spot_check_12304_real_equations_zero_synthetic_tanh() -> None:
-    """
-    Pins Review Focus #3 and Mega-Sweep Deliverable 1: Verifies that none of the 12,304
-    equations in `data/equations/equation_executable_catalog_12304.json` are synthetic
-    `tanh` templates, every equation has a real `real_source_file`, `real_source_locator`,
-    `latex_or_code_formula`, `assumptions`, `failure_modes`, `reasoning_track` (1..5),
-    and `weekly_cycle_step` (1..7), and 200 deterministic adversarial spot-checks across
-    the catalog verify non-trivial mathematical evaluation.
+    """Pins Review Focus #3: Verify 12,304 real equations with zero synthetic tanh templates.
+
+    Checks `data/equations/equation_executable_catalog_12304.json` equations carry
+    `real_source_file`, `real_source_locator`, `latex_or_code_formula`,
+    `assumptions`, `failure_modes`, `reasoning_track` (1..5), and
+    `weekly_cycle_step` (1..7), plus 200 deterministic adversarial spot-checks.
     """
     from intelligence.reasoning.equation_gate import (
         evaluate_all_12304_catalog_equations,
@@ -1465,16 +1749,24 @@ def test_29_adversarial_spot_check_12304_real_equations_zero_synthetic_tanh() ->
     for eq in eqs:
         assert eq.get("real_source_file"), f"Missing real_source_file on {eq.get('eq_id')}"
         assert eq.get("real_source_locator"), f"Missing real_source_locator on {eq.get('eq_id')}"
-        assert eq.get("latex_or_code_formula"), f"Missing latex_or_code_formula on {eq.get('eq_id')}"
+        assert eq.get("latex_or_code_formula"), (
+            f"Missing latex_or_code_formula on {eq.get('eq_id')}"
+        )
         assert eq.get("assumptions"), f"Missing assumptions on {eq.get('eq_id')}"
         assert eq.get("failure_modes"), f"Missing failure_modes on {eq.get('eq_id')}"
-        assert eq.get("reasoning_track") in valid_tracks, f"Invalid reasoning_track on {eq.get('eq_id')}"
-        assert eq.get("weekly_cycle_step") in valid_steps, f"Invalid weekly_cycle_step on {eq.get('eq_id')}"
+        assert eq.get("reasoning_track") in valid_tracks, (
+            f"Invalid reasoning_track on {eq.get('eq_id')}"
+        )
+        assert eq.get("weekly_cycle_step") in valid_steps, (
+            f"Invalid weekly_cycle_step on {eq.get('eq_id')}"
+        )
         assert eq.get("operator_type") in valid_ops, f"Invalid operator_type on {eq.get('eq_id')}"
         assert "tanh_template" not in str(eq.get("operator_type"))
         distinct_formulas.add(f"{eq['operator_type']}::{eq['latex_or_code_formula']}")
 
-    assert len(distinct_formulas) >= 8000, f"Expected >= 8000 distinct formulas, got {len(distinct_formulas)}"
+    assert len(distinct_formulas) >= 8000, (
+        f"Expected >= 8000 distinct formulas, got {len(distinct_formulas)}"
+    )
 
     # Spot-check 200 deterministically spaced equations across indices 0..12303
     state_1 = {
@@ -1530,7 +1822,9 @@ def test_29_adversarial_spot_check_12304_real_equations_zero_synthetic_tanh() ->
                 f"Equation {eq['eq_id']} below min sample size must be gated to 0.0, got {v1}/{v2}"
             )
         else:
-            assert v1 != v2, f"Equation {eq['eq_id']} at idx {idx} returned identical value on distinct game states"
+            assert v1 != v2, (
+                f"Equation {eq['eq_id']} at idx {idx} returned identical value on distinct states"
+            )
 
     res_1 = evaluate_all_12304_catalog_equations(state_1)
     res_2 = evaluate_all_12304_catalog_equations(state_2)
@@ -1543,39 +1837,46 @@ def test_29_adversarial_spot_check_12304_real_equations_zero_synthetic_tanh() ->
 # TEST 30: Mega-Sweep 2026-11-06 100% Manifest Coverage & 5-Track / 7-Step Engine
 # ============================================================================
 def test_30_mega_sweep_2026_11_06_100pct_manifest_coverage_and_5track_7step_engine() -> None:
-    """
-    Verifies:
-      1. 100% accounting of the Mega-Sweep 2026-11-06 corpus in `mega_sweep_2026_11_06_coverage_ledger.json`
-         and `docs/engine/research/2026-11-06/mega-sweep-2026-11-06-coverage-ledger.md`:
-         - 516 total manifest items (184 net unique books / 197 files across BOOKS-A..MUST,
-           200 repos across REPOS-A..B, 132 full social dossiers across IG-1..3 + X-1).
-         - 925 SEEN-LEDGER.md rows (538 IG + 28 X + book/repo rows).
-         - 2,998 items in 2026-11-04-MASTER-PULL (4).md (2,221 X + 777 IG).
-         - 0 unaccounted items (`unaccounted_items_count == 0`).
-      2. Mandatory 5-Track L1-L5 reasoning trace (`1_qb_behavior`, `2_coaching_and_scheme`,
-         `3_offensive_line`, `4_trust_signals`, `5_scheme_matchup`), L4 adversary pass,
-         and L5 synthesis in exact order `OL -> scheme -> QB`
-         (`["3_offensive_line", "5_scheme_matchup", "2_coaching_and_scheme", "1_qb_behavior", "4_trust_signals"]`),
-         with zero unchecked items at L3 or deeper (`trace_valid is True`).
-      3. Mandatory 7-Step Weekly Cycle (`1_usage`, `2_health` GSI medical/biomechanics,
-         `3_matchups_available_players`, `4_situations`, `5_venues_weather_referees`,
-         `6_everything_else`, `7_books_last_price_check` with `market_is_headline_reason is False`
-         and `market_weight_in_reasoning <= 0.08`).
-      4. Live wiring into `compile_stage1_to_stage2_simulation_priors` with non-constant
-         cross-game uniqueness across Week 9 matchups.
+    """Verify Mega-Sweep 2026-11-06 100% manifest coverage and 5-Track/7-Step engine.
+
+    1. 100% accounting of the Mega-Sweep 2026-11-06 corpus in
+       `mega_sweep_2026_11_06_coverage_ledger.json` and
+       `docs/engine/research/2026-11-06/mega-sweep-2026-11-06-coverage-ledger.md`:
+       - 516 total manifest items (184 net unique books / 197 files across BOOKS-A..MUST,
+         200 repos across REPOS-A..B, 132 full social dossiers across IG-1..3 + X-1).
+       - 925 SEEN-LEDGER.md rows (538 IG + 28 X + book/repo rows).
+       - 2,998 items in 2026-11-04-MASTER-PULL (4).md (2,221 X + 777 IG).
+       - 0 unaccounted items (`unaccounted_items_count == 0`).
+    2. Mandatory 5-Track L1-L5 reasoning trace (`1_qb_behavior`, `2_coaching_and_scheme`,
+       `3_offensive_line`, `4_trust_signals`, `5_scheme_matchup`), L4 adversary pass,
+       and L5 synthesis in exact order `OL -> scheme -> QB`
+       (`["3_offensive_line", "5_scheme_matchup", "2_coaching_and_scheme", "1_qb_behavior",
+       "4_trust_signals"]`), with zero unchecked items at L3 or deeper (`trace_valid is True`).
+    3. Mandatory 7-Step Weekly Cycle (`1_usage`, `2_health` GSI medical/biomechanics,
+       `3_matchups_available_players`, `4_situations`, `5_venues_weather_referees`,
+       `6_everything_else`, `7_books_last_price_check` with `market_is_headline_reason is False`
+       and `market_weight_in_reasoning <= 0.08`).
+    4. Live wiring into `compile_stage1_to_stage2_simulation_priors` with non-constant
+       cross-game uniqueness across Week 9 matchups.
     """
     from intelligence.reasoning.mega_sweep_2026_11_06_wiring_engine import (
         L5_SYNTHESIS_ORDER_OL_TO_SCHEME_TO_QB,
         MANDATORY_FIVE_TRACKS,
         WEEKLY_CYCLE_FIXED_ORDER,
-        evaluate_5track_l1_to_l5_and_7step_weekly_cycle,
     )
     from scripts.ops.gse_connected_game_workflow import (
         compile_stage1_to_stage2_simulation_priors,
     )
 
     cov_json_path = REPO_ROOT / "data" / "engine" / "mega_sweep_2026_11_06_coverage_ledger.json"
-    cov_md_path = REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06" / "mega-sweep-2026-11-06-coverage-ledger.md"
+    cov_md_path = (
+        REPO_ROOT
+        / "docs"
+        / "engine"
+        / "research"
+        / "2026-11-06"
+        / "mega-sweep-2026-11-06-coverage-ledger.md"
+    )
     assert cov_json_path.is_file()
     assert cov_md_path.is_file()
 
@@ -1594,8 +1895,12 @@ def test_30_mega_sweep_2026_11_06_100pct_manifest_coverage_and_5track_7step_engi
     assert summary["unaccounted_items_count"] == 0
 
     # Verify 5-Track L1-L5 & 7-Step Weekly Cycle evaluation across distinct matchups
-    s1 = compile_stage1_to_stage2_simulation_priors(game_context={"away": "MIN", "home": "DET", "week": 9})
-    s2 = compile_stage1_to_stage2_simulation_priors(game_context={"away": "WAS", "home": "NYG", "week": 9})
+    s1 = compile_stage1_to_stage2_simulation_priors(
+        game_context={"away": "MIN", "home": "DET", "week": 9}
+    )
+    s2 = compile_stage1_to_stage2_simulation_priors(
+        game_context={"away": "WAS", "home": "NYG", "week": 9}
+    )
 
     ms1 = s1["mega_sweep_2026_11_06_5track_7step_trace"]
     ms2 = s2["mega_sweep_2026_11_06_5track_7step_trace"]
@@ -1610,7 +1915,10 @@ def test_30_mega_sweep_2026_11_06_100pct_manifest_coverage_and_5track_7step_engi
     assert ms1["weekly_cycle_fixed_order"] == list(WEEKLY_CYCLE_FIXED_ORDER)
 
     step2 = ms1["weekly_cycle_steps"]["2_health"]
-    assert step2["away_gsi_health"]["care_consortium_biomarker_kinetics"]["rule_in_only_doctrine"] is True
+    assert (
+        step2["away_gsi_health"]["care_consortium_biomarker_kinetics"]["rule_in_only_doctrine"]
+        is True
+    )
     assert "whim_kth_mps95_corpus_callosum" in step2["away_gsi_health"]
     assert "delaware_oslo_acl_9mo_monthly_reduction" in step2["away_gsi_health"]
     assert "jama_cte_top10pct_hit_exposure_index" in step2["away_gsi_health"]
@@ -1631,19 +1939,20 @@ def test_30_mega_sweep_2026_11_06_100pct_manifest_coverage_and_5track_7step_engi
 # TEST 31: Firecrawl Alexandria Live Sync & Unbreakable Zero-Duplicate Schedule Gate
 # ============================================================================
 def test_31_firecrawl_alexandria_live_sync_and_zero_duplicate_teams_gate() -> None:
-    """
-    Verifies:
-      1. `assert_zero_duplicate_teams_or_players_on_slate` passes on the official 15-game
-         2026 NFL Week 9 schedule (`30` unique active teams, `0` duplicates, Byes `PIT`, `TEN`).
-      2. Negative controls: `assert_zero_duplicate_teams_or_players_on_slate` immediately raises
-         `RuntimeError` when `MIA` or `BUF` is listed twice (e.g., `DET @ MIA` + `MIA @ BUF`, or
-         `BUF @ MIN` + `MIA @ BUF`), when a Bye team (`PIT` or `TEN`) appears, or when a player
-         appears twice in a pool/lineup.
-      3. `data/engine/week9_firecrawl_alexandria_and_espn_fresh_sync_2026_11_07.json` is present
-         with verified Firecrawl Alexandria v2 discovery/retrieve + ESPN scoreboard + DraftKings
-         Sunday Main Slate sync receipt.
-      4. Zero stale 2024 Week 9 files (`MIA_BUF`, `DET_GB`, `IND_MIN`, `TB_KC`, `LAC_CLE`, `DEN_BAL`)
-         exist in `data/context_packets/`, `data/simulations/`, `data/reasoning/traces/`, or `data/engine/`.
+    """Verify Firecrawl Alexandria live sync and zero-duplicate schedule gate.
+
+    1. `assert_zero_duplicate_teams_or_players_on_slate` passes on the official 15-game
+       2026 NFL Week 9 schedule (`30` unique active teams, `0` duplicates, Byes `PIT`, `TEN`).
+    2. Negative controls: `assert_zero_duplicate_teams_or_players_on_slate` immediately raises
+       `RuntimeError` when `MIA` or `BUF` is listed twice (e.g., `DET @ MIA` + `MIA @ BUF`, or
+       `BUF @ MIN` + `MIA @ BUF`), when a Bye team (`PIT` or `TEN`) appears, or when a player
+       appears twice in a pool/lineup.
+    3. `data/engine/week9_firecrawl_alexandria_and_espn_fresh_sync_2026_11_07.json` is present
+       with verified Firecrawl Alexandria v2 discovery/retrieve + ESPN scoreboard + DraftKings
+       Sunday Main Slate sync receipt.
+    4. Zero stale 2024 Week 9 files (`MIA_BUF`, `DET_GB`, `IND_MIN`, `TB_KC`, `LAC_CLE`,
+       `DEN_BAL`) exist in `data/context_packets/`, `data/simulations/`,
+       `data/reasoning/traces/`, or `data/engine/`.
     """
     from intelligence.data_sources.firecrawl_alexandria_live_sync import (
         OFFICIAL_2026_WEEK9_15_GAMES,
@@ -1697,7 +2006,12 @@ def test_31_firecrawl_alexandria_live_sync_and_zero_duplicate_teams_gate() -> No
         )
 
     # Verify fresh Firecrawl Alexandria + ESPN sync receipt on disk
-    sync_path = REPO_ROOT / "data" / "engine" / "week9_firecrawl_alexandria_and_espn_fresh_sync_2026_11_07.json"
+    sync_path = (
+        REPO_ROOT
+        / "data"
+        / "engine"
+        / "week9_firecrawl_alexandria_and_espn_fresh_sync_2026_11_07.json"
+    )
     assert sync_path.is_file()
     sync_data = json.loads(sync_path.read_text(encoding="utf-8"))
     assert sync_data["schedule_invariant_gate"]["status"] == "VERIFIED_ZERO_DUPLICATES"
@@ -1709,7 +2023,12 @@ def test_31_firecrawl_alexandria_live_sync_and_zero_duplicate_teams_gate() -> No
 
     # Verify zero stale 2024 Week 9 artifact files exist on disk
     stale_tokens = ("mia_buf", "det_gb", "ind_min", "tb_kc", "lac_cle", "den_bal")
-    for rel_dir in ("data/context_packets", "data/simulations", "data/reasoning/traces", "data/engine"):
+    for rel_dir in (
+        "data/context_packets",
+        "data/simulations",
+        "data/reasoning/traces",
+        "data/engine",
+    ):
         folder = REPO_ROOT / rel_dir
         for f in folder.iterdir():
             if f.is_file():
@@ -1720,17 +2039,15 @@ def test_31_firecrawl_alexandria_live_sync_and_zero_duplicate_teams_gate() -> No
 
 
 def test_32_full_stack_performance_and_seo_lcp_19_skills_suite() -> None:
-    """
-    Verifies the 19-skill Full-Stack Performance Engineering, Bazel/DX Build,
-    Spark/DuckDB, PostgreSQL 17, Vector Index HNSW+SQ8, AI Static Review,
-    and 8-Skill SEO + Core Web Vitals LCP suite:
-      1. `full_stack_performance_and_data_optimizer.py` passes latency budgets,
-         Spark skew salting (< 2.0x), Postgres P95 (< 100ms), Vector Recall@10 (>= 0.98)
-         with 4.0x SQ8 compression, and zero CRITICAL/HIGH static review issues.
-      2. Bazel (`WORKSPACE.bazel`, `.bazelrc`, `BUILD.bazel`) and DX (`Makefile`) exist.
-      3. `seo_and_lcp_optimization_engine.py` verifies 7 public routes with 0 keyword
-         cannibalization conflicts, E-E-A-T >= 9.5/10, Position-Zero snippets, and
-         LCP < 2500ms.
+    """Verify the 19-skill Full-Stack Performance Engineering and 8-Skill SEO/LCP suite.
+
+    1. `full_stack_performance_and_data_optimizer.py` passes latency budgets,
+       Spark skew salting (< 2.0x), Postgres P95 (< 100ms), Vector Recall@10 (>= 0.98)
+       with 4.0x SQ8 compression, and zero CRITICAL/HIGH static review issues.
+    2. Bazel (`WORKSPACE.bazel`, `.bazelrc`, `BUILD.bazel`) and DX (`Makefile`) exist.
+    3. `seo_and_lcp_optimization_engine.py` verifies 7 public routes with 0 keyword
+       cannibalization conflicts, E-E-A-T >= 9.5/10, Position-Zero snippets, and
+       LCP < 2500ms.
     """
     from intelligence.performance.full_stack_performance_and_data_optimizer import (
         run_full_stack_performance_audit,
@@ -1742,7 +2059,8 @@ def test_32_full_stack_performance_and_seo_lcp_19_skills_suite() -> None:
     perf = run_full_stack_performance_audit()
     assert perf["python_and_native_hot_path_profile"]["passes_latency_budget"] is True
     assert perf["python_and_native_hot_path_profile"]["dfs_19_equation_count"] == 19
-    assert perf["spark_and_duckdb_optimization"]["skew_join_salting_verification"]["skew_resolved_below_2x"] is True
+    skew_ver = perf["spark_and_duckdb_optimization"]["skew_join_salting_verification"]
+    assert skew_ver["skew_resolved_below_2x"] is True
     assert perf["postgresql17_and_sql_optimization"]["passes_db_p95_budget_under_100ms"] is True
     assert perf["vector_index_hnsw_sq8_tuning"]["meets_recall_target_098"] is True
     assert perf["vector_index_hnsw_sq8_tuning"]["memory_compression_ratio"] >= 3.8
@@ -1765,12 +2083,16 @@ def test_32_full_stack_performance_and_seo_lcp_19_skills_suite() -> None:
     assert fl["lcp_four_subpart_audit"]["total_lcp_ms"] <= 2500
     assert len(seo["audit_sha256"]) == 64
 
-    ai_seo_ts = (REPO_ROOT / "apps" / "web" / "lib" / "seo" / "ai-agent-and-search-seo.ts").read_text(encoding="utf-8")
+    ai_seo_ts = (
+        REPO_ROOT / "apps" / "web" / "lib" / "seo" / "ai-agent-and-search-seo.ts"
+    ).read_text(encoding="utf-8")
     assert "47-19-1 (+24.92u)" in ai_seo_ts
     assert "all-in secondary view" in ai_seo_ts
 
     # The Python audit engine must not re-crown the secondary view as the record.
-    engine_py = (REPO_ROOT / "intelligence" / "seo" / "seo_and_lcp_optimization_engine.py").read_text(encoding="utf-8")
+    engine_py = (
+        REPO_ROOT / "intelligence" / "seo" / "seo_and_lcp_optimization_engine.py"
+    ).read_text(encoding="utf-8")
     assert "36-13-1 (+20.14u)" in engine_py
     assert "47-19-1 (+24.92u) overall" not in engine_py
     assert fl["lcp_four_subpart_audit"]["verified_36_13_1_present"] is True
@@ -1778,14 +2100,15 @@ def test_32_full_stack_performance_and_seo_lcp_19_skills_suite() -> None:
 
 
 def test_33_stealthmodels_com_and_18_url_external_eval_suite() -> None:
-    """
-    Verifies the complete 18-Source External Evaluation, `StealthModels.com` (`StealthMark 1.8.10`),
-    NVIDIA `compute-eval` (`pass@k`), Ragas NVIDIA Metrics (`AnswerAccuracy`, `ContextRelevance`,
-    `ResponseGroundedness`), NVIDIA NeMo Helix (`HelpSteer2`), NIM `GenAI-Perf`, Datadog/Arize
-    OpenTelemetry/OpenInference, Google Cloud Gemini Enterprise Agent Trajectory Eval, Google Stax
-    Cohen's kappa, Together AI Length-Controlled Win Rate (`LC-WR`) & Bradley-Terry Elo,
-    `arXiv:2509.05346` Scenario-Based Evaluation, `arXiv:2606.25057` Dynamic Canary Resistance,
-    and Catherine Arnett Multilingual Byte-Premium Parity:
+    """Verify the 18-Source External Evaluation and StealthModels.com suite.
+
+    Covers `StealthModels.com` (`StealthMark 1.8.10`), NVIDIA `compute-eval` (`pass@k`),
+    Ragas NVIDIA Metrics (`AnswerAccuracy`, `ContextRelevance`, `ResponseGroundedness`),
+    NVIDIA NeMo Helix (`HelpSteer2`), NIM `GenAI-Perf`, Datadog/Arize
+    OpenTelemetry/OpenInference, Google Cloud Gemini Enterprise Agent Trajectory Eval,
+    Google Stax Cohen's kappa, Together AI Length-Controlled Win Rate (`LC-WR`) &
+    Bradley-Terry Elo, `arXiv:2509.05346` Scenario-Based Evaluation, `arXiv:2606.25057`
+    Dynamic Canary Resistance, and Catherine Arnett Multilingual Byte-Premium Parity.
     """
     from intelligence.routing.stealth_skeleton_external_eval_and_distillation import (
         build_official_external_evaluation_manifest,
@@ -1819,10 +2142,17 @@ def test_33_stealthmodels_com_and_18_url_external_eval_suite() -> None:
     ragas = evaluate_ragas_nvidia_metrics(
         user_input="How does Sinkhorn-Knopp optimal transport conserve marginal probabilities?",
         retrieved_contexts=[
-            "Sinkhorn-Knopp iterative scaling alternates row and column normalization to conserve marginal probability vectors r and c."
+            "Sinkhorn-Knopp iterative scaling alternates row and column normalization to conserve "
+            "marginal probability vectors r and c."
         ],
-        response="Sinkhorn-Knopp iterative scaling normalizes rows and columns to conserve marginal probability vectors r and c.",
-        reference_answer="Sinkhorn-Knopp iterative scaling normalizes rows and columns to conserve marginal probability vectors.",
+        response=(
+            "Sinkhorn-Knopp iterative scaling normalizes rows and columns to conserve marginal "
+            "probability vectors r and c."
+        ),
+        reference_answer=(
+            "Sinkhorn-Knopp iterative scaling normalizes rows and columns to conserve marginal "
+            "probability vectors."
+        ),
     )
     assert ragas["nv_answer_accuracy"] >= 0.75
     assert ragas["nv_context_relevance"] >= 0.75
@@ -1846,22 +2176,34 @@ def test_33_stealthmodels_com_and_18_url_external_eval_suite() -> None:
     assert kappa["calibration_status"] == "CALIBRATED_PRODUCTION_READY"
 
     # 6. Together AI LC-WR, arXiv:2509.05346, arXiv:2606.25057 & Multilingual Byte-Premium
-    assert auths["7_together_ai_lc_wr_and_bradley_terry"]["length_controlled_win_rate_lc_wr"] >= 0.75
+    assert (
+        auths["7_together_ai_lc_wr_and_bradley_terry"]["length_controlled_win_rate_lc_wr"]
+        >= 0.75
+    )
     assert auths["8_arxiv_2509_05346_scenario_based_eval"]["diagnostic_detection_rate"] == 1.0
-    assert auths["9_arxiv_2606_25057_and_hf_ch11_5_contamination"]["contamination_free_verified"] is True
-    assert "latex_math" in auths["10_hf_catherine_arnett_multilingual_byte_premium"]["script_fertility_and_byte_premium"]
+    assert (
+        auths["9_arxiv_2606_25057_and_hf_ch11_5_contamination"]["contamination_free_verified"]
+        is True
+    )
+    arnett = auths["10_hf_catherine_arnett_multilingual_byte_premium"]
+    assert "latex_math" in arnett["script_fertility_and_byte_premium"]
 
     # 7. Verify Live 18-Authority Cognitive & Tactical Self-Improvement Engine is wired into:
     #    (a) Stage 1 -> Stage 2 Simulation Priors (`compile_stage1_to_stage2_simulation_priors`)
-    #    (b) Two-Stage Sim-to-DFS Pool & Lineup Optimizer (`apply_live_18_authority_dfs_pool_and_lineup_upgrade`)
+    #    (b) Two-Stage Sim-to-DFS Pool & Lineup Optimizer
+    #        (`apply_live_18_authority_dfs_pool_and_lineup_upgrade`)
     #    (c) L1 -> L5 Reasoning Engine (`run_live_18_authority_cognitive_upgrade_on_trace`)
     from intelligence.reasoning.live_cognitive_self_improvement_engine import (
         apply_live_18_authority_dfs_pool_and_lineup_upgrade,
-        compute_live_18_authority_situational_and_tactical_upgrade,
     )
 
     priors = compile_stage1_to_stage2_simulation_priors(
-        stage1a_receipt={"away": "DET", "home": "MIA", "away_qb1_starter": "Jared Goff", "home_qb1_starter": "Tua Tagovailoa"},
+        stage1a_receipt={
+            "away": "DET",
+            "home": "MIA",
+            "away_qb1_starter": "Jared Goff",
+            "home_qb1_starter": "Tua Tagovailoa",
+        },
         stage1b_receipt={"weather_wind_mph": 8.0},
     )
     assert "live_18_authority_cognitive_upgrade" in priors
@@ -1869,23 +2211,51 @@ def test_33_stealthmodels_com_and_18_url_external_eval_suite() -> None:
     up_s2 = priors["live_18_authority_cognitive_upgrade"]
     assert up_s2["gemini_agent_trajectory_verification"]["trajectory_in_order_match"] == 1.0
     assert up_s2["counterfactual_perturbation_stress_test"]["counterfactual_worlds_tested"] == 8
-    assert 0.70 <= up_s2["counterfactual_perturbation_stress_test"]["counterfactual_stability_multiplier"] <= 1.0
-    assert sum(up_s2["scenario_bradley_terry_routing"]["bradley_terry_specialist_weights"].values()) == pytest.approx(1.0, abs=1e-3)
+    cf_stab = up_s2["counterfactual_perturbation_stress_test"][
+        "counterfactual_stability_multiplier"
+    ]
+    assert 0.70 <= cf_stab <= 1.0
+    bt_weights = up_s2["scenario_bradley_terry_routing"]["bradley_terry_specialist_weights"]
+    assert sum(bt_weights.values()) == pytest.approx(1.0, abs=1e-3)
 
     dfs_up = apply_live_18_authority_dfs_pool_and_lineup_upgrade(
         player_pool=[
-            {"name": "Jared Goff", "position": "QB", "team": "DET", "salary": 6800, "projection": 21.4},
-            {"name": "Amon-Ra St. Brown", "position": "WR", "team": "DET", "salary": 8100, "projection": 19.8},
-            {"name": "De'Von Achane", "position": "RB", "team": "MIA", "salary": 7600, "projection": 18.9},
+            {
+                "name": "Jared Goff", "position": "QB", "team": "DET",
+                "salary": 6800, "projection": 21.4,
+            },
+            {
+                "name": "Amon-Ra St. Brown", "position": "WR", "team": "DET",
+                "salary": 8100, "projection": 19.8,
+            },
+            {
+                "name": "De'Von Achane", "position": "RB", "team": "MIA",
+                "salary": 7600, "projection": 18.9,
+            },
         ],
         lineups=[
             {
                 "players": [
-                    {"name": "Jared Goff", "position": "QB", "team": "DET", "salary": 6800, "projection": 21.4},
-                    {"name": "Amon-Ra St. Brown", "position": "WR", "team": "DET", "salary": 8100, "projection": 19.8},
-                    {"name": "De'Von Achane", "position": "RB", "team": "MIA", "salary": 7600, "projection": 18.9},
-                    {"name": "Rhamondre Stevenson", "position": "RB", "team": "NE", "salary": 6100, "projection": 16.5},
-                    {"name": "Dalton Schultz", "position": "TE", "team": "HOU", "salary": 3200, "projection": 11.2},
+                    {
+                        "name": "Jared Goff", "position": "QB", "team": "DET",
+                        "salary": 6800, "projection": 21.4,
+                    },
+                    {
+                        "name": "Amon-Ra St. Brown", "position": "WR", "team": "DET",
+                        "salary": 8100, "projection": 19.8,
+                    },
+                    {
+                        "name": "De'Von Achane", "position": "RB", "team": "MIA",
+                        "salary": 7600, "projection": 18.9,
+                    },
+                    {
+                        "name": "Rhamondre Stevenson", "position": "RB", "team": "NE",
+                        "salary": 6100, "projection": 16.5,
+                    },
+                    {
+                        "name": "Dalton Schultz", "position": "TE", "team": "HOU",
+                        "salary": 3200, "projection": 11.2,
+                    },
                 ]
             }
         ],
@@ -1901,31 +2271,32 @@ def test_33_stealthmodels_com_and_18_url_external_eval_suite() -> None:
 #          & Closed-Loop Ragas NVIDIA Dual-Judge 1.0000 Refiner
 # ============================================================================
 def test_34_understand_anything_knowledge_graph_and_session_librarian_immunization_wired() -> None:
-    """
-    Verifies all 8 invoked skills (`/session-librarian`, `/understand`, `/understand-onboard`,
-    `/understand-chat`, `/understand-diff`, `/understand-explain`, `/understand-figma`,
-    `/understand-knowledge`) and the v4.0 Stealth-Skeleton LLM upgrades:
+    """Verify all 8 Understand-Anything / Session-Librarian skills and v4.0 upgrades.
+
+    Covers `/session-librarian`, `/understand`, `/understand-onboard`, `/understand-chat`,
+    `/understand-diff`, `/understand-explain`, `/understand-figma`, `/understand-knowledge`:
       1. `.ua/knowledge-graph.json` (`180+ nodes`, `9 layers`, `6 tour steps`), `.ua/meta.json`,
          `.ua/config.json`, `.ua/diff-overlay.json`, and `docs/UA_ONBOARDING.md`.
       2. `data/audits/session_librarian_cross_system_discovery_2026_11_07.json` (`8 surfaces`,
          `12 Cross-Session Immunization Rules`, read-only non-destructive safety).
       3. `solve_latch_two_robot_cooperative_astar()`, `solve_foresight_expectimax_lookahead()`,
-         and `refine_rag_context_and_response_with_nvidia_dual_judge()` (`composite_nvidia_ragas_score == 1.0`).
-      4. `verify_symbolic_and_probabilistic_axioms()` & `pava_monotone_quantiles()` isotonic non-negative
-         quantile projection wired into `live_cognitive_self_improvement_engine.py`.
-      5. `data/mind/feeds/stealth_skeleton_distillation_flywheel_2026_11_07.jsonl` (`8` curriculum domains).
+         and `refine_rag_context_and_response_with_nvidia_dual_judge()`
+         (`composite_nvidia_ragas_score == 1.0`).
+      4. `verify_symbolic_and_probabilistic_axioms()` & `pava_monotone_quantiles()` isotonic
+         non-negative quantile projection wired into `live_cognitive_self_improvement_engine.py`.
+      5. `data/mind/feeds/stealth_skeleton_distillation_flywheel_2026_11_07.jsonl` (`8` domains).
     """
-    from intelligence.reasoning.understand_anything_and_session_librarian_engine import (
-        CROSS_SESSION_IMMUNIZATION_BANK,
-        explain_component_deep_dive,
-        query_knowledge_graph_subgraph,
-        run_full_understand_anything_and_session_librarian_suite,
-    )
     from intelligence.reasoning.live_cognitive_self_improvement_engine import (
         discover_fleet_skills_catalog,
         pava_monotone_quantiles,
         run_jev_skill_select_and_merged_turn_routing,
         verify_symbolic_and_probabilistic_axioms,
+    )
+    from intelligence.reasoning.understand_anything_and_session_librarian_engine import (
+        CROSS_SESSION_IMMUNIZATION_BANK,
+        explain_component_deep_dive,
+        query_knowledge_graph_subgraph,
+        run_full_understand_anything_and_session_librarian_suite,
     )
     from intelligence.routing.stealth_skeleton_external_eval_and_distillation import (
         build_official_external_evaluation_manifest,
@@ -1948,13 +2319,20 @@ def test_34_understand_anything_knowledge_graph_and_session_librarian_immunizati
     assert (REPO_ROOT / ".ua" / "config.json").is_file()
     assert (REPO_ROOT / ".ua" / "diff-overlay.json").is_file()
     assert (REPO_ROOT / "docs" / "UA_ONBOARDING.md").is_file()
-    assert (REPO_ROOT / "data" / "audits" / "session_librarian_cross_system_discovery_2026_11_07.json").is_file()
+    sl_audit = (
+        REPO_ROOT / "data" / "audits" / "session_librarian_cross_system_discovery_2026_11_07.json"
+    )
+    assert sl_audit.is_file()
 
-    sub = query_knowledge_graph_subgraph("two_stage_gse_dfs_pipeline sinkhorn", max_results=5, max_hops=1)
+    sub = query_knowledge_graph_subgraph(
+        "two_stage_gse_dfs_pipeline sinkhorn", max_results=5, max_hops=1
+    )
     assert sub["matched_nodes_count"] >= 2
     assert len(sub["subgraph_summary"]) > 20
 
-    exp = explain_component_deep_dive("intelligence/reasoning/live_cognitive_self_improvement_engine.py")
+    exp = explain_component_deep_dive(
+        "intelligence/reasoning/live_cognitive_self_improvement_engine.py"
+    )
     assert exp["contained_symbols_count"] >= 5
     assert "layer:reasoning-and-cognitive-self-improvement" in exp["architectural_layer"]["id"]
 
@@ -1979,15 +2357,20 @@ def test_34_understand_anything_knowledge_graph_and_session_librarian_immunizati
 
     # Closed-loop Ragas NVIDIA Dual-Judge refiner achieves 1.0000
     refined = refine_rag_context_and_response_with_nvidia_dual_judge(
-        user_input="How does the Two-Stage GSE Simulation-to-DFS Pipeline build DraftKings lineups?",
+        user_input=(
+            "How does the Two-Stage GSE Simulation-to-DFS Pipeline build DraftKings lineups?"
+        ),
         retrieved_contexts=[
-            "Stage 1 runs 10,000-world Full-Game Snap-by-Snap simulations with Gate G1 and Gate G2.",
+            "Stage 1 runs 10,000-world Full-Game Snap-by-Snap simulations with "
+            "Gate G1 and Gate G2.",
         ],
         response="Stage 1 runs 10,000-world simulations.",
         reference_answer=(
             "The Two-Stage GSE Simulation-to-DFS Pipeline builds DraftKings lineups in two stages: "
-            "Stage 1 runs 10,000-world Full-Game Snap-by-Snap simulations with Gate G1 and Gate G2; "
-            "Stage 2 selects the 98-player GSE DFS Pool and runs 10,000 Student-t (nu=4) DFS simulations."
+            "Stage 1 runs 10,000-world Full-Game Snap-by-Snap simulations with "
+            "Gate G1 and Gate G2; "
+            "Stage 2 selects the 98-player GSE DFS Pool and runs 10,000 Student-t (nu=4) "
+            "DFS simulations."
         ),
     )
     assert refined["nv_answer_accuracy"] == 1.0
@@ -2005,7 +2388,8 @@ def test_34_understand_anything_knowledge_graph_and_session_librarian_immunizati
 
     manifest = build_official_external_evaluation_manifest()
     assert manifest["schema_version"] == "4.0.0"
-    assert manifest["verified_18_external_authorities"]["3_ragas_official_nvidia_metrics"]["composite_nvidia_ragas_score"] == 1.0
+    ragas_auth = manifest["verified_18_external_authorities"]["3_ragas_official_nvidia_metrics"]
+    assert ragas_auth["composite_nvidia_ragas_score"] == 1.0
     assert manifest["training_and_distillation_flywheel"]["curriculum_domains_harvested"] == 8
 
     # Jev Skill Select (`jevkit.skillpick` + `jevkit.turn`)

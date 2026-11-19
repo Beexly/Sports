@@ -1,0 +1,732 @@
+{
+ "book_id": "1cfc38c92533ca46",
+ "source_status": "COMPLETE",
+ "source_note": "Vijay Janapa Reddi (Harvard University), Scaling Machine Learning Systems: From Nodes to Fleets: The Engineering of Distributed Scale, The MIT Press, 2026; this is Volume 2 of Machine Learning Systems. The local file is the publisher PDF, 18,056,345 bytes, full sha256 1cfc38c92533ca4611e11cc8064715f76bc20cc908e6e5437f48379e418631d2. The extracted text is complete across all 17 chapters and clean in the principle summaries; body pages interleave margin notes and a few words carry extraction spacing artifacts, so every quote was taken from a clean passage and verified as a contiguous substring of the extracted text file. Catalog note: the local filename says ReddiEtAl, but the title page credits Vijay Janapa Reddi as the author. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "generality_tax",
+   "name": "Specialization improves performance per watt for stable workloads at the cost of programmability (Principle 1)",
+   "verbatim_quote": "For workloads with stable computation patterns, specialization can improve performance per watt by reducing general-purpose overhead, while also reducing programmability and workload flexibility.",
+   "page": "Fleet Principles, Principle 1 (p. 52)",
+   "latex": "\\rho_{energy,specific} \\gg \\rho_{energy,general}",
+   "symbol_and_unit_ledger": {
+    "rho_energy": "useful computation per unit energy (operations per joule) for a fixed power budget"
+   },
+   "assumptions": [
+    "The workload computation pattern is stable enough to justify fixed-function hardware",
+    "The comparison is made at a fixed power budget"
+   ],
+   "breakdown_regime": "Breaks when workload patterns change faster than hardware generations, or when flexibility across many model types matters more than per-watt efficiency on one pattern.",
+   "domain": "compute infrastructure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A reasoning engine faces the same trade: a specialized signal path (a hard-coded feature extractor for one matchup type) is cheaper per evaluation than a general reasoning pass, but it cannot adapt when the pattern shifts. The engine should specialize only the signal paths whose input patterns are stable across seasons.",
+    "source_operator": "generality_tax",
+    "telemetry": "Per-signal evaluation cost and pattern-stability measures for each engine feature path."
+   }
+  },
+  {
+   "primitive_id": "memory_capacity_gap",
+   "name": "Frontier model memory requirements grow faster than single-accelerator HBM capacity, forcing model state to be divided across devices (Principle 2)",
+   "verbatim_quote": "Frontier model memory requirements have grown faster and more irregularly than single-accelerator HBM capacity.",
+   "page": "Fleet Principles, Principle 2 (p. 52)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Model plus training state (parameters, gradients, optimizer states) is what must fit, not parameters alone"
+   ],
+   "breakdown_regime": "Breaks as a binding constraint only if memory capacity growth catches up with model growth, or if state can be compressed without quality loss.",
+   "domain": "compute infrastructure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any state that outgrows one store must be partitioned, and the partition boundary decides the communication cost. In the engine, a game-state representation that outgrows one reasoning context must be sharded by layer (usage, health, matchup), and the shard that exchanges the most data must sit on the fastest path.",
+    "source_operator": "memory_capacity_gap",
+    "telemetry": "State size per reasoning layer versus per-context capacity; cross-layer exchange volume."
+   }
+  },
+  {
+   "primitive_id": "power_density_wall",
+   "name": "Cluster scaling is constrained by thermal dissipation per rack and cooling capacity, not silicon area or floor space (Principle 3)",
+   "verbatim_quote": "Cluster scaling is constrained by thermal dissipation limits (watts per rack) and cooling capacity, not just silicon area or floor space.",
+   "page": "Fleet Principles, Principle 3 (p. 53)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Accelerator power draw keeps rising faster than rack power budgets"
+   ],
+   "breakdown_regime": "Breaks if accelerator power per unit compute falls enough that rack envelopes stop binding before other limits do.",
+   "domain": "compute infrastructure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every fleet has a non-silicon envelope that caps density. For a reasoning fleet the analog is a rate envelope: API quotas, context budgets, and cost per hour cap how many parallel reasoning workers can run, regardless of how many could be spawned in principle.",
+    "source_operator": "power_density_wall",
+    "telemetry": "Sustained worker count versus quota, cost, and latency envelopes."
+   }
+  },
+  {
+   "primitive_id": "thermodynamic_limit",
+   "name": "Heat produced by IT equipment cannot exceed the facility heat-removal rate (Principle 4)",
+   "verbatim_quote": "Irreversible computation and data movement dissipate electrical energy as heat; at data-center scale, the practical limit is the rate at which that heat can be removed.",
+   "page": "Fleet Principles, Principle 4 (p. 53)",
+   "latex": "\\dot{Q}_{IT} \\le \\dot{Q}_{remove,max}",
+   "symbol_and_unit_ledger": {
+    "Q_IT": "heat produced by IT equipment (watts)",
+    "Q_remove,max": "maximum heat-removal rate of the installed facility and cooling configuration (watts)"
+   },
+   "assumptions": [
+    "All electrical energy consumed by IT equipment becomes heat that must be removed"
+   ],
+   "breakdown_regime": "The bound is a facility property: it moves only when cooling class or facility capacity changes, and it says nothing about efficiency below the cap.",
+   "domain": "compute infrastructure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Throughput ceilings set by a sink, not a source: an engine pipeline is capped by the rate at which its slowest consumer (settlement, grading, publication) can absorb output, not by how fast producers can generate it.",
+    "source_operator": "thermodynamic_limit",
+    "telemetry": "Producer output rate versus consumer absorption rate at each pipeline stage."
+   }
+  },
+  {
+   "primitive_id": "alpha_beta_model",
+   "name": "Communication time is fixed startup latency plus message size over effective bandwidth (Principle 5)",
+   "verbatim_quote": "In the latency-bandwidth model, communication time combines fixed startup latency (𝛼) with the transfer time for a message of size 𝑛 at effective bandwidth",
+   "page": "Fleet Principles, Principle 5 (pp. 53-54)",
+   "latex": "T(n) = \\alpha + \\frac{n}{\\beta}",
+   "symbol_and_unit_ledger": {
+    "T(n)": "time to send one message of size n (seconds)",
+    "alpha": "fixed startup latency (seconds)",
+    "n": "message size (bytes)",
+    "beta": "effective bandwidth (bytes per second)"
+   },
+   "assumptions": [
+    "One message on one path, with constant effective bandwidth",
+    "Startup latency is independent of message size"
+   ],
+   "breakdown_regime": "Breaks under congestion and shared links, where effective bandwidth depends on other traffic; the bisection bound then governs instead.",
+   "domain": "network fabrics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every engine signal fetch pays a fixed startup cost plus a size cost. Many small evidence lookups are latency-bound, so the engine should fuse small lookups into batched fetches, and compress large payloads (full play-by-play pulls) rather than issuing them piecemeal.",
+    "source_operator": "alpha_beta_model",
+    "telemetry": "Per-fetch fixed overhead versus payload size for each data source the engine uses."
+   }
+  },
+  {
+   "primitive_id": "bisection_bandwidth_theorem",
+   "name": "Traffic crossing a network cut is bounded by the aggregate bandwidth of that cut (Principle 6)",
+   "verbatim_quote": "For traffic that must cross between two halves of a cluster, the minimum bisection bandwidth bounds the achievable transfer rate.",
+   "page": "Fleet Principles, Principle 6 (p. 54)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The traffic pattern actually crosses the minimum cut",
+    "Links on the cut are the shared resource"
+   ],
+   "breakdown_regime": "Breaks for traffic patterns that stay within one half of the cluster; locality-aware placement can avoid the cut entirely.",
+   "domain": "network fabrics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any shared channel between two halves of a system caps the exchange between them. In the engine, the bus or API between the evidence layer and the reasoning layer is a cut: total reasoning throughput cannot exceed what that channel carries, no matter how fast either side is internally.",
+    "source_operator": "bisection_bandwidth_theorem",
+    "telemetry": "Cross-layer message volume and channel capacity between engine layers."
+   }
+  },
+  {
+   "primitive_id": "io_wall",
+   "name": "If storage cannot deliver training data as fast as accelerators consume it, accelerators idle (Principle 7)",
+   "verbatim_quote": "When storage throughput cannot deliver training data as fast as accelerators consume it, accelerators idle regardless of their computational power.",
+   "page": "Fleet Principles, Principle 7 (p. 54)",
+   "latex": "\\mathrm{Utilization} = \\min\\left(1, \\frac{BW_{storage}}{N_{GPU} \\times R_{consumption}}\\right)",
+   "symbol_and_unit_ledger": {
+    "BW_storage": "aggregate storage bandwidth (bytes per second)",
+    "N_GPU": "number of accelerators",
+    "R_consumption": "per-accelerator data-consumption rate (bytes per second)"
+   },
+   "assumptions": [
+    "Per-device consumption rate is fixed as devices are added",
+    "Storage throughput is provisioned independently of device count"
+   ],
+   "breakdown_regime": "Breaks when data is cached or staged close to the accelerators so the storage path is no longer on the critical path every step.",
+   "domain": "data storage",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A reasoning fleet starves the same way: if the evidence pipeline cannot deliver verified inputs as fast as reasoning workers consume them, workers idle regardless of their quality. Input throughput must be provisioned to scale with worker count, not fixed at the level that sufficed for fewer workers.",
+    "source_operator": "io_wall",
+    "telemetry": "Evidence delivery rate versus reasoning-worker consumption rate."
+   }
+  },
+  {
+   "primitive_id": "storage_hierarchy_principle",
+   "name": "Storage tiers trade latency and bandwidth for capacity and cost per byte as they move away from the accelerator (Principle 8)",
+   "verbatim_quote": "Storage hierarchies are designed so that tiers farther from the accelerator typically trade higher access latency and lower per-stream",
+   "page": "Fleet Principles, Principle 8 (p. 55)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "No single medium offers both corpus-scale capacity and accelerator-scale bandwidth"
+   ],
+   "breakdown_regime": "The principle describes typical tier ordering; provisioning and parallelism can make a far tier outperform a near one in aggregate.",
+   "domain": "data storage",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Evidence should be tiered the same way: hot, verified, current-week evidence in the fastest tier; deep historical corpora in cheap tiers, promoted upward by prefetch policies when a matchup needs them. The engineering task is placement and promotion timing, not a single store.",
+    "source_operator": "storage_hierarchy_principle",
+    "telemetry": "Access latency and hit rate per evidence tier; promotion frequency before reasoning runs."
+   }
+  },
+  {
+   "primitive_id": "empirical_scaling_law",
+   "name": "Model loss follows approximate power-law relationships with compute, data, or parameter count (Principle 9)",
+   "verbatim_quote": "Within empirically validated regimes, foundation-model loss (ℒ) follows approximate power-law relationships with a resource quantity 𝑋 such as training compute, dataset size, or parameter count.",
+   "page": "Distributed ML Principles, Principle 9 (p. 276)",
+   "latex": "\\mathcal{L}(X) \\propto X^{-\\alpha_{scale}}",
+   "symbol_and_unit_ledger": {
+    "L(X)": "model loss at resource quantity X (dimensionless)",
+    "X": "resource quantity: training compute, dataset size, or parameter count",
+    "alpha_scale": "fitted scaling exponent for the regime (dimensionless)"
+   },
+   "assumptions": [
+    "The regime has been empirically validated",
+    "Architecture, data quality, and training method stay within the fitted regime"
+   ],
+   "breakdown_regime": "Breaks when the regime changes: architecture, data quality, or method shifts refit the exponent, and the relation guides planning without guaranteeing per-task improvement.",
+   "domain": "scaling laws",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Diminishing returns with a fitted exponent is the right shape for engine evidence investment too: each doubling of historical data or signal history buys a smaller calibration improvement, and the fitted exponent prices whether the next data purchase is worth it.",
+    "source_operator": "empirical_scaling_law",
+    "telemetry": "Calibration error (Brier score) versus seasons of history and per-signal sample counts."
+   }
+  },
+  {
+   "primitive_id": "fleet_law",
+   "name": "Distributed step time is compute over N plus communication plus synchronization minus overlap (Principle 10)",
+   "verbatim_quote": "Scaling is a race between parallelizable compute (which shrinks with 𝑁 under ideal partitioning), communication overhead,",
+   "page": "Distributed ML Principles, Principle 10 (p. 276)",
+   "latex": "T_{step}(N) = \\frac{T_{compute}}{N} + T_{comm}(N) + T_{sync}(N) - T_{overlap}",
+   "symbol_and_unit_ledger": {
+    "T_step(N)": "wall-clock time of one distributed step on N workers (seconds)",
+    "T_compute": "single-worker compute time for the step (seconds)",
+    "T_comm(N)": "communication time (seconds)",
+    "T_sync(N)": "synchronization and barrier time (seconds)",
+    "T_overlap": "communication time hidden by overlap with compute (seconds), bounded by min(T_compute/N, T_comm + T_sync)"
+   },
+   "assumptions": [
+    "Fixed total work, ideally partitioned across N workers",
+    "Overlap cannot exceed the smaller of the compute term and the communication plus synchronization terms"
+   ],
+   "breakdown_regime": "Breaks under load imbalance and stragglers, where the slowest worker, not the average, sets the step time.",
+   "domain": "distributed training",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's weekly cycle has the same anatomy: per-game reasoning shrinks as more workers take games, but evidence synchronization and cross-game consistency checks grow, and only overlapped work is free. Scheduling the cycle means minimizing the exposed communication and synchronization terms, not just adding workers.",
+    "source_operator": "fleet_law",
+    "telemetry": "Per-cycle wall-clock split into reasoning, evidence sync, and consistency-check time."
+   }
+  },
+  {
+   "primitive_id": "allreduce_bandwidth_bound",
+   "name": "Ring AllReduce is bandwidth-optimal: per-rank traffic approaches 2M/Beta and stops shrinking as workers are added (Principle 11)",
+   "verbatim_quote": "The bandwidth term approaches 2𝑀 /𝛽 and stops shrinking as workers are added, while each worker's share of the compute keeps shrinking, so under pure data parallelism communication eventually dominates the step.",
+   "page": "Distributed ML Principles, Principle 11 (p. 277)",
+   "latex": "T_{ring} = 2(N-1)\\alpha + 2\\frac{N-1}{N}\\frac{M}{\\beta}",
+   "symbol_and_unit_ledger": {
+    "T_ring": "ring AllReduce completion time (seconds)",
+    "N": "number of ranks",
+    "alpha": "per-hop startup latency (seconds)",
+    "M": "tensor size (bytes)",
+    "beta": "effective link bandwidth (bytes per second)"
+   },
+   "assumptions": [
+    "AllReduce is built from point-to-point transfers",
+    "Ring schedule; tree and hierarchical schedules trade byte efficiency for fewer startup rounds"
+   ],
+   "breakdown_regime": "Breaks for small messages or very large N, where the linear startup term dominates and tree schedules win despite worse byte efficiency.",
+   "domain": "collective communication",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Aggregation has a floor: combining partial results from all workers costs a fixed volume per worker no matter how many workers join. The engine's cross-game synthesis (market-wide and slate-wide aggregation) has the same floor, so adding game workers past a point only grows the exposed aggregation share of the cycle.",
+    "source_operator": "allreduce_bandwidth_bound",
+    "telemetry": "Aggregation payload per worker versus worker count in slate-level synthesis."
+   }
+  },
+  {
+   "primitive_id": "scaling_efficiency_bound",
+   "name": "Scaling efficiency is achieved speedup as a fraction of ideal linear speedup, limited by communication and synchronization (Principle 12)",
+   "verbatim_quote": "but the communication and synchronization terms of the Fleet Law limit the resulting speedup.",
+   "page": "Distributed ML Principles, Principle 12 (p. 277)",
+   "latex": "\\eta_{scaling} = \\frac{T_1}{N \\times T_N}",
+   "symbol_and_unit_ledger": {
+    "eta_scaling": "scaling efficiency (dimensionless, 1.0 is ideal linear speedup)",
+    "T_1": "time for the fixed work on one device (seconds)",
+    "T_N": "time for the same work on N devices (seconds)",
+    "N": "device count"
+   },
+   "assumptions": [
+    "Fixed amount of work (strong scaling)",
+    "A statistical limit also applies past the critical batch size, where added width buys little loss reduction"
+   ],
+   "breakdown_regime": "Efficiency 1.0 is an ideal baseline, not a practical target; the shortfall grows with N under pure data parallelism.",
+   "domain": "distributed training",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The same ratio disciplines the engine fleet: doubling reasoning workers and measuring cycle time gives an achieved efficiency, and the gap from 1.0 is the coordination tax that must be attacked directly rather than hidden by adding more workers.",
+    "source_operator": "scaling_efficiency_bound",
+    "telemetry": "Cycle time versus worker count for a fixed slate of games."
+   }
+  },
+  {
+   "primitive_id": "young_daly_checkpoint_interval",
+   "name": "The optimal checkpoint interval balances write cost against expected rework, growing as the square root of write time times MTBF (Principle 13)",
+   "verbatim_quote": "When more participating components reduce job MTBF, the model favors shorter intervals, and the overhead at the optimum grows roughly as the square root of the component count; faster checkpoint writes can reduce that overhead.",
+   "page": "Distributed ML Principles, Principle 13 (p. 278)",
+   "latex": "T_{ckpt}^{*} = \\sqrt{2 \\cdot T_{write} \\cdot MTBF_{system}}",
+   "symbol_and_unit_ledger": {
+    "T_ckpt*": "optimal checkpoint interval (seconds)",
+    "T_write": "time to write one checkpoint (seconds)",
+    "MTBF_system": "system mean time between failures (seconds)"
+   },
+   "assumptions": [
+    "Long runs with approximately constant failure rates",
+    "Checkpoint write times small relative to MTBF",
+    "First-order model; correlated failures and variable write times need additional analysis"
+   ],
+   "breakdown_regime": "Breaks under correlated failures, variable write times, or when recovery requirements, not rework cost, set the interval.",
+   "domain": "fault tolerance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "State-saving cadence for any long reasoning job follows the same square-root law: persist intermediate reasoning state at intervals set by save cost and failure rate, so a crashed overnight run loses bounded work instead of the whole night.",
+    "source_operator": "young_daly_checkpoint_interval",
+    "telemetry": "Save cost per snapshot, worker failure rate, and rework observed per failure."
+   }
+  },
+  {
+   "primitive_id": "displacement_of_overhead",
+   "name": "Distributed optimizations relocate overhead among compute, communication, and coordination rather than removing it (Principle 14)",
+   "verbatim_quote": "Reducing one term can increase another, so designs must evaluate all three.",
+   "page": "Distributed ML Principles, Principle 14 (p. 278)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The C3 taxonomy accounts for all wall-clock cost of distributed execution"
+   ],
+   "breakdown_regime": "Not a failure mode but a conservation warning: a claimed optimization that reports only the term it reduced has not shown a net gain.",
+   "domain": "distributed systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine optimizations obey the same conservation: making one signal cheaper to compute can push cost into evidence gathering or into cross-checking. Every engine change should be scored on all three accounts before it is called an improvement.",
+    "source_operator": "displacement_of_overhead",
+    "telemetry": "Compute, evidence-transfer, and coordination time per reasoning cycle before and after each change."
+   }
+  },
+  {
+   "primitive_id": "feasibility_before_fairness",
+   "name": "A scheduler must enumerate feasible allocations before applying any fairness policy (Principle 15)",
+   "verbatim_quote": "Missing required gang members or placement can prevent execution; insufficient power or I/O capacity can reduce progress below the admitted rate.",
+   "page": "Distributed ML Principles, Principle 15 (p. 279)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The job is synchronous and needs all gang members at once",
+    "Placement must sit within the interconnect domains the parallelism requires",
+    "Power and I/O allocation must support the admitted rate of progress"
+   ],
+   "breakdown_regime": "Feasibility constraints can deliberately leave capacity idle; fairness applied to infeasible bundles produces idle capacity charged to a tenant.",
+   "domain": "fleet orchestration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Work assignment in the engine fleet is feasibility-first: a game dossier should only be assigned when its full evidence bundle can be assembled at once, and only then should fairness (load balancing across workers) choose among feasible assignments. A fair share of an unusable assignment is wasted capacity.",
+    "source_operator": "feasibility_before_fairness",
+    "telemetry": "Fraction of assignments that were feasible at admission; idle-worker time caused by infeasible assignments."
+   }
+  },
+  {
+   "primitive_id": "ml_goodput_decomposition",
+   "name": "Fleet productivity goodput factors into scheduling, runtime, and program (MFU) components (Principle 16)",
+   "verbatim_quote": "A fleet's ML productivity goodput, the fraction of its capacity-time that becomes useful work, is the product of three factors, each counted at a stated boundary so that every loss belongs to exactly one.",
+   "page": "Fleet-in-Production Principles, Principle 16 (p. 606)",
+   "latex": "MPG = \\eta_{scheduling} \\times \\eta_{runtime} \\times \\eta_{program}",
+   "symbol_and_unit_ledger": {
+    "MPG": "ML productivity goodput (dimensionless fraction)",
+    "eta_scheduling": "share of capacity held by complete allocations",
+    "eta_runtime": "share of allocated time retained as progress after startup, stalls, checkpoint pauses, restarts, and rework",
+    "eta_program": "fraction of ideal rate achieved by retained steps, measured as MFU"
+   },
+   "assumptions": [
+    "Each factor is counted at a stated boundary so every loss belongs to exactly one factor",
+    "Applies to a training step and to a serving replica alike"
+   ],
+   "breakdown_regime": "A change that moves a loss from one factor to another helps only if the product rises; per-team metrics that ignore the product hide losses.",
+   "domain": "fleet efficiency",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's weekly output should be audited with the same product: share of the slate assigned, share of assigned time retained as finished dossiers after stalls and rework, and quality rate of the retained work. Multiplying the three locates whether losses are scheduling, runtime, or program losses, each with a different owner.",
+    "source_operator": "ml_goodput_decomposition",
+    "telemetry": "Assignment coverage, retained-progress share, and per-dossier quality scores per cycle."
+   }
+  },
+  {
+   "primitive_id": "serving_cost_dominance",
+   "name": "Cumulative inference cost can exceed one-time training cost over a high-traffic model's lifetime (Principle 17)",
+   "verbatim_quote": "For high-traffic production models, cumulative inference cost can exceed the one-time training cost over the model's lifetime.",
+   "page": "Fleet-in-Production Principles, Principle 17 (p. 606)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "High traffic volume and a long product lifetime",
+    "The quantity to reduce is cost per completed request at fixed quality and latency"
+   ],
+   "breakdown_regime": "Breaks for low-traffic or short-lived models, where training cost remains dominant and inference optimization is misplaced effort.",
+   "domain": "serving at scale",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For the engine, the recurring per-game, per-week reasoning cost dominates the one-time cost of building it. Optimization effort belongs on the repeated inference path (the weekly cycle), not on one-time setup tooling.",
+    "source_operator": "serving_cost_dominance",
+    "telemetry": "Cumulative per-cycle reasoning cost versus one-time build cost, tracked over weeks."
+   }
+  },
+  {
+   "primitive_id": "autoregressive_bottleneck",
+   "name": "Low-batch transformer decode is memory-bandwidth bound because every step streams the full weights (Principle 18)",
+   "verbatim_quote": "In low-batch dense transformer decode, weight streaming often makes throughput memory-bandwidth bound because every decode step must stream the model weights from device memory to the compute units.",
+   "page": "Fleet-in-Production Principles, Principle 18 (p. 607)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Dense transformer decode at low batch size",
+    "A key-value cache retains intermediate attention state for reuse"
+   ],
+   "breakdown_regime": "Higher batch sizes amortize weight streaming; at long context, KV cache traffic and capacity become the binding constraint instead.",
+   "domain": "serving at scale",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Repeatedly streaming a large fixed context for every small decision is the same bottleneck: if each game decision re-reads the entire season corpus, throughput is bound by context streaming, not reasoning. Batching decisions and caching intermediate state (per-team summaries) amortize the fixed read.",
+    "source_operator": "autoregressive_bottleneck",
+    "telemetry": "Context bytes re-read per decision versus cached-state hit rate."
+   }
+  },
+  {
+   "primitive_id": "power_of_two_choices",
+   "name": "Sampling two replicas and choosing the least loaded cuts maximum load from Theta(log R / log log R) to Theta(log log R) (Principle 19)",
+   "verbatim_quote": "with each request sampling replicas independently and uniformly at random, querying two replicas and selecting the least-loaded one reduces the maximum load from the one-choice bound",
+   "page": "Fleet-in-Production Principles, Principle 19 (p. 607)",
+   "latex": "\\text{max load} = \\Theta(\\log \\log R) \\text{ with two choices, vs. } \\Theta\\left(\\frac{\\log R}{\\log \\log R}\\right) \\text{ with one}",
+   "symbol_and_unit_ledger": {
+    "R": "number of replicas (integer)",
+    "max load": "maximum number of requests on any replica"
+   },
+   "assumptions": [
+    "Idealized process: requests placed sequentially, each sampling replicas independently and uniformly at random",
+    "Probes must read a work signal, not a request count, because remaining work varies and probes go stale"
+   ],
+   "breakdown_regime": "Degrades when load probes are stale or measure the wrong signal; serving requests differ widely in remaining work.",
+   "domain": "serving at scale",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Assigning reasoning tasks by probing two candidate workers and taking the less loaded one gives near-optimal balance with almost no coordination, which beats both round-robin and a central queue for a fleet of subagents with variable task sizes.",
+    "source_operator": "power_of_two_choices",
+    "telemetry": "Maximum per-worker load and tail completion time under two-choice assignment."
+   }
+  },
+  {
+   "primitive_id": "participation_selection_principle",
+   "name": "Edge admission policies select the training population, so the admitted population is not the deployed one (Principle 20)",
+   "verbatim_quote": "An edge device contributes to on-device or federated learning only in windows its admission policy accepts, when the predicted update energy fits the remaining energy slack, the added power stays within the thermal limit, and foreground latency still meets its deadline",
+   "page": "Fleet-in-Production Principles, Principle 20 (pp. 607-608)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Admission requires energy slack, thermal headroom, and foreground latency headroom simultaneously",
+    "Those conditions correlate with hardware class, charging habits, and connectivity"
+   ],
+   "breakdown_regime": "Loosening admission is not a remedy for skew, because it spends the energy, thermal, and latency budgets the policy exists to protect; skew must be corrected by stratified selection, quotas, or reweighting.",
+   "domain": "edge intelligence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any gated data intake has the same selection effect: the games, books, or sources admitted into the engine's corpus are a selected population, not the deployed population. Participation and completion rates must be measured per cohort and the skew corrected, or the engine learns the admitted world, not the real one.",
+    "source_operator": "participation_selection_principle",
+    "telemetry": "Admission and completion rates per source cohort versus the full population."
+   }
+  },
+  {
+   "primitive_id": "evaluation_contract_principle",
+   "name": "A release decision is valid only against one versioned evaluation contract, with reliability as a vector of budgets (Principle 21)",
+   "verbatim_quote": "that pins the model and its dependencies, the workload, the metrics and statistical design, the acceptance thresholds, the rollback conditions, and the accountable owners.",
+   "page": "Fleet-in-Production Principles, Principle 21 (p. 608)",
+   "latex": "\\max_i B_i \\le 1",
+   "symbol_and_unit_ledger": {
+    "B_i": "fraction of observations violating target i, divided by the violating fraction that target allows (dimensionless)"
+   },
+   "assumptions": [
+    "Thresholds and rollback conditions are fixed before exposure",
+    "Reliability is a vector over availability, latency, freshness, and quality, never an average"
+   ],
+   "breakdown_regime": "Averaging dimensions hides a quality regression behind perfect uptime; evidence gathered under different configurations certifies no single candidate.",
+   "domain": "ML operations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine changes should ship under the same contract: one versioned evaluation that pins data, metrics, thresholds, and rollback, with calibration, coverage, and freshness as separate budgets. A change that improves the headline number while exhausting any single budget does not promote.",
+    "source_operator": "evaluation_contract_principle",
+    "telemetry": "Per-dimension budget consumption (calibration, coverage, freshness) for each candidate engine change."
+   }
+  },
+  {
+   "primitive_id": "provenance_bound_on_trust",
+   "name": "Model behavior is a function of every contributor to its data, code, and weights, so the provenance record bounds trust (Principle 22)",
+   "verbatim_quote": "A contributor that cannot be identified and verified can change that behavior without producing a visible failure, so the provenance record bounds how far the model can be trusted.",
+   "page": "Responsible Fleet Principles, Principle 22 (pp. 1043-1044)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Contributors include training records and labels, preprocessing and training code, dependencies, pretrained checkpoints, and the executing hardware and firmware"
+   ],
+   "breakdown_regime": "Clean evaluation results cannot certify integrity, because a small crafted input set can shift targeted decisions while aggregate accuracy stays unchanged.",
+   "domain": "security and privacy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine input needs lineage for the same reason: a signal whose source cannot be identified and verified can move a projection without leaving a visible failure. Trust in any pick extends only as far as the provenance record of its evidence reaches.",
+    "source_operator": "provenance_bound_on_trust",
+    "telemetry": "Share of engine inputs with complete, verified lineage records."
+   }
+  },
+  {
+   "primitive_id": "information_leakage_invariant",
+   "name": "Leakage is present whenever mutual information between a protected record and an observable output is positive (Principle 23)",
+   "verbatim_quote": "A privacy claim must name the protected unit and the observations available to an adversary.",
+   "page": "Responsible Fleet Principles, Principle 23 (p. 1044)",
+   "latex": "I(R; O) > 0",
+   "symbol_and_unit_ledger": {
+    "I(R; O)": "mutual information between protected record R and observable output O (bits)",
+    "R": "one protected individual's training record",
+    "O": "an observable model output"
+   },
+   "assumptions": [
+    "The adversary's observation set is named",
+    "A correctly executing model can still disclose data through authorized outputs"
+   ],
+   "breakdown_regime": "Access control over stored data cannot fix leakage through outputs; privacy is a budget, and interactive systems must account for composition and stop when the budget is exhausted.",
+   "domain": "security and privacy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Outputs leak inputs in any published system: a published projection can reveal the private signals behind it if the mapping is invertible enough. The engine should treat published surfaces as observations available to an adversary and check what they disclose about internal signals.",
+    "source_operator": "information_leakage_invariant",
+    "telemetry": "Reconstruction tests: how much of the internal signal set can be inferred from published outputs alone."
+   }
+  },
+  {
+   "primitive_id": "robustness_compute_penalty",
+   "name": "Adversarial training multiplies per-batch cost by roughly K_PGD + 1 forward-backward passes (Principle 24)",
+   "verbatim_quote": "It trains on adversarial examples, inputs perturbed within a stated budget so that the model's prediction changes.",
+   "page": "Responsible Fleet Principles, Principle 24 (p. 1044)",
+   "latex": "\\text{batch cost} \\approx (K_{PGD} + 1) \\text{ forward-backward passes}",
+   "symbol_and_unit_ledger": {
+    "K_PGD": "number of inner projected-gradient-descent attack steps used to find each perturbation (integer)"
+   },
+   "assumptions": [
+    "Perturbations stay within a stated budget",
+    "Clean-accuracy and robustness effects depend on attack strength and training procedure"
+   ],
+   "breakdown_regime": "Robustness is claimed only per stated failure class with its own evidence; external guardrails complement but do not establish the same guarantee as robustness of the underlying model.",
+   "domain": "robust AI",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Stress-testing reasoning costs a multiplier, not a surcharge: adversarial review of a projection (devil's-advocate passes against each signal) multiplies the reasoning cost per game by the number of attack passes plus one, and that multiplier must be budgeted explicitly in the weekly cycle.",
+    "source_operator": "robustness_compute_penalty",
+    "telemetry": "Reasoning cost per game with and without adversarial review passes; error rate caught per pass."
+   }
+  },
+  {
+   "primitive_id": "jevons_paradox_of_ai",
+   "name": "Efficiency gains can raise total consumption when usage grows by a larger factor than efficiency improves (Principle 25)",
+   "verbatim_quote": "Efficiency improvements can lower unit cost and stimulate demand. In this comparison, total resource consumption rises only when usage grows by a larger factor than resource efficiency improves.",
+   "page": "Responsible Fleet Principles, Principle 25 (p. 1045)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The schematic depicts a rebound scenario, not an inevitable consequence of efficiency",
+    "Scaling laws also price each further loss reduction in multiplicative compute, so demand can outrun efficiency without any price response"
+   ],
+   "breakdown_regime": "Sustainability strategies must target absolute limits (carbon budgets, renewable sourcing) rather than rate efficiency alone.",
+   "domain": "sustainable AI",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Cheaper reasoning invites more reasoning: when per-game analysis gets cheaper, the fleet expands coverage, context, and test-time search until total spend climbs back. Budgets for the engine should be set as absolute caps per cycle, not as per-unit efficiency targets.",
+    "source_operator": "jevons_paradox_of_ai",
+    "telemetry": "Total cycle cost trend as per-unit reasoning cost falls; coverage and depth growth rates."
+   }
+  },
+  {
+   "primitive_id": "fairness_impossibility_theorem",
+   "name": "With different group base rates and imperfect scores, calibration and equal mean scores per outcome class cannot all hold (Principle 26)",
+   "verbatim_quote": "Under the theorem's conditions, fairness requires an explicit trade-off; there is no criterion-free optimum that selects among incompatible metrics.",
+   "page": "Responsible Fleet Principles, Principle 26 (p. 1046)",
+   "latex": "\\Pr(Y = 1 \\mid G = a) \\ne \\Pr(Y = 1 \\mid G = b) \\implies \\text{Trade-off Required}",
+   "symbol_and_unit_ledger": {
+    "Y": "the outcome",
+    "G": "group attribute, in {a, b}",
+    "Pr(Y = 1 | G)": "group base rate"
+   },
+   "assumptions": [
+    "Prediction is imperfect",
+    "Group base rates differ",
+    "The claim concerns the three score criteria named in the text; equalized odds at one threshold is a different condition"
+   ],
+   "breakdown_regime": "Exceptions: equal base rates or perfect prediction. Otherwise fairness requires an explicit, stakeholder-chosen trade-off enforced and monitored like a latency budget.",
+   "domain": "responsible AI",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's own quality criteria have the same structure: calibration, coverage, and sharpness cannot all be maximized at once across segments with different base rates. The trade-off must be chosen explicitly, enforced, and monitored per segment rather than discovered after the fact.",
+    "source_operator": "fairness_impossibility_theorem",
+    "telemetry": "Calibration and coverage measured per segment (league, market type) against the chosen trade-off."
+   }
+  },
+  {
+   "primitive_id": "sociotechnical_feedback_invariant",
+   "name": "When decisions affect the environment, the future data distribution is a function of past decisions: performative feedback (Principle 27)",
+   "verbatim_quote": "Settings with this feedback, where predictions change the outcomes they predict, are called performative.",
+   "page": "Responsible Fleet Principles, Principle 27 (p. 1046)",
+   "latex": "p_{t+1}(x) = g(p_t(x), f_t(x))",
+   "symbol_and_unit_ledger": {
+    "p_t(x)": "data distribution at time t",
+    "f_t(x)": "the model's decisions at time t",
+    "g": "the environment's response function"
+   },
+   "assumptions": [
+    "The deployed model's decisions affect its environment",
+    "The environment responds through a function of the current distribution and the decisions"
+   ],
+   "breakdown_regime": "A model maximizing accuracy on static test data can still degrade the future distribution, amplify biasing incentives, or destabilize the monitored environment; feed-forward evaluation alone cannot see it.",
+   "domain": "responsible AI",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Published projections move the market they predict: lines react to published picks, so the engine operates in a performative setting and must model the feedback loop (how its own output shifts future prices and data) rather than treating the market as a static target.",
+    "source_operator": "sociotechnical_feedback_invariant",
+    "telemetry": "Line movement following publication; distribution shift in incoming data after engine releases."
+   }
+  },
+  {
+   "primitive_id": "c3_taxonomy",
+   "name": "The C3 taxonomy divides distributed execution time into Compute, Communication, and Coordination",
+   "verbatim_quote": "The C³ taxonomy divides the wall-clock time of distributed execution into Compute, Communication, and Coordination, and the Fleet Law turns that division into an equation for distributed step time.",
+   "page": "Preface, Suggested Reading Paths context (p. xxi); developed in Chapter 1.5",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The three axes are independent accounts of wall-clock cost",
+    "Every layer of the fleet stack can be diagnosed through the same lens"
+   ],
+   "breakdown_regime": "The taxonomy diagnoses where cost sits; it does not by itself say which layer to change. The Fleet Law supplies the quantitative form.",
+   "domain": "distributed systems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's cost-accounting frame: every reasoning cycle is decomposed into compute (reasoning itself), communication (evidence movement), and coordination (synchronization, consistency, assignment). Any bottleneck claim must name its axis, and any optimization must report all three.",
+    "source_operator": "c3_taxonomy",
+    "telemetry": "Per-cycle time and cost split across the three axes."
+   }
+  },
+  {
+   "primitive_id": "power_law_scaling_formulation",
+   "name": "Theorem 1.1: loss equals a power-law decay in the resource plus an irreducible floor",
+   "verbatim_quote": "where loss ℒ decreases as resource quantity 𝑋 increases, following a power law decay with rate 𝛼scale , plus a baseline constant 𝐶ℒ , the irreducible loss (a constant of the fit, not one of the C3 labels).",
+   "page": "Chapter 1.3, Theorem 1.1 (p. 22)",
+   "latex": "\\mathcal{L}(X) = A_{\\mathcal{L}} X^{-\\alpha_{scale}} + C_{\\mathcal{L}}",
+   "symbol_and_unit_ledger": {
+    "L(X)": "loss achieved with resource quantity X",
+    "A_L": "task-dependent scale constant",
+    "alpha_scale": "scaling exponent; larger means more efficient improvement per resource",
+    "C_L": "irreducible loss, a constant of the fit",
+    "X": "resource quantity: parameters, tokens, or compute"
+   },
+   "assumptions": [
+    "The fit is empirical, from measured learning curves",
+    "Halving the reducible term requires multiplying X by 2^(1/alpha_scale)"
+   ],
+   "breakdown_regime": "The constants are task-dependent and regime-bound; a fit from one task or regime does not transfer to another.",
+   "domain": "scaling laws",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The irreducible floor is the key transfer: every engine signal has an irreducible error floor set by the domain, and investment only buys down the reducible term. Estimating each signal's floor tells the engine when more data for that signal is wasted spend.",
+    "source_operator": "power_law_scaling_formulation",
+    "telemetry": "Per-signal error versus sample size, fitted to estimate the irreducible floor."
+   }
+  },
+  {
+   "primitive_id": "compute_optimal_allocation",
+   "name": "Applying scaling laws is a scarcity diagnosis: identify whether compute, data, or model size binds first, and invest there (Chinchilla regime analysis)",
+   "verbatim_quote": "Applying scaling laws in practice is therefore a scarcity diagnosis that asks which resource prevents balanced growth first.",
+   "page": "Chapter 1.3.3.1, Resource-constrained scaling regimes (p. 23)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Compute budget, data availability, and model size create three regimes with different optimal responses",
+    "Compute-optimal growth scales model size and training data in proportion, as Chinchilla demonstrated"
+   ],
+   "breakdown_regime": "Misdiagnosis wastes the investment: a data-limited project gains more from data pipelines than from accelerators, and a compute-limited one the reverse.",
+   "domain": "scaling laws",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine improvement is the same diagnosis: before buying more of anything, identify whether the binding scarcity is reasoning compute, evidence data, or model capacity, because the optimal spend differs completely by regime and the wrong one buys nothing.",
+    "source_operator": "compute_optimal_allocation",
+    "telemetry": "Marginal calibration gain per unit spend on compute, data, and capacity, compared per cycle."
+   }
+  },
+  {
+   "primitive_id": "zero_redundancy_optimizer",
+   "name": "ZeRO sharding divides optimizer, gradient, and parameter state across workers; offloading moves cold state to host memory",
+   "verbatim_quote": "Sharding divides optimizer, gradient, and parameter state across workers; offloading places colder state in host DRAM or Non-Volatile Memory Express (NVMe) when HBM capacity is the binding limit.",
+   "page": "Chapter 2.3, The Memory Wall (Lighthouse 2.1 context)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Data-parallel replicas would otherwise each hold a redundant full copy of the state",
+    "The HBM-versus-host boundary is a deliberate design parameter"
+   ],
+   "breakdown_regime": "Placing too much state in fast memory wastes expensive capacity; placing too much in host memory creates bandwidth stalls that idle the arithmetic units.",
+   "domain": "distributed training",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Redundant state is the default waste in a fleet of reasoning workers too: if every worker holds the full corpus context, capacity is spent on copies. Sharding context by worker and offloading cold material to slower storage frees the fast context for the state each decision actually touches.",
+    "source_operator": "zero_redundancy_optimizer",
+    "telemetry": "Context duplication factor across workers; stall time from cold-state fetches."
+   }
+  },
+  {
+   "primitive_id": "roofline_model",
+   "name": "Attainable throughput is the lower of the bandwidth slope and the compute roof, meeting at the ridge point",
+   "verbatim_quote": "Attainable FP16 throughput is the lower of two ceilings, the memory-bandwidth slope (blue) and the compute roof (orange), which meet at the dashed ridge point.",
+   "page": "Chapter 2.4, Figure 2.8: The H100 Roofline Landscape (p. 102)",
+   "latex": "R_{attain} \\le \\min(R_{peak}, I \\times BW), \\quad I_{ridge} = \\frac{R_{peak}}{BW}",
+   "symbol_and_unit_ledger": {
+    "R_attain": "attainable compute rate (FLOP/s)",
+    "R_peak": "peak compute rate (FLOP/s)",
+    "I": "arithmetic intensity (FLOP per byte moved)",
+    "BW": "memory bandwidth (bytes per second)",
+    "I_ridge": "ridge-point intensity where the two ceilings meet (FLOP/byte)"
+   },
+   "assumptions": [
+    "Workload arithmetic intensity is measured per byte moved from memory",
+    "Batching raises intensity by amortizing each weight read across more requests"
+   ],
+   "breakdown_regime": "Workloads left of the ridge stay capped by bandwidth however much compute is offered; KV cache traffic, activation traffic, and capacity limits lower both ceilings in practice.",
+   "domain": "compute infrastructure",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every engine worker has a roofline: output rate is the lower of its reasoning ceiling and its evidence-bandwidth ceiling, and the ridge is the evidence-per-decision ratio where the binding constraint flips. Measuring where each worker sits tells whether to add reasoning capacity or evidence bandwidth.",
+    "source_operator": "roofline_model",
+    "telemetry": "Decisions per hour versus evidence bytes per decision, per worker."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "1cfc38c92533ca46-t1",
+   "think": "This book is the second volume of Reddi's Machine Learning Systems project, and its unit of analysis is not the model, the kernel, or even the node, but the fleet: the whole population of accelerators, networks, storage tiers, schedulers, and operators that a frontier training or serving job actually occupies. Its central move is to make the fleet a first-class engineering object with its own physics. The introduction establishes why the move is forced: training compute has grown through seven to eight orders of magnitude, loss falls only as a power law in resources, and each further step of quality therefore costs a multiplicative factor of hardware, time, and energy. Because the scaling exponent prices the future, infrastructure stops being a procurement detail and becomes the binding scientific constraint. The book's diagnostic spine is the C3 taxonomy, which divides the wall-clock time of distributed execution into Compute, Communication, and Coordination, and the Fleet Law, which turns that division into a step-time equation: compute divided by N, plus communication, plus synchronization, minus whatever overlap can hide. Nearly every later result is a statement about one term of that equation or about the conservation law the book calls the displacement of overhead: optimizations relocate cost among the three axes rather than deleting it, so any claimed improvement must be audited on all three accounts. Part I builds the physical substrate term by term: the generality tax on accelerator design, the memory capacity gap that forces model state to be sharded, the power density wall and the thermodynamic limit that cap rack density, the alpha-beta model that prices a single message, the bisection bound that prices all messages at once, and the I/O wall and storage hierarchy that decide whether accelerators are fed or idle. Part II develops the logic of distribution. The AllReduce bandwidth bound shows that ring collectives are byte-optimal yet impose a per-rank traffic floor near twice the tensor size, which is why pure data parallelism must eventually become communication-dominated as compute per worker shrinks. The scaling efficiency bound converts that prediction into a measured ratio against ideal linear speedup. Fault tolerance enters as an economic optimization through the Young-Daly interval, whose square-root law balances checkpoint write cost against expected rework under a system MTBF that shrinks as components multiply. Orchestration is then framed by feasibility before fairness: a gang allocation must be atomically granted and topologically placeable before any fairness policy may divide what remains, because a fair share of an unusable allocation is simply idle capacity charged to a tenant. Part III moves the fleet into production. The ML goodput decomposition factors fleet productivity into scheduling, runtime, and program components, each counted at a stated boundary so every lost hour has exactly one owner; it is the book's accounting answer to teams optimizing their local metric while the product falls. Serving is treated as the dominant lifetime cost for high-traffic models, with the autoregressive bottleneck explaining why decode is bandwidth-bound and why batching, KV cache management, and two-choice load balancing are the operative levers. Edge intelligence adds the participation selection principle: admission policies quietly choose the training population, so data skew is a governance fact, not an accident. The evaluation contract principle then insists that release decisions are valid only against one versioned contract with reliability kept as a vector of budgets, never averaged into a single number. Part IV draws the outer boundaries. Trust is bounded by provenance, because model behavior is a function of every contributor to data, code, and weights. Privacy is stated as an information leakage invariant: leakage exists whenever mutual information between a protected record and an observable output is positive, which makes privacy a budget rather than a switch. Robustness carries a compute penalty proportional to the inner attack steps, sustainability is reframed by the Jevons paradox toward absolute budgets instead of rate efficiency, fairness is bounded by an impossibility theorem that forces explicit trade-offs, and the sociotechnical feedback invariant closes the loop: deployed decisions change the future data distribution, so the system must be governed as a feedback loop rather than a feed-forward pipeline. For a reasoning engine, the transfer is direct. The engine also runs a fleet, also pays compute, communication, and coordination on every cycle, also faces diminishing power-law returns on evidence, also loses capacity in three separately owned ways, and also publishes outputs that move the environment it measures. The book's limits are equally clear: its models are first-order and idealized, its constants must be measured rather than assumed, several bounds assume independence or constant failure rates that real fleets violate through correlation and stragglers, and its empirical scaling fits are regime-bound. Used properly, it is not a set of answers but a measurement discipline: decompose, price each term, locate the binding constraint, and re-measure after every change. The book also makes a quieter methodological claim through its structure. Each part opens by stating its principles in advance, as invariants with implications, and only then develops the mechanisms that enforce them. That ordering matters: the principle is the contract, and the mechanism is one way to honor it. A reader who internalizes the twenty-seven principles can evaluate technologies the book never mentions, because the principles price behavior rather than products. This is why the volume survives its own examples. Accelerators, fabrics, and frameworks will turn over, but a step still costs compute plus communication plus synchronization minus overlap, aggregation still has a byte floor, saved state still trades write cost against rework, and a release still needs one contract with vector budgets. The durable content is the accounting, and the accounting is what a fleet operator actually runs on.",
+   "retrocausal_genealogy": "The lineage runs from classical performance engineering into warehouse-scale computing. Amdahl's law supplies the strong-scaling skeleton that the Fleet Law generalizes; the roofline model contributes the two-ceiling picture of attainable rate; the alpha-beta and LogP traditions price messages; Young's 1974 checkpoint analysis and Daly's refinement supply the square-root interval; Kaplan's and Hoffmann's scaling-law empirics supply the demand curve that makes fleets necessary; and the warehouse-scale computing literature supplies the premise that the data center itself is the computer. The book's contribution is synthesis: it re-derives these inherited results inside one taxonomy so each can be applied at fleet scale.",
+   "theory_of_mind": "The author writes as a teacher of system builders who will operate fleets they did not design end to end. He assumes the reader keeps mistaking local optimization for system improvement, so every chapter pairs a mechanism with the fallacy it corrects and states its result as a named, falsifiable principle with an invariant and an implication. His model of the domain is accounting-minded: every cost is real, conserved, and attributable, every gain is paid for on some axis, and the engineer's job is to know which axis is binding before spending anything. Worked lighthouse archetypes recur because he believes principles are only understood when priced on a concrete workload.",
+   "cross_layer_veto": "Several results veto whole classes of cross-layer optimism. The displacement of overhead vetoes any single-axis improvement claim: a faster kernel cannot compensate for capacity lost to infeasible scheduling, and cheaper communication bought with staleness reappears as extra compute. The AllReduce floor vetoes the belief that adding workers dilutes communication cost. The evaluation contract vetoes promotion on a single headline metric, and the provenance bound vetoes trusting a model whose lineage is incomplete no matter how clean its evaluation looks. Together they say the fleet's layers constrain one another multiplicatively, so a weakness in any layer caps the whole product."
+  }
+ ],
+ "universal_lens": "Read generally, the book is a template for engineering any system whose work has outgrown one container. Decompose total cost into production, movement, and coordination; write the step-time equation for your own domain; find which term refuses to shrink as you add capacity; treat reliability, evaluation, and provenance as budgeted accounts rather than virtues; and expect every optimization to move cost rather than delete it. The fleet is incidental. The discipline of pricing each term, locating the binding constraint, and re-measuring after each change applies to laboratories, logistics networks, research organizations, and any multi-agent system that must turn capacity into retained, trustworthy progress.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the book's research infrastructure doctrine: corpus and evidence work should be run as a fleet with explicit goodput accounting, so lost capacity is charged to scheduling, runtime stalls, or program quality and fixed by the right owner. Its scaling-law framing prices further data acquisition against diminishing returns and an irreducible floor, its provenance bound sets the lineage standard for every ingested source, and its evaluation contract principle gives the Institute a release discipline for methods and datasets: one versioned contract, vector budgets, rollback conditions fixed before exposure.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes the operating model for its weekly reasoning cycle. The Fleet Law and C3 taxonomy structure cycle planning: per-game reasoning is the compute term, evidence movement is the communication term, and consistency checks are the coordination term, with overlap hiding what it can. The goodput decomposition audits each cycle's output by assignment coverage, retained progress, and reasoning quality. The scaling-law and scarcity-diagnosis results direct investment toward whichever of compute, data, or capacity actually binds, the Young-Daly interval sets state-saving cadence for long runs, and the performative feedback invariant requires the engine to model how its published projections move the market it predicts."
+}

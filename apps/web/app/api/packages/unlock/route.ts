@@ -1,7 +1,30 @@
 import { NextResponse } from "next/server";
 import { getPackageBySlug } from "@/lib/packages/catalog";
-import { LIVE_SLATE_COACH_WRITEUPS, type CoachGameWriteup } from "@/lib/writeups/coach-writeup-engine";
+import {
+  LIVE_SLATE_COACH_WRITEUPS,
+  filterWriteupsForWindowSlot,
+  type CoachGameWriteup,
+} from "@/lib/writeups/coach-writeup-engine";
 import { verifyPackagePurchase } from "@/lib/packages/verify-purchase";
+import { signUnlockCookie, verifyUnlockCookie } from "@/lib/packages/unlock-cookie";
+
+function extractCookieValue(cookieHeader: string, cookieName: string): string | null {
+  if (!cookieHeader || !cookieName) return null;
+  for (const part of cookieHeader.split(";")) {
+    const eqIdx = part.indexOf("=");
+    if (eqIdx === -1) continue;
+    const key = part.slice(0, eqIdx).trim();
+    if (key === cookieName) {
+      const raw = part.slice(eqIdx + 1).trim();
+      try {
+        return raw ? decodeURIComponent(raw) : null;
+      } catch {
+        return raw || null;
+      }
+    }
+  }
+  return null;
+}
 
 export async function GET(req: Request) {
   try {
@@ -11,12 +34,9 @@ export async function GET(req: Request) {
     const whopToken = searchParams.get("whop_token") || searchParams.get("token");
 
     const cookieHeader = req.headers.get("cookie") || "";
-    const cookieMatch = slug
-      ? cookieHeader.match(new RegExp(`(?:^|; )gse_unlock_${slug}=([^;]*)`)) ||
-        cookieHeader.match(/(?:^|; )gse_unlock_global=([^;]*)/)
-      : null;
-    const cookieSessionId = cookieMatch && cookieMatch[1] ? decodeURIComponent(cookieMatch[1]) : null;
-    const effectiveSessionId = sessionId || cookieSessionId;
+    const rawSlugCookie = slug ? extractCookieValue(cookieHeader, `gse_unlock_${slug}`) : null;
+    const verifiedCookie = slug ? verifyUnlockCookie(rawSlugCookie, slug) : { valid: false, sessionId: null };
+    const effectiveSessionId = sessionId || (verifiedCookie.valid ? verifiedCookie.sessionId : null);
 
     if (!slug) {
       return NextResponse.json(
@@ -49,24 +69,11 @@ export async function GET(req: Request) {
       );
     }
 
-    // Match relevant writeups for package window
-    const writeups: CoachGameWriteup[] = LIVE_SLATE_COACH_WRITEUPS.filter((w) => {
-      if (pkg.windowSlot === "WEEKEND_PASS" || pkg.windowSlot === "WEEKLY_PASS") {
-        return true;
-      }
-      if (pkg.windowSlot === "SUN_MAIN") {
-        return w.windowSlot === "SUN_EARLY" || w.windowSlot === "SUN_LATE" || w.windowSlot === "SUN_MAIN";
-      }
-      // Two-door offers: primetime pack covers the standalone night games;
-      // the Sunday full-slate pack covers every Sunday window.
-      if (pkg.windowSlot === "PRIMETIME") {
-        return w.windowSlot === "SNF" || w.windowSlot === "MNF" || w.windowSlot === "TNF";
-      }
-      if (pkg.windowSlot === "SUNDAY_FULL") {
-        return w.windowSlot === "SUN_EARLY" || w.windowSlot === "SUN_LATE" || w.windowSlot === "SUN_MAIN" || w.windowSlot === "SNF";
-      }
-      return w.windowSlot === pkg.windowSlot;
-    });
+    // Match relevant writeups for package window via shared filter helper
+    const writeups: CoachGameWriteup[] = filterWriteupsForWindowSlot(
+      LIVE_SLATE_COACH_WRITEUPS,
+      pkg.windowSlot,
+    );
 
     const res = NextResponse.json({
       unlocked: true,
@@ -76,21 +83,20 @@ export async function GET(req: Request) {
     });
 
     if (effectiveSessionId) {
-      const isProd = process.env.NODE_ENV === "production";
-      res.cookies.set(`gse_unlock_${pkg.slug}`, effectiveSessionId, {
-        httpOnly: true,
-        secure: isProd,
-        path: "/",
-        maxAge: 60 * 60 * 24 * 30,
-        sameSite: "lax",
+      const signedCookieVal = signUnlockCookie({
+        sessionId: effectiveSessionId,
+        slug: pkg.slug,
       });
-      res.cookies.set("gse_unlock_global", effectiveSessionId, {
-        httpOnly: true,
-        secure: isProd,
-        path: "/",
-        maxAge: 60 * 60 * 24 * 30,
-        sameSite: "lax",
-      });
+      if (signedCookieVal) {
+        const isProd = process.env.NODE_ENV === "production";
+        res.cookies.set(`gse_unlock_${pkg.slug}`, signedCookieVal, {
+          httpOnly: true,
+          secure: isProd,
+          path: "/",
+          maxAge: 60 * 60 * 24 * 30,
+          sameSite: "lax",
+        });
+      }
     }
 
     return res;

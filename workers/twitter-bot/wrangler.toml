@@ -1,0 +1,11 @@
+# Cloudflare Worker deployment descriptor for @sports/twitter-bot.
+# Enforces draft-only safety by default unless LIVE_POSTING_ENABLED is explicitly flipped.
+name = "gse-twitter-bot"
+main = "oauth1.js"
+compatibility_date = "2026-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+LIVE_POSTING_ENABLED = "false"
+DRAFT_ONLY_MODE = "true"
+GSE_WEB_ORIGIN = "https://www.galaxysportsedge.com"

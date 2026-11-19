@@ -12,10 +12,9 @@ import math
 
 import numpy as np
 import pytest
-
+from intelligence.coaching import qb_visual_cognitive_load as qbl
 from intelligence.vision import ball_tracklet as bt
 from intelligence.vision import route_geometry as rg
-from intelligence.coaching import qb_visual_cognitive_load as qbl
 
 
 # ---------------------------------------------------------------------------
@@ -55,8 +54,11 @@ def test_em_clustering_separates_two_route_shapes():
     a = [np.column_stack([np.zeros(20), 12 * t]) + np.random.default_rng(i).normal(0, 0.05, (20, 2))
          for i in range(n)]
     # shape B: sharp horizontal break
-    b = [np.column_stack([12 * t, np.zeros(20)]) + np.random.default_rng(100 + i).normal(0, 0.05, (20, 2))
-         for i in range(n)]
+    b = [
+        np.column_stack([12 * t, np.zeros(20)])
+        + np.random.default_rng(100 + i).normal(0, 0.05, (20, 2))
+        for i in range(n)
+    ]
     res = rg.em_cluster_routes(a + b, n_clusters=2, max_iter=60)
     truth = ["A"] * n + ["B"] * n
     purity = rg.cluster_purity(res["labels"], truth)
@@ -103,9 +105,9 @@ def test_ball_metrics_detects_deceleration():
 # 6-DOF flight model
 # ---------------------------------------------------------------------------
 def test_ball_constants_match_published_values():
-    assert bt.BALL_MASS_KG == pytest.approx(0.415)
-    assert bt.BALL_R_LONG_M == pytest.approx(0.14)
-    assert bt.BALL_AREA_M2 == pytest.approx(math.pi * 0.14 * 0.0857, rel=1e-9)
+    assert pytest.approx(0.415) == bt.BALL_MASS_KG
+    assert pytest.approx(0.14) == bt.BALL_R_LONG_M
+    assert pytest.approx(math.pi * 0.14 * 0.0857, rel=1e-9) == bt.BALL_AREA_M2
 
 
 def test_flight_drag_reduces_carry_versus_vacuum():

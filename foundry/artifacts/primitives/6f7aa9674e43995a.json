@@ -1,0 +1,614 @@
+{
+ "book_id": "6f7aa9674e43995a",
+ "source_status": "COMPLETE",
+ "source_note": "True source: Filipe Manuel Clemente (ed.), Training Load, Well-Being, and Readiness: Reducing Injury Risk and Improving Sports Performance, printed edition of the Special Issue of Medicina, MDPI, Basel, 2022; ISBN 978-3-0365-3867-9 (hardback) and 978-3-0365-3868-6 (PDF). The volume reprints seven Medicina 2021 articles (Cha et al. 57, 1166; Tafunai et al. 57, 863; Albaker et al. 57, 703; Aali et al. 57, 657; Oliveira et al. 57, 645; Goncalves et al. 57, 617; Lopez-Laval et al. 57, 606), book pages 1 to 90 plus editor front matter. Local file is the publisher PDF, 4690581 bytes, sha256 6f7aa9674e43995aac0e13321a86f4c48ba8fd6c952ece9518420e18116b8d0a, book_id 6f7aa9674e43995a. Extracted text is clean born digital text with two column interleaving in some article sidebars; all quotes were chosen from passages that sit inside one page and verified as contiguous substrings of the extracted text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "monitoring_system_load_wellbeing_readiness",
+   "name": "A consistent monitoring system tracks internal and external load individually, accumulated load effects on well-being, and readiness",
+   "verbatim_quote": "applying a consistent monitoring system involves individually tracking the internal and external load of athletes, analyzing the impact of accumulated load and peripherical factors on well-being and assessing the athlete's readiness",
+   "page": "Preface, p. ix; txt lines 153-175",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Monitoring is individual, not team averaged, so each athlete carries a separate load history.",
+    "Well-being and readiness are treated as observable states that respond to accumulated load."
+   ],
+   "breakdown_regime": "Breaks when monitoring is intermittent or team averaged; accumulated effects are then invisible and readiness is guessed rather than measured.",
+   "domain": "athlete monitoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats every performer as an individual time series: imposed demand, internal response, accumulated state, and readiness are separate channels that must all be present before a projection is trusted. A missing channel is a missing input, not a zero.",
+    "source_operator": "monitoring_system_load_wellbeing_readiness",
+    "telemetry": "Daily per athlete internal load, external load, wellness scores, and readiness assessments."
+   }
+  },
+  {
+   "primitive_id": "internal_load_psychophysiological_response",
+   "name": "Internal load is the psychophysiological response to external load, most often measured by RPE and heart rate",
+   "verbatim_quote": "the internal load corresponds to the psychophysiological responses to the external load",
+   "page": "Oliveira et al., Sec. 1 (book pp. 47-62); txt around line 2916",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same external demand can produce different internal responses in different athletes.",
+    "RPE and heart rate are accepted proxies for the internal response."
+   ],
+   "breakdown_regime": "Self reported RPE drifts with motivation and habituation, and heart rate is confounded by heat, caffeine, illness, and sleep loss.",
+   "domain": "load monitoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Imposed conditions and experienced cost are different variables. The engine keeps the external event record separate from the internal response record, because the gap between them is itself a signal about current state.",
+    "source_operator": "internal_load_psychophysiological_response",
+    "telemetry": "Session RPE, heart rate response, and wellness reports paired with the session that produced them."
+   }
+  },
+  {
+   "primitive_id": "external_load_distance_speed_inertial",
+   "name": "External load in soccer is characterized by distance at speed thresholds and inertial measures such as accelerations, decelerations, and player load",
+   "verbatim_quote": "in soccer, the external load is typically characterized by the distance covered at different speed thresholds, or the inertial-derived measures such as accelerations/decelerations or composite variables (e.g., player load)",
+   "page": "Oliveira et al., Sec. 1 (book pp. 47-62); txt around line 2916",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tracking devices sample frequently enough to resolve speed zones and inertial events.",
+    "Speed thresholds are fixed across the monitoring period so distances are comparable."
+   ],
+   "breakdown_regime": "Device changes, sampling rate changes, and threshold changes break comparability; distance alone hides acceleration cost.",
+   "domain": "load monitoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "External demand is a vector, not a scalar: volume, high speed volume, and inertial events are stored separately because they carry different costs and different predictive content for later performance.",
+    "source_operator": "external_load_distance_speed_inertial",
+    "telemetry": "GPS and inertial tracking: total distance, distance by speed zone, acceleration and deceleration counts."
+   }
+  },
+  {
+   "primitive_id": "srpe_session_load_product",
+   "name": "Session load is the post session RPE score multiplied by training duration (sRPE, arbitrary units)",
+   "verbatim_quote": "The scores provided by the players were then multiplied by the training duration to obtain the s-RPE",
+   "page": "Oliveira et al., Sec. 2.3 (book pp. 47-62); txt around line 2916",
+   "latex": "\\mathrm{sRPE} = \\mathrm{RPE} \\times t_{\\mathrm{session}}",
+   "symbol_and_unit_ledger": {
+    "RPE": "Foster CR10 rating collected about 30 min after the session [dimensionless, 0 to 10]",
+    "t_session": "training or match duration [min]",
+    "sRPE": "session load [arbitrary units, AU]"
+   },
+   "assumptions": [
+    "Players are familiarized with the CR10 scale before data collection.",
+    "One global rating collected after the session summarizes the whole session.",
+    "Answers are given individually so ratings are not copied from teammates."
+   ],
+   "breakdown_regime": "Recall bias and anchoring distort the single rating; the product carries no information about how load was distributed inside the session.",
+   "domain": "load monitoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A cheap always available internal load estimate: a subjective intensity rating scaled by exposure time. The engine uses the same proxy times exposure pattern whenever a latent cost must be estimated daily without laboratory measurement.",
+    "source_operator": "srpe_session_load_product",
+    "telemetry": "Post session RPE ratings and session durations for every athlete and every session."
+   }
+  },
+  {
+   "primitive_id": "gps_external_load_10hz_hsr_threshold",
+   "name": "External load was captured with 10 Hz GPS, with high speed running defined as distance above 19 km/h",
+   "verbatim_quote": "Global positioning system (GPS) units (Viper pod 2, STATSports, Belfast, UK) with 10 Hz frequency were used to monitor the training duration, total distance and HSR (above 19 km/h) for each player",
+   "page": "Oliveira et al., Sec. 2.4 (book pp. 47-62); txt around line 2916",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Every player wears a unit in every session and match.",
+    "The 19 km/h threshold defines high speed running for the whole study period."
+   ],
+   "breakdown_regime": "Indoor or stadium signal loss, unit swaps, and threshold changes corrupt the series; a single speed threshold hides position specific speed demands.",
+   "domain": "load monitoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Measurement definitions are part of the data. The engine records the device, sampling rate, and threshold behind every external load number, because a number without its definition cannot be compared across time or across sources.",
+    "source_operator": "gps_external_load_10hz_hsr_threshold",
+    "telemetry": "GPS exports with sampling rate, total distance, and distance above the stated speed threshold."
+   }
+  },
+  {
+   "primitive_id": "acute_chronic_acwr_definitions",
+   "name": "Acute load is the accumulated load of one week, chronic load is the mean load of past weeks, and ACWR is their relationship",
+   "verbatim_quote": "acute load (representing the accumulated load during a week), chronic load (typically represented by the mean load in the past weeks), acute:chronic workload ratio (ACWR, representing the relationship between acute and chronic workloads)",
+   "page": "Oliveira et al., Sec. 1 (book pp. 47-62); txt around line 2916",
+   "latex": "\\mathrm{ACWR} = \\frac{L_{\\mathrm{acute}}}{L_{\\mathrm{chronic}}}",
+   "symbol_and_unit_ledger": {
+    "L_acute": "accumulated load during the current week [AU, m, or counts, matching the base measure]",
+    "L_chronic": "mean weekly load over the past weeks [same units as L_acute]",
+    "ACWR": "acute to chronic workload ratio [dimensionless]"
+   },
+   "assumptions": [
+    "The base load measure is identical for the acute and chronic windows.",
+    "Enough past weeks exist to form a stable chronic mean."
+   ],
+   "breakdown_regime": "Short histories, missing days, and whether the acute week is included in the chronic mean all move the ratio; the ratio compresses toward 1 when windows overlap.",
+   "domain": "load monitoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Current demand is judged against the performer own recent baseline, not a population norm. The engine applies the same normalization whenever a present value must be interpreted relative to a rolling personal history, and it records the window definitions used.",
+    "source_operator": "acute_chronic_acwr_definitions",
+    "telemetry": "Daily load series per athlete covering the current week and several prior weeks."
+   }
+  },
+  {
+   "primitive_id": "training_monotony_and_strain_definitions",
+   "name": "Training monotony represents the variability of load within the week, and training strain represents that variability multiplied by the acute load",
+   "verbatim_quote": "training monotony (TM) (representing the variability of load within the week) and training strain (TS) (representing the variability of the load multiplied by the acute load)",
+   "page": "Oliveira et al., Sec. 1 (book pp. 47-62); txt around line 2916",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Daily loads inside the week are recorded, not only the weekly total.",
+    "Variability is computed on the same base measure as the acute load."
+   ],
+   "breakdown_regime": "A week with few recorded days understates variability; monotony and strain inherit every error in the daily load series.",
+   "domain": "load monitoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Two weeks with equal total load are not equal stress: flat weeks and spiky weeks differ. The engine tracks within period variability and its product with volume as separate state variables, not just totals.",
+    "source_operator": "training_monotony_and_strain_definitions",
+    "telemetry": "Daily load values inside each week, per athlete and per load measure."
+   }
+  },
+  {
+   "primitive_id": "congestion_spikes_monotony_acwr_strain",
+   "name": "Across an elite soccer season, spikes in monotony, ACWR, and strain for internal and external measures occur during match congestion intensification",
+   "verbatim_quote": "we observed across in-season soccer that spikes in training monotony, ACWR and strain for both internal and external load parameters",
+   "page": "Oliveira et al., Sec. 5 Conclusions (book pp. 47-62); txt around line 2916",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The 41 week monitoring window with 52 matches represents a full congested season.",
+    "Spikes are read against the same athlete group baseline across mesocycles."
+   ],
+   "breakdown_regime": "Findings come from one top elite European team with 17 players; congestion patterns differ by league, squad size, and travel load.",
+   "domain": "load monitoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Stress markers spike when event density rises, in both the imposed and the experienced channel at once. The engine watches for joint spikes across independent load channels as a congestion state, rather than reacting to any single marker alone.",
+    "source_operator": "congestion_spikes_monotony_acwr_strain",
+    "telemetry": "Weekly monotony, strain, and ACWR series aligned with match density per week."
+   }
+  },
+  {
+   "primitive_id": "starters_nonstarters_equal_load_adjustment",
+   "name": "Starters and non starters behaved equally across the season, suggesting workload adjustments removed status differences in monitoring indices",
+   "verbatim_quote": "starters and non starters behaved equally across the period, thereby suggesting a lack of differences between them in the adjustments of training workloads during the period",
+   "page": "Oliveira et al., Sec. 5 Conclusions (book pp. 47-62); txt around line 2916",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Coaching staff actively adjusted training for non starters to compensate for missing match load.",
+    "Status groups were stable enough across the season to compare."
+   ],
+   "breakdown_regime": "Without deliberate compensatory training the equality disappears; the result describes a managed squad, not a natural law.",
+   "domain": "load monitoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Unequal event exposure does not have to mean unequal accumulated state if the training process compensates. The engine separates event participation from accumulated readiness, because a non participant can still arrive equally prepared.",
+    "source_operator": "starters_nonstarters_equal_load_adjustment",
+    "telemetry": "Match minutes, training load, and monitoring indices split by participation status."
+   }
+  },
+  {
+   "primitive_id": "wushu_injury_length_grouping_20_months",
+   "name": "Wushu players returning from knee injury were split at 20 months of injury experience into LESS and MORE injury groups of six each",
+   "verbatim_quote": "The group was classified into a group with less than 20 months of injury experience (LESS IG, n = 6) and a group with more than 20 months of injury experience (MORE IG, n = 6)",
+   "page": "Cha et al., Abstract and Sec. 2 (book pp. 1-16); txt lines 205-260",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "All participants had suffered knee injuries and were recovering and returning to training.",
+    "Injury experience length is treated as the grouping variable for performance differences."
+   ],
+   "breakdown_regime": "Twelve athletes is a very small sample; the 20 month cut is a study choice, not a validated clinical threshold.",
+   "domain": "injury and return to play",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Time since injury is a state variable with a long tail: two athletes with the same current test scores can carry different injury histories. The engine keeps history length as an explicit input instead of treating return to training as a full reset.",
+    "source_operator": "wushu_injury_length_grouping_20_months",
+    "telemetry": "Injury dates, return dates, and months of injury experience per athlete."
+   }
+  },
+  {
+   "primitive_id": "wushu_shorter_distance_faster_rotation_less_injured",
+   "name": "The less injury experienced group had a shorter jump distance but a faster rotation time than the more injury experienced group",
+   "verbatim_quote": "For distance and time, the LESS IG had a shorter jump distance, but a faster rotation time compared to those in the MORE IG",
+   "page": "Cha et al., Abstract (book pp. 1-16); txt lines 205-260",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Jump inside kicks at 360, 540, and 720 degrees were measured with high speed cameras.",
+    "Distance is measured from take off to landing across the kick events."
+   ],
+   "breakdown_regime": "No group difference appeared at the lowest difficulty; the tradeoff is difficulty dependent and based on six athletes per group.",
+   "domain": "biomechanics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Recovery changes the shape of performance, not just its level: distance and rotation speed moved in opposite directions between groups. The engine reads multi dimensional performance profiles, because a single score would hide which component recovered and which did not.",
+    "source_operator": "wushu_shorter_distance_faster_rotation_less_injured",
+    "telemetry": "Event split times and distances for rotational skills, split by injury history group."
+   }
+  },
+  {
+   "primitive_id": "tensiomyography_tc_dm_assessment",
+   "name": "Tensiomyography contraction time and maximal displacement were assessed across seven lower limb muscles in both legs",
+   "verbatim_quote": "the contraction time and maximal displacement of tensiomyography were assessed in the vastus lateralis, vastus medialis, rectus femoris, biceps femoris, gastrocnemius",
+   "page": "Cha et al., Abstract (book pp. 1-16); txt lines 205-260",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tensiomyography response reflects the contractile properties of the named muscles.",
+    "Both legs are measured so asymmetry is visible."
+   ],
+   "breakdown_regime": "Contraction time and displacement are indirect markers; hypertrophy can lower displacement without any loss of function, which the authors themselves note.",
+   "domain": "muscle function testing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A non invasive probe of muscle state: contraction time and displacement turn an unobservable contractile property into two numbers per muscle per leg. The engine values paired left right probe measurements because asymmetry is often the earliest readable change.",
+    "source_operator": "tensiomyography_tc_dm_assessment",
+    "telemetry": "Tensiomyography contraction time and maximal displacement by muscle and by leg."
+   }
+  },
+  {
+   "primitive_id": "isokinetic_strength_protocol",
+   "name": "Isokinetic testing used 4 warm up and 5 maximal repetitions at 60 degrees per second to evaluate peak torque and work per repetition",
+   "verbatim_quote": "performed 4 maximal warm-up repetitions and 5 maximal test repetitions for evaluating peak torque (Pt) and work per repetition (Wr)",
+   "page": "Cha et al., Sec. 2.3 (book pp. 1-16); txt around line 900",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Joint axes and stabilization follow the stated positioning protocol.",
+    "Maximal effort is given on every test repetition."
+   ],
+   "breakdown_regime": "Effort, familiarization, and positioning errors move peak torque; a single angular speed does not describe the full strength curve.",
+   "domain": "muscle function testing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Strength is reported as torque and work under a fixed protocol, not as a generic fitness label. The engine stores the protocol with the result, since torque at one angular speed and work across repetitions answer different questions.",
+    "source_operator": "isokinetic_strength_protocol",
+    "telemetry": "Isokinetic peak torque, work per repetition, fatigue index, and total work by joint and angular speed."
+   }
+  },
+  {
+   "primitive_id": "wushu_myofunction_development_requirement",
+   "name": "Becoming a non injured self-taolu athlete requires developing myofunctions of the knee extensor, knee flexor, and ankle plantarflexor",
+   "verbatim_quote": "This study confirmed that in order to be a non-injured self-taolu athlete, it is necessary to develop myofunctions of the knee extensor, knee flexor, and ankle plantarflexor for jump inside kicks",
+   "page": "Cha et al., Sec. 5 Conclusions (book pp. 1-16); txt around line 1700",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Jump inside kick performance depends on those three muscle functions together.",
+    "Static and dynamic contractile properties were both measured in the study."
+   ],
+   "breakdown_regime": "The claim rests on 12 recovering athletes in one discipline; it does not dose the training or prove causation.",
+   "domain": "injury and return to play",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A complex skill decomposes into a short list of required muscle functions, each trainable and testable. The engine uses the same decomposition habit: name the component capacities a task needs, then track each capacity separately.",
+    "source_operator": "wushu_myofunction_development_requirement",
+    "telemetry": "Strength and contractile measures for knee extensors, knee flexors, and ankle plantarflexors."
+   }
+  },
+  {
+   "primitive_id": "bfr_low_load_adaptation",
+   "name": "Blood flow restriction during low load exercise stimulates similar muscle adaptations to those normally observed with higher loads",
+   "verbatim_quote": "Blood flow restriction during low-load exercise stimulates similar muscle adaptations to those normally observed with higher loads",
+   "page": "Tafunai et al., Abstract (book pp. 17-28); txt around line 1199",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Occlusion pressure is set relative to the individual arterial occlusion pressure.",
+    "Low load exercise is performed while blood flow is restricted."
+   ],
+   "breakdown_regime": "Adaptation claims come from the cited BFR literature, not from a training intervention in this paper; wrong pressures change both effect and risk.",
+   "domain": "blood flow restriction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A constraint can substitute for intensity: restricting one input produces adaptations normally bought with a larger input. The engine notes such substitution effects, because they show which variable is actually driving an adaptation.",
+    "source_operator": "bfr_low_load_adaptation",
+    "telemetry": "Training load, cuff pressure as percent of AOP, and strength or hypertrophy outcomes."
+   }
+  },
+  {
+   "primitive_id": "aop_measure_both_limbs_limb_specific",
+   "name": "Arterial occlusion pressure is not always greater in the dominant or larger leg, so practitioners should measure AOP in both limbs",
+   "verbatim_quote": "Practitioners should measure AOP in both limbs to determine if occlusion pressures used during exercise should be limb specific",
+   "page": "Tafunai et al., Abstract and Sec. 5 (book pp. 17-28); txt around line 1199",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "AOP is measured in the superficial femoral artery with ultrasound.",
+    "Dominant and non dominant legs are measured in the same session."
+   ],
+   "breakdown_regime": "Findings are from 35 young adults; older, clinical, or upper limb populations may behave differently.",
+   "domain": "blood flow restriction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Do not assume symmetry. A calibration measured on one side does not transfer to the other side by default. The engine treats left and right, and by extension any paired units, as separate calibrations until measurement proves they match.",
+    "source_operator": "aop_measure_both_limbs_limb_specific",
+    "telemetry": "Arterial occlusion pressure measured separately in each limb, with limb dominance recorded."
+   }
+  },
+  {
+   "primitive_id": "aop_relative_flow_linear_relationship",
+   "name": "Blood flow expressed as a percentage of unoccluded flow relates linearly to occlusion pressure expressed as a percentage of AOP",
+   "verbatim_quote": "We also report a linear relationship between relative occlusion pressure and blood flow",
+   "page": "Tafunai et al., Sec. 5 Conclusions (book pp. 17-28); txt around line 1199",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Flow and pressure are both expressed relative to individual reference values.",
+    "The 0 percent AOP point has no variance because flow is defined as 100 percent there, and the authors handled it separately."
+   ],
+   "breakdown_regime": "The authors report large variance in blood flow at given occlusion pressures, so the linear mean hides wide individual spread; caution in application is stated.",
+   "domain": "blood flow restriction",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Normalizing by an individual reference value turns an absolute pressure into a portable dose. The engine prefers relative dosing variables, while keeping the individual variance visible instead of trusting the group line.",
+    "source_operator": "aop_relative_flow_linear_relationship",
+    "telemetry": "Relative occlusion pressure and relative blood flow measurements per subject and limb."
+   }
+  },
+  {
+   "primitive_id": "aop_limb_circumference_driver",
+   "name": "Differences in arterial occlusion pressure between individuals are attributed primarily to differences in limb circumference",
+   "verbatim_quote": "Differences in the AOP between individuals is attributed primarily to differences in limb circumference",
+   "page": "Tafunai et al., Sec. 1 (book pp. 17-28); txt around line 1199",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Limb circumference is measurable at the occlusion site.",
+    "Other contributors such as blood pressure are secondary in this account."
+   ],
+   "breakdown_regime": "Circumference is a proxy; two limbs with equal circumference can still occlude at different pressures, which is why direct measurement is recommended in the same paper.",
+   "domain": "blood flow restriction",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A simple anthropometric proxy explains much of a physiological threshold, but the paper itself vetoes proxy only practice. The engine uses proxies for screening and direct measurement for dosing, in that order.",
+    "source_operator": "aop_limb_circumference_driver",
+    "telemetry": "Limb circumference at the cuff site paired with measured AOP."
+   }
+  },
+  {
+   "primitive_id": "aas_prevalence_gym_users",
+   "name": "Anabolic androgenic steroid consumption prevalence among gym trainees in Eastern Province, Saudi Arabia was 21.3 percent",
+   "verbatim_quote": "The prevalence of AAS consumption among trainees in Eastern Province was 21.3%",
+   "page": "Albaker et al., Abstract (book pp. 29-36); txt around line 1836",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Use was self reported on a questionnaire, so prevalence depends on honest disclosure.",
+    "The sample is male gym members in one province."
+   ],
+   "breakdown_regime": "Self report undercounts stigmatized use, no blood work was done, and the sample does not generalize beyond its setting.",
+   "domain": "substance use surveillance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A hidden behavior can still be measured at population level with a direct survey, and the measured rate was high enough to demand a response. The engine treats self reported exposure data as a real signal with a known downward bias, not as noise to discard.",
+    "source_operator": "aas_prevalence_gym_users",
+    "telemetry": "Survey based prevalence of AAS use by age group, with reported adverse effects."
+   }
+  },
+  {
+   "primitive_id": "aas_unawareness_and_social_supply",
+   "name": "Study participants were not aware of the potential adverse effects of AAS use, and trainers and friends were the major supply source",
+   "verbatim_quote": "Participants in the study were not aware of the potential adverse effects of AAS use",
+   "page": "Albaker et al., Abstract (book pp. 29-36); txt around line 1836",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Awareness was assessed by the same self administered questionnaire.",
+    "Adverse effects reported by users included psychiatric problems, acne, hair loss, and sexual dysfunction."
+   ],
+   "breakdown_regime": "Awareness and effects are self reported without clinical verification; the study cannot separate use causing effects from reporting differences.",
+   "domain": "substance use surveillance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Risk behavior persisted alongside low risk knowledge and a social supply channel. For the engine, exposure risk is modeled as knowledge plus access plus prevalence, not prevalence alone.",
+    "source_operator": "aas_unawareness_and_social_supply",
+    "telemetry": "Awareness scores, supply source reports, and adverse effect reports from user surveys."
+   }
+  },
+  {
+   "primitive_id": "heel_first_strike_knee_moments_reduced",
+   "name": "Mean knee external rotation and adductor moments during the heel strike condition were lower than in normal walking",
+   "verbatim_quote": "the mean values of the knee external rotation and adductor moments during heel strike condition were lower than those in normal walking",
+   "page": "Aali et al., Abstract (book pp. 37-46); txt around line 2274",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Healthy athletes walked in normal and heel first strike patterns under laboratory measurement.",
+    "Moments are compared within the same participants across gait conditions."
+   ],
+   "breakdown_regime": "Participants had no limited dorsiflexion range of motion; people with gastro soleus tightness may not respond the same way, as the authors state.",
+   "domain": "gait biomechanics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A small change in initial contact geometry redistributes joint moments. The engine reads contact pattern as a causal lever on downstream load, not as a style label.",
+    "source_operator": "heel_first_strike_knee_moments_reduced",
+    "telemetry": "Knee rotation and adductor moments by gait condition, with ankle dorsiflexion range."
+   }
+  },
+  {
+   "primitive_id": "heel_first_strike_kinematic_changes",
+   "name": "Heel first strike gait in healthy athletes makes kinematic changes in the knee and ankle joints in all three movement planes",
+   "verbatim_quote": "Based on the results, heel-first strike gait pattern in healthy athletes could make kinematic changes in the knee and ankle joints in all three movement planes",
+   "page": "Aali et al., Sec. 5 Conclusions (book pp. 37-46); txt around line 2274",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Changes were measured in a pilot study of healthy athletes.",
+    "Knee flexion at initial contact and stance phase flexion range both decreased under the heel first pattern."
+   ],
+   "breakdown_regime": "Pilot scale and healthy participants limit the claim; the pattern that helps one joint can shift load to another tissue.",
+   "domain": "gait biomechanics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "One gait intervention moves kinematics in three planes at two joints at once. The engine evaluates any technique change as a multi joint redistribution and checks where the load went, not only whether the target joint improved.",
+    "source_operator": "heel_first_strike_kinematic_changes",
+    "telemetry": "Three dimensional knee and ankle kinematics under normal and modified gait patterns."
+   }
+  },
+  {
+   "primitive_id": "heel_first_knee_flexion_rom_decrease",
+   "name": "Knee flexion angle at initial contact and knee flexion range of motion during stance decreased with the heel first strike pattern",
+   "verbatim_quote": "knee flexion angle at the initial contact and the knee flexion ROM during the stance phase decreased with heel-first strike pattern walking",
+   "page": "Aali et al., Sec. 5 Conclusions (book pp. 37-46); txt around line 2274",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The comparison is within participant, normal walking against heel first strike walking.",
+    "Increased ankle dorsiflexion at heel contact accompanied the knee changes in the same study."
+   ],
+   "breakdown_regime": "Reduced knee flexion is not automatically beneficial; it changes shock absorption and may not suit injured or tight athletes.",
+   "domain": "gait biomechanics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Initial contact angle is a control variable for the whole stance phase that follows. The engine treats first contact conditions as high leverage state variables whose small changes propagate through the movement.",
+    "source_operator": "heel_first_knee_flexion_rom_decrease",
+    "telemetry": "Knee flexion angle at initial contact and stance phase range of motion by gait condition."
+   }
+  },
+  {
+   "primitive_id": "cod_test_predicts_match_running",
+   "name": "Including a change of direction test in assessment may partly predict match play running performance in women soccer players",
+   "verbatim_quote": "Including a change-of-direction ability test seems pertinent when assessing women soccer players, as it may partly predict match-play running performance",
+   "page": "Goncalves et al., Sec. 5 Conclusions (book pp. 63-80); txt around line 3784",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The cohort was tested three times and match running was tracked across 10 matches.",
+    "Prediction held for shorter and longer test to match gaps, though it weakened with time."
+   ],
+   "breakdown_regime": "Explained variance was partial, around a quarter for related outcomes in the study; opposition and match context also move running output.",
+   "domain": "fitness testing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A field test earns its place by predicting the real performance it stands for, with stated explained variance. The engine keeps tests whose predictive link to live output is measured, and records how much variance they actually explain.",
+    "source_operator": "cod_test_predicts_match_running",
+    "telemetry": "Change of direction test times paired with match running performance indicators."
+   }
+  },
+  {
+   "primitive_id": "fitness_test_timing_decay",
+   "name": "The further apart a fitness testing battery is carried out in relation to actual matches, the lower its value in predicting in game running outputs",
+   "verbatim_quote": "We also demonstrated that the further apart a fitness testing battery is carried out in relation to actual matches, the lower its value in predicting in-game running outputs",
+   "page": "Goncalves et al., Sec. 5 Conclusions (book pp. 63-80); txt around line 3784",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Fitness status changes between testing and competition through training, fatigue, and injury.",
+    "Match running outputs are measured the same way across the cohort period."
+   ],
+   "breakdown_regime": "Decay rate is cohort specific; a stable trait test decays slower than a state sensitive test, and the paper does not give a universal half life.",
+   "domain": "fitness testing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Measurements expire. A test result is a statement about a past state, and its predictive value decays as the gap to the event grows. The engine timestamps every assessment and discounts it with age instead of treating it as current truth.",
+    "source_operator": "fitness_test_timing_decay",
+    "telemetry": "Test dates, match dates, and the test to match interval for every prediction."
+   }
+  },
+  {
+   "primitive_id": "yoyo_ir1_vo2max_estimation_equation",
+   "name": "Maximal oxygen uptake is estimated from Yo-Yo IR1 distance by VO2max equals IR1 distance times 0.0084 plus 36.4 (Bangsbo 2008)",
+   "verbatim_quote": "VO2max was estimated by the next equation: Yo-Yo IR1 test: VO2max (mL/min/kg) = IR1 distance (m) × 0.0084 + 36.4 (Bangsbo. 2008)",
+   "page": "Goncalves et al., Table note (book pp. 63-80); txt around line 3784",
+   "latex": "\\dot{V}O_{2\\max} = 0.0084 \\times d_{\\mathrm{IR1}} + 36.4",
+   "symbol_and_unit_ledger": {
+    "d_IR1": "Yo-Yo intermittent recovery test level 1 distance [m]",
+    "VO2max": "estimated maximal oxygen uptake [mL/min/kg]",
+    "0.0084": "empirical slope from Bangsbo 2008 [mL/min/kg per m]",
+    "36.4": "empirical intercept [mL/min/kg]"
+   },
+   "assumptions": [
+    "The Yo-Yo IR1 protocol is run to exhaustion under standard conditions.",
+    "The Bangsbo 2008 regression transfers to the tested population."
+   ],
+   "breakdown_regime": "It is an estimate from a field test regression, not a laboratory measurement; error grows for athletes unlike the calibration sample.",
+   "domain": "fitness testing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A field performance converts to a physiological capacity through a published regression with named provenance. The engine stores the conversion equation and its source with the estimate, so estimated and measured capacities are never confused.",
+    "source_operator": "yoyo_ir1_vo2max_estimation_equation",
+    "telemetry": "Yo-Yo IR1 distance in meters, converted with the stated equation."
+   }
+  },
+  {
+   "primitive_id": "pedaling_stiffness_no_resting_level_difference",
+   "name": "There are no differences in resting passive muscle stiffness of the pedaling muscles between cyclists categorized by performance level",
+   "verbatim_quote": "there are no differences in the passive muscle stiffness of the muscles involved in the pedaling action between cyclists categorized by performance level",
+   "page": "Lopez-Laval et al., Sec. 5 Conclusions (book pp. 81-90); txt around line 4723",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stiffness was measured at rest with myometry in rectus femoris, vastus lateralis, biceps femoris, and gastrocnemius.",
+    "Groups were elite, sub elite, and recreational cyclists."
+   ],
+   "breakdown_regime": "An honest negative: resting stiffness does not separate levels in this sample, and the recreational group still had high aerobic fitness, which narrows the contrast.",
+   "domain": "muscle stiffness monitoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A plausible marker failed to separate known groups at rest. The engine records such negatives with the same weight as positives, because a marker that does not discriminate at rest may still discriminate in response to a stimulus.",
+    "source_operator": "pedaling_stiffness_no_resting_level_difference",
+    "telemetry": "Resting passive stiffness by muscle and by performance group."
+   }
+  },
+  {
+   "primitive_id": "stiffness_rises_after_exhaustive_test_knee_extensors",
+   "name": "An incremental exercise test until exhaustion increased passive stiffness of the knee extensor muscles regardless of performance group, without changing knee flexor or ankle extensor muscles",
+   "verbatim_quote": "Exposition to an incremental exercise test until exhaustion caused an increase in passive muscle stiffness of the knee extensor muscles, regardless of the performance group",
+   "page": "Lopez-Laval et al., Sec. 5 Conclusions (book pp. 81-90); txt around line 4723",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stiffness was measured before and after the same incremental test for all groups.",
+    "Only the vastus lateralis response differed between higher and recreational groups in the study."
+   ],
+   "breakdown_regime": "An incremental laboratory test is not a stage race; structural fatigue in real competition may produce different stiffness behavior, as the authors note.",
+   "domain": "muscle stiffness monitoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The informative signal is the response to a standard stimulus, not the resting value: knee extensors stiffened after exhaustive work in every group. The engine uses pre post stimulus deltas as state change measures wherever a resting baseline is uninformative.",
+    "source_operator": "stiffness_rises_after_exhaustive_test_knee_extensors",
+    "telemetry": "Pre and post effort stiffness for knee extensors, knee flexors, and ankle extensors."
+   }
+  },
+  {
+   "primitive_id": "myotonpro_passive_stiffness_measurement",
+   "name": "Passive muscle stiffness can be measured non invasively through short oscillatory impulses generated on the skin over the analyzed muscle (MyotonPRO)",
+   "verbatim_quote": "allows for the measurement of passive muscle stiffness through short oscillatory impulses",
+   "page": "Lopez-Laval et al., Sec. 1 (book pp. 81-90); txt around line 4723",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The device is applied on the skin over the target muscle belly.",
+    "Reported validity and reliability in the paper were ICC 0.75 to 0.96 in cited work."
+   ],
+   "breakdown_regime": "Surface measurement reflects the whole myofascial complex under the probe, not one isolated muscle, and placement error moves the reading.",
+   "domain": "muscle stiffness monitoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A handheld probe turns a tissue property into a repeatable number in seconds, which is what makes daily monitoring feasible. The engine favors measurements cheap enough to repeat daily over precise measurements that can only happen in a laboratory.",
+    "source_operator": "myotonpro_passive_stiffness_measurement",
+    "telemetry": "Myometry stiffness readings by muscle, side, and time point relative to effort."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "6f7aa9674e43995a-t1",
+   "think": "This edited volume is a special issue reprint, not a single author monograph, and that shape matters for how its knowledge should be used. Seven peer reviewed papers from Medicina in 2021 are bound under one editorial frame, and the editor preface states the frame plainly: performance monitoring exists to decrease injury risk and improve performance, and a consistent system tracks internal load, external load, accumulated load effects on well being, and readiness for each athlete individually. Everything else in the book is an instance of that frame worked out in a different population with a different instrument. Oliveira and colleagues run the frame for a full 41 week season in a top elite European soccer team, with session RPE for internal load and 10 Hz GPS for external load, and they derive the standard control quantities from those two channels: acute load, chronic load, the acute to chronic workload ratio, training monotony, and training strain, each computed separately for perceived exertion, total distance, and high speed running. Their central finding is managerial as much as physiological. Starters and non starters ended the season behaving equally on those indices, which the authors read as evidence that deliberate workload adjustment compensated for unequal match exposure, while spikes in monotony, ratio, and strain still appeared for the whole squad when match congestion intensified, and the phase of the season shifted which index peaked, with monotony of perceived exertion highest early and strain highest late. Goncalves and colleagues attack the other side of the frame, the validity of the fitness tests that feed it, in adult women soccer players tested three times while match running was tracked across ten matches. Their change of direction result is the durable one: the test partly predicts match running performance and keeps some validity across longer gaps, but the paper also demonstrates a general decay law, namely that the further a testing battery sits from the matches, the less it predicts what happens in them, which converts every test result into a time stamped, expiring observation. Their battery also shows the book standard estimation pattern, converting Yo Yo intermittent recovery distance into maximal oxygen uptake through a published regression with its source named, rather than pretending the field number is a laboratory measurement. The remaining papers supply the tissue level and clinical level instruments that a load frame needs underneath it. Cha and colleagues study Wushu athletes returning from knee injury and split them at twenty months of injury experience; the less experienced injury group rotated faster over a shorter jump distance at the higher difficulties, and tensiomyography contraction time and displacement plus isokinetic peak torque, work, fatigue index, and total work give the muscle level account behind that difference, ending in a short list of muscle functions, knee extensor, knee flexor, and ankle plantarflexor, that must be developed for the skill. Tafunai and colleagues show that arterial occlusion pressure, the calibration that makes blood flow restriction dosing individual, is not reliably greater in the dominant or larger leg, differs by sex, and must be measured in both limbs, with relative blood flow falling linearly against relative occlusion pressure but with wide individual variance that the authors flag as a reason for caution. Albaker and colleagues contribute the surveillance paper: anabolic steroid use among gym trainees in one Saudi province measured 21.3 percent, concentrated in younger age groups, supplied mainly by trainers and friends, and paired with low awareness of adverse effects, which makes exposure a knowledge and access problem and not only a behavior problem. Aali and colleagues show a gait lever: a heel first strike pattern lowered knee external rotation and adductor moments and changed knee and ankle kinematics in all three planes, while increasing ankle dorsiflexion and the extensibility of the gastro soleus complex, in healthy athletes whose dorsiflexion was not limited. Lopez-Laval and colleagues close the volume with an honest negative that is as useful as any positive: resting passive muscle stiffness of the pedaling muscles, measured by myometry, did not differ between elite, sub elite, and recreational cyclists, but an incremental test to exhaustion raised knee extensor stiffness in every group, and only the vastus lateralis response separated the higher groups from recreational riders, so the response to a standard stimulus carried information that the resting value did not. Read together, the volume teaches a reasoning engine four habits. First, keep imposed load and experienced load as separate channels and derive control ratios from each, because congestion spikes appeared in both. Second, treat every assessment as expiring and every conversion as sourced. Third, calibrate individually and bilaterally instead of assuming symmetry or group values. Fourth, publish negatives and variance, not only means, because the stiffness negative and the blood flow variance are exactly the parts that stop a system from over trusting a marker.  The volume also disciplines how such a system should report itself. Oliveira and colleagues report indices separately for starters and non starters and for three different base measures, which makes clear that a ratio is only meaningful when its base measure and its group are named alongside it. Goncalves and colleagues report explained variance in plain numbers, so a reader can see that a useful test still leaves most of the match output unexplained. Tafunai and colleagues report the spread around their linear relationship and warn against confident dosing from the mean line. Cha and colleagues report effect sizes alongside significance in a sample of twelve, which keeps the size of the claim proportional to the evidence. That reporting discipline is part of the extraction, not decoration around it, because an engine that ingests these papers without their sample sizes, populations, and variance would systematically overstate what the volume actually established, and would then carry that overstatement into every later judgment built on these primitives.",
+   "retrocausal_genealogy": "The lineage runs through Foster session RPE method from the late 1990s, which turned a Borg style rating multiplied by duration into a daily load number any team could afford, and through the acute to chronic workload ratio literature that followed in the 2010s, which reframed injury risk as a relationship between this week and the athlete own recent weeks rather than an absolute threshold. Behind the GPS channel sits the team sport tracking literature that made distance at speed thresholds and inertial events standard external load language. The fitness testing papers descend from Bangsbo Yo Yo intermittent recovery work and its published oxygen uptake regression. Tensiomyography and myometry come from Slovenian and Estonian muscle mechanics groups who built non invasive probes of contractile properties, and blood flow restriction descends from Japanese Kaatsu practice turned into individualized pressure prescription. The editor own research program in soccer monitoring ties the volume together.",
+   "theory_of_mind": "The editor and authors write for coaches and sports scientists who already collect data and need to know what the data license them to do. Their shared model of the reader is a practitioner with a squad, a calendar, and limited testing time, so every paper favors field feasible instruments, GPS units, questionnaires, handheld probes, and short test batteries, over laboratory gold standards, and every paper states its population narrowly, one elite team, twelve Wushu athletes, thirty five young adults, women players in one cohort, because the authors expect effects to be population bound. They also model the athlete as a system whose state changes daily and whose history matters, which is why monitoring is continuous and individual rather than a preseason screen. Where they are cautious, it is about transfer: between limbs, between groups, between test day and match day, and between provinces.",
+   "cross_layer_veto": "Several results in this volume veto habits that other layers of a reasoning system are tempted by. The occlusion pressure paper vetoes symmetry assumptions and proxy only dosing: limb circumference explains much of the threshold, yet the authors still require direct measurement in both limbs. The cyclist stiffness paper vetoes resting marker confidence: a marker that fails to separate known performance groups at rest cannot be used as a readiness grade, whatever its response value after effort. The women soccer paper vetoes permanent test validity: any fitness number used without its date is an error, because predictive value decays with the test to event gap. The soccer workload paper vetoes reading totals without shape: equal weekly loads with different monotony and strain are different stresses, and a single channel cannot stand in for both internal and external load."
+  }
+ ],
+ "universal_lens": "Any managed human performance system needs the same four part loop this volume demonstrates across seven unrelated populations: measure what is imposed, measure what is experienced, compare the present against the individual own recent history rather than a group norm, and re measure after a standard stimulus because resting values often carry less information than responses. Calibrations expire, symmetry cannot be assumed, and honest negatives about a marker are as valuable as confirmations.",
+ "gsi_mapping": "The Institute takes the monitoring architecture and its measurement discipline: individual load histories, internal and external channels kept separate, test results time stamped with decaying predictive value, conversions published with their source equations, bilateral and individual calibration before any individualized prescription, and surveillance of exposure risks such as steroid use as a knowledge and access problem. These are teachable, auditable methods for any training program the Institute studies or advises.",
+ "gse_mapping": "The engine takes workload state variables it can compute daily for any performer: session load from rating times duration, acute and chronic windows with their ratio, within week monotony and strain, congestion spike detection across independent channels, expiring assessment values with stated age, and pre post stimulus deltas where resting markers are uninformative. It also takes three vetoes: no symmetry by default, no totals without shape, and no marker trusted past the population and date where it was validated."
+}

@@ -1,6 +1,6 @@
 # CRON matrix (generated from vercel.json)
 
-Generated: 2026-09-05T16:45:33.578Z
+Generated: 2026-11-19T04:32:34.584Z
 
 Default SoT: `apps/web/vercel.json` (the file Vercel actually reads).
 Compared against: `vercel.json`.
@@ -12,25 +12,19 @@ Compared against: `vercel.json`.
 | `/api/cron/settle-picks` | `20 * * * *` |
 | `/api/cron/deliver-settlement-alerts` | `15 */3 * * *` |
 | `/api/cron/generate-signal-slate` | `5,20,35,50 * * * *` |
-| `/api/cron/generate-drafts` | `0 11 * * *` |
 | `/api/cron/reconcile-entitlements` | `45 * * * *` |
-| `/api/cron/ingest-player-stats` | `0 9 * * *` |
-| `/api/cron/hydrate-cold-plane` | `30 9 * * *` |
-| `/api/cron/drain-ai-telemetry-recovery` | `30 * * * *` |
 | `/api/cron/prune-rate-limits` | `30 6 * * *` |
 | `/api/cron/repair-checkout-attempts` | `50 * * * *` |
-| `/api/cron/run-formal-receipt` | `45 9 * * *` |
-| `/api/cron/jarvis-snapshot` | `15 * * * *` |
 | `/api/cron/free-spine-health` | `0 */2 * * *` |
 | `/api/cron/health-alert` | `*/15 * * * *` |
 | `/api/cron/autonomy-cycle` | `7,22,37,52 * * * *` |
 | `/api/cron/calibration-metrics` | `40 */6 * * *` |
-| `/api/cron/backfill-independent-trueprob` | `10 */4 * * *` |
 | `/api/cron/refresh-player-stats` | `0,30 * * * *` |
-| `/api/cron/backfill-team-efficiency` | `15 7 * * *` |
 | `/api/ops/daily-truth` | `5 12 * * *` |
+| `/api/cron/arbiter-adjudication` | `41 * * * *` |
+| `/api/cron/site-wide-workflows` | `12 0,3,6,13,16,19,22 * * *` |
 
-**Count:** 22 scheduled routes in apps/web/vercel.json.
+**Count:** 16 scheduled routes in apps/web/vercel.json.
 
 **DRIFT:** none — both vercel.json copies agree.
 

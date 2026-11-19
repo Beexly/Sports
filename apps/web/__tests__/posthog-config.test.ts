@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   POSTHOG_DEFAULT_HOST,
   POSTHOG_FALLBACK_PROJECT_TOKEN,
+  buildPostHogZeroWasteInitOptions,
+  isAutomatedCrawlerOrHeadlessClient,
   resolvePostHogHost,
   resolvePostHogToken,
   shouldInitPostHogClient,
@@ -76,5 +78,35 @@ describe("shouldInitPostHogClient", () => {
     expect(shouldInitPostHogClient("true", undefined)).toBe(false);
     expect(shouldInitPostHogClient(undefined, "")).toBe(false);
     expect(shouldInitPostHogClient(undefined, "   ")).toBe(false);
+  });
+});
+
+describe("zero-waste PostHog crawler and replay guards", () => {
+  it("suppresses PostHog capture for search/AI bots and headless browsers", () => {
+    expect(isAutomatedCrawlerOrHeadlessClient("Mozilla/5.0 (compatible; Googlebot/2.1)")).toBe(true);
+    expect(isAutomatedCrawlerOrHeadlessClient("Mozilla/5.0 (compatible; OAI-SearchBot/1.0)")).toBe(true);
+    expect(isAutomatedCrawlerOrHeadlessClient("PerplexityBot/1.0")).toBe(true);
+    expect(isAutomatedCrawlerOrHeadlessClient("Mozilla/5.0 HeadlessChrome/128.0")).toBe(true);
+    expect(isAutomatedCrawlerOrHeadlessClient("Mozilla/5.0 Safari/605.1.15", true)).toBe(true);
+    expect(
+      isAutomatedCrawlerOrHeadlessClient(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0.0.0",
+        false,
+      ),
+    ).toBe(false);
+  });
+
+  it("keeps session replay and heatmaps disabled by default while rate-limiting events", () => {
+    const opts = buildPostHogZeroWasteInitOptions("https://us.i.posthog.com", {});
+    expect(opts.disable_session_recording).toBe(true);
+    expect(opts.capture_dead_clicks).toBe(false);
+    expect(opts.capture_heatmaps).toBe(false);
+    expect(opts.person_profiles).toBe("identified_only");
+    expect(opts.rate_limiting).toEqual({ events_per_second: 10, events_burst_limit: 50 });
+
+    const replayOn = buildPostHogZeroWasteInitOptions("https://us.i.posthog.com", {
+      NEXT_PUBLIC_POSTHOG_SESSION_REPLAY_ENABLED: "true",
+    });
+    expect(replayOn.disable_session_recording).toBe(false);
   });
 });

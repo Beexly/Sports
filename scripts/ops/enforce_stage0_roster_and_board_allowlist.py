@@ -198,11 +198,16 @@ _ACTIVE_2026_TEAM_EXEMPTIONS: dict[str, str] = {
 
 
 def _strip_name_suffix(name_low: str) -> str:
-    """Strip common generational suffixes when matching duplicate roster rows."""
-    for suffix in (" jr.", " sr.", " iii", " ii", " iv", " jr", " sr", " v"):
-        if name_low.endswith(suffix):
-            return name_low[: -len(suffix)].strip()
-    return name_low
+    """Strip generational suffixes, apostrophes/periods, and Matthew->Matt aliases."""
+    cleaned = re.sub(r"['\u2019.]+", "", name_low.strip().lower())
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    if cleaned.startswith("matthew "):
+        cleaned = "matt " + cleaned[len("matthew ") :]
+    for suffix in (" jr", " sr", " iii", " ii", " iv", " v"):
+        if cleaned.endswith(suffix):
+            cleaned = cleaned[: -len(suffix)].strip()
+            break
+    return cleaned
 
 
 def _effective_hallucination_denylist(away: str, home: str, week: int = 9) -> dict[str, str]:
@@ -694,6 +699,10 @@ def load_stage0_game_roster_allowlist(
     matchup_key = f"{away}@{home}"
 
     pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
+    if not pbp_path.is_file():
+        pbp_path = (
+            REPO_ROOT / "intelligence" / "coaching" / "data" / "play_by_play_2026.parquet"
+        )
     slim_csv_path = REPO_ROOT / "data" / "nflverse" / "pbp_2026_slim_clean_checkout.csv.gz"
     wh_pbp_path = REPO_ROOT / "data" / "warehouse" / "v1" / "pbp_normalized.parquet"
     pbp: Any = None
@@ -818,23 +827,35 @@ def load_stage0_game_roster_allowlist(
 
     # Extract all verified named athletes and their core lines from the live board
     athletes: dict[str, dict[str, Any]] = {}
+    canon_by_team_stripped: dict[tuple[str, str], str] = {}
     for p in board.get("props", []):
-        name = str(p.get("athlete") or "").strip()
-        if not name or name in ("Unknown", "Jacksonville Jaguars", "Baltimore Ravens", "Game"):
+        raw_name = str(p.get("athlete") or "").strip()
+        if not raw_name or raw_name in ("Unknown", "Jacksonville Jaguars", "Baltimore Ravens", "Game"):
             continue
-        if name.lower() in excluded_names_lower:
+        tm = _normalize_team_abbr(str(p.get("team") or "").strip(), away, home)
+        strp_key = (tm, _strip_name_suffix(raw_name.lower()))
+        # Prefer the shorter/base name without Sr./Jr. mismatch splits (e.g. 'Aaron Jones' vs 'Aaron Jones Sr.')
+        prev_canon = canon_by_team_stripped.get(strp_key)
+        if prev_canon is None:
+            canon_by_team_stripped[strp_key] = raw_name
+            name = raw_name
+        else:
+            name = prev_canon
+        p["athlete"] = name
+        if name.lower() in excluded_names_lower or raw_name.lower() in excluded_names_lower:
             raise Stage0RosterContaminationError(
                 f"STAGE0_FAIL: Excluded player {name} appeared on live board allowlist!"
             )
-        if name.lower() in matchup_denylist:
+        if name.lower() in matchup_denylist or raw_name.lower() in matchup_denylist:
             raise Stage0RosterContaminationError(
                 f"STAGE0_FAIL: Off-roster player {name} appeared on live board allowlist!"
             )
-        tm = _normalize_team_abbr(str(p.get("team") or "").strip(), away, home)
         if int(week) >= 10:
+            return_from_ir = stage0_cfg.get("return_from_ir") or {}
+            is_return_ir = any(k.lower() == name.lower() for k in return_from_ir)
             inj_chk = injury_map.get((tm, name.lower())) or inj_stripped_map.get((tm, _strip_name_suffix(name.lower()))) or {}
             inj_st_low = str(inj_chk.get("report_status") or "").strip().lower()
-            if inj_st_low in {"out", "doubtful", "ir", "injured reserve"}:
+            if inj_st_low in {"out", "doubtful", "ir", "injured reserve"} and not is_return_ir:
                 raise Stage0RosterContaminationError(
                     f"STAGE0_FAIL: Injured ({inj_chk.get('report_status')}) player {name} appeared on live board allowlist!"
                 )
@@ -1100,6 +1121,21 @@ def load_stage0_game_roster_allowlist(
         for df_part in (pass_rows, rush_rows, rec_rows, kick_rows, solo_rows, ast1_rows, ast2_rows, sack_rows):
             if len(df_part):
                 game_ids.update(df_part["game_id"].dropna().unique().tolist())
+
+        # Cross-team 2026 PBP fallback for traded / mid-season acquisitions (e.g. Zach Charbonnet,
+        # Keenan Allen, Josh Downs, Kirk Cousins, Jacoby Brissett) whose prior 2026 snaps are on another team.
+        if not game_ids and not isinstance(pbp, _StdlibDataFrame):
+            pass_rows = pbp[pbp["passer_player_name"].isin(cands)]
+            rush_rows = pbp[pbp["rusher_player_name"].isin(cands)]
+            rec_rows = pbp[pbp["receiver_player_name"].isin(cands)]
+            kick_rows = pbp[pbp["kicker_player_name"].isin(cands)]
+            solo_rows = pbp[pbp["solo_tackle_1_player_name"].isin(cands)]
+            ast1_rows = pbp[pbp["assist_tackle_1_player_name"].isin(cands)]
+            ast2_rows = pbp[pbp["assist_tackle_2_player_name"].isin(cands)]
+            sack_rows = pbp[pbp["sack_player_name"].isin(cands)]
+            for df_part in (pass_rows, rush_rows, rec_rows, kick_rows, solo_rows, ast1_rows, ast2_rows, sack_rows):
+                if len(df_part):
+                    game_ids.update(df_part["game_id"].dropna().unique().tolist())
 
         player_gp = max(1, len(game_ids)) if game_ids else 1
         has_pbp_snaps = len(game_ids) > 0

@@ -36,7 +36,17 @@ export type AutonomyActionKind =
   | "ACCUMULATE_SETTLED_SAMPLE"
   | "RECORD_LEARNING"
   | "UPDATE_OPS_TRUTH"
-  | "NO_OP_HEALTHY";
+  | "NO_OP_HEALTHY"
+  // Pregame Cadence & Integrity Monitoring (ADR-0010)
+  | "SEAL_WED_NOON_TNF_LOCK"
+  | "SEAL_FRI_NOON_SUNDAY_LOCK"
+  | "SEAL_SUN_NOON_MNF_LOCK"
+  | "RUN_T90M_INACTIVES_ADJUSTMENT"
+  | "REBUILD_DFS_LATE_SWAP_PACKETS"
+  | "QUARANTINE_ENGINE_INTEGRITY_LEAK"
+  // Wave 14/16 Compound-Intelligence Fabric & GSI ADR-0003 Doctrine Monitoring
+  | "RUN_COMPOUND_FABRIC_AUDIT"
+  | "QUARANTINE_GSI_DOCTRINE_BREACH";
 
 export interface AutonomyAction {
   readonly kind: AutonomyActionKind;
@@ -50,6 +60,17 @@ export interface AutonomyAction {
   readonly requiresOwner: boolean;
   /** Safe for unattended cron / agent loop. */
   readonly autonomousSafe: boolean;
+}
+
+export interface PregameCadenceObservation {
+  readonly wedNoonTnfLockDue?: boolean;
+  readonly friNoonSundayLockDue?: boolean;
+  readonly sunNoonMnfLockDue?: boolean;
+  readonly t90mInactivesAdjustmentDue?: boolean;
+  readonly lateSwapPacketsStale?: boolean;
+  readonly engineIntegrityLeakDetected?: boolean;
+  readonly integrityLeakDetail?: string | null;
+  readonly activeSlot?: string | null;
 }
 
 export interface AutonomyObservation {
@@ -81,10 +102,19 @@ export interface AutonomyObservation {
   readonly openPicks: number | null;
   readonly canonicalSettled: number | null;
   readonly minSettledForLearning: number;
+  /** Optional pregame cadence & integrity status (ADR-0010). */
+  readonly pregameCadence?: PregameCadenceObservation | null;
+  /** Age of Foundry compound-corpus index in minutes; null = missing, undefined = not probed. */
+  readonly compoundFabricAgeMinutes?: number | null;
+  /** Wave 16 GSI ADR-0003 rule-in-only neuro-biomarker doctrine check; undefined = not probed. */
+  readonly gsiRuleInDoctrineHeld?: boolean;
 }
 
 /** I8 SLA: free-spine durable snap age ceiling (minutes). */
 export const FREE_SPINE_SLA_MINUTES = 120;
+
+/** Wave 14/16 compound-fabric index freshness ceiling (minutes). */
+export const COMPOUND_FABRIC_SLA_MINUTES = 360;
 
 export interface AutonomyIntrospection {
   readonly honestyScore: number; // 0..100
@@ -299,6 +329,133 @@ export function planAutonomyCycle(obs: AutonomyObservation): AutonomyPlan {
     });
   }
 
+  // ── Pregame Cadence & Integrity Monitoring (ADR-0010) ────────────────────
+  if (obs.pregameCadence) {
+    const pc = obs.pregameCadence;
+    if (pc.engineIntegrityLeakDetected) {
+      severity = worse(severity, "P0");
+      actions.push({
+        kind: "QUARANTINE_ENGINE_INTEGRITY_LEAK",
+        priority: 1200,
+        severity: "P0",
+        title: "Quarantine engine integrity leak",
+        detail:
+          pc.integrityLeakDetail ??
+          "Engine integrity leak detected in pregame projections. Quarantine unverified outputs before publication.",
+        target: "engine:integrity:quarantine",
+        requiresOwner: true,
+        autonomousSafe: false,
+      });
+    }
+
+    if (pc.wedNoonTnfLockDue) {
+      severity = worse(severity, "P1");
+      actions.push({
+        kind: "SEAL_WED_NOON_TNF_LOCK",
+        priority: 850,
+        severity: "P1",
+        title: "Seal Wednesday 12:00 CT TNF Content Cutoff",
+        detail: "Wednesday Noon Content-Ready Cutoff due for Thursday Night Football (v2.0 seal).",
+        target: "cadence:seal:wed-noon-tnf",
+        requiresOwner: true,
+        autonomousSafe: false,
+      });
+    }
+
+    if (pc.friNoonSundayLockDue) {
+      severity = worse(severity, "P1");
+      actions.push({
+        kind: "SEAL_FRI_NOON_SUNDAY_LOCK",
+        priority: 850,
+        severity: "P1",
+        title: "Seal Friday 12:00 CT Sunday Content Cutoff",
+        detail: "Friday Noon Content-Ready Cutoff due for all Sunday games (v3.0 seal).",
+        target: "cadence:seal:fri-noon-sunday",
+        requiresOwner: true,
+        autonomousSafe: false,
+      });
+    }
+
+    if (pc.sunNoonMnfLockDue) {
+      severity = worse(severity, "P1");
+      actions.push({
+        kind: "SEAL_SUN_NOON_MNF_LOCK",
+        priority: 850,
+        severity: "P1",
+        title: "Seal Sunday 12:00 CT MNF Content Cutoff",
+        detail: "Sunday Noon Content-Ready Cutoff due for Monday Night Football (v3.5 seal).",
+        target: "cadence:seal:sun-noon-mnf",
+        requiresOwner: true,
+        autonomousSafe: false,
+      });
+    }
+
+    if (pc.t90mInactivesAdjustmentDue) {
+      severity = worse(severity, "P1");
+      actions.push({
+        kind: "RUN_T90M_INACTIVES_ADJUSTMENT",
+        priority: 890,
+        severity: "P1",
+        title: "Execute T-90m inactives differential adjustment",
+        detail: `T-90m pre-kickoff window open for ${pc.activeSlot ?? "slate"}. Apply inactive deltas without mutating tau/mindset.`,
+        target: "cadence:adjustment:t-90m",
+        requiresOwner: true,
+        autonomousSafe: false,
+      });
+    }
+
+    if (pc.lateSwapPacketsStale) {
+      severity = worse(severity, "P1");
+      actions.push({
+        kind: "REBUILD_DFS_LATE_SWAP_PACKETS",
+        priority: 680,
+        severity: "P1",
+        title: "Rebuild DFS late-swap packets",
+        detail: "Inactives or late scratches moved projection. Rebuild 2TE and flex late-swap packets.",
+        target: "dfs:late-swap:rebuild",
+        requiresOwner: true,
+        autonomousSafe: false,
+      });
+    }
+  }
+
+  // ── Compound-Intelligence Fabric & GSI ADR-0003 Doctrine (Wave 14/16) ──
+  if (obs.gsiRuleInDoctrineHeld === false) {
+    severity = worse(severity, "P0");
+    actions.push({
+      kind: "QUARANTINE_GSI_DOCTRINE_BREACH",
+      priority: 1210,
+      severity: "P0",
+      title: "Quarantine ADR-0003 neuro-biomarker doctrine breach",
+      detail:
+        "GSI biomarker check detected a non-rule-in return-to-play / clearance breach (ADR-0003). Quarantine biomedical modifiers immediately.",
+      target: "gsi:adr0003:quarantine",
+      requiresOwner: true,
+      autonomousSafe: false,
+    });
+  }
+
+  if (
+    obs.compoundFabricAgeMinutes === null ||
+    (typeof obs.compoundFabricAgeMinutes === "number" &&
+      obs.compoundFabricAgeMinutes > COMPOUND_FABRIC_SLA_MINUTES)
+  ) {
+    severity = worse(severity, "P2");
+    actions.push({
+      kind: "RUN_COMPOUND_FABRIC_AUDIT",
+      priority: 350,
+      severity: "P2",
+      title: "Audit compound-intelligence fabric + GSI telemetry",
+      detail:
+        obs.compoundFabricAgeMinutes === null
+          ? "Compound-corpus index timestamp missing/unreadable — run read-only fabric & GSI audit."
+          : `Compound-corpus index age ${obs.compoundFabricAgeMinutes}m exceeds ${COMPOUND_FABRIC_SLA_MINUTES}m SLA — run idempotent audit.`,
+      target: "/api/cron/compound-fabric-audit",
+      requiresOwner: false,
+      autonomousSafe: true,
+    });
+  }
+
   // ── Law / refuse-default (always reinforce when public surfaces look tempting) ─
   if (obs.liveBoardEnabled || obs.publicPicksEnabled || obs.performanceStatsEnabled || obs.publishLedgerEnabled) {
     // If any public gate is open while settlement critical or board suppressed — hold
@@ -446,6 +603,12 @@ function introspect(
   }
   if (obs.ingestionOk && obs.settlementBand === "CRITICAL") {
     contradictions.push("Ingestion healthy while settlement critical — settle path / matching gap, not data absence.");
+  }
+  if (obs.pregameCadence?.engineIntegrityLeakDetected) {
+    contradictions.push("Engine integrity leak detected in pregame projections — quarantine active.");
+  }
+  if (obs.gsiRuleInDoctrineHeld === false) {
+    contradictions.push("GSI ADR-0003 rule-in-only doctrine breached — clearance contamination quarantined.");
   }
 
   const growthEdges: string[] = [];

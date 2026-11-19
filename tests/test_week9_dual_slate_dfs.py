@@ -144,8 +144,12 @@ def test_build_all_writes_packets_and_markdown(synthetic_slates, tmp_path):
     assert (docs_dir / "WEEK-9-SUNDAY-MAIN-SLATE-11-GAME-OPTIMIZER-PACKET.md").exists()
     assert (docs_dir / "WEEK-9-TNF-SHOWDOWN-JAX-BAL-OPTIMIZER-PACKET.md").exists()
     # the source CSVs are archived byte-for-byte
-    assert (out_dir / "dk_salaries_week9_main_slate_2026_11_08.csv").read_bytes() == classic.read_bytes()
-    assert (out_dir / "dk_salaries_week9_tnf_showdown_jax_bal_2026_11_05.csv").read_bytes() == showdown.read_bytes()
+    assert (out_dir / "dk_salaries_week9_main_slate_2026_11_08.csv").read_bytes() == (
+        classic.read_bytes()
+    )
+    assert (out_dir / "dk_salaries_week9_tnf_showdown_jax_bal_2026_11_05.csv").read_bytes() == (
+        showdown.read_bytes()
+    )
 
 
 def test_showdown_packet_lineups_are_legal(synthetic_slates, tmp_path):
@@ -156,7 +160,8 @@ def test_showdown_packet_lineups_are_legal(synthetic_slates, tmp_path):
         tnf_src=showdown, main_src=classic,
     )
     packet = json.loads(
-        (tmp_path / "o" / "week9_tnf_showdown_jax_bal_packet_2026_11_03.json").read_text(encoding="utf-8")
+        (tmp_path / "o" / "week9_tnf_showdown_jax_bal_packet_2026_11_03.json")
+        .read_text(encoding="utf-8")
     )
     assert packet["roster_structure"].startswith("1 CPT")
     assert packet["portfolio_size"] >= 1
@@ -176,7 +181,8 @@ def test_classic_packet_lineups_are_legal(synthetic_slates, tmp_path):
         tnf_src=showdown, main_src=classic,
     )
     packet = json.loads(
-        (tmp_path / "o2" / "week9_sunday_main_11_game_packet_2026_11_03.json").read_text(encoding="utf-8")
+        (tmp_path / "o2" / "week9_sunday_main_11_game_packet_2026_11_03.json")
+        .read_text(encoding="utf-8")
     )
     for lu in packet["lineups"]:
         positions = [p["position"] for p in lu["players"]]
@@ -195,8 +201,14 @@ def test_build_is_deterministic_for_a_fixed_seed(synthetic_slates, tmp_path):
                   opponents=20, seed=11, tnf_src=showdown, main_src=classic)
     b = build_all(out_dir=tmp_path / "b", docs_dir=tmp_path / "db", lineups=2, sims=40,
                   opponents=20, seed=11, tnf_src=showdown, main_src=classic)
-    pa = json.loads((tmp_path / "a" / "week9_tnf_showdown_jax_bal_packet_2026_11_03.json").read_text(encoding="utf-8"))
-    pb = json.loads((tmp_path / "b" / "week9_tnf_showdown_jax_bal_packet_2026_11_03.json").read_text(encoding="utf-8"))
+    pa = json.loads(
+        (tmp_path / "a" / "week9_tnf_showdown_jax_bal_packet_2026_11_03.json")
+        .read_text(encoding="utf-8")
+    )
+    pb = json.loads(
+        (tmp_path / "b" / "week9_tnf_showdown_jax_bal_packet_2026_11_03.json")
+        .read_text(encoding="utf-8")
+    )
     assert [lu["players"] for lu in pa["lineups"]] == [lu["players"] for lu in pb["lineups"]]
     assert a["showdown"]["win_threshold_p99"] == b["showdown"]["win_threshold_p99"]
 

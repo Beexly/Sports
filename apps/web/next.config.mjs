@@ -1,3 +1,4 @@
+import { statfsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -176,11 +177,23 @@ const nextConfig = {
       "/api/cron/generate-signal-slate": ["../../data/gse-dataset/bridge-premises.jsonl"],
     },
   },
-  webpack: (config, { isServer, nextRuntime }) => {
+  webpack: (config, { dev, isServer, nextRuntime }) => {
     config.resolve.alias = {
       ...(config.resolve.alias ?? {}),
-      "@": path.resolve(process.cwd()),
+      "@": path.resolve(here),
     };
+
+    if (dev) {
+      try {
+        const fsStats = statfsSync(here);
+        const freeBytes = Number(fsStats.bavail) * Number(fsStats.bsize);
+        if (Number.isFinite(freeBytes) && freeBytes < 10 * 1024 * 1024 * 1024) {
+          config.cache = false;
+        }
+      } catch {
+        // Ignore statfs errors on unsupported filesystems; keep default cache.
+      }
+    }
 
     // Client and Edge builds cannot import node:* builtins (e.g. from
     // @sports/prediction-engine barrels or shared server/edge helpers). Shim
@@ -226,6 +239,7 @@ const nextConfig = {
       { source: "/login", destination: "/auth/signin", permanent: false },
       { source: "/checkout", destination: "/pricing", permanent: false },
       { source: "/subscribe", destination: "/pricing", permanent: false },
+      { source: "/dfs", destination: "/fantasy/dfs", permanent: true },
       // C-329: the ten legacy player-lab aliases live here so they are REAL HTTP
       // redirects. They already had `redirect()` stubs in app/players/<view>/page.tsx,
       // but `app/players/loading.tsx` exists — the segment needs it for the hub's own
@@ -273,13 +287,13 @@ const nextConfig = {
     // (the production bundle has zero `eval(` / `new Function(` calls). Splitting
     // it out of the production `script-src` is the security fix — see P13-05.
     const scriptSrcProd =
-      "'self' 'unsafe-inline' https://www.clarity.ms https://scripts.clarity.ms https://js.stripe.com https://static.cloudflareinsights.com https://pagead2.googlesyndication.com https://www.googletagservices.com https://partner.googleadservices.com https://tpc.googlesyndication.com";
+      "'self' 'unsafe-inline' https://www.clarity.ms https://scripts.clarity.ms https://js.stripe.com https://static.cloudflareinsights.com https://us-assets.i.posthog.com https://pagead2.googlesyndication.com https://www.googletagservices.com https://partner.googleadservices.com https://tpc.googlesyndication.com";
     const scriptSrcDev = `${scriptSrcProd} 'unsafe-eval'`;
-    // Sentry client-side error reporting: connect-src must allow the ingest
-    // endpoints or client DSN transport silently fails in production. Added
-    // alongside the existing clarity/stripe origins.
+    // Sentry + PostHog client-side telemetry: connect-src must allow Sentry ingest
+    // and PostHog US cloud endpoints or client DSN / $pageview transport silently
+    // fails in production (and triggers CSP rejections on Mobile Safari).
     const connectSrc =
-      "'self' https://www.clarity.ms https://*.clarity.ms https://*.vercel-insights.com https://api.stripe.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cloudflareinsights.com https://pagead2.googlesyndication.com https://*.g.doubleclick.net https://ep1.adtrafficquality.google";
+      "'self' https://www.clarity.ms https://*.clarity.ms https://*.vercel-insights.com https://api.stripe.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cloudflareinsights.com https://us.i.posthog.com https://us-assets.i.posthog.com https://pagead2.googlesyndication.com https://*.g.doubleclick.net https://ep1.adtrafficquality.google";
     const baseCsp = [
       "default-src 'self'",
       "base-uri 'self'",

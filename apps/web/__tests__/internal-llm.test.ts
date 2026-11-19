@@ -52,4 +52,19 @@ describe("internal-LLM tier", () => {
     const fetchImpl = (async () => ({ ok: false, status: 429, text: async () => "rate limited" }) as unknown as Response) as typeof fetch;
     await expect(callInternalLlm({ system: "s", user: "u", maxTokens: 10, env: ENV, fetchImpl })).rejects.toMatchObject({ status: 429 });
   });
+
+  it("falls back to Alibaba DashScope Qwen credits when ALIBABA_API_KEY or DASHSCOPE_API_KEY is set", async () => {
+    const aliCfg = internalLlmConfig({ ALIBABA_API_KEY: "ali-key" });
+    expect(aliCfg).toEqual({
+      baseUrl: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+      model: "qwen-plus",
+      apiKey: "ali-key",
+    });
+    const dashCfg = internalLlmConfig({
+      DASHSCOPE_API_KEY: "ds-key",
+      ALIBABA_INTERNAL_MODEL: "qwen2.5-coder-32b-instruct",
+    });
+    expect(dashCfg?.model).toBe("qwen2.5-coder-32b-instruct");
+    expect(isInternalLlmConfigured({ ALIBABA_API_KEY: "ali-key" })).toBe(true);
+  });
 });

@@ -8,10 +8,7 @@ Covers:
 """
 from __future__ import annotations
 
-import math
-
 import pytest
-
 from intelligence.coaching.trench_pocket_physics import (
     apply_sharp_pass_rush_chip_and_slide_adjustment,
     compute_ibrahim_voronoi_pocket_survival,

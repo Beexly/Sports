@@ -10,8 +10,8 @@
  *
  * Pipeline
  * --------
- *   Tuesday 04:00 CT  generateTuesdayMasterLock()  -> v1.0 seal
- *   Wed/Thu/Fri       advanceWeeklyLockWithInjuries() -> v2.0/v3.0/v4.0 seals
+ *   Tuesday 04:00 CT  generateTuesdayMasterLock()      -> v1.0 seal
+ *   Wed/Thu/Fri/Sun   advanceWeeklyLockWithInjuries()   -> v2.0/v2.5/v3.0/v3.5/v4.0 seals (Three-Noon + T-90m, ADR-0010)
  *
  * Invariants
  * ----------

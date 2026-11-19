@@ -121,8 +121,7 @@ instead. Proven against real Postgres (GE2 shape detected, legal sequential
 shape produces zero false positives, identical window run twice logs at
 most once) in `apps/web/__tests__/formal-receipt-cron.test.ts`.
 
-**Schedule:** `vercel.json`, `/api/cron/run-formal-receipt`, `45 9 * * *`
-(once daily), with a 26h lookback window (24h cadence + 2h buffer) so no
+**Schedule:** `/api/cron/run-formal-receipt` (offloaded from Vercel cron to GitHub Actions daily formal-receipt audit; active Vercel schedules live in `docs/ops/CRON_MATRIX.generated.md`), with a 26h lookback window (24h cadence + 2h buffer) so no
 window boundary can leave a gap. No `.github/workflows/external-cron.yml`
 entry was added — that workflow exists to give the Hobby-plan-capped
 odds/settlement jobs a sub-daily cadence; this is non-urgent detection work,

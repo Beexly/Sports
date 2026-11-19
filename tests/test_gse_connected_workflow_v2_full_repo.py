@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-tests/test_gse_connected_workflow_v2_full_repo.py
+"""tests/test_gse_connected_workflow_v2_full_repo.py.
 
 Comprehensive Full-Repository Regression Test Suite for GSE Connected Game Workflow v2:
   1. Stage 0 Roster & Contamination Gate:
@@ -9,23 +8,31 @@ Comprehensive Full-Repository Regression Test Suite for GSE Connected Game Workf
        and passes on clean output).
      - Joe Fagnano is BAL QB1 (Jacoby Brissett emergency QB2); Trevor Lawrence is JAX QB1.
      - All 37 board athletes have verified 2026 `player_gp` and team assignments.
-  2. TypeScript Prediction & MCP Equation Engines Telemetry (`tnf_jax_bal_ts_engines_telemetry_2026_11_05.json`):
+  2. TypeScript Prediction & MCP Equation Engines Telemetry
+     (`tnf_jax_bal_ts_engines_telemetry_2026_11_05.json`):
      - `mcp_cognitive_router.thousand_equation_matrix_count == 1666`
      - `mcp_cognitive_router.stage_d_james_stein_shrinkage > 0.90` (specifically `0.916978`)
      - `abs(mcp_cognitive_router.stage_d_clamped_log_odds_delta) <= 0.35`
-     - `master_situational_reasoning_aggregator.streams_executed_count == 22` and `streams_skipped_count == 0`
-     - `master_situational_reasoning_aggregator.stream15i_zero_orphan_modules_evaluated == 77` and `stream15i_catalog_signals_evaluated == 51`
+     - `master_situational_reasoning_aggregator.streams_executed_count == 22`
+       and `streams_skipped_count == 0`
+     - `master_situational_reasoning_aggregator.stream15i_zero_orphan_modules_evaluated == 77`
+       and `stream15i_catalog_signals_evaluated == 51`
      - `x_situational_80_rules.total_rules == 80` and `evaluated_count == 80`
-     - `wireable_dispatch_registry.wireable_module_ids_count == 173` and `registered_model_ids_count == 196`
-  3. Python 31-Subpackage & 31-Dataset Telemetry (`tnf_jax_bal_python_31_domains_telemetry_2026_11_05.json`):
+     - `wireable_dispatch_registry.wireable_module_ids_count == 173`
+       and `registered_model_ids_count == 196`
+  3. Python 31-Subpackage & 31-Dataset Telemetry
+     (`tnf_jax_bal_python_31_domains_telemetry_2026_11_05.json`):
      - `intelligence_31_subpackages.subpackages_connected_count >= 30`
      - `datasets_report.ftn_charting_2026.rows == 18019`
      - `len(datasets_report.step_n_market_11_parquets) == 11`
-  4. Connected Workflow Master Receipt (`tnf_jax_bal_connected_workflow_v1_2026_11_05.json`) & Markdown Dossier:
-     - Cryptographic SHA-256 lineage chain (`Stage 0 -> Stage 1A -> Stage 1B -> Stage 2 -> Stage 3/4 -> Stage 5`) is intact.
+  4. Connected Workflow Master Receipt (`tnf_jax_bal_connected_workflow_v1_2026_11_05.json`)
+     & Markdown Dossier:
+     - Cryptographic SHA-256 lineage chain
+       (`Stage 0 -> Stage 1A -> Stage 1B -> Stage 2 -> Stage 3/4 -> Stage 5`) is intact.
      - `stage3_and_4_projections_and_situational` contains `derivatives_and_exotics_360`
        (`quarters_and_halves_team_projections`, `first_quarter_and_first_half_player_projections`,
-        `longest_play_projections`, `touchdown_scorer_probabilities`, `idp_pass_rush_sack_projections`).
+       `longest_play_projections`, `touchdown_scorer_probabilities`,
+       `idp_pass_rush_sack_projections`).
      - `stage5_360_conjunction_gate_and_call_sheet` has dynamic `gate_reason` strings (no hardcoded
        `42.1%` or `65.7%` mismatch), integer `XX/100` confidence strings (no `%` confidence),
        and Dual-Panel Official Ledger (`15,947` replay + `16-5` Wilson CI).
@@ -129,7 +136,9 @@ def test_ts_prediction_and_mcp_engines_telemetry():
 
 
 def test_python_31_subpackages_and_31_datasets_telemetry():
-    py_path = REPO_ROOT / "data" / "engine" / "tnf_jax_bal_python_31_domains_telemetry_2026_11_05.json"
+    py_path = (
+        REPO_ROOT / "data" / "engine" / "tnf_jax_bal_python_31_domains_telemetry_2026_11_05.json"
+    )
     assert py_path.is_file(), f"Missing Python 31-domain telemetry JSON: {py_path}"
     py_data = json.loads(py_path.read_text(encoding="utf-8"))
 
@@ -143,16 +152,31 @@ def test_python_31_subpackages_and_31_datasets_telemetry():
 
 def test_connected_workflow_master_receipt_and_markdown_dossier():
     v1_path = REPO_ROOT / "data" / "engine" / "tnf_jax_bal_connected_workflow_v1_2026_11_05.json"
-    master_path = REPO_ROOT / "data" / "engine" / "tnf_jax_bal_connected_workflow_master_2026_11_05.json"
+    master_path = (
+        REPO_ROOT / "data" / "engine" / "tnf_jax_bal_connected_workflow_master_2026_11_05.json"
+    )
     target_path = v1_path if v1_path.is_file() else master_path
     assert target_path.is_file(), f"Missing connected workflow receipt JSON: {v1_path}"
     receipt = json.loads(target_path.read_text(encoding="utf-8"))
 
-    # 1. Verify Cryptographic SHA-256 lineage chain (Stage 0 -> Stage 1A -> Stage 1B -> Stage 2 -> Stage 3/4 -> Stage 5)
-    chain = receipt.get("cryptographic_receipt_chain") or receipt.get("receipt_lineage_sha256") or {}
+    # 1. Verify Cryptographic SHA-256 lineage chain (Stage 0 -> Stage 5)
+    chain = (
+        receipt.get("cryptographic_receipt_chain")
+        or receipt.get("receipt_lineage_sha256")
+        or {}
+    )
     s0 = receipt.get("stage0_roster_and_board_allowlist") or receipt.get("stage0_allowlist") or {}
-    s1a = receipt.get("stage1a_coaching_mind_and_schemes") or receipt.get("stage1a_coaching_and_schemes") or {}
-    s1b = receipt.get("stage1b_5367_equations_pre_sim_review") or receipt.get("stage1b_equations_and_ engines") or receipt.get("stage1b_equations_and_engines") or {}
+    s1a = (
+        receipt.get("stage1a_coaching_mind_and_schemes")
+        or receipt.get("stage1a_coaching_and_schemes")
+        or {}
+    )
+    s1b = (
+        receipt.get("stage1b_5367_equations_pre_sim_review")
+        or receipt.get("stage1b_equations_and_ engines")
+        or receipt.get("stage1b_equations_and_engines")
+        or {}
+    )
     s2 = receipt.get("stage2_jev_spine_and_10k_simulation") or {}
     s34 = (
         receipt.get("stage3_and_4_projections_and_situational")
@@ -180,7 +204,9 @@ def test_connected_workflow_master_receipt_and_markdown_dossier():
         ("stage3_4", s34_hash),
         ("stage5", s5_hash),
     ):
-        assert isinstance(h_val, str) and len(h_val) == 64, f"Invalid SHA-256 hash for {h_name}: {h_val}"
+        assert isinstance(h_val, str) and len(h_val) == 64, (
+            f"Invalid SHA-256 hash for {h_name}: {h_val}"
+        )
 
     if "parent_stage0_receipt_sha256" in s1a:
         assert s1a["parent_stage0_receipt_sha256"] == s0_hash
@@ -225,7 +251,11 @@ def test_connected_workflow_master_receipt_and_markdown_dossier():
         assert "%" not in conf_str
 
     # Verify Dual-Panel Official Ledger (15,947 replay + 16-5 Wilson CI)
-    dual_ledger = s5_main.get("dual_panel_ledger_summary") or s5_main.get("dual_panel_official_ledger") or {}
+    dual_ledger = (
+        s5_main.get("dual_panel_ledger_summary")
+        or s5_main.get("dual_panel_official_ledger")
+        or {}
+    )
     dual_ledger_str = json.dumps(dual_ledger)
     assert "15947" in dual_ledger_str or "15,947" in dual_ledger_str
     assert "16-5" in dual_ledger_str or "0.7619" in dual_ledger_str
@@ -256,7 +286,7 @@ def test_dynamic_32_team_league_wide_denylist():
     dyn_jax_bal = build_dynamic_league_wide_denylist_for_matchup("JAX", "BAL", 9)
     assert len(dyn_jax_bal) >= 2400
 
-    # Any player from another NFL team (e.g., Patrick Mahomes on KC, Ja'Marr Chase on CIN, Saquon Barkley on PHI)
+    # Any player from another NFL team (e.g., Mahomes on KC, Chase on CIN, Barkley on PHI)
     # must be automatically blocked by assert_zero_roster_contamination for JAX @ BAL
     for wrong_team_player in ("Patrick Mahomes", "Ja'Marr Chase", "Saquon Barkley"):
         assert wrong_team_player.lower() in dyn_jax_bal
@@ -326,48 +356,95 @@ def test_live_books_and_pdfs_executable_engine():
     assert abs(aero["prolate_spheroid_aerodynamics_mt_bank"]["air_density_kg_m3"] - 1.24182) < 1e-4
     assert aero["coaching_network_graph_laplacian"]["fiedler_algebraic_connectivity_lambda2"] > 0.0
 
-    # 6. Tukey Fourth-Spread Fences, Huff/Levitin Simpson's Paradox, Nash Equilibrium & Markov Drive Matrix
+    # 6. Tukey Fourth-Spread Fences, Simpson's Paradox, Nash Equilibrium & Markov Drive Matrix
     thl = res["tukey_huff_levitin_game_theory_and_markov_drive_engine"]
     assert "JAX" in thl["tukey_fourth_spread_epa_fences"]
     assert "BAL" in thl["tukey_fourth_spread_epa_fences"]
-    assert thl["huff_levitin_simpsons_paradox_audit"]["simpsons_confounder_gap_epa_per_dropback"] > 0.25
+    huff = thl["huff_levitin_simpsons_paradox_audit"]
+    assert huff["simpsons_confounder_gap_epa_per_dropback"] > 0.25
     assert thl["zero_sum_nash_equilibrium_play_calling"]["duality_gap"] < 0.05
-    assert thl["absorbing_markov_chain_drive_matrix"]["JAX"]["from_own_25_zone1"]["expected_drive_points"] > 1.5
+    markov_jax = thl["absorbing_markov_chain_drive_matrix"]["JAX"]
+    assert markov_jax["from_own_25_zone1"]["expected_drive_points"] > 1.5
 
-    # 7-21. Wave 8, 9 & 10 Local Football/Sports/ML/Stats Books (9,712 pages) + 77 GitHub Sports-Quant/ML Repos
+    # 7-21. Wave 8/9/10 Local Sports/ML/Stats Books (9,712 pages) + 77 GitHub Repos
     w8 = res["wave8_hidden_game_eager_ifaf_quant_and_github_engines"]
     assert w8["status"] == "ACTIVE_EXECUTED"
     assert w8["wave8_local_pdfs_wired"] == 36
     assert w8["wave8_local_pdf_pages_wired"] == 9712
     assert w8["wave8_github_books_notebooks_repos_wired"] == 77
     assert w8["kernel_7_hidden_game_of_football"]["jax_hidden_points_advantage"] > 3.0
-    assert w8["kernel_7_hidden_game_of_football"]["real_qbr_comparison"]["real_qbr_delta_jax_minus_bal"] > 10.0
-    assert "Zay Flowers" in w8["kernel_8_eager_erickson_football_analytics"]["receiver_wopr_pca_and_poisson_td"]
-    assert w8["kernel_9_ifaf_rules_sid_gamenotes_numbers_game"]["ifaf_rulebook_clock_and_penalty_mechanics"]["rule_3_2_5_minimum_spike_clock_sec"] == 3.0
-    assert w8["kernel_10_davidovg_quant_algo_double_entry"]["frappe_double_entry_boxscore_ledger"]["double_entry_imbalance_linf"] == 0.0
-    assert w8["kernel_11_multigrid_kalman_nflwar_transformer"]["transformer_causal_attention_and_evidential_dirichlet"]["mlfs_point_in_time_causal_mask_verified"] is True
-    assert w8["kernel_12_kissell_posirina_optimal_sports_math"]["probit_margin_and_spread_calibration"]["jax_plus_6_5_cover_prob_probit"] > 0.55
-    assert "Josh Hines-Allen (JAX EDGE)" in w8["kernel_13_congelio_nfl_analytics_with_r"]["congelio_weighted_adjusted_sack_impact"]
-    assert w8["kernel_14_severini_analytic_methods_3rd_ed"]["quantile_regression_player_tails"]["Zay Flowers"]["p90"] > w8["kernel_14_severini_analytic_methods_3rd_ed"]["quantile_regression_player_tails"]["Zay Flowers"]["p50"]
-    assert w8["kernel_15_egidi_karlis_ntzoufras_footbayes"]["dibp_bivariate_poisson_td_model"]["expected_total_tds"] > 3.5
-    assert w8["kernel_16_corballis_rubio_sanchez_klosterman_recursive_mind"]["corballis_level3_theory_of_mind_hierarchy"]["recursion_depth_k"] == 3
-    assert w8["kernel_17_smart_football_kelley_inside_zone_nfl_playbooks"]["saban_belichick_manning_smart_football"]["clam_banjo_rub_pick_neutralization_rate"] > 0.70
-    assert w8["kernel_18_liang_sparse_graphical_banerjee_spatial"]["liang_psi_learning_sparse_sgp_graph"]["retained_conditional_edges_count"] >= 4
-    assert w8["kernel_19_murphy_jaynes_ross_probabilistic_foundations"]["jaynes_maxent_and_decibel_evidence"]["maxent_entropy_nats"] > 1.0
-    assert w8["kernel_20_kuhn_johnson_brownlee_montgomery_spc"]["montgomery_cusum_spc_regime_detector"]["week8_qb_regime_shift_alarm_triggered"] is True
-    assert w8["kernel_21_fujii_hamadani_smartmoney_bellafiore_playbook"]["fujii_2025_counterfactual_next_play_analytics"]["counterfactual_decision_advantage_epa"] > 0.30
+    k7_qbr = w8["kernel_7_hidden_game_of_football"]["real_qbr_comparison"]
+    assert k7_qbr["real_qbr_delta_jax_minus_bal"] > 10.0
+    k8_ee = w8["kernel_8_eager_erickson_football_analytics"]
+    assert "Zay Flowers" in k8_ee["receiver_wopr_pca_and_poisson_td"]
+    k9_clk = w8["kernel_9_ifaf_rules_sid_gamenotes_numbers_game"][
+        "ifaf_rulebook_clock_and_penalty_mechanics"
+    ]
+    assert k9_clk["rule_3_2_5_minimum_spike_clock_sec"] == 3.0
+    k10_dbl = w8["kernel_10_davidovg_quant_algo_double_entry"][
+        "frappe_double_entry_boxscore_ledger"
+    ]
+    assert k10_dbl["double_entry_imbalance_linf"] == 0.0
+    k11_tx = w8["kernel_11_multigrid_kalman_nflwar_transformer"][
+        "transformer_causal_attention_and_evidential_dirichlet"
+    ]
+    assert k11_tx["mlfs_point_in_time_causal_mask_verified"] is True
+    k12_kp = w8["kernel_12_kissell_posirina_optimal_sports_math"][
+        "probit_margin_and_spread_calibration"
+    ]
+    assert k12_kp["jax_plus_6_5_cover_prob_probit"] > 0.55
+    k13_cg = w8["kernel_13_congelio_nfl_analytics_with_r"]
+    assert "Josh Hines-Allen (JAX EDGE)" in k13_cg["congelio_weighted_adjusted_sack_impact"]
+    k14_tails = w8["kernel_14_severini_analytic_methods_3rd_ed"]["quantile_regression_player_tails"]
+    assert k14_tails["Zay Flowers"]["p90"] > k14_tails["Zay Flowers"]["p50"]
+    k15_td = w8["kernel_15_egidi_karlis_ntzoufras_footbayes"]["dibp_bivariate_poisson_td_model"]
+    assert k15_td["expected_total_tds"] > 3.5
+    k16_tom = w8["kernel_16_corballis_rubio_sanchez_klosterman_recursive_mind"][
+        "corballis_level3_theory_of_mind_hierarchy"
+    ]
+    assert k16_tom["recursion_depth_k"] == 3
+    k17_sf = w8["kernel_17_smart_football_kelley_inside_zone_nfl_playbooks"][
+        "saban_belichick_manning_smart_football"
+    ]
+    assert k17_sf["clam_banjo_rub_pick_neutralization_rate"] > 0.70
+    k18_lg = w8["kernel_18_liang_sparse_graphical_banerjee_spatial"][
+        "liang_psi_learning_sparse_sgp_graph"
+    ]
+    assert k18_lg["retained_conditional_edges_count"] >= 4
+    k19_mj = w8["kernel_19_murphy_jaynes_ross_probabilistic_foundations"][
+        "jaynes_maxent_and_decibel_evidence"
+    ]
+    assert k19_mj["maxent_entropy_nats"] > 1.0
+    k20_spc = w8["kernel_20_kuhn_johnson_brownlee_montgomery_spc"][
+        "montgomery_cusum_spc_regime_detector"
+    ]
+    assert k20_spc["week8_qb_regime_shift_alarm_triggered"] is True
+    k21_fj = w8["kernel_21_fujii_hamadani_smartmoney_bellafiore_playbook"][
+        "fujii_2025_counterfactual_next_play_analytics"
+    ]
+    assert k21_fj["counterfactual_decision_advantage_epa"] > 0.30
 
 
 def test_web_app_connected_workflow_api_route():
     import subprocess
 
     loader_path = REPO_ROOT / "apps" / "web" / "lib" / "engine" / "connected-workflow-loader.ts"
-    route_path = REPO_ROOT / "apps" / "web" / "app" / "api" / "engine" / "connected-workflow" / "route.ts"
+    route_path = (
+        REPO_ROOT / "apps" / "web" / "app" / "api" / "engine" / "connected-workflow" / "route.ts"
+    )
     assert loader_path.is_file()
     assert route_path.is_file()
 
     proc = subprocess.run(
-        "npx tsx -e \"import { loadVerifiedConnectedWorkflowBundle } from './apps/web/lib/engine/connected-workflow-loader.ts'; const res = loadVerifiedConnectedWorkflowBundle(); console.log(JSON.stringify({status: res.status, matchup: res.matchup, subpackages: res.pythonIntelligenceSummary.subpackagesConnected, streams: res.typescriptEngineSummary.situationalStreamsExecuted, booksEngines: (res.liveBooksAndPdfsEngine as any).engines_executed_count}));\"",
+        (
+            "npx tsx -e \"import { loadVerifiedConnectedWorkflowBundle } from "
+            "'./apps/web/lib/engine/connected-workflow-loader.ts'; "
+            "const res = loadVerifiedConnectedWorkflowBundle(); "
+            "console.log(JSON.stringify({status: res.status, matchup: res.matchup, "
+            "subpackages: res.pythonIntelligenceSummary.subpackagesConnected, "
+            "streams: res.typescriptEngineSummary.situationalStreamsExecuted, "
+            "booksEngines: (res.liveBooksAndPdfsEngine as any).engines_executed_count}));\""
+        ),
         shell=True,
         cwd=str(REPO_ROOT),
         capture_output=True,

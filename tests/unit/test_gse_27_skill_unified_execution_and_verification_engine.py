@@ -1,6 +1,4 @@
-"""
-Unit and Integration Tests for GSE 27-Skill Unified Execution and Verification Engine.
-"""
+"""Unit and Integration Tests for GSE 27-Skill Unified Execution and Verification Engine."""
 
 from __future__ import annotations
 

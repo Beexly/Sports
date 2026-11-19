@@ -1,0 +1,720 @@
+{
+ "book_id": "00ea35790656f6f5",
+ "source_status": "COMPLETE",
+ "source_note": "Centers for Disease Control and Prevention, National Center for Injury Prevention and Control, Division of Unintentional Injury Prevention. Report to Congress: The Management of Traumatic Brain Injury in Children, 2018, Atlanta, GA, in collaboration with the National Institutes of Health. Local file is the published 2018 report PDF, 2847986 bytes, full sha256 00ea35790656f6f5a4b092a31c471e8130ea400842325112923800369e1c6c5c, book_id first 16 hex 00ea35790656f6f5. The shipped extracted text at the library path is pdftotext output that interleaves the report two columns side by side on each line, so many sentences of the printed report are not contiguous in that file. Every verbatim quote in this artifact is proven as a contiguous substring of the shipped extracted text file, taken from inside one page with no stitching across page breaks. A repair pass replaced 29 quotes from an earlier draft, which had been proven against a column sequential extraction of the same PDF, with passages from the shipped text file itself; where a fragment carries only part of a sentence, the page citation points to the full sentence on that page. In the burden counts quote, the shipped text breaks the word TBI-related across a line, so the normalized quote reads TBIrelated. The work contains no equations, so all latex fields are empty and breakdown fields use domain limits rather than no_equation_domain placeholders where a specific limit applies. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "tbi_definition",
+   "name": "TBI is a disruption of normal brain function caused by a bump, blow, jolt, or penetrating head injury",
+   "verbatim_quote": "A traumatic brain injury disrupts the normal function of the brain, and can be caused by a bump, blow, or jolt to the head, or a penetrating head injury.",
+   "page": "Executive Summary, Public Health Burden, p. 5; Section I, Incidence",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Injury mechanism can be external mechanical force or penetration",
+    "Normal function is the baseline against which disruption is judged"
+   ],
+   "breakdown_regime": "Applies to traumatic causes only; non traumatic brain dysfunction is outside this definition",
+   "domain": "pediatric neurology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Definition as an event classifier: a reasoning engine must first classify whether an observed disruption has a traumatic mechanism before applying any TBI trajectory, separating mechanism from severity and from outcome",
+    "source_operator": "tbi_definition",
+    "telemetry": "Mechanism of injury, head impact history, presentation setting"
+   }
+  },
+  {
+   "primitive_id": "developing_brain_trajectory_disruption",
+   "name": "Any severity injury to the developing brain can disrupt developmental trajectory",
+   "verbatim_quote": "any severity to the developing brain can disrupt a child’s",
+   "page": "Executive Summary, Introduction, p. 4",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Child brain is still developing, so effects interact with maturation",
+    "Severity at presentation does not bound developmental impact"
+   ],
+   "breakdown_regime": "Mild presentation can still carry developmental risk; the claim does not predict disruption for every child",
+   "domain": "developmental neuroscience",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Developmental stage as a state variable: the same insult has different downstream effects depending on where the system sits on its growth trajectory, so projections must be age and stage conditioned, not static",
+    "source_operator": "developing_brain_trajectory_disruption",
+    "telemetry": "Age at injury, developmental stage, school participation restrictions"
+   }
+  },
+  {
+   "primitive_id": "tbi_acquired_sudden_onset",
+   "name": "TBI is an acquired condition that can occur anytime during childhood",
+   "verbatim_quote": "TBI is an acquired condition that can occur anytime",
+   "page": "Executive Summary, Introduction, p. 4",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Onset is not present at birth and is not scheduled",
+    "Baseline is the pre injury developmental path"
+   ],
+   "breakdown_regime": "Does not distinguish single from repeated injury timing",
+   "domain": "pediatric neurology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sudden state change model: an exogenous shock interrupts an otherwise ongoing trajectory, requiring pre injury baseline reconstruction rather than comparison to population norms alone",
+    "source_operator": "tbi_acquired_sudden_onset",
+    "telemetry": "Date and age of injury, pre injury functioning records"
+   }
+  },
+  {
+   "primitive_id": "burden_2013_counts",
+   "name": "In 2013 about 640,000 ED visits, 18,000 hospitalizations and 1,500 deaths for children 14 and younger",
+   "verbatim_quote": "In 2013, there were approximately 640,000 TBI-related emergency department (ED) visits, 18,000 TBI-related hospitalizations, and 1,500 TBIrelated deaths among children 14",
+   "page": "Executive Summary, Public Health Burden, p. 5",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Counts are for the United States in 2013 and age 14 and younger",
+    "ED, hospital and death counts are separate care levels, not unique children"
+   ],
+   "breakdown_regime": "Counts are dated and age bounded; later years and older adolescents differ",
+   "domain": "epidemiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Base rate anchor: population burden at three care intensities gives a severity funnel that any incidence estimate must reproduce before finer stratification",
+    "source_operator": "burden_2013_counts",
+    "telemetry": "ED visits, hospitalizations, deaths by year and age band"
+   }
+  },
+  {
+   "primitive_id": "mechanism_age_pattern",
+   "name": "Leading causes differ by age: falls and struck by or against for 0 to 14, motor vehicle crashes and falls for 15 to 24",
+   "verbatim_quote": "unintentional falls and being struck by or against an object, whereas for those 15-24 years of age, the leading causes were motor vehicle crashes and falls.1",
+   "page": "Executive Summary, Public Health Burden, p. 5",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cause ranking is age specific",
+    "ED, hospitalization and death causes are pooled in this statement"
+   ],
+   "breakdown_regime": "Ranking does not give cause specific severity or outcome rates",
+   "domain": "epidemiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Age conditioned mechanism prior: the likely cause distribution shifts with age, so mechanism inference and prevention targeting must be stratified, not pooled",
+    "source_operator": "mechanism_age_pattern",
+    "telemetry": "Mechanism by age band, care setting"
+   }
+  },
+  {
+   "primitive_id": "sports_recreation_burden",
+   "name": "Sports and recreation accounted for an estimated 325,000 TBI related ED visits in children and teens in 2012",
+   "verbatim_quote": "Another common cause of TBI is sports and recreational activities which accounted for an estimated 325,000 TBI-related ED visits among children and teens in 2012.",
+   "page": "Executive Summary, Public Health Burden, p. 5",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Estimate is for 2012 ED visits in children and teens",
+    "Sports and recreation is one cause category among several"
+   ],
+   "breakdown_regime": "ED only count misses primary care and untreated cases",
+   "domain": "sports medicine",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Exposure linked incidence: a large share of burden comes from organized activity exposure, so exposure denominators matter as much as injury counts",
+    "source_operator": "sports_recreation_burden",
+    "telemetry": "Sport and activity exposure, ED visits by activity"
+   }
+  },
+  {
+   "primitive_id": "severity_classification",
+   "name": "Severity is separated into mild, moderate and severe based on initial clinical presentation, and mild accounts for most ED visits",
+   "verbatim_quote": "TBI severity is typically separated into categories of mild, moderate, and severe based on a patient's initial clinical presentation.",
+   "page": "Executive Summary, Public Health Burden, p. 5",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Classification uses initial presentation, not later outcome",
+    "Categories are ordinal and clinically assigned"
+   ],
+   "breakdown_regime": "Initial class can misstate later trajectory, especially in young children whose deficits emerge later",
+   "domain": "clinical classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Initial state label with known uncertainty: the label is a starting prior for trajectory reasoning, not a final verdict, and must be updated as new functioning is demanded",
+    "source_operator": "severity_classification",
+    "telemetry": "Initial presentation, severity category, later functional assessments"
+   }
+  },
+  {
+   "primitive_id": "disability_prevalence_by_severity",
+   "name": "More than 62 percent of moderate to severe cases experienced disability versus 14 percent for mild TBI in one study",
+   "verbatim_quote": "found that more than 62% of children with moderate-to-severe TBI experienced disability, compared to 14% of children with mTBI.",
+   "page": "Executive Summary, Public Health Burden, p. 5",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Disability in that study meant use of specialized medical and educational services",
+    "Comparison is within one study definition"
+   ],
+   "breakdown_regime": "Different disability definitions change the rates; service use also reflects access, not only impairment",
+   "domain": "epidemiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Severity conditioned outcome rate: disability probability rises sharply with severity class, providing a calibration anchor that must be definition matched before reuse",
+    "source_operator": "disability_prevalence_by_severity",
+    "telemetry": "Severity, specialized service use, disability status"
+   }
+  },
+  {
+   "primitive_id": "tbi_chronic_not_only_acute",
+   "name": "Effects of TBI can be chronic and disabling even though TBI is often thought of as acute",
+   "verbatim_quote": "Recent research supports the notion of a TBI as a chronic condition in adults because of the number of health, cognitive, behavioral, and social effects that can persist or progress over an individual’s lifespan.142 Similar long term chronic effects almost certainly impact children in similar ways, except potentially for a longer period of time.",
+   "page": "Section II, p. 23",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Acute care episode and long term effect are distinct phases",
+    "Chronicity is possible, not universal"
+   ],
+   "breakdown_regime": "Most mild cases recover quickly; chronic framing must not be applied uniformly",
+   "domain": "long term outcomes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Two phase temporal model: an acute event can generate a chronic condition, so reasoning must carry a long horizon state rather than closing the case at discharge",
+    "source_operator": "tbi_chronic_not_only_acute",
+    "telemetry": "Follow up duration, persistent symptoms, disability status over time"
+   }
+  },
+  {
+   "primitive_id": "mtbi_symptom_profile",
+   "name": "Mild TBI symptoms include headache, dizziness, and problems with thinking, memory, physical activity, emotion, mood and sleep",
+   "verbatim_quote": "can include headaches and dizziness, as well as problems with thinking, memory, physical activities, emotions",
+   "page": "Executive Summary, Outcomes, p. 6",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Symptoms span somatic, cognitive, emotional and sleep domains",
+    "List is representative, not exhaustive"
+   ],
+   "breakdown_regime": "Symptoms are non specific and overlap other conditions",
+   "domain": "clinical symptoms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Multi domain symptom vector: outcome is not a single score, the profile across domains is the observable that tracks recovery",
+    "source_operator": "mtbi_symptom_profile",
+    "telemetry": "Symptom reports by domain over time"
+   }
+  },
+  {
+   "primitive_id": "mtbi_recovery_timeline",
+   "name": "Most children with mTBI recover from initial symptoms within 6 weeks, with 30-60 percent having persistent symptoms at one month post-injury",
+   "verbatim_quote": "Longitudinal studies suggest that most children with mTBI recover from the initial symptoms within 6 weeks after injury, with 30-60% having persistent symptoms at one month post-injury, 10%",
+   "page": "Section II, Medical and Health Outcomes, p. 24",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Longitudinal studies pooled; timeline is for initial symptoms of mild TBI",
+    "The body section gives a 30-60 percent range for persistent symptoms at one month; percentages are population shares, not individual predictions"
+   ],
+   "breakdown_regime": "Moderate to severe injury follows a different, longer course; individual recovery varies",
+   "domain": "recovery trajectory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Empirical decay curve for symptom persistence: a quantified time course that a reasoning engine can use as the expected trajectory and flag deviations from",
+    "source_operator": "mtbi_recovery_timeline",
+    "telemetry": "Days since injury, symptom persistence at 1, 3 and 12 months"
+   }
+  },
+  {
+   "primitive_id": "latent_effects_emerge_with_demands",
+   "name": "Problems may not be realized until years later when higher level functioning is required for developmental milestones",
+   "verbatim_quote": "significance of problems might not be realized until years after the injury when higher-level cognitive and behavioral functioning is required to meet typical developmental milestones, especially when the injury occurs at a very young age.",
+   "page": "Executive Summary, Outcomes, p. 6",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Deficit visibility depends on later environmental demands",
+    "Very young age at injury raises this risk"
+   ],
+   "breakdown_regime": "Latent emergence is not guaranteed; some deficits are immediate and obvious",
+   "domain": "developmental outcomes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Demand revealed deficit: absence of observed problems early is weak evidence, because the test that would reveal them has not yet occurred in development",
+    "source_operator": "latent_effects_emerge_with_demands",
+    "telemetry": "Age at injury, milestone demands, later cognitive and behavioral assessments"
+   }
+  },
+  {
+   "primitive_id": "school_outcomes_moderate_severe",
+   "name": "Moderate to severe TBI is associated with worse grades, higher grade retention and more special education than uninjured peers",
+   "verbatim_quote": "Children with moderate-to-severe TBI earn worse grades, show higher rates of grade retention, and receive more special",
+   "page": "Executive Summary, Outcomes, p. 6",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Comparison group is uninjured peers",
+    "School outcomes are downstream of cognitive and behavioral effects"
+   ],
+   "breakdown_regime": "Association does not isolate injury effect from pre injury and family factors",
+   "domain": "education outcomes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "School performance as a measurable downstream signal: grades, retention and service receipt are observable proxies for underlying functional change",
+    "source_operator": "school_outcomes_moderate_severe",
+    "telemetry": "Grades, grade retention, special education receipt"
+   }
+  },
+  {
+   "primitive_id": "mtbi_school_support_12_months",
+   "name": "In a large study 14 percent of children with mild TBI needed educational support services at school 12 months later",
+   "verbatim_quote": "14% of children who experienced an mTBI needed",
+   "page": "Executive Summary, Outcomes, p. 6",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Study followed children younger than 18 years",
+    "Need is measured at 12 months, well past typical symptom recovery"
+   ],
+   "breakdown_regime": "Single study rate; need depends on school identification practices",
+   "domain": "education outcomes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Long tail in a mild category: even the mild class carries a non trivial rate of service need a year out, so mild must not be treated as zero risk in projections",
+    "source_operator": "mtbi_school_support_12_months",
+    "telemetry": "Educational support receipt at 12 months, severity"
+   }
+  },
+  {
+   "primitive_id": "post_school_employment_gap",
+   "name": "Fewer than half of students with TBI out of school a year or more had a paying job outside the home in one study",
+   "verbatim_quote": "half of students with TBI who had been out of school a year",
+   "page": "Executive Summary, Outcomes, p. 6",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Population is students with TBI out of school at least a year",
+    "Employment is outside the home paid work"
+   ],
+   "breakdown_regime": "Study specific; labor market and severity mix affect the rate",
+   "domain": "adult outcomes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Distal outcome marker: the trajectory extends into employment and independent living, so short follow up windows systematically understate total effect",
+    "source_operator": "post_school_employment_gap",
+    "telemetry": "Employment status, postsecondary enrollment, independent living"
+   }
+  },
+  {
+   "primitive_id": "family_functioning_determinant",
+   "name": "Parent and caregiver burden and family dysfunction are a strong determinant of child recovery",
+   "verbatim_quote": "they are a strong determinant of a child’s recovery",
+   "page": "Executive Summary, Factors Influencing Outcomes, p. 6",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Family functioning is measurable and varies across families",
+    "Effect is on psychosocial functioning and recovery generally"
+   ],
+   "breakdown_regime": "Family effect is entangled with socioeconomic resources and pre injury functioning",
+   "domain": "family systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Context variable with causal weight: the recovering system is the child inside a family, and family state modifies the trajectory, not just the injury parameters",
+    "source_operator": "family_functioning_determinant",
+    "telemetry": "Family functioning measures, caregiver burden, psychosocial outcomes"
+   }
+  },
+  {
+   "primitive_id": "socioeconomic_disadvantage_effect",
+   "name": "Poor cognitive and academic outcomes following a severe TBI, associated in the report with economic and social disadvantage",
+   "verbatim_quote": "poor cognitive and academic outcomes following a severe TBI.45,49",
+   "page": "Executive Summary, Factors Influencing Outcomes, p. 6",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Statement is for severe TBI outcomes",
+    "Association is population level"
+   ],
+   "breakdown_regime": "Does not prove disadvantage causes the gap independent of access to care differences",
+   "domain": "social determinants",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Resource modifier: identical injuries can diverge by social and economic context, so outcome reasoning must include access and resource variables or it will misattribute their effects to biology",
+    "source_operator": "socioeconomic_disadvantage_effect",
+    "telemetry": "Socioeconomic indicators, cognitive and academic outcomes, care access"
+   }
+  },
+  {
+   "primitive_id": "cooccurring_conditions_modifier",
+   "name": "Co occurring health and developmental conditions such as mental health diagnosis and ADHD can influence outcomes after TBI",
+   "verbatim_quote": "Co-occurring health and developmental conditions, such as a mental health diagnosis and Attention",
+   "page": "Executive Summary, Factors Influencing Outcomes, p. 6",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Conditions are pre existing or co occurring, not caused by the TBI in this statement",
+    "Evidence for longer term milestone effects is limited"
+   ],
+   "breakdown_regime": "Short term influence is better supported than long term milestone claims",
+   "domain": "comorbidity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Interaction term requirement: baseline conditions modify post injury outcomes, so a model that starts from injury variables alone is misspecified",
+    "source_operator": "cooccurring_conditions_modifier",
+    "telemetry": "Pre injury diagnoses, ADHD status, milestone attainment"
+   }
+  },
+  {
+   "primitive_id": "uncoordinated_service_systems",
+   "name": "Management depends on multiple service delivery systems that are often neither systematic nor coordinated across the lifespan",
+   "verbatim_quote": "often are neither systematic, nor coordinated to provide",
+   "page": "Executive Summary, Current Service Delivery Systems, p. 7",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Care spans health, school, state and family systems",
+    "Coordination failure is a system property, not a family failure"
+   ],
+   "breakdown_regime": "Some local systems coordinate well; the claim is about the typical state",
+   "domain": "health systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Fragmented pipeline principle: when a process crosses independent systems with no shared record, loss occurs at the handoffs, and improving single nodes does not fix handoff loss",
+    "source_operator": "uncoordinated_service_systems",
+    "telemetry": "Care transitions, referrals completed, follow up receipt across settings"
+   }
+  },
+  {
+   "primitive_id": "two_systems_health_and_school",
+   "name": "Children receive care from two separate systems, healthcare and education, that are often not well coordinated or integrated",
+   "verbatim_quote": "There is often a lack of communication between healthcare and educational systems.",
+   "page": "Section IV, p. 60",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Health and school are the two main post injury settings",
+    "Each system has its own records, eligibility and vocabulary"
+   ],
+   "breakdown_regime": "Coordination programs exist in places; integration is uneven",
+   "domain": "health systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Dual system interface: the same child is represented in two unlinked records, so information about injury often never reaches the setting where daily functioning is observed",
+    "source_operator": "two_systems_health_and_school",
+    "telemetry": "School notification of injury, shared care plans, service receipt"
+   }
+  },
+  {
+   "primitive_id": "initial_triage_goal",
+   "name": "Goal of initial management is to determine severity or acuity and safely triage to the most appropriate level of care",
+   "verbatim_quote": "goal of initial management for all types of brain injury is to determine injury",
+   "page": "Section III, Medical Management, p. 35",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Triage precedes definitive treatment decisions",
+    "Safety is the constraint on level of care choice"
+   ],
+   "breakdown_regime": "Triage quality depends on assessment tools and training available at the entry point",
+   "domain": "acute care",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "First decision under uncertainty: classify and route before the full picture is known, with the cost of under triage being missed severe injury",
+    "source_operator": "initial_triage_goal",
+    "telemetry": "Entry setting, severity assessment, disposition"
+   }
+  },
+  {
+   "primitive_id": "pediatric_specialist_rehab_advantage",
+   "name": "Inpatient rehabilitation at pediatric hospitals is associated with more efficient functional improvement",
+   "verbatim_quote": "have more efficient functional improvement than children receiving inpatient rehabilitation at other hospitals.",
+   "page": "Executive Summary, Current Service Delivery Systems, p. 7",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Comparison is pediatric hospitals versus other hospitals for inpatient rehabilitation",
+    "Efficiency is rate of functional improvement"
+   ],
+   "breakdown_regime": "Observational comparison; case mix may differ by facility type",
+   "domain": "rehabilitation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Specialization effect: domain specific expertise and volume change the recovery rate, so where care happens is a variable in the trajectory, not a neutral container",
+    "source_operator": "pediatric_specialist_rehab_advantage",
+    "telemetry": "Facility type, functional improvement rate, rehabilitation receipt"
+   }
+  },
+  {
+   "primitive_id": "early_specialized_care_matters",
+   "name": "Access to specialized care in a pediatric trauma center at injury time is especially important because early care can influence long term outcomes",
+   "verbatim_quote": "Access to specialized care in a pediatric trauma center at",
+   "page": "Executive Summary, Identifying Gaps, p. 8",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Early care window has leverage over later outcomes",
+    "Pediatric trauma centers provide the specialized care referenced"
+   ],
+   "breakdown_regime": "Benefit varies by severity; mild cases often enter through primary care",
+   "domain": "acute care",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Early leverage point: interventions at the start of a long trajectory compound, so initial routing decisions carry disproportionate weight in final outcomes",
+    "source_operator": "early_specialized_care_matters",
+    "telemetry": "Trauma center access, time to specialized care, long term outcomes"
+   }
+  },
+  {
+   "primitive_id": "ed_only_undercount",
+   "name": "Incidence estimates based solely on ED visit data are significant undercounts",
+   "verbatim_quote": "solely on ED visit data are significant undercounts, likely",
+   "page": "Section I, Incidence, p. 18",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Most mild cases enter through primary care in the cited network study",
+    "Untreated cases are unobserved in any care dataset"
+   ],
+   "breakdown_regime": "Magnitude of undercount is not quantified in this statement",
+   "domain": "surveillance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Observation bias correction: the data source determines what is counted, and a single channel count is a lower bound, not an estimate of the total",
+    "source_operator": "ed_only_undercount",
+    "telemetry": "Entry point distribution, primary care visits, ED visits, untreated share"
+   }
+  },
+  {
+   "primitive_id": "point_of_entry_distribution",
+   "name": "In one large network, mild TBI entry was 82 percent primary care, 5 percent specialty care and 12 percent ED",
+   "verbatim_quote": "82% initially visited primary care, 5% visited specialty care, and 12% visited an ED.",
+   "page": "Section I, Incidence, p. 18",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Shares are for pediatric mild TBI patients in one large healthcare network",
+    "Shares describe first visit location"
+   ],
+   "breakdown_regime": "Network specific; insurance and age shift entry patterns",
+   "domain": "surveillance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Channel distribution for case capture: knowing where cases first appear determines where detection and guidance must be placed to reach most cases",
+    "source_operator": "point_of_entry_distribution",
+    "telemetry": "First visit setting by severity, age and insurance"
+   }
+  },
+  {
+   "primitive_id": "child_find_early_intervention",
+   "name": "Child Find requires school systems to identify, locate and evaluate children from birth to 21 with disabilities or suspected disabilities",
+   "verbatim_quote": "to identify, locate, and evaluate children from birth to 21",
+   "page": "Section III, p. 49",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Child Find is a school system obligation",
+    "Eligibility covers suspected as well as confirmed disability"
+   ],
+   "breakdown_regime": "Identification depends on referral and parent and provider awareness",
+   "domain": "education services",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Standing detection obligation: a system charged with finding cases will still miss them when the referring settings do not signal, so detection rate is a joint property",
+    "source_operator": "child_find_early_intervention",
+    "telemetry": "Referrals, evaluations completed, early intervention enrollment by age"
+   }
+  },
+  {
+   "primitive_id": "underidentification_for_services",
+   "name": "Children with brain injury are under identified for health and educational services and under served by existing supports",
+   "verbatim_quote": "under-served by existing supports, placing them at risk for",
+   "page": "Executive Summary, Identifying Gaps, p. 8",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Under identification is relative to need implied by incidence and disability rates",
+    "Risk is to health and educational outcomes"
+   ],
+   "breakdown_regime": "Some children genuinely need no services; the gap is the unidentified share among those who do",
+   "domain": "education services",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Need versus receipt gap: prevalence of need and receipt of services are separate quantities, and the difference is the actionable gap a system must measure",
+    "source_operator": "underidentification_for_services",
+    "telemetry": "Students identified under TBI category, estimated need, services received"
+   }
+  },
+  {
+   "primitive_id": "no_longterm_monitoring_system",
+   "name": "There are no formal systems to monitor the health of children with TBI over time, and most are discharged home after ED care",
+   "verbatim_quote": "Currently, there are no formal systems to monitor the health",
+   "page": "Executive Summary, Identifying Gaps, p. 8",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Statement describes the United States at the time of the report",
+    "Discharge home is the typical path after ED care"
+   ],
+   "breakdown_regime": "Some hospitals and states run local follow up programs",
+   "domain": "long term management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Missing feedback loop: without scheduled re observation, late emerging problems are detected only if families notice and re enter care on their own",
+    "source_operator": "no_longterm_monitoring_system",
+    "telemetry": "Follow up visits, monitoring enrollment, time to problem detection"
+   }
+  },
+  {
+   "primitive_id": "first_evidence_based_mtbi_guideline",
+   "name": "CDC was developing the first ever evidence based clinical guideline on diagnosis and management of mild TBI in children and adolescents",
+   "verbatim_quote": "The CDC is working to develop the first-ever",
+   "page": "Executive Summary, Current Service Delivery Systems, p. 7",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Guideline scope is mild TBI, diagnosis and management",
+    "Basis is current best evidence plus expert opinion where evidence is thin"
+   ],
+   "breakdown_regime": "Guideline does not settle moderate and severe TBI standards, where evidence is weaker",
+   "domain": "clinical guidelines",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Evidence synthesis as a standard setter: where practice varies widely, a systematic review based guideline converts scattered evidence into a common decision rule",
+    "source_operator": "first_evidence_based_mtbi_guideline",
+    "telemetry": "Guideline recommendations, practice variation measures"
+   }
+  },
+  {
+   "primitive_id": "individualized_management_without_evidence",
+   "name": "Most management of TBI is based on consensus guidelines and expert opinion rather than a definitive evidence base",
+   "verbatim_quote": "At present, most management of TBI is based on consensus guidelines and expert opinion.90-94",
+   "page": "Executive Summary, research and guideline discussion, p. 10",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Context is the overall state of TBI management, where rigorous systematic clinical trials are few",
+    "Individualized symptom management is reported elsewhere in the report as the most common recommendation for mTBI"
+   ],
+   "breakdown_regime": "Individualization is not inherently poor care; the gap is the missing evidence base behind it",
+   "domain": "clinical management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Practice under missing standards: when no validated protocol exists, variation is expected and outcomes data collection becomes the path to a standard",
+    "source_operator": "individualized_management_without_evidence",
+    "telemetry": "Treatment variation, symptom management plans, specialist involvement"
+   }
+  },
+  {
+   "primitive_id": "pacing_graduated_return",
+   "name": "For mild TBI, guidelines recommend pacing, or gradual return to cognitive and physical activities as tolerated by symptoms",
+   "verbatim_quote": "gradual return to cognitive and physical activities as",
+   "page": "Building Research to Guide TBI Management in Children, p. 70",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Return is gradual and symptom titrated",
+    "Applies to both cognitive and physical activity"
+   ],
+   "breakdown_regime": "Implementation is variable and evidence for specific pacing schedules is limited",
+   "domain": "return to activity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Graduated load reintroduction: activity is reintroduced in steps gated by response, a general protocol for returning a recovering system to demand without overshoot",
+    "source_operator": "pacing_graduated_return",
+    "telemetry": "Return to learn and play stages, symptom response to activity increases"
+   }
+  },
+  {
+   "primitive_id": "family_advocacy_roles",
+   "name": "The suddenness of TBI forces parents into multiple roles including advocacy in healthcare and school settings",
+   "verbatim_quote": "The suddenness of a TBI forces parents into multiple",
+   "page": "Executive Summary, Family Support and Training, p. 8",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Parents did not choose or train for these roles",
+    "Advocacy is required in two separate systems"
+   ],
+   "breakdown_regime": "Support programs can reduce but not eliminate this burden",
+   "domain": "family support",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Hidden labor transfer: when systems do not coordinate, the coordination work falls on the family, and family capacity becomes a rate limiting step in care",
+    "source_operator": "family_advocacy_roles",
+    "telemetry": "Parent advocacy activities, navigation support receipt, caregiver strain"
+   }
+  },
+  {
+   "primitive_id": "state_tbi_infrastructure",
+   "name": "States have TBI trust funds designated by legislation to support services for individuals of all ages with TBI",
+   "verbatim_quote": "states have TBI trust funds, designated by legislation,",
+   "page": "Section III, State-Based Services Available to Children with a TBI, p. 48",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Trust funds support services for all ages, not only children",
+    "Federal TBI grant program supplements state structures"
+   ],
+   "breakdown_regime": "Funding levels and eligibility vary widely by state",
+   "domain": "state services",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Geographic variation in support infrastructure: the same injury meets a different service landscape by state, so location is a variable in expected support",
+    "source_operator": "state_tbi_infrastructure",
+    "telemetry": "State of residence, trust fund availability, lead agency services"
+   }
+  },
+  {
+   "primitive_id": "professional_training_gap",
+   "name": "Many professionals who care for children after TBI received limited training specific to TBI recognition or management",
+   "verbatim_quote": "limited training specific to TBI recognition or management",
+   "page": "Executive Summary, Professional Training, p. 10",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Gap spans medical, educational and other professionals",
+    "Pediatric specific training is scarcer than general TBI training"
+   ],
+   "breakdown_regime": "Training levels vary by specialty and setting",
+   "domain": "professional training",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Operator competence as a system constraint: detection and management quality are bounded by the training of the people at each node, independent of the quality of written guidance",
+    "source_operator": "professional_training_gap",
+    "telemetry": "Provider training history, recognition accuracy, management decisions"
+   }
+  },
+  {
+   "primitive_id": "transition_to_adulthood_gap",
+   "name": "Transition from pediatric to adult medical care providers is a particular area of clinical concern",
+   "verbatim_quote": "to adult medical care providers is a particular area of clinical concern.",
+   "page": "Executive Summary, Transition to Adulthood, p. 9",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Transition coincides with school exit and loss of school based supports",
+    "Decline is in access to and use of healthcare services"
+   ],
+   "breakdown_regime": "Some adolescents transition smoothly with planned handoffs",
+   "domain": "transition of care",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Boundary crossing loss: at a planned system boundary, continuity fails unless the handoff is explicitly managed, and measurable use drops at the boundary",
+    "source_operator": "transition_to_adulthood_gap",
+    "telemetry": "Healthcare use before and after transition, adult provider establishment"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "00ea35790656f6f5-t1",
+   "think": "This report is a federal synthesis about a medical and educational problem, and its machinery is worth reading as a reasoning system rather than as a list of facts. The Centers for Disease Control and Prevention, working with the National Institutes of Health and a broad writing group, set out to describe how traumatic brain injury affects children in the United States, what happens to those children over time, what systems are supposed to help them, and where those systems fail. The core move in the report is to treat childhood brain injury as a trajectory problem. An injury happens at a point in development, and development does not stop. The child keeps growing into new cognitive, social, and physical demands, and the injury interacts with every later demand. That single framing explains most of the report structure. Severity is classified at presentation, but the report repeatedly warns that presentation is not destiny. Mild injuries usually resolve in weeks, and the report gives a concrete decay curve for symptom persistence, yet a meaningful minority of mild cases still need school support a year later, and deficits from more serious injuries may not become visible until the child reaches the developmental stage that requires the damaged function. A reasoning engine that closes a case at discharge, or that treats an early normal check as proof of full recovery, will systematically miss exactly the cases this report is about.\nThe second piece of machinery is stratification. Almost every quantity in the report is conditional. Burden is conditional on age, because causes differ by age and because entry into care differs by age and insurance. Disability is conditional on severity, with a sharp gradient between mild and moderate to severe injury. Recovery is conditional on family functioning, socioeconomic resources, co occurring conditions, and pre injury functioning. School outcomes are conditional on severity and on whether the school ever learns that an injury occurred. Even the count of cases is conditional on the observation channel, because most mild cases first appear in primary care rather than emergency departments, and some never appear in care at all. The report therefore teaches a discipline: never quote an unconditional number when the source gives a conditional one, and never build a projection from a single channel count without asking what that channel misses. That discipline transfers directly to any prediction system that ingests surveillance style data.\nThe third piece is systems analysis. Children with brain injury are served, or failed, by at least two large systems that do not share records: healthcare and education. Healthcare identifies and treats the acute injury and then, in most cases, discharges the child home with no formal long term monitoring. Education is where the child spends the day, where cognitive and behavioral changes are most visible, and where supports such as special education, Section 504 accommodations, and early intervention are delivered, but education often never receives the injury information, and children are identified for services at rates far below what incidence and disability figures imply. The report names this as under identification and treats it as a measurable gap between need and receipt. Around those two systems sit state lead agencies, trust funds, federal grant programs, family support centers, and rehabilitation facilities, each with its own eligibility rules and geographic variation. The report is blunt that coordination work, when systems do not do it, falls on parents, who are suddenly required to advocate in two bureaucracies while also coping with changes in their child and strain in the family. Family functioning then feeds back into child outcomes, which closes a loop: system fragmentation raises family burden, and family burden worsens the very outcomes the systems exist to improve.\nThe fourth piece is an honest account of evidence. For mild injury, the report describes the development of the first evidence based federal guideline, built from systematic review and expert workgroup judgment, with pacing and graduated return to cognitive and physical activity as a central recommendation. For moderate and severe injury, it states plainly that standards are weak, that individualized symptom management is the common practice in the absence of evidence, and that management overall has rested more on consensus and clinical experience than on rigorous trials. It also lists what research is missing: true incidence, developmental timing effects, recovery trajectories by age and severity, the separate contributions of family environment and co occurring conditions, and evaluations of the care models themselves. A reasoning engine should take that as an instruction about confidence. Some quantities in this report are measured rates from defined studies. Others are expert consensus. Others are identified unknowns. Treating all three at the same confidence level would corrupt any downstream reasoning.\nFor a sports and health reasoning engine, the value of this report is not a set of betting inputs and the report contains no such inputs. Its value is structural. It supplies base rates and conditional rates for a real injury domain, a validated recovery time course for mild injury, a model of latent deficit emergence tied to developmental demand, a worked example of observation channel bias, and a map of how handoffs between systems lose information and outcomes. Those are general reasoning templates. Base rates must be age and severity conditioned. Trajectories must be projected forward to the next demand, not just to the next check in. Observation channels must be audited for what they miss. Handoffs must be treated as loss points. Family and social context must be carried as variables that modify outcomes, not as background color. Where the report breaks is also instructive. Its counts are anchored in 2012 and 2013 data published in 2018, so absolute numbers will drift. Several key rates come from single studies with specific definitions, especially disability defined as service use, which confounds impairment with access. Long term adult outcomes are acknowledged to be thinly studied, and there are no equations, no fitted models, and no individual level prediction rules in the report at all. Anyone who needs a quantitative forecast must build it elsewhere and use this report for structure, priors, and sanity checks.",
+   "retrocausal_genealogy": "The lineage of this report runs through the Traumatic Brain Injury Act, first enacted in 1996 and reauthorized in 2008 and 2014, which directed the CDC to study brain injury management in children and to report to Congress. Behind that statute sits decades of pediatric rehabilitation work, including Mark Ylvisaker and colleagues in the 1980s, who first framed childhood head injury rehabilitation around the developing child rather than the injured adult, and a long line of longitudinal outcome studies from researchers in Cincinnati, Columbus, Houston, and elsewhere who followed injured children into school and adolescence. The report also inherits the concussion awareness wave of the 2000s and 2010s, state return to play laws in all fifty states, and the federal special education framework built by the Individuals with Disabilities Education Act and Section 504, which together created the school side of the care system the report evaluates.",
+   "theory_of_mind": "The authors write for Congress, agency leaders, clinicians, educators, and state program staff at the same time, and they model the reader as a decision maker who controls systems rather than individual cases. Their model of the domain is ecological: a child develops inside a family, a school, a healthcare system, and a state service landscape, and injury outcomes are produced by that whole ecology, not by the lesion alone. They assume the reader may still think of brain injury as an emergency department event, so they work to replace that picture with a chronic, developmental, cross system picture. They also assume goodwill but fragmented responsibility, which is why so many recommendations are about communication, identification, monitoring, and training rather than about a single new treatment.",
+   "cross_layer_veto": "This work vetoes several tempting simplifications in any layered reasoning system. It vetoes closing an injury case at acute discharge, because it documents late emerging deficits and the absence of long term monitoring. It vetoes treating mild severity as equivalent to no consequence, because it quantifies school support need a year after mild injury. It vetoes single channel incidence counts, because it shows most mild cases enter outside the emergency department. It vetoes attributing outcomes to injury biology alone, because it establishes family functioning, socioeconomic context, and co occurring conditions as determinants. And it vetoes confident protocol claims for moderate and severe injury, because it states that the evidence base there is thin and practice is individualized."
+  }
+ ],
+ "universal_lens": "Any injury or shock to a still developing system should be reasoned about as a trajectory interruption, not a one time event. Effects can stay hidden until later growth creates the demand that reveals them, observed counts depend on which channel you watch, outcomes are modified by the family and resource context around the individual, and when two institutions share responsibility without sharing information, the gap between need and service becomes the main measurable failure. That template applies to development, organizations, infrastructure, and learning systems far beyond medicine.",
+ "gsi_mapping": "The Galaxy Sports Institute takes from this report a rigorous injury and recovery framework for youth sport: age and severity conditioned base rates, a quantified mild injury recovery time course, the principle that deficits can emerge when new demands arrive, and a systems view in which school, family, and medical care must exchange information for a young athlete to be supported. It also takes a research agenda discipline: name the unknowns, separate measured rates from consensus, and build monitoring where none exists, rather than assuming discharge means resolution.",
+ "gse_mapping": "The Galaxy Sports Edge reasoning engine takes structural value only, with no betting content: conditional base rates instead of pooled averages, trajectory projection to the next demand point instead of a single snapshot, observation channel auditing so a count from one source is treated as a lower bound, handoff loss modeling between systems, and context variables such as family and socioeconomic resources carried as genuine modifiers of outcomes. Applied to athlete health reasoning, it supports more honest availability and recovery reasoning, explicit uncertainty where evidence is consensus rather than measured, and refusal to treat a mild label or an early clearance as proof that nothing follows."
+}

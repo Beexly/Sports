@@ -1,0 +1,765 @@
+{
+  "book_id": "e9919106b279ebef",
+  "source_status": "COMPLETE",
+  "source_note": "Edited volume: Zhou Zhou, Jifeng Cai, Xianping Du and Jian Shi (eds.), New Insights and Perspectives on Traumatic Brain Injury: Integration, Translation and Multidisciplinary Approaches, Frontiers in Neurology Research Topic ebook, Frontiers Media SA, Lausanne, July 2024, doi: 10.3389/978-2-8325-5108-0; topic coordinator Maria Jose Cavagnaro. The local file is the publisher PDF of the complete ebook (editorial plus 12 articles). File size 22639706 bytes; scan digest sha256 e9919106b279ebef44fa8910ed195ff1dc517ddcde28c1c153520f1ed8b3f498 computed over str(size) encoded plus full file bytes; book_id is the first 16 hex characters of that digest. Text quality: the PDF has a clean embedded text layer, but the shipped library extraction (pdftotext -layout) interleaves the two printed columns line by line, so verbatim quotes were proven against a reading-order extraction of the same PDF (pdftotext without -layout) stored at ~/workspace/motif-foundry/work/frontiers-2024-new-insights-tbi/frontiers-plain.txt, following the fleet precedent for column-interleaved texts; every quote in this artifact was verified as a contiguous string in that extraction under the gatekeeper normalization. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "tbi_damage_mixture",
+      "name": "TBI brain damage is a mixture of structural, cellular, and vascular damage set off by the initial mechanical impact",
+      "verbatim_quote": "The brain damage caused by TBI is a mixture of structural, cellular,",
+      "page": "Ebook p. 5, Editorial (Shi et al.), Basic and translational research",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A single mechanical event initiates separable structural, cellular, and vascular damage components",
+        "The structural damage activates complex molecular and cellular cascade reactions downstream"
+      ],
+      "breakdown_regime": "The mixture framing is qualitative; it assigns no relative weights to the three components and does not cover purely functional presentations with no detectable structural lesion.",
+      "domain": "neurotrauma pathophysiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An engine scoring a complex insult should decompose it into interacting damage channels (structure, cells, vasculature) rather than one severity scalar, because the channels evolve on different clocks and respond to different interventions.",
+        "source_operator": "tbi_damage_mixture",
+        "telemetry": "Imaging lesion load, biomarker panels, and perfusion measures recorded as separate channels per case"
+      }
+    },
+    {
+      "primitive_id": "mtbi_forensic_identification_gap",
+      "name": "Mild TBI is prone to misdiagnosis because injury severity does not track the degree of post-injury functional impairment",
+      "verbatim_quote": "making it prone to misdiagnosis or underdiagnosis, especially",
+      "page": "Ebook p. 6, Editorial (Shi et al.), Forensic and precision identification research",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Clinical symptoms and routine imaging are the default detection instruments",
+        "Functional impairment is the quantity that matters for identification decisions"
+      ],
+      "breakdown_regime": "The gap is stated for mild TBI specifically; moderate and severe injuries present overt findings where the mismatch is smaller.",
+      "domain": "diagnostics and forensic identification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Surface severity readings must not gate deeper evaluation: a low apparent severity score in a class with high downstream impairment is exactly the regime where a reasoning engine should order more evidence instead of closing the case.",
+        "source_operator": "mtbi_forensic_identification_gap",
+        "telemetry": "Cases where initial severity grade and later functional outcome disagree"
+      }
+    },
+    {
+      "primitive_id": "service_provision_system_omission",
+      "name": "Multidisciplinary TBI research systematically omits the service provision system running from prevention to resocialization",
+      "verbatim_quote": "of the service provision system, which encompasses prevention,",
+      "page": "Ebook p. 7, Editorial (Shi et al.), Conclusion and final considerations",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Patient outcome depends on the whole care chain, not only on hospital-phase science",
+        "The omission is attributed to the complexity of coordinating multiple perspectives"
+      ],
+      "breakdown_regime": "This is an editorial judgment, not a measured audit; the size of the omission is not quantified anywhere in the volume.",
+      "domain": "health systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A pipeline that models only the event and not the delivery system around it will misprice outcomes: prevention, pre-hospital care, hospital care, rehabilitation, and resocialization are sequential stages whose weakest stage caps total recovery.",
+        "source_operator": "service_provision_system_omission",
+        "telemetry": "Stage by stage timing and capacity data across the care pathway"
+      }
+    },
+    {
+      "primitive_id": "secondary_hyperperfusion_injury",
+      "name": "Secondary hyperperfusion injury: regional hemorrhage or edema in the parenchyma under an evacuated epidural hematoma, arising within 6 hours of surgery (12 of 157 cases)",
+      "verbatim_quote": "Secondary brain hemorrhage or edema occurring within an early perioperative period of hematoma-evacuation craniotomy for acute-isolated EDH is a rarely described hyperperfusion injury.",
+      "page": "Ebook p. 9, Huang et al., Abstract and Conclusion",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Cohort is isolated acute supratentorial epidural hematoma with cerebral herniation undergoing craniotomy",
+        "Detection window is the early perioperative period, within 6 h of evacuation"
+      ],
+      "breakdown_regime": "Defined on a single-center retrospective cohort; incidence outside herniation-positive EDH surgery is not established.",
+      "domain": "neurosurgery and secondary injury",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Removing a dominant constraint can itself create a second injury wave in the tissue underneath: the engine should model post-intervention rebound states instead of treating intervention as the end of the causal chain.",
+        "source_operator": "secondary_hyperperfusion_injury",
+        "telemetry": "Post-procedure perfusion imaging and timed complication onset after constraint removal"
+      }
+    },
+    {
+      "primitive_id": "hyperperfusion_injury_risk_factor_set",
+      "name": "Four independent risk factors for secondary hyperperfusion injury: herniation longer than 2 h, non-temporal hematoma location, hematoma thicker than 40 mm, and pediatric or elderly age",
+      "verbatim_quote": "that lasted longer than 2h, hematomas that were located in the non-temporal",
+      "page": "Ebook p. 9, Huang et al., Abstract and Results",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Concurrent cerebral herniation is a prerequisite for the complication, present across the study cohort by inclusion criteria",
+        "Factors come from multivariable logistic regression on 157 patients with 12 outcome events"
+      ],
+      "breakdown_regime": "Only 12 outcome events support four predictors, so the factor set is fragile under resampling; the 2 h and 40 mm thresholds are cohort-specific.",
+      "domain": "neurosurgery and risk stratification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A gated risk rule: a necessary precondition (herniation) plus duration, location, size, and age-extreme modifiers. The engine can reuse this shape wherever a rare complication needs a prerequisite gate before additive risk scoring.",
+        "source_operator": "hyperperfusion_injury_risk_factor_set",
+        "telemetry": "Herniation duration, lesion location and thickness, patient age band"
+      }
+    },
+    {
+      "primitive_id": "ctp_hyperperfusion_signature",
+      "name": "CT perfusion signature of the hyperperfusion lesion versus the contralateral mirror region: CBF 67.43 vs 43.98 mL/(100 g.min), CBV 5.31 vs 3.82 mL/100 g, MTT 2.72 vs 3.40 s",
+      "verbatim_quote": "CBF[mL/(100 g.min)] 67.43 ± 7.48 43.98 ± 5.00 <0.001",
+      "page": "Ebook pp. 9-10, Huang et al., Results and Table 1",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The contralateral mirror region serves as the within-patient reference",
+        "Quoted perfusion values are group means with standard deviations from the 12 confirmed cases in Table 1"
+      ],
+      "breakdown_regime": "The signature is defined against a mirror region, so bilateral or midline pathology breaks the reference; CTP was performed only on suspected cases, so silent cases are uncounted.",
+      "domain": "neuroimaging and perfusion",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Within-subject mirrored comparison converts an absolute perfusion reading into a directional injury signal: elevated flow with shortened transit time on the lesion side reads as hyperperfusion, the opposite pattern as ischemia.",
+        "source_operator": "ctp_hyperperfusion_signature",
+        "telemetry": "Paired lesion-side and mirror-side CBF, CBV, and MTT values"
+      }
+    },
+    {
+      "primitive_id": "tbi_global_burden",
+      "name": "More than 50 million people sustain traumatic brain injury each year, and it is the leading cause of death and disability for all ages",
+      "verbatim_quote": "Globally, more than 50 million people suffer from traumatic",
+      "page": "Ebook p. 18, Guo et al., Introduction",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The figure is a literature-cited global estimate, not a count from this cohort",
+        "Annual economic cost is estimated in the same passage at approximately US$400 billion"
+      ],
+      "breakdown_regime": "Global estimates aggregate incompatible national registries; the number is an order-of-magnitude burden statement, not a rate that can be applied to a single population.",
+      "domain": "epidemiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Base-rate anchor: case-level reasoning about head injury sits inside a very high-volume global process, so priors and resource models should be set from population burden rather than from memorable individual cases.",
+        "source_operator": "tbi_global_burden",
+        "telemetry": "Population incidence and mortality series by region and year"
+      }
+    },
+    {
+      "primitive_id": "tbi_epidemiology_regime_shift",
+      "name": "Over 18 years the case mix shifted regime: incidence fell under age 44 and rose over age 45, road traffic injuries and assaults declined, and ground-level falls increased",
+      "verbatim_quote": "temporal changes, a decreasing trend in TBI incidence for patients under 44",
+      "page": "Ebook p. 17, Guo et al., Abstract and Results",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Single tertiary neurosurgical center in western China, 11,068 patients from 2003 to 2020",
+        "Road traffic injuries were the major cause at 44 percent and cerebral contusion the main injury type at 44.94 percent"
+      ],
+      "breakdown_regime": "A hospital-based series cannot separate true population incidence from referral and admission pattern change; the shift may not transfer to other health systems.",
+      "domain": "epidemiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Nonstationarity is the default: a risk model fitted on an old case mix silently expires as the generating process shifts with urbanization and aging. The engine should track covariate drift by age band and mechanism as a first-class signal.",
+        "source_operator": "tbi_epidemiology_regime_shift",
+        "telemetry": "Rolling case-mix proportions by age band, mechanism, and year"
+      }
+    },
+    {
+      "primitive_id": "tbi_mortality_predictor_set",
+      "name": "Independent mortality predictors across 11,068 TBI patients (933 deaths, 8.43 percent): age, GCS, ISS, shock, acute subdural hematoma, acute epidural hematoma, and traumatic subarachnoid hemorrhage",
+      "verbatim_quote": "Multivariable analysis in patients with TBI showed that the mortality predictors for cases included age, GCS, ISS, shock, A-SDH, A-EDH, and T-SAH.",
+      "page": "Ebook p. 23, Guo et al., Figure 5 caption and Results",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Predictors were selected by multivariable analysis of the full cohort",
+        "Lesion diagnoses are CT-based admission diagnoses"
+      ],
+      "breakdown_regime": "The set is mortality-specific and does not transfer unchanged to functional outcome; epidural hematoma enters the separate prognosis model with a protective sign.",
+      "domain": "prognostic modeling",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A compact admission-time feature set (demographics, consciousness score, whole-body injury load, shock state, lesion types) carries most of the mortality signal; the engine should expect a small set of early variables to dominate outcome variance.",
+        "source_operator": "tbi_mortality_predictor_set",
+        "telemetry": "Admission age, GCS, ISS, shock flag, and CT lesion classes"
+      }
+    },
+    {
+      "primitive_id": "poor_prognosis_nomogram",
+      "name": "Eight-factor nomogram for poor prognosis at discharge (age, GCS, ISS, SDH, EDH, shock, accompanying injury, treatment): AUC 0.9304 in training, 0.8102 in external validation",
+      "verbatim_quote": "(B) The AUC of the purposed nomogram for predicting poor prognosis in the training cohort was 93.04% (95% CI: 92.3-93.70).",
+      "page": "Ebook p. 28, Guo et al., Discussion (model in Results and Figure 6)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Outcome is Glasgow Outcome Scale at discharge dichotomized into good and poor prognosis",
+        "Training cohort n = 9,949 with bootstrap internal validation, mean absolute calibration error 0.05"
+      ],
+      "breakdown_regime": "Discrimination drops from 0.9304 to 0.8102 out of sample, so the training figure overstates transportable accuracy; single-center development limits calibration in other systems.",
+      "domain": "prognostic modeling",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Report the validation gap, not the training fit: the engine should carry both numbers for any score it adopts and weight the external figure when the score is used outside its home population.",
+        "source_operator": "poor_prognosis_nomogram",
+        "telemetry": "Paired training and external AUC plus calibration error for every adopted score"
+      }
+    },
+    {
+      "primitive_id": "animal_model_translational_failure",
+      "name": "Most neuroprotective strategies that were effective in animal TBI models failed in phase II or phase III clinical trials",
+      "verbatim_quote": "strategies were identified to be effective in animal models, a majority of strategies have failed in phase II or phase III clinical trials.",
+      "page": "Ebook p. 31, Zhao et al., Abstract",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Animal efficacy was established under controlled, homogeneous injury conditions",
+        "Clinical populations are heterogeneous in mechanism, age, sex, and comorbidity"
+      ],
+      "breakdown_regime": "The failure statement covers neuroprotection trials as a class; it does not imply every model is uninformative for mechanism research.",
+      "domain": "translational research",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A model that reproduces a mechanism is not evidence that an intervention survives contact with heterogeneous real cases; the engine should keep mechanism confidence and deployment confidence as separate quantities.",
+        "source_operator": "animal_model_translational_failure",
+        "telemetry": "Preclinical effect sizes beside phase II and III trial outcomes for the same intervention class"
+      }
+    },
+    {
+      "primitive_id": "marmarou_weight_drop_diffuse_injury",
+      "name": "Marmarou weight-drop model: a metal disc disperses the blow over a sponge-mounted rat to replicate diffuse axonal injury from falls and traffic accidents",
+      "verbatim_quote": "Marmarou (10, 14, 15, 21) Diffuse injury; High fatality rate Simple methods; Axonal injury Easy control",
+      "page": "Ebook p. 32, Zhao et al., Section 2.1",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The sponge platform is pulled away after the blow to prevent a second impact",
+        "Rat head biomechanics stand in for human diffuse injury"
+      ],
+      "breakdown_regime": "Higher fatality rate than controlled impact models, and diffuse injury in a lissencephalic rat brain only approximates human white matter distribution.",
+      "domain": "experimental models",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Distributed loading produces distributed damage: the same input energy concentrated focally or spread across a surface yields different injury topology, so the engine should track load distribution, not only load magnitude.",
+        "source_operator": "marmarou_weight_drop_diffuse_injury",
+        "telemetry": "Impact energy, contact area, and resulting lesion distribution"
+      }
+    },
+    {
+      "primitive_id": "controlled_cortical_impact_model",
+      "name": "Controlled cortical impact trades a craniotomy requirement and expensive equipment for accurate, reproducible, titratable cortical injury",
+      "verbatim_quote": "CCI (24, 25, 30-32, 68) Cortical loss; Expensive equipment; Good repeatability Cerebral concussion A bone window is required Accuracy of injury",
+      "page": "Ebook p. 32, Zhao et al., Section 2.1",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Injury degree is controlled by adjusting impact duration, speed, and depth",
+        "The impact head retracts automatically to avoid rebound or extrusion damage"
+      ],
+      "breakdown_regime": "Requires a bone window, so it cannot model closed-head injury as it occurs clinically; equipment cost limits throughput.",
+      "domain": "experimental models",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Precision of the input is what buys reproducibility of the output: where the engine can choose its measurement instrument, controlled and parameterized inputs beat realistic but uncontrolled ones for learning causal structure.",
+        "source_operator": "controlled_cortical_impact_model",
+        "telemetry": "Impact velocity, depth, dwell time, and outcome variance across replicates"
+      }
+    },
+    {
+      "primitive_id": "fluid_percussion_injury_model",
+      "name": "Fluid percussion injury: rapid saline injection into the cranial cavity deforms and displaces brain tissue, with severity set by pressure pulse intensity",
+      "verbatim_quote": "through rapid injection of a certain amount of normal saline into the",
+      "page": "Ebook p. 33, Zhao et al., Section 3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The pressure pulse transmits through the intracranial fluid to deform brain tissue",
+        "Craniotomy location (central, parasagittal, lateral) selects the injury pattern"
+      ],
+      "breakdown_regime": "The injury mechanism differs from clinical impact TBI, and brainstem involvement with prolonged apnea raises mortality above other models.",
+      "domain": "experimental models",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A pressure transient inside a closed fluid-filled container injures by deformation and displacement, a different causal route than direct contact; the engine should classify insults by transmission route before comparing severity.",
+        "source_operator": "fluid_percussion_injury_model",
+        "telemetry": "Pulse pressure amplitude and duration, craniotomy location, apnea duration"
+      }
+    },
+    {
+      "primitive_id": "blast_tbi_shock_tube_model",
+      "name": "Advanced blast simulator: a shock tube pressurized to about 1,230 kPa ruptures a diaphragm to deliver a controlled blast wave to the animal head",
+      "verbatim_quote": "diaphragm causing a shock wave, resulting in head injury in the rat.",
+      "page": "Ebook p. 34, Zhao et al., Section 4",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A gas-driven shock wave approximates an explosive blast wave",
+        "Diaphragm material and thickness set the generated wave size"
+      ],
+      "breakdown_regime": "Gas-driven waves differ physically from explosive waves, diaphragm fragments can strike the subject, and the jet efflux near the tube outlet contaminates exposure.",
+      "domain": "experimental models",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The simulator is a proxy with named artifacts: every proxy measurement the engine consumes should carry its known distortion list so downstream reasoning can discount the right features.",
+        "source_operator": "blast_tbi_shock_tube_model",
+        "telemetry": "Peak overpressure, wave duration, fragment and jet artifact flags"
+      }
+    },
+    {
+      "primitive_id": "repetitive_mtbi_tau_cascade",
+      "name": "Repetitive mild TBI drives pathological tau formation, tau hyperphosphorylation, metal homeostasis disorder, astrocyte and microglia proliferation, and brain atrophy",
+      "verbatim_quote": "r-mTBI leads to pathological tau formation, metal homeostasis",
+      "page": "Ebook p. 34, Zhao et al., Section 5",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Findings aggregate across repetitive CCI, weight-drop, FPI, blast, and cell stretch models",
+        "Tau phosphorylation is presented as a driver of neuronal death in the cascade"
+      ],
+      "breakdown_regime": "Not all repetitive mild TBI studies report tau pathology; results vary with species, age, design parameters, and sampling time points, as the review itself states.",
+      "domain": "neurodegeneration",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Repeated sub-threshold insults accumulate into a degenerative cascade rather than resetting between events; the engine should integrate exposure history with a memory kernel instead of scoring each event independently.",
+        "source_operator": "repetitive_mtbi_tau_cascade",
+        "telemetry": "Cumulative impact count and spacing, tau biomarkers, imaging atrophy rates"
+      }
+    },
+    {
+      "primitive_id": "tbi_dementia_hazard",
+      "name": "TBI carries a hazard ratio of 2.2 for developing dementia over 10 years of follow-up in a 24,846-patient cohort, with a hazard ratio of 5.49 reported for early-onset dementia",
+      "verbatim_quote": "ratio (HR) of 2.2 for developing dementia. Another cohort study",
+      "page": "Ebook p. 38, Sang et al., Introduction",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Hazard ratios are adjusted observational estimates from the cited cohort studies",
+        "The Lancet Commission population attributable fraction for TBI and dementia is cited in the same passage as 3.4 percent"
+      ],
+      "breakdown_regime": "Observational hazard ratios cannot exclude confounding by shared risk factors; the bibliometric article reports the association, it does not estimate a causal effect.",
+      "domain": "epidemiology and neurodegeneration",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A single exposure can carry a long-tailed outcome risk that only appears on a decade horizon; the engine should attach delayed-outcome hazards to acute events instead of closing the episode at discharge.",
+        "source_operator": "tbi_dementia_hazard",
+        "telemetry": "Longitudinal dementia diagnoses linked to index injury records"
+      }
+    },
+    {
+      "primitive_id": "ptod_definition",
+      "name": "Post-traumatic olfactory dysfunction is the complete or partial loss of olfactory function from blocked nasal passages, olfactory nerve injury, or concussion or hemorrhage in the olfactory centers of the brain",
+      "verbatim_quote": "Post-traumatic Olfactory Dysfunction (PTOD) is commonly described as the complete or partial loss of olfactory function due to the block of nasal nerve passages, olfactory nerve injury or concussions or hemorrhages in the olfactory centers of the brain",
+      "page": "Ebook p. 58, De Luca et al., Introduction",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Three mechanism classes are distinguished: conductive blockage, peripheral nerve injury, and central lesions",
+        "Lesions localize to orbitofrontal cortex, olfactory frontal cortex, and temporal lobes on MRI studies cited in the review"
+      ],
+      "breakdown_regime": "The definition lumps conductive and sensorineural causes whose prognoses differ sharply; conductive loss recovers well after intervention, sensorineural loss often does not.",
+      "domain": "sensory neurology and rehabilitation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "One symptom can be produced at three different points along a single pathway (input blocked, wire cut, processor damaged); localization along the pathway, not the symptom, determines prognosis and treatment.",
+        "source_operator": "ptod_definition",
+        "telemetry": "Nasal patency, olfactory nerve imaging, lesion location in olfactory cortex"
+      }
+    },
+    {
+      "primitive_id": "ptod_severity_prevalence_gradient",
+      "name": "PTOD prevalence rises with injury severity: 0-16 percent of mild, 15-19 percent of moderate, and 25-30 percent of severe TBI",
+      "verbatim_quote": "PTOD can occur in 0–16% of patients with mild TBI, 15–19% of those with moderate TBI, and 25–30% of those with severe TBI (5)",
+      "page": "Ebook p. 58, De Luca et al., Introduction",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Ranges aggregate studies using different assessment tools and follow-up times",
+        "Likelihood is also linked to length of post-traumatic amnesia in the same passage"
+      ],
+      "breakdown_regime": "The wide range inside each severity band shows the gradient is real but imprecise; assessment method moves the estimate as much as severity does.",
+      "domain": "sensory neurology and epidemiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A monotone dose-response gradient across severity bands is stronger evidence than any single prevalence figure; the engine should prefer features whose effect grows with dose when ranking candidate signals.",
+        "source_operator": "ptod_severity_prevalence_gradient",
+        "telemetry": "Olfactory test results stratified by admission severity grade"
+      }
+    },
+    {
+      "primitive_id": "olfactory_event_related_potentials",
+      "name": "Olfactory event-related potentials give an objective, quantitative electrophysiological measurement of smell loss where psychophysical tests depend on patient report",
+      "verbatim_quote": "Potentials (OERPs), which allows one to observe electrophysiologically",
+      "page": "Ebook p. 59, De Luca et al., assessment discussion",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The Sniffin Sticks Test is the most widely used validated psychophysical comparator",
+        "The review recommends running subjective and electrophysiological tests together, including for medicolegal evaluation"
+      ],
+      "breakdown_regime": "OERP recording needs specialized stimulation and EEG equipment, and the method measures function without by itself proving the traumatic cause of a deficit.",
+      "domain": "neurophysiology and assessment",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pair a subjective instrument with an objective one on the same quantity: agreement licenses confidence, disagreement flags reporting or measurement problems. The engine should seek paired measurements for any self-reported signal.",
+        "source_operator": "olfactory_event_related_potentials",
+        "telemetry": "Sniffin Sticks scores beside OERP amplitudes and latencies for the same patient"
+      }
+    },
+    {
+      "primitive_id": "pte_incidence_gradient",
+      "name": "Post-traumatic epilepsy incidence is approximately 5-7 percent after hospitalized TBI, rises with injury severity, and exceeds 50 percent after severe penetrating head injury",
+      "verbatim_quote": "approximately 5-7% (1, 18, 19). The higher the severity of the injury,",
+      "page": "Ebook p. 70, Fang et al., Section 2, Epidemiological characteristics of PTE",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "General population epilepsy incidence of 0.5-2 percent is the comparison baseline in the same section",
+        "Up to 20 percent of symptomatic epilepsy is estimated to be caused by TBI in the same section"
+      ],
+      "breakdown_regime": "Incidence varies with follow-up length and seizure ascertainment; penetrating military cohorts are not comparable to civilian blunt trauma cohorts.",
+      "domain": "epilepsy and epidemiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Risk scales steeply with mechanism: penetrating injury is not a slightly worse blunt injury but a different risk class. The engine should let mechanism switch the risk regime instead of only shifting a coefficient.",
+        "source_operator": "pte_incidence_gradient",
+        "telemetry": "Injury mechanism class and long-term seizure diagnoses"
+      }
+    },
+    {
+      "primitive_id": "excitation_inhibition_imbalance",
+      "name": "Epilepsy is caused by an imbalance between excitation and inhibition in the central nervous system, so any factor raising excitability or lowering inhibition can induce seizures",
+      "verbatim_quote": "Epilepsy is caused by an imbalance between excitation and",
+      "page": "Ebook p. 70, Fang et al., Section 3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The balance framing covers both neuronal and network-level mechanisms",
+        "Post-traumatic epilepsy is treated as no exception to the general rule"
+      ],
+      "breakdown_regime": "The statement is a framework identity rather than a measurable threshold; it does not specify how much imbalance produces seizures in a given brain.",
+      "domain": "epilepsy and neurophysiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Stability of a networked system is a balance property between driving and restraining forces; the engine should model paired opposing quantities and watch their ratio, not either side alone.",
+        "source_operator": "excitation_inhibition_imbalance",
+        "telemetry": "Excitatory and inhibitory synaptic markers, glutamate and GABA measures"
+      }
+    },
+    {
+      "primitive_id": "axonal_sprouting_epileptogenesis",
+      "name": "Axonal sprouting and the formation of new recurrent excitatory synaptic connections are a key structural mechanism of post-traumatic epileptogenesis",
+      "verbatim_quote": "Many studies have shown that axonal sprouting and the formation of",
+      "page": "Ebook p. 70, Fang et al., Section 3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Sprouted connections are functional: excitatory postsynaptic current frequency rises significantly two to three weeks after injury alongside axon growth and branching",
+        "The dentate gyrus is used as the model system for post-injury synaptic circuit change"
+      ],
+      "breakdown_regime": "Evidence is largely from animal models; sprouting also occurs during normal recovery, so its presence alone does not prove epileptogenesis.",
+      "domain": "epilepsy and neuroplasticity",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Repair rewiring can overshoot into a pathological attractor: growth that restores connectivity also creates recurrent loops. The engine should treat post-disruption reorganization as a risk window, not purely as recovery.",
+        "source_operator": "axonal_sprouting_epileptogenesis",
+        "telemetry": "GAP43 expression and excitatory postsynaptic current frequency in injured cortex over weeks"
+      }
+    },
+    {
+      "primitive_id": "cortical_scar_hypoperfusion_focus",
+      "name": "The border zone between cortical scar and normal cortex is perfused at only 1/50 of normal blood flow and becomes the epileptic focus",
+      "verbatim_quote": "The blood flow in the middle area is only 1/50 of that in",
+      "page": "Ebook p. 70, Fang et al., Section 3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The border zone lacks capillaries and is fed by anastomosed pial and dural arteries",
+        "Vascular pulsation imposes mechanical tension on dendrites in the border zone, and dendrites are highly sensitive to that tension"
+      ],
+      "breakdown_regime": "The 1/50 figure comes from the classic literature summarized by the review, not from new measurement in this volume.",
+      "domain": "epilepsy and cerebrovascular physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Boundary zones between damaged and healthy tissue are where pathology concentrates: underperfused, mechanically stressed interfaces become the failure locus. The engine should weight interface regions over bulk averages.",
+        "source_operator": "cortical_scar_hypoperfusion_focus",
+        "telemetry": "Perfusion imaging at lesion margins and seizure focus localization"
+      }
+    },
+    {
+      "primitive_id": "big_score_formula",
+      "name": "BIG score: base deficit + 2.5 x INR + (15 - GCS), a three-value admission score; below 12 points mortality is under 5 percent and above 26 points it exceeds 50 percent",
+      "verbatim_quote": "The BIG score was calculated by base deficit + 2.5 × INR",
+      "page": "Ebook p. 79, Bai et al., Materials and methods (score bands from Introduction)",
+      "latex": "\\mathrm{BIG} = \\mathrm{BD} + 2.5 \\times \\mathrm{INR} + (15 - \\mathrm{GCS})",
+      "symbol_and_unit_ledger": {
+        "BD": "base deficit from blood gas analysis, mEq/L",
+        "INR": "international normalized ratio of prothrombin time, dimensionless",
+        "GCS": "Glasgow Coma Scale score, 3 to 15 points, dimensionless",
+        "BIG": "composite trauma score, points"
+      },
+      "assumptions": [
+        "The score was developed for pediatric trauma and is tested here in adults",
+        "Mortality bands are quoted from the source literature cited by the article"
+      ],
+      "breakdown_regime": "In the adult MIMIC-III cohort the score alone reached only AUC 0.669, below its pediatric performance and below GCS alone at 0.699; simplicity costs discrimination in adults.",
+      "domain": "trauma scoring",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A three-term additive score spanning perfusion debt (base deficit), coagulation (INR), and consciousness (GCS) shows how much prognostic signal a minimal early feature set carries; the engine should benchmark complex models against such minimal baselines.",
+        "source_operator": "big_score_formula",
+        "telemetry": "Admission base deficit, INR, and GCS"
+      }
+    },
+    {
+      "primitive_id": "age_adjusted_big_score_gain",
+      "name": "Adding age to the BIG score raised AUC from 0.669 to 0.764 in 1,034 adult TBI patients (in-hospital mortality 22.8 percent); a multi-factor model including the score reached 0.786",
+      "verbatim_quote": "However, combining the BIG score with age increased the AUC to 0.764.",
+      "page": "Ebook p. 78, Bai et al., Abstract and Results",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Cohort is adult TBI drawn from the MIMIC-III critical care database, 2001 to 2012 admissions",
+        "Discrimination is compared by ROC AUC with Youden-index cutoffs"
+      ],
+      "breakdown_regime": "Retrospective single-database study; the age adjustment is a refit evaluated on the same database family, not an external validation.",
+      "domain": "trauma scoring and prognostic modeling",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "One strong omitted variable (age) can be worth more than added model complexity elsewhere: feature omission, not model form, is often the binding constraint. The engine should audit which obvious variables an adopted score leaves out.",
+        "source_operator": "age_adjusted_big_score_gain",
+        "telemetry": "AUC of the base score, the score plus age, and the full model on the same cohort"
+      }
+    },
+    {
+      "primitive_id": "ckd_tbi_outcome_gap",
+      "name": "Older TBI patients with chronic kidney disease were discharged with GCS 7.1 versus 13.1 for matched patients with normal kidney function",
+      "verbatim_quote": "(7.1 ± 5.9) compared to the non-CKD TBI group (13.1 ± 2.6) (p < 0.01).",
+      "page": "Ebook p. 87, Mo et al., Abstract and Results",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Case-control matching on age, gender, and admission GCS score",
+        "Logistic regression in the same study associates advanced age, low admission GCS, elevated blood urea, and creatinine with poor prognosis"
+      ],
+      "breakdown_regime": "The sample is very small (11 CKD cases, 27 controls), so the effect estimate is unstable; the study shows association, not the size of the CKD effect.",
+      "domain": "comorbidity and prognosis",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A chronic comorbidity in a distant organ system can dominate the outcome of an acute brain injury; the engine should carry standing organ-system burden as a modifier on every acute prognosis, not as an afterthought.",
+        "source_operator": "ckd_tbi_outcome_gap",
+        "telemetry": "Admission urea and creatinine, discharge versus admission GCS change"
+      }
+    },
+    {
+      "primitive_id": "ckd_infection_amplification",
+      "name": "Hospital-acquired infection struck 54.4 percent of CKD TBI patients versus 7.4 percent of non-CKD TBI patients in the matched cohort",
+      "verbatim_quote": "patients in the CKD TBI group had a higher frequency of hospital-acquired infections (54.4%) compared with those in the non-CKD TBI group (7.4%) (p < 0.01)",
+      "page": "Ebook p. 87, Mo et al., Abstract and Results",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Infection is counted during the index hospitalization",
+        "ICU stay time and hospitalization expenses were higher in the CKD group without reaching statistical significance"
+      ],
+      "breakdown_regime": "Longer ICU exposure in the CKD group confounds the infection comparison, and the study does not adjust for exposure time; the cohort is the same small matched sample.",
+      "domain": "comorbidity and infection",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Secondary complications mediate comorbidity effects: part of the pathway from kidney disease to poor brain outcome runs through infection acquired during care. The engine should model mediator variables explicitly instead of only direct effects.",
+        "source_operator": "ckd_infection_amplification",
+        "telemetry": "Infection onset dates, ICU days, and culture results during admission"
+      }
+    },
+    {
+      "primitive_id": "dbsi_metric_pathology_correspondence",
+      "name": "DBSI metrics correspond one-to-one with coexisting optic nerve pathologies validated by immunohistochemistry: axon volume, axial diffusivity, and restricted fraction track axon density, axonal injury, and cellularity",
+      "verbatim_quote": "Increased DBSI axon volume, decreased DBSI λ||, and elevated DBSI restricted fraction correlated with decreased SMI-312, decreased SMI-31, and increased DAPI density, respectively, suggesting that DBSI can detect coexisting pathologies in the optic nerves of TBI mice.",
+      "page": "Ebook p. 93, Yang et al., Abstract and Results",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Mouse modCHIMERA closed-head model with 22 animals split between sham and TBI groups",
+        "Histology markers SMI-312, SMI-31, and DAPI density serve as ground truth for the imaging correspondence"
+      ],
+      "breakdown_regime": "Correspondence is shown in mouse optic nerve at 4.7 T with scan times of hours; human translation and clinical field strengths are untested in this article.",
+      "domain": "neuroimaging and diffusion MRI",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A composite signal can be decomposed into a spectrum whose components correspond to distinct physical pathologies, each validated against a ground-truth stain; the engine should prefer decomposable measurements over single summary indices.",
+        "source_operator": "dbsi_metric_pathology_correspondence",
+        "telemetry": "DBSI fiber fraction, axial and radial diffusivity, restricted and non-restricted fractions beside histology"
+      }
+    },
+    {
+      "primitive_id": "dti_specificity_limit",
+      "name": "Conventional MRI and DTI lack the specificity to separate demyelination, inflammation, and axonal injury, because their summary metrics respond to all three",
+      "verbatim_quote": "However, both conventional MRI and DTI lack the needed specificity for the underlying pathologies in optic nerves",
+      "page": "Ebook p. 94, Yang et al., Introduction",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "T2-hyperintense lesions and fractional anisotropy changes are many-to-one maps from pathology to signal",
+        "Optic nerve assessment is the context; OCT is additionally limited to the anterior segment and confounded by inflammation-related swelling"
+      ],
+      "breakdown_regime": "The limit is stated for optic nerve pathology; DTI remains informative where a single dominant pathology can be assumed.",
+      "domain": "neuroimaging",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A many-to-one measurement cannot identify which cause produced a change; when the engine sees an ambiguous aggregate metric move, it should branch hypotheses rather than commit to one cause.",
+        "source_operator": "dti_specificity_limit",
+        "telemetry": "Cases where DTI change and histology disagree on the dominant pathology"
+      }
+    },
+    {
+      "primitive_id": "modchimera_rotational_acceleration",
+      "name": "modCHIMERA delivers a 2.1-joule helmeted closed-head impact modeling engineered rotational acceleration in mice, classed as moderate to severe TBI",
+      "verbatim_quote": "during injury induction), had a helmet placed over the head, and were placed in",
+      "page": "Ebook p. 94, Yang et al., Methods, Experimental design",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Sham animals underwent the identical anesthesia and holder procedure without impact",
+        "Serial visual acuity and DBSI were collected at 1, 3, 7, and 30 days in the in vivo cohort"
+      ],
+      "breakdown_regime": "Rotational acceleration scaling from mouse to human brain mass is not established; the model targets mechanism, not dose equivalence.",
+      "domain": "experimental models",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Rotational loading injures by shear rather than focal crush; matching the loading mode of the real event matters more than matching its energy. The engine should classify impacts by mode (linear, rotational, blast) before comparing magnitudes.",
+        "source_operator": "modchimera_rotational_acceleration",
+        "telemetry": "Impact energy, helmet and holder configuration, rotational kinematics where available"
+      }
+    },
+    {
+      "primitive_id": "hrv_beyond_symptom_recovery",
+      "name": "Resting heart rate variability remains lowered after concussion symptoms resolve, marking an extended period of autonomic nervous system susceptibility relevant to return-to-play decisions",
+      "verbatim_quote": "It demonstrates that there can be lowered HRV values that expand beyond the recovery of symptoms, reflecting an extensive period of ANS susceptibility after a concussion.",
+      "page": "Ebook p. 106, Wesolowski et al., Abstract and Conclusion",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Athletes with a history of concussion are compared with matched controls at rest, beyond symptom recovery",
+        "Symptom clearance is the prevailing return-to-play gate that this finding argues is insufficient"
+      ],
+      "breakdown_regime": "Only six studies with 242 participants; heterogeneous populations and testing methods admit confounding by age and sex, and the authors recommend within-person baseline comparisons.",
+      "domain": "autonomic physiology and sports medicine",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A cheap continuous physiological channel can reveal unresolved state after the headline symptom signal clears; the engine should not declare recovery on symptom absence alone while a lagging objective channel is still abnormal.",
+        "source_operator": "hrv_beyond_symptom_recovery",
+        "telemetry": "Resting MeanNN, SDNN, and RMSSD from wearables against symptom clearance dates"
+      }
+    },
+    {
+      "primitive_id": "hrv_meta_analysis_time_domain",
+      "name": "Meta-analysis of six studies (242 participants): MeanNN (p = 0.03) and RMSSD (p = 0.04) differ significantly by concussion history, while SDNN (p = 0.11) does not",
+      "verbatim_quote": "The meta-analysis was conducted and found that MeanNN (p = 0.03) and RMSSD (p = 0.04) reached statistical significance, while SDNN did not (p = 0.11).",
+      "page": "Ebook p. 106, Wesolowski et al., Abstract and Results",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "PRISMA systematic review of PubMed, Cochrane Library, Google Scholar, and EMBASE, 1996 to June 2023, with ROBINS-E bias assessment",
+        "Groups were 133 participants without and 109 with a history of concussion"
+      ],
+      "breakdown_regime": "Four of the six studies reported no significant difference in any of the three measures; the pooled significance rests on the two positive studies.",
+      "domain": "autonomic physiology and meta-analysis",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sibling metrics from the same signal family are not interchangeable: two of three time-domain measures carried the effect and one did not. The engine should test each derived feature separately instead of treating a family as one signal.",
+        "source_operator": "hrv_meta_analysis_time_domain",
+        "telemetry": "Per-study effect sizes for MeanNN, SDNN, and RMSSD"
+      }
+    },
+    {
+      "primitive_id": "kriging_population_specific_fem",
+      "name": "Kriging interpolation morphs the THUMS AM50 finite element body into a Chinese 50th percentile body, and the two bodies sustain different skull and brain injuries in identical sedan, SUV, and MPV collisions",
+      "verbatim_quote": "the Kriging interpolation algorithm was used to perform grid",
+      "page": "Ebook p. 115, Yan et al., Abstract and Methods",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The Chinese body surface derives from 3D optical scans of 40 adult male volunteers collected 2014 to 2019",
+        "THUMS AM50 version 4.02 (1,786 mm, 77.6 kg) is the biologically validated base model"
+      ],
+      "breakdown_regime": "Grid morphing changes geometry, not tissue material properties; the injury differences are simulation findings, and the article concludes current C-NCAP pedestrian test rules may under-protect Chinese bodies.",
+      "domain": "biomechanics and finite element modeling",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A model calibrated on one population misprices another population with different geometry and mass distribution; population mismatch is a modeling error, not noise. The engine should check which population a borrowed model was built on before applying it.",
+        "source_operator": "kriging_population_specific_fem",
+        "telemetry": "Anthropometric percentiles, collision time, head impact position, invasion speed and angle by vehicle type"
+      }
+    },
+    {
+      "primitive_id": "pedestrian_head_injury_fatality_share",
+      "name": "Head injury is the main cause of pedestrian death, accounting for approximately 54 percent of pedestrian traffic accident fatalities",
+      "verbatim_quote": "cause of pedestrian death, accounting for approximately 54% of",
+      "page": "Ebook p. 115, Yan et al., Introduction",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Pedestrians account for over 25 percent of traffic fatalities in China, about 25,000 deaths per year, per the same passage",
+        "Shares are literature-cited statistics, not outputs of the finite element simulation"
+      ],
+      "breakdown_regime": "Fatality shares vary by country, vehicle fleet mix, and impact speed distribution; the 54 percent figure is a cited estimate for the studied context.",
+      "domain": "injury epidemiology and biomechanics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In a multi-impact event sequence, one injury class dominates mortality; protection effort should be allocated by fatality share, not by injury frequency. The engine should rank failure modes by consequence share.",
+        "source_operator": "pedestrian_head_injury_fatality_share",
+        "telemetry": "Fatality cause distribution in pedestrian crash records"
+      }
+    },
+    {
+      "primitive_id": "cte_progressive_tauopathy",
+      "name": "Chronic traumatic encephalopathy is a progressive tauopathy arising from repetitive mild traumatic brain injury, diagnosable definitively only by post-mortem brain examination",
+      "verbatim_quote": "tauopathy that occurs due to repetitive mild traumatic brain injury",
+      "page": "Ebook p. 126, Guan et al., Introduction",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Case definition rests on post-mortem tau pathology; traumatic encephalopathy syndrome criteria are the in-life proxy framework",
+        "The condition was first described by Martland over 93 years ago as punch drunk in boxers"
+      ],
+      "breakdown_regime": "The article itself notes that a cause-and-effect relationship between contact sport exposure and CTE has not been demonstrated and that true prevalence is unknown.",
+      "domain": "neurodegeneration",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A disease defined only by post-mortem ground truth forces all in-life work onto proxy criteria with unknown error rates; the engine should label such targets as proxy-defined and carry the identification uncertainty explicitly.",
+        "source_operator": "cte_progressive_tauopathy",
+        "telemetry": "Traumatic encephalopathy syndrome criteria status in life beside post-mortem confirmation where available"
+      }
+    },
+    {
+      "primitive_id": "altmetric_citation_coupling",
+      "name": "Altmetric attention scores correlate positively with citation counts across 788 CTE publications; 44 articles sit in both the top-100 cited and top-100 attention sets",
+      "verbatim_quote": "significant positive correlations with varied strength between AAS and citation were observed in the 788 articles, Top-cited, Top-AAS and High-High datasets",
+      "page": "Ebook p. 126, Guan et al., Abstract and Results",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Correlation is assessed by Spearman coefficients between Altmetric attention scores and citation counts",
+        "Data come from the Web of Science Core Databases and Altmetric Explorer, visualized with VOSviewer and CiteSpace"
+      ],
+      "breakdown_regime": "Correlation strength varies by subset, and attention is partly controversy-driven: the highest-attention article is the 2017 JAMA report of CTE in 110 of 111 former football players.",
+      "domain": "scientometrics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Public attention and scholarly impact are coupled but distinct channels; measuring both separates work that is merely loud from work that is actually used. The engine should track attention metrics and use metrics as separate features.",
+        "source_operator": "altmetric_citation_coupling",
+        "telemetry": "Altmetric attention scores beside citation counts over time for a literature set"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e9919106b279ebef-t1",
+      "think": "This volume is an edited Frontiers Research Topic ebook, and understanding its shape is the first step: an editorial frame plus twelve articles that, read together, cover the full life cycle of traumatic brain injury as a reasoning problem. Guo and colleagues supply the population layer, 11,068 patients over eighteen years at one Chinese neurosurgical center, with a case mix that visibly changes regime as the country urbanizes and ages. Bai and colleagues and the Guo nomogram supply the scoring layer, where compact admission-time instruments are built, adjusted, and validated. Huang and colleagues supply the perioperative layer, a complication that only exists because an intervention succeeded in removing a hematoma. Mo and colleagues supply the comorbidity layer, where a kidney disease that predates the injury by years ends up dominating the neurological outcome. Zhao and colleagues supply the preclinical layer, a taxonomy of animal and cell models with their failure modes named, and Yang and colleagues pair one of those models, modCHIMERA, with a decomposition imaging method, DBSI, that is validated stain by stain against histology. Fang and De Luca review two delayed sequelae, epilepsy and olfactory loss, that unfold over weeks to years. Wesolowski and colleagues show a physiological signal, resting heart rate variability, still abnormal after the symptom signal has cleared. Yan and colleagues move outside the hospital entirely, morphing a validated human body finite element model across populations to show that crash protection standards inherit the body they were calibrated on. Sang and Guan close the volume by turning the instruments on the literature itself, mapping who produces TBI dementia and CTE research and how public attention couples to citation. Four patterns recur across these otherwise unrelated articles, and they are the real content of the volume for a reasoning engine. First, single summary numbers keep failing and keep being repaired by decomposition or augmentation: GCS alone is beaten by an eight-factor nomogram, the BIG score only becomes respectable in adults once age is added back, DTI fractional anisotropy cannot say which pathology moved it while the DBSI spectrum can, and symptom clearance cannot certify recovery while HRV is still depressed. Second, effects are regime-dependent rather than constant: olfactory loss and epilepsy incidence climb in steps with severity and mechanism, the epidemiology inverts across an age boundary near forty-five, and the same collision injures two population-specific bodies differently. Third, secondary processes dominate outcomes: hyperperfusion injury after successful evacuation, infection mediating the CKD effect, axonal sprouting converting repair into an epileptic circuit, tau accumulating after repetitive sub-threshold impacts. The primary event is often just the trigger; the prognosis lives in what the system does next. Fourth, every quantitative claim in the volume carries a visible transportability gap: the nomogram falls from 0.9304 to 0.8102 between training and external validation, the BIG score falls from pediatric to adult cohorts, animal neuroprotection falls at the phase II boundary, and CTE cannot even be confirmed in a living patient. Read as one pipeline, the articles also slot into a natural order that the editors only imply. The epidemiology sets the priors: who gets injured, by what mechanism, at what age, and how that mix is drifting. The scores then stratify the individual case at admission, cheaply and immediately, with the nomogram showing what a fuller feature set buys and the BIG score showing what three values alone can carry. Imaging and physiology take over where scores saturate, decomposing the individual injury (DBSI) and tracking the recovery trajectory on a channel that lags symptoms (heart rate variability). The preclinical models and the finite element simulations generate the counterfactuals the clinical data cannot: what this intervention does to this mechanism, what this collision does to this body. The sequelae reviews extend the time horizon past discharge, where epilepsy, olfactory loss, dementia, and tauopathy actually accrue most of the lifetime cost. Finally the scientometric layer audits the pipeline itself, asking whether the field's attention is allocated where the burden is, and finding the coupling between attention and citation loose enough to matter. A reasoning engine that only implements the middle of this pipeline, the scoring layer, will be systematically blind at both ends: wrong priors going in, and no account of delayed outcomes or of its own literature's distortions coming out. The volume's own editorial concedes a further blind spot that no article fills: the service provision system, the chain from prevention through pre-hospital care to rehabilitation and resocialization, which decides how much of the science ever reaches a patient. What this changes for a reasoning engine is procedural. Scores must be stored with their validation gaps and home populations attached, not as bare numbers. Composite signals should be decomposed before they are interpreted, and ambiguous aggregates should branch hypotheses instead of selecting one. Mediators and second waves deserve their own nodes in the causal graph, because the volume shows them carrying more outcome variance than the primary insult. Exposure history needs a memory kernel, since repetitive mild injury accumulates rather than resets. And recovery should be declared only when the slowest relevant channel normalizes, not when the fastest one does. Where the volume breaks is equally instructive: the CKD study has eleven cases, the hyperperfusion study twelve events for four predictors, most designs are retrospective and single-center, the imaging correspondence is proven in mouse optic nerve at 4.7 tesla with ten-hour scans, and the scientometric articles measure attention, which is coupled to controversy as much as to truth. The honest reading is that this is a map of mechanisms and measurement strategies with well-marked uncertainty, not a set of deployable clinical rules.",
+      "retrocausal_genealogy": "The volume's lineage runs from the 1970s severity instruments (Glasgow Coma Scale, Injury Severity Score) through the IMPACT and CRASH prognostic collaborations, which established that TBI outcome could be modeled from admission variables, down to the nomogram and age-adjusted score refinements published here. In parallel, the experimental line descends from Feeney and Marmarou weight-drop models through controlled cortical impact, fluid percussion, and shock tubes to rotational-acceleration devices such as modCHIMERA, while the imaging line descends from diffusion tensor imaging to spectrum decompositions like DBSI. The scientometric articles are the newest layer: bibliometric mapping tools (VOSviewer, CiteSpace) and altmetrics applied back onto the field's own output.",
+      "theory_of_mind": "The editors and authors write for clinician-researchers who must act under time pressure with incomplete data, and their shared belief is that progress comes from integration across disciplines rather than from depth in any single one. Nearly every article is written defensively, foregrounding limitations, small samples, and validation gaps, because this field has been burned repeatedly by results that did not transport: animal neuroprotection that failed in trials, scores that failed outside their home cohorts. The authors model the reader as someone who will misuse a number if its conditions of validity are not attached, so they attach them.",
+      "cross_layer_veto": "The volume's layers veto each other in specific, reusable ways. The physiology layer vetoes the symptom layer: symptom clearance does not certify recovery while heart rate variability remains depressed. The validation layer vetoes the modeling layer: a training AUC of 0.9304 does not survive its own external validation at 0.8102. The histology layer vetoes the imaging layer: a normal or ambiguous DTI reading does not override stained evidence of axonal injury. The population layer vetoes borrowed instruments: a pediatric score and a European American crash model both fail, measurably, when applied to populations they were not built on. Any single channel claiming certainty is overridden somewhere in this collection."
+    }
+  ],
+  "universal_lens": "Any complex injury process decomposes into a primary insult, a cascade of secondary processes, and a long tail of delayed outcomes, and measurement systems built on single summary numbers systematically miss the second and third parts. The corrective pattern shown across this volume is general: decompose composite signals into interpretable components, pair subjective instruments with objective ones, attach validation gaps and home populations to every score, and expect the generating process itself to drift over time and across populations.",
+  "gsi_mapping": "For the Galaxy Sports Institute, this volume is a curriculum map for injury science: a model taxonomy with named failure modes for teaching experimental design, a worked example of prognostic score construction and honest validation, an imaging decomposition method validated against ground-truth histology, and a scientometric layer for tracking how a research field's attention and output move. It also supplies teaching cases on small-sample humility, from the eleven-case kidney study, and on proxy-defined diseases, from the post-mortem-only definition of chronic traumatic encephalopathy.",
+  "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the transferable machinery is methodological: gated risk rules with explicit prerequisites (herniation before the hyperperfusion factor set), validation-gap reporting for any adopted score (0.9304 training against 0.8102 external), dose-response gradient features (olfactory loss and epilepsy incidence by severity), mediator modeling (infection on the path from kidney disease to outcome), population-mismatch checks for borrowed models (the Kriging-morphed crash body), and lagging-indicator recovery checks (heart rate variability after symptom clearance). Every mapping concerns prediction quality and reasoning discipline only."
+}

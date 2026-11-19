@@ -13,7 +13,6 @@ import shutil
 from pathlib import Path
 
 import pytest
-
 from intelligence.ecosystem.twelve_repo_frontier_integration_engine import (
     REPO_ROOT,
     AccessibilityNode,
@@ -54,7 +53,9 @@ def test_repo1_vercel_agent_browser_snapshot_and_iframe_invalidation() -> None:
             AccessibilityNode(role="textbox", name="Stake", value="50"),
         ],
     )
-    snap1 = distiller.build_compact_snapshot(root_v1, frame_id="dk-iframe", raw_html_char_estimate=3500)
+    snap1 = distiller.build_compact_snapshot(
+        root_v1, frame_id="dk-iframe", raw_html_char_estimate=3500
+    )
     assert snap1["interactive_ref_count"] == 2
     assert "@e1" in snap1["refs"]
     assert snap1["token_reduction_ratio"] > 0.80
@@ -118,7 +119,9 @@ def test_repo5_meta_astryx_dense_compression_and_spoken_a11y_contract() -> None:
     assert parsed_dense.get("$s") == "astryx.v1"
     assert isinstance(parsed_dense.get("k"), list)
     assert isinstance(parsed_dense.get("r"), list)
-    decompressed = AstryxDenseProtocolAndA11yEngine.decompress_records_dense(compressed["dense_payload"])
+    decompressed = AstryxDenseProtocolAndA11yEngine.decompress_records_dense(
+        compressed["dense_payload"]
+    )
     assert decompressed == rows
 
     # Verify multi-row heterogeneous records + None preservation
@@ -128,7 +131,10 @@ def test_repo5_meta_astryx_dense_compression_and_spoken_a11y_contract() -> None:
     ]
     comp_multi = AstryxDenseProtocolAndA11yEngine.compress_records_dense(multi_rows)
     assert comp_multi["compression_savings_pct"] > 20.0
-    assert AstryxDenseProtocolAndA11yEngine.decompress_records_dense(comp_multi["dense_payload"]) == multi_rows
+    assert (
+        AstryxDenseProtocolAndA11yEngine.decompress_records_dense(comp_multi["dense_payload"])
+        == multi_rows
+    )
 
     # Clean customer-facing spoken phrase passes
     clean_a11y = AstryxDenseProtocolAndA11yEngine.verify_spoken_a11y_contract({
@@ -162,16 +168,28 @@ def test_repo6_prometheus_in_process_tsdb_and_promql_alerts() -> None:
     assert "# EOF" in text
 
     alerts = prom.evaluate_alert_rules([
-        {"alert": "GateTooLoose", "metric": "gse_conjunction_gate_pass_ratio", "op": ">", "threshold": 0.35, "severity": "critical"},
+        {
+            "alert": "GateTooLoose",
+            "metric": "gse_conjunction_gate_pass_ratio",
+            "op": ">",
+            "threshold": 0.35,
+            "severity": "critical",
+        },
     ])
     assert len(alerts) == 1
     assert alerts[0]["state"] == "FIRING"
 
 
 def test_repo7_sherlock_provenance_and_anti_impersonation_gate() -> None:
-    real = SherlockProvenanceAndInsiderVerifier.verify_handle_provenance("@RapSheet", "NFL_INJURY_DESK")
-    spoof = SherlockProvenanceAndInsiderVerifier.verify_handle_provenance("@RapSheet_BreakingNews2026", "NFL_INJURY_DESK")
-    orcid = SherlockProvenanceAndInsiderVerifier.verify_handle_provenance("0000-0002-1825-0097", "GSI_CLINICAL")
+    real = SherlockProvenanceAndInsiderVerifier.verify_handle_provenance(
+        "@RapSheet", "NFL_INJURY_DESK"
+    )
+    spoof = SherlockProvenanceAndInsiderVerifier.verify_handle_provenance(
+        "@RapSheet_BreakingNews2026", "NFL_INJURY_DESK"
+    )
+    orcid = SherlockProvenanceAndInsiderVerifier.verify_handle_provenance(
+        "0000-0002-1825-0097", "GSI_CLINICAL"
+    )
 
     assert real["allow_autonomous_line_move_trigger"] is True
     assert spoof["allow_autonomous_line_move_trigger"] is False
@@ -194,8 +212,16 @@ def test_repo8_openmausbot_mcp_trim_query_result_and_dream_consolidation() -> No
     assert engine.enforce_tool_policy("bash_exec_destructive", mode="read_only") is False
 
     dreams = engine.consolidate_dream_memories([
-        {"topic": "turf_toe_recovery", "confidence": 0.88, "insight": "Grade 2 turf toe reduces burst by 14% in week 1 back"},
-        {"topic": "turf_toe_recovery", "confidence": 0.92, "insight": "Plantar plate stiffness normalizes after 21 days"},
+        {
+            "topic": "turf_toe_recovery",
+            "confidence": 0.88,
+            "insight": "Grade 2 turf toe reduces burst by 14% in week 1 back",
+        },
+        {
+            "topic": "turf_toe_recovery",
+            "confidence": 0.92,
+            "insight": "Plantar plate stiffness normalizes after 21 days",
+        },
     ])
     assert len(dreams) == 1
     assert dreams[0]["type"] == "DREAM"
@@ -254,8 +280,16 @@ def test_repo11_billion_context_ccr_simhash_and_hybrid_search() -> None:
 
     # Hybrid 0.7 BM25 + 0.3 Fuzzy search
     docs = [
-        {"id": "GSI-1", "domain": "GSI", "text": "Biomechanics Achilles tendon viscoelastic strain tensor"},
-        {"id": "GSE-1", "domain": "GSE", "text": "Same Game Parlay Student-t copula tail correlation"},
+        {
+            "id": "GSI-1",
+            "domain": "GSI",
+            "text": "Biomechanics Achilles tendon viscoelastic strain tensor",
+        },
+        {
+            "id": "GSE-1",
+            "domain": "GSE",
+            "text": "Same Game Parlay Student-t copula tail correlation",
+        },
     ]
     top = kernel.hybrid_bm25_fuzzy_search("Achilles viscoelastic strain", docs, top_k=1)
     assert top[0]["id"] == "GSI-1"
@@ -287,4 +321,7 @@ def test_end_to_end_twelve_repo_two_pass_integration_receipt() -> None:
     assert (REPO_ROOT / ".zed" / "settings.json").exists()
     assert (Path.home() / ".agents" / "skills" / "cloudflare-security-audit" / "SKILL.md").exists()
     assert (Path.home() / ".agents" / "skills" / "vercel-agent-browser" / "SKILL.md").exists()
-    assert (Path.home() / ".agents" / "skills" / "astryx-dense-compression-protocol" / "SKILL.md").exists()
+    skill_path = (
+        Path.home() / ".agents" / "skills" / "astryx-dense-compression-protocol" / "SKILL.md"
+    )
+    assert skill_path.exists()

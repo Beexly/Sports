@@ -1,0 +1,365 @@
+{
+  "schema": "wave39_gsi_hpa_and_disruption_total_benchmark_v1",
+  "generated_utc": "2026-11-18T05:48:01.608077+00:00",
+  "real_money_stake_cleared": false,
+  "live_stake_fraction": 0.0,
+  "sample_kc_at_den": {
+    "schema": "wave39_disruption_total_and_3yr_ftn_suite_v1",
+    "wired": true,
+    "matchup": "KC @ DEN",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "gsi_hpa_and_chronic_sofa": {
+      "schema": "wave39_gsi_hpa_and_chronic_sofa_suite_v1",
+      "wired": true,
+      "matchup": "KC @ DEN",
+      "as_of_week": 10,
+      "adr0003_rule_in_only_doctrine": true,
+      "clinical_ruo_sports_weight": 0.0,
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "hpa_proteomics_concordance": {
+        "schema": "wave39_gsi_hpa_proteomics_concordance_v1",
+        "clean_checkout_fallback": false,
+        "adr0003_rule_in_only_doctrine": true,
+        "clinical_ruo_sports_weight": 0.0,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0,
+        "payload_sha256": "9871c2f158eeb9a0067aac6c933664d3321c035fce7a5f1fe27ce938d85b15f3",
+        "proteins_count": 9,
+        "ihc_tissue_records_count": 35,
+        "tnni3_cardiac_ihc_ordinal": 3.0,
+        "tnni3_skeletal_ihc_ordinal": 0.0,
+        "gfap_cerebellum_ihc_ordinal": 3.0,
+        "gfap_cortex_ihc_ordinal": 2.0,
+        "gfap_heart_ihc_ordinal": 0.0,
+        "ckm_skeletal_ihc_ordinal": 3.0,
+        "col1a1_skeletal_stroma_discordance": true,
+        "pending_ihc_mrna_fallback_genes": [
+          "ACTN3",
+          "PPARGC1A"
+        ],
+        "steady_state_ckm_to_tnni3_clearance_ratio": 74.2857
+      },
+      "mimic_iv_chronic_elixhauser_sofa": {
+        "schema": "wave39_gsi_mimic_iv_chronic_elixhauser_sofa_v1",
+        "clean_checkout_fallback": false,
+        "adr0003_rule_in_only_doctrine": true,
+        "clinical_ruo_sports_weight": 0.0,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0,
+        "icu_stays_count": 140,
+        "deaths_count": 20,
+        "icd_rows_audited": 4506,
+        "survivor_mean_composite": 9.331,
+        "non_survivor_mean_composite": 18.096,
+        "mortality_auroc": 0.7883,
+        "mortality_brier": 0.1036,
+        "base_prevalence_brier": 0.1224
+      },
+      "myofibrillar_recovery_kinetics": {
+        "away": {
+          "team": "KC",
+          "rest_days": 7.0,
+          "ckm_clearance_residual": 0.37531,
+          "myofibrillar_structural_retention_mult": 1.00198
+        },
+        "home": {
+          "team": "DEN",
+          "rest_days": 7.0,
+          "ckm_clearance_residual": 0.37531,
+          "myofibrillar_structural_retention_mult": 1.00157
+        }
+      }
+    },
+    "longitudinal_3yr_ftn_vaults": {
+      "schema": "wave39_longitudinal_3yr_ftn_and_2025_vaults_v1",
+      "clean_checkout_fallback": false,
+      "ftn_2024_rows": 48031,
+      "ftn_2025_rows": 47316,
+      "ftn_2026_w1_w10_rows": 25310,
+      "ftn_3yr_combined_rows": 120657,
+      "stats_player_week_2025_rows": 19422,
+      "stats_team_week_2025_rows": 570,
+      "snap_counts_2025_rows": 26613,
+      "motion_rate_by_season": {
+        "2024": 0.3778,
+        "2025": 0.4203,
+        "2026_w1_w10": 0.445
+      },
+      "play_action_rate_by_season": {
+        "2024": 0.1064,
+        "2025": 0.1068,
+        "2026_w1_w10": 0.1053
+      }
+    },
+    "away_w1_w10_w39_profile": {
+      "def_hurry_hit_per_game_norm": 0.0875,
+      "net_pressure_margin_norm": 0.0,
+      "wr_drop_avoidance_norm": -0.58333,
+      "penalty_first_down_net": -0.00577,
+      "short_yardage_power_conv_net": 0.05455
+    },
+    "home_w1_w10_w39_profile": {
+      "def_hurry_hit_per_game_norm": 0.36667,
+      "net_pressure_margin_norm": 0.48889,
+      "wr_drop_avoidance_norm": -0.2963,
+      "penalty_first_down_net": -0.00155,
+      "short_yardage_power_conv_net": -0.02908
+    },
+    "game_total_environmental_shift": {
+      "schema": "wave39_game_total_environmental_shift_v1",
+      "matchup": "KC @ DEN",
+      "as_of_week": 10,
+      "is_indoor": false,
+      "div_game": 0,
+      "wind_mph": 0.0,
+      "total_shift_pts": 1.15
+    },
+    "max_week_loaded": 10,
+    "quarantined_close_overpriced_signals": {
+      "raw_pass_success_rate_net": 0.0,
+      "two_minute_drill_raw_epa": 0.0,
+      "explosive_20yd_play_rate_net": 0.0,
+      "def_raw_yds_per_tgt_supp": 0.0
+    },
+    "live_honest_ast": {
+      "schema": "wave39_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 6,
+      "equations_evaluated": [
+        {
+          "eq_id": "sarcolemmal_biomarker_leakage_steady",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 18.571429,
+          "operators": 2
+        },
+        {
+          "eq_id": "chronic_elixhauser_sofa_composite",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 16.575,
+          "operators": 4
+        },
+        {
+          "eq_id": "def_hurry_hit_pressure_composite",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.089174,
+          "operators": 3
+        },
+        {
+          "eq_id": "drop_penalty_short_yardage_edge",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.231282,
+          "operators": 5
+        },
+        {
+          "eq_id": "dynamic_kickoff_outdoor_total_shift",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.15,
+          "operators": 5
+        },
+        {
+          "eq_id": "mrna_protein_log_concordance_ratio",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.645161,
+          "operators": 2
+        }
+      ]
+    },
+    "w39_close_residual_signal": 1.320456,
+    "stage2_deltas": {
+      "away_epa_delta": -0.001585,
+      "home_epa_delta": 0.001585,
+      "away_sack_prob_delta": -0.0,
+      "home_sack_prob_delta": -0.005
+    }
+  },
+  "sample_cin_at_buf": {
+    "schema": "wave39_disruption_total_and_3yr_ftn_suite_v1",
+    "wired": true,
+    "matchup": "CIN @ BUF",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "gsi_hpa_and_chronic_sofa": {
+      "schema": "wave39_gsi_hpa_and_chronic_sofa_suite_v1",
+      "wired": true,
+      "matchup": "CIN @ BUF",
+      "as_of_week": 10,
+      "adr0003_rule_in_only_doctrine": true,
+      "clinical_ruo_sports_weight": 0.0,
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "hpa_proteomics_concordance": {
+        "schema": "wave39_gsi_hpa_proteomics_concordance_v1",
+        "clean_checkout_fallback": false,
+        "adr0003_rule_in_only_doctrine": true,
+        "clinical_ruo_sports_weight": 0.0,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0,
+        "payload_sha256": "9871c2f158eeb9a0067aac6c933664d3321c035fce7a5f1fe27ce938d85b15f3",
+        "proteins_count": 9,
+        "ihc_tissue_records_count": 35,
+        "tnni3_cardiac_ihc_ordinal": 3.0,
+        "tnni3_skeletal_ihc_ordinal": 0.0,
+        "gfap_cerebellum_ihc_ordinal": 3.0,
+        "gfap_cortex_ihc_ordinal": 2.0,
+        "gfap_heart_ihc_ordinal": 0.0,
+        "ckm_skeletal_ihc_ordinal": 3.0,
+        "col1a1_skeletal_stroma_discordance": true,
+        "pending_ihc_mrna_fallback_genes": [
+          "ACTN3",
+          "PPARGC1A"
+        ],
+        "steady_state_ckm_to_tnni3_clearance_ratio": 74.2857
+      },
+      "mimic_iv_chronic_elixhauser_sofa": {
+        "schema": "wave39_gsi_mimic_iv_chronic_elixhauser_sofa_v1",
+        "clean_checkout_fallback": false,
+        "adr0003_rule_in_only_doctrine": true,
+        "clinical_ruo_sports_weight": 0.0,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0,
+        "icu_stays_count": 140,
+        "deaths_count": 20,
+        "icd_rows_audited": 4506,
+        "survivor_mean_composite": 9.331,
+        "non_survivor_mean_composite": 18.096,
+        "mortality_auroc": 0.7883,
+        "mortality_brier": 0.1036,
+        "base_prevalence_brier": 0.1224
+      },
+      "myofibrillar_recovery_kinetics": {
+        "away": {
+          "team": "CIN",
+          "rest_days": 7.0,
+          "ckm_clearance_residual": 0.37531,
+          "myofibrillar_structural_retention_mult": 1.00207
+        },
+        "home": {
+          "team": "BUF",
+          "rest_days": 7.0,
+          "ckm_clearance_residual": 0.37531,
+          "myofibrillar_structural_retention_mult": 1.00146
+        }
+      }
+    },
+    "longitudinal_3yr_ftn_vaults": {
+      "schema": "wave39_longitudinal_3yr_ftn_and_2025_vaults_v1",
+      "clean_checkout_fallback": false,
+      "ftn_2024_rows": 48031,
+      "ftn_2025_rows": 47316,
+      "ftn_2026_w1_w10_rows": 25310,
+      "ftn_3yr_combined_rows": 120657,
+      "stats_player_week_2025_rows": 19422,
+      "stats_team_week_2025_rows": 570,
+      "snap_counts_2025_rows": 26613,
+      "motion_rate_by_season": {
+        "2024": 0.3778,
+        "2025": 0.4203,
+        "2026_w1_w10": 0.445
+      },
+      "play_action_rate_by_season": {
+        "2024": 0.1064,
+        "2025": 0.1068,
+        "2026_w1_w10": 0.1053
+      }
+    },
+    "away_w1_w10_w39_profile": {
+      "def_hurry_hit_per_game_norm": 0.2125,
+      "net_pressure_margin_norm": 0.075,
+      "wr_drop_avoidance_norm": -0.33333,
+      "penalty_first_down_net": -0.00396,
+      "short_yardage_power_conv_net": 0.10588
+    },
+    "home_w1_w10_w39_profile": {
+      "def_hurry_hit_per_game_norm": 0.45,
+      "net_pressure_margin_norm": 0.4875,
+      "wr_drop_avoidance_norm": -0.45833,
+      "penalty_first_down_net": 0.00595,
+      "short_yardage_power_conv_net": 0.09964
+    },
+    "game_total_environmental_shift": {
+      "schema": "wave39_game_total_environmental_shift_v1",
+      "matchup": "CIN @ BUF",
+      "as_of_week": 10,
+      "is_indoor": false,
+      "div_game": 0,
+      "wind_mph": 0.0,
+      "total_shift_pts": 1.15
+    },
+    "max_week_loaded": 10,
+    "quarantined_close_overpriced_signals": {
+      "raw_pass_success_rate_net": 0.0,
+      "two_minute_drill_raw_epa": 0.0,
+      "explosive_20yd_play_rate_net": 0.0,
+      "def_raw_yds_per_tgt_supp": 0.0
+    },
+    "live_honest_ast": {
+      "schema": "wave39_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 6,
+      "equations_evaluated": [
+        {
+          "eq_id": "sarcolemmal_biomarker_leakage_steady",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 18.571429,
+          "operators": 2
+        },
+        {
+          "eq_id": "chronic_elixhauser_sofa_composite",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 16.575,
+          "operators": 4
+        },
+        {
+          "eq_id": "def_hurry_hit_pressure_composite",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.9225,
+          "operators": 3
+        },
+        {
+          "eq_id": "drop_penalty_short_yardage_edge",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": -0.080935,
+          "operators": 5
+        },
+        {
+          "eq_id": "dynamic_kickoff_outdoor_total_shift",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.15,
+          "operators": 5
+        },
+        {
+          "eq_id": "mrna_protein_log_concordance_ratio",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.645161,
+          "operators": 2
+        }
+      ]
+    },
+    "w39_close_residual_signal": 0.841565,
+    "stage2_deltas": {
+      "away_epa_delta": -0.00101,
+      "home_epa_delta": 0.00101,
+      "away_sack_prob_delta": -0.001125,
+      "home_sack_prob_delta": -0.005
+    }
+  },
+  "benchmark_sha256": "d370d579189ecf7f47d063744ada12f37447832ccbc00feba73a4cf326ada31c"
+}

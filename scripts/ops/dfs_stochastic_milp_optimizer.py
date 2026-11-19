@@ -94,7 +94,7 @@ def optimize_dfs_portfolio(
     covariance_bonuses: Optional[Dict[Tuple[int, int], float]] = None,
     min_salary: float = 0.0,
     max_per_team: Optional[int] = None,
-    max_tes: int = 1,
+    max_tes: int = 2,
     max_exposure: Optional[float] = None,
 ) -> List[pd.DataFrame]:
     """Optimize a portfolio of K distinct, covariance-aware DraftKings Classic lineups
@@ -176,7 +176,7 @@ def optimize_dfs_portfolio(
     add_constraint({i: 1.0 for i in range(n)}, 9.0, 9.0)
 
     # 3. Positional constraints (DraftKings Classic: 1 QB, 2-3 RB, 3-4 WR, 1..max_tes TE, 1 DST)
-    # By default max_tes=1 so FLEX must be an RB or WR (never a double-TE punt).
+    # Allows max_tes=2 so FLEX can be an RB, WR, or TE (2-TE build per ADR-0009).
     qbs = [i for i in range(n) if df.loc[i, "position"] == "QB"]
     rbs = [i for i in range(n) if df.loc[i, "position"] == "RB"]
     wrs = [i for i in range(n) if df.loc[i, "position"] == "WR"]
@@ -369,7 +369,8 @@ def optimize_dfs_portfolio(
                                 used.add(i)
                         if len(w_sel) < 3:
                             continue
-                        flx_avail = [i for i in rem_all if i not in used and pos_list[i] in ("RB", "WR")]
+                        flex_pos_allowed = ("RB", "WR", "TE") if max_tes >= 2 else ("RB", "WR")
+                        flx_avail = [i for i in rem_all if i not in used and pos_list[i] in flex_pos_allowed]
                         if not flx_avail:
                             continue
                         flx_i = flx_avail[0]
@@ -392,7 +393,7 @@ def optimize_dfs_portfolio(
                                 cur_p = cand[sp]
                                 if cur_p in prot:
                                     continue
-                                req_p = ("RB", "WR") if sp == 7 else (pos_list[cur_p],)
+                                req_p = flex_pos_allowed if sp == 7 else (pos_list[cur_p],)
                                 for ci in range(n):
                                     if (
                                         ub_k[ci] > 0.5
@@ -876,6 +877,38 @@ def build_sample_week9_dfs_slate_pool() -> pd.DataFrame:
             {"player": "Seahawks DST", "position": "DST", "salary": 2900, "projection": 8.4, "team": "SEA", "opponent": "ARI"},
             {"player": "Ravens DST", "position": "DST", "salary": 3200, "projection": 8.1, "team": "BAL", "opponent": "DEN"},
         ]
+    )
+
+
+def solve_k22_milp_lineup(
+    *,
+    mode: str,
+    names: Sequence[str],
+    positions: Sequence[str],
+    teams: Sequence[str],
+    salaries: Sequence[int],
+    mean_projections: Sequence[float],
+    scenario_pts_matrix: Sequence[Sequence[float]],
+    dirichlet_field_own: Sequence[float] | None = None,
+    zero_floor_probs: Sequence[float] | None = None,
+    is_late_kickoff: Sequence[bool] | None = None,
+    prior_lineup_matrix: Sequence[Sequence[int]] | None = None,
+) -> Dict[str, Any]:
+    """Delegate K22 Cash DRO+CVaR or GPP DPP+ROV_FLEX MILP solver cleanly."""
+    from gse_engine.compute.dfs_optimizer import solve_k22_dro_cash_or_dpp_gpp_milp
+
+    return solve_k22_dro_cash_or_dpp_gpp_milp(
+        mode=mode,
+        names=names,
+        positions=positions,
+        teams=teams,
+        salaries=salaries,
+        mean_projections=mean_projections,
+        scenario_pts_matrix=scenario_pts_matrix,
+        dirichlet_field_own=dirichlet_field_own,
+        zero_floor_probs=zero_floor_probs,
+        is_late_kickoff=is_late_kickoff,
+        prior_lineup_matrix=prior_lineup_matrix,
     )
 
 

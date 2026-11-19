@@ -5,6 +5,7 @@ import { db, DurableWriteStoreUnavailableError, requireDurableWriteStore } from 
 import { tierFromPriceRef } from "@/lib/billing/price-ids";
 import { track } from "@/lib/analytics/events";
 import { recordPurchaseLedgerEntry } from "@/lib/packages/purchase-ledger";
+import { sendPostCheckoutUnlockReceipt } from "@/lib/packages/post-checkout-receipt";
 
 // IMPORTANT: This route must receive the raw body for Stripe signature verification.
 // Next.js App Router does not parse the body automatically for route handlers.
@@ -166,7 +167,11 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
       } else {
         // One-time pack purchase — record to durable purchase ledger so customer
         // access survives tab close, browser refreshes, and page navigation.
-        const packageSlug = session.metadata?.packageSlug || session.metadata?.package || "week8-all-access";
+        const rawSlug = session.metadata?.packageSlug || session.metadata?.package || "";
+        if (!rawSlug) {
+          console.warn(`[stripe-webhook] One-time checkout ${session.id} missing packageSlug metadata; recording under unmapped-pack without wildcard escalation.`);
+        }
+        const packageSlug = rawSlug || "unmapped-pack";
         completedTier = packageSlug;
         const customerEmail = session.customer_details?.email || session.customer_email || null;
         await recordPurchaseLedgerEntry({
@@ -177,6 +182,12 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
           amountCents: session.amount_total ?? 0,
           currency: session.currency || "usd",
           metadata: session.metadata as Record<string, unknown> | undefined,
+        });
+        void sendPostCheckoutUnlockReceipt({
+          email: customerEmail,
+          packageSlug,
+          sessionId: session.id,
+          amountCents: session.amount_total ?? 0,
         });
       }
       // Conversion signal — a checkout session completed and entitlement was

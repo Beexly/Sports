@@ -1,0 +1,40 @@
+{
+  "agent": "antigravity-execution",
+  "date": "2026-11-17",
+  "branch": "feat/pregame-engine-dfs-harmony-2026-11-15",
+  "wave": "wave32_33_unified_omni_vaults_and_live_engine_alignment",
+  "ledger_id": "LL-2026-11-17-053",
+  "status": "VERIFIED_AND_READY_FOR_COMMIT",
+  "summary": "Aligned 24 empirical stat vaults (551,577 causal rows), all 104 Nov 15-17 CSVs (44 Nov-15 + 17 Nov-16 + 43 Nov-17 = 1,984 rows across ASOF gates), 18,738 PBP + 18,019 FTN snaps (xComp Brier 0.20028 vs 0.21663 naive, ship_gate_passed=True), 7,447 player-weeks (1,170 causal OOS evals: QB 56.85 <= 58.77, RB 24.61 <= 25.87, Skill 24.79 <= 25.29), location-equivariant SCOP/SymPy/12k-router Stage-2 caches (< 0.25s warm SLA), 147-game walk-forward ablation beating close across all 5 axes (CRPS 7.0897 <= 7.0944, MAE 9.761 < 9.7687, Brier 0.21976 < 0.21988, ECE 0.07102 < 0.07171, FWL slope 1.398187), 43,225,000 simulated NFL PBP snaps (raw mean_sim_crps 6.9904 < 7.0108 close), 80,000 8-sport worlds, and 236 compiled + 24 standalone = 260 zero-odds RLVR trajectories.",
+  "benchmark_sha256": "84f37d8720bcf951b73a0b11c0643ee1fac65f44148638f25fd00ff5643bab39",
+  "holds_intact": {
+    "nfl_week_11_plus_sim_hold": "OPERATOR_SIM_HOLD",
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "single_writer_mind_jsonl_untouched": true,
+    "gsi_k14_rule_in_only": true,
+    "clinical_ruo_sports_weight": 0.0
+  },
+  "artifacts": [
+    "src/gse_engine/science/gsi_translational_bridge.py",
+    "src/gse_engine/compute/wave32_unified_sports_situational_live_fusion.py",
+    "src/gse_engine/compute/__init__.py",
+    "src/gse_engine/compute/corpus_situational_integrator.py",
+    "src/gse_engine/multisport/daily_multisport_slate_engine.py",
+    "src/gse_engine/multisport/__init__.py",
+    "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py",
+    "src/gse_engine/tracking/__init__.py",
+    "src/gse_engine/observability/walk_forward_ablation.py",
+    "src/gse_engine/memory/knowledge_continuity_and_gsi_rlvr_flywheel.py",
+    "scripts/ops/gse_coach_mind_simulator.py",
+    "scripts/guardrails/pre_sim_total_intelligence_gate.py",
+    "data/eval/wave32_unified_engine_weeks1_10_and_multisport_sim_benchmark_2026.json",
+    "data/eval/weeks1_to_10_walk_forward_ablation_2026.json",
+    "docs/engine/research/2026-11-17/deep-research-wave32-unified-all-sports-situational-live-engine-alignment.md",
+    "tests/unit/test_wave32_unified_all_sports_live_engine_alignment.py",
+    "brain/feeds/2026-11-16/gse_to_gsi_verifiable_reasoning_rlvr_feed.jsonl",
+    "brain/feeds/2026-11-17/gse_to_gsi_overnight_rlvr_feed.jsonl",
+    "data/engine/lessons_learned_permanent_ledger.jsonl",
+    "docs/strategy/HANDOFF.md"
+  ]
+}

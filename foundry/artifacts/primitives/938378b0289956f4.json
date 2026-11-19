@@ -1,0 +1,744 @@
+{
+ "book_id": "938378b0289956f4",
+ "source_status": "COMPLETE",
+ "source_note": "Edited by Yongxia Zhou, Traumatic Brain Injury: Neurobiology, Diagnosis and Treatment, IntechOpen, London, first published 2019 (book DOI 10.5772/intechopen.77680; print ISBN 978-1-78984-295-1; chapters distributed under CC BY 3.0). Seven chapters in three sections: post-concussion syndrome; neuroprotection, photoperiod and sleep; cumulative mild head injury in contact sports; neuronal and glial biomarkers; neuroprotective agents (systematic review); direct brain cooling; sedation. The local file is the publisher PDF of the complete volume, 5,193,925 bytes, full sha256 938378b0289956f41bc4141689b4f3bb1defda88ada57581284de5200334c490. Extracted text is clean born-digital text (472,835 bytes, 8,064 lines) with page headers interleaved; every verbatim quote was verified as a contiguous substring of the extracted text under the standard normalization. Catalog title matches the title page; no corrections. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "concussion_definition",
+   "name": "Concussion is reversible neurological dysfunction without gross brain lesions, caused by an impulsive force transmitted to the head",
+   "verbatim_quote": "Concussions are defined as reversible neurological dysfunction in the absence of gross brain lesions [1], caused by either a direct blow to the head, neck, or elsewhere on the body with an impulsive force transmitted to the head [2].",
+   "page": "Chapter 1, section 1 (Introduction), text lines 291-294",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The dysfunction is reversible in the typical case",
+    "Force can be transmitted indirectly, not only by direct head contact"
+   ],
+   "breakdown_regime": "Breaks down for injuries with gross lesions, which are classified as more severe TBI, and where dysfunction proves persistent rather than reversible",
+   "domain": "concussion definition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A functional disturbance with normal structure is a distinct state class: the engine should represent cases where measured output is impaired while structural measures read normal, and should not require structural damage before scoring a functional deficit.",
+    "source_operator": "concussion_definition",
+    "telemetry": "Functional test results paired with structural imaging or structural metrics recorded as normal"
+   }
+  },
+  {
+   "primitive_id": "neurometabolic_cascade_concussion",
+   "name": "Concussion pathophysiology is a neurometabolic cascade: ionic imbalance and neurotransmitter release followed by a hypermetabolic restoration attempt",
+   "verbatim_quote": "It is hypothesized that acceleration/deceleration and rotational forces cause diffuse injury to the neurons, which causes an ionic imbalance and release of a cascade of neurotransmitters [9-11].",
+   "page": "Chapter 1, section 1 (Introduction), text lines 306-309",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Acceleration, deceleration, and rotational forces are the initiating mechanics",
+    "The cascade is a hypothesis supported by imaging and metabolic observation, not a directly observed sequence in humans"
+   ],
+   "breakdown_regime": "Breaks down outside the acute window and for focal injuries where a diffuse cascade is not the dominant process",
+   "domain": "concussion pathophysiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Model post-impact performance as a cascade with phases rather than a single step change: an initial disruption, a compensatory overexertion phase that itself impairs function, and a recovery tail. A signal measured during the compensation phase should be read differently from the same signal at baseline.",
+    "source_operator": "neurometabolic_cascade_concussion",
+    "telemetry": "Time since impact, metabolic or symptom time series sampled across the acute and subacute phases"
+   }
+  },
+  {
+   "primitive_id": "pcs_persistence_threshold",
+   "name": "Post-concussion syndrome is diagnosed by symptom persistence past a fixed threshold: more than 2 weeks in adults, 1 month in adolescents",
+   "verbatim_quote": "If symptoms persist for more than 2 weeks in adults, or 1 month in adolescents, then the diagnosis of post-concussion syndrome (PCS) is made [19].",
+   "page": "Chapter 1, section 1 (Introduction), text lines 324-327",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The threshold is a convention, and published persistence rates vary from 5% to over 50% depending on criteria",
+    "Symptom report is the input, with known under-reporting and over-reporting biases"
+   ],
+   "breakdown_regime": "Breaks down when the measured signal is objective rather than self-reported, and at the boundary where a case sits just either side of the cutoff",
+   "domain": "diagnostic criteria",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Convert a continuous recovery curve into a classification with an explicit time threshold that differs by population subgroup. The engine should carry subgroup-specific persistence thresholds rather than one global cutoff when deciding whether a deviation is transient or a state change.",
+    "source_operator": "pcs_persistence_threshold",
+    "telemetry": "Days since event with symptom or performance deviation still present, stratified by subgroup"
+   }
+  },
+  {
+   "primitive_id": "pcs_subtype_classification",
+   "name": "PCS is subcategorized by predominant mechanism into physiological, vestibulo-ocular, cervicogenic, and mood-related subtypes",
+   "verbatim_quote": "PCS can be subcategorized into physiological PCS, vestibulo-ocular PCS, cervicogenic PCS, and mood-related PCS based on predominant clinical signs and symptoms.",
+   "page": "Chapter 1, Abstract, text lines 272-274",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Subtypes are defined by predominant presentation and may overlap in one patient",
+    "Only the physiological subtype involves global metabolic disturbance of the brain"
+   ],
+   "breakdown_regime": "Breaks down when presentation data are too thin to separate subtypes, which is common with symptom-only records",
+   "domain": "clinical classification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "One surface label hides several mechanisms that need different handling. The engine should split a syndrome-level category into mechanism subtypes before reasoning about cause or treatment, and should allow overlapping subtype membership instead of forcing a single class.",
+    "source_operator": "pcs_subtype_classification",
+    "telemetry": "Sign and symptom pattern per case, examination findings, and response to graded exertion"
+   }
+  },
+  {
+   "primitive_id": "exercise_intolerance_biomarker",
+   "name": "Symptom-limited exercise intolerance at a low heart rate is the most objective biomarker of physiological PCS dysfunction",
+   "verbatim_quote": "the most objective biomarker of physiological dysfunction is symptom-limited exercise intolerance at a low heart rate [34].",
+   "page": "Chapter 1, section 2 (PCS classification), text lines 383-385",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Exertion is increased in graded steps until symptoms worsen",
+    "The test requires a cooperative subject and a controlled protocol"
+   ],
+   "breakdown_regime": "Breaks down for the vestibulo-ocular and cervicogenic subtypes, whose exacerbation appears at higher workloads for mechanical rather than metabolic reasons",
+   "domain": "functional biomarker",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A graded stress test exposes dysfunction that resting measures miss. The engine should value provoked measurements, where the system is loaded in controlled steps and the failure point is recorded, over resting snapshots when classifying hidden dysfunction.",
+    "source_operator": "exercise_intolerance_biomarker",
+    "telemetry": "Heart rate at symptom exacerbation during graded exercise, expressed against age-predicted maximum"
+   }
+  },
+  {
+   "primitive_id": "ans_dysfunction_hrv",
+   "name": "Autonomic dysfunction after concussion shows as reduced heart rate variability, a measure of sympathovagal reactivity",
+   "verbatim_quote": "This may cause reduced heart rate variability, a measure of sympathovagal reactivity.",
+   "page": "Chapter 1, section 5 (ANS dysfunction and PCS), text lines 507-508",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "ANS control centers in the brainstem are vulnerable to rotational forces at the upper cervical spine",
+    "HRV changes persist in some patients after clinical recovery"
+   ],
+   "breakdown_regime": "Breaks down when HRV is moved by confounders such as fitness, medication, or sleep state that are not recorded",
+   "domain": "autonomic physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Variability of a control signal is itself information: a system whose beat-to-beat variation collapses has lost regulatory flexibility even if its mean level looks normal. The engine should track dispersion and reactivity of control variables, not only their averages.",
+    "source_operator": "ans_dysfunction_hrv",
+    "telemetry": "Heart rate variability at rest and during exertion, resting heart rate, blood pressure response to position change"
+   }
+  },
+  {
+   "primitive_id": "cbf_autoregulation_failure",
+   "name": "Cerebral autoregulation is impaired in PCS, explaining exertional symptom exacerbation through failed blood flow control",
+   "verbatim_quote": "Taken together, there is an abundance of evidence that cerebral autoregulation is impaired in PCS, a likely explanation for many physiological PCS symptoms.",
+   "page": "Chapter 1, section 6 (Cerebral blood flow and PCS), text lines 549-551",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Autoregulation normally buffers changes in arterial pressure and CO2",
+    "Evidence is convergent across MR angiography, fMRI, and fNIRS studies rather than from one decisive trial"
+   ],
+   "breakdown_regime": "Breaks down as an explanation for subtypes without global metabolic disturbance, and the fMRI literature the chapter reviews is not decisive",
+   "domain": "cerebrovascular physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A regulator that normally holds supply constant across demand swings can itself be the failed component. The engine should distinguish a supply problem from a regulation problem: when the controller is impaired, output tracks external pressure instead of need, and the failure appears only when demand changes.",
+    "source_operator": "cbf_autoregulation_failure",
+    "telemetry": "Resting and exertional cerebral blood flow measures, CO2 reactivity, blood pressure coupling measures"
+   }
+  },
+  {
+   "primitive_id": "graded_exercise_treatment",
+   "name": "Current guidance replaces prolonged rest with 24 to 48 hours of rest followed by graded sub-threshold aerobic activity",
+   "verbatim_quote": "the most recent CISG guidelines [21] recommend a short period of rest (24-48 hours) post-injury, followed by a graded return to sub-threshold activity.",
+   "page": "Chapter 1, section 9 (Treatment of PCS), text lines 646-648",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The supporting randomized trial evidence is in adolescents and may not transfer unchanged to adults",
+    "Sub-threshold means intensity kept below the point of symptom exacerbation"
+   ],
+   "breakdown_regime": "Breaks down in the first 24 to 48 hours, when rest remains protective, and for patients whose subtype is driven by cervical or vestibular lesions needing targeted therapy first",
+   "domain": "treatment guideline",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Inactivity is itself an intervention with costs: prolonged rest deconditions the very regulatory systems that are impaired. The engine should model enforced rest as an active variable with a harmful tail, and prefer early graded re-exposure below the symptom threshold when the evidence supports it.",
+    "source_operator": "graded_exercise_treatment",
+    "telemetry": "Days of rest prescribed, timing and intensity of first aerobic activity, recovery duration outcomes"
+   }
+  },
+  {
+   "primitive_id": "cte_tau_topography",
+   "name": "CTE tau pathology is distributed across frontal and temporal lobes, unlike the limbic localization of Alzheimer disease tau",
+   "verbatim_quote": "The Tau proteinopathy seen in CTE is different from the Tau proteinopathy seen in Alzheimer's disease because it is found widespread in the frontal and temporal lobes [124], as opposed to localization in the limbic system in Alzheimer's.",
+   "page": "Chapter 1, section 10 (Long-term sequelae), text lines 700-703",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Definitive CTE diagnosis remains post-mortem in the evidence reviewed",
+    "Incidence estimates from post-mortem series are contested and may reflect selection bias"
+   ],
+   "breakdown_regime": "Breaks down for in-vivo classification, where the chapter notes retired athletes often show no measurable functional difference despite deposits",
+   "domain": "neurodegeneration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Two processes can share a molecular marker and still be different diseases because the spatial distribution differs. The engine should treat where a marker accumulates as part of its identity, not only whether it is present.",
+    "source_operator": "cte_tau_topography",
+    "telemetry": "Regional distribution maps of pathology, exposure history of repetitive head impacts"
+   }
+  },
+  {
+   "primitive_id": "neuroprotection_definition",
+   "name": "Neuroprotection is any therapeutic modality, or endogenous response, that prevents or delays cell death after neuronal injury",
+   "verbatim_quote": "This term refers to the use of any therapeutic modality that prevents or delays cell death resulting from a neuronal injury.",
+   "page": "Chapter 2, section 1 (Introduction), text lines 1367-1369",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The term covers both administered therapies and the body's own self-protective responses",
+    "Delaying cell death is counted as protection even when death is not fully prevented"
+   ],
+   "breakdown_regime": "Breaks down when the death process is instantaneous, as in the primary mechanical lesion, where no protective window exists",
+   "domain": "neuroprotection concept",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Protection is a race against a death process, not a repair after it. The engine should score protective factors by whether they act before the damage process completes, and should model endogenous protective responses as part of the system rather than as external interventions only.",
+    "source_operator": "neuroprotection_definition",
+    "telemetry": "Timing of protective factor activation relative to insult, cell survival or tissue outcome measures"
+   }
+  },
+  {
+   "primitive_id": "secondary_lesion_process",
+   "name": "The secondary lesion is a delayed process unfolding hours to days after trauma through functional, structural, cellular, and molecular changes",
+   "verbatim_quote": "the secondary lesion, which corresponds to late effects, which occur hours to days post-trauma, involves a series of functional, structural, cellular, and molecular changes that cause neuronal damage.",
+   "page": "Chapter 2, section 1 (Introduction), text lines 1383-1386",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The primary lesion at impact is not reversible",
+    "Secondary processes are triggered by the primary lesion and by released mediators"
+   ],
+   "breakdown_regime": "Breaks down when observation stops at the acute assessment, which systematically understates final damage",
+   "domain": "injury chronology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Total damage is the sum of an instantaneous component and a delayed, still-modifiable component. The engine should decompose any adverse outcome into impact damage and evolving secondary damage, because only the second term can be changed after the event, and it should keep forecasting during the whole secondary window.",
+    "source_operator": "secondary_lesion_process",
+    "telemetry": "Time stamped secondary markers: edema, ischemia signs, inflammatory mediators, evolving imaging findings"
+   }
+  },
+  {
+   "primitive_id": "excitotoxic_cascade",
+   "name": "Ischemic excitotoxic cascade: energy failure disables Na/K ATPase, releasing glutamate and driving massive calcium entry and enzyme activation",
+   "verbatim_quote": "There is a depletion of glucose and glycogen and failure of Na/K ATPase and other pumps, which result in a decrease in excitation threshold, presence of action potentials, release of excitatory neurotransmitters such as glutamate, massive entry of calcium, and activation of proteases, lipases, and nucleases, among other enzymes [5].",
+   "page": "Chapter 2, section 1 (Introduction), text lines 1389-1393",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Blood flow cessation is the initiating condition in the described sequence",
+    "The cascade steps are ordered: energy failure precedes pump failure, which precedes excitotoxic release"
+   ],
+   "breakdown_regime": "Breaks down in well perfused tissue and in injuries dominated by mechanical axonal damage rather than ischemia",
+   "domain": "excitotoxicity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A supply failure converts a signaling molecule into a toxin: glutamate is normal transmission at controlled levels and a killing agent when clearance fails. The engine should model mediator harm as a function of clearance capacity, not of mediator level alone, and should look for the pump or clearance failure upstream of the toxic accumulation.",
+    "source_operator": "excitotoxic_cascade",
+    "telemetry": "Glucose and oxygen delivery measures, extracellular glutamate, calcium load indicators, edema progression"
+   }
+  },
+  {
+   "primitive_id": "endocannabinoid_protection",
+   "name": "Endocannabinoids anandamide and 2-AG rise after brain injury and regulate glutamate and GABA release as an endogenous protective system",
+   "verbatim_quote": "Endocannabinoid anandamide and 2-arachidonoylglycerol (2-Ag) increase after an acquired brain injury [14, 15] and serve as signaling mediators in integrating inhibitory and excitatory synaptic transmission",
+   "page": "Chapter 2, section 1 (Introduction), text lines 1409-1412",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Evidence is largely from animal models and in vitro work",
+    "2-AG also exerts anti-inflammatory effects that support homeostasis"
+   ],
+   "breakdown_regime": "Breaks down as a complete explanation: the chapter presents the cannabinergic system as one component among several protective mechanisms",
+   "domain": "endogenous neuroprotection",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The system carries its own brake: injury triggers a mediator that feeds back on both excitation and inhibition. The engine should look for endogenous negative feedback loops after a shock and measure their strength, because outcome depends on the brake as much as on the insult.",
+    "source_operator": "endocannabinoid_protection",
+    "telemetry": "Endocannabinoid levels in CSF and tissue, CB1 receptor expression by region and time of day"
+   }
+  },
+  {
+   "primitive_id": "photoperiod_severity_variation",
+   "name": "TBI outcome varies with the photoperiod: in rats, recovery is better when trauma occurs during darkness than during daylight",
+   "verbatim_quote": "Using the rat as a model, we have found that the recovery from a TBI induced by the technique of \"closed head injury\" presents diurnal variations, recovery being better if the trauma occurs in the hours of darkness concerning daylight hours [22-24].",
+   "page": "Chapter 2, section 2 (Neuroprotection and photoperiod), text lines 1431-1434",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rat findings are phase-relative: darkness coincides with the rat's active period",
+    "Diurnal variation is documented for HSP, BDNF, anandamide, and receptor expression"
+   ],
+   "breakdown_regime": "Breaks down when transferred directly to humans without phase translation, and the chapter offers no human photoperiod trial",
+   "domain": "circadian modulation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The same input at a different phase of a daily cycle produces a different outcome, because protective machinery is phase dependent. The engine should timestamp events against the subject's active and rest phases and treat time of day as a real covariate, not noise.",
+    "source_operator": "photoperiod_severity_variation",
+    "telemetry": "Time of injury relative to light and dark phase, CB1 and NMDA receptor expression by phase, outcome scores by phase"
+   }
+  },
+  {
+   "primitive_id": "posttraumatic_hypersomnia_mechanism",
+   "name": "Posttraumatic hypersomnia is linked to loss of about 40% of histaminergic tuberomammillary neurons after severe TBI",
+   "verbatim_quote": "It has been reported that PH is related to direct injury to the alerting histaminergic tuberomammillary neurons, which are reduced by approximately 40% after severe TBI [44].",
+   "page": "Chapter 2, section 3 (Neuroprotection and sleep), text lines 1506-1510",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The neuron count figure comes from severe TBI material",
+    "Hypersomnia after TBI has several competing mechanisms, including hypocretin cell loss and arousal system injury"
+   ],
+   "breakdown_regime": "Breaks down for mild TBI sleep complaints, where insomnia is more frequent than hypersomnia and the mechanism differs",
+   "domain": "sleep medicine",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A persistent symptom can be the signature of a specific small structure's cell loss rather than diffuse damage. The engine should keep structure-specific hypotheses for persistent symptoms and check the symptom against the known function of the candidate structure.",
+    "source_operator": "posttraumatic_hypersomnia_mechanism",
+    "telemetry": "Sleep-wake pattern records, hypersomnia prevalence, histaminergic cell counts in post-mortem or model studies"
+   }
+  },
+  {
+   "primitive_id": "short_sleep_deprivation_protection",
+   "name": "Short periods of sleep deprivation can be neuroprotective after brain injury, while prolonged deprivation is lethal",
+   "verbatim_quote": "Nevertheless, recent evidence suggests that sleep deprivation for shorter periods may be neuroprotective.",
+   "page": "Chapter 2, section 3 (Neuroprotection and sleep), text lines 1545-1546",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Evidence is from animal ischemia, cardiac arrest, and TBI models, with some null and some harmful results in the same table",
+    "The protective pathway may be the sleep rebound rather than the deprivation itself"
+   ],
+   "breakdown_regime": "Breaks down in humans, where the chapter states direct evidence after brain injury is scarce, and for prolonged deprivation at any severity",
+   "domain": "sleep and neuroprotection",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Dose and duration flip the sign of an intervention: brief deprivation recruits protective molecules and rebound slow wave sleep, while total deprivation kills rats within 11 to 32 days. The engine should never extrapolate an intervention's effect across durations without a sign check at each duration band.",
+    "source_operator": "short_sleep_deprivation_protection",
+    "telemetry": "Deprivation duration and type (total vs REM selective), timing before or after insult, histological and behavioral outcomes"
+   }
+  },
+  {
+   "primitive_id": "cmhi_definition",
+   "name": "Cumulative mild head injury is the state produced by multiple concussions, especially with exposure from a young age",
+   "verbatim_quote": "Multiple concussions can be referred to as cumulative mild head injury (CMHI), and are problematic particularly if athletes have competed from a very young age.",
+   "page": "Chapter 3, section 1 (Background), text lines 2341-2343",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Effects are attributed to neural attrition accumulating across events",
+    "Exposure often begins in childhood or adolescence in the populations studied"
+   ],
+   "breakdown_regime": "Breaks down when event counts are self-reported or unreported, which the chapter notes is common in football and rugby",
+   "domain": "cumulative injury",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Repeated sub-threshold events compose into a state variable of their own. The engine should maintain a cumulative exposure ledger per subject and reason about the ledger, not only about the latest event.",
+    "source_operator": "cmhi_definition",
+    "telemetry": "Count and dates of prior concussions, age at first exposure, years of contact sport participation"
+   }
+  },
+  {
+   "primitive_id": "concussion_grading_scale",
+   "name": "Concussion grading by confusion and loss of consciousness: Grade 1 resolves within 15 minutes, Grade 2 lasts longer, Grade 3 involves any loss of consciousness",
+   "verbatim_quote": "Grade 1 (mild) = transient confusion; no loss of consciousness with symptoms resolving in 15 minutes or less: Grade 2 (moderate) = transient confusion, no loss of consciousness and symptoms lasting longer than 15 minutes",
+   "page": "Chapter 3, section 1.7 (Concussive injuries), text lines 2501-2505",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The scheme is one of several competing grading guidelines",
+    "Grade 3 is defined by any loss of consciousness, brief or prolonged"
+   ],
+   "breakdown_regime": "Breaks down because identical grades can hide different mechanisms, and later consensus definitions moved away from grading by these signs alone",
+   "domain": "injury grading",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A usable field grading compresses a complex state into two observables, consciousness and resolution time, with hard boundaries. The engine should keep simple ordinal grades for fast triage alongside richer measures, and should record which observable set the grade came from.",
+    "source_operator": "concussion_grading_scale",
+    "telemetry": "Presence and duration of confusion, presence of loss of consciousness, time to symptom resolution"
+   }
+  },
+  {
+   "primitive_id": "second_impact_syndrome",
+   "name": "Second impact syndrome: a second head injury before recovery from the first causes rapid swelling and can be fatal",
+   "verbatim_quote": "SIS occurs when an athlete suffers a concussion and before the first injury has recovered suffers another injury to the head.",
+   "page": "Chapter 3, section 1.11 (Secondary brain injury), text lines 2611-2613",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The first injury must still be unrecovered when the second lands",
+    "The mechanism proposed is loss of vascular control with rapid brain swelling"
+   ],
+   "breakdown_regime": "Breaks down as a quantified risk: the chapter presents it as a recognized but uncommon event without a reliable incidence rate",
+   "domain": "cumulative injury risk",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Vulnerability is state dependent and time limited: a second shock inside the recovery window is not additive but catastrophic. The engine should model a post-event vulnerability window during which repeat exposure is weighted far above its standalone value, especially for young subjects.",
+    "source_operator": "second_impact_syndrome",
+    "telemetry": "Recovery status at time of second impact, interval between impacts, age of athlete"
+   }
+  },
+  {
+   "primitive_id": "dai_rotational_mechanism",
+   "name": "Diffuse axonal injury is caused by rotational acceleration as the brain twists inside the skull, straining axons",
+   "verbatim_quote": "Diffuse Axonal Injury (DAI) is caused through acceleration-deceleration trauma when the brain twists or rotates inside the skull (rotational acceleration).",
+   "page": "Chapter 3, section 1.12.1 (Diffuse Axonal Injury), text lines 2626-2628",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "DAI is postulated to underlie persistent post-concussive symptoms and attentional deficits",
+    "Severity scales with axonal strain and tensile stress"
+   ],
+   "breakdown_regime": "Breaks down for focal contusion injuries, where contact force rather than rotation dominates",
+   "domain": "axonal injury mechanics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The damaging component of an impact is its rotational part, not its linear magnitude alone. The engine should decompose impact or force measures into translational and rotational components and weight the rotational component when predicting diffuse, network-level damage.",
+    "source_operator": "dai_rotational_mechanism",
+    "telemetry": "Impact direction and rotational acceleration estimates, processing speed, working memory and attention measures"
+   }
+  },
+  {
+   "primitive_id": "three_concussion_threshold",
+   "name": "Rugby players with three or more concussions show likely cognitive dysfunction compared with players with no concussion history",
+   "verbatim_quote": "The results suggested that rugby players who had incurred three or more concussions were likely to suffer cognitive dysfunction [3].",
+   "page": "Chapter 3, section 1.20 (Research on CMHI), text lines 2965-2967",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The study is one of several the chapter reviews, and some schoolboy studies found no cumulative effect",
+    "Forwards, who absorb more contact, show greater deficits than backs"
+   ],
+   "breakdown_regime": "Breaks down as a universal constant: sample sizes are small, control groups vary, and education and age may mitigate the effect",
+   "domain": "cumulative injury evidence",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Accumulation shows a count threshold effect in the data: below it, group differences are inconsistent; at three or more events, dysfunction becomes the expected finding. The engine should test count thresholds on its own cumulative ledgers instead of assuming a linear dose response.",
+    "source_operator": "three_concussion_threshold",
+    "telemetry": "Concussion count per athlete, neuropsychological battery scores, position played (forwards vs backs)"
+   }
+  },
+  {
+   "primitive_id": "biomarker_panel_requirement",
+   "name": "No single biomarker predicts clinical decline with high sensitivity and specificity; a panel reflecting different aspects of trauma is required",
+   "verbatim_quote": "Literature has shown that there is not a single biomarker that predicts the patient's clinical decline with high sensitivity and specificity. Instead, it is required to use a panel of markers that reflect different aspects of head trauma.",
+   "page": "Chapter 4, Abstract, text lines 3507-3510",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Panel members should reflect different physiopathological processes, such as barrier disruption and neuronal injury",
+    "Most candidate markers are associated with cell damage"
+   ],
+   "breakdown_regime": "Breaks down when panel members are highly correlated, adding cost without information, or when extracranial sources contaminate several members at once",
+   "domain": "biomarker strategy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When no single signal is both sensitive and specific, the correct move is a panel whose members cover different mechanisms, not a search for a better single signal. The engine should assemble complementary weak signals with known error profiles and combine them explicitly.",
+    "source_operator": "biomarker_panel_requirement",
+    "telemetry": "Panel member values with each member's sensitivity, specificity, and mechanism tag"
+   }
+  },
+  {
+   "primitive_id": "s100b_kinetics",
+   "name": "S-100β kinetics: detectable 30 minutes after trauma, half-life about 97 minutes, peak on day 0, declining toward day 6",
+   "verbatim_quote": "In humans, the earliest that has been detected is 30 minutes posttrauma. The approximate half-life of this protein is 97 minutes [10], the peak occurs on day 0, and the concentrations decrease toward the sixth day in both CSF and serum.",
+   "page": "Chapter 4, section 2.1 (S-100β), text lines 3665-3668",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Kinetics are stated for human serum and CSF after trauma",
+    "Release begins within seconds in cell models, so the 30 minute figure is a detection limit, not a release time"
+   ],
+   "breakdown_regime": "Breaks down in polytrauma, where extracranial S-100β sources distort the curve, and for repeat injuries that restart the clock",
+   "domain": "biomarker kinetics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every marker has a kinetic window: a sampling time outside the window reads as absence. The engine should attach appearance time, half-life, and peak to every time-varying signal and should discount or reject samples drawn outside the valid window instead of treating them as negative evidence.",
+    "source_operator": "s100b_kinetics",
+    "telemetry": "Sample timestamps relative to event, marker concentration, compartment sampled (serum vs CSF)"
+   }
+  },
+  {
+   "primitive_id": "s100b_sensitivity_specificity",
+   "name": "S-100β is a sensitive but not specific predictor of CT abnormality: sensitivity 90 to 100% with specificity only 4 to 65% at low cutoffs",
+   "verbatim_quote": "In general terms, S-100β is a sensitive but not specific predictor of CT abnormalities. Using low serum cut-off values, the sensitivity oscillates between 90 and 100% with a specificity between 4 and 65%.",
+   "page": "Chapter 4, section 2.1 (S-100β), text lines 3680-3683",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Figures are for prediction of CT abnormalities in mild TBI cohorts",
+    "Raising the cutoff raises specificity and lowers sensitivity, as the chapter states"
+   ],
+   "breakdown_regime": "Breaks down when the signal is used to confirm rather than exclude, which inverts its error profile",
+   "domain": "diagnostic test performance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A high sensitivity, low specificity signal is a rule-out tool, not a rule-in tool, and moving the cutoff trades one error for the other along a known curve. The engine should label each signal with its operating role and set cutoffs by the cost of each error type.",
+    "source_operator": "s100b_sensitivity_specificity",
+    "telemetry": "Cutoff value used, sensitivity and specificity at that cutoff, prevalence in the tested population"
+   }
+  },
+  {
+   "primitive_id": "uchl1_mortality_threshold",
+   "name": "A serum UCH-L1 level above 5.22 ng/mL predicted mortality after severe TBI with an odds ratio of 4.8",
+   "verbatim_quote": "In this study, a serum level of UCH-L1 > 5.22 ng/mL was a predictor of mortality (OR 4.8).",
+   "page": "Chapter 4, section 2.2 (UCH-L1), text lines 3908-3910",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The threshold comes from one severe TBI case-control study and needs larger validation, as the chapter notes for this literature",
+    "UCH-L1 was higher in GCS 3-5 than GCS 6-8 patients and persisted longer in nonsurvivors"
+   ],
+   "breakdown_regime": "Breaks down in mild TBI, where the chapter reports divergent results, and where release from the neuromuscular junction may elevate levels without brain injury",
+   "domain": "prognostic biomarker",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A continuous marker becomes actionable at a validated threshold tied to a hard outcome. The engine should store outcome-linked thresholds with their effect sizes, and should treat crossing such a threshold as a state change rather than a marginal score change.",
+    "source_operator": "uchl1_mortality_threshold",
+    "telemetry": "Serum UCH-L1 concentration in the first 12 hours, survival status, GCS band"
+   }
+  },
+  {
+   "primitive_id": "gfap_basal_level",
+   "name": "Normal serum GFAP is below 0.03 ng/mL, so any elevation indicates blood-brain barrier disruption",
+   "verbatim_quote": "Its normal level in serum is <0.03 ng/mL [30], so any elevation thereof will indicate BBBD (Table 4).",
+   "page": "Chapter 4, section 2.3 (GFAP), text lines 3960-3961",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "GFAP is the most abundant intermediate filament protein in astrocytes",
+    "The interpretation assumes the assay can resolve values near the basal level"
+   ],
+   "breakdown_regime": "Breaks down in polytrauma: the chapter reports orthopedic trauma patients with higher admission GFAP than negative-CT mild TBI patients",
+   "domain": "biomarker reference range",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A near-zero basal level makes a marker a clean event detector: any reading above baseline is signal. The engine should record basal levels for every marker it uses, because the same absolute value means anomaly for a zero-basal marker and noise for a high-basal one.",
+    "source_operator": "gfap_basal_level",
+    "telemetry": "Serum GFAP concentration, assay detection limit, time since injury"
+   }
+  },
+  {
+   "primitive_id": "glial_neuronal_ratio",
+   "name": "The glial/neuronal ratio GNR, GFAP divided by UCH-L1, discriminates focal from diffuse injury and tracks injury type",
+   "verbatim_quote": "The glial/neuronal ratio (GNR) was measured as the quotient between the concentrations of GFAP and UCH-L1.",
+   "page": "Chapter 4, section 2.3 (GFAP), text lines 3977-3979",
+   "latex": "\\mathrm{GNR} = \\frac{[\\mathrm{GFAP}]}{[\\mathrm{UCH\\text{-}L1}]}",
+   "symbol_and_unit_ledger": {
+    "GNR": "glial/neuronal ratio, dimensionless",
+    "[GFAP]": "serum glial fibrillary acidic protein concentration, ng/mL",
+    "[UCH-L1]": "serum ubiquitin C-terminal hydrolase L1 concentration, ng/mL"
+   },
+   "assumptions": [
+    "Both concentrations come from the same serum sample",
+    "GNR was independently associated with injury type but not with age, gender, GCS, or mechanism in the cited study"
+   ],
+   "breakdown_regime": "Breaks down when either concentration is near the detection limit, making the ratio unstable, and it was not an independent predictor of mortality",
+   "domain": "biomarker ratio",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A ratio of two compartment markers cancels shared noise and exposes the balance between two injury processes. The engine should construct ratio features from markers of different compartments when classifying injury type, and should measure them early, since the chapter reports the ratio is more accurate early than late.",
+    "source_operator": "glial_neuronal_ratio",
+    "telemetry": "Paired GFAP and UCH-L1 concentrations from the same draw, lesion type on CT (focal vs diffuse)"
+   }
+  },
+  {
+   "primitive_id": "gfap_auc_advantage",
+   "name": "GFAP outperforms S-100β for identifying intracranial lesions: AUC 0.82 vs 0.77 in GCS 14-15 patients",
+   "verbatim_quote": "For those patients with GCS 14-15, the AUC for the identification of intracranial lesions was 0.82 for GFAP and 0.77 for S-100β.",
+   "page": "Chapter 4, section 2.3 (GFAP), text lines 3999-4001",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The comparison cohort had GCS 9-15 with only 10% intracranial lesions",
+    "At a 0.067 ng/mL cutoff GFAP reached 100% sensitivity and 55% specificity even with extracranial lesions present"
+   ],
+   "breakdown_regime": "Breaks down outside the studied severity band and when transported to populations with different lesion prevalence",
+   "domain": "diagnostic test performance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Candidate signals for the same job should be benchmarked head to head on the same cohort and task, with AUC as the comparison currency. The engine should keep per-task benchmark results for its signals and retire or demote signals that lose on the task they serve.",
+    "source_operator": "gfap_auc_advantage",
+    "telemetry": "AUC per marker per task, cohort severity band, presence of extracranial lesions"
+   }
+  },
+  {
+   "primitive_id": "animal_translation_failure",
+   "name": "Thirty years of neuroprotective agents that succeeded in animal models failed to forecast the same effect in humans",
+   "verbatim_quote": "A recent study of Burns et al. declared 30 years of using Neuroprotective agents on animal models forecasting the same effect on humans failed",
+   "page": "Chapter 5, section 1.2 (Description of the intervention), text lines 4510-4512",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The chapter is a systematic review restricted to human trials for its own analysis",
+    "The failure claim is attributed to Burns et al. and is confirmed, the chapter says, by other studies"
+   ],
+   "breakdown_regime": "Breaks down as a blanket rule: some mechanisms do transfer, so the discount should be a rate, not a veto",
+   "domain": "translational evidence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A model system that repeatedly predicts success where the real system fails is evidence about the model, not about the interventions. The engine should keep a translation ledger: which source domains its evidence came from, and the historical hit rate of transfers from each domain, and should discount new claims by that rate.",
+    "source_operator": "animal_translation_failure",
+    "telemetry": "Source domain of each supporting study, human trial outcome when tested, per-domain transfer success count"
+   }
+  },
+  {
+   "primitive_id": "corticosteroid_prohibition",
+   "name": "Corticosteroids are prohibited in isolated acute TBI because they increase mortality, with a narrow exception protocol for combined TBI and spinal cord injury",
+   "verbatim_quote": "Corticosteroid use in solo acute TBI management is prohibited, as its increased risk of mortalities; in dual-diagnosed patients (TBI and SCI together), corticosteroid use, should be obtained by this protocol [13]",
+   "page": "Chapter 5, section 5 (Overall conclusion), text lines 5748-5751",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The prohibition rests on the CRASH trial and an updated Cochrane review",
+    "The exception protocol is time limited to patients arriving 2 to 3 hours after injury"
+   ],
+   "breakdown_regime": "Breaks down if applied beyond its evidence: the chapter separates isolated TBI from dual diagnosis, and spinal cord injury use follows a different evidence base",
+   "domain": "treatment contraindication",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A large trial can flip an intervention from standard to prohibited, and the flip can be conditional on comorbidity. The engine should store interventions with signed, condition-dependent verdicts that a single strong trial can reverse, rather than as permanent properties of the intervention.",
+    "source_operator": "corticosteroid_prohibition",
+    "telemetry": "Mortality by treatment arm in the CRASH trial, presence of concurrent spinal cord injury, time since injury"
+   }
+  },
+  {
+   "primitive_id": "brain_hypoxia_threshold",
+   "name": "Brain hypoxia, PbtiO2 below 10 mmHg for more than 15 minutes, matters more for morbidity and functional outcome than ICP, which drives mortality",
+   "verbatim_quote": "brain hypoxia (defined as PbtiO2 < 10 mmHg and for more than 15 minutes) is actually more important in determining the morbidity and patient functional outcome [7].",
+   "page": "Chapter 6, section 1 (Introduction), text lines 6356-6358",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The threshold pairs a level with a duration; brief dips do not meet the definition",
+    "ICP and CPP guided treatment alone did not prevent hypoxic-ischemic damage in the cited analysis"
+   ],
+   "breakdown_regime": "Breaks down when brain oxygen is not monitored, which remains common, and the 10 mmHg figure is one cited definition among varying study definitions",
+   "domain": "neuromonitoring threshold",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Different endpoints are governed by different variables: the variable that predicts death is not the variable that predicts disability. The engine should map each monitored variable to the outcome it actually predicts and should not let a mortality variable stand in for functional outcome.",
+    "source_operator": "brain_hypoxia_threshold",
+    "telemetry": "Brain tissue oxygen (PbtiO2) duration below threshold, ICP, CPP, functional outcome scores"
+   }
+  },
+  {
+   "primitive_id": "mild_cooling_oxygen_advantage",
+   "name": "Mild direct brain cooling (30 to 36 C) produced significantly higher brain oxygenation than deep cooling or no cooling across all comparisons",
+   "verbatim_quote": "Interestingly, in all group comparisons, mild brain cooling group has significantly higher mean brain oxygenation values as compared to either deep or no cooling group (depicted in Table 3).",
+   "page": "Chapter 6, section 4.2.2 (Effects on brain oxygenation), text lines 6614-6616",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The trial randomized 32 severe head injury patients after decompressive craniectomy into no, mild, and deep cooling",
+    "Deep cooling still kept brain oxygen above the critical ischemic range"
+   ],
+   "breakdown_regime": "Breaks down beyond this small single-center pilot: the authors state larger, more homogeneous studies are needed",
+   "domain": "therapeutic hypothermia",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The dose response is non-monotonic: the middle dose wins and the stronger dose loses. The engine should test interventions at several intensities and should never assume that more of a beneficial intervention is better.",
+    "source_operator": "mild_cooling_oxygen_advantage",
+    "telemetry": "Coolant temperature band, 4-hourly mean brain oxygen over 48 hours, group assignment"
+   }
+  },
+  {
+   "primitive_id": "cooling_outcome_six_months",
+   "name": "Direct brain cooling showed no outcome difference at discharge but significantly better good-outcome rates at 6 months (p < 0.007)",
+   "verbatim_quote": "However, there is significant difference on good GOS in cooling group compared to no cooling group at 6 months follow-up (as shown in Table 4 with p < 0.007).",
+   "page": "Chapter 6, section 4.2.3 (Effect on GOS), text lines 6621-6623",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Good outcome is GOS 4-5 and poor outcome GOS 1-3 in the chapter's tables",
+    "The mild cooling subgroup drove the effect, with p < 0.013 against no cooling"
+   ],
+   "breakdown_regime": "Breaks down when follow-up is incomplete or when early mortality differences change the composition of the surviving groups",
+   "domain": "clinical trial outcome",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Treatment effects can be invisible at the early endpoint and decisive at the late one. The engine should score interventions at multiple horizons and should treat an early null result as uninformative about the late horizon when the mechanism is slow.",
+    "source_operator": "cooling_outcome_six_months",
+    "telemetry": "Glasgow Outcome Score at discharge and at 6 months, cooling group assignment"
+   }
+  },
+  {
+   "primitive_id": "propofol_profile",
+   "name": "Propofol directly activates GABA receptors and inhibits NMDA receptors, with onset in 1 to 2 minutes and rapid recovery, suiting it to daily wake-up testing",
+   "verbatim_quote": "Propofol is a central nervous system depressant which directly activates GABA receptors and inhibits the NMDA receptor modulating calcium influx through slow calcium ion channels. It has a rapid onset (1-2 min) and a dose-related hypnotic effect.",
+   "page": "Chapter 7, section 2.1 (Propofol), text lines 7422-7425",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Propofol reduces ICP, CMRO2, and CBF while preserving CO2 reactivity and autoregulation",
+    "It has no analgesic effect and no active metabolites"
+   ],
+   "breakdown_regime": "Breaks down at high dose and long duration: dose-dependent hypotension can cut cerebral perfusion pressure, and propofol infusion syndrome is a named catastrophic failure",
+   "domain": "sedative pharmacology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An agent's value in a control loop is set by its time constants: fast onset and fast, organ-independent clearance make it titratable and make interruptions informative. The engine should profile every control lever by onset, recovery, accumulation, and interaction before ranking it for a feedback role.",
+    "source_operator": "propofol_profile",
+    "telemetry": "Infusion duration, time to awakening after interruption, ICP and CPP during titration, triglyceride levels on long infusions"
+   }
+  },
+  {
+   "primitive_id": "barbiturate_burst_suppression",
+   "name": "Barbiturates cut ICP and CBF in proportion to CMRO2 reduction, up to 60% at burst suppression, and are reserved for refractory intracranial hypertension",
+   "verbatim_quote": "They are a GABA receptor agonist leading to a decrease in ICP and CBF that is proportional to the decrease in CMRO2 (up to 60%) during burst suppression.",
+   "page": "Chapter 7, section 2.5 (Barbiturates), text lines 7519-7520",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The coupling holds while cerebral autoregulation and flow-metabolism coupling are intact",
+    "Barbiturates accumulate in tissue after long infusions, slowing recovery"
+   ],
+   "breakdown_regime": "Breaks down as a general sedative: the chapter limits the indication to refractory intracranial hypertension and refractory status epilepticus because of systemic complications",
+   "domain": "sedative pharmacology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Flow follows metabolism: suppressing metabolic demand suppresses the flow and pressure coupled to it, with a ceiling at burst suppression. The engine should model coupled variables as one system with a saturation point, beyond which more suppression buys nothing and only adds side effects.",
+    "source_operator": "barbiturate_burst_suppression",
+    "telemetry": "EEG burst suppression depth, CMRO2 proxy measures, ICP response, infection and hemodynamic complication rates"
+   }
+  },
+  {
+   "primitive_id": "ketamine_csd_effect",
+   "name": "Ketamine use was associated with lower incidence of cortical spreading depolarization than propofol, midazolam, and opioids",
+   "verbatim_quote": "In a recent study, the use of ketamine was associated with a lower incidence of cortical spreading depolarization (CSD) when compared with propofol, midazolam and opioids [30].",
+   "page": "Chapter 7, section 2.6 (Ketamine), text lines 7540-7542",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The finding is from a single recent study cited by the chapter",
+    "Ketamine maintains hemodynamic stability and does not depress respiration"
+   ],
+   "breakdown_regime": "Breaks down when the ICP concern dominates in a specific patient, and the chapter reports mixed CBF and ICP findings depending on co-sedation and PaCO2 control",
+   "domain": "sedative pharmacology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A drug's reputation from one era can invert under a new endpoint: ketamine was avoided for raising ICP, yet it suppresses spreading depolarization, a different harm pathway. The engine should score agents per endpoint and keep the endpoint attached to the score, so a change of endpoint can reorder the ranking.",
+    "source_operator": "ketamine_csd_effect",
+    "telemetry": "Cortical spreading depolarization counts by sedative regimen, ICP and CPP under each regimen"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "938378b0289956f4-t1",
+   "think": "This volume is an edited clinical monograph, and its value to a reasoning engine is not a single theory but a layered account of how a brain injury unfolds over time and how each stage can be observed, classified, and acted on. The first layer is definitional. Concussion is defined as reversible neurological dysfunction without gross lesions, and post-concussion syndrome is defined not by a lesion but by symptom persistence past a time threshold, two weeks in adults and one month in adolescents. That move, from anatomy to time course, recurs throughout the book: severity is something that evolves, and the observer's instruments have to be matched to the phase of the process. The second layer is mechanistic. The neurometabolic cascade of concussion, ionic imbalance, neurotransmitter release, a hypermetabolic restoration phase, lactate accumulation, is the same shape as the excitotoxic cascade described for larger injuries: glucose depletion, Na/K ATPase failure, glutamate release, calcium influx, and enzyme activation. Chapter 2 generalizes this into a balance model. Damage processes and endogenous protection processes, GABAergic inhibition and endocannabinoid signaling among them, run concurrently, and the fate of the tissue is decided by their relation, which itself varies with the photoperiod and with sleep state. Injury is therefore not an event but a competition between two time-varying processes, and the same insult lands differently depending on when it occurs. The third layer is accumulation. Chapter 3 shows that repeated mild injuries are not independent draws: cumulative mild head injury produces neural attrition, second impact syndrome punishes a second insult delivered inside the recovery window, and three or more concussions shift the expected outcome toward lasting cognitive dysfunction. Any engine that scores events one at a time, without a decaying memory of prior load, will misjudge exactly the cases this chapter is about. The fourth layer is measurement. Chapter 4 is a sustained argument that no single biomarker carries enough sensitivity and specificity, so assessment must be a panel whose members have different temporal profiles and reflect different mechanisms: S-100 beta is detectable within 30 minutes and clears with a half-life of about 97 minutes, UCH-L1 marks neuronal injury, GFAP marks astrocyte injury and barrier disruption, and their ratio discriminates focal from diffuse injury in ways neither does alone. The general lesson is that a marker is only interpretable relative to its kinetic window and its basal level, and that a ratio of two markers from different compartments can carry information neither carries separately. The fifth layer is intervention under uncertainty. Chapter 5 is a systematic review whose dominant finding is translational failure: thirty years of neuroprotective agents that worked in animals did not transfer to humans, corticosteroids moved from plausible to prohibited after the CRASH trial, and magnesium's animal benefit collapsed on a blood-brain barrier delivery problem. Chapter 6 then shows a positive but narrow result: direct focal brain cooling after decompressive craniectomy did not move intracranial pressure, yet mild cooling at 30 to 36 degrees produced significantly higher brain oxygenation and significantly better six-month outcomes, while deep cooling did not, a non-monotonic dose response. Chapter 7 closes the loop on control: sedation is a titrated intervention with explicit targets, and each agent is a profile of onset, clearance, accumulation, and failure modes rather than a binary choice. Read together, the book teaches a reasoning posture. Classify by mechanism and phase, not by surface label. Track load cumulatively. Combine weak signals with known kinetics instead of hunting for one decisive signal. Treat every intervention as a dose and timing decision with a named breakdown regime. Hold trial evidence above mechanistic plausibility, because this field's history is a graveyard of plausible mechanisms. The volume's edited structure is itself informative. Because each chapter was written by a different team, the same concepts recur in independent vocabularies: the energy failure that Chapter 1 calls the neurometabolic cascade is the ischemia of Chapter 2 and the delivery failure behind magnesium's collapse in Chapter 5. When independent authors converge on one mechanism from different starting points, the mechanism earns more confidence than any single chapter could give it, and the disagreements between chapters are equally diagnostic. The sports chapter treats concussion count as the exposure variable, while the biomarker chapter treats time since a single event as the variable that governs interpretation; both are right, and an engine has to hold exposure history and recency at once. The sedation chapter adds a final discipline the others imply but do not state: every intervention is monitored against a named target with a named instrument, pressure by probe, burst suppression by EEG, awakening by scheduled interruption, and an intervention without a monitoring channel is treated as unfinished. That is the difference between administering a treatment and running a control loop. The book also shows, in its photoperiod and sleep material, that context variables usually filed as background, light phase, sleep debt, circadian receptor expression, can move outcomes by amounts comparable to the interventions being tested, which means any evaluation that ignores them is confounded by design. Where the book breaks is equally instructive. It is a 2019 snapshot of a fast-moving literature. Several chapters rest on small samples, the cooling trial has 32 patients, the biomarker literature it reviews is explicitly inconclusive, and its sports chapter mixes strong and weak study designs without formal quality weighting. A reasoning engine should ingest its mechanisms and thresholds as structured priors stamped with their evidence grade, not as settled fact.",
+   "retrocausal_genealogy": "The ideas here descend from several distinct lineages that the chapters cite as they go. The Glasgow Coma Scale of the 1970s supplies the severity grammar everything else argues with. The neurometabolic cascade model of Giza and Hovda frames Chapter 1's account of concussion, and the ICD-10 criteria supply its definition of post-concussion syndrome. The biomarker chapter descends from two decades of Scandinavian and European mild head injury work, including the Scandinavian guidelines that already use S-100 beta to ration CT scans. The neuroprotection chapter is written in the shadow of the 2005 CRASH trial, and the cooling chapter descends from the older systemic hypothermia literature it is trying to replace with a focal method.",
+   "theory_of_mind": "The editors and chapter authors write for clinicians who manage the whole pathway from emergency assessment to rehabilitation, and their model of the domain is that traumatic brain injury is one process seen at several scales: molecular cascades, physiology that can be monitored at the bedside, and outcomes that only declare themselves months later. They believe classification by mechanism beats classification by appearance, which is why the first chapter splits a single syndrome into four subtypes. They trust measured physiology, intracranial pressure, brain tissue oxygen, biomarker kinetics, more than symptom report, while conceding that symptom report is sometimes the only instrument available. They also assume the reader will act: nearly every mechanism is presented next to the decision it changes.",
+   "cross_layer_veto": "Several findings in this book veto conclusions that other layers would otherwise support. The subtype classification vetoes any single global recovery signal for post-concussion syndrome, because vestibulo-ocular and cervicogenic cases are not true concussions and a metabolic marker cannot rule them in or out. Biomarker kinetics veto late sampling: an S-100 beta level drawn after its window has closed cannot veto a CT scan. The CRASH result vetoes mechanism-based confidence in corticosteroids regardless of how sound the anti-inflammatory reasoning sounds. The cooling data veto the assumption that intracranial pressure control is the pathway to outcome, since outcome improved while pressure did not change. And midazolam accumulation vetoes wake-up based assessment beyond 48 hours of infusion, whatever the examination schedule says."
+  }
+ ],
+ "universal_lens": "Read as a general template, this book is about managing any system whose damage unfolds in phases and whose true state is only partly observable. Its recurring moves transfer directly: define states by time course when anatomy is silent, decompose harm into an instant component and an evolving component, keep a cumulative ledger of repeated small insults, combine several weak measurements with known kinetics and baselines instead of seeking one decisive gauge, expect intervention effects to be non-monotonic in dose and delayed in time, and let large controlled trials overrule attractive mechanisms. Any field with delayed secondary damage and noisy sensors faces the same structure.",
+ "gsi_mapping": "The Galaxy Sports Institute takes from this volume a curriculum and a research agenda. The curriculum: concussion and cumulative head injury taught as phased, mechanism-split processes, with the subtype classification, the persistence thresholds, and the second impact window as core teaching units for anyone assessing athletes after head impacts. The research agenda: biomarker kinetics and panel design as the model for evaluating any proposed diagnostic, cumulative exposure ledgers as the Institute's standard record for contact sport participants, and the translational failure record as a standing caution whenever animal or laboratory findings are presented as ready for practice.",
+ "gse_mapping": "The Galaxy Sports Edge reasoning engine takes structured priors, not medical advice. It gains: a phase model in which an adverse event has an instant component and a delayed secondary component that keeps evolving for days; a cumulative load ledger with a vulnerability window in which a repeat event is weighted far above its standalone value; a measurement doctrine that pairs every signal with its kinetic window, basal level, sensitivity, and specificity, and builds ratio features from different compartments; non-monotonic dose handling for interventions; multi-horizon outcome scoring, since effects invisible at discharge were decisive at six months; and an evidence discipline that discounts animal-model success by its historical transfer rate."
+}

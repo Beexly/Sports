@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
-"""
-Unit Tests for GSE End-to-End Causal Looped Funnel Engine & 8-Month `/session-librarian`
-Integrator (`tests/unit/test_gse_causal_looped_funnel_engine.py`).
+"""Unit Tests for GSE End-to-End Causal Looped Funnel Engine & 8-Month Integrator.
+
+Covers `/session-librarian` integration (`tests/unit/test_gse_causal_looped_funnel_engine.py`).
 """
 
 from __future__ import annotations
 
 import pytest
-
 from intelligence.funnel.gse_causal_looped_funnel_engine import (
     CANONICAL_PROJECTIONS_OUT_PATH,
     DFS_LOOPED_FUNNEL_OUT_PATH,
@@ -30,7 +29,10 @@ def test_session_librarian_8month_excavation_ledger_completeness() -> None:
     assert surfaces["antigravity_conversation_summaries_db"]["total_conversations_scanned"] == 584
     assert surfaces["typescript_corpus_modules"]["total_ts_corpus_modules"] == 630
     assert surfaces["gse_lab_20260919_discovery_mills"]["total_lab_files_scanned"] == 40
-    assert surfaces["hermes_plans_and_coach_mindset_cadence"]["tuesday_v1_sealed_coach_mindset_tau"] == 0.42
+    assert (
+        surfaces["hermes_plans_and_coach_mindset_cadence"]["tuesday_v1_sealed_coach_mindset_tau"]
+        == 0.42
+    )
 
 
 def test_hard_sequence_gates_prevent_dfs_or_optimization_before_projections() -> None:
@@ -50,11 +52,11 @@ def test_hard_sequence_gates_prevent_dfs_or_optimization_before_projections() ->
     with pytest.raises(FunnelSequenceViolationError):
         engine.stage4_construct_optimized_dfs_lineups()
 
-    # 4. Cannot run Iterative Lineup Optimization Testing (Stage 5) before Canonical Projections & Lineups
+    # 4. Cannot run Iterative Lineup Optimization Testing (Stage 5) before projections & lineups
     with pytest.raises(FunnelSequenceViolationError):
         engine.stage5_run_iterative_lineup_optimization_testing_loop(write_artifacts=False)
 
-    # Lock Stage 1 only -> Stage 3B, Stage 4, Stage 5 MUST STILL fail until Stage 2 Projections are locked!
+    # Lock Stage 1 only -> Stage 3B, Stage 4, Stage 5 MUST STILL fail until Stage 2 is locked!
     engine.stage1_compile_equations_to_metrics_to_stats(write_artifacts=False)
     with pytest.raises(FunnelSequenceViolationError):
         engine.stage3b_derive_dfs_player_pools_from_canonical_projections()

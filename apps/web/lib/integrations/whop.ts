@@ -68,23 +68,20 @@ export async function verifyWhopMembership(
   }
 
   const clean = accessToken.trim();
+  const isTestEnv = process.env.VITEST === "true" || process.env.NODE_ENV === "test";
 
-  // 1. Support valid test tokens directly
-  if (clean.startsWith("whop_test_valid") || clean.startsWith("whop_vip") || clean.startsWith("test_token_")) {
-    return { valid: true, tier: clean.includes("vip") ? "vip" : "standard" };
+  // 1. Test tokens are accepted ONLY in explicit automated test environments.
+  if (isTestEnv && (clean.startsWith("whop_test_valid") || clean.startsWith("test_token_"))) {
+    return { valid: true, tier: "standard" };
   }
 
   if (clean.startsWith("whop_test_invalid") || clean.startsWith("expired_")) {
     return { valid: false, tier: "none" };
   }
 
-  // 2. Query Whop API if live API key is configured
-  const apiKey = process.env.WHOP_API_KEY;
+  // 2. Query Whop API (fail closed when API key is absent; never accept prefix tokens).
+  const apiKey = (process.env.WHOP_API_KEY || "").trim();
   if (!apiKey) {
-    // If no API key configured, accept structured active membership keys (e.g. starting with 'mem_')
-    if (clean.startsWith("mem_") || clean.startsWith("token_")) {
-      return { valid: true, tier: "active" };
-    }
     return { valid: false, tier: "none" };
   }
 

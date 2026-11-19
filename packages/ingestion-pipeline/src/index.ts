@@ -263,6 +263,12 @@ export {
   type PropsSlateShadowOptions,
   type ShadowPropLine,
 } from "./props-slate-shadow.js";
+export {
+  createBoard360PropsShadowSource,
+  mapBoard360MarketToPropType,
+  type Board360ShadowSourceOptions,
+  type RateHistoryResolver,
+} from "./board360-props-shadow-source.js";
 export { EXTENDED_SIGNALS } from "./signal-registry-extensions.js";
 
 // Prereg leakage gate (V1 probes live call site)

@@ -1,8 +1,8 @@
-"""Regression tests for Unicode math input and guard (comparison) semantics.
+r"""Regression tests for Unicode math input and guard (comparison) semantics.
 
 Two failure classes were measured on 2026-11-11 against the shipped executor:
 
-1. Subscript residue. `\\tau_{\\text{Out}}` expanded to `tau _Out`, and the
+1. Subscript residue. `\tau_{\text{Out}}` expanded to `tau _Out`, and the
    tokenizer rejected the leading underscore with
    `unexpected_character:_`. Every subscripted macro row failed this way.
 2. Comparison glyphs. `a <= b`, `P <= 0.05` and `E ~= 4.2` were rejected as
@@ -14,7 +14,6 @@ Two failure classes were measured on 2026-11-11 against the shipped executor:
 from __future__ import annotations
 
 import pytest
-
 from intelligence.equations.honest_equation_executor import parse_and_execute_honestly
 
 
@@ -56,7 +55,8 @@ def test_latex_relation_macros_compile_to_guards(
 
 def test_plain_arithmetic_is_unchanged() -> None:
     assert parse_and_execute_honestly("x^2 + 1", {"x": 3.0}).evaluated_value == pytest.approx(10.0)
-    assert parse_and_execute_honestly("y = 2x + 1", {"x": 2.0, "y": 5.0}).evaluated_value == pytest.approx(5.0)
+    res = parse_and_execute_honestly("y = 2x + 1", {"x": 2.0, "y": 5.0})
+    assert res.evaluated_value == pytest.approx(5.0)
 
 
 def test_residual_equation_still_solves_to_zero_when_consistent() -> None:
@@ -73,7 +73,7 @@ def test_set_relations_are_still_rejected() -> None:
 
 
 def test_wrapper_macros_flatten_and_punctuation_only_wrapper_adds_no_symbol():
-    """\\mbox{ ,} must not invent a phantom symbol; \\bm/\\textbf/\\mathfrak flatten."""
+    r"""\mbox{ ,} must not invent a phantom symbol; \bm/\textbf/\mathfrak flatten."""
     from intelligence.equations import honest_equation_executor as h
     r = h.parse_and_execute_honestly(r"\mbox{ ,} x = \bm{y}+2")
     assert r.status == "PARSED_SYMBOLIC_ONLY"

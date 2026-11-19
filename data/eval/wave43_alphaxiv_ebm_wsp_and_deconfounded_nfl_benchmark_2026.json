@@ -1,0 +1,528 @@
+{
+  "schema": "wave43_alphaxiv_ebm_wsp_and_deconfounded_nfl_benchmark_v1",
+  "generated_utc": "2026-11-18T13:45:45.977420+00:00",
+  "real_money_stake_cleared": false,
+  "live_stake_fraction": 0.0,
+  "clinical_ruo_sports_weight": 0.0,
+  "sample_kc_at_den": {
+    "schema": "wave43_ebm_deconfounded_nfl_and_alphaxiv_suite_v1",
+    "wired": true,
+    "matchup": "KC @ DEN",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "clinical_ruo_sports_weight": 0.0,
+    "alphaxiv_31paper_summary": {
+      "schema": "wave43_alphaxiv_31paper_frontier_suite_v1",
+      "wired": true,
+      "clean_checkout_fallback": false,
+      "adr0003_rule_in_only_doctrine": true,
+      "clinical_ruo_sports_weight": 0.0,
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "vault_payload_sha256": "a28d242a8bdd4566e593b26751942d2362c2ea1fd1ba2b8907debf239001bb0d",
+      "total_unique_papers": 31,
+      "frontier_total_pages": 217,
+      "continuous_flb_devig": {
+        "schema": "wave43_continuous_flb_devig_v1",
+        "legacy_step_even_minus110": [
+          0.4463,
+          0.5537
+        ],
+        "legacy_even_step_jump": 0.1074,
+        "power_even_minus110": [
+          0.5,
+          0.5
+        ],
+        "power_even_jump": 0.0,
+        "power_exponent_k_even": 1.071943,
+        "strictly_monotone_and_conserving": true,
+        "asym_neg200_pos160_power_fav": 0.64465,
+        "asym_neg200_pos160_shin_fav": 0.641026,
+        "asym_shin_z": 0.051498,
+        "asym_power_k": 1.082825
+      },
+      "clv_vs_breakeven_beuoy": {
+        "schema": "wave43_clv_vs_breakeven_beuoy_v1",
+        "minus110_breakeven_hit_rate": 0.52381,
+        "small_move_60pct_beat_close_ev": -0.028273,
+        "positive_net_clv_ev": 0.040455,
+        "beuoy_calibrated_kelly_log_wealth": 0.003236,
+        "beuoy_flat_baseline_log_wealth": 5e-05,
+        "beuoy_kelly_beats_flat": true
+      },
+      "rossellini_isotonic_df": {
+        "schema": "wave43_rossellini_isotonic_df_v1",
+        "train_n": 64,
+        "pava_effective_df_k": 8,
+        "binary_isotonic_optimism": 0.0625,
+        "oos_pava_brier": 0.217558,
+        "oos_df_shrunk_cir_brier": 0.205956,
+        "shrinkage_improves_brier": true
+      },
+      "conformal_kelly_fisher_drawdown": {
+        "schema": "wave43_conformal_fisher_drawdown_v1",
+        "zero_edge_conformal_coverage": 0.884,
+        "zero_edge_conformal_log_growth": -0.078622,
+        "n25_binomial_se": 0.1,
+        "n50_fisher_z_se": 0.145865,
+        "fisher_lcb_small_n50_rho018": 0.0,
+        "fisher_jacquier_n160_rho055": 0.430398,
+        "mean_max_dd_gaussian": 0.19199,
+        "mean_max_dd_student_t4": 0.2393,
+        "dd_ratio_nongauss_over_brownian": 1.2464
+      },
+      "deflation_placebo_evalues": {
+        "schema": "wave43_deflation_and_evalue_v1",
+        "raw_sharpe": 1.65,
+        "expected_max_noise_sharpe_m200": 1.09597,
+        "out_of_loop_dsr_prob": 1.0,
+        "gt_score": 1.6974,
+        "null_imaginative_mean_wealth": 0.9908,
+        "alt_imaginative_power_at_2": 0.692
+      },
+      "cross_sport_scoring": {
+        "schema": "wave43_cross_sport_scoring_v1",
+        "soccer_rps": 0.1219,
+        "weibull_aft_rem_goals_55m": 0.63906,
+        "weibull_aft_prob_goal_from_55m": 0.47221,
+        "glicko2_mu_post_upset_win": 1.03039,
+        "tennis_prematch_weight_10pts": 0.87032,
+        "tennis_prematch_weight_120pts": 0.18888
+      },
+      "latent_feedback_scaling_law": {
+        "schema": "wave43_latent_feedback_eq8_v1",
+        "clean_checkout_fallback": false,
+        "heldout_778m_max_rel_error": 0.003338,
+        "compute_multiplier_kappa_271m_u200n": 2.3318,
+        "compute_saved_pct_at_271m": 0.5711,
+        "max_reported_compute_saved_pct": 0.48,
+        "max_reported_data_saved_pct": 0.47,
+        "fixed_point_deltas": [
+          0.286974,
+          0.013872,
+          0.000651
+        ],
+        "fixed_point_strictly_contracting": true
+      },
+      "ebm_composition_verifier_bon": {
+        "schema": "wave43_ebm_perspective_v1",
+        "eq162_composed_pmf_mass": 1.0,
+        "eq162_map_state": 2,
+        "eq163_kl_identity_abs_err": 1.1102230246251565e-16,
+        "eq167_base_expected_reward": 0.443,
+        "eq167_bon_expected_reward": 0.795918,
+        "fig12_low_temp_prob_a": 0.307692,
+        "fig12_power_dist_prob_a": 0.571429,
+        "fig12_reversal_verified": true
+      },
+      "iwsp_wsr_rmsnorm_invariance": {
+        "schema": "wave43_iwsp_wsr_invariance_v1",
+        "zero_backprop": true,
+        "boundary_confound_r2": 0.16336,
+        "deconfounded_signal_corr": 0.90291,
+        "confounded_signal_corr": 0.84014,
+        "deconfounded_beats_confounded": true,
+        "pre_norm_scale_diff": 4.89209,
+        "post_rmsnorm_scale_diff": 6.910028105266974e-13,
+        "exact_rmsnorm_invariance": true,
+        "auditor_noop_false_alarm_rate": 0.0,
+        "uncalibrated_muse30b_false_alarm_rate": 0.85
+      },
+      "vision_infusion_and_slam_dunk": {
+        "schema": "wave43_vision_and_slam_dunk_v1",
+        "clinical_ruo_sports_weight": 0.0,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0,
+        "vision_encoder_free_vqa_flop_lag_x": 3.0,
+        "vision_upstream_pretrain_cap_pct": 15.0,
+        "vision_ttft_prefusion_ms": 62.0,
+        "vision_ttft_early_infusion_ms": 43.0,
+        "vision_ttft_reduction_pct": 0.3065,
+        "slam_const_cam_floor_m_per_km": 0.77,
+        "slam_tv_cam_floor_m_per_km": 0.09,
+        "slam_drift_ratio_30m": 3.1369,
+        "slam_cp_baseline": 69.1,
+        "slam_cp_with_tv_and_gyro": 82.4,
+        "slam_ate_baseline_m": 1.02,
+        "slam_ate_with_tv_and_gyro_m": 0.43,
+        "lamaria_categories_beating_aria": 3
+      },
+      "suite_sha256": "44e89085625cd5824e21092c68ad30301cedb8209720b25fd4ee7693efa92876"
+    },
+    "max_prior_week_used": 9,
+    "quarantined_metrics_weights": {
+      "raw_late_down_3rd4th_succ": 0.0,
+      "raw_qb_hit_headline_net": 0.0,
+      "raw_off_explosive_15yd": 0.0,
+      "raw_def_explosive_15yd": 0.0,
+      "raw_deconf_off_margin": 0.0
+    },
+    "away_w43_ebm_deconfounded_profile": {
+      "comp_proe_norm": 0.40885,
+      "comp_rz_succ_net_norm": 0.21056,
+      "iwsp_def_garbage_deconfound_norm": -0.47036,
+      "comp_early_down_succ_net_norm": 0.60896,
+      "comp_net_epa_norm": 0.39348,
+      "comp_qb_scramble_epa_norm": -0.16295,
+      "iwsp_off_garbage_deconfound_norm": -0.04001
+    },
+    "home_w43_ebm_deconfounded_profile": {
+      "comp_proe_norm": 0.0366,
+      "comp_rz_succ_net_norm": 0.02866,
+      "iwsp_def_garbage_deconfound_norm": 0.31803,
+      "comp_early_down_succ_net_norm": 0.0081,
+      "comp_net_epa_norm": 0.04872,
+      "comp_qb_scramble_epa_norm": -0.15888,
+      "iwsp_off_garbage_deconfound_norm": 0.13141
+    },
+    "game_total_deconfounded_shift": {
+      "schema": "wave43_causal_game_total_deconfounded_v1",
+      "matchup": "KC @ DEN",
+      "as_of_week": 10,
+      "w43_tot_signal": 0.259862,
+      "total_shift_pts": 0.116938
+    },
+    "martingale_placebo_audit": {
+      "schema": "wave43_martingale_placebo_audit_v1",
+      "clean_checkout_fallback": false,
+      "games_audited": 147,
+      "real_signal_corr": 0.133158,
+      "null_placebo_draws": 200,
+      "empirical_p_value": 0.03483,
+      "beats_null_95pct": true
+    },
+    "live_honest_ast": {
+      "schema": "wave43_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 8,
+      "equations_evaluated": [
+        {
+          "eq_id": "flb_power_devig_logit_slope",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.629183,
+          "operators": 8
+        },
+        {
+          "eq_id": "clv_breakeven_hit_rate",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.52381,
+          "operators": 4
+        },
+        {
+          "eq_id": "rossellini_isotonic_optimism",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.108675,
+          "operators": 5
+        },
+        {
+          "eq_id": "latent_feedback_effective_epochs",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 608.453535,
+          "operators": 8
+        },
+        {
+          "eq_id": "ebm_kl_verifier_tilting_gap",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.738,
+          "operators": 2
+        },
+        {
+          "eq_id": "slam_dunk_sqrt_time_drift",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.318218,
+          "operators": 3
+        },
+        {
+          "eq_id": "nfl_w43_ebm_deconfounded_margin",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": -0.792818,
+          "operators": 11
+        },
+        {
+          "eq_id": "nfl_w43_total_deconfounded_shift",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.116938,
+          "operators": 4
+        }
+      ]
+    },
+    "w43_close_residual_signal": -0.792819,
+    "stage2_deltas": {
+      "away_epa_delta": 0.000793,
+      "home_epa_delta": -0.000793,
+      "away_sack_prob_delta": 0.000196,
+      "home_sack_prob_delta": 0.000191
+    }
+  },
+  "sample_cin_at_buf": {
+    "schema": "wave43_ebm_deconfounded_nfl_and_alphaxiv_suite_v1",
+    "wired": true,
+    "matchup": "CIN @ BUF",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "clinical_ruo_sports_weight": 0.0,
+    "alphaxiv_31paper_summary": {
+      "schema": "wave43_alphaxiv_31paper_frontier_suite_v1",
+      "wired": true,
+      "clean_checkout_fallback": false,
+      "adr0003_rule_in_only_doctrine": true,
+      "clinical_ruo_sports_weight": 0.0,
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "vault_payload_sha256": "a28d242a8bdd4566e593b26751942d2362c2ea1fd1ba2b8907debf239001bb0d",
+      "total_unique_papers": 31,
+      "frontier_total_pages": 217,
+      "continuous_flb_devig": {
+        "schema": "wave43_continuous_flb_devig_v1",
+        "legacy_step_even_minus110": [
+          0.4463,
+          0.5537
+        ],
+        "legacy_even_step_jump": 0.1074,
+        "power_even_minus110": [
+          0.5,
+          0.5
+        ],
+        "power_even_jump": 0.0,
+        "power_exponent_k_even": 1.071943,
+        "strictly_monotone_and_conserving": true,
+        "asym_neg200_pos160_power_fav": 0.64465,
+        "asym_neg200_pos160_shin_fav": 0.641026,
+        "asym_shin_z": 0.051498,
+        "asym_power_k": 1.082825
+      },
+      "clv_vs_breakeven_beuoy": {
+        "schema": "wave43_clv_vs_breakeven_beuoy_v1",
+        "minus110_breakeven_hit_rate": 0.52381,
+        "small_move_60pct_beat_close_ev": -0.028273,
+        "positive_net_clv_ev": 0.040455,
+        "beuoy_calibrated_kelly_log_wealth": 0.003236,
+        "beuoy_flat_baseline_log_wealth": 5e-05,
+        "beuoy_kelly_beats_flat": true
+      },
+      "rossellini_isotonic_df": {
+        "schema": "wave43_rossellini_isotonic_df_v1",
+        "train_n": 64,
+        "pava_effective_df_k": 8,
+        "binary_isotonic_optimism": 0.0625,
+        "oos_pava_brier": 0.217558,
+        "oos_df_shrunk_cir_brier": 0.205956,
+        "shrinkage_improves_brier": true
+      },
+      "conformal_kelly_fisher_drawdown": {
+        "schema": "wave43_conformal_fisher_drawdown_v1",
+        "zero_edge_conformal_coverage": 0.884,
+        "zero_edge_conformal_log_growth": -0.078622,
+        "n25_binomial_se": 0.1,
+        "n50_fisher_z_se": 0.145865,
+        "fisher_lcb_small_n50_rho018": 0.0,
+        "fisher_jacquier_n160_rho055": 0.430398,
+        "mean_max_dd_gaussian": 0.19199,
+        "mean_max_dd_student_t4": 0.2393,
+        "dd_ratio_nongauss_over_brownian": 1.2464
+      },
+      "deflation_placebo_evalues": {
+        "schema": "wave43_deflation_and_evalue_v1",
+        "raw_sharpe": 1.65,
+        "expected_max_noise_sharpe_m200": 1.09597,
+        "out_of_loop_dsr_prob": 1.0,
+        "gt_score": 1.6974,
+        "null_imaginative_mean_wealth": 0.9908,
+        "alt_imaginative_power_at_2": 0.692
+      },
+      "cross_sport_scoring": {
+        "schema": "wave43_cross_sport_scoring_v1",
+        "soccer_rps": 0.1219,
+        "weibull_aft_rem_goals_55m": 0.63906,
+        "weibull_aft_prob_goal_from_55m": 0.47221,
+        "glicko2_mu_post_upset_win": 1.03039,
+        "tennis_prematch_weight_10pts": 0.87032,
+        "tennis_prematch_weight_120pts": 0.18888
+      },
+      "latent_feedback_scaling_law": {
+        "schema": "wave43_latent_feedback_eq8_v1",
+        "clean_checkout_fallback": false,
+        "heldout_778m_max_rel_error": 0.003338,
+        "compute_multiplier_kappa_271m_u200n": 2.3318,
+        "compute_saved_pct_at_271m": 0.5711,
+        "max_reported_compute_saved_pct": 0.48,
+        "max_reported_data_saved_pct": 0.47,
+        "fixed_point_deltas": [
+          0.286974,
+          0.013872,
+          0.000651
+        ],
+        "fixed_point_strictly_contracting": true
+      },
+      "ebm_composition_verifier_bon": {
+        "schema": "wave43_ebm_perspective_v1",
+        "eq162_composed_pmf_mass": 1.0,
+        "eq162_map_state": 2,
+        "eq163_kl_identity_abs_err": 1.1102230246251565e-16,
+        "eq167_base_expected_reward": 0.443,
+        "eq167_bon_expected_reward": 0.795918,
+        "fig12_low_temp_prob_a": 0.307692,
+        "fig12_power_dist_prob_a": 0.571429,
+        "fig12_reversal_verified": true
+      },
+      "iwsp_wsr_rmsnorm_invariance": {
+        "schema": "wave43_iwsp_wsr_invariance_v1",
+        "zero_backprop": true,
+        "boundary_confound_r2": 0.16336,
+        "deconfounded_signal_corr": 0.90291,
+        "confounded_signal_corr": 0.84014,
+        "deconfounded_beats_confounded": true,
+        "pre_norm_scale_diff": 4.89209,
+        "post_rmsnorm_scale_diff": 6.910028105266974e-13,
+        "exact_rmsnorm_invariance": true,
+        "auditor_noop_false_alarm_rate": 0.0,
+        "uncalibrated_muse30b_false_alarm_rate": 0.85
+      },
+      "vision_infusion_and_slam_dunk": {
+        "schema": "wave43_vision_and_slam_dunk_v1",
+        "clinical_ruo_sports_weight": 0.0,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0,
+        "vision_encoder_free_vqa_flop_lag_x": 3.0,
+        "vision_upstream_pretrain_cap_pct": 15.0,
+        "vision_ttft_prefusion_ms": 62.0,
+        "vision_ttft_early_infusion_ms": 43.0,
+        "vision_ttft_reduction_pct": 0.3065,
+        "slam_const_cam_floor_m_per_km": 0.77,
+        "slam_tv_cam_floor_m_per_km": 0.09,
+        "slam_drift_ratio_30m": 3.1369,
+        "slam_cp_baseline": 69.1,
+        "slam_cp_with_tv_and_gyro": 82.4,
+        "slam_ate_baseline_m": 1.02,
+        "slam_ate_with_tv_and_gyro_m": 0.43,
+        "lamaria_categories_beating_aria": 3
+      },
+      "suite_sha256": "44e89085625cd5824e21092c68ad30301cedb8209720b25fd4ee7693efa92876"
+    },
+    "max_prior_week_used": 9,
+    "quarantined_metrics_weights": {
+      "raw_late_down_3rd4th_succ": 0.0,
+      "raw_qb_hit_headline_net": 0.0,
+      "raw_off_explosive_15yd": 0.0,
+      "raw_def_explosive_15yd": 0.0,
+      "raw_deconf_off_margin": 0.0
+    },
+    "away_w43_ebm_deconfounded_profile": {
+      "comp_proe_norm": 0.8039,
+      "comp_rz_succ_net_norm": 0.85,
+      "iwsp_def_garbage_deconfound_norm": -0.3289,
+      "comp_early_down_succ_net_norm": 0.40451,
+      "comp_net_epa_norm": 0.38534,
+      "comp_qb_scramble_epa_norm": 0.01949,
+      "iwsp_off_garbage_deconfound_norm": 0.59724
+    },
+    "home_w43_ebm_deconfounded_profile": {
+      "comp_proe_norm": -0.15508,
+      "comp_rz_succ_net_norm": -0.24188,
+      "iwsp_def_garbage_deconfound_norm": -0.12263,
+      "comp_early_down_succ_net_norm": 0.13338,
+      "comp_net_epa_norm": 0.27061,
+      "comp_qb_scramble_epa_norm": 0.52102,
+      "iwsp_off_garbage_deconfound_norm": -0.26349
+    },
+    "game_total_deconfounded_shift": {
+      "schema": "wave43_causal_game_total_deconfounded_v1",
+      "matchup": "CIN @ BUF",
+      "as_of_week": 10,
+      "w43_tot_signal": 0.508906,
+      "total_shift_pts": 0.229008
+    },
+    "martingale_placebo_audit": {
+      "schema": "wave43_martingale_placebo_audit_v1",
+      "clean_checkout_fallback": false,
+      "games_audited": 147,
+      "real_signal_corr": 0.133158,
+      "null_placebo_draws": 200,
+      "empirical_p_value": 0.03483,
+      "beats_null_95pct": true
+    },
+    "live_honest_ast": {
+      "schema": "wave43_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 8,
+      "equations_evaluated": [
+        {
+          "eq_id": "flb_power_devig_logit_slope",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.629183,
+          "operators": 8
+        },
+        {
+          "eq_id": "clv_breakeven_hit_rate",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.52381,
+          "operators": 4
+        },
+        {
+          "eq_id": "rossellini_isotonic_optimism",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.108675,
+          "operators": 5
+        },
+        {
+          "eq_id": "latent_feedback_effective_epochs",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 608.453535,
+          "operators": 8
+        },
+        {
+          "eq_id": "ebm_kl_verifier_tilting_gap",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.738,
+          "operators": 2
+        },
+        {
+          "eq_id": "slam_dunk_sqrt_time_drift",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.318218,
+          "operators": 3
+        },
+        {
+          "eq_id": "nfl_w43_ebm_deconfounded_margin",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": -2.432247,
+          "operators": 11
+        },
+        {
+          "eq_id": "nfl_w43_total_deconfounded_shift",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.229008,
+          "operators": 4
+        }
+      ]
+    },
+    "w43_close_residual_signal": -2.432247,
+    "stage2_deltas": {
+      "away_epa_delta": 0.002432,
+      "home_epa_delta": -0.002432,
+      "away_sack_prob_delta": -2.3e-05,
+      "home_sack_prob_delta": -0.000625
+    }
+  },
+  "benchmark_sha256": "efa8371e99985f58bf4d94c77ad050c84050cb4ec57d230ede4d0e4e1b109667"
+}

@@ -1,9 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   FREE_LANE_SURFACES,
+  alibabaCreditLaneConfig,
   generateContentMessages,
   shouldUseFreeLane,
 } from "@/lib/claude-api/free-lane";
+import { creditPoolForModel } from "@/lib/claude-api/credit-pool";
 
 const anthropicResponse = () =>
   new Response(
@@ -94,5 +96,33 @@ describe("content free-lane dispatcher", () => {
         CEREBRAS_API_KEY: "test",
       }),
     ).toBe(true);
+  });
+
+  it("routes brief/content through Alibaba DashScope Qwen credits before Anthropic and attributes alibaba_credits", async () => {
+    const aliEnv = {
+      CONTENT_FREE_LANE_ENABLED: "true",
+      ALIBABA_API_KEY: "ali-credit-key",
+    } as const;
+    expect(shouldUseFreeLane("content", aliEnv)).toBe(true);
+    expect(alibabaCreditLaneConfig(aliEnv)?.ledgerPrefix).toBe("alibaba-qwen/");
+    expect(creditPoolForModel("alibaba-qwen/qwen-plus")).toBe("alibaba_credits");
+
+    const fetchImpl = vi.fn(async () => cerebrasResponse());
+    const res = await generateContentMessages({ ...base, fetchImpl, surface: "content" }, aliEnv);
+    expect(res.modelName).toBe("alibaba-qwen/qwen-plus");
+    expect(urls(fetchImpl)[0]).toBe(
+      "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions",
+    );
+
+    const failFetch = vi
+      .fn()
+      .mockResolvedValueOnce(new Response("dashscope quota", { status: 429 }))
+      .mockResolvedValueOnce(anthropicResponse());
+    const fallbackRes = await generateContentMessages(
+      { ...base, fetchImpl: failFetch, surface: "brief" },
+      aliEnv,
+    );
+    expect(fallbackRes.text).toBe("Anthropic text");
+    expect(failFetch).toHaveBeenCalledTimes(2);
   });
 });

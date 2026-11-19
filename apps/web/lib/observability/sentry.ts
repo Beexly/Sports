@@ -70,11 +70,41 @@ export function initObservability(): void {
     tracesSampleRate,
     replaysSessionSampleRate,
     replaysOnErrorSampleRate: 1.0,
+    ignoreErrors: [
+      // Mobile Safari / WebKit aborted fetch & third-party content-blocker rejections (GSE-WEB-9)
+      /^TypeError: Load failed$/,
+      /^TypeError: cancelled$/,
+      /^AbortError:/,
+      /^Non-Error promise rejection captured with value: undefined$/,
+      /^ResizeObserver loop limit exceeded$/,
+      /^ResizeObserver loop completed with undelivered notifications\.$/,
+    ],
     ignoreTransactions: [
       "/api/cron/free-spine-health",
       "/api/health",
       "/api/ops/public-surface-truth",
     ],
+    beforeSend(event) {
+      if (typeof window !== "undefined") {
+        const values = event.exception?.values ?? [];
+        const onlyBenignSafariAbort =
+          values.length > 0 &&
+          values.every((ex) => {
+            const val = ex.value ?? "";
+            const mech = ex.mechanism?.type ?? "";
+            return (
+              mech === "onunhandledrejection" &&
+              (val === "Load failed" ||
+                val === "cancelled" ||
+                val === "Non-Error promise rejection captured with value: undefined")
+            );
+          });
+        if (onlyBenignSafariAbort) {
+          return null;
+        }
+      }
+      return event;
+    },
     beforeSendTransaction(event) {
       const txn = event.transaction ?? "";
       if (

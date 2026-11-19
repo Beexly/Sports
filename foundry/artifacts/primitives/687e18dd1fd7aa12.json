@@ -1,0 +1,768 @@
+{
+ "book_id": "687e18dd1fd7aa12",
+ "source_status": "COMPLETE",
+ "source_note": "Li Deng and Dong Yu, both Microsoft Research, Redmond. Deep Learning: Methods and Applications, Foundations and Trends in Signal Processing, Vol. 7, Nos. 3-4 (2013), pp. 197-387, copyright 2014, DOI 10.1561/2000000039. The local file is the publisher PDF of the monograph (9,365,144 bytes; full sha256 over str(size) plus file bytes: 687e18dd1fd7aa12d89d78c7d37fc2fb0bbe3d849084e6ed559f68e2eaffc9cd; book_id is the first 16 hex chars). Extracted text is clean and complete across all 12 sections, with ligatures, hyphenated line breaks, and interleaved page headers as the only extraction artifacts; all verbatim quotes were proven contiguous in the extracted text file under the fleet normalization. No catalog corrections needed: authors, title, year, and venue in the file match the task assignment. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "deep_learning_hierarchical_representation",
+   "name": "Deep learning defined by two key aspects: many layers of nonlinear processing, and supervised or unsupervised feature learning at successively more abstract layers",
+   "verbatim_quote": "Common among the various high-level descriptions of deep learning above are two key aspects: (1) models consisting of multiple layers or stages of nonlinear information processing; and (2) methods for supervised or unsupervised learning of feature representation at successively higher, more abstract layers.",
+   "page": "Section 1.1, printed p. 201",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A task admits a hierarchy of features where higher levels are defined from lower ones",
+    "Labeled or unlabeled data exist in enough quantity to learn the layers"
+   ],
+   "breakdown_regime": "Fails when the signal has no compositional structure to exploit, or when data are so scarce that the hierarchy cannot be estimated and a shallow model generalizes better",
+   "domain": "representation learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine own layering follows this shape: raw observations enter at the bottom, each stage transforms them into more abstract factors, and the reasoning layer reads only the top factors plus the audit trail of how they were formed. Depth is justified only where each layer demonstrably abstracts the one below.",
+    "source_operator": "deep_learning_hierarchical_representation",
+    "telemetry": "Per layer activation summaries, feature drift statistics, and ablation deltas when a layer is removed"
+   }
+  },
+  {
+   "primitive_id": "shallow_architecture_representational_limit",
+   "name": "Shallow architectures (GMM, SVM, CRF, MaxEnt, one hidden layer MLP) are effective on simple or well constrained problems but lack the modeling power for complex natural signals",
+   "verbatim_quote": "Shallow architectures have been shown eﬀective in solving many simple or well-constrained problems, but their limited modeling and representational power can cause difficulties when dealing with more complicated real-world applications involving natural signals such as human speech, natural sound and language, and natural image and visual scenes.",
+   "page": "Section 2, printed p. 205",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The target function is compositional, built from intermediate structure",
+    "Enough training data exist to fit the richer model class"
+   ],
+   "breakdown_regime": "The claim reverses on small or well constrained problems, where shallow convex models reach a global optimum cheaply and deep models overfit or stall in optimization",
+   "domain": "model capacity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Capacity budgeting for the reasoning engine: simple, well constrained subproblems (arithmetic checks, lookup rules, threshold tests) stay shallow and exact, while compositional subproblems (sequence context, interacting factors) get depth. The primitive supplies the decision test for which regime a subproblem sits in.",
+    "source_operator": "shallow_architecture_representational_limit",
+    "telemetry": "Sample counts per subproblem, validation error of shallow versus deep variants on the same split"
+   }
+  },
+  {
+   "primitive_id": "backpropagation_local_optima_depth",
+   "name": "Back propagation on deep nonconvex objectives gets trapped in poor local optima, and the severity grows significantly with network depth",
+   "verbatim_quote": "It often gets trapped in poor local optima when the batch-mode or even stochastic gradient descent BP algorithm is used. The severity increases significantly as the depth of the networks increases.",
+   "page": "Section 2, printed p. 206",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Training starts from random initial points and follows local gradient information",
+    "The objective is nonconvex, as in any multilayer network"
+   ],
+   "breakdown_regime": "Mitigated, not removed, by good initialization, stochastic noise in gradients, second order methods, and very large redundant training sets; the monograph notes wide layers lower the chance that a local optimum is poor",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any iterative fitting inside the engine inherits this failure mode: a fit that stops early can be a poor local optimum rather than evidence about the signal. The engine therefore treats single run fits as suspect and prefers restarts, staged fitting, and initialization from simpler solved subproblems.",
+    "source_operator": "backpropagation_local_optima_depth",
+    "telemetry": "Loss trajectories across restarts, spread of final losses, gradient norms at termination"
+   }
+  },
+  {
+   "primitive_id": "dbn_greedy_layerwise_training",
+   "name": "A deep belief network is a stack of restricted Boltzmann machines trained by a greedy layer by layer algorithm whose cost is linear in network size and depth",
+   "verbatim_quote": "A core component of the DBN is a greedy, layer-by-layer learning algorithm which optimizes DBN weights at time complexity linear to the size and depth of the networks.",
+   "page": "Section 2, printed p. 207",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each layer can be trained as a self contained unsupervised problem on the activations of the layer below",
+    "Unlabeled data are plentiful relative to labeled data"
+   ],
+   "breakdown_regime": "Greedy staging is approximate maximum likelihood, not exact; later evidence in the monograph shows the whole procedure becomes unnecessary when labeled data and compute are abundant",
+   "domain": "unsupervised pretraining",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Staged construction maps directly onto engine building practice: fit one layer on frozen outputs of the previous layer, verify it in isolation, then stack. Each stage stays independently testable, which is what makes a deep stack auditable instead of monolithic.",
+    "source_operator": "dbn_greedy_layerwise_training",
+    "telemetry": "Per stage reconstruction or likelihood gains, frozen layer evaluation scores before stacking"
+   }
+  },
+  {
+   "primitive_id": "three_way_categorization",
+   "name": "Deep networks sort into three classes: unsupervised or generative, supervised or discriminative, and hybrid networks where generative learning assists discrimination",
+   "verbatim_quote": "one can broadly categorize most of the work in this area into three major classes:",
+   "page": "Section 3.1, printed p. 214",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The intended use of the architecture (generation, classification, or assisted classification) is known",
+    "Classes are about training regime and purpose, not about layer shapes, since supervised and hybrid networks often share architectures"
+   ],
+   "breakdown_regime": "The boundaries blur in practice: denoising autoencoders became generative, discriminative criteria can train generative models, and the monograph itself catalogs such crossings",
+   "domain": "taxonomy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine registry classifies every learned component by this scheme: generative components model the data distribution, discriminative components map inputs to decisions, and hybrid components are discriminative fits whose parameters were initialized or regularized by a generative stage. The class label determines which validation each component must pass.",
+    "source_operator": "three_way_categorization",
+    "telemetry": "Component registry entries with class labels, validation type required per class"
+   }
+  },
+  {
+   "primitive_id": "distributed_representation",
+   "name": "A distributed representation explains data by the interactions of many hidden factors, so a factor learned from some configurations generalizes to new configurations of other factors",
+   "verbatim_quote": "Distributed representation: an internal representation of the observed data in such a way that they are modeled as being explained by the interactions of many hidden factors.",
+   "page": "Section 3.2, Table 3.1, printed p. 217",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Concepts are patterns of activity across many units, and each unit participates in many concepts",
+    "The hidden factors capture real structure rather than noise"
+   ],
+   "breakdown_regime": "Distributed codes are hard to interpret unit by unit, degrade the ability to attach a plain meaning to a single factor, and can entangle factors that a downstream reasoner needs separated",
+   "domain": "representation learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine features are stored as distributed factor vectors rather than single named indicators wherever interaction effects matter: a situation is the joint configuration of many weak factors, and generalization to unseen situations comes from recombining factors already seen in other configurations.",
+    "source_operator": "distributed_representation",
+    "telemetry": "Factor activation vectors, nearest neighbor configuration distances, performance on held out factor combinations"
+   }
+  },
+  {
+   "primitive_id": "deep_boltzmann_machine_hierarchy",
+   "name": "In a deep Boltzmann machine each layer captures complicated higher order correlations between the activities of hidden features in the layer below",
+   "verbatim_quote": "In a DBM, each layer captures complicated, higher-order correlations between the activities of hidden features in the layer below.",
+   "page": "Section 3.2, printed p. 219",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "No connections exist within a layer, so layers interact only through their neighbors",
+    "Approximate inference is acceptable, since exact inference in the full model is intractable"
+   ],
+   "breakdown_regime": "Inference and learning are intractable for complex systems and rely on approximations whose errors are hard to bound; this is the stated reason discriminative deep models are usually more practical end to end",
+   "domain": "generative models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The correlation stacking idea transfers as a design rule: each engine layer should be required to express interactions among the factors below it, not merely reweight them. A layer that only rescales lower factors adds cost without the higher order correlation capture that justifies depth.",
+    "source_operator": "deep_boltzmann_machine_hierarchy",
+    "telemetry": "Interaction strength measurements between adjacent layers, mutual information between layer activations and target residuals"
+   }
+  },
+  {
+   "primitive_id": "hybrid_pretraining_two_viewpoints",
+   "name": "Generative pretraining helps discrimination through two mechanisms: it supplies good initialization points for a highly nonlinear estimation problem, and it acts as a prior that regularizes the set of representable functions",
+   "verbatim_quote": "The optimization viewpoint where generative models trained in an unsupervised fashion can provide excellent initialization points in highly nonlinear parameter estimation problems (The com monly used term of \"pre-training\" in deep learning has been intro duced for this reason); and/or • The regularization perspective where the unsupervised-learning models can eﬀectively provide a prior on the set of functions representable by the model.",
+   "page": "Section 3.4, printed p. 226",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The generative model is trained on data from the same distribution as the discriminative task",
+    "Labeled data are limited enough that initialization and prior effects matter"
+   ],
+   "breakdown_regime": "When labeled data are abundant the monograph reports pretraining can be skipped entirely; a mismatched generative prior can also pull the discriminative model toward structure the task does not need",
+   "domain": "hybrid learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine template for using unlabeled history: first fit the structure of the domain without outcomes (initialization), then fit the decision mapping with outcomes (fine tuning), and credit the first stage both as a starting point and as a regularizer that constrains what the second stage may claim.",
+    "source_operator": "hybrid_pretraining_two_viewpoints",
+    "telemetry": "Unlabeled corpus size, labeled sample size, fine tuned performance with and without the generative stage"
+   }
+  },
+  {
+   "primitive_id": "rbm_energy_based_joint_distribution",
+   "name": "A restricted Boltzmann machine defines the joint distribution over visible and hidden units through an energy function, normalized by a partition function",
+   "verbatim_quote": "the joint distribution p(v, h; θ) over the visible units v and hidden units h, given the model parameters θ, is defined in terms of an energy function E(v, h;",
+   "page": "Section 5.1, printed p. 242",
+   "latex": "p(v, h; \\theta) = \\frac{\\exp(-E(v, h; \\theta))}{Z}",
+   "symbol_and_unit_ledger": {
+    "v": "visible unit vector, observed data, dimensionless state values",
+    "h": "hidden unit vector, latent binary or real states, dimensionless",
+    "E(v, h; theta)": "energy of a joint configuration, arbitrary energy units",
+    "theta": "model parameters (weights and biases), dimensionless",
+    "Z": "partition function, sum of exp(-E) over all configurations, dimensionless"
+   },
+   "assumptions": [
+    "Visible and hidden units form a bipartite graph with no connections within a layer",
+    "Lower energy configurations are exponentially more probable"
+   ],
+   "breakdown_regime": "The partition function is intractable for realistic layer sizes, so likelihoods cannot be computed exactly and training must approximate the model expectation",
+   "domain": "energy based models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Energy scoring is a reusable engine pattern: assign a scalar compatibility score to a full configuration of factors, then compare configurations by relative score instead of by absolute probability whenever the normalizer is unavailable or irrelevant to the ranking decision.",
+    "source_operator": "rbm_energy_based_joint_distribution",
+    "telemetry": "Configuration scores for candidate states, score gaps between top candidates, calibration of score differences against outcomes"
+   }
+  },
+  {
+   "primitive_id": "rbm_bernoulli_energy_function",
+   "name": "For a Bernoulli visible, Bernoulli hidden RBM the energy is a negative sum of pairwise visible hidden interactions plus visible and hidden bias terms",
+   "verbatim_quote": "For a Bernoulli (visible)-Bernoulli (hidden) RBM, the energy function is defined as",
+   "page": "Section 5.1, printed p. 242",
+   "latex": "E(v, h; \\theta) = -\\sum_{i=1}^{I}\\sum_{j=1}^{J} w_{ij} v_i h_j - \\sum_{i=1}^{I} b_i v_i - \\sum_{j=1}^{J} a_j h_j",
+   "symbol_and_unit_ledger": {
+    "w_{ij}": "symmetric interaction weight between visible unit i and hidden unit j, dimensionless",
+    "v_i": "state of visible unit i, 0 or 1",
+    "h_j": "state of hidden unit j, 0 or 1",
+    "b_i": "bias of visible unit i, dimensionless",
+    "a_j": "bias of hidden unit j, dimensionless",
+    "I, J": "numbers of visible and hidden units, counts"
+   },
+   "assumptions": [
+    "Units are binary (Bernoulli) on both layers",
+    "Interactions are pairwise only; there are no higher order terms inside one RBM"
+   ],
+   "breakdown_regime": "Pairwise binary energy cannot represent covariance structure in the data, the limitation the monograph cites for the mean covariance RBM extension, which proved hard to train and hard to reproduce",
+   "domain": "energy based models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The decomposition is the useful part for the engine: a configuration score splits into pairwise interaction terms plus per factor bias terms, so any engine score built this way can be audited term by term and a surprising total can be traced to the specific interactions that produced it.",
+    "source_operator": "rbm_bernoulli_energy_function",
+    "telemetry": "Per term score contributions, largest interaction terms per decision, bias term distributions"
+   }
+  },
+  {
+   "primitive_id": "rbm_conditional_distributions",
+   "name": "Because of the bipartite structure, the conditional probability of a hidden unit given the visibles is a sigmoid of its weighted input, and symmetrically for a visible unit given the hiddens",
+   "verbatim_quote": "and I and J are the numbers of visible and hidden units. The conditional probabilities can be eﬃciently calculated as",
+   "page": "Section 5.1, printed p. 242",
+   "latex": "p(h_j = 1 \\mid v; \\theta) = \\sigma\\left(\\sum_{i=1}^{I} w_{ij} v_i + a_j\\right)",
+   "symbol_and_unit_ledger": {
+    "p(h_j = 1 | v; theta)": "probability hidden unit j is on given the visible vector, dimensionless in [0,1]",
+    "sigma(x)": "logistic function 1/(1+exp(-x)), dimensionless",
+    "w_{ij}": "interaction weight between visible unit i and hidden unit j, dimensionless",
+    "v_i": "state of visible unit i, 0 or 1",
+    "a_j": "bias of hidden unit j, dimensionless"
+   },
+   "assumptions": [
+    "Hidden units are conditionally independent given the visibles, and vice versa",
+    "Activations use the logistic sigmoid nonlinearity"
+   ],
+   "breakdown_regime": "Conditional independence within a layer is exactly what the restriction buys and what it costs: no lateral interactions can be represented inside a layer, so correlated factors must be mediated through the neighboring layer",
+   "domain": "energy based models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "One shot bidirectional inference is the transferable mechanism: given any layer of engine factors, the adjacent layer can be computed in a single forward pass with no iteration, which is how stacked components in the engine exchange state cheaply and deterministically.",
+    "source_operator": "rbm_conditional_distributions",
+    "telemetry": "Layer to layer activation pass counts, inference latency, activation saturation rates"
+   }
+  },
+  {
+   "primitive_id": "contrastive_divergence_learning",
+   "name": "RBM weights are updated by the difference between data and model expectations of visible hidden co activation, and contrastive divergence approximates the intractable model expectation with a Gibbs chain started at the data and run for one or a few steps",
+   "verbatim_quote": "The contrastive divergence (CD) approximation to the gradient was the first eﬃcient method proposed to approximate this expected value, where Emodel (vi hj ) is replaced by running the Gibbs sampler initialized at the data for one or more steps.",
+   "page": "Section 5.1, printed p. 243",
+   "latex": "\\Delta w_{ij} = \\mathbb{E}_{\\mathrm{data}}(v_i h_j) - \\mathbb{E}_{\\mathrm{model}}(v_i h_j)",
+   "symbol_and_unit_ledger": {
+    "Delta w_{ij}": "weight update for interaction between visible unit i and hidden unit j, dimensionless",
+    "E_data(v_i h_j)": "expected co activation under the training data distribution, dimensionless in [0,1]",
+    "E_model(v_i h_j)": "expected co activation under the model distribution, dimensionless in [0,1]"
+   },
+   "assumptions": [
+    "A short Gibbs chain started at a data point gives a usable estimate of the model expectation",
+    "The learning rate absorbs the bias of the approximation"
+   ],
+   "breakdown_regime": "CD is a biased approximation, not the true likelihood gradient; the monograph notes persistent contrastive divergence works better when the RBM is used as a generative model, and careless training is a common failure source",
+   "domain": "energy based models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The update shape generalizes: adjust a parameter by the gap between what the data show and what the current model predicts, estimated by sampling from the model itself. Engine calibration loops use the same signed gap structure, with the model own simulations standing in for the Gibbs samples.",
+    "source_operator": "contrastive_divergence_learning",
+    "telemetry": "Data versus model co activation gaps per parameter, sample counts used per estimate, update magnitudes over time"
+   }
+  },
+  {
+   "primitive_id": "greedy_stacking_variational_bound",
+   "name": "Stacking RBMs greedily layer by layer improves a variational lower bound on the likelihood of the training data under the composite model, which justifies the procedure as approximate maximum likelihood learning",
+   "verbatim_quote": "it is shown that the stacking procedure above improves a variational lower bound on the likelihood of the training data under the composite model.",
+   "page": "Section 5.2, printed pp. 245-246",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each new layer is trained with the previous layers frozen",
+    "The bound argument holds for the composite generative model, not automatically for a discriminative fine tuned descendant"
+   ],
+   "breakdown_regime": "The guarantee covers the generative objective only; once discriminative fine tuning begins, the bound no longer certifies the result, and the monograph is explicit that the theoretical foundation for the full hybrid procedure is still lacking",
+   "domain": "unsupervised pretraining",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A staged build with a measurable per stage objective gives the engine a defensible stacking order: a new layer earns its place only if the stage objective improves on held out data, mirroring the bound improvement test instead of stacking on intuition.",
+    "source_operator": "greedy_stacking_variational_bound",
+    "telemetry": "Held out objective before and after each added layer, per stage improvement deltas"
+   }
+  },
+  {
+   "primitive_id": "deep_autoencoder_reconstruction",
+   "name": "A deep autoencoder is a neural network whose output targets are the input itself, so it learns an encoding of the data at its hidden layers without using class labels",
+   "verbatim_quote": "The deep autoencoder is a special type of the DNN (with no class labels), whose output vectors have the same dimensionality as the input vectors.",
+   "page": "Section 4.1, printed p. 230",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Input and output layers have the same dimensionality",
+    "Reconstruction error is a meaningful training signal for the data at hand"
+   ],
+   "breakdown_regime": "With an overwide hidden layer and no constraint, the network can learn the trivial identity mapping and the code carries no useful compression or abstraction",
+   "domain": "unsupervised learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Reconstruction is the engine self test for any representation: if a compressed internal state cannot rebuild the salient input, the state has discarded information the reasoner may need. Engine representations are periodically scored by what they can reconstruct, not only by downstream accuracy.",
+    "source_operator": "deep_autoencoder_reconstruction",
+    "telemetry": "Reconstruction error per input channel, information loss profile of compressed states"
+   }
+  },
+  {
+   "primitive_id": "denoising_autoencoder_corruption_training",
+   "name": "A denoising autoencoder is trained on deliberately corrupted inputs, for example with a random percentage of inputs zeroed or Gaussian noise added, and must reconstruct the original uncorrupted input",
+   "verbatim_quote": "in de-noising autoencoders, the input vectors are first corrupted by, for example, randomly selecting a percentage of the inputs and setting them to zeros or adding Gaussian noise to them.",
+   "page": "Section 3.2, printed p. 216",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The corruption process destroys information but leaves the underlying structure recoverable",
+    "The target remains the clean input, which prevents the trivial identity solution"
+   ],
+   "breakdown_regime": "If corruption is too weak the identity shortcut survives; if too strong the recoverable structure is destroyed and the learned features describe the noise process instead of the data",
+   "domain": "unsupervised learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Corruption training is the engine robustness drill: randomly degrade inputs (missing feeds, stale values, dropped factors) and require the system to recover the clean state. Components that only work on pristine inputs fail this test before they fail in production.",
+    "source_operator": "denoising_autoencoder_corruption_training",
+    "telemetry": "Corruption rates per channel, recovery error as a function of corruption level, degradation curves"
+   }
+  },
+  {
+   "primitive_id": "denoising_autoencoder_consistent_estimator",
+   "name": "Any denoising autoencoder is a consistent estimator of the underlying data generating distribution, for any parameterization, any information destroying corruption with positive noise level, and any reconstruction loss expressed as a conditional log likelihood",
+   "verbatim_quote": "any denoising autoencoder is a consistent estimator of the underlying data generating distribution within some family of distributions.",
+   "page": "Section 4.3, printed p. 239",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The corruption process destroys information but has positive noise level",
+    "Consistency is an asymptotic statement about enough data and capacity"
+   ],
+   "breakdown_regime": "Consistency says nothing about finite sample efficiency or optimization reachability; a consistent estimator can still be the wrong practical choice at the data sizes an application actually has",
+   "domain": "generative models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The result licenses a specific engine move: a component trained only to undo corruption can be treated as an implicit model of the data distribution and sampled from, via the associated Markov chain, when the engine needs synthetic scenarios drawn from the learned distribution.",
+    "source_operator": "denoising_autoencoder_consistent_estimator",
+    "telemetry": "Sample quality checks against held out data, distributional distance between generated and real samples"
+   }
+  },
+  {
+   "primitive_id": "transforming_autoencoder_capsules",
+   "name": "A transforming autoencoder is built from capsules, independent sub networks that each extract a single parameterized feature representing a single entity, so the code can change predictably under known global transformations",
+   "verbatim_quote": "The building block of the transforming autoencoder is a \"capsule,\" which is an independent sub-network that extracts a single parameterized feature representing a single entity, be it visual or audio.",
+   "page": "Section 4.4, printed p. 240",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An explicit representation of the global transformation is assumed known during training",
+    "The scene decomposes into entities that capsules can specialize on"
+   ],
+   "breakdown_regime": "The monograph notes plain autoencoder codes are transformation variant; the capsule fix requires knowing the transformation family in advance, so unmodeled transformations still scramble the code",
+   "domain": "representation learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Entity factored coding transfers to engine state design: represent each tracked entity with its own small parameter set inside the state vector, including the parameters that describe how the entity is transformed, instead of one entangled global code. Downstream reasoning can then vary one entity while holding the rest fixed.",
+    "source_operator": "transforming_autoencoder_capsules",
+    "telemetry": "Per entity parameter blocks, counterfactual variation tests, code stability under known transformations"
+   }
+  },
+  {
+   "primitive_id": "dsn_closed_form_output_weights",
+   "name": "In a deep stacking network module with linear output units, the upper weight matrix is fixed by a closed form least squares solution once the hidden activities are known, giving an explicit constraint between the output and input weights",
+   "verbatim_quote": "The weight matrix U can be determined through a closed-form solution given the weight matrix W when the mean square error training criterion is used.",
+   "page": "Section 6.2, printed p. 252",
+   "latex": "U = (HH^{\\top})^{-1} H T",
+   "symbol_and_unit_ledger": {
+    "U": "upper layer weight matrix of a module, hidden by output dimensions, dimensionless",
+    "H": "hidden layer activity matrix over all training samples, dimensionless activations",
+    "T": "target matrix over all training samples, dimensionless coded targets",
+    "H^T": "transpose of the hidden activity matrix"
+   },
+   "assumptions": [
+    "Output units are linear and the training criterion is mean square error",
+    "Hidden activities H are known, equivalently the lower weights W are fixed while solving for U"
+   ],
+   "breakdown_regime": "The closed form exists only for the linear output layer under squared error; the remaining problem of learning W stays nonconvex, and the monograph is clear the convexity covers only a major portion of the algorithm",
+   "domain": "supervised learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Wherever an engine component ends in a linear readout over fixed features, the readout should be solved exactly by least squares rather than fitted iteratively: the solution is unique, reproducible, parallelizable, and removes one whole class of optimization failure from that component.",
+    "source_operator": "dsn_closed_form_output_weights",
+    "telemetry": "Readout residual norms, condition numbers of HH^T, comparison of closed form versus iterated fits"
+   }
+  },
+  {
+   "primitive_id": "dsn_stacking_prediction_reinjection",
+   "name": "Deep stacking network modules are stacked by feeding each higher module the output units of the module below together, optionally, with the raw input features, with supervision used at every module",
+   "verbatim_quote": "in a second module that is directly above the lowest module in the DSN, the input units can include the output units of the lowest module and optionally the raw input feature.",
+   "page": "Section 6.2, printed p. 253",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Every module solves the same target problem, so its output is a prediction usable as a feature",
+    "Modules share one architecture: linear input, nonlinear hidden layer, linear output"
+   ],
+   "breakdown_regime": "Stacking predictions can amplify a lower module systematic error, since higher modules see the prediction as an input feature; the monograph notes hundreds of modules were trainable, but each added module must still earn its place empirically",
+   "domain": "supervised learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Prediction reinjection is a core engine pattern: the output of every solved subproblem becomes an input feature for the next reasoning stage alongside the raw observations, never instead of them. Keeping the raw input in the stack is what lets a higher stage detect and override a lower stage error.",
+    "source_operator": "dsn_stacking_prediction_reinjection",
+    "telemetry": "Per stage prediction features, stage wise error changes, override rates of higher stages over lower stage outputs"
+   }
+  },
+  {
+   "primitive_id": "kernel_dsn_dual_solution",
+   "name": "The kernelized deep stacking network eliminates nonconvex learning of the lower weights entirely through the kernel trick, reducing each module to a dual closed form with a kernel matrix and a regularization constant",
+   "verbatim_quote": "In the new K-DSN extension, we completely eliminate nonconvex learning for W using the kernel trick.",
+   "page": "Section 6.5, printed p. 258",
+   "latex": "a = (CI + K)^{-1} T, \\qquad y(x) = k^{\\top}(x)\\,(CI + K)^{-1} T",
+   "symbol_and_unit_ledger": {
+    "a": "dual coefficient matrix, dimensionless",
+    "C": "regularization parameter of the module, dimensionless positive scalar",
+    "I": "identity matrix",
+    "K": "kernel matrix over training samples, K_nm = g(x_n)^T g(x_m), dimensionless",
+    "T": "target matrix over training samples",
+    "k(x)": "kernel vector between test input x and all training samples",
+    "y(x)": "module prediction for input x, target units"
+   },
+   "assumptions": [
+    "A kernel function implicitly defines the (possibly infinite dimensional) hidden mapping",
+    "Regularization C and the kernel parameter are tuned per module, with looser tuning of lower modules often better for the full stack"
+   ],
+   "breakdown_regime": "Kernel methods scale poorly with sample count in both training and testing; the monograph points to random Fourier features as the practical remedy for large samples",
+   "domain": "kernel methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The dual form gives the engine a way to buy very wide implicit feature spaces without paying for explicit features or nonconvex fitting: similarity to stored exemplars becomes the representation, and the only fitted objects are dual coefficients with a closed form solution.",
+    "source_operator": "kernel_dsn_dual_solution",
+    "telemetry": "Kernel matrix sizes, exemplar counts, prediction cost per query, approximation error when random features replace exact kernels"
+   }
+  },
+  {
+   "primitive_id": "filterbank_features_over_mfcc",
+   "name": "When GMMs are replaced by deep models, the decorrelation that MFCC features were designed for becomes irrelevant, and returning to more primitive filter bank spectral features lowers recognition error because the network learns a better transformation itself",
+   "verbatim_quote": "when GMMs are replaced by deep learning models such as DNNs, deep belief nets (DBNs), or deep autoencoders, such de-correlation becomes irrelevant due to the very strength of the deep learning methods in modeling data correlation.",
+   "page": "Section 7.1.1, printed p. 264",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The downstream model can model correlations among features directly",
+    "The primitive features retain information that the hand crafted transform discarded"
+   ],
+   "breakdown_regime": "Rawer features shift the burden to normalization and model capacity; the monograph notes waveform level inputs demanded even more normalization attention and early results there were disappointing",
+   "domain": "feature learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Feature minimalism rule for the engine: do not hand compress an input to suit a weak consumer. When the consuming model can handle correlation, feed the least processed form of the signal and let the model learn the transform, because every hand crafted compression is an irreversible information decision made before the evidence is seen.",
+    "source_operator": "filterbank_features_over_mfcc",
+    "telemetry": "Information retention comparisons per feature set, downstream error by feature type, normalization statistics"
+   }
+  },
+  {
+   "primitive_id": "cd_dnn_hmm_scaling_with_data",
+   "name": "For the context dependent DNN HMM, computation scales almost linearly with training size while the relative error reduction over the GMM HMM grows substantially with data, roughly 10 percent, then 20 percent, then 30 percent across the reported task sizes (Switchboard word error rate 23.6 to 15.8 percent at 309 hours, and 21.7 to 14.6 percent at 2000 hours)",
+   "verbatim_quote": "Not only the computation scales up well (i.e., almost linearly) with the training size, but most importantly the relative error rate reduction increases substantially with increasing amounts of training data",
+   "page": "Section 7.1.2.1, printed p. 268, with Table 7.1",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The DNN output layer reuses the GMM HMM context dependent state inventory (senones), so existing decoders and alignments carry over",
+    "Training data grows by orders of magnitude across the compared tasks"
+   ],
+   "breakdown_regime": "The gains are demonstrated on speech tasks with a mature shallow baseline and reusable alignments; the monograph does not claim the same scaling exponent for unrelated domains, and small data tasks show only the smallest gains",
+   "domain": "empirical scaling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Two transferable lessons: first, deep methods in the engine should be evaluated at increasing data scales, because a method that ties at small scale can dominate at large scale; second, adoption friction drops when a new model reuses the incumbent system output inventory and interfaces instead of demanding a new downstream stack.",
+    "source_operator": "cd_dnn_hmm_scaling",
+    "telemetry": "Error versus training set size curves, integration surface area reused from incumbent systems"
+   }
+  },
+  {
+   "primitive_id": "relu_rectified_linear_unit",
+   "name": "Rectified linear units use the activation f(x) = max(0, x) and overcome the weak gradient problem of sigmoidal units near saturation; the best reported speech results combine ReLU with dropout",
+   "verbatim_quote": "ReLU refers to the units in a neural network that use the activation function of f (x) = max(0, x).",
+   "page": "Section 7.1.6, printed pp. 280-281",
+   "latex": "f(x) = \\max(0, x)",
+   "symbol_and_unit_ledger": {
+    "f(x)": "unit output activation, dimensionless",
+    "x": "unit input pre activation, dimensionless"
+   },
+   "assumptions": [
+    "Positive regime gradient is exactly one, so gradients neither vanish nor explode through the unit itself",
+    "Units are paired with regularization such as dropout in the reported best systems"
+   ],
+   "breakdown_regime": "ReLU units can die permanently at zero for inputs that stay negative, and the monograph lists competing units (maxout, p-norm, winner take all) with p-norm units at p = 2 reported better than ReLU on the cited experiments",
+   "domain": "nonlinear units",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Activation choice is a gradient plumbing decision for any engine component trained by gradient methods: saturating nonlinearities throttle the learning signal exactly where the unit is most confident, so non saturating units are the default wherever deep stacks are fitted end to end.",
+    "source_operator": "relu_rectified_linear_unit",
+    "telemetry": "Gradient magnitude by layer depth, fraction of inactive units, saturation rates of sigmoidal baselines"
+   }
+  },
+  {
+   "primitive_id": "sequence_discriminative_mmi_training",
+   "name": "Sequence level discriminative training fine tunes the network on the conditional probability of the whole label sequence given the whole input sequence (maximum mutual information), instead of the frame level cross entropy criterion, and is reported to beat frame level training by about 5 percent relative on the phone task",
+   "verbatim_quote": "fine-tuned with a sequence-level discriminative criterion, which is the conditional probability of the label sequence given the input feature sequence, instead of the frame-level criterion of crossentropy commonly used.",
+   "page": "Sections 3.4 and 7.1.7, printed pp. 227 and 282-283",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Frame level training initializes the weights before sequence training begins",
+    "Careful scheduling is used to control overfitting during joint optimization"
+   ],
+   "breakdown_regime": "Sequence trained models overfit more readily because cross frame correlations differ between training and test data, and at large vocabulary scale the method needs lattice engineering heuristics that frame level training does not",
+   "domain": "sequence learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Objective alignment rule: train and score engine components on the unit at which they are judged. A component judged on whole sequences must be optimized on sequence level criteria, because a frame level proxy systematically ignores the correlations that decide sequence outcomes.",
+    "source_operator": "sequence_discriminative_mmi_training",
+    "telemetry": "Sequence level versus frame level objective values, correlation drift between training and evaluation windows"
+   }
+  },
+  {
+   "primitive_id": "dropout_co_adaptation_regularization",
+   "name": "Dropout randomly omits each hidden unit with a fixed probability (for example p = 0.5) on each training instance, with weights scaled at decoding, which limits co adaptation and acts as model averaging over many thinned networks",
+   "verbatim_quote": "On each training instance, each hidden unit is randomly omitted with a fixed probability (e.g., p = 0.5).",
+   "page": "Section 7.1.7, printed p. 285",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Omission is independent per unit and per training instance",
+    "Weight scaling at test time (or inverted scaling during training) keeps expected activations consistent"
+   ],
+   "breakdown_regime": "Benefits are most pronounced with limited data or oversized networks; rates must differ by layer type, and the monograph notes the convolutional layer needed a substantially smaller dropout rate than fully connected layers",
+   "domain": "regularization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Dropout is the engine template for anti fragility in fitted components: randomly ablate internal factors during fitting so no conclusion rests on one factor combination, then read the spread across ablations as a confidence signal at decision time.",
+    "source_operator": "dropout_co_adaptation_regularization",
+    "telemetry": "Ablation rates, performance spread across ablated variants, dependence concentration per factor"
+   }
+  },
+  {
+   "primitive_id": "word_embedding_projection",
+   "name": "A neural language model projects each word from a sparse 1 of V code through a shared projection matrix into a low dimensional continuous space, a word embedding, so similar words and similar histories cluster and the model generalizes to unseen sequences",
+   "verbatim_quote": "This type of continuous-space, distributed representation of words is called \"word embedding,\" very diﬀerent from the common symbolic or localist presentation",
+   "page": "Section 8.1, printed p. 294",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The projection matrix is shared among words at all history positions",
+    "Words that function similarly should land close in the embedding space along at least some dimensions"
+   ],
+   "breakdown_regime": "Embeddings cost far more computation than count based n gram models, and proximity in the space reflects distributional similarity in the training corpus, including its biases and gaps",
+   "domain": "language modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Categorical engine inputs (entities, situations, regimes) get the same treatment: embed each category as a learned continuous vector shared across all contexts, so the reasoner can generalize from a seen category to a similar unseen one instead of treating every category as an unrelated symbol.",
+    "source_operator": "word_embedding_projection",
+    "telemetry": "Embedding nearest neighbors audits, performance on categories unseen in training, embedding drift across refits"
+   }
+  },
+  {
+   "primitive_id": "noise_contrastive_estimation",
+   "name": "Noise contrastive estimation trains a density model by logistic discrimination between observed data and artificially generated noise, which removes the costly partition function normalization and makes neural language model training time independent of vocabulary size",
+   "verbatim_quote": "The idea behind NCE is to perform nonlinear logistic regression to discriminate between the observed data and some artificially generated noise.",
+   "page": "Section 8.1, printed p. 298",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The noise distribution is known and samplable",
+    "The model is expressed through an unnormalized scoring function whose normalization constant is shared across candidates"
+   ],
+   "breakdown_regime": "The estimator inherits sensitivity to the choice of noise distribution; a noise process too far from the data makes the discrimination task trivial and the learned scores uninformative, the same family of shortcut the monograph flags for negative sampling practice",
+   "domain": "estimation methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Contrastive estimation is the engine fallback whenever a probability is needed but its normalizer is intractable: replace normalization with discrimination against a known reference process, and carry the reference process definition as part of the model record so the scores stay interpretable.",
+    "source_operator": "noise_contrastive_estimation",
+    "telemetry": "Noise distribution specification, discrimination accuracy (too high signals a shortcut), score calibration on held out data"
+   }
+  },
+  {
+   "primitive_id": "semantic_hashing_binary_codes",
+   "name": "Semantic hashing trains a deep autoencoder to map a document word count vector to a compact binary code (128 bits in the retrieval system) such that semantically similar documents sit at nearby memory addresses, and retrieval reduces to Hamming distance lookups in a hash table",
+   "verbatim_quote": "documents are mapped to memory addresses in such a way that semantically similar text documents are located at nearby addresses to facilitate rapid document retrieval.",
+   "page": "Section 9.2, printed p. 310",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The final hidden layer can be thresholded to binary values without destroying the semantic structure",
+    "Hamming neighbors in code space correspond to semantic neighbors in document space"
+   ],
+   "breakdown_regime": "The code is trained for reconstruction, not for a ranking objective, and the monograph reports such unsupervised deep models did not significantly outperform strong lexical baselines, which is the gap DSSM was built to close",
+   "domain": "information retrieval",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Binary semantic codes give the engine a fast pre filter: hash every stored situation to a compact code, retrieve Hamming neighbors of the current situation in near constant time, and spend deep reasoning only on that neighbor set instead of the full archive.",
+    "source_operator": "semantic_hashing_binary_codes",
+    "telemetry": "Code length, neighbor recall against exhaustive search, Hamming distance distributions for matched and unmatched pairs"
+   }
+  },
+  {
+   "primitive_id": "dssm_cosine_semantic_matching",
+   "name": "The deep structured semantic model projects queries and documents through a deep network into a common low dimensional semantic space and scores relevance as the cosine similarity between their vectors",
+   "verbatim_quote": "the relevance of each document given the query is calculated as the cosine similarity between their vectors in that semantic space.",
+   "page": "Section 9.3, printed pp. 312-314",
+   "latex": "R(Q, D) = \\cos(y_Q, y_D) = \\frac{y_Q^{\\top} y_D}{\\lVert y_Q \\rVert \\, \\lVert y_D \\rVert}",
+   "symbol_and_unit_ledger": {
+    "R(Q, D)": "semantic relevance score between query Q and document D, dimensionless in [-1, 1]",
+    "y_Q": "semantic vector of the query, final layer activations, dimensionless",
+    "y_D": "semantic vector of the document, final layer activations, dimensionless"
+   },
+   "assumptions": [
+    "Query and document encoders share the architecture that maps sparse text features to dense semantic vectors",
+    "The final hidden layer uses the tanh nonlinearity in the reported architecture"
+   ],
+   "breakdown_regime": "Cosine similarity discards vector magnitude, so confidence or frequency information carried in magnitude is lost; matching is only as good as the shared space, which is trained on click behavior rather than judged relevance",
+   "domain": "information retrieval",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Two tower encoding with cosine scoring is the engine standard for matching problems: encode the current situation and each candidate reference through the same network shape into one space, then rank by angle. The shared space, not the scoring function, is where the modeling work lives.",
+    "source_operator": "dssm_cosine_semantic_matching",
+    "telemetry": "Cosine score distributions for matched versus unmatched pairs, ranking quality on held out matches"
+   }
+  },
+  {
+   "primitive_id": "dssm_word_hashing_letter_trigrams",
+   "name": "DSSM handles web scale vocabularies by word hashing: each word is projected to a low dimensional letter n gram (trigram) count vector, and the first hidden layer with 30k units performs this hashing with little information loss",
+   "verbatim_quote": "a new word hashing method is developed, through which the high-dimensional term vectors of queries or documents are projected to low-dimensional letter based n-gram vectors with little information loss.",
+   "page": "Section 9.3, printed p. 313",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Words decompose into letter trigrams that carry most of the discriminative signal",
+    "Collisions between different words sharing trigrams are rare enough to tolerate"
+   ],
+   "breakdown_regime": "Subword hashing generalizes to unseen words but conflates words that share letter patterns while differing in meaning, and it discards word order at this stage, which the convolutional DSSM variant was built to recover",
+   "domain": "text encoding",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sub unit hashing solves the engine open vocabulary problem: any new categorical token (a new entity name, a new situation label) can be encoded from its parts on first sight, with no retraining and no unknown token failure, at the price of occasional part level collisions.",
+    "source_operator": "dssm_word_hashing_letter_trigrams",
+    "telemetry": "Collision counts per token set, unseen token coverage, encoding dimensionality versus vocabulary size"
+   }
+  },
+  {
+   "primitive_id": "dssm_clickthrough_negative_sampling",
+   "name": "DSSM is trained on click through data by maximizing the softmax posterior of the clicked document, approximated per query with the clicked document plus only four randomly selected unclicked documents as negatives",
+   "verbatim_quote": "the set of D is approximated by including D+ and only four randomly selected unclicked documents",
+   "page": "Section 9.3, printed pp. 314-315",
+   "latex": "P(D \\mid Q) = \\frac{\\exp(\\gamma R(Q, D))}{\\sum_{D' \\in \\mathbf{D}} \\exp(\\gamma R(Q, D'))}",
+   "symbol_and_unit_ledger": {
+    "P(D | Q)": "posterior probability of document D given query Q, dimensionless in [0,1]",
+    "gamma": "smoothing factor set on held out data, dimensionless positive scalar",
+    "R(Q, D)": "cosine relevance score between query and document, dimensionless in [-1, 1]",
+    "D": "candidate document set for the query, approximated by one clicked plus four sampled unclicked documents"
+   },
+   "assumptions": [
+    "Clicked documents are more relevant than unclicked ones on average, which is weak supervision rather than judged labels",
+    "A small random negative sample approximates the web scale candidate set without significant loss, as reported in the study"
+   ],
+   "breakdown_regime": "Clicks encode position and presentation bias, not pure relevance, and four negatives per query is a coarse approximation whose adequacy is empirical, not guaranteed for other candidate distributions",
+   "domain": "information retrieval",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Weak supervision at scale is the transferable pattern: where the engine has abundant behavioral traces that correlate with quality, train the ranking component on a sampled contrast (one chosen item against a few unchosen ones) instead of waiting for a fully judged training set that will never exist.",
+    "source_operator": "dssm_clickthrough_negative_sampling",
+    "telemetry": "Positive versus negative sampling counts, bias audits of the behavioral trace, ranking lift over lexical baselines"
+   }
+  },
+  {
+   "primitive_id": "cnn_weight_sharing_pooling_invariance",
+   "name": "A convolutional network stacks modules of a convolutional layer with shared weights and a pooling layer that subsamples the output, and the weight sharing plus pooling endows the model with invariance properties such as translation invariance",
+   "verbatim_quote": "The weight sharing in the convolutional layer, together with appropriately chosen pooling schemes, endows the CNN with some \"invariance\" properties (e.g., translation invariance).",
+   "page": "Section 3.3, printed p. 225",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same local pattern is worth detecting at every position, which justifies sharing the detector weights",
+    "Small displacements of the input should not change the classification, which justifies pooling"
+   ],
+   "breakdown_regime": "The monograph records the argument that this limited invariance is not adequate for complex recognition and that more principled handling of a wider range of invariances may be needed; pooling also destroys precise position information that some tasks need",
+   "domain": "convolutional networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Weight sharing is the engine symmetry principle: wherever the same local pattern should be judged identically at every position of a sequence or field, one shared detector replaces per position detectors, cutting parameters and forcing the position invariance to be structural rather than learned from data volume.",
+    "source_operator": "cnn_weight_sharing_pooling_invariance",
+    "telemetry": "Detector response consistency across positions, parameter counts versus unshared baselines, position sensitivity audits"
+   }
+  },
+  {
+   "primitive_id": "imagenet_2012_deep_cnn_result",
+   "name": "The 2012 ImageNet winning deep CNN (60 million weights, 650,000 neurons, five convolutional layers with max pooling plus fully connected layers, trained on 1.2 million images for 1000 classes) reached a top 5 test error of 15.3 percent with extra training data and 16.4 percent on the supplied data, against 26.2 percent for the second best hand crafted feature system; by 2013 the best deep CNN error fell further to 11.2 percent",
+   "verbatim_quote": "This deep-CNN system achieved a winning top-5 test error rate of 15.3% using extra training data from ImageNet Fall 2011 release, or 16.4% using only supplied training data in ImageNet-2012,",
+   "page": "Section 10.2, printed pp. 325-326",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Large labeled data and GPU scale computing are available",
+    "Dropout regularization and rectified linear units are part of the winning recipe, per the monograph account"
+   ],
+   "breakdown_regime": "The result is a benchmark on one curated dataset; the monograph itself notes there was no clear understanding at the time of why deep CNNs perform so well, and unsupervised approaches were not competitive on this task",
+   "domain": "empirical results",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The result is the engine existence proof for scale plus recipe: a deep model with the right regularization and nonlinearity beat a mature hand crafted pipeline by a wide margin once data and compute crossed a threshold, which is the pattern to test for in any engine subsystem still running on hand built features.",
+    "source_operator": "imagenet_2012_deep_cnn_result",
+    "telemetry": "Benchmark deltas against incumbent pipelines, data and compute budgets at the crossover point"
+   }
+  },
+  {
+   "primitive_id": "rnn_label_sequence_conditional",
+   "name": "Discriminative recurrent networks classify sequences by interpreting the network outputs as conditional distributions over all possible label sequences given the input sequence, yielding a differentiable objective in which segmentation of the data is performed automatically by the algorithm",
+   "verbatim_quote": "interpreting RNN outputs as the conditional distributions over all possible label sequences given the input sequences.",
+   "page": "Section 3.3, printed p. 224",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The label sequence can be aligned to the input in many ways and the objective marginalizes or optimizes over those alignments",
+    "Long short term memory units are embedded to carry information across long spans"
+   ],
+   "breakdown_regime": "Recurrent training is plagued by vanishing or exploding gradients over long dependencies, known since the early 1990s, and the monograph lists Hessian free optimization and gradient capping as partial remedies rather than solutions",
+   "domain": "sequence learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Unsegmented sequence labeling is a standing engine need: events arrive as a continuous stream and the boundaries between regimes are not given. Modeling the distribution over label sequences directly, with alignment handled inside the objective, removes the brittle pre segmentation step entirely.",
+    "source_operator": "rnn_label_sequence_conditional",
+    "telemetry": "Alignment posterior entropy, gradient norms across sequence length, label sequence accuracy on held out streams"
+   }
+  },
+  {
+   "primitive_id": "devise_zero_shot_joint_embedding",
+   "name": "DeViSE replaces the classifier output layer with a projection into a word embedding space and trains the joint image text model on labeled images plus semantic information from unannotated text, enabling zero shot prediction for thousands of labels the image model never saw, with hit rates close to 15 percent",
+   "verbatim_quote": "The joint model is trained to identify image classes using both labeled image data and the semantic information learned from unannotated text.",
+   "page": "Section 11.1, printed p. 333",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A pretrained text embedding model supplies vectors for labels far beyond the labeled image set",
+    "Dot product similarity with a max margin hinge rank loss trains the projection"
+   ],
+   "breakdown_regime": "Zero shot accuracy remains far below supervised accuracy on seen classes, and the method inherits the geometry of the text embedding space, including the confusions that space contains between related labels",
+   "domain": "multimodal learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Zero shot transfer through a shared embedding space is the engine route to cold start categories: map a new category into the space through its textual or structural description, and the existing reasoner can rank it immediately, with accuracy expected to be modest until direct evidence accumulates.",
+    "source_operator": "devise_zero_shot_joint_embedding",
+    "telemetry": "Zero shot hit rates on held out categories, embedding coverage of the category inventory, confusion pairs in the shared space"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "687e18dd1fd7aa12-t1",
+   "think": "This monograph is the signal processing community's own account of the deep learning transition, written by two Microsoft Research authors who helped cause it, and its value for a reasoning engine is that it documents not only the architectures but the order in which problems had to be solved before the architectures worked. The first problem was optimization, not capacity. Deep networks were known for decades, and back propagation was known, but randomly initialized deep networks fell into poor local optima whose severity grew with depth, which pushed the whole field toward shallow convex models that were weaker but trainable. The unlock was staged construction: greedy layer by layer unsupervised training of stacked restricted Boltzmann machines, or of denoising autoencoders, placed the parameters in a region where discriminative fine tuning could succeed, and the monograph is careful to explain this through two distinct mechanisms, better initialization and a regularizing prior on the function class. The second problem was interface. The context dependent DNN HMM succeeded at industry scale partly because the network output layer reused the incumbent GMM HMM state inventory, so decoders, alignments, and infrastructure carried over; the lesson is that a stronger model wins adoption when it speaks the existing system's language at the boundary. The third problem was objective alignment. Frame level cross entropy trains a different quantity than the sequence error the system is judged on, and moving to full sequence maximum mutual information training bought real gains at the price of worse overfitting and much harder engineering, a trade the monograph reports honestly. The fourth thread is representation. Distributed representations, word embeddings, semantic hashing, and the DSSM all express the same idea in different modalities: map discrete symbols into a continuous space where similarity is geometry, and generalization becomes interpolation. The DSN family is the counterpoint to the DNN story inside the same book: by making module outputs linear, Deng and collaborators recovered closed form solutions, convex subproblems, and batch parallel training, showing that architectural constraints chosen for learnability can beat raw flexibility when training must scale across machines. The kernelized DSN pushes that logic to its limit and eliminates nonconvex learning altogether, at the price of kernel method scaling limits. Reading the applications chapters as one argument, the pattern is that deep methods won where three conditions coincided: compositional structure in the signal, very large training sets, and a training procedure staged or constrained enough to be optimizable. Where one condition failed, the monograph records failure or modesty: waveform level inputs disappointed, unsupervised vision lagged supervised vision, generative pretraining failed for language identification and speaker recognition because the features it learned described variation that did not separate the classes. For a reasoning engine, the operational imports are concrete. Stage the construction of any deep component and verify each stage on its own objective. Keep raw inputs available to higher stages alongside lower stage predictions, as DSN stacking does, so errors can be overridden. Solve exactly whatever subproblem admits a closed form instead of fitting it iteratively. Train on the unit of judgment, sequences when sequences are judged. Regularize by ablation so no conclusion rests on a single factor pathway. Embed categories so that unseen categories are reachable by similarity rather than being invisible. And hold the scaling caveat in view throughout: several headline results in this book are statements about what happens when data grows by orders of magnitude, so small scale evaluations of the same methods systematically underrate them, which cuts both ways, since it also means small scale successes may not survive contact with distribution shift at scale. The monograph closes by admitting the theory is incomplete, the hyperparameters are expensive, and no single technique wins everywhere, and that admission is itself a design instruction: the engine should treat every method here as a tool with a stated regime, not as a doctrine. A further thread worth isolating is optimization at scale, because the monograph treats it as a first class research object rather than an implementation detail. Hessian free and Krylov subspace methods supplied approximate second order information for full sequence training, asynchronous stochastic gradient descent let many replicas compute gradients on different data subsets against a central parameter server, and the text notes that stochastic gradient descent is robust to the slight staleness this introduces. The practical reading is that the training algorithm, the architecture, and the hardware topology are designed together, and a method that cannot be parallelized, however elegant, loses to one that can. That is precisely the argument the DSN chapter makes from the other direction, preferring batch mode closed form steps because they distribute over CPU clusters while stochastic fine tuning of a DNN resists distribution. Multi task and multi modal learning supply the complementary lesson about sharing: multilingual speech systems share every hidden layer across languages and separate only the final classifier, so a new language can be bootstrapped from a small corpus, and DeViSE shows the same sharing logic across modalities, with a text embedding space standing in for labels the visual model has never seen. Sharing is therefore not an economy measure but a generalization mechanism, because the shared layers are forced to represent what is common across tasks rather than what is idiosyncratic to one. The monograph also names the open wound honestly: learned features entangle the factors of variation, and the proposed remedy, disentangling factors so that discriminative yet invariant features can be extracted, is flagged as unfinished work, as is the whole theoretical basis for why pretraining helps. Hyperparameter selection is singled out as a barrier to application, with learning rate schedules, regularization strengths, layer counts, and unit counts interacting and each evaluation expensive, and random search plus Bayesian optimization offered as partial relief. Any engine adopting these methods inherits that tuning cost and should budget for it as a permanent operating expense, with search over configurations treated as part of the model, recorded and versioned, rather than as folklore in a practitioner's notebook.",
+   "retrocausal_genealogy": "The lineage runs from the perceptron era through the 1980s back propagation revival, into the 1990s trough when convex shallow methods (support vector machines, conditional random fields, maximum entropy models) displaced neural networks precisely because their optima could be found. The 2006 restricted Boltzmann machine and deep belief network papers reopened depth by supplying an unsupervised initialization, and autoencoder variants from the same year offered a non probabilistic route to the same place. The speech community then industrialized the hybrid in 2009 to 2012 through academic and industrial collaboration, the vision community followed with the 2012 ImageNet result, and this 2014 monograph consolidates the moment when the signal processing field formally absorbed the transition.",
+   "theory_of_mind": "The authors write as engineers of deployed systems, not as theorists: their recurring question is what made a method work at industry scale, under decoder constraints, data pipelines, and compute budgets. They assume the reader already owns a working shallow system and wants to know what to replace, what to keep, and what the replacement costs. Their model of the domain is that natural signals are compositional and hierarchical because the human systems that produce and perceive them are hierarchical, so depth is presented not as fashion but as matching the structure of the phenomenon. They are also candid empiricists: where a technique failed, or where theory is missing, they say so in plain terms.",
+   "cross_layer_veto": "Several results in this monograph veto naive readings of its own successes. The conclusion states that generative pretraining appears unnecessary when enough labeled data and computing power are used, which vetoes any pipeline that treats pretraining as a permanent mandatory stage rather than a small data remedy. The report that pretraining failed for language identification and speaker recognition vetoes the assumption that features describing data variation are automatically features that separate classes. The scaling tables veto small sample verdicts about deep methods in either direction. And the kernel DSN analysis vetoes unconstrained flexibility as a default: where a constrained architecture admits exact solutions, the constrained architecture is the safer engineering choice."
+  }
+ ],
+ "universal_lens": "Read generally, this monograph is a template for replacing any mature hand engineered pipeline with a learned hierarchical one: keep the incumbent system's interfaces and output inventory, stage the training so each layer is verifiable, align the training objective with the unit of final judgment, embed discrete symbols into continuous spaces so similarity becomes geometry, and expect the payoff to grow with data scale rather than appear at pilot scale.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the research method: the three way classification as a registry discipline for learned components, the variational bound style test that a new layer or signal family must improve a held out objective before it is stacked, the denoising corruption drill as a standard robustness evaluation, and the monograph's habit of recording negative results with their regimes, so the institute's knowledge base stores where methods break alongside where they win.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes the machinery: staged fitting with per stage verification, prediction reinjection with raw inputs preserved for override, closed form least squares readouts wherever a component ends linearly, sequence level objectives for sequence level judgments, dropout style ablation as a confidence signal, category embeddings for cold start entities, semantic codes for fast neighbor retrieval over historical situations, and contrastive estimation wherever a normalizer is intractable."
+}

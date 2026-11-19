@@ -1,0 +1,569 @@
+{
+  "schema": "wave38_gsi_gtex_and_sgp_copula_cir_benchmark_v1",
+  "generated_utc": "2026-11-18T05:48:01.604047+00:00",
+  "real_money_stake_cleared": false,
+  "live_stake_fraction": 0.0,
+  "sample_kc_at_den": {
+    "schema": "wave38_presnap_sgp_copula_and_cir_suite_v1",
+    "wired": true,
+    "matchup": "KC @ DEN",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "gsi_gtex_and_schrodinger": {
+      "schema": "wave38_gsi_gtex_and_schrodinger_suite_v1",
+      "wired": true,
+      "matchup": "KC @ DEN",
+      "as_of_week": 10,
+      "adr0003_rule_in_only_doctrine": true,
+      "clinical_ruo_sports_weight": 0.0,
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "gtex_v10_partition": {
+        "schema": "wave38_gsi_gtex_v10_partition_v1",
+        "clean_checkout_fallback": false,
+        "adr0003_rule_in_only_doctrine": true,
+        "clinical_ruo_sports_weight": 0.0,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0,
+        "payload_sha256": "49d51664853c3c0e8a94bbf1dfcf3a8f01644e273cd9206677282db9478af3f7",
+        "tissues_count": 54,
+        "genes_count": 7,
+        "records_count": 378,
+        "actn3_skeletal_tpm": 108.963,
+        "actn3_cardiac_lv_tpm": 0.0483,
+        "actn3_skeletal_to_cardiac_ratio": 2257.9261,
+        "tnni3_cardiac_to_skeletal_ratio": 979.2362,
+        "mapt_brain_to_fibroblast_ratio": 380.3115,
+        "col1a1_col5a1_fibroblast_ecm_tpm": 4197.37,
+        "ppargc1a_oxidative_muscle_cardiac_mean_tpm": 11.4438,
+        "tpm1_cardiac_to_skeletal_ratio": 3.0731,
+        "specificity_by_gene": {
+          "ACTN3": 0.77366,
+          "TNNI3": 0.82116,
+          "MAPT": 0.26219,
+          "COL1A1": 0.26972,
+          "COL5A1": 0.19528,
+          "PPARGC1A": 0.09487,
+          "TPM1": 0.21037
+        }
+      },
+      "schrodinger_bridge_recovery": {
+        "schema": "wave38_gsi_schrodinger_bridge_recovery_v1",
+        "matchup": "KC @ DEN",
+        "as_of_week": 10,
+        "states": [
+          "acute_glycolytic_depletion",
+          "micro_sarcomeric_strain",
+          "ecm_fibroblast_remodeling",
+          "pgc1a_mitochondrial_biogenesis",
+          "homeostatic_fast_twitch_readiness"
+        ],
+        "away": {
+          "team": "KC",
+          "rest_days": 7.0,
+          "mean_prior_total_snaps": 1436.9,
+          "load_stress_index": 0.99095,
+          "sinkhorn_l1_marginal_error": 0.0,
+          "entropic_kl_cost": -2.413064,
+          "quadratic_wasserstein_cost": 0.137568,
+          "terminal_readiness_mass": 0.23459,
+          "fast_twitch_power_retention_mult": 0.97482,
+          "mitochondrial_q4_stamina_mult": 0.95634
+        },
+        "home": {
+          "team": "DEN",
+          "rest_days": 7.0,
+          "mean_prior_total_snaps": 1482.6,
+          "load_stress_index": 1.02245,
+          "sinkhorn_l1_marginal_error": 0.0,
+          "entropic_kl_cost": -2.398966,
+          "quadratic_wasserstein_cost": 0.139988,
+          "terminal_readiness_mass": 0.23459,
+          "fast_twitch_power_retention_mult": 0.97473,
+          "mitochondrial_q4_stamina_mult": 0.95555
+        }
+      }
+    },
+    "presnap_scheme_matrix": {
+      "schema": "wave38_presnap_scheme_matrix_v1",
+      "clean_checkout_fallback": false,
+      "bdb25_plays_count": 16124,
+      "participation_2024_count": 45919,
+      "participation_2025_count": 45184,
+      "participation_combined_count": 91103,
+      "players_master_count": 24869,
+      "mean_box_count_combined": 4.9236,
+      "unpressured_free_rush_rate": 0.04366,
+      "run_concept_epa": {
+        "POWER": 0.0425,
+        "INSIDE ZONE": -0.03437,
+        "MAN": -0.03626,
+        "COUNTER": -0.04818,
+        "OUTSIDE ZONE": -0.07373
+      },
+      "coverage_shell_epa": {
+        "Cover-1": 0.00537,
+        "Cover-2": -0.03628,
+        "Cover-3": -0.04421,
+        "Quarters": -0.066
+      }
+    },
+    "away_w1_w10_w38_profile": {
+      "heavy_box_run_succ_net": 0.08913,
+      "third_down_sack_avoid_net": -0.02223,
+      "takeaway_margin_per_snap": 0.00755,
+      "q4_one_score_clutch_epa_net": -0.0449,
+      "no_huddle_tempo_off_epa": 0.0,
+      "def_front5_continuity_jaccard": 0.79365,
+      "redzone_td_conv_net": 0.09041
+    },
+    "home_w1_w10_w38_profile": {
+      "heavy_box_run_succ_net": 0.10107,
+      "third_down_sack_avoid_net": 0.10974,
+      "takeaway_margin_per_snap": 0.00813,
+      "q4_one_score_clutch_epa_net": 0.26907,
+      "no_huddle_tempo_off_epa": 0.0607,
+      "def_front5_continuity_jaccard": 0.75,
+      "redzone_td_conv_net": 0.0349
+    },
+    "max_week_loaded": 10,
+    "quarantined_close_overpriced_signals": {
+      "light_box_rush_epa_net": 0.0,
+      "shotgun_raw_pass_epa_net": 0.0,
+      "raw_bad_throw_rate_diff": 0.0,
+      "db_secondary5_jaccard": 0.0
+    },
+    "student_t_sgp_copula_and_cir": {
+      "schema": "wave38_student_t_copula_and_cir_gate_v1",
+      "clean_checkout_fallback": false,
+      "total_copula_pairs_evaluated": 5303,
+      "archetypes": {
+        "wr_rec_yds_and_receptions": {
+          "pairs_n": 2239,
+          "kendall_tau": 0.604,
+          "elliptical_rho": 0.8127,
+          "student_t4_upper_tail_lambda_u": 0.5045,
+          "gaussian_upper_tail_lambda_u": 0.0,
+          "empirical_joint_over_rate": 0.3814,
+          "indep_joint_over_prob": 0.2287,
+          "gaussian_copula_joint_prob": 0.3791,
+          "student_t4_copula_joint_prob": 0.3791,
+          "emp_p85_extreme_joint_rate": 0.0728,
+          "gaussian_p85_extreme_joint": 0.0932,
+          "student_t4_p85_extreme_joint": 0.0969,
+          "indep_joint_brier": 0.25926,
+          "gaussian_copula_brier": 0.23594,
+          "student_t4_copula_brier": 0.23594,
+          "beats_independence_brier": true
+        },
+        "qb_pass_and_wr_rec_yds": {
+          "pairs_n": 2317,
+          "kendall_tau": 0.2086,
+          "elliptical_rho": 0.3219,
+          "student_t4_upper_tail_lambda_u": 0.1702,
+          "gaussian_upper_tail_lambda_u": 0.0,
+          "empirical_joint_over_rate": 0.3047,
+          "indep_joint_over_prob": 0.2511,
+          "gaussian_copula_joint_prob": 0.3032,
+          "student_t4_copula_joint_prob": 0.3032,
+          "emp_p85_extreme_joint_rate": 0.0466,
+          "gaussian_p85_extreme_joint": 0.0431,
+          "student_t4_p85_extreme_joint": 0.0498,
+          "indep_joint_brier": 0.21474,
+          "gaussian_copula_brier": 0.21186,
+          "student_t4_copula_brier": 0.21186,
+          "beats_independence_brier": true
+        },
+        "qb_pass_and_rb_rush_yds_neg_script": {
+          "pairs_n": 747,
+          "kendall_tau": -0.0788,
+          "elliptical_rho": -0.1235,
+          "student_t4_upper_tail_lambda_u": 0.0524,
+          "gaussian_upper_tail_lambda_u": 0.0,
+          "empirical_joint_over_rate": 0.2115,
+          "indep_joint_over_prob": 0.2387,
+          "gaussian_copula_joint_prob": 0.219,
+          "student_t4_copula_joint_prob": 0.219,
+          "emp_p85_extreme_joint_rate": 0.0241,
+          "gaussian_p85_extreme_joint": 0.0162,
+          "student_t4_p85_extreme_joint": 0.0233,
+          "indep_joint_brier": 0.16751,
+          "gaussian_copula_brier": 0.16683,
+          "student_t4_copula_brier": 0.16683,
+          "beats_independence_brier": true
+        }
+      },
+      "all_3_archetypes_beat_independence_brier": true,
+      "cir_time_holdout": {
+        "train_n": 525,
+        "test_n": 527,
+        "cir_knots": 10,
+        "raw_test_brier": 0.25626,
+        "shrunk_cir_test_brier": 0.25576,
+        "raw_test_bias": 0.0506,
+        "shrunk_cir_test_bias": 0.0187,
+        "improves_brier_and_bias": true
+      },
+      "promotion_gates": {
+        "identity_fixed_point": {
+          "mean_gain": 0.0,
+          "eb_radius": 0.0,
+          "lcb": 0.0,
+          "eligible": false
+        },
+        "unregularized_cir_gate": {
+          "mean_gain": -0.014725,
+          "eb_radius": 0.046741,
+          "lcb": -0.061465,
+          "eligible": false
+        },
+        "oracle_sanity_gate": {
+          "mean_gain": 0.250631,
+          "eb_radius": 0.040166,
+          "lcb": 0.210465,
+          "eligible": true
+        }
+      }
+    },
+    "live_honest_ast": {
+      "schema": "wave38_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 6,
+      "equations_evaluated": [
+        {
+          "eq_id": "gtex_actn3_skeletal_cardiac_selectivity",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 2255.962733,
+          "operators": 1
+        },
+        {
+          "eq_id": "schrodinger_entropic_gibbs_kernel",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.595796,
+          "operators": 3
+        },
+        {
+          "eq_id": "kendall_tau_to_elliptical_rho",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.321805,
+          "operators": 5
+        },
+        {
+          "eq_id": "student_t_tail_amplification_ratio",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.155452,
+          "operators": 1
+        },
+        {
+          "eq_id": "empirical_bernstein_lcb",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.189,
+          "operators": 1
+        },
+        {
+          "eq_id": "heavy_box_and_clutch_edge",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.52307,
+          "operators": 5
+        }
+      ]
+    },
+    "w38_close_residual_signal": 0.493911,
+    "stage2_deltas": {
+      "away_epa_delta": -0.000593,
+      "home_epa_delta": 0.000593,
+      "away_sack_prob_delta": 0.000445,
+      "home_sack_prob_delta": -0.002195
+    }
+  },
+  "sample_cin_at_buf": {
+    "schema": "wave38_presnap_sgp_copula_and_cir_suite_v1",
+    "wired": true,
+    "matchup": "CIN @ BUF",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "gsi_gtex_and_schrodinger": {
+      "schema": "wave38_gsi_gtex_and_schrodinger_suite_v1",
+      "wired": true,
+      "matchup": "CIN @ BUF",
+      "as_of_week": 10,
+      "adr0003_rule_in_only_doctrine": true,
+      "clinical_ruo_sports_weight": 0.0,
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "gtex_v10_partition": {
+        "schema": "wave38_gsi_gtex_v10_partition_v1",
+        "clean_checkout_fallback": false,
+        "adr0003_rule_in_only_doctrine": true,
+        "clinical_ruo_sports_weight": 0.0,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0,
+        "payload_sha256": "49d51664853c3c0e8a94bbf1dfcf3a8f01644e273cd9206677282db9478af3f7",
+        "tissues_count": 54,
+        "genes_count": 7,
+        "records_count": 378,
+        "actn3_skeletal_tpm": 108.963,
+        "actn3_cardiac_lv_tpm": 0.0483,
+        "actn3_skeletal_to_cardiac_ratio": 2257.9261,
+        "tnni3_cardiac_to_skeletal_ratio": 979.2362,
+        "mapt_brain_to_fibroblast_ratio": 380.3115,
+        "col1a1_col5a1_fibroblast_ecm_tpm": 4197.37,
+        "ppargc1a_oxidative_muscle_cardiac_mean_tpm": 11.4438,
+        "tpm1_cardiac_to_skeletal_ratio": 3.0731,
+        "specificity_by_gene": {
+          "ACTN3": 0.77366,
+          "TNNI3": 0.82116,
+          "MAPT": 0.26219,
+          "COL1A1": 0.26972,
+          "COL5A1": 0.19528,
+          "PPARGC1A": 0.09487,
+          "TPM1": 0.21037
+        }
+      },
+      "schrodinger_bridge_recovery": {
+        "schema": "wave38_gsi_schrodinger_bridge_recovery_v1",
+        "matchup": "CIN @ BUF",
+        "as_of_week": 10,
+        "states": [
+          "acute_glycolytic_depletion",
+          "micro_sarcomeric_strain",
+          "ecm_fibroblast_remodeling",
+          "pgc1a_mitochondrial_biogenesis",
+          "homeostatic_fast_twitch_readiness"
+        ],
+        "away": {
+          "team": "CIN",
+          "rest_days": 7.0,
+          "mean_prior_total_snaps": 1427.0,
+          "load_stress_index": 0.98414,
+          "sinkhorn_l1_marginal_error": 0.0,
+          "entropic_kl_cost": -2.416128,
+          "quadratic_wasserstein_cost": 0.137038,
+          "terminal_readiness_mass": 0.23459,
+          "fast_twitch_power_retention_mult": 0.97484,
+          "mitochondrial_q4_stamina_mult": 0.95651
+        },
+        "home": {
+          "team": "BUF",
+          "rest_days": 7.0,
+          "mean_prior_total_snaps": 1494.5,
+          "load_stress_index": 1.03069,
+          "sinkhorn_l1_marginal_error": 0.0,
+          "entropic_kl_cost": -2.395304,
+          "quadratic_wasserstein_cost": 0.140613,
+          "terminal_readiness_mass": 0.23459,
+          "fast_twitch_power_retention_mult": 0.97471,
+          "mitochondrial_q4_stamina_mult": 0.95535
+        }
+      }
+    },
+    "presnap_scheme_matrix": {
+      "schema": "wave38_presnap_scheme_matrix_v1",
+      "clean_checkout_fallback": false,
+      "bdb25_plays_count": 16124,
+      "participation_2024_count": 45919,
+      "participation_2025_count": 45184,
+      "participation_combined_count": 91103,
+      "players_master_count": 24869,
+      "mean_box_count_combined": 4.9236,
+      "unpressured_free_rush_rate": 0.04366,
+      "run_concept_epa": {
+        "POWER": 0.0425,
+        "INSIDE ZONE": -0.03437,
+        "MAN": -0.03626,
+        "COUNTER": -0.04818,
+        "OUTSIDE ZONE": -0.07373
+      },
+      "coverage_shell_epa": {
+        "Cover-1": 0.00537,
+        "Cover-2": -0.03628,
+        "Cover-3": -0.04421,
+        "Quarters": -0.066
+      }
+    },
+    "away_w1_w10_w38_profile": {
+      "heavy_box_run_succ_net": 0.0027,
+      "third_down_sack_avoid_net": 0.04721,
+      "takeaway_margin_per_snap": 0.0058,
+      "q4_one_score_clutch_epa_net": 0.02414,
+      "no_huddle_tempo_off_epa": -0.10242,
+      "def_front5_continuity_jaccard": 0.83333,
+      "redzone_td_conv_net": 0.1229
+    },
+    "home_w1_w10_w38_profile": {
+      "heavy_box_run_succ_net": 0.09799,
+      "third_down_sack_avoid_net": -0.02245,
+      "takeaway_margin_per_snap": 0.0,
+      "q4_one_score_clutch_epa_net": 0.19258,
+      "no_huddle_tempo_off_epa": 0.72354,
+      "def_front5_continuity_jaccard": 0.84444,
+      "redzone_td_conv_net": 0.01567
+    },
+    "max_week_loaded": 10,
+    "quarantined_close_overpriced_signals": {
+      "light_box_rush_epa_net": 0.0,
+      "shotgun_raw_pass_epa_net": 0.0,
+      "raw_bad_throw_rate_diff": 0.0,
+      "db_secondary5_jaccard": 0.0
+    },
+    "student_t_sgp_copula_and_cir": {
+      "schema": "wave38_student_t_copula_and_cir_gate_v1",
+      "clean_checkout_fallback": false,
+      "total_copula_pairs_evaluated": 5303,
+      "archetypes": {
+        "wr_rec_yds_and_receptions": {
+          "pairs_n": 2239,
+          "kendall_tau": 0.604,
+          "elliptical_rho": 0.8127,
+          "student_t4_upper_tail_lambda_u": 0.5045,
+          "gaussian_upper_tail_lambda_u": 0.0,
+          "empirical_joint_over_rate": 0.3814,
+          "indep_joint_over_prob": 0.2287,
+          "gaussian_copula_joint_prob": 0.3791,
+          "student_t4_copula_joint_prob": 0.3791,
+          "emp_p85_extreme_joint_rate": 0.0728,
+          "gaussian_p85_extreme_joint": 0.0932,
+          "student_t4_p85_extreme_joint": 0.0969,
+          "indep_joint_brier": 0.25926,
+          "gaussian_copula_brier": 0.23594,
+          "student_t4_copula_brier": 0.23594,
+          "beats_independence_brier": true
+        },
+        "qb_pass_and_wr_rec_yds": {
+          "pairs_n": 2317,
+          "kendall_tau": 0.2086,
+          "elliptical_rho": 0.3219,
+          "student_t4_upper_tail_lambda_u": 0.1702,
+          "gaussian_upper_tail_lambda_u": 0.0,
+          "empirical_joint_over_rate": 0.3047,
+          "indep_joint_over_prob": 0.2511,
+          "gaussian_copula_joint_prob": 0.3032,
+          "student_t4_copula_joint_prob": 0.3032,
+          "emp_p85_extreme_joint_rate": 0.0466,
+          "gaussian_p85_extreme_joint": 0.0431,
+          "student_t4_p85_extreme_joint": 0.0498,
+          "indep_joint_brier": 0.21474,
+          "gaussian_copula_brier": 0.21186,
+          "student_t4_copula_brier": 0.21186,
+          "beats_independence_brier": true
+        },
+        "qb_pass_and_rb_rush_yds_neg_script": {
+          "pairs_n": 747,
+          "kendall_tau": -0.0788,
+          "elliptical_rho": -0.1235,
+          "student_t4_upper_tail_lambda_u": 0.0524,
+          "gaussian_upper_tail_lambda_u": 0.0,
+          "empirical_joint_over_rate": 0.2115,
+          "indep_joint_over_prob": 0.2387,
+          "gaussian_copula_joint_prob": 0.219,
+          "student_t4_copula_joint_prob": 0.219,
+          "emp_p85_extreme_joint_rate": 0.0241,
+          "gaussian_p85_extreme_joint": 0.0162,
+          "student_t4_p85_extreme_joint": 0.0233,
+          "indep_joint_brier": 0.16751,
+          "gaussian_copula_brier": 0.16683,
+          "student_t4_copula_brier": 0.16683,
+          "beats_independence_brier": true
+        }
+      },
+      "all_3_archetypes_beat_independence_brier": true,
+      "cir_time_holdout": {
+        "train_n": 525,
+        "test_n": 527,
+        "cir_knots": 10,
+        "raw_test_brier": 0.25626,
+        "shrunk_cir_test_brier": 0.25576,
+        "raw_test_bias": 0.0506,
+        "shrunk_cir_test_bias": 0.0187,
+        "improves_brier_and_bias": true
+      },
+      "promotion_gates": {
+        "identity_fixed_point": {
+          "mean_gain": 0.0,
+          "eb_radius": 0.0,
+          "lcb": 0.0,
+          "eligible": false
+        },
+        "unregularized_cir_gate": {
+          "mean_gain": -0.014725,
+          "eb_radius": 0.046741,
+          "lcb": -0.061465,
+          "eligible": false
+        },
+        "oracle_sanity_gate": {
+          "mean_gain": 0.250631,
+          "eb_radius": 0.040166,
+          "lcb": 0.210465,
+          "eligible": true
+        }
+      }
+    },
+    "live_honest_ast": {
+      "schema": "wave38_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 6,
+      "equations_evaluated": [
+        {
+          "eq_id": "gtex_actn3_skeletal_cardiac_selectivity",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 2255.962733,
+          "operators": 1
+        },
+        {
+          "eq_id": "schrodinger_entropic_gibbs_kernel",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.595796,
+          "operators": 3
+        },
+        {
+          "eq_id": "kendall_tau_to_elliptical_rho",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.321805,
+          "operators": 5
+        },
+        {
+          "eq_id": "student_t_tail_amplification_ratio",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.155452,
+          "operators": 1
+        },
+        {
+          "eq_id": "empirical_bernstein_lcb",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.189,
+          "operators": 1
+        },
+        {
+          "eq_id": "heavy_box_and_clutch_edge",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.18493,
+          "operators": 5
+        }
+      ]
+    },
+    "w38_close_residual_signal": 0.603435,
+    "stage2_deltas": {
+      "away_epa_delta": -0.000724,
+      "home_epa_delta": 0.000724,
+      "away_sack_prob_delta": -0.000944,
+      "home_sack_prob_delta": 0.000449
+    }
+  },
+  "benchmark_sha256": "80249aaaa19786a33d6b54b3883c2fa782dcdd1bb670938830fd6c6065201ed4"
+}

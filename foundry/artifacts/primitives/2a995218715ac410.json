@@ -1,0 +1,727 @@
+{
+ "book_id": "2a995218715ac410",
+ "source_status": "COMPLETE",
+ "source_note": "Neurological and neuropsychiatric disorders affecting military personnel and veterans, volume II. Frontiers in Neurology Research Topic ebook, Frontiers Media SA, Lausanne, August 2026. Edited by Chen Lin, Lisa C. Krishnamurthy, Mary Jo Pugh, William Walker and Venkatagiri Krishnamurthy. ISBN 978-2-8325-8566-5, DOI 10.3389/978-2-8325-8566-5, ISSN 1664-8714. Ten contributions: an editorial plus nine articles (Belding et al. 2024; Zhao et al. 2025; Lin et al. 2025; Oberman et al. 2025; McDonald et al. 2025; Panahi et al. 2026; Hamama-Raz and Hamama 2026; McCready et al. 2026; Manhapra et al. 2026). Local file is the publisher PDF, 18,655,544 bytes, sha256 2a995218715ac41038c832ea7431913486b997de244246909bfa0bb5e4ca8a40, book_id is the first 16 hex of that digest and matches the expected id. Catalog correction: the assignment title 'Neurological and Neuropsychiatric Disorders in Military Settings, Vol. II' does not match the ebook's own title page, which reads 'Neurological and neuropsychiatric disorders affecting military personnel and veterans, volume II'. Text quality: the extracted text is complete (about 97,000 words) but the two-column journal layout is interleaved line by line on body pages, so every verbatim quote below was sourced from a contiguous single-column segment of the shipped text file and substring-verified against it under gatekeeper normalization; a few quotes therefore begin or end mid-sentence exactly where the column break falls. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "multimorbidity_interaction_thesis",
+   "name": "Military neurological and neuropsychiatric conditions rarely occur in isolation; they emerge as interacting syndromes unfolding across time",
+   "verbatim_quote": "Yet the central lesson from this Research Topic is that these conditions rarely occur in isolation.",
+   "page": "Editorial, ebook p.05",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Conditions such as TBI, PTSD, chronic pain, epilepsy, depression and cognitive dysfunction co-occur in the same individuals",
+    "Interactions among conditions, not only their presence, shape outcomes"
+   ],
+   "breakdown_regime": "A framing thesis, not a measured effect; it does not specify which interactions dominate in any given patient",
+   "domain": "multimorbidity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats each condition as an interacting state variable whose effect on a projection is modulated by the other active conditions, never as an independent additive flag; composite states are first-class objects in the reasoning layer.",
+    "source_operator": "multimorbidity_interaction_thesis",
+    "telemetry": "Diagnosis co-occurrence timelines, symptom cluster time series, functional status scores"
+   }
+  },
+  {
+   "primitive_id": "retiree_cohort_design",
+   "name": "Retrospective cohort built by restricting 6,092,432 service members (1980-2020 records) to the 1,211,972 retirees whose Tricare eligibility keeps outcomes observable after service",
+   "verbatim_quote": "Those who were discharged from military service with a retirement designation, and were thus eligible for Tricare for Life, were included in the analytic sample (N = 1,211,972).",
+   "page": "Belding et al., Abstract/Methods, ebook p.08",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Retirees remain observable in Tricare-reimbursable records after separation, so exposure and outcome windows are both captured",
+    "Diagnoses recorded in inpatient settings from 1980 and outpatient settings from 2001 are comparable enough to pool"
+   ],
+   "breakdown_regime": "Retirees are a selected, healthier and longer-serving subset; findings do not transport to all who served, and outpatient capture only begins in 2001",
+   "domain": "epidemiology cohort design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Cohort construction precedes inference: define the denominator by who stays observable, link exposure records to outcome records across decades, and report the selection explicitly; the engine applies the same denominator-first discipline before computing any rate.",
+    "source_operator": "retiree_cohort_design",
+    "telemetry": "Roster and career histories linked to longitudinal medical outcome registries"
+   }
+  },
+  {
+   "primitive_id": "llb_definition",
+   "name": "Low-level blast (LLB) is blast overpressure exposure from outgoing munitions such as firing heavy caliber weapons, as distinct from high-level blast (HLB) from incoming munitions",
+   "verbatim_quote": "blast overpressure exposure that results from outgoing munitions,",
+   "page": "Belding et al., Introduction, ebook p.09",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Exposure class is assigned by the direction and source of the blast, not only by overpressure magnitude",
+    "Occupational specialty proxies LLB dose, since artillery and special forces fire heavy weapons more often"
+   ],
+   "breakdown_regime": "Occupation is a coarse dose proxy; individual cumulative exposure is not measured, and the study found LLB occupational risk was not associated with early-onset dementia",
+   "domain": "exposure taxonomy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine tags exposures by generating mechanism and direction, not just intensity, because the same measured dose from different sources carries different downstream risk structure.",
+    "source_operator": "llb_definition",
+    "telemetry": "Occupational exposure logs, event source classification, training firing records"
+   }
+  },
+  {
+   "primitive_id": "concussion_memory_mci_hazard",
+   "name": "Retirees with a concussion on record were over four times more likely than non-injured counterparts to be diagnosed with memory loss and MCI, the precursors to dementia",
+   "verbatim_quote": "veterans with a concussion on record were over four times more likely",
+   "page": "Belding et al., Discussion, ebook p.11-12",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Concussion was diagnosed during active duty service and recorded in military medical records",
+    "Memory loss and MCI diagnoses after service are treated as dementia precursors"
+   ],
+   "breakdown_regime": "Diagnosis-based ascertainment can inflate the association if injured veterans receive more cognitive surveillance; the same study found no greater risk of early-onset dementia for concussion",
+   "domain": "neurodegeneration risk",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A single mild index event can carry a large long-horizon hazard multiplier for precursor outcomes even when the terminal outcome shows no early shift; the engine keeps precursor hazards and terminal hazards as separate channels with separate multipliers.",
+    "source_operator": "concussion_memory_mci_hazard",
+    "telemetry": "Injury event history, cognitive screening trajectories, precursor diagnosis dates"
+   }
+  },
+  {
+   "primitive_id": "exercise_dual_level_effect",
+   "name": "Exercise reduces PTSD symptoms in veterans at both psychological and physiological levels, and through them inhibits suicidal tendencies",
+   "verbatim_quote": "and physiological levels, which in turn inhibits their suicidal tendencies.",
+   "page": "Zhao et al., Abstract, ebook p.19",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The narrative review's 54 included studies support effects at both levels",
+    "Suicidal tendency reduction is mediated by symptom reduction rather than a direct effect"
+   ],
+   "breakdown_regime": "Narrative review without meta-analytic pooling; optimal exercise type, dosage and duration remain unclear by the authors' own statement",
+   "domain": "intervention mechanisms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "One intervention is modeled as a simultaneous perturbation on several layers (affect, endocrine, immune, behavior) whose combined effect, not any single channel, explains the outcome; the engine evaluates interventions as multi-layer perturbations.",
+    "source_operator": "exercise_dual_level_effect",
+    "telemetry": "Activity dose logs, symptom scores, sleep and risk indicators"
+   }
+  },
+  {
+   "primitive_id": "exercise_hippocampal_mechanism",
+   "name": "Aerobic training increases hippocampal volume and neurogenesis, one physiological route by which exercise improves PTSD symptoms",
+   "verbatim_quote": "training has been shown to increase the volume of the hippocampus and the number of neurogenesis in the brain",
+   "page": "Zhao et al., section 2/3.2.1, ebook p.20",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Findings from the reviewed aerobic training studies generalize to veteran PTSD populations",
+    "Structural brain change is one of three physiological routes, alongside HPA axis regulation and inflammatory cytokine reduction"
+   ],
+   "breakdown_regime": "Most underlying studies are small and not veteran-specific; the review does not establish dose-response for the structural effect",
+   "domain": "neuroplasticity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sustained training load is treated as a slow structural state variable that changes the substrate itself over weeks, not as a transient performance input; the engine separates fast state from slow structural state in every longitudinal model.",
+    "source_operator": "exercise_hippocampal_mechanism",
+    "telemetry": "Training volume and adherence, imaging where available, symptom trajectory"
+   }
+  },
+  {
+   "primitive_id": "exercise_symptom_effect_sizes",
+   "name": "Reviewed exercise studies report cluster-level gains: 19 percent improvement in Negative Cognitions and Mood and 21 percent enhancement in Re-experiencing",
+   "verbatim_quote": "Empirical studies further support this, showing a 19% improvement in Negative Cognitions and Mood, a 21% enhancement in",
+   "page": "Zhao et al., section 3.1.1, ebook p.20",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Percentages are as reported by the underlying empirical studies cited in the review",
+    "Effects are cluster-specific rather than uniform across the PTSD syndrome"
+   ],
+   "breakdown_regime": "Single-review secondary reporting; the percentages are not pooled estimates and the underlying samples are heterogeneous",
+   "domain": "intervention effect sizes",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Intervention response priors are stored per symptom cluster with their own magnitudes, so the engine expects uneven response across clusters instead of one global effect size.",
+    "source_operator": "exercise_symptom_effect_sizes",
+    "telemetry": "Cluster-level symptom inventories measured before and after intervention"
+   }
+  },
+  {
+   "primitive_id": "karvonen_heart_rate_reserve",
+   "name": "Exercise dose is prescribed from heart rate reserve by the Karvonen formula: reserve is max HR minus resting HR, max HR is 220 minus age, and target HR is reserve times percent target plus resting HR",
+   "verbatim_quote": "rate reserve was calculated using the Karvonen formula: pt's maximum",
+   "page": "Lin et al. (EXERT-Stroke), Methods, ebook p.27",
+   "latex": "$\\mathrm{HR}_{target} = \\mathrm{HRR} \\times \\%target + \\mathrm{HR}_{rest},\\quad \\mathrm{HRR} = \\mathrm{HR}_{max} - \\mathrm{HR}_{rest},\\quad \\mathrm{HR}_{max} = 220 - age$",
+   "symbol_and_unit_ledger": {
+    "HR_target": "target heart rate, beats per minute",
+    "HRR": "heart rate reserve, beats per minute",
+    "HR_max": "maximum heart rate, beats per minute",
+    "HR_rest": "resting heart rate, beats per minute",
+    "%target": "target intensity fraction of reserve, dimensionless",
+    "age": "participant age, years"
+   },
+   "assumptions": [
+    "Maximal heart rate is adequately estimated as 220 minus age for this population",
+    "Reaching a physiologic target state matters more than time spent exercising"
+   ],
+   "breakdown_regime": "The 220 minus age estimate has wide individual error; the trial screened every participant with a graded exercise stress test before applying it",
+   "domain": "exercise prescription",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Dose is scaled by individual reserve (capacity above baseline) rather than by absolute maxima: target equals reserve times intensity fraction plus baseline; the engine uses reserve-relative dosing wherever an input has a personal baseline and ceiling.",
+    "source_operator": "karvonen_heart_rate_reserve",
+    "telemetry": "Resting heart rate, age, measured peak heart rate, session heart rate zones"
+   }
+  },
+  {
+   "primitive_id": "rtms_m1_protocol",
+   "name": "EXERT-Stroke rTMS dose: 30 trains of 10 s at 10 Hz, 3,000 pulses per session, at 90 percent of resting motor threshold over contra-lesional M1",
+   "verbatim_quote": "rTMS session consisted of a series of 30 trains of 10 s in duration (30 s intertrain interval) at a stimulation rate of 10 Hz (3,000 pulses) and an intensity set at 90% of RMT.",
+   "page": "Lin et al. (EXERT-Stroke), Methods, ebook p.27-28",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Resting motor threshold is measurable for each participant and stable enough to dose against",
+    "Parameters were chosen because prior chronic neuropathic pain studies obtained significant pain relief with them"
+   ],
+   "breakdown_regime": "rTMS analgesic effects are transient, lasting hours to days, so a paired exercise protocol was used to try to sustain benefit; efficacy was not this pilot's endpoint",
+   "domain": "neuromodulation protocol",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Interventions are specified in threshold-relative units with a complete dose grammar (trains, rate, total pulses, percent of individual threshold), which is the same form the engine requires before any candidate intervention or signal can be compared across individuals.",
+    "source_operator": "rtms_m1_protocol",
+    "telemetry": "Session logs, per-participant threshold measurements, adherence records"
+   }
+  },
+  {
+   "primitive_id": "exert_feasibility_result",
+   "name": "EXERT-Stroke pilot result: 80 percent of the active rTMS arm and 50 percent of the sham arm completed the final assessment, with no serious adverse events in nine randomized participants",
+   "verbatim_quote": "Four of the five (80%) active rTMS and two of the four (50.0%) of the sham rTMS completed the final assessment",
+   "page": "Lin et al. (EXERT-Stroke), Abstract/Results, ebook p.26",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Feasibility endpoints are attendance, tolerance and adverse events, judged before any efficacy claim",
+    "Nine randomized participants after one screen failure from those consented"
+   ],
+   "breakdown_regime": "A nine-person single-center pilot cannot estimate efficacy or rare harms; completion differences at this size are compatible with chance",
+   "domain": "clinical trial feasibility",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Candidate interventions graduate through a feasibility gate (can it be delivered, tolerated, and completed) before any efficacy evaluation; the engine applies the identical gate order to candidate signals.",
+    "source_operator": "exert_feasibility_result",
+    "telemetry": "Completion and attendance counts, adverse event logs, screen failure counts"
+   }
+  },
+  {
+   "primitive_id": "persistent_poststroke_headache_definition",
+   "name": "Persistent post-stroke headache is defined by duration over 3 months after stroke stabilization, with no other pain diagnosis better explaining the symptoms",
+   "verbatim_quote": "stroke headache have been defined to last >3 months and no other",
+   "page": "Lin et al. (EXERT-Stroke), Introduction, ebook p.26",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Acute post-stroke headaches resolve within 3 months, so persistence past that point marks a distinct syndrome (ICHD-3, 2018)",
+    "Exclusion of better-explaining diagnoses is part of the case definition"
+   ],
+   "breakdown_regime": "The diagnosis is recent and lacks specific treatment guidelines; mechanisms are poorly understood per the authors",
+   "domain": "diagnostic definition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A state is classified by a persistence threshold plus an exclusion rule, not by a single observation; the engine uses duration-plus-exclusion definitions before treating any persistent pattern as a distinct regime.",
+    "source_operator": "persistent_poststroke_headache_definition",
+    "telemetry": "Symptom onset dates, duration tracking, competing diagnosis list"
+   }
+  },
+  {
+   "primitive_id": "no_level1_treatment_gap",
+   "name": "Over 500,000 service members have sustained concussions, yet no Level I evidence-based treatment exists for depressive symptoms associated with concussion",
+   "verbatim_quote": "over 500,000 SMs who have sustained concussions, there are currently no Level I evidence-based treatments for improving depressive symptoms associated with concussion.",
+   "page": "Oberman et al. (ADEPT), Abstract, ebook p.34",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Standard pharmacotherapy has failed to show efficacy for post-TBI depression in randomized trials, per the protocol's rationale",
+    "A history of concussion was historically an exclusion criterion in rTMS trials, which is why the evidence base is empty"
+   ],
+   "breakdown_regime": "The gap is specific to depressive symptoms after concussion; it does not claim no treatments exist for depression generally",
+   "domain": "evidence gap",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An explicit evidence vacuum is recorded as a state of the world with wide priors, not as a zero; where no Level I evidence exists, the engine flags the cell as open for experimentation instead of silently importing evidence from adjacent conditions.",
+    "source_operator": "no_level1_treatment_gap",
+    "telemetry": "Evidence-grade registry for each condition and intervention pair"
+   }
+  },
+  {
+   "primitive_id": "bayesian_adaptive_rules",
+   "name": "ADEPT Bayesian adaptive rules: stop for success when an active arm reaches a 99.75 percent posterior probability of superiority to sham, with arm-dropping at 60 percent and futility stopping at 60 percent",
+   "verbatim_quote": "stopping for success (if either active arm obtains a 99.75% posterior probability of being superior to sham) if predefined Bayesian probabilities are met.",
+   "page": "Oberman et al. (ADEPT), Figure 1 caption, ebook p.36",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Interim analyses are preplanned at N = 90 and N = 135 of the total N = 198",
+    "Posterior thresholds are fixed in advance, not tuned to accruing data"
+   ],
+   "breakdown_regime": "Adaptive dropping complicates final inference and requires the prespecified Bayesian machinery to stay valid; results are not yet reported, this is a protocol",
+   "domain": "adaptive trial design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine adopts the same three-threshold grammar for candidate signals: promote on a high posterior bar, drop a dominated variant on a moderate bar, and stop the whole comparison for futility on a symmetric bar, all fixed before data arrives.",
+    "source_operator": "bayesian_adaptive_rules",
+    "telemetry": "Accumulating outcome data with scheduled posterior updates"
+   }
+  },
+  {
+   "primitive_id": "itbs_session_structure",
+   "name": "iTBS dose grammar: 60 trains of 2 s, each train 10 bursts of three pulses at 50 Hz repeated every 200 ms (5 Hz), with an 8 s intertrain interval, about 9 min per session",
+   "verbatim_quote": "iTBS sessions consist of 60, 2-s, trains of 10 bursts. Bursts consist of three rTMS pulses at 50 Hz applied every 200 ms (5 Hz).",
+   "page": "Oberman et al. (ADEPT), Figure 2 caption, ebook p.37",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stimulation is delivered at 90 percent of resting motor threshold, corrected for scalp-to-target distance, with 70 percent as the tolerability floor",
+    "ADEPT delivers eight sessions per day for one week, 40 sessions total"
+   ],
+   "breakdown_regime": "The accelerated schedule's advantage over once-daily treatment is attributed jointly to session count, targeting and schedule; the protocol cannot yet separate them",
+   "domain": "neuromodulation dose",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Dose is a hierarchical timing structure (pulse, burst, train, session, course), and each level carries its own parameters; the engine encodes any periodic intervention or signal at all of its timing levels rather than as a single rate.",
+    "source_operator": "itbs_session_structure",
+    "telemetry": "Timing parameters at pulse, burst, train, session and course levels"
+   }
+  },
+  {
+   "primitive_id": "rsfmri_targeting_advantage",
+   "name": "rTMS antidepressant efficacy was greater when the scalp-targeted stimulation site happened to lie closer to the individual's optimal rsfMRI-derived site",
+   "verbatim_quote": "the scalp-targeted stimulation site was incidentally closer to the",
+   "page": "Oberman et al. (ADEPT), Introduction, ebook p.35",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Individual resting-state functional connectivity maps have high test-retest reliability, so an individual optimal site exists and is stable",
+    "Clinical effect is mediated partly by network connectivity change, not only local excitability"
+   ],
+   "breakdown_regime": "The cited evidence is two retrospective papers; concussion-related circuit disruption may shift the optimal site in ways scalp targeting cannot see, which is the trial's open question",
+   "domain": "personalized targeting",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Effect size scales with the distance between the applied intervention point and the individually computed optimal point; the engine personalizes intervention targets from individual maps instead of applying population-average coordinates.",
+    "source_operator": "rsfmri_targeting_advantage",
+    "telemetry": "Individual connectivity maps, applied versus optimal target coordinates"
+   }
+  },
+  {
+   "primitive_id": "c4_item_structure",
+   "name": "The C4 questionnaire contains 22 activity-based items and one bias-check item, built to select treatment targets rather than to measure outcomes",
+   "verbatim_quote": "The result was a questionnaire with 22 activity-based items and one bias-check item.",
+   "page": "McDonald et al. (C4), Abstract/Results, ebook p.46",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Items are phrased at the activity level (trouble keeping track when someone gives many details), not the impairment level (poor memory)",
+    "Content validity was established by expert selection rounds and domain sorting by a separate expert group"
+   ],
+   "breakdown_regime": "Development samples were small (21 service members and 32 veterans with mTBI, 25 with orthopedic injury); full psychometric validation is preliminary",
+   "domain": "instrument design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Measurement instruments query function in everyday activity contexts rather than abstract deficit labels; the engine's own intake instruments follow the same activity-level rule so responses map directly onto actionable targets.",
+    "source_operator": "c4_item_structure",
+    "telemetry": "Activity-level self-report responses across cognitive domains"
+   }
+  },
+  {
+   "primitive_id": "bias_check_item",
+   "name": "The C4 bias-check item is a non-declarative memory task chosen because it would be unaffected by mTBI, so endorsement flags response bias rather than injury",
+   "verbatim_quote": "The bias-check item was selected to be a non-declarative memory",
+   "page": "McDonald et al. (C4), Results, ebook p.47",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Non-declarative memory performance is preserved in mTBI, making the item a known-null probe",
+    "The item sits inside the same response format as genuine items so bias is measured in situ"
+   ],
+   "breakdown_regime": "A single check item detects only gross bias; a determined or confused responder can pass it while distorting other answers",
+   "domain": "measurement validity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every measurement instrument should embed at least one known-null probe whose true value is fixed by construction, so data quality can be audited from inside the data itself; the engine plants such probes in its own intake and labeling pipelines.",
+    "source_operator": "bias_check_item",
+    "telemetry": "Bias-check responses compared against main scale responses"
+   }
+  },
+  {
+   "primitive_id": "mtbi_vadod_criteria",
+   "name": "VA/DoD mild TBI case definition bounds the injury by duration: 30 min or less of loss of consciousness, under 24 h of alteration of consciousness, or 1 day or less of posttraumatic amnesia",
+   "verbatim_quote": "the VA/DoD criteria (16): 30 min or less of loss of consciousness, less",
+   "page": "McDonald et al. (C4), Participants, ebook p.47",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cases also require no abnormalities on neuroimaging where imaging is available",
+    "Diagnosis in the study rested on clinician judgment supported by self-report and medical record review"
+   ],
+   "breakdown_regime": "Duration bounds are recalled or recorded imperfectly years later; the criteria classify severity at injury, not current symptom burden",
+   "domain": "case definition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Events are classified by bounded observable windows on several channels at once; the engine stores the window values themselves, not only the resulting class label, so classifications can be recomputed when criteria change.",
+    "source_operator": "mtbi_vadod_criteria",
+    "telemetry": "Event duration fields for consciousness, alteration and amnesia, imaging flags"
+   }
+  },
+  {
+   "primitive_id": "top_three_prioritization",
+   "name": "The C4 asks examinees to identify their top three greatest challenges, converting a complaint inventory into ranked treatment targets and countering negative response bias",
+   "verbatim_quote": "three greatest challenges, as a means of identifying treatment targets",
+   "page": "McDonald et al. (C4), Introduction/Methods, ebook p.47",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Respondents can rank their own priorities reliably enough to guide planning",
+    "Forced ranking counteracts the bias of rating everything as frequently bothersome"
+   ],
+   "breakdown_regime": "Ranking reflects perceived burden, which may diverge from measured impairment; priorities can shift with mood and context",
+   "domain": "treatment planning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Before resources are allocated, a flat inventory is forced through a ranked prioritization step supplied by the affected party; the engine applies the same inventory-then-rank sequence to its own candidate lists.",
+    "source_operator": "top_three_prioritization",
+    "telemetry": "Ranked top-three complaint lists linked to the full inventory"
+   }
+  },
+  {
+   "primitive_id": "epilepsy_tbi_burden_asymmetry",
+   "name": "Veterans with both epilepsy and TBI, in either temporal order, show greater cognitive and behavioral burden than veterans with TBI only",
+   "verbatim_quote": "Both veterans with TBI before Epilepsy post traumatic epilepsy and those with epilepsy preceding TBI displayed greater cognitive and behavioral burden compared to veteran with TBI only.",
+   "page": "Panahi et al., Abstract, ebook p.57",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Groups were drawn from post-9/11 veterans with neuropsychological testing on record",
+    "Burden was measured from NLP-extracted cognitive and behavioral concepts in clinical notes"
+   ],
+   "breakdown_regime": "Both-conditions groups are sicker by construction and receive more documentation, which can inflate extracted symptom counts",
+   "domain": "comorbidity burden",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Combined-condition burden exceeds single-condition burden under both temporal orders, so the engine never models a comorbidity as a one-directional modifier; interaction terms are estimated for each order separately.",
+    "source_operator": "epilepsy_tbi_burden_asymmetry",
+    "telemetry": "Paired diagnosis histories with dates, symptom concept counts"
+   }
+  },
+  {
+   "primitive_id": "temporal_order_phenotype",
+   "name": "Epilepsy preceding TBI concentrates in high behavioral risk profiles, with negative valence system dysfunction in 44.4 percent and arousal/regulatory dysfunction in 37.0 percent of that group",
+   "verbatim_quote": "This group with epilepsy preceding TBI was associated with, including dysfunction in the RDoC domains related to negative valence systems (44.4%), arousal/regulatory systems (37.0%), and interpersonal trauma.",
+   "page": "Panahi et al., Abstract, ebook p.57",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Phenotypes come from UMAP clustering of 39 NLP-extracted concepts mapped to seven RDoC domains",
+    "Percentages describe the epilepsy-before-TBI group's representation in high-risk clusters"
+   ],
+   "breakdown_regime": "Cluster labels are model-dependent; a different embedding or seed could redraw boundaries, though the authors report seed robustness for the embedding",
+   "domain": "phenotyping",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Event order is a feature, not a footnote: the same two events in opposite order produce different risk phenotypes, so the engine encodes sequences with their timestamps and never collapses them into an unordered comorbidity set.",
+    "source_operator": "temporal_order_phenotype",
+    "telemetry": "Timestamped diagnosis sequences, domain-level dysfunction scores"
+   }
+  },
+  {
+   "primitive_id": "epilepsy_algorithm_ppv",
+   "name": "The epilepsy phenotype algorithm used to build the cohort carries a positive predictive value of 0.92 against chart review",
+   "verbatim_quote": "predictive value of 0.92, we identified those with a diagnosis of epilepsy (12).",
+   "page": "Panahi et al., Materials and methods, ebook p.58",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The algorithm's PPV was established in prior validation work cited by the authors",
+    "Epilepsy onset within 6 months after a TBI diagnosis defines the post-traumatic epilepsy subgroup"
+   ],
+   "breakdown_regime": "PPV depends on prevalence in the source population; transported to a lower-prevalence registry the same algorithm yields more false positives",
+   "domain": "phenotype algorithm validation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A classifier-derived label is admissible only with its validated precision attached; the engine stores the PPV next to every algorithm-generated label and discounts downstream conclusions accordingly.",
+    "source_operator": "epilepsy_algorithm_ppv",
+    "telemetry": "Chart-review validation samples, algorithm precision estimates"
+   }
+  },
+  {
+   "primitive_id": "moonstone_classifier_precision",
+   "name": "A random forest classifier on Moonstone NLP text features identified cognitive dysfunction cases with an 88 percent success rate against human rater labels",
+   "verbatim_quote": "cases with an 88% success rate, further confirming the supervised",
+   "page": "Panahi et al., Materials and methods, ebook p.58",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Moonstone grammar rules and ontologies were expanded iteratively until accuracy against human labels was satisfactory",
+    "Features capture implicit indicators in narrative notes, not only explicit diagnostic phrases"
+   ],
+   "breakdown_regime": "Precision was measured on the study's own note distribution; performance on other sites' documentation styles is unproven",
+   "domain": "clinical NLP",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Extracted concepts are audited against human labels with a stated success rate before they feed any model; the engine treats unaudited extraction as unlabeled noise regardless of how plausible the output looks.",
+    "source_operator": "moonstone_classifier_precision",
+    "telemetry": "Labeled note samples, classifier outputs and confusion counts"
+   }
+  },
+  {
+   "primitive_id": "parents_sample",
+   "name": "The wartime parent study included 402 parents, 201 fathers and 201 mothers, drawn from unrelated households",
+   "verbatim_quote": "The study included 402 parents (201 fathers and 201 mothers)",
+   "page": "Hamama-Raz and Hamama, Methods, ebook p.65",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Parents were of sons or daughters aged 18-27 in regular or reserve duty during wartime, recruited through a national online panel in August 2025",
+    "Unrelated households keep mothers' and fathers' networks statistically independent"
+   ],
+   "breakdown_regime": "Online panel self-selection and a single national context limit generalization; data are cross-sectional self-reports",
+   "domain": "family systems sampling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The exposed unit is the family system around the index person, not the index person alone; the engine tracks second-order exposure in connected individuals as its own signal channel.",
+    "source_operator": "parents_sample",
+    "telemetry": "Family linkage records, caregiver and parent survey panels"
+   }
+  },
+  {
+   "primitive_id": "mothers_network_integration",
+   "name": "Mothers' symptom network had shorter path lengths and higher predictability, with healthcare visits acting as a dominant bridge between domains",
+   "verbatim_quote": "had shorter path lengths, higher predictability, and healthcare visits",
+   "page": "Hamama-Raz and Hamama, Abstract/Results, ebook p.64",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Networks were estimated per group and compared with edge and centrality invariance tests",
+    "Global strength was similar across groups (fathers 5.65, mothers 5.79), so the difference is organization, not total connectivity"
+   ],
+   "breakdown_regime": "Cross-sectional networks show conditional association structure, not causal spread; bridge status can shift with the variable set included",
+   "domain": "network psychometrics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "In an integrated network, disturbances propagate quickly and the bridge nodes are the leverage points; the engine monitors bridge variables as early-warning and intervention points in any coupled symptom or signal system.",
+    "source_operator": "mothers_network_integration",
+    "telemetry": "Multivariate symptom and behavior panels, healthcare utilization records"
+   }
+  },
+  {
+   "primitive_id": "fathers_compartmentalized_network",
+   "name": "Fathers' network was denser yet more compartmentalized, with bridges concentrated on somatic and pain nodes and adverse events, and alcohol use isolated",
+   "verbatim_quote": "network was denser yet more compartmentalized, with bridges concentrated on",
+   "page": "Hamama-Raz and Hamama, Abstract/Results, ebook p.64",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Compartmentalization means distress can be high inside a module while remaining invisible to help-seeking channels",
+    "Gendered expression patterns are attributed more to socialized roles than to physiology, per the authors"
+   ],
+   "breakdown_regime": "Density and compartmentalization estimates depend on the same cross-sectional self-report data; isolated alcohol use may reflect under-reporting",
+   "domain": "network psychometrics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Absence of signal in a subgroup can be a structural artifact of a compartmentalized network rather than absence of the underlying state; the engine checks network structure before interpreting a quiet channel as a healthy one.",
+    "source_operator": "fathers_compartmentalized_network",
+    "telemetry": "Network density and bridge distribution by subgroup, channel-specific reporting rates"
+   }
+  },
+  {
+   "primitive_id": "bridge_centrality_methods",
+   "name": "Bridge centrality was computed with the networktools package as bridge strength, bridge betweenness and bridge closeness, identifying nodes that connect network communities",
+   "verbatim_quote": "package including bridge strength, bridge betweenness, and bridge",
+   "page": "Hamama-Raz and Hamama, Methods, ebook p.66",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Communities were defined a priori as psychological, somatic and behavioral or utilization domains",
+    "Networks were estimated with EBICglasso via bootnet, with predictability from the mgm package and group comparison by network comparison tests"
+   ],
+   "breakdown_regime": "Bridge metrics inherit the estimated network's uncertainty; the authors bootstrapped with 1,000 iterations to check stability",
+   "domain": "network methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Cross-community connectors are ranked by strength, betweenness and closeness so monitoring effort goes to the nodes whose change would reconnect or destabilize the whole structure; the engine maintains the same three bridge rankings for its own signal graphs.",
+    "source_operator": "bridge_centrality_methods",
+    "telemetry": "Estimated edge weights, community assignments, bootstrap stability distributions"
+   }
+  },
+  {
+   "primitive_id": "cbs_definition",
+   "name": "Charles Bonnet Syndrome: visual hallucinations in complete or partial vision loss that are not attributable to cognitive decline or a psychiatric disorder, with insight typically preserved",
+   "verbatim_quote": "hallucinations that are not attributable to cognitive decline or a",
+   "page": "McCready et al., Introduction, ebook p.83",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The accepted mechanism is deafferentation: reduced afferent visual input triggers compensatory hyperactivity in the visual cortex",
+    "Hallucinations range from simple patterns to detailed faces, animals or scenes, lasting seconds to continuously"
+   ],
+   "breakdown_regime": "The definition excludes psychiatric causes, so in veteran populations it is easily misread as PTSD, psychosis or dementia, which is the paper's central recognition problem",
+   "domain": "diagnostic definition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Classification separates a signal-generation fault (sensory cortex releasing stored patterns under input loss) from an interpretation fault (psychosis or cognitive decline); the engine likewise distinguishes generator faults from interpreter faults before assigning a cause.",
+    "source_operator": "cbs_definition",
+    "telemetry": "Sensory function measures, hallucination reports, cognitive screening results"
+   }
+  },
+  {
+   "primitive_id": "cbs_veteran_prevalence",
+   "name": "Around 11 percent of visually impaired veterans experience Charles Bonnet Syndrome",
+   "verbatim_quote": "around 11% of visually impaired veterans experience CBS (Jones",
+   "page": "McCready et al., Introduction, ebook p.83",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Figure comes from the programme's earlier prevalence work on UK visually impaired veterans (Jones et al., 2025b)",
+    "Over one million US veterans and about 59,000 UK veterans live with visual impairment, per the cited sources"
+   ],
+   "breakdown_regime": "Prevalence in a help-seeking or surveyed subgroup may not equal prevalence among all visually impaired veterans; under-disclosure biases it downward",
+   "domain": "prevalence base rate",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Subgroup base rates are stored as priors that any individual-level assessment must start from; an 11 percent prior in the defined subgroup changes how much evidence a single report needs to carry.",
+    "source_operator": "cbs_veteran_prevalence",
+    "telemetry": "Subgroup prevalence registries, vision impairment rolls"
+   }
+  },
+  {
+   "primitive_id": "physician_unawareness",
+   "name": "In a survey of 499 Canadian physicians, 55 percent were unaware of Charles Bonnet Syndrome and 85 percent did not routinely discuss it with visually impaired patients",
+   "verbatim_quote": "found that 55% were unaware of the condition and 85% did not",
+   "page": "McCready et al., Introduction, ebook p.83",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Survey figures are as reported by Gordon and Felfeli (2018), cited in the paper",
+    "Low clinician awareness compounds patient non-disclosure driven by fear of psychiatric misdiagnosis"
+   ],
+   "breakdown_regime": "A 2018 Canadian survey may not describe current UK veteran-sector clinicians, the toolkit's target audience",
+   "domain": "recognition bottleneck",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Detection failure can sit in the recognizer rather than the signal: when most recognizers have never heard of a pattern, negative findings carry little information; the engine audits recognizer coverage before trusting an absence.",
+    "source_operator": "physician_unawareness",
+    "telemetry": "Clinician awareness surveys, diagnosis rates by clinic and specialty"
+   }
+  },
+  {
+   "primitive_id": "cbs_toolkit",
+   "name": "The co-produced CBS psychoeducational toolkit was delivered as podcasts and a video animation, in the formats the veteran and clinician users preferred",
+   "verbatim_quote": "A psychoeducational toolkit was developed in the form of podcasts and a video animation, as preferred by users.",
+   "page": "McCready et al., Abstract/Results, ebook p.82",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Format followed a two-phase co-production design: a workshop with 7 veterans and 13 professionals, then a feedback focus group with 4 veterans and 5 professionals",
+    "Every product includes a practical strategy for managing visual hallucinations"
+   ],
+   "breakdown_regime": "Small co-production samples shape the product; acceptability in the workshop does not prove reach or effect at scale",
+   "domain": "co-production",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Explanations are packaged in the medium the receiver selected during co-design, not the medium the producer prefers; the engine treats format choice as part of the intervention and records it alongside content.",
+    "source_operator": "cbs_toolkit",
+    "telemetry": "Toolkit usage counts, format preference data, disclosure and help-seeking rates"
+   }
+  },
+  {
+   "primitive_id": "pct_definition",
+   "name": "The polytrauma clinical triad (PCT) is the combination of PTSD, chronic pain syndromes and persistent post-TBI symptoms, mostly after mild TBI, treated as one composite state",
+   "verbatim_quote": "The polytrauma clinical triad (PCT) refers to the combination of",
+   "page": "Manhapra et al., Introduction, ebook p.103",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An estimated 13 percent of US veterans enrolled in VHA facilities meet PCT diagnostic criteria, per the cited studies",
+    "The three components share overlapping symptoms, producing complex combined profiles"
+   ],
+   "breakdown_regime": "The triad label can mask which component dominates in an individual; the FREIDEM model itself is scoped to mTBI and may not suit moderate to severe TBI with severe cognitive compromise",
+   "domain": "composite syndrome",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Recurring co-occurring conditions are named as one composite state with its own dynamics, instead of being juggled as separate flags whose interactions must be rediscovered case by case.",
+    "source_operator": "pct_definition",
+    "telemetry": "Component diagnosis triples, symptom overlap profiles"
+   }
+  },
+  {
+   "primitive_id": "freidem_suspended_healing",
+   "name": "FREIDEM model: a complex chronic pain syndrome like PCT is a state of inadequate or suspended self-healing produced by the cumulative impact of several biopsychosocial impediments accrued over a lifetime",
+   "verbatim_quote": "that a complex CPS like PCT represents a state of inadequate or suspended",
+   "page": "Manhapra et al., Abstract, ebook p.103",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Impediments are multimorbidity: psychiatric, substance use, medical and psychosocial factors accrued over a lifetime",
+    "Treatment is theorized as advancing self-recovery by mitigating impediments, with symptom management judicious and time-limited"
+   ],
+   "breakdown_regime": "The model is explicitly untested; the authors state it needs rigorous experimental evaluation before wide acceptance",
+   "domain": "theoretical model",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Persistent symptoms are modeled as an incomplete recovery process stalled by identifiable impediments, so the reasoning target is the impediment list and its removal order, not the symptom intensity alone.",
+    "source_operator": "freidem_suspended_healing",
+    "telemetry": "Impediment inventories across biological, psychological and social domains, recovery trajectories"
+   }
+  },
+  {
+   "primitive_id": "nociplastic_pain",
+   "name": "Nociplastic pain (IASP, 2017), the primary pain type in chronic pain syndromes, occurs without injury or disease of non-neural tissue or nerves at the pain location",
+   "verbatim_quote": "pain, considered the primary type of pain in CPS, occurs without",
+   "page": "Manhapra et al., section 2, ebook p.105",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Nociplastic is a third mechanistic category alongside nociceptive and neuropathic pain",
+    "Drivers can be whole-person threats such as psychiatric disorders, substance use, chronic medical issues and psychosocial stressors"
+   ],
+   "breakdown_regime": "A mechanism class defined partly by absence of local findings risks becoming a residual bucket unless positive criteria are applied",
+   "domain": "pain mechanism taxonomy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A state can be driven by system-level load with no local lesion at the site where it is felt; the engine permits generator-absent explanations and looks for whole-system drivers instead of forcing a local cause.",
+    "source_operator": "nociplastic_pain",
+    "telemetry": "Pain reports discordant with local examination and imaging, whole-person stressor inventories"
+   }
+  },
+  {
+   "primitive_id": "recuperative_debility",
+   "name": "In the FREIDEM view the polysymptomatic state is recuperative debility: an innate healing response in which pain and accompanying symptoms promote recovery behaviors and resolve once biopsychosocial recovery is sufficient",
+   "verbatim_quote": "polysymptomatic recuperative debility is likely a part of a complex innate healing response that promotes further recovery",
+   "page": "Manhapra et al., section 2, ebook p.105",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Pain, fatigue, sleep and appetite problems, low energy and social withdrawal develop and dissipate together rather than sequentially",
+    "Debility behaviors are recuperative, so suppressing symptoms without advancing recovery misses the mechanism"
+   ],
+   "breakdown_regime": "The healing-response framing is a theoretical reinterpretation built through the Theory Creation Model over 10 years of clinic observation; it is not yet experimentally confirmed",
+   "domain": "recovery theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Debility signals are read as an adaptive recovery program with an expected resolution condition, so the engine asks what recovery is incomplete and what would complete it, instead of scoring the signals only as deficits to suppress.",
+    "source_operator": "recuperative_debility",
+    "telemetry": "Activity, sleep, appetite and fatigue panels tracked against recovery milestones"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "2a995218715ac410-t1",
+   "think": "This volume is an edited Frontiers Research Topic, not a single study, and its value to a reasoning engine is the way ten independent contributions converge on one operating picture. The editorial states the picture plainly: in military and veteran populations, traumatic brain injury, PTSD, chronic pain, epilepsy, depression, stroke, sensory loss and cognitive decline rarely occur in isolation. They interact, they unfold over decades, and they are shaped by recognition failures, access barriers and family context. Each article then supplies one piece of machinery for handling that picture. Belding and colleagues supply the long time horizon. Using the CHAMPS archive, they follow more than six million service members and restrict analysis to the 1.2 million retirees whose outcomes stay observable, then show that a concussion recorded during service is associated with more than four times the likelihood of later memory loss and mild cognitive impairment diagnoses, while early-onset dementia itself does not move. The lesson is channel separation: precursor outcomes and terminal outcomes carry different hazard structures, and a mild early event can matter enormously at a forty-year horizon. Their low-level blast definition adds an exposure taxonomy based on the direction and source of the blast rather than its size alone. Zhao and colleagues supply a mechanism stack for one intervention. Their narrative review of fifty-four studies organizes exercise effects on veteran PTSD into a psychological layer, subjective and psychological well-being, and a physiological layer, hippocampal structure, HPA axis regulation and immune modulation, with cluster-specific effect sizes rather than one global number. The two neuromodulation papers supply intervention engineering. EXERT-Stroke is a nine-person feasibility pilot pairing M1 rTMS dosed at ninety percent of resting motor threshold with heart-rate-reserve exercise dosed by the Karvonen formula; its endpoint is deliverability, and it reports completion and zero serious adverse events rather than efficacy. ADEPT is a protocol for a Bayesian adaptive trial of accelerated iTBS after concussion, with prespecified posterior thresholds for dropping an arm, stopping for futility and stopping for success, and a head-to-head test of individualized rsfMRI targeting against scalp targeting. Together they show dose expressed as a complete grammar and evidence generated under explicit stopping rules. McDonald and colleagues supply measurement engineering: the C4 questionnaire measures activity-level complaints instead of impairment labels, embeds a bias-check item that the injury cannot affect, and forces a top-three ranking so an inventory becomes a plan. Panahi and colleagues supply phenotyping machinery: NLP extraction from clinical notes, a phenotype algorithm with stated positive predictive value, a classifier audited against human labels, and RDoC-domain phenotypes in which the temporal order of epilepsy and TBI changes the risk profile. Hamama-Raz and Hamama supply network machinery: symptom systems whose bridge nodes and compartment structure differ by subgroup, so that a quiet channel can mean hidden distress rather than health. McCready and colleagues supply the recognizer lesson: a well-defined syndrome, Charles Bonnet Syndrome, goes undetected mainly because clinicians have never heard of it and patients fear psychiatric mislabeling, and the fix is co-produced education in formats users chose. Manhapra and colleagues supply the unifying theory. The FREIDEM model reframes the polytrauma triad as a complex chronic pain syndrome, a state of suspended self-healing under cumulative biopsychosocial impediments, with nociplastic pain as the mechanism that needs no local lesion. Read together, the volume argues that a reasoning engine should model interacting states over long horizons, encode event order, separate precursor from terminal hazards, dose interventions in threshold-relative units, gate candidates through feasibility before efficacy, embed null probes in its instruments, monitor bridge variables, audit its recognizers, and treat persistent symptom clusters as incomplete recovery processes with identifiable impediments. Two further patterns deserve weight. The first is that null results in this volume are informative rather than empty. Belding's occupational low-level blast risk showed no association with early-onset dementia and no association with dementia once memory loss and MCI were excluded, yet it did associate with memory loss diagnoses; the exposure signal lives in the precursor channel only. A reasoning layer that tested only the terminal outcome would have recorded a clean null and discarded a real, narrower effect. The second pattern is the volume's insistence on implementation as a scientific variable. The editorial's third theme is recognition and delivery: travel burden, stigma, fragmented services and family context decide whether an effective intervention ever reaches the person. The Charles Bonnet toolkit, the C4's clinician-endorsed treatment targets and EXERT-Stroke's recruitment arithmetic all treat deliverability as measured data. Zhao's review makes the same point from the other side: exercise is acceptable to military patients partly because it does not carry the stigma of psychiatric treatment, and its reported regimens are concrete, such as low to moderate aerobic sessions of thirty to forty minutes over twenty or more weeks. Stacking the contributions gives a measurement hierarchy the engine can copy. Recognition comes first: know that a pattern exists and that your recognizers can see it. Classification follows: bounded case definitions, persistence thresholds and exclusion rules turn observations into states. Phenotyping follows: order-aware, domain-organized profiles replace flat labels. Only then do interventions enter, dosed in threshold-relative units, gated by feasibility, and adapted under prespecified Bayesian rules, with the impediment list as the standing reasoning target for anything that fails to resolve. Most analytic failures this volume documents are level errors, a classification treated as a phenotype, a feasibility result read as efficacy, a recognizer gap read as an absence. Its limits are equally clear. Most contributions are observational, qualitative, feasibility-stage or protocol-stage; ADEPT has no results yet and FREIDEM is explicitly untested. Effect sizes come from selected military and veteran populations and may not transport. The volume is a map of mechanisms and methods, not a set of settled effects, and every primitive extracted here inherits that status.",
+   "retrocausal_genealogy": "The volume's lineage runs through several older traditions that converged after two decades of war. The cohort epidemiology descends from military medical surveillance systems built to follow service members across a career. The polytrauma triad concept emerged from VA polytrauma care for Iraq and Afghanistan veterans, and FREIDEM extends the biopsychosocial model of chronic pain, Fordyce-era interdisciplinary pain rehabilitation, and the IASP's 2017 nociplastic category. The phenotyping work descends from NIMH's Research Domain Criteria initiative and from clinical NLP in the VA record system. The neuromodulation trials descend from FDA-cleared depression protocols, including the accelerated SNT protocol, now being carried into brain-injured populations that earlier trials excluded.",
+   "theory_of_mind": "The editors and authors model their reader as a clinician-researcher inside military and veteran health systems who already knows the single-diagnosis literature and is frustrated by its failure at the bedside. They assume the reader accepts that comorbidity is the norm, that function and quality of life are the outcomes that matter, and that implementation constraints are part of the science rather than an afterthought. Their model of the domain is systems-first: patients are trajectories through interacting conditions and care structures, families are part of the exposed unit, and the binding constraints are recognition, access and time. Articles are written to hand that reader a usable tool, a questionnaire, a trial design, a phenotype method, a care model, rather than only a finding.",
+   "cross_layer_veto": "Several findings in this volume veto shortcuts a reasoning layer might otherwise take. The Belding result vetoes collapsing precursor and terminal outcomes into one dementia variable, because the hazards diverge. The Panahi phenotypes veto unordered comorbidity features, because reversing the order of epilepsy and TBI changes the risk profile. The fathers' network vetoes reading a silent channel as a healthy one. The Charles Bonnet work vetoes trusting negative findings from recognizers who lack the concept entirely. The EXERT pilot vetoes efficacy language for an intervention that has only passed a feasibility gate, and the FREIDEM paper vetoes its own model, labeling it untested and scoped to mild TBI."
+  }
+ ],
+ "universal_lens": "Read as a general template, this volume is about any domain where multiple slow conditions interact inside one system over long horizons. Its recurring moves transfer directly: define the observable denominator before computing rates, classify exposures by generating mechanism, separate precursor from terminal outcomes, express dose relative to individual capacity, prespecify Bayesian stopping rules, embed null probes in instruments, rank inventories before acting, model event order as information, find bridge variables in coupled networks, audit the recognizers, and treat persistent dysfunction as a stalled recovery process with removable impediments rather than a fixed trait of the system.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the volume's clinical machinery as research infrastructure: lifespan cohort design for following athletes after head impact, activity-level complaint instruments with bias-check items for post-concussion follow-up, RDoC-style phenotyping of symptom clusters, network models of symptom interaction in recovery, and the FREIDEM discipline of listing biopsychosocial impediments to recovery in order. It also takes the cautionary structure: feasibility before efficacy, protocols labeled as protocols, and models labeled as untested until they survive prospective evaluation.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes methods, not medical claims. From this volume it adopts denominator-first cohort construction, precursor-versus-terminal hazard separation, event-order features, threshold-relative dosing units, the three-threshold Bayesian grammar for promoting, dropping or futility-stopping candidate signals, known-null probes inside its intake instruments, bridge-node monitoring in coupled signal graphs, and recognizer-coverage audits before any absence of evidence is treated as evidence of absence. These are reasoning and evaluation mechanics that strengthen projection quality without importing any clinical conclusion into a sports context."
+}

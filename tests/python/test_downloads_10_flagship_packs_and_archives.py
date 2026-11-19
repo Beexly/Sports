@@ -1,18 +1,20 @@
-"""Unit Test Suite for the 10-File Downloads Flagship Packs & Streaming Archive Harvester.
+r"""Unit Test Suite for the 10-File Downloads Flagship Packs & Streaming Archive Harvester.
 
 Verifies:
-1. All 10 flagship files in `C:\\Users\\Garrett\\Downloads\\` are audited in
+1. All 10 flagship files in `C:\Users\Garrett\Downloads\` are audited in
    `data/audits/downloads_10_flagship_packs_and_archives_audit_2026_11_06.json` and
    `docs/engine/research/2026-11-06/DOWNLOADS_10_FLAGSHIP_PACKS_AND_ARCHIVES_BIBLE.md`.
 2. In-memory streaming audit of `175a7503-2ced-4d50-8494-b61b9c313b9d.zip` (1.47 GB, 2,426 entries,
-   705,112,070-byte `prod-grok-backend.json` 8MB-chunk scan) and `EYI Package_11-06-2026_1793956103.zip`
-   (789 MB, 1,514 entries) with strict credential firewall enforcement.
+   705,112,070-byte `prod-grok-backend.json` 8MB-chunk scan) and
+   `EYI Package_11-06-2026_1793956103.zip` (789 MB, 1,514 entries) with strict credential firewall
+   enforcement.
 3. Recovery & sanitization of first-party specs (`GSE_V5_3_0_BUILD_SPEC_RECOVERED.md`,
    `OPEN_SOURCE_FOOTBALL_DISSECTION_RECOVERED.md`, `GSE_DEEP_NFL_METRICS_CATALOG_RECOVERED.md`)
    and all 11 modules in `intelligence/introspection_s0s1/`.
 4. Pinecone (`2025-04` API) upsert of 25 hybrid vectors into `gse-200-book-hybrid-index`
    namespace `gse-downloads-10-flagship-packs`.
-5. Zero raw credentials and zero literal forbidden abbreviations across all generated/recovered files.
+5. Zero raw credentials and zero literal forbidden abbreviations across all generated/recovered
+   files.
 """
 
 from __future__ import annotations
@@ -29,8 +31,20 @@ if str(REPO_ROOT) not in sys.path:
 
 
 def test_downloads_10_flagship_packs_audit_json_and_bible() -> None:
-    json_path = REPO_ROOT / "data" / "audits" / "downloads_10_flagship_packs_and_archives_audit_2026_11_06.json"
-    md_path = REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06" / "DOWNLOADS_10_FLAGSHIP_PACKS_AND_ARCHIVES_BIBLE.md"
+    json_path = (
+        REPO_ROOT
+        / "data"
+        / "audits"
+        / "downloads_10_flagship_packs_and_archives_audit_2026_11_06.json"
+    )
+    md_path = (
+        REPO_ROOT
+        / "docs"
+        / "engine"
+        / "research"
+        / "2026-11-06"
+        / "DOWNLOADS_10_FLAGSHIP_PACKS_AND_ARCHIVES_BIBLE.md"
+    )
     assert json_path.is_file(), "Missing audit JSON"
     assert md_path.is_file(), "Missing audit Markdown Bible"
 
@@ -50,7 +64,9 @@ def test_downloads_10_flagship_packs_audit_json_and_bible() -> None:
     assert oai_docx["tables_count"] == 2
     assert oai_docx["omml_equations_count"] == 130
 
-    upt_docx = data["docx_files"]["Universal Phase-Transition Engine GSE Revenue & GSI Grant Blueprint.docx"]
+    upt_docx = data["docx_files"][
+        "Universal Phase-Transition Engine GSE Revenue & GSI Grant Blueprint.docx"
+    ]
     assert upt_docx["size_bytes"] == 5619480
 
     gsi_11_5_docx = data["docx_files"]["GSI & GSE 11_5 (1).docx"]
@@ -90,9 +106,30 @@ def test_downloads_10_flagship_packs_audit_json_and_bible() -> None:
 
 def test_recovered_first_party_specs_and_introspection_s0s1_modules() -> None:
     spec_paths = [
-        REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06" / "GSE_V5_3_0_BUILD_SPEC_RECOVERED.md",
-        REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06" / "OPEN_SOURCE_FOOTBALL_DISSECTION_RECOVERED.md",
-        REPO_ROOT / "docs" / "data-sources" / "research" / "2026-11-06" / "GSE_DEEP_NFL_METRICS_CATALOG_RECOVERED.md",
+        (
+            REPO_ROOT
+            / "docs"
+            / "engine"
+            / "research"
+            / "2026-11-06"
+            / "GSE_V5_3_0_BUILD_SPEC_RECOVERED.md"
+        ),
+        (
+            REPO_ROOT
+            / "docs"
+            / "engine"
+            / "research"
+            / "2026-11-06"
+            / "OPEN_SOURCE_FOOTBALL_DISSECTION_RECOVERED.md"
+        ),
+        (
+            REPO_ROOT
+            / "docs"
+            / "data-sources"
+            / "research"
+            / "2026-11-06"
+            / "GSE_DEEP_NFL_METRICS_CATALOG_RECOVERED.md"
+        ),
     ]
     for sp in spec_paths:
         assert sp.is_file(), f"Missing recovered spec: {sp}"
@@ -126,11 +163,44 @@ def test_zero_secrets_and_zero_forbidden_abbreviations() -> None:
 
     files_to_check = [
         REPO_ROOT / "scripts" / "ops" / "harvest_10_downloads_flagship_packs_and_archives.py",
-        REPO_ROOT / "data" / "audits" / "downloads_10_flagship_packs_and_archives_audit_2026_11_06.json",
-        REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06" / "DOWNLOADS_10_FLAGSHIP_PACKS_AND_ARCHIVES_BIBLE.md",
-        REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06" / "GSE_V5_3_0_BUILD_SPEC_RECOVERED.md",
-        REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06" / "OPEN_SOURCE_FOOTBALL_DISSECTION_RECOVERED.md",
-        REPO_ROOT / "docs" / "data-sources" / "research" / "2026-11-06" / "GSE_DEEP_NFL_METRICS_CATALOG_RECOVERED.md",
+        (
+            REPO_ROOT
+            / "data"
+            / "audits"
+            / "downloads_10_flagship_packs_and_archives_audit_2026_11_06.json"
+        ),
+        (
+            REPO_ROOT
+            / "docs"
+            / "engine"
+            / "research"
+            / "2026-11-06"
+            / "DOWNLOADS_10_FLAGSHIP_PACKS_AND_ARCHIVES_BIBLE.md"
+        ),
+        (
+            REPO_ROOT
+            / "docs"
+            / "engine"
+            / "research"
+            / "2026-11-06"
+            / "GSE_V5_3_0_BUILD_SPEC_RECOVERED.md"
+        ),
+        (
+            REPO_ROOT
+            / "docs"
+            / "engine"
+            / "research"
+            / "2026-11-06"
+            / "OPEN_SOURCE_FOOTBALL_DISSECTION_RECOVERED.md"
+        ),
+        (
+            REPO_ROOT
+            / "docs"
+            / "data-sources"
+            / "research"
+            / "2026-11-06"
+            / "GSE_DEEP_NFL_METRICS_CATALOG_RECOVERED.md"
+        ),
     ]
     for py_mod in (REPO_ROOT / "intelligence" / "introspection_s0s1").glob("*.py"):
         files_to_check.append(py_mod)

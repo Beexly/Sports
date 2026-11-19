@@ -1,0 +1,144 @@
+{
+  "schema": "gse-game-ts-overlay-receipt-v1",
+  "season": 2026,
+  "week": 10,
+  "matchup": "KC@ATL",
+  "espnEventId": "401873058",
+  "kickoffUtc": "2026-11-15T18:00Z",
+  "venue": "Stadium",
+  "indoor": false,
+  "gameSlot": "SUN_EARLY",
+  "confirmedQb1": {
+    "away": {
+      "team": "KC",
+      "qb": "Patrick Mahomes"
+    },
+    "home": {
+      "team": "ATL",
+      "qb": "Michael Penix Jr."
+    }
+  },
+  "mcpCognitiveRouter": {
+    "contextMaskWords": [
+      255,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "stageCSelectedCount": 20,
+    "jamesSteinShrinkage": 0,
+    "clampedLogOddsDelta": 0.0036,
+    "clamped": false,
+    "mpRankShrinkage": 0.97443
+  },
+  "masterSituationalOverlay": {
+    "streamsExecutedCount": 14,
+    "streamsTotalCount": 19,
+    "situational80EvaluatedCount": 80,
+    "zeroOrphanModulesCount": 140,
+    "conformalAbstentionVerdict": "ABSTAIN_CONFORMAL"
+  },
+  "corpusGrounding": {
+    "overallSupport": 0.563904,
+    "coverage": 0.8,
+    "facetsCount": 5,
+    "evidenceCount": 8,
+    "citationsSample": [
+      "lit.situation:e3b0c44298fc#0",
+      "lit.corpus_chunk:e3b0c44298fc#0",
+      "lit.corpus_statement:8a7b6c5d4e3fp48",
+      "lit.corpus_chunk:a1b2c3d4e5f6#1",
+      "lit.situation:a1b2c3d4e5f6#1"
+    ]
+  },
+  "tacticalPrior": {
+    "logOddsPrior": 0.006468,
+    "rawLogOdds": 0.34,
+    "support": 0.4,
+    "boundedByPriorBound": true,
+    "priorBoundLimit": 0.025
+  },
+  "chartingHooks": {
+    "statrankings": {
+      "proeSeason": -0.015,
+      "proeL3": -0.0165,
+      "neutralPaceSecPerPlay": 27.8,
+      "firstHalfPassPct": 0.535,
+      "passRateTrailing8Plus": 0.72,
+      "passRateLeading8Plus": 0.44,
+      "matchupRanks": {
+        "scoring": 21,
+        "epa": 21,
+        "pressure": 8,
+        "redzone": 14,
+        "tackling": 12,
+        "kicking": 10,
+        "qb": 15,
+        "rb": 15,
+        "wr": 11,
+        "te": 13
+      },
+      "wrYprrVsMan": 2.15,
+      "wrYprrVsZone": 1.85,
+      "primaryCbFpRtAllowed": 0.28,
+      "seasonFpVsXfp": 1.04
+    },
+    "samHoppen": {
+      "epaPerPlayYtd": 0.048,
+      "epaPerPlayL4": 0.0504,
+      "successRateYtd": 0.434,
+      "successRateL4": 0.44399999999999995,
+      "epaPerDrive": 1.59,
+      "earlyDownEpa": 0.055,
+      "explosivePassPct": 0.122,
+      "explosiveRushPct": 0.119,
+      "cpoe": -1.95,
+      "pressurePct": 0.29,
+      "personnel11Pct": 0.64,
+      "multiTePct": 0.28,
+      "motionAtSnapPct": 0.36,
+      "zoneRushPct": 0.58,
+      "clockDrainPct": 0.42,
+      "manCoveragePct": 0.26,
+      "zoneCoveragePct": 0.74,
+      "lightBoxPct": 0.52,
+      "blitzPct": 0.21,
+      "stuntPct": 0.18
+    },
+    "fantasyPtsData": {
+      "sepScore": 79.3,
+      "oneReadPct": 62.8
+    },
+    "pattonAnalytics": {
+      "pressureOverExpectation": -10,
+      "pressureToSackSurvivalRate": 0.81
+    },
+    "koalatyStats": {
+      "xfpPerG": 15.2,
+      "fppgMinusXfppg": 0.8
+    },
+    "wideLeft": {
+      "cover1RateByDefense": 0.20800000000000002
+    }
+  },
+  "cadenceWindows": {
+    "noonMasterLock": {
+      "version": "v3.0",
+      "dow": "Fri",
+      "ctTime": "12:00",
+      "phase": "NOON_CONTENT_READY_MASTER_LOCK"
+    },
+    "tMinus90Adjustment": {
+      "version": "v4.0",
+      "ctTime": "10:30",
+      "adjustmentUtc": "2026-11-15T16:30:00.000Z"
+    }
+  },
+  "generatedUtc": "2026-11-15T20:12:15.803Z",
+  "merkleHash": "b4dc0cbaef8a5950967c22a65d98435de58bd4f3ae6590b71e2a1ba712728571"
+}

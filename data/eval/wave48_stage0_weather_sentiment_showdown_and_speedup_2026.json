@@ -1,0 +1,964 @@
+{
+  "schema": "wave48_stage0_weather_sentiment_showdown_benchmark_v1",
+  "generated_utc": "2026-11-18T22:23:55.040884+00:00",
+  "real_money_stake_cleared": false,
+  "live_stake_fraction": 0.0,
+  "clinical_ruo_sports_weight": 0.0,
+  "live_win_prob_sentiment_weight": 0.0,
+  "cross_sport_soccer_contract_nfl_weight": 0.0,
+  "martingale_and_shortcut_audit": {
+    "schema": "wave48_martingale_and_shortcut_audit_v1",
+    "clean_checkout_fallback": false,
+    "games_audited": 147,
+    "total_games_audited": 148,
+    "margin_real_corr": 0.144543,
+    "margin_empirical_p_value": 0.04192,
+    "total_real_corr": 0.226998,
+    "total_empirical_p_value": 0.00998,
+    "null_placebo_draws": 500,
+    "beats_null_95pct": true,
+    "total_beats_null_99pct": true,
+    "shortcut_max_output_perturbation": 0.0,
+    "shortcut_invariance_verified": true
+  },
+  "walk_forward_hydrated_spine_showdown": {
+    "schema": "wave48_hydrated_spine_showdown_walkforward_v1",
+    "clean_checkout_fallback": false,
+    "games_evaluated": 18,
+    "total_worlds_simulated": 18000,
+    "all_hydrated_from_vaults": true,
+    "max_world_conservation_residual": 0.0,
+    "total_orphaned_projections": 0,
+    "zero_cap_violations": true,
+    "all_showdown_gpp_in_anti_dupe_band": true,
+    "all_qb_cpt_stacks_compliant": true,
+    "max_portfolio_overlap": 4,
+    "sample_games_preview": [
+      {
+        "week": 2,
+        "matchup": "DET @ BUF",
+        "qb_away_name": "Jared Goff",
+        "qb_home_name": "Josh Allen",
+        "salary_left_range": [
+          600,
+          2100
+        ]
+      },
+      {
+        "week": 2,
+        "matchup": "CAR @ ATL",
+        "qb_away_name": "Bryce Young",
+        "qb_home_name": "Tua Tagovailoa",
+        "salary_left_range": [
+          600,
+          1000
+        ]
+      },
+      {
+        "week": 3,
+        "matchup": "ATL @ GB",
+        "qb_away_name": "Michael Penix Jr.",
+        "qb_home_name": "Jordan Love",
+        "salary_left_range": [
+          700,
+          1300
+        ]
+      },
+      {
+        "week": 3,
+        "matchup": "LAC @ BUF",
+        "qb_away_name": "Justin Herbert",
+        "qb_home_name": "Josh Allen",
+        "salary_left_range": [
+          600,
+          1600
+        ]
+      },
+      {
+        "week": 4,
+        "matchup": "PIT @ CLE",
+        "qb_away_name": "Aaron Rodgers",
+        "qb_home_name": "Deshaun Watson",
+        "salary_left_range": [
+          700,
+          1100
+        ]
+      },
+      {
+        "week": 4,
+        "matchup": "IND @ WAS",
+        "qb_away_name": "Daniel Jones",
+        "qb_home_name": "Marcus Mariota",
+        "salary_left_range": [
+          600,
+          800
+        ]
+      },
+      {
+        "week": 5,
+        "matchup": "TB @ DAL",
+        "qb_away_name": "Jalon Daniels",
+        "qb_home_name": "Dak Prescott",
+        "salary_left_range": [
+          600,
+          1100
+        ]
+      },
+      {
+        "week": 5,
+        "matchup": "PHI @ JAX",
+        "qb_away_name": "Jalen Hurts",
+        "qb_home_name": "Trevor Lawrence",
+        "salary_left_range": [
+          1100,
+          1700
+        ]
+      },
+      {
+        "week": 6,
+        "matchup": "SEA @ DEN",
+        "qb_away_name": "Drew L.",
+        "qb_home_name": "Bo Nix",
+        "salary_left_range": [
+          700,
+          1700
+        ]
+      },
+      {
+        "week": 6,
+        "matchup": "HOU @ JAX",
+        "qb_away_name": "C.J. Stroud",
+        "qb_home_name": "Trevor Lawrence",
+        "salary_left_range": [
+          700,
+          1000
+        ]
+      },
+      {
+        "week": 7,
+        "matchup": "NE @ CHI",
+        "qb_away_name": "Drake Maye",
+        "qb_home_name": "Caleb Williams",
+        "salary_left_range": [
+          700,
+          1600
+        ]
+      },
+      {
+        "week": 7,
+        "matchup": "PIT @ NO",
+        "qb_away_name": "Aaron Rodgers",
+        "qb_home_name": "Tyler Shough",
+        "salary_left_range": [
+          700,
+          1000
+        ]
+      },
+      {
+        "week": 8,
+        "matchup": "CAR @ GB",
+        "qb_away_name": "Bryce Young",
+        "qb_home_name": "Jordan Love",
+        "salary_left_range": [
+          1000,
+          1600
+        ]
+      },
+      {
+        "week": 8,
+        "matchup": "BAL @ BUF",
+        "qb_away_name": "Lamar Jackson",
+        "qb_home_name": "Josh Allen",
+        "salary_left_range": [
+          900,
+          2400
+        ]
+      },
+      {
+        "week": 9,
+        "matchup": "JAX @ BAL",
+        "qb_away_name": "Trevor Lawrence",
+        "qb_home_name": "Joe Fagnano",
+        "salary_left_range": [
+          1100,
+          1400
+        ]
+      },
+      {
+        "week": 9,
+        "matchup": "CIN @ ATL",
+        "qb_away_name": "Joe Burrow",
+        "qb_home_name": "Michael Penix Jr.",
+        "salary_left_range": [
+          600,
+          700
+        ]
+      },
+      {
+        "week": 10,
+        "matchup": "WAS @ NYG",
+        "qb_away_name": "Jayden Daniels",
+        "qb_home_name": "J.J. McCarthy",
+        "salary_left_range": [
+          700,
+          1500
+        ]
+      },
+      {
+        "week": 10,
+        "matchup": "NE @ DET",
+        "qb_away_name": "Tommy DeVito",
+        "qb_home_name": "Jared Goff",
+        "salary_left_range": [
+          1100,
+          1500
+        ]
+      }
+    ],
+    "cold_start_vectorization_telemetry": {
+      "baseline_seconds": 101.696,
+      "vectorized_seconds": 20.934,
+      "speedup_factor": 4.8627,
+      "seconds_saved": 80.762,
+      "sha256_exact_matches": 6,
+      "sha256_total_checked": 6
+    }
+  },
+  "sample_kc_at_den": {
+    "schema": "wave48_stage0_weather_sentiment_and_showdown_suite_v1",
+    "wired": true,
+    "matchup": "KC @ DEN",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "clinical_ruo_sports_weight": 0.0,
+    "live_win_prob_sentiment_weight": 0.0,
+    "cross_sport_soccer_contract_nfl_weight": 0.0,
+    "unmined_vaults_audit": {
+      "schema": "wave48_unmined_vaults_audit_v1",
+      "clean_checkout_fallback": false,
+      "kaggle_weather_zone1": {
+        "total_games": 14371,
+        "modern_2010_plus_games": 4363,
+        "modern_weather_valid_games": 3315,
+        "calm_under_10mph_mean_total": 46.516,
+        "wind_15mph_plus_mean_total": 40.0,
+        "wind_15mph_total_delta_pts": -6.516,
+        "cold_35f_wind_15mph_mean_total": 39.194,
+        "cold_wind_total_delta_pts": -7.322
+      },
+      "hf_twitter_sentiment_zone2": {
+        "raw_rows": 5171,
+        "valid_roberta_rows": 5153,
+        "quarantined_malformed_rows": 18,
+        "teams_covered": 10,
+        "routing_surface": "dfs_ownership_tilt_only",
+        "live_win_prob_weight": 0.0,
+        "chalk_firewall_zero_true_grad": true
+      },
+      "hf_contracts_zone1_quarantine": {
+        "contract_rows": 1000,
+        "detected_domain": "european_football_june30_club_contracts",
+        "nfl_gsis_overlap": 0,
+        "nfl_live_weight": 0.0,
+        "governance_policy": "INGEST_AND_LEARN_ISOLATED_5B_CUT"
+      },
+      "trades_and_stage0_truth_2026_w10": {
+        "total_trade_rows": 4975,
+        "trades_2026_count": 63,
+        "confirmed_qb1_count": 32,
+        "excluded_players_union_count": 241,
+        "verified_deadline_trades_count": 16,
+        "sea_qb1_sanitized": "Drew L."
+      }
+    },
+    "max_prior_week_used": 9,
+    "quarantined_metrics_weights": {
+      "raw_short_yardage_3rd4th_sr": 0.0,
+      "raw_turnover_avoidance_rate": 0.0,
+      "raw_outside_run_epa": 0.0,
+      "raw_def_short_yardage_stop": 0.0,
+      "unfiltered_soccer_contract_crossjoin_probe": 0.0
+    },
+    "away_w48_profile": {
+      "mot_sr_norm": 0.74322,
+      "d1_neut_epa_norm": 1.432562,
+      "rz_sr_norm": -0.432368,
+      "def_four_man_stop_norm": 0.298407,
+      "def_d1_stop_norm": 0.51688,
+      "bad_throw_avoid_norm": 0.409877,
+      "def_mid_stop_norm": 0.584544,
+      "def_obv_stop_norm": 0.016925,
+      "def_rz_stop_norm": 0.747294,
+      "def_uncontested_rate_norm": -0.105858,
+      "uc_epa_norm": 0.841683
+    },
+    "home_w48_profile": {
+      "mot_sr_norm": -0.792975,
+      "d1_neut_epa_norm": 0.608803,
+      "rz_sr_norm": 0.726819,
+      "def_four_man_stop_norm": 0.715906,
+      "def_d1_stop_norm": 0.589843,
+      "bad_throw_avoid_norm": -0.339895,
+      "def_mid_stop_norm": 0.813574,
+      "def_obv_stop_norm": 0.591649,
+      "def_rz_stop_norm": 1.136932,
+      "def_uncontested_rate_norm": 1.557214,
+      "uc_epa_norm": -0.165049
+    },
+    "game_total_obv_stop_weather_shift": {
+      "schema": "wave48_game_total_shift_v1",
+      "clean_checkout_fallback": false,
+      "matchup": "KC @ DEN",
+      "as_of_week": 10,
+      "is_divisional": true,
+      "effective_wind_mph": 6.0,
+      "effective_temp_f": 55.0,
+      "w48_tot_signal": -1.139468,
+      "total_shift_pts": -0.319051
+    },
+    "walk_forward_hydrated_spine_showdown": {
+      "schema": "wave48_hydrated_spine_showdown_walkforward_v1",
+      "clean_checkout_fallback": false,
+      "games_evaluated": 18,
+      "total_worlds_simulated": 18000,
+      "all_hydrated_from_vaults": true,
+      "max_world_conservation_residual": 0.0,
+      "total_orphaned_projections": 0,
+      "zero_cap_violations": true,
+      "all_showdown_gpp_in_anti_dupe_band": true,
+      "all_qb_cpt_stacks_compliant": true,
+      "max_portfolio_overlap": 4,
+      "sample_games_preview": [
+        {
+          "week": 2,
+          "matchup": "DET @ BUF",
+          "qb_away_name": "Jared Goff",
+          "qb_home_name": "Josh Allen",
+          "salary_left_range": [
+            600,
+            2100
+          ]
+        },
+        {
+          "week": 2,
+          "matchup": "CAR @ ATL",
+          "qb_away_name": "Bryce Young",
+          "qb_home_name": "Tua Tagovailoa",
+          "salary_left_range": [
+            600,
+            1000
+          ]
+        },
+        {
+          "week": 3,
+          "matchup": "ATL @ GB",
+          "qb_away_name": "Michael Penix Jr.",
+          "qb_home_name": "Jordan Love",
+          "salary_left_range": [
+            700,
+            1300
+          ]
+        },
+        {
+          "week": 3,
+          "matchup": "LAC @ BUF",
+          "qb_away_name": "Justin Herbert",
+          "qb_home_name": "Josh Allen",
+          "salary_left_range": [
+            600,
+            1600
+          ]
+        },
+        {
+          "week": 4,
+          "matchup": "PIT @ CLE",
+          "qb_away_name": "Aaron Rodgers",
+          "qb_home_name": "Deshaun Watson",
+          "salary_left_range": [
+            700,
+            1100
+          ]
+        },
+        {
+          "week": 4,
+          "matchup": "IND @ WAS",
+          "qb_away_name": "Daniel Jones",
+          "qb_home_name": "Marcus Mariota",
+          "salary_left_range": [
+            600,
+            800
+          ]
+        },
+        {
+          "week": 5,
+          "matchup": "TB @ DAL",
+          "qb_away_name": "Jalon Daniels",
+          "qb_home_name": "Dak Prescott",
+          "salary_left_range": [
+            600,
+            1100
+          ]
+        },
+        {
+          "week": 5,
+          "matchup": "PHI @ JAX",
+          "qb_away_name": "Jalen Hurts",
+          "qb_home_name": "Trevor Lawrence",
+          "salary_left_range": [
+            1100,
+            1700
+          ]
+        },
+        {
+          "week": 6,
+          "matchup": "SEA @ DEN",
+          "qb_away_name": "Drew L.",
+          "qb_home_name": "Bo Nix",
+          "salary_left_range": [
+            700,
+            1700
+          ]
+        },
+        {
+          "week": 6,
+          "matchup": "HOU @ JAX",
+          "qb_away_name": "C.J. Stroud",
+          "qb_home_name": "Trevor Lawrence",
+          "salary_left_range": [
+            700,
+            1000
+          ]
+        },
+        {
+          "week": 7,
+          "matchup": "NE @ CHI",
+          "qb_away_name": "Drake Maye",
+          "qb_home_name": "Caleb Williams",
+          "salary_left_range": [
+            700,
+            1600
+          ]
+        },
+        {
+          "week": 7,
+          "matchup": "PIT @ NO",
+          "qb_away_name": "Aaron Rodgers",
+          "qb_home_name": "Tyler Shough",
+          "salary_left_range": [
+            700,
+            1000
+          ]
+        },
+        {
+          "week": 8,
+          "matchup": "CAR @ GB",
+          "qb_away_name": "Bryce Young",
+          "qb_home_name": "Jordan Love",
+          "salary_left_range": [
+            1000,
+            1600
+          ]
+        },
+        {
+          "week": 8,
+          "matchup": "BAL @ BUF",
+          "qb_away_name": "Lamar Jackson",
+          "qb_home_name": "Josh Allen",
+          "salary_left_range": [
+            900,
+            2400
+          ]
+        },
+        {
+          "week": 9,
+          "matchup": "JAX @ BAL",
+          "qb_away_name": "Trevor Lawrence",
+          "qb_home_name": "Joe Fagnano",
+          "salary_left_range": [
+            1100,
+            1400
+          ]
+        },
+        {
+          "week": 9,
+          "matchup": "CIN @ ATL",
+          "qb_away_name": "Joe Burrow",
+          "qb_home_name": "Michael Penix Jr.",
+          "salary_left_range": [
+            600,
+            700
+          ]
+        },
+        {
+          "week": 10,
+          "matchup": "WAS @ NYG",
+          "qb_away_name": "Jayden Daniels",
+          "qb_home_name": "J.J. McCarthy",
+          "salary_left_range": [
+            700,
+            1500
+          ]
+        },
+        {
+          "week": 10,
+          "matchup": "NE @ DET",
+          "qb_away_name": "Tommy DeVito",
+          "qb_home_name": "Jared Goff",
+          "salary_left_range": [
+            1100,
+            1500
+          ]
+        }
+      ],
+      "cold_start_vectorization_telemetry": {
+        "baseline_seconds": 101.696,
+        "vectorized_seconds": 20.934,
+        "speedup_factor": 4.8627,
+        "seconds_saved": 80.762,
+        "sha256_exact_matches": 6,
+        "sha256_total_checked": 6
+      }
+    },
+    "live_honest_ast": {
+      "schema": "wave48_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 8,
+      "equations_evaluated": [
+        {
+          "eq_id": "memtx_w48_huber_prior_shrink",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.492542,
+          "operators": 6
+        },
+        {
+          "eq_id": "kaggle_weather_wind_cold_delta",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 39.194,
+          "operators": 2
+        },
+        {
+          "eq_id": "showdown_captain_salary_15x",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 48400.0,
+          "operators": 2
+        },
+        {
+          "eq_id": "showdown_anti_dupe_band_slack",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1600.0,
+          "operators": 1
+        },
+        {
+          "eq_id": "chalk_firewall_zero_win_prob_grad",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.033,
+          "operators": 3
+        },
+        {
+          "eq_id": "nfl_w48_7feat_margin_signal",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": -0.513779,
+          "operators": 14
+        },
+        {
+          "eq_id": "nfl_w48_total_obv_stop_shift",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": -0.319051,
+          "operators": 1
+        },
+        {
+          "eq_id": "cold_start_vectorization_speedup",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 4.857934,
+          "operators": 1
+        }
+      ]
+    },
+    "w48_close_residual_signal": -0.513779,
+    "stage2_deltas": {
+      "away_epa_delta": 0.000257,
+      "home_epa_delta": -0.000257,
+      "away_sack_prob_delta": -0.00043,
+      "home_sack_prob_delta": -0.000179
+    }
+  },
+  "sample_sea_at_lv": {
+    "schema": "wave48_stage0_weather_sentiment_and_showdown_suite_v1",
+    "wired": true,
+    "matchup": "SEA @ LV",
+    "as_of_week": 10,
+    "is_indoor": true,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "clinical_ruo_sports_weight": 0.0,
+    "live_win_prob_sentiment_weight": 0.0,
+    "cross_sport_soccer_contract_nfl_weight": 0.0,
+    "unmined_vaults_audit": {
+      "schema": "wave48_unmined_vaults_audit_v1",
+      "clean_checkout_fallback": false,
+      "kaggle_weather_zone1": {
+        "total_games": 14371,
+        "modern_2010_plus_games": 4363,
+        "modern_weather_valid_games": 3315,
+        "calm_under_10mph_mean_total": 46.516,
+        "wind_15mph_plus_mean_total": 40.0,
+        "wind_15mph_total_delta_pts": -6.516,
+        "cold_35f_wind_15mph_mean_total": 39.194,
+        "cold_wind_total_delta_pts": -7.322
+      },
+      "hf_twitter_sentiment_zone2": {
+        "raw_rows": 5171,
+        "valid_roberta_rows": 5153,
+        "quarantined_malformed_rows": 18,
+        "teams_covered": 10,
+        "routing_surface": "dfs_ownership_tilt_only",
+        "live_win_prob_weight": 0.0,
+        "chalk_firewall_zero_true_grad": true
+      },
+      "hf_contracts_zone1_quarantine": {
+        "contract_rows": 1000,
+        "detected_domain": "european_football_june30_club_contracts",
+        "nfl_gsis_overlap": 0,
+        "nfl_live_weight": 0.0,
+        "governance_policy": "INGEST_AND_LEARN_ISOLATED_5B_CUT"
+      },
+      "trades_and_stage0_truth_2026_w10": {
+        "total_trade_rows": 4975,
+        "trades_2026_count": 63,
+        "confirmed_qb1_count": 32,
+        "excluded_players_union_count": 241,
+        "verified_deadline_trades_count": 16,
+        "sea_qb1_sanitized": "Drew L."
+      }
+    },
+    "max_prior_week_used": 9,
+    "quarantined_metrics_weights": {
+      "raw_short_yardage_3rd4th_sr": 0.0,
+      "raw_turnover_avoidance_rate": 0.0,
+      "raw_outside_run_epa": 0.0,
+      "raw_def_short_yardage_stop": 0.0,
+      "unfiltered_soccer_contract_crossjoin_probe": 0.0
+    },
+    "away_w48_profile": {
+      "mot_sr_norm": -0.036225,
+      "d1_neut_epa_norm": 0.734917,
+      "rz_sr_norm": -0.125271,
+      "def_four_man_stop_norm": 0.660794,
+      "def_d1_stop_norm": 0.297499,
+      "bad_throw_avoid_norm": 0.685976,
+      "def_mid_stop_norm": 0.917833,
+      "def_obv_stop_norm": 0.714432,
+      "def_rz_stop_norm": 0.452806,
+      "def_uncontested_rate_norm": 0.470802,
+      "uc_epa_norm": 0.246658
+    },
+    "home_w48_profile": {
+      "mot_sr_norm": -0.876688,
+      "d1_neut_epa_norm": -1.115073,
+      "rz_sr_norm": -0.99633,
+      "def_four_man_stop_norm": -0.801262,
+      "def_d1_stop_norm": -0.056308,
+      "bad_throw_avoid_norm": 0.877165,
+      "def_mid_stop_norm": -0.912939,
+      "def_obv_stop_norm": -1.32887,
+      "def_rz_stop_norm": -0.756986,
+      "def_uncontested_rate_norm": -0.994763,
+      "uc_epa_norm": -1.256582
+    },
+    "game_total_obv_stop_weather_shift": {
+      "schema": "wave48_game_total_shift_v1",
+      "clean_checkout_fallback": false,
+      "matchup": "SEA @ LV",
+      "as_of_week": 10,
+      "is_divisional": false,
+      "effective_wind_mph": 0.0,
+      "effective_temp_f": 70.0,
+      "w48_tot_signal": 0.568427,
+      "total_shift_pts": 0.15916
+    },
+    "walk_forward_hydrated_spine_showdown": {
+      "schema": "wave48_hydrated_spine_showdown_walkforward_v1",
+      "clean_checkout_fallback": false,
+      "games_evaluated": 18,
+      "total_worlds_simulated": 18000,
+      "all_hydrated_from_vaults": true,
+      "max_world_conservation_residual": 0.0,
+      "total_orphaned_projections": 0,
+      "zero_cap_violations": true,
+      "all_showdown_gpp_in_anti_dupe_band": true,
+      "all_qb_cpt_stacks_compliant": true,
+      "max_portfolio_overlap": 4,
+      "sample_games_preview": [
+        {
+          "week": 2,
+          "matchup": "DET @ BUF",
+          "qb_away_name": "Jared Goff",
+          "qb_home_name": "Josh Allen",
+          "salary_left_range": [
+            600,
+            2100
+          ]
+        },
+        {
+          "week": 2,
+          "matchup": "CAR @ ATL",
+          "qb_away_name": "Bryce Young",
+          "qb_home_name": "Tua Tagovailoa",
+          "salary_left_range": [
+            600,
+            1000
+          ]
+        },
+        {
+          "week": 3,
+          "matchup": "ATL @ GB",
+          "qb_away_name": "Michael Penix Jr.",
+          "qb_home_name": "Jordan Love",
+          "salary_left_range": [
+            700,
+            1300
+          ]
+        },
+        {
+          "week": 3,
+          "matchup": "LAC @ BUF",
+          "qb_away_name": "Justin Herbert",
+          "qb_home_name": "Josh Allen",
+          "salary_left_range": [
+            600,
+            1600
+          ]
+        },
+        {
+          "week": 4,
+          "matchup": "PIT @ CLE",
+          "qb_away_name": "Aaron Rodgers",
+          "qb_home_name": "Deshaun Watson",
+          "salary_left_range": [
+            700,
+            1100
+          ]
+        },
+        {
+          "week": 4,
+          "matchup": "IND @ WAS",
+          "qb_away_name": "Daniel Jones",
+          "qb_home_name": "Marcus Mariota",
+          "salary_left_range": [
+            600,
+            800
+          ]
+        },
+        {
+          "week": 5,
+          "matchup": "TB @ DAL",
+          "qb_away_name": "Jalon Daniels",
+          "qb_home_name": "Dak Prescott",
+          "salary_left_range": [
+            600,
+            1100
+          ]
+        },
+        {
+          "week": 5,
+          "matchup": "PHI @ JAX",
+          "qb_away_name": "Jalen Hurts",
+          "qb_home_name": "Trevor Lawrence",
+          "salary_left_range": [
+            1100,
+            1700
+          ]
+        },
+        {
+          "week": 6,
+          "matchup": "SEA @ DEN",
+          "qb_away_name": "Drew L.",
+          "qb_home_name": "Bo Nix",
+          "salary_left_range": [
+            700,
+            1700
+          ]
+        },
+        {
+          "week": 6,
+          "matchup": "HOU @ JAX",
+          "qb_away_name": "C.J. Stroud",
+          "qb_home_name": "Trevor Lawrence",
+          "salary_left_range": [
+            700,
+            1000
+          ]
+        },
+        {
+          "week": 7,
+          "matchup": "NE @ CHI",
+          "qb_away_name": "Drake Maye",
+          "qb_home_name": "Caleb Williams",
+          "salary_left_range": [
+            700,
+            1600
+          ]
+        },
+        {
+          "week": 7,
+          "matchup": "PIT @ NO",
+          "qb_away_name": "Aaron Rodgers",
+          "qb_home_name": "Tyler Shough",
+          "salary_left_range": [
+            700,
+            1000
+          ]
+        },
+        {
+          "week": 8,
+          "matchup": "CAR @ GB",
+          "qb_away_name": "Bryce Young",
+          "qb_home_name": "Jordan Love",
+          "salary_left_range": [
+            1000,
+            1600
+          ]
+        },
+        {
+          "week": 8,
+          "matchup": "BAL @ BUF",
+          "qb_away_name": "Lamar Jackson",
+          "qb_home_name": "Josh Allen",
+          "salary_left_range": [
+            900,
+            2400
+          ]
+        },
+        {
+          "week": 9,
+          "matchup": "JAX @ BAL",
+          "qb_away_name": "Trevor Lawrence",
+          "qb_home_name": "Joe Fagnano",
+          "salary_left_range": [
+            1100,
+            1400
+          ]
+        },
+        {
+          "week": 9,
+          "matchup": "CIN @ ATL",
+          "qb_away_name": "Joe Burrow",
+          "qb_home_name": "Michael Penix Jr.",
+          "salary_left_range": [
+            600,
+            700
+          ]
+        },
+        {
+          "week": 10,
+          "matchup": "WAS @ NYG",
+          "qb_away_name": "Jayden Daniels",
+          "qb_home_name": "J.J. McCarthy",
+          "salary_left_range": [
+            700,
+            1500
+          ]
+        },
+        {
+          "week": 10,
+          "matchup": "NE @ DET",
+          "qb_away_name": "Tommy DeVito",
+          "qb_home_name": "Jared Goff",
+          "salary_left_range": [
+            1100,
+            1500
+          ]
+        }
+      ],
+      "cold_start_vectorization_telemetry": {
+        "baseline_seconds": 101.696,
+        "vectorized_seconds": 20.934,
+        "speedup_factor": 4.8627,
+        "seconds_saved": 80.762,
+        "sha256_exact_matches": 6,
+        "sha256_total_checked": 6
+      }
+    },
+    "live_honest_ast": {
+      "schema": "wave48_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 8,
+      "equations_evaluated": [
+        {
+          "eq_id": "memtx_w48_huber_prior_shrink",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.492542,
+          "operators": 6
+        },
+        {
+          "eq_id": "kaggle_weather_wind_cold_delta",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 39.194,
+          "operators": 2
+        },
+        {
+          "eq_id": "showdown_captain_salary_15x",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 48400.0,
+          "operators": 2
+        },
+        {
+          "eq_id": "showdown_anti_dupe_band_slack",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1600.0,
+          "operators": 1
+        },
+        {
+          "eq_id": "chalk_firewall_zero_win_prob_grad",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.033,
+          "operators": 3
+        },
+        {
+          "eq_id": "nfl_w48_7feat_margin_signal",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": -2.42676,
+          "operators": 14
+        },
+        {
+          "eq_id": "nfl_w48_total_obv_stop_shift",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.15916,
+          "operators": 1
+        },
+        {
+          "eq_id": "cold_start_vectorization_speedup",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 4.857934,
+          "operators": 1
+        }
+      ]
+    },
+    "w48_close_residual_signal": -2.42676,
+    "stage2_deltas": {
+      "away_epa_delta": 0.001213,
+      "home_epa_delta": -0.001213,
+      "away_sack_prob_delta": 0.000481,
+      "home_sack_prob_delta": -0.000396
+    }
+  },
+  "benchmark_sha256": "64bf0a0a347906d9843e36bedfd036582c83095a17a1f21cd2039082d87d3352"
+}

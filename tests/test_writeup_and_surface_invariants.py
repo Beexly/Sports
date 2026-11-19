@@ -66,7 +66,8 @@ def test_writeup_engine_emits_at_most_one_play() -> None:
     writeup = _read(WRITEUP_ENGINE)
     side_plays = len(re.findall(r'"sideDecision":\s*"PLAY"', writeup))
     total_plays = len(re.findall(r'"totalDecision":\s*"PLAY"', writeup))
-    assert side_plays + total_plays <= 1, f"writeup engine publishes {side_plays + total_plays} plays"
+    total_plays = side_plays + total_plays
+    assert total_plays <= 1, f"writeup engine publishes {total_plays} plays"
 
 
 def test_voided_record_never_reaches_active_storefront_surfaces() -> None:

@@ -1,0 +1,701 @@
+{
+ "book_id": "7d540a7f1373703c",
+ "source_status": "COMPLETE",
+ "source_note": "Frontiers in Traumatic Brain Injury, edited by Xianli Lv, Yi Guo and Gengsheng Mao, IntechOpen, London, first published 2022. DOI 10.5772/intechopen.98165; Print ISBN 978-1-80356-059-5; Online ISBN 978-1-80356-060-1; eBook (PDF) ISBN 978-1-80356-061-8. Seven chapters in two sections (General; Specialties), chapters distributed under CC BY 3.0. Catalog correction: the assignment named the editors as 'Su & Lv'; the title page lists Lv, Guo and Mao as editors, and Youle Su is co-author (with Xianli Lv) of Chapter 1 only. Local file: PDF of 3,275,988 bytes; sha256 over (str(size) encoded + full file bytes) = 7d540a7f1373703c725a208af29323b7d78286004216793b210ac5c02bb67c1a, book_id = first 16 hex. Extracted text quality: clean born-digital extraction, 6,218 lines and about 48,854 words; body prose is contiguous within pages, two-column reference pages interleave, and a few Greek letters render imperfectly (for example IL1 with a sharp-s glyph for beta); all quoted passages were verified as contiguous substrings of the extracted text. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "secondary_injury_cascade",
+   "name": "TBI damage splits into irreversible primary injury at impact and a delayed secondary cascade (excitotoxicity, calcium influx, caspase activation, free radicals, blood-brain barrier disruption, edema) unfolding over minutes to days, which is the modifiable target",
+   "verbatim_quote": "Secondary injury can occur minutes to days after the primary impact and consists of molecular, chemical, and inflammatory cascades that lead to further brain damage.",
+   "page": "Chapter 1, section 2 (Pathophysiology of TBI); text line 309",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Primary damage is directly caused by the external mechanical influence and is not treatable after the fact",
+    "The secondary cascade is driven by neuronal depolarization and release of glutamate and aspartate, raising intracellular calcium",
+    "A recovery phase of molecular, anatomical and functional reorganization follows the second injury phase"
+   ],
+   "breakdown_regime": "Applies to the post-impact evolution of injury; it does not describe the instantaneous mechanical lesion itself, and cascade timing varies by injury type and patient",
+   "domain": "neurotrauma pathophysiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine should model any damaging event as two phases: an immediate, fixed component and a delayed, evolving component whose trajectory can still change. State after an event is therefore a time-indexed process, not a single severity value, and later observations update the delayed component rather than the fixed one",
+    "source_operator": "secondary_injury_cascade",
+    "telemetry": "Time since event, serial status observations, and downstream complication reports that reveal cascade progression"
+   }
+  },
+  {
+   "primitive_id": "monro_kellie_volume_partition",
+   "name": "The intracranial compartment is a fixed volume partitioned as brain parenchyma 83 percent, cerebrospinal fluid 11 percent and blood 6 percent; added volume (hematoma, edema, venous congestion) is first offset by displacing CSF and venous blood, then compensation fails into pathological compression",
+   "verbatim_quote": "The volume of the intracranial compartment consists of 3 separate contents: brain parenchyma (83%), cerebrospinal fluid (CSF, 11%) and blood (6%).",
+   "page": "Chapter 1, section 2 (Pathophysiology of TBI); text line 339",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Brain tissue is incompressible, so compensation works only by displacing the fluid compartments",
+    "Compensatory reserve is finite; beyond it, small volume additions produce large pressure rises"
+   ],
+   "breakdown_regime": "The partition percentages are population averages for the adult skull; the doctrine does not hold the same way in infants with open fontanelles or after decompressive surgery removes the rigid boundary",
+   "domain": "neurotrauma pathophysiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A fixed-capacity system with substitutable contents and a hard compliance limit: the engine can reuse this as the template for any constrained resource where slack absorbs shocks until a knee point, after which the response becomes nonlinear and catastrophic",
+    "source_operator": "monro_kellie_volume_partition",
+    "telemetry": "Compartment volume shares, pressure readings, and displacement of the compensating components"
+   }
+  },
+  {
+   "primitive_id": "gcs_structure_and_bands",
+   "name": "The Glasgow Coma Scale is an additive bedside score: eye opening 4 points, verbal response 5 points, motor response 6 points, total 3 to 15; the total bands severity as 13 to 15 mild, 9 to 12 moderate, and below 8 severe",
+   "verbatim_quote": "GCS measures eye-opening (4 points), verbal response (5 points), and optimal motor response (6 points), for a total of at least 3 to a maximum of 15 points.",
+   "page": "Chapter 1, section 3 (Neurological exam in TBI); text line 360",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The three subscores are summed as if commensurable, and the total is treated as a severity index",
+    "The score correlates with pathophysiological change after TBI (chapter text)"
+   ],
+   "breakdown_regime": "The total hides which component drives it; sedation, paralysis, intubation, alcohol and language barriers corrupt subscores, and the same total can arise from very different clinical states",
+   "domain": "clinical severity scoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A composite score kernel: heterogeneous ordinal subscales are normalized to point ranges and summed into one index with banded interpretation. The engine can reuse the pattern for composite ratings, but must retain the subscore vector because the sum is lossy",
+    "source_operator": "gcs_structure_and_bands",
+    "telemetry": "The three component observations (eye, verbal, motor equivalents) recorded separately before summation"
+   }
+  },
+  {
+   "primitive_id": "icp_treatment_threshold_22",
+   "name": "Brain Trauma Foundation threshold: treat intracranial pressure above 22 mmHg, because values above this level are associated with increased mortality",
+   "verbatim_quote": "Recommend treatment for ICP > 22 mmHg, as values above this level are associated with increased mortality.",
+   "page": "Chapter 1, section 6 (Blood pressure thresholds), item 2; text line 476",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The threshold comes from guideline synthesis of cohort data, not from a randomized trial of the cutoff itself",
+    "ICP values are to be interpreted together with clinical examination and brain CT findings"
+   ],
+   "breakdown_regime": "A single population threshold ignores individual autoregulation status and the duration of elevation; brief spikes and sustained burden are not equivalent",
+   "domain": "critical care thresholds",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Threshold governance pattern: a continuous risk variable is governed by an action trigger set where the outcome gradient steepens. The engine should store such triggers with their source population and evidence type, and should track time-above-threshold, not only crossings",
+    "source_operator": "icp_treatment_threshold_22",
+    "telemetry": "Continuous pressure series, time above threshold, and concurrent clinical state"
+   }
+  },
+  {
+   "primitive_id": "cpp_target_band_60_70",
+   "name": "Cerebral perfusion pressure should be targeted at 60 to 70 mmHg for survival and improved outcomes; pushing CPP above 70 mmHg with fluids and vasopressors is avoided because of respiratory failure risk, and whether 60 or 70 is the true floor may depend on the patient's autoregulation status",
+   "verbatim_quote": "The recommended CPP (cerebral perfusion pressure) target for survival and improved outcomes is 60–70 mmHg.",
+   "page": "Chapter 1, section 6 (Blood pressure thresholds), item 4; text line 482",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "CPP-guided management is recommended to decrease 2-week mortality (chapter section 5)",
+    "The optimal minimum within the band is unresolved and may be patient-specific"
+   ],
+   "breakdown_regime": "The band is a population target; a patient with intact autoregulation and one without it may need different floors, and aggressive augmentation above the band causes harm (ARDS risk)",
+   "domain": "critical care thresholds",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A target band with a harm ceiling, not a maximize-the-variable rule: the engine should treat some controlled quantities as stay-inside-the-band problems where overshoot is penalized, and should flag when the band itself is population-derived rather than individualized",
+    "source_operator": "cpp_target_band_60_70",
+    "telemetry": "Perfusion pressure series, intervention doses used to hold the band, and respiratory status"
+   }
+  },
+  {
+   "primitive_id": "pbto2_threshold_boost2",
+   "name": "Brain tissue oxygen tension (PbtO2) monitoring uses a pathological threshold of 20 mmHg; in the phase II BOOST-II trial, PbtO2-targeted therapy on top of ICP-driven therapy cut the hypoxic burden during hospitalization by 74 percent with no substantial safety concerns, motivating the phase III BOOST-III trial",
+   "verbatim_quote": "A phase II trial (BOOST-II, Brain Tissue Oxygen Monitoring, and Management in Severe Traumatic Brain Injury) demonstrated a significant reduction (74%) in the hypoxic burden during hospitalization in the PbtO2-targeted group, with no substantial safety concerns.",
+   "page": "Chapter 1, section 7 (Potential new monitor); text line 500",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The probe is a modified Clark electrode placed in brain tissue, so readings are local, not global",
+    "Intervention triggers in the studied protocol: treat ICP if above 20 mmHg for more than 5 minutes, PbtO2 if below 20 mmHg for more than 5 minutes, or both"
+   ],
+   "breakdown_regime": "Phase II evidence on a burden surrogate is not proof of outcome benefit; the phase III efficacy trial was still pending at publication, and a focal probe can miss ischemia outside its territory",
+   "domain": "neuromonitoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Adding a second, independent sensor channel for the variable you actually care about (tissue oxygen) instead of inferring it from a proxy (pressure): the engine should prefer direct measurement of the outcome-relevant quantity and should quantify burden as area under the bad region, not event counts",
+    "source_operator": "pbto2_threshold_boost2",
+    "telemetry": "Dual-channel time series (pressure and tissue oxygen), minutes below threshold, and intervention log"
+   }
+  },
+  {
+   "primitive_id": "steroid_contraindication_tbi",
+   "name": "Steroids are contraindicated in severe TBI: they are not recommended to improve outcomes or reduce ICP, and high-dose methylprednisolone is associated with increased mortality (the CRASH trial, chapter 3, stopped early after interim analysis of 10,008 patients showed increased mortality)",
+   "verbatim_quote": "Steroids are not recommended to improve results or reduce ICP. In patients with severe TBI, high-dose methylprednisolone is associated with increased mortality and is contraindicated.",
+   "page": "Chapter 1, section 4 (Updated medical interventions for TBI), item 14; text line 447",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The anti-inflammatory and pressure-lowering rationale for steroids was mechanistically plausible before the outcome data arrived",
+    "The contraindication is stated for severe TBI management in the Brain Trauma Foundation based guideline digest"
+   ],
+   "breakdown_regime": "The veto is specific to this indication and dosing context; it does not generalize to every steroid use in every neurological condition, and the mechanisms of the excess mortality are not fully understood (chapter 3)",
+   "domain": "treatment evidence and vetoes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A hard veto pattern: a plausible mechanism (reduce inflammation, reduce pressure) is overridden by outcome-level evidence of harm. The engine needs veto entries that block an otherwise attractive action when direct outcome evidence contradicts the mechanism story",
+    "source_operator": "steroid_contraindication_tbi",
+    "telemetry": "Outcome data by treatment arm, mortality endpoints, and trial stopping records"
+   }
+  },
+  {
+   "primitive_id": "gcs8_intubation_harm_signal",
+   "name": "The rule that GCS of 8 or less mandates intubation rests on expert opinion, not evidence; in 2,727 patients with GCS 7 or 8 and isolated blunt head trauma, immediate intubation was independently associated with higher mortality (OR 1.79) and more complications (OR 2.46), and the chapter concludes strict GCS-threshold intubation can do more harm than good",
+   "verbatim_quote": "After correcting for age, gender, overall comorbidities, tachycardia, GCS, alcohol, illegal drug use, and head injury severity, immediate intubation was independently associated with higher mortality (OR 1.79, CI 95% 1.31–2.44, p < 0.001) and more overall complications (OR 2.46, CI 95% 1.62–3.73, p < 0.001).",
+   "page": "Chapter 2, section 3 (Airway management in the ER); conclusion in section 5; text line 915",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The studies are observational; confounding by indication is possible because sicker patients get intubated",
+    "Head AIS, tachycardia and younger age were independent factors associated with intubation and could support a more selective rule"
+   ],
+   "breakdown_regime": "The harm signal is shown for routine, threshold-driven intubation in specific cohorts (isolated blunt head injury, GCS 7 to 8); it does not apply to patients with actual airway obstruction or refractory hypoxia, who still need a definitive airway",
+   "domain": "airway management evidence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Inherited single-variable triggers must be audited against outcome data before the engine automates them. A threshold that merely correlates with severity can convert a marker into a harmful intervention rule; the engine should require outcome evidence for action triggers, not only for risk scores",
+    "source_operator": "gcs8_intubation_harm_signal",
+    "telemetry": "Cohort outcome data stratified by whether the trigger fired, plus the covariates (injury severity, physiology, age) that confound the comparison"
+   }
+  },
+  {
+   "primitive_id": "epic_prehospital_guideline_effect",
+   "name": "Implementing prehospital TBI guidelines that target avoidance and treatment of hypoxia, correction of hyperventilation, and avoidance and treatment of hypotension doubled adjusted survival in severe TBI and tripled it in the severe intubated cohort (EPIC study)",
+   "verbatim_quote": "The implementation of these prehospital guidelines showed that adjusted survival doubled among patients with severe TBI and tripled in the severe, intubated cohort.",
+   "page": "Chapter 2, section 2 (Prehospital airway management); text line 699",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The effect is attributed to preventing secondary insults (hypoxia, hypotension, hyperventilation) rather than to any single procedure",
+    "The comparison is a statewide before-and-after implementation association, not a randomized trial"
+   ],
+   "breakdown_regime": "Implementation effects bundle training, protocols and system change together, so the gain cannot be assigned to one component; results may not transfer to systems with different baseline care",
+   "domain": "prehospital care systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Process discipline on the few lethal confounders beats procedural heroics: the engine should weight reliable execution of basic protective steps (oxygenation, perfusion, ventilation equivalents) above advanced interventions when allocating attention",
+    "source_operator": "epic_prehospital_guideline_effect",
+    "telemetry": "Guideline adherence rates, incidence of hypoxia and hypotension episodes, and survival by cohort"
+   }
+  },
+  {
+   "primitive_id": "first_pass_success_rule",
+   "name": "In emergency intubation, complications rise significantly with each attempt and sharply once more than 2 attempts are needed; first-pass success is the operative standard, and after 2 failed attempts the operator should return to basic maneuvers or a surgical airway",
+   "verbatim_quote": "In addition, complication rate increases significantly with the number of intubation attempts, with a sharp increase if more than 2 attempts are needed [28].",
+   "page": "Chapter 2, section 4 (Technical aspects); text line 996",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Airway clearance by suction before intubation significantly increases first-pass success (SALAD technique, chapter text)",
+    "Preoxygenation quality before the attempt strongly conditions the attempt's risk"
+   ],
+   "breakdown_regime": "The rule presumes a trained operator and a prepared setting; in a cannot-intubate emergency the fallback ladder matters more than the attempt count itself",
+   "domain": "procedural risk",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Retry economics: repeated attempts at a failing action have superlinear cost, so the engine should cap retries, invest in preparation before the first attempt, and switch strategy after a small fixed number of failures instead of persisting",
+    "source_operator": "first_pass_success_rule",
+    "telemetry": "Attempt counts, per-attempt success, preparation steps completed, and complication incidence by attempt number"
+   }
+  },
+  {
+   "primitive_id": "preoxygenation_spo2_cliff",
+   "name": "Oxygen saturation at the moment of intubation attempt is a cliff variable: starting below 93 percent SpO2 gives almost 100 percent incidence of severe hypoxemia during the attempt, versus 17 percent when starting at 95 percent or above",
+   "verbatim_quote": "when intubation is attempted in a patient with a SpO2 < 93%, there is almost 100% incidence of severe hypoxemia while incidence goes down to 17% if SpO2 is 95% or more",
+   "page": "Chapter 2, section 4 (Technical aspects); text line 1008",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The figures come from a prehospital rapid sequence intubation study of desaturation rates",
+    "Time spent optimizing oxygenation before the attempt is treated as repaid in outcome"
+   ],
+   "breakdown_regime": "The cliff is measured in one practice setting; exact percentages will shift with patient population, altitude and equipment, but the existence of a steep threshold region is the durable content",
+   "domain": "procedural risk",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Precondition cliffs: the success probability of an action can depend discontinuously on a measurable starting state. The engine should measure the precondition, delay action to improve it when the cliff is near, and treat sub-threshold starts as near-certain failures",
+    "source_operator": "preoxygenation_spo2_cliff",
+    "telemetry": "Starting saturation (or the analogous precondition metric), desaturation events, and time spent on preparation"
+   }
+  },
+  {
+   "primitive_id": "succinylcholine_rocuronium_high_ais",
+   "name": "In 233 ER TBI patients intubated with rapid sequence induction, overall mortality was similar for succinylcholine and rocuronium, but in the high head AIS (4 to 6) subgroup succinylcholine was associated with higher mortality than rocuronium (44 percent versus 23 percent; OR 4.10, 95 percent CI 1.18 to 14.12, p = 0.026)",
+   "verbatim_quote": "for patients with a high head AIS score (4–6), succinylcholine was associated with increased mortality compared with rocuronium",
+   "page": "Chapter 2, section 4 (Technical aspects); text line 1042",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Retrospective single study; the chapter states prospective studies are needed to clarify the finding",
+    "Succinylcholine's rapid offset otherwise aids early neurological examination, and rocuronium's prolonged paralysis delays it"
+   ],
+   "breakdown_regime": "A subgroup effect in one retrospective cohort with a wide confidence interval; it should shift a prior, not dictate practice, until prospectively confirmed",
+   "domain": "pharmacology evidence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Aggregate equivalence can hide subgroup harm: the engine should evaluate candidate actions within severity strata, because an option that is neutral on average can be clearly worse in the highest-severity slice",
+    "source_operator": "succinylcholine_rocuronium_high_ais",
+    "telemetry": "Outcomes stratified by severity score for each candidate action, with subgroup sample sizes and interval widths"
+   }
+  },
+  {
+   "primitive_id": "ketamine_cpp_neuroprotection",
+   "name": "The old concern that ketamine raises intracranial pressure is no longer valid; ketamine may be neuroprotective because it raises mean arterial pressure and therefore cerebral perfusion pressure, without increasing cerebral oxygen consumption or reducing regional glucose metabolism, making it a preferred induction agent when hypotension is present",
+   "verbatim_quote": "On the contrary, ketamine may, in fact, be neuroprotective due to an increase in MAP and CPP [31], without an increase in cerebral oxygen consumption or reducing regional glucose metabolism [32].",
+   "page": "Chapter 2, section 4 (Technical aspects); text line 1031",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The benefit runs through hemodynamics (MAP and CPP), so it presumes the patient's pressure actually rises",
+    "Ketamine also provides analgesia, unlike etomidate, the other common induction choice discussed"
+   ],
+   "breakdown_regime": "The rehabilitation of ketamine rests on accumulated smaller studies and reviews rather than one definitive trial in TBI; patient selection (hypotensive versus hypertensive presentations) conditions the claim",
+   "domain": "pharmacology evidence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Reputation reversal pattern: a long-standing contraindication can be an artifact of early, confounded observations. The engine should keep deprecated warnings revisitable, with the evidence that created them attached, so new data can retire them",
+    "source_operator": "ketamine_cpp_neuroprotection",
+    "telemetry": "Blood pressure and perfusion responses by agent, plus the provenance and date of the standing warning"
+   }
+  },
+  {
+   "primitive_id": "damp_hmgb1_tlr4_nlrp3_axis",
+   "name": "Injured tissue releases damage-associated molecular patterns (DAMPs); the classic DAMP HMGB1 binds TLR-2 and TLR-4, and on TLR-4 activates the NLRP3 inflammasome, which cleaves pro-IL-1beta and pro-caspase into active forms, priming the neuroinflammatory cascade; TNF appears in brain tissue within 17 minutes and early cytokines peak within 24 hours",
+   "verbatim_quote": "HMGB1, a nuclear protein present in all cell types, attaches onto TLR-4 and activates the NLRP3 inflammasome complex, priming it for further inflammation in response to stressors.",
+   "page": "Chapter 3, section 2.1 (The acute neuroinflammatory response); text line 1408",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Microglia are the resident amplifiers: activated pro-inflammatory microglia release further cytokines into the extracellular space",
+    "Neutrophils are the earliest and most abundant peripheral immune cells to enter the CNS"
+   ],
+   "breakdown_regime": "Much of the timing and pathway detail comes from animal models; in humans, early cytokine levels correlate inconsistently with ICP and functional outcome, so the axis is mechanistically solid but prognostically weak",
+   "domain": "neuroinflammation mechanisms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A trigger-amplifier kernel: a small set of damage signals (DAMPs) binds pattern receptors and switches on a self-amplifying production line (inflammasome, cytokines, recruited cells). The engine can model post-event deterioration as such a gated amplifier whose gain, not the initial insult alone, sets the eventual damage",
+    "source_operator": "damp_hmgb1_tlr4_nlrp3_axis",
+    "telemetry": "Damage signal levels over the first 24 hours, microglial activation markers, and cytokine trajectories"
+   }
+  },
+  {
+   "primitive_id": "chronic_neuroinflammation_persistence",
+   "name": "Post-TBI inflammation is not only acute: rat models show blood-brain barrier permeability still increased 10 months after injury and the microglia/macrophage marker CD68 still elevated in perilesional cortex at 11 months, and plasma pro-inflammatory cytokines remain elevated beyond 12 months even after mild TBI with normal MRI",
+   "verbatim_quote": "Imaging studies in rat TBI models have demonstrated a persistent increase in BBB permeability up to 10 months post injury, and an elevation in CD68, a marker for activated microglia and macrophages, in perilesional cortical tissue up to 11 months post injury [29].",
+   "page": "Chapter 3, section 2.2 (The role of chronic neuroinflammation); text line 1460",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Microglia are central to establishing the chronic state: microglia-depleted mice do not show the same inflammatory response",
+    "Systemic inflammation participates; chronically elevated serum TNF is associated with unfavorable behavioral outcomes"
+   ],
+   "breakdown_regime": "Persistence is demonstrated mainly in animal models and selected human cohorts; how acute inflammation transitions to the chronic state is explicitly not fully understood",
+   "domain": "neuroinflammation mechanisms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Long-tail state: the engine should not close a case when the acute window closes. Post-event processes can remain measurably active for months to years, so status models need a chronic tail with its own slow variables instead of a binary recovered/not-recovered flag",
+    "source_operator": "chronic_neuroinflammation_persistence",
+    "telemetry": "Late follow-up measurements (months), persistent marker levels, and functional status at long horizons"
+   }
+  },
+  {
+   "primitive_id": "bbb_claudin5_vegf_breakdown",
+   "name": "Blood-brain barrier failure is mechanistically specific: VEGF-A from neutrophils and astrocytes downregulates the tight junction protein claudin-5, neutrophil extracellular traps (NETosis) release MMPs and elastase that degrade extracellular matrix, and microglia-driven aquaporin-4 expression shifts fluid into the CNS, producing protein-rich interstitial edema that raises ICP",
+   "verbatim_quote": "Within tight junctions, upregulation of vascular endothelial growth factor-A (VEGF-A) from neutrophils and astrocytes act to reduce the expression of tight junction protein claudin-5, leading to BBB leakage [38].",
+   "page": "Chapter 3, section 3.1 (Increased blood-brain barrier permeability); text line 1517",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The barrier is a composite structure: endothelial cells, astrocyte foot processes, pericytes and basement membrane",
+    "Albumin and plasma protein extravasation further activates microglia and astrocytes, making the process self-propagating"
+   ],
+   "breakdown_regime": "The full chain is assembled from multiple model systems; the relative contribution of transcytosis, tight junction loss and basement membrane failure in human TBI is not settled",
+   "domain": "neuroinflammation mechanisms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Barrier failure as a derived kernel: permeability is computed from the state of named components (junction proteins, matrix integrity, water channels), so the engine can reason about which component failed instead of treating leakage as a single unexplained variable",
+    "source_operator": "bbb_claudin5_vegf_breakdown",
+    "telemetry": "Junction protein expression, MMP activity, edema volume, and barrier permeability imaging"
+   }
+  },
+  {
+   "primitive_id": "glymphatic_clearance_reduction",
+   "name": "The glymphatic system, driven by aquaporin-4 channels on astrocytes, clears cerebrospinal and interstitial fluid, solutes and waste; after TBI its solute clearance falls by more than 25 percent, aquaporin-4 relocalizes away from astrocytic end feet, and tau, beta-amyloid and inflammatory mediators accumulate, feeding further inflammation and tau pathology",
+   "verbatim_quote": "A > 25% reduction in glymphatic solute clearance is observed after TBI [73].",
+   "page": "Chapter 3, section 3.5 (Glymphatic and lymphatic dysfunction); text line 1653",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Clearance depends on aquaporin-4 polarization at astrocytic end feet, not merely on channel presence",
+    "Meningeal lymphatic vessels provide a parallel drainage and immune trafficking route"
+   ],
+   "breakdown_regime": "The clearance figure comes from animal tracer studies; human glymphatic measurement is indirect, and the causal share of clearance failure in human CTE is still being established",
+   "domain": "neuroinflammation mechanisms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Waste-removal throughput as a state variable: when clearance degrades, toxic intermediates accumulate and become drivers themselves. The engine should track removal capacity alongside production, because a system can deteriorate from a drainage failure with no change in input",
+    "source_operator": "glymphatic_clearance_reduction",
+    "telemetry": "Clearance rate estimates, waste product concentrations, and channel localization state"
+   }
+  },
+  {
+   "primitive_id": "txa_crash3_benefit",
+   "name": "Tranexamic acid, a lysine analogue antifibrinolytic, reduced head injury-related deaths in the CRASH-3 trial without increasing thrombotic risk; in TBI models early TXA also reduces TBI-induced coagulopathy, and by limiting blood products in the CNS it may limit pro-inflammatory triggering",
+   "verbatim_quote": "The CRASH 3 trial demonstrated that TXA reduces head injury-related deaths without increasing the thrombotic risk [157].",
+   "page": "Chapter 3, section 7.4 (Tranexamic acid); text line 2039",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "TXA inhibits plasmin, which otherwise degrades laminin, fibronectin and collagen and modulates barrier integrity",
+    "The chapter notes TXA has shown both pro- and anti-inflammatory effects in the surgical literature, and its net effect on neuroinflammation is not validated"
+   ],
+   "breakdown_regime": "The mortality benefit is a trial-level result for early administration in TBI; the anti-inflammatory mechanism story remains secondary and partly speculative",
+   "domain": "treatment evidence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A cheap, time-critical stabilizer: some interventions earn their value by preventing the substrate of later damage (bleeding, blood products) rather than by reversing damage. The engine should value early cascade-interruption actions separately from late repair actions",
+    "source_operator": "txa_crash3_benefit",
+    "telemetry": "Time from event to administration, bleeding progression on imaging, and head injury-related mortality"
+   }
+  },
+  {
+   "primitive_id": "tspo_pet_microglia_imaging",
+   "name": "Translocator protein 18 kDa (TSPO), on the mitochondrial membrane of microglia, enables PET radioligand imaging of activated microglia in vivo; PET studies show greater microglial activation in professional football players than in age-matched controls, linking repetitive head impact to measurable chronic inflammation",
+   "verbatim_quote": "The identification of translocator protein 18 kDa (TSPO), located on the mitochondrial membrane of microglia, has allowed the development of radioligands with PET visualization of activated microglia in vivo [128].",
+   "page": "Chapter 3, section 6.2 (Glial and immune cells); text line 1897",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "TSPO is treated as a marker of activated microglia and reactive astrocytes",
+    "Flow cytometry remains the gold standard for microglial phenotyping; imaging is the in vivo surrogate"
+   ],
+   "breakdown_regime": "TSPO is not perfectly specific to one cell state, and PET signal cannot by itself separate harmful from reparative activation",
+   "domain": "neuroinflammation measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Latent-state imaging: an unobservable internal process (cellular activation) becomes tractable when a proxy molecule with known localization is found. The engine should prize such proxy channels for hidden states, while recording their specificity limits",
+    "source_operator": "tspo_pet_microglia_imaging",
+    "telemetry": "PET binding values by region, exposure history (years of contact play), and control-group baselines"
+   }
+  },
+  {
+   "primitive_id": "cte_perivascular_ptau",
+   "name": "Chronic traumatic encephalopathy is a tauopathy defined pathologically by perivascular accumulation of phosphorylated tau in neurons and astrocytes within the cortex, arising after repeated head trauma; longer repetitive head injury history is associated with greater neuroinflammation in brain bank tissue",
+   "verbatim_quote": "Pathologically, CTE is a tauopathy characterized by perivascular accumulation of p-tau in neurons and astrocytes within the cortex [107].",
+   "page": "Chapter 3, section 4.3 (Neuroinflammation in chronic traumatic encephalopathy); text line 1755",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Inflammation is implicated in tau phosphorylation: innate immune activation exacerbates it, immune suppression reduces p-tau in models",
+    "The diagnosis described is pathological (post-mortem); in vivo criteria are still research-stage"
+   ],
+   "breakdown_regime": "Causality from trauma to CTE in individuals remains under investigation, including genetic and epigenetic modifiers; the chapter calls for more work on pathway and time course",
+   "domain": "neurodegeneration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A signature lesion pattern: the diagnostic content is in the spatial distribution (perivascular, cortical) of a common molecule, not its mere presence. The engine should encode pattern-of-distribution features, not only analyte levels, when classifying accumulated damage",
+    "source_operator": "cte_perivascular_ptau",
+    "telemetry": "Exposure duration, regional pathology distribution, and inflammatory marker co-localization"
+   }
+  },
+  {
+   "primitive_id": "velocity_classification_600ms",
+   "name": "Penetrating craniocerebral injury is classified by projectile velocity: high-velocity above 600 meters per second (typically rifle, military), low-velocity below 600 m/sec (typically handguns in civilians, plus stab, BB and pellet, and improvised objects in children)",
+   "verbatim_quote": "Low-velocity injuries are those associated with projectiles traveling less than 600 m/sec.",
+   "page": "Chapter 4, section 1 (Introduction); text line 3048",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The chapter defines high-velocity injuries as projectiles traveling at velocities greater than 600 meters per second",
+    "Mechanism mix differs by setting: civilian pediatric cases are dominated by low-velocity and non-missile objects"
+   ],
+   "breakdown_regime": "The 600 m/sec line is a convention of this review, useful for triage and literature grouping; tissue damage also depends on projectile mass, yaw, fragmentation and trajectory, which velocity alone does not capture",
+   "domain": "injury classification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A single physical parameter used as a class boundary because it proxies energy transfer and damage pattern. The engine can adopt such boundary parameters, but should record that the boundary is conventional and list the variables it proxies for",
+    "source_operator": "velocity_classification_600ms",
+    "telemetry": "Projectile velocity, weapon class, and injury pattern on imaging"
+   }
+  },
+  {
+   "primitive_id": "pediatric_gsw_burden",
+   "name": "In the US National Trauma Data Bank, gunshot wounds to the head were 1.4 percent of pediatric TBI cases and rising (275 per 100,000 in 2003 to 315 per 100,000 in 2012); mean age 14.8 years, 79.2 percent male, assault the commonest mechanism (63 percent), overall mortality 45.1 percent and 71.5 percent when intent was suicidal",
+   "verbatim_quote": "gunshot wounds to the head represented 1.4% of pediatric TBI cases, with increasing incidence over time (from 275 per 100,000 in 2003 to 315 per 100,000 in 2012)",
+   "page": "Chapter 4, section 2 (Epidemiology); text line 3081",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Registry data: curated US trauma registry cases, so denominators are treated pediatric TBI, not population incidence",
+    "Series mortality for pediatric gunshot wounds to the head ranges roughly 47.9 to 65 percent across the cited literature"
+   ],
+   "breakdown_regime": "Registry and case-series data are setting-specific (US urban centers dominate) and cannot be read as global rates; penetrating injury is only an estimated 1 to 7 percent of pediatric TBI",
+   "domain": "epidemiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Base-rate anchoring: rare-but-catastrophic categories need registry base rates with their denominators stated, because intuition overweights memorable cases. The engine should carry incidence, mechanism mix and outcome rates as one bundle with the registry named",
+    "source_operator": "pediatric_gsw_burden",
+    "telemetry": "Registry case counts, mechanism and intent distribution, age and sex mix, mortality by intent"
+   }
+  },
+  {
+   "primitive_id": "debridement_dural_closure_infection",
+   "name": "In pediatric penetrating head injury, infection is the controllable killer: pediatric series report infection rates up to 40 to 50 percent, and early surgical debridement (under 12 hours from presentation) plus watertight dural closure are among the most significant variables minimizing it; risk rises with porous foreign material such as wood, fragmentation, CSF leak and sinus involvement",
+   "verbatim_quote": "Early surgical intervention and debridement <12 hours from presentation decrease the risk of subsequent infection, with watertight dural closure being one of the most significant variables related to minimizing infection [34, 39].",
+   "page": "Chapter 4, section 4.3 (Infectious complications); text line 3206",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Empiric broad-spectrum antibiotics on arrival are common practice, covering Staphylococcus species and gram-negative bacteria",
+    "Low-velocity tracts are more likely grossly contaminated with skin, hair and bone"
+   ],
+   "breakdown_regime": "Antibiotic choice and duration vary widely in the literature, and one large adult review found very low infection incidence despite minimal dosing, so the debridement and closure effect is better supported than any specific drug regimen",
+   "domain": "surgical management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Contamination control beats later cure: sealing the boundary (dural closure) and removing the inoculum early dominate downstream anti-infective effort. The engine should treat boundary integrity and time-to-decontamination as primary variables in any contamination process",
+    "source_operator": "debridement_dural_closure_infection",
+    "telemetry": "Time to debridement, closure integrity, foreign body material, CSF leak presence, and infection incidence"
+   }
+  },
+  {
+   "primitive_id": "sah_48h_mortality_split",
+   "name": "Subarachnoid hemorrhage on imaging at 48 hours after penetrating head trauma sharply separates outcomes: present in 17 percent of survivors versus 68 percent of nonsurvivors; traumatic pseudoaneurysms complicate about 20 percent of traumatic aneurysm cases after penetrating injury, and vasospasm (incidence up to 40 percent in adults with penetrating trauma) peaks at 2 to 4 days and resolves in 2 to 3 days",
+   "verbatim_quote": "At 48 hours post-injury, 17% of survivors and 68% of nonsurvivors had SAH on imaging [42].",
+   "page": "Chapter 4, section 4.4 (Vascular complications); text line 3249",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Vascular imaging is strongly indicated when the tract crosses the Sylvian fissure or major subarachnoid spaces or passes near vascular structures",
+    "Predictors of vasospasm in pediatric blunt TBI include post-resuscitation GCS below 8, motor vehicle mechanism and fever at admission"
+   ],
+   "breakdown_regime": "The 17 versus 68 percent split is from one cited series; SAH is partly a marker of injury severity rather than a purely causal factor, and pseudoaneurysm rupture risk after penetrating injury is not well quantified",
+   "domain": "prognostic markers",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A mid-course binary marker with a large likelihood ratio: the engine should schedule decisive observations at the time points where they separate trajectories (here 48 hours), rather than only at intake, and should pair them with the delayed complication window (vasospasm days 2 to 4)",
+    "source_operator": "sah_48h_mortality_split",
+    "telemetry": "Imaging findings at fixed post-event times, aneurysm surveillance results, and transcranial Doppler velocities"
+   }
+  },
+  {
+   "primitive_id": "ionts_ton_treatment_null",
+   "name": "For traumatic optic neuropathy, the largest comparative study (IONTS) found no significant difference in final visual outcome between systemic steroids, surgical decompression and observation, and no benefit for any steroid timing or dosage; spontaneous visual improvement occurs in roughly 25 to 50 percent of patients, and the TONTT phase 3 trial likewise found no significant difference between erythropoietin, steroids and observation",
+   "verbatim_quote": "The International Optic Nerve Trauma Study (IONTS) is the largest comparative study comparing systemic steroids to surgical decompression and observation using different dosing and timing regimens failed to show any significant difference between the three groups [16].",
+   "page": "Chapter 5, section 3 (Treatment); text line 3681",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Baseline visual acuity is the dominant prognostic variable; it proxies the number of surviving retinal ganglion cells",
+    "Steroid use in TON was extrapolated from the NASCIS spinal cord trial, an analogy the evidence did not sustain"
+   ],
+   "breakdown_regime": "IONTS was comparative but not a large randomized trial, and subgroup claims (for example steroids within 24 hours in no-light-perception patients) rest on small series; absence of demonstrated difference is not proof of exact equivalence",
+   "domain": "treatment evidence and nulls",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A disciplined null: when observation matches intervention across the best available comparison, the engine should default to observation and require new evidence, not new enthusiasm, to act. Extrapolation from an adjacent domain (spinal cord to optic nerve) is a named failure mode to penalize",
+    "source_operator": "ionts_ton_treatment_null",
+    "telemetry": "Visual acuity trajectories by treatment arm, spontaneous recovery base rate, and time from injury to treatment"
+   }
+  },
+  {
+   "primitive_id": "ocs_two_hour_rule",
+   "name": "Orbital compartment syndrome is the timing-critical exception in optic nerve trauma: a confined, low-compliance orbit converts bleeding into pressure that ischemically injures the nerve; treated within 2 hours, most patients finish with visual acuity better than 20/40, while treatment after 2 hours has poorer outcomes; bedside lateral canthotomy and cantholysis is the first-line decompression and should not wait for imaging when clinical signs and vision loss are clear",
+   "verbatim_quote": "In cases of OCS, if treated within 2 hours, most patients will achieve a final visual acuity better than 20/40, though approximately 15% will be worse.",
+   "page": "Chapter 5, section 4 (Prognosis); text line 3818",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Diagnosis is clinical: pain, proptosis, chemosis, ophthalmoplegia, resistance to retropulsion and elevated intraocular pressure",
+    "About 15 percent of even promptly treated patients end worse than the 20/40 benchmark"
+   ],
+   "breakdown_regime": "Delayed presentations can still recover, including some with no decompression, so the 2-hour rule is a strong gradient, not an absolute deadline",
+   "domain": "neuro-ophthalmic emergencies",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A deadline primitive: in a low-compliance compartment, value decays steeply with time to decompression, and diagnostic certainty must yield to the clock. The engine should encode such windows explicitly and escalate as the deadline approaches rather than after it passes",
+    "source_operator": "ocs_two_hour_rule",
+    "telemetry": "Time from onset to decompression, intraocular pressure, and presenting visual acuity"
+   }
+  },
+  {
+   "primitive_id": "pseudoaneurysm_rebleed_window",
+   "name": "Traumatic intracranial pseudoaneurysms (partial to complete arterial wall disruption contained by adventitia or surrounding tissue) are under 1 percent of all aneurysms but unstable: most rebleed 3 to 7 days after injury and mortality reaches 50 percent; traffic accidents cause 51 percent, stab wounds 12 percent and falls 8 percent of traumatic aneurysms",
+   "verbatim_quote": "It is reported that most pseudoaneurysms will bleed again 3–7 days after injury, and the mortality rate is as high as 50% [17].",
+   "page": "Chapter 6, section 3 (Traumatic neurovascular pseudoaneurysm); text line 4271",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Risk factors: male sex, young age, skull base fracture, intracranial hemorrhage and high-energy mechanism",
+    "The commonest sites are the petrous and cavernous segments of the internal carotid artery"
+   ],
+   "breakdown_regime": "The rebleed window and mortality are literature aggregates; individual lesions can grow, shrink or thrombose, so surveillance imaging rather than the calendar alone governs management",
+   "domain": "neurovascular injury",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A deferred-failure window: a contained defect looks stable while its failure probability concentrates in a known future interval (days 3 to 7). The engine should represent contained damage as a scheduled hazard peak and pre-position monitoring and response inside that window",
+    "source_operator": "pseudoaneurysm_rebleed_window",
+    "telemetry": "Days since injury, serial vascular imaging, and hemorrhage events"
+   }
+  },
+  {
+   "primitive_id": "dissection_incidence_and_sites",
+   "name": "Traumatic carotid and vertebral artery dissection (intimal tear letting arterial blood form an intramural hematoma) occurs in 0.08 to 0.4 percent of trauma populations, at characteristic sites: the carotid 2 to 3 cm distal to the bifurcation and the vertebral artery at C1 to C2; in children it presents most often as cerebral ischemia with hemiparesis, and sudden unilateral Horner syndrome should trigger suspicion of vertebral dissection",
+   "verbatim_quote": "The incidence of traumatic dissection of the carotid and vertebral arteries has been reported to be 0.08–0.4% of overall traumatic populations [21].",
+   "page": "Chapter 6, section 4 (Traumatic arterial dissection); text line 4293",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Children's vessels are especially vulnerable to stretch and distortion forces",
+    "CTA is the commonest initial screening modality; MRI SNAP sequences show intramural hematoma with higher wall contrast than T1-weighted VISTA"
+   ],
+   "breakdown_regime": "Incidence estimates vary with screening intensity: the more liberally CTA is applied to trauma patients, the more dissections are found, so the rate is partly a detection artifact",
+   "domain": "neurovascular injury",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Low base rate, high consequence, known location: screening earns its cost when a rare lesion concentrates at predictable anatomical sites. The engine should allocate diagnostic attention by site-specific prior probability, not uniformly",
+    "source_operator": "dissection_incidence_and_sites",
+    "telemetry": "Screening yield by anatomical site, imaging modality used, and presenting signs (Horner syndrome, hemiparesis, headache)"
+   }
+  },
+  {
+   "primitive_id": "endovascular_reconstruction_outcomes",
+   "name": "Endovascular therapy has replaced destructive carotid ligation or trapping with reconstruction for traumatic carotid-cavernous fistula, pseudoaneurysm and dissection: detachable balloon or coil occlusion of a fistula preserves internal carotid artery patency in 70 to 90 percent of cases, and the Willis covered stent's mid- and long-term occlusion rate is 95.7 percent; flow diversion works by stagnating flow in the sac until it thromboses",
+   "verbatim_quote": "The detachable balloon or the application of the coil can occlude the fistula, which can maintain the patency of the ICA of the affected side in 70–90% cases (Figure 5) [33].",
+   "page": "Chapter 6, section 5.1 (Traumatic carotid cavernous fistula); text line 4336",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cerebral angiography is the gold standard for diagnosis and the platform for treatment",
+    "Covered stents are limited where important arterial branches arise, because covering them sacrifices their territory"
+   ],
+   "breakdown_regime": "Rates come from case series at experienced centers; device availability and operator experience condition the results, and long-term durability data are thinner than the headline occlusion rate",
+   "domain": "neurointerventional treatment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Repair-over-sacrifice paradigm: when reconstruction becomes feasible, the objective changes from stopping the problem by destroying the conduit to restoring the conduit itself. The engine should re-derive its preferred strategy when tooling changes, instead of inheriting the destructive default",
+    "source_operator": "endovascular_reconstruction_outcomes",
+    "telemetry": "Patency and occlusion rates by device class, branch sacrifice events, and recurrence on follow-up imaging"
+   }
+  },
+  {
+   "primitive_id": "dai_share_and_predilection",
+   "name": "Diffuse axonal injury, produced by rapid acceleration, deceleration and rotational forces shearing axons, accounts for about 70 percent of TBI cases; its hallmark is extensive axonal damage in subcortical and deep white matter, with predilection for the reticular formation, basal ganglia, superior cerebellar peduncles, limbic fornices, hypothalamus and corpus callosum, and it is frequently invisible on CT and conventional MRI",
+   "verbatim_quote": "DAI accounts for about 70% of TBI cases.",
+   "page": "Chapter 7, section 2.1 (Primary brain injuries); text line 4768",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Axonal damage can persist for months after DAI, with impaired axonal transport and cytoskeletal degradation",
+    "Focal and diffuse injuries commonly coexist in moderate to severe TBI"
+   ],
+   "breakdown_regime": "The 70 percent figure is the chapter's literature estimate and varies with case definition and imaging sensitivity; blast TBI shows DAI characteristics through shock waves rather than inertial forces",
+   "domain": "diffuse axonal injury",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The dominant hidden category: the most common injury class is the one structural imaging cannot see, so a normal scan must not be read as absence of injury. The engine should carry an explicit invisible-but-prevalent state for such categories and seek functional or fluid measurements instead",
+    "source_operator": "dai_share_and_predilection",
+    "telemetry": "Mechanism (rotational acceleration exposure), functional deficits, and fluid biomarker levels when imaging is normal"
+   }
+  },
+  {
+   "primitive_id": "biomarker_panel_combination",
+   "name": "No single biofluid biomarker is universally applicable to TBI or diffuse axonal injury; because each molecule reports on only one element of the pathophysiology, the chapter's conclusion is to analyze biomarkers in combination as a panel, ideally multimodal (biofluid plus physiological markers plus advanced neuroimaging) sampled at multiple time points",
+   "verbatim_quote": "Since these molecules offer isolated information on some of the many elements implicated in the physiopathology of TBI/DAI, we believe that the best strategy is to analyze them in combination.",
+   "page": "Chapter 7, section 9 (Conclusions); text line 5347",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An ideal marker would be brain-specific, appear rapidly in accessible fluid, scale with severity, vary little by age and sex, sit low in healthy controls and respond to treatment (chapter section 4.1); no current marker meets all criteria",
+    "Serial measurements are required because markers are dynamic across inflammatory states"
+   ],
+   "breakdown_regime": "The panel strategy is a reasoned recommendation, not yet a validated clinical product; panel composition, timing and cutoffs remain research questions",
+   "domain": "biomarker science",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Signal fusion kernel: individually insufficient indicators, each with a known tissue source, kinetics and confounder set, are combined so their errors partially cancel. The engine should implement panels as first-class objects with per-member provenance and failure modes, not as ad hoc feature lists",
+    "source_operator": "biomarker_panel_combination",
+    "telemetry": "Panel member levels with sampling times, each member's confounder flags, and the joint trajectory"
+   }
+  },
+  {
+   "primitive_id": "uch_l1_gfap_dual_panel",
+   "name": "UCH-L1 (neuronal cell body, about 5 percent of soluble brain protein) and GFAP (astrocyte intermediate filament, 52 kDa) form the foundation panel because they report on the two dominant cell types, neuron and astrocyte; GFAP enters blood after crossing the damaged barrier with an early plasma peak within 3 to 34 hours, is not affected by extracranial injury, and day-1 serum GFAP in pediatric TBI correlates with 6-month functional outcome",
+   "verbatim_quote": "UCH-L1 together with GFAP form the foundation of a biomarker panel representing the two dominant cell types (neuron and astrocytes) in the brain [38].",
+   "page": "Chapter 7, section 6.1 (UCH-L1); GFAP kinetics in section 4.7; text line 5286",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "UCH-L1 rises early in blood in both mild and severe TBI and has been linked to CT lesions, need for neurosurgery and outcome",
+    "GFAP breakdown products of 44 to 38 kDa are also released; plasma concentrations above 0.033 micrograms per liter are regarded as pathological (chapter text)"
+   ],
+   "breakdown_regime": "GFAP's mild-TBI performance is weaker because of contamination from other sources, and the panel still requires multicenter validation before routine use",
+   "domain": "biomarker science",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Complementary coverage kernel: pick panel members whose sources partition the system (neuron versus astrocyte) so the pair localizes damage by cell type. The engine should design feature sets by coverage of the underlying components, not by individual predictive strength alone",
+    "source_operator": "uch_l1_gfap_dual_panel",
+    "telemetry": "Paired serum levels with time since injury, CT findings, and 6-month functional outcome"
+   }
+  },
+  {
+   "primitive_id": "s100b_thresholds_and_limits",
+   "name": "S100B, the most studied TBI biomarker (11 kDa astroglial calcium-binding protein, serum peak 20 minutes after injury, half-life 30 to 113 minutes, renal clearance), has a mild-TBI upper reference limit of 0.1 micrograms per liter and reported 100 percent mortality above 0.7 ng/mL, but its sensitivity for intracranial pathology (up to 100 percent) comes with only 28 percent specificity, extracranial sources (fat, muscle) confound polytrauma, and it is not useful under age 2",
+   "verbatim_quote": "serum levels of S100B > 0.7 ng/mL were reported to correlate with 100% mortality [130].",
+   "page": "Chapter 7, section 4.8 (S100B); text line 5183",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A second subacute rise in S100B signals secondary astroglial injury and worsens the prognosis implied by the first peak",
+    "In polytrauma without brain injury, S100B elevations normalize within about 6 hours"
+   ],
+   "breakdown_regime": "Extreme thresholds like the 0.7 ng/mL figure come from individual studies and should not be treated as universal constants; the chapter's own verdict is that S100B is an adjuvant marker whose diagnostic value remains controversial",
+   "domain": "biomarker science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A fast, sensitive, nonspecific alarm: useful for ruling out, dangerous for ruling in. The engine should tag such signals as screen-only, require a specific confirmatory channel before acting, and model their short half-life so stale values are discounted",
+    "source_operator": "s100b_thresholds_and_limits",
+    "telemetry": "Serial S100B-equivalent alarm levels with sampling times, extracranial injury flags, and confirmatory test results"
+   }
+  },
+  {
+   "primitive_id": "nfl_long_duration_marker",
+   "name": "Neurofilament light chain (NfL, the 68 kDa axonal cytoskeletal subunit) is released into CSF and blood after axonal damage and remains informative far longer than acute-phase markers: serum NfL distinguishes mild, moderate and severe TBI for months and even years after injury, though it also rises with neurodegeneration and neuroinflammation generally, and the chapter notes phosphorylated neurofilament heavy chain may be the better blood candidate",
+   "verbatim_quote": "Serum NfL has been shown to distinguish patients with mild, moderate or severe TBI for months and even years after injury [168].",
+   "page": "Chapter 7, section 8 (Neurofilament light chain); text line 5328",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Release follows calcium-driven phosphorylation change and proteolysis after axon damage",
+    "NfL is a cross-disease marker (per the cited Zetterberg review), not a TBI-specific one"
+   ],
+   "breakdown_regime": "Long duration is bought with low specificity: an elevated NfL years later cannot attribute itself to the index trauma without a baseline and an exposure history",
+   "domain": "biomarker science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The slow integral marker: where acute markers spike and vanish, an integrative marker accumulates the history of axonal loss and stays readable. The engine should pair fast transient signals with slow integral ones so both the event and its cumulative cost are visible",
+    "source_operator": "nfl_long_duration_marker",
+    "telemetry": "Longitudinal NfL levels at months-to-years horizons, baseline values, and intervening neurological events"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "7d540a7f1373703c-t1",
+   "think": "This volume is an edited clinical review of traumatic brain injury, published by IntechOpen in 2022 under the editorship of Xianli Lv, Yi Guo and Gengsheng Mao, with seven chapters split between a general section (an introductory guideline digest, prehospital and emergency airway management, and neuroinflammation) and a specialties section (pediatric penetrating injury, traumatic optic neuropathy, traumatic carotid and vertebral artery injury, and biofluid biomarkers of diffuse axonal injury). Its intellectual spine is the distinction between primary injury, the mechanical damage done at impact, and secondary injury, the molecular, chemical and inflammatory cascade that unfolds over minutes to days and is the only part of the process medicine can still modify. Almost every chapter returns to that split: the airway chapter treats hypoxemia, hypotension and hyperventilation as secondary insults to be prevented; the neuroinflammation chapter treats DAMP release, inflammasome activation, blood-brain barrier failure and glymphatic stagnation as the machinery of secondary injury; the biomarker chapter tries to measure the cascade in blood and cerebrospinal fluid. The introductory chapter is essentially a compressed restatement of the fourth edition of the Brain Trauma Foundation guidelines, and it shows the volume's characteristic unit of knowledge: the numeric threshold with an evidence grade behind it. Intracranial pressure is treated above 22 mmHg, cerebral perfusion pressure is targeted at 60 to 70 mmHg, systolic blood pressure floors are stratified by age, brain tissue oxygen tension has a pathological threshold of 20 mmHg, and the Glasgow Coma Scale partitions severity at 13 to 15, 9 to 12 and below 8. These numbers are presented as governance parameters for a control problem: the intracranial compartment is a fixed volume of brain, cerebrospinal fluid and blood (83, 11 and 6 percent), so any added volume must be offset or pressure rises along a compliance curve until compensation fails. The airway chapter is the volume's methodological conscience. It takes the most entrenched threshold in trauma care, intubate at a Glasgow Coma Scale of 8 or less, and shows that the rule rests on expert opinion rather than evidence, then assembles cohort data in which immediate intubation of patients with GCS 7 or 8 was independently associated with higher mortality, and a 13,625-patient study in which prehospital intubation was associated with decreased survival. Against that, the EPIC implementation study showed adjusted survival doubling when prehospital guidelines targeting hypoxia, hypotension and hyperventilation were actually implemented. The lesson is not that intubation is bad but that a single-number trigger cannot substitute for a multi-factor decision involving patient state, provider skill and scene conditions, and that process variables (first-pass success, preoxygenation above a saturation cliff at 93 to 95 percent, attempt count) carry outcome weight of their own. The neuroinflammation chapter supplies the mechanistic middle layer: HMGB1 and other DAMPs switching on the NLRP3 inflammasome within minutes, cytokine peaks inside 24 hours, claudin-5 loss and neutrophil extracellular traps opening the blood-brain barrier, aquaporin-4 mislocalization cutting glymphatic clearance by more than a quarter, and barrier failure still measurable 10 months out in animal models. The specialty chapters then repeat the pattern in narrower domains: a 600 meters per second velocity boundary separating pediatric penetrating injury classes, outcome governed by trajectory, 48-hour subarachnoid hemorrhage and whether dural closure prevented infection; an optic neuropathy literature that is honestly null across steroids, surgery and observation, beside one hard two-hour rule for orbital compartment syndrome; a vascular chapter that classifies fistulas (Barrow, Zipfel), quantifies a 3 to 7 day pseudoaneurysm rebleed window, and documents the migration from carotid ligation to reconstructive endovascular repair; and a biomarker chapter that catalogs tau, amyloid beta, MBP, CK-BB, NSE, GFAP, S100B, UCH-L1, spectrin breakdown products and neurofilament light with each one's kinetics, tissue source and failure mode, concluding that no single marker survives its confounders and the rational strategy is a panel read in combination and in series. Two cross-cutting habits deserve note. The first is internal consistency under repetition: steroids appear in three chapters (the guideline digest, the neuroinflammation review and the optic neuropathy chapter) and the verdict is the same each time, contraindicated or unproven, because each chapter defers to the same outcome trials rather than to local enthusiasm. The second is classification as infrastructure: the volume repeatedly builds or borrows taxonomies (Glasgow Coma Scale bands, Barrow and Zipfel fistula grades, biomarker classes by cell of origin, injury classes by velocity) because a shared taxonomy is what lets cohorts be compared and thresholds be attached to categories. Where the book is silent is also informative: there are no equations anywhere in it, almost no pooled quantitative synthesis, and the management of interacting problems (polytrauma confounding biomarker levels, hypotension changing drug choice, age changing every threshold) is handled by caveats rather than by a joint model. For a reasoning engine, the transferable machinery is fourfold. First, thresholds should be stored as versioned, sourced parameters with the population they were estimated on, not as constants of nature. Second, interventions must be modeled as actions with their own harm profiles and operator dependence, because the same act (intubation, steroids) flips sign depending on timing, indication and execution quality. Third, null and negative results are first-class evidence: the steroid contraindication and the IONTS null result constrain the action space as firmly as any positive finding. Fourth, single weak signals should be fused into panels and tracked as trajectories (the S100B second peak, the NfL months-long tail) rather than read as point values. The volume breaks down where narrative review always breaks down: no equations, no pooled effect sizes, heavy reliance on single-center cohorts and on animal models whose lissencephalic brains differ mechanically from human ones, guideline numbers inherited from consensus where trials are absent, and biomarker claims that repeatedly failed to replicate across cohorts. Its numbers are therefore priors with provenance, not ground truth, and any system ingesting them should carry the citation, the population and the failure mode alongside every value.",
+   "retrocausal_genealogy": "The volume's lineage runs from the Monro-Kellie doctrine of a fixed intracranial volume, through Teasdale and Jennett's 1974 Glasgow Coma Scale, to the Brain Trauma Foundation guideline editions that converted cohort experience into numeric thresholds. Its trial ancestry includes NASCIS, whose steroid protocol was extrapolated to optic nerve injury, the CRASH trial that reversed steroid use in head injury, CRASH-3 for tranexamic acid, the EPIC prehospital implementation study, and BOOST-II for brain tissue oxygen monitoring. Its device lineage runs from Serbinenko's detachable balloon in the 1960s and 1970s through coils and liquid embolics to covered stents and flow diverters, and its measurement lineage runs from single serum markers to the GFAP and UCH-L1 panel era.",
+   "theory_of_mind": "The editors and chapter authors write for clinicians who must act before the evidence is complete, and they model the reader as a guideline consumer who needs thresholds, indications and contraindications in compressed form. Their model of the domain is that traumatic brain injury is not one disease but a family of mechanisms sharing a final common pathway of secondary injury, and that progress comes from matching mechanism to intervention inside narrow time windows. They assume heterogeneity is the central problem: of patients, of injuries, of providers and of health systems, which is why single rules keep failing and why the book repeatedly replaces them with stratified criteria and panels.",
+   "cross_layer_veto": "Several findings in this volume veto signals that other layers would otherwise pass. The steroid data veto the entire anti-inflammatory intuition at the treatment layer: a therapy that reduces inflammation and pressure still increases mortality, so mechanism plausibility cannot override outcome evidence. The airway data veto threshold-only triage: a Glasgow Coma Scale of 8 cannot by itself authorize an intervention whose harm depends on operator and setting. S100B vetoes single-marker diagnosis: near-perfect sensitivity with 28 percent specificity and extracranial sources mean a positive value cannot confirm brain injury. And computed tomography is vetoed as a rule-out test for diffuse axonal injury, which is frequently microscopic and invisible on structural imaging."
+  }
+ ],
+ "universal_lens": "Read generally, this volume is a case study in governing a complex system whose damage arrives in two phases: an irreversible mechanical insult and a slower, modifiable cascade. Its method is to convert physiology into thresholds, audit inherited rules against outcome data, retire the rules that fail, fuse weak signals into panels, and treat timing as a state variable. That template transfers to any domain where an initial shock triggers secondary degradation, where interventions carry their own harm, and where measurement is indirect: instrument the cascade, version the thresholds, respect the null results, and never let a single number or a single marker make the decision alone.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the volume supplies the medical substrate for its concussion and head-impact research program: the primary and secondary injury distinction, the diffuse axonal injury mechanism under rotational acceleration, the chronic neuroinflammation and perivascular tau pathway toward chronic traumatic encephalopathy, and the biomarker panel logic (GFAP, UCH-L1, NfL, tau) that defines what a future sideline or laboratory test would have to measure. It also supplies evidence discipline: which legacy practices (steroids, threshold-only decisions) the outcome data have already retired, and which open questions (glymphatic clearance, TSPO imaging of microglia) are live research fronts.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine, this volume is a health-layer reference on brain injury that sharpens how the engine reasons about player availability and recovery after head trauma: injury effects unfold as a delayed secondary cascade rather than a single event, recovery timelines are long-tailed (biomarker and imaging abnormalities persist for months), and return-to-play risk cannot be read off one observation. Its deeper value is methodological. The engine should store clinical-style thresholds as versioned parameters with provenance, model every intervention as an action with a harm profile, treat null results as constraints, fuse weak signals into panels instead of trusting single markers, and encode time since event as a first-class state variable, exactly as this literature learned to do."
+}

@@ -30,6 +30,18 @@ if str(QB_BEHAVIOR_SRC) not in sys.path:
     sys.path.insert(0, str(QB_BEHAVIOR_SRC))
 
 
+def _load_pbp_2026_df() -> pd.DataFrame:
+    """Load 2026 PBP parquet with tracked coaching mirror fallback on clean checkouts."""
+    nflv = REPO_ROOT / "data" / "nflverse"
+    primary = nflv / "pbp" / "play_by_play_2026.parquet"
+    fallback = REPO_ROOT / "intelligence" / "coaching" / "data" / "play_by_play_2026.parquet"
+    slim_csv = nflv / "pbp_2026_slim_clean_checkout.csv.gz"
+    pbp_src = primary if primary.is_file() else fallback
+    if pbp_src.is_file():
+        return pd.read_parquet(pbp_src)
+    return pd.read_csv(slim_csv, compression="gzip", low_memory=False)
+
+
 def run_all_31_datasets(away: str = "JAX", home: str = "BAL") -> dict[str, Any]:
     """Ingests and extracts real JAX/BAL and league metrics from all 31 local Parquet/CSV/JSON datasets."""
     nflv = REPO_ROOT / "data" / "nflverse"
@@ -38,9 +50,7 @@ def run_all_31_datasets(away: str = "JAX", home: str = "BAL") -> dict[str, Any]:
 
     # 1. FTN Charting 2026 (18,019 rows x 29 cols)
     ftn_df = pd.read_parquet(nflv / "ftn_charting_2026.parquet")
-    pbp_path = nflv / "pbp" / "play_by_play_2026.parquet"
-    slim_csv = nflv / "pbp_2026_slim_clean_checkout.csv.gz"
-    pbp_df = pd.read_parquet(pbp_path) if pbp_path.is_file() else pd.read_csv(slim_csv, compression="gzip", low_memory=False)
+    pbp_df = _load_pbp_2026_df()
     pbp_sub = pbp_df[["game_id", "play_id", "posteam", "defteam", "epa", "success"]].rename(
         columns={"game_id": "nflverse_game_id", "play_id": "nflverse_play_id"}
     )
@@ -395,9 +405,7 @@ def _sanitize_json(obj: Any) -> Any:
 
 
 def main() -> int:
-    pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
-    slim_csv = REPO_ROOT / "data" / "nflverse" / "pbp_2026_slim_clean_checkout.csv.gz"
-    pbp_df = pd.read_parquet(pbp_path) if pbp_path.is_file() else pd.read_csv(slim_csv, compression="gzip", low_memory=False)
+    pbp_df = _load_pbp_2026_df()
     datasets_report = run_all_31_datasets("JAX", "BAL")
     coaching_deep = run_all_coaching_physics_and_signal_functions(pbp_df, "JAX", "BAL")
     intel_domains = run_all_31_intelligence_subpackages("JAX", "BAL")

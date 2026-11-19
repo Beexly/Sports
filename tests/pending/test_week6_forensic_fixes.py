@@ -1,57 +1,49 @@
 #!/usr/bin/env python3
-"""
-tests/test_week6_forensic_fixes.py
-Unit and acceptance tests replaying the five largest NFL Week 6 (October 18, 2026)
-failures against the upgraded GSE engine modules, plus the 50-feature player x
-situational state interaction vector and standardized Ridge model.
+"""Unit and acceptance tests for NFL Week 6 forensic fixes.
+
+Replays the five largest NFL Week 6 (October 18, 2026) failures against the
+upgraded GSE engine modules, plus the 50-feature player x situational state
+interaction vector and standardized Ridge model (`tests/test_week6_forensic_fixes.py`).
 """
 
 from __future__ import annotations
+
 import sys
 from pathlib import Path
+
 import numpy as np
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.sync_week6_db import (
-    SOVEREIGN_SIGNAL_LEAGUE_BASELINES,
-    evaluate_total_steam_exhaustion_gate,
-    compute_pick_probability_from_db_signals,
+from intelligence.models.player_linear_model import (  # noqa: E402
+    FEATURE_NAMES,
+    build_design_matrix,
+    predict_player,
+    train_player_model,
 )
-from intelligence.props.target_conservation import (
-    shrink_rate,
-    enforce_conservation,
-    enforce_target_conservation,
-    check_te_committee_gate,
-    reproject_team_receiving_stack,
-    project_qb_pass_yards_with_conservation,
+from intelligence.optimizer.dfs_optimizer_suite import (  # noqa: E402
+    compute_correlation_penalty,
+    overlap,
+    score_lineup_with_correlation,
 )
-from intelligence.props.projection_bus import (
-    apply_vacated_target,
-    gate_wr_under,
+from intelligence.props.player_feature_vector import build_player_feature_vector  # noqa: E402
+from intelligence.props.projection_bus import (  # noqa: E402
     get_canonical_week6_prop_projections,
 )
-from intelligence.props.regime_mixture import (
-    project_rb_rush,
-    project_rb_rush_yards,
-    apply_pocket_penalty,
-    apply_pocket_catch_penalty,
+from intelligence.props.regime_mixture import (  # noqa: E402
     evaluate_rb_prop_with_regime_mixture,
     evaluate_wr_prop_with_pocket_penalty,
 )
-from intelligence.optimizer.dfs_optimizer_suite import (
-    overlap,
-    compute_correlation_penalty,
-    score_lineup_with_correlation,
+from intelligence.props.target_conservation import (  # noqa: E402
+    project_qb_pass_yards_with_conservation,
+    reproject_team_receiving_stack,
+    shrink_rate,
 )
-from intelligence.props.player_feature_vector import build_player_feature_vector
-from intelligence.models.player_linear_model import (
-    FEATURE_NAMES,
-    build_design_matrix,
-    train_player_model,
-    predict_player,
+from scripts.sync_week6_db import (  # noqa: E402
+    SOVEREIGN_SIGNAL_LEAGUE_BASELINES,
+    compute_pick_probability_from_db_signals,
 )
 
 
@@ -125,8 +117,8 @@ def _sample_week6_team_signals() -> dict[str, dict[str, float]]:
 
 
 def test_item1_signal_centering_and_steam_exhaustion_gate():
-    """
-    Acceptance 1:
+    """Acceptance 1: verify signal centering and steam exhaustion gate.
+
     - Mean-center level features against 2026 league baselines and use PROB_SCALE = 0.10 on totals.
     - Re-score ARI @ LAR OVER 51.5 (opened 46.5, current 51.5, structural 52.8) -> flips to PASS.
     - Re-score DAL @ GB OVER 53.5 (opened 51.5, current 53.5, two-high 63.5%) -> flips to PASS.
@@ -181,8 +173,8 @@ def test_item1_signal_centering_and_steam_exhaustion_gate():
 
 
 def test_item2_target_conservation_and_james_stein_shrinkage():
-    """
-    Acceptance 2:
+    """Acceptance 2: verify target conservation and James-Stein shrinkage.
+
     - James-Stein shrinkage (k=6) pulls Nacua's 3-game 15.0 tgts/G toward WR1 prior (8.4).
     - Dirichlet-Multinomial conservation caps sum of team targets <= 33 * 0.96 = 31.68.
     - TE Committee Gate blocks Tyler Higbee OVER 31.5 (TE2+TE3 route share 52.8% > 45%).
@@ -192,13 +184,35 @@ def test_item2_target_conservation_and_james_stein_shrinkage():
     assert nacua_shrunk == 10.6  # (3/9)*15.0 + (6/9)*8.4 = 5.0 + 5.6 = 10.6
 
     lar_receivers = [
-        {"player": "Puka Nacua", "position": "WR", "role": "WR1", "n_games": 3, "observed_targets_pg": 15.0, "observed_yards_pg": 112.3, "line": 94.5, "side": "OVER"},
-        {"player": "Davante Adams", "position": "WR", "role": "WR2", "n_games": 5, "observed_targets_pg": 9.0, "observed_yards_pg": 88.2, "line": 66.5, "side": "OVER"},
-        {"player": "Tyler Higbee", "position": "TE", "role": "TE", "n_games": 2, "observed_targets_pg": 5.5, "observed_yards_pg": 56.0, "line": 31.5, "side": "OVER", "te2_te3_route_share": 0.528},
-        {"player": "Kyren Williams", "position": "RB", "role": "RB1", "n_games": 5, "observed_targets_pg": 3.6, "observed_yards_pg": 25.0, "line": 19.5, "side": "OVER"},
-        {"player": "Tutu Atwell", "position": "WR", "role": "WR3", "n_games": 5, "observed_targets_pg": 4.8, "observed_yards_pg": 38.0, "line": 28.5, "side": "OVER"},
+        {
+            "player": "Puka Nacua", "position": "WR", "role": "WR1",
+            "n_games": 3, "observed_targets_pg": 15.0, "observed_yards_pg": 112.3,
+            "line": 94.5, "side": "OVER",
+        },
+        {
+            "player": "Davante Adams", "position": "WR", "role": "WR2",
+            "n_games": 5, "observed_targets_pg": 9.0, "observed_yards_pg": 88.2,
+            "line": 66.5, "side": "OVER",
+        },
+        {
+            "player": "Tyler Higbee", "position": "TE", "role": "TE",
+            "n_games": 2, "observed_targets_pg": 5.5, "observed_yards_pg": 56.0,
+            "line": 31.5, "side": "OVER", "te2_te3_route_share": 0.528,
+        },
+        {
+            "player": "Kyren Williams", "position": "RB", "role": "RB1",
+            "n_games": 5, "observed_targets_pg": 3.6, "observed_yards_pg": 25.0,
+            "line": 19.5, "side": "OVER",
+        },
+        {
+            "player": "Tutu Atwell", "position": "WR", "role": "WR3",
+            "n_games": 5, "observed_targets_pg": 4.8, "observed_yards_pg": 38.0,
+            "line": 28.5, "side": "OVER",
+        },
     ]
-    conserved = reproject_team_receiving_stack(lar_receivers, team_pass_attempts=33.0, k=6.0, cap=0.96)
+    conserved = reproject_team_receiving_stack(
+        lar_receivers, team_pass_attempts=33.0, k=6.0, cap=0.96
+    )
     total_targets = sum(r["projected_targets"] for r in conserved)
     assert total_targets <= 33.0 * 0.96 + 0.05
 
@@ -230,9 +244,10 @@ def test_item2_target_conservation_and_james_stein_shrinkage():
 
 
 def test_item3_vacated_target_multiplier_and_canonical_bus():
-    """
-    Acceptance 3:
-    - Rashee Rice (24.5% share >= 20%) OUT boosts Xavier Worthy by x1.28 targets and flips Worthy to OVER 48.5.
+    """Acceptance 3: verify vacated target multiplier and canonical bus.
+
+    - Rashee Rice (24.5% share >= 20%) OUT boosts Xavier Worthy by x1.28 targets and flips
+      Worthy to OVER 48.5.
     - WR Under Gate blocks Germie Bernard UNDER 44.5 and Colston Loveland UNDER 39.5.
     - Canonical bus emits identical mu and side across Packet, SGP, and JEV.
     """
@@ -253,11 +268,12 @@ def test_item3_vacated_target_multiplier_and_canonical_bus():
 
 
 def test_item4_regime_mixture_and_pocket_depth_penalty():
-    """
-    Acceptance 4:
-    - Bijan Robinson 2-state regime mixture drops projected rushing yards below 93.5 (and sets script_risk_flag=True).
-    - Drake London receives -8% catch-rate haircut under pocket_depth_yd=3.45 (<3.60) vs top-12 pressure front,
-      dropping projected receiving yards below 89.5.
+    """Acceptance 4: verify regime mixture and pocket depth penalty.
+
+    - Bijan Robinson 2-state regime mixture drops projected rushing yards below 93.5 (and sets
+      script_risk_flag=True).
+    - Drake London receives -8% catch-rate haircut under pocket_depth_yd=3.45 (<3.60) vs top-12
+      pressure front, dropping projected receiving yards below 89.5.
     """
     bijan = evaluate_rb_prop_with_regime_mixture(
         base_carries=16.8,
@@ -286,8 +302,8 @@ def test_item4_regime_mixture_and_pocket_depth_penalty():
 
 
 def test_item5_dfs_correlation_penalty_and_diversity():
-    """
-    Acceptance 5:
+    """Acceptance 5: verify DFS correlation penalty and lineup diversity.
+
     - Unhedged Dad's Stack (Stafford + Kyren + Higbee + Bijan + London) is penalized for:
       (a) same-team RB+WR without QB on ATL (Bijan + London, Bijan target share 11.5% < 15%),
       (b) same-team RB+TE on LAR (Kyren + Higbee, Kyren target share 10.2% < 15%),
@@ -296,32 +312,88 @@ def test_item5_dfs_correlation_penalty_and_diversity():
     - Overlap helper accurately enforces <= 5 shared players.
     """
     dads_lineup = [
-        {"pid": "stafford", "name": "Matthew Stafford", "pos": "QB", "team": "LAR", "opp": "ARI", "mu": 20.8},
-        {"pid": "kyren", "name": "Kyren Williams", "pos": "RB", "team": "LAR", "opp": "ARI", "mu": 19.4, "target_share": 0.102},
-        {"pid": "bijan", "name": "Bijan Robinson", "pos": "RB", "team": "ATL", "opp": "CHI", "mu": 21.2, "target_share": 0.115},
-        {"pid": "london", "name": "Drake London", "pos": "WR", "team": "ATL", "opp": "CHI", "mu": 18.9},
-        {"pid": "adams", "name": "Davante Adams", "pos": "WR", "team": "LAR", "opp": "ARI", "mu": 16.5},
-        {"pid": "shakir", "name": "Khalil Shakir", "pos": "WR", "team": "BUF", "opp": "LV", "mu": 13.8},
-        {"pid": "higbee", "name": "Tyler Higbee", "pos": "TE", "team": "LAR", "opp": "ARI", "mu": 10.6},
-        {"pid": "worthy", "name": "Xavier Worthy", "pos": "WR", "team": "KC", "opp": "LAC", "mu": 13.2},
-        {"pid": "browns_dst", "name": "Browns", "pos": "DST", "team": "CLE", "opp": "BAL", "mu": 8.2},
+        {
+            "pid": "stafford", "name": "Matthew Stafford", "pos": "QB",
+            "team": "LAR", "opp": "ARI", "mu": 20.8,
+        },
+        {
+            "pid": "kyren", "name": "Kyren Williams", "pos": "RB",
+            "team": "LAR", "opp": "ARI", "mu": 19.4, "target_share": 0.102,
+        },
+        {
+            "pid": "bijan", "name": "Bijan Robinson", "pos": "RB",
+            "team": "ATL", "opp": "CHI", "mu": 21.2, "target_share": 0.115,
+        },
+        {
+            "pid": "london", "name": "Drake London", "pos": "WR",
+            "team": "ATL", "opp": "CHI", "mu": 18.9,
+        },
+        {
+            "pid": "adams", "name": "Davante Adams", "pos": "WR",
+            "team": "LAR", "opp": "ARI", "mu": 16.5,
+        },
+        {
+            "pid": "shakir", "name": "Khalil Shakir", "pos": "WR",
+            "team": "BUF", "opp": "LV", "mu": 13.8,
+        },
+        {
+            "pid": "higbee", "name": "Tyler Higbee", "pos": "TE",
+            "team": "LAR", "opp": "ARI", "mu": 10.6,
+        },
+        {
+            "pid": "worthy", "name": "Xavier Worthy", "pos": "WR",
+            "team": "KC", "opp": "LAC", "mu": 13.2,
+        },
+        {
+            "pid": "browns_dst", "name": "Browns", "pos": "DST",
+            "team": "CLE", "opp": "BAL", "mu": 8.2,
+        },
     ]
     garretts_3rb_lineup = [
-        {"pid": "allen", "name": "Josh Allen", "pos": "QB", "team": "BUF", "opp": "LV", "mu": 24.6},
-        {"pid": "walker", "name": "Kenneth Walker III", "pos": "RB", "team": "KC", "opp": "LAC", "mu": 20.5},
-        {"pid": "cook", "name": "James Cook", "pos": "RB", "team": "BUF", "opp": "LV", "mu": 19.2, "target_share": 0.155},
-        {"pid": "shakir", "name": "Khalil Shakir", "pos": "WR", "team": "BUF", "opp": "LV", "mu": 13.8},
-        {"pid": "tucker", "name": "Tre Tucker", "pos": "WR", "team": "LV", "opp": "BUF", "mu": 12.1},
-        {"pid": "worthy", "name": "Xavier Worthy", "pos": "WR", "team": "KC", "opp": "LAC", "mu": 13.2},
-        {"pid": "goedert", "name": "Dallas Goedert", "pos": "TE", "team": "PHI", "opp": "CAR", "mu": 12.4},
-        {"pid": "hubbard", "name": "Chuba Hubbard", "pos": "RB", "team": "CAR", "opp": "PHI", "mu": 17.8},
-        {"pid": "jets_dst", "name": "Jets", "pos": "DST", "team": "NYJ", "opp": "NE", "mu": 7.8},
+        {
+            "pid": "allen", "name": "Josh Allen", "pos": "QB",
+            "team": "BUF", "opp": "LV", "mu": 24.6,
+        },
+        {
+            "pid": "walker", "name": "Kenneth Walker III", "pos": "RB",
+            "team": "KC", "opp": "LAC", "mu": 20.5,
+        },
+        {
+            "pid": "cook", "name": "James Cook", "pos": "RB",
+            "team": "BUF", "opp": "LV", "mu": 19.2, "target_share": 0.155,
+        },
+        {
+            "pid": "shakir", "name": "Khalil Shakir", "pos": "WR",
+            "team": "BUF", "opp": "LV", "mu": 13.8,
+        },
+        {
+            "pid": "tucker", "name": "Tre Tucker", "pos": "WR",
+            "team": "LV", "opp": "BUF", "mu": 12.1,
+        },
+        {
+            "pid": "worthy", "name": "Xavier Worthy", "pos": "WR",
+            "team": "KC", "opp": "LAC", "mu": 13.2,
+        },
+        {
+            "pid": "goedert", "name": "Dallas Goedert", "pos": "TE",
+            "team": "PHI", "opp": "CAR", "mu": 12.4,
+        },
+        {
+            "pid": "hubbard", "name": "Chuba Hubbard", "pos": "RB",
+            "team": "CAR", "opp": "PHI", "mu": 17.8,
+        },
+        {
+            "pid": "jets_dst", "name": "Jets", "pos": "DST",
+            "team": "NYJ", "opp": "NE", "mu": 7.8,
+        },
     ]
     mu_map = {p["pid"]: p["mu"] for p in dads_lineup + garretts_3rb_lineup}
     opp_map = {"LAR": "ARI", "ATL": "CHI", "BUF": "LV", "KC": "LAC"}
 
     dads_corr_score = score_lineup_with_correlation(dads_lineup, mu_map, opponent_map=opp_map)
-    garretts_corr_score = score_lineup_with_correlation(garretts_3rb_lineup, mu_map, opponent_map=opp_map)
+    garretts_corr_score = score_lineup_with_correlation(
+        garretts_3rb_lineup, mu_map, opponent_map=opp_map
+    )
 
     assert compute_correlation_penalty(dads_lineup, mu_map, opponent_map=opp_map) > 15.0
     assert dads_corr_score < garretts_corr_score
@@ -329,9 +401,9 @@ def test_item5_dfs_correlation_penalty_and_diversity():
 
 
 def test_50_feature_player_interaction_vector_and_ridge_model():
-    """
-    Verifies that `build_player_feature_vector` produces all 50 named interaction features
-    and `train_player_model` / `predict_player` fits and predicts cleanly.
+    """Verify `build_player_feature_vector` produces all 50 named interaction features.
+
+    Also verifies `train_player_model` / `predict_player` fits and predicts cleanly.
     """
     base = {
         "soe_yd": 0.312,
@@ -377,7 +449,12 @@ def test_50_feature_player_interaction_vector_and_ridge_model():
         }
         fv = build_player_feature_vector(b, s)
         sample_dicts.append(fv)
-        y_vals.append(55.0 + 40.0 * fv["soe_residual_two_high"] + 80.0 * fv["target_share"] - 25.0 * fv["soe_x_two_high"])
+        y_vals.append(
+            55.0
+            + 40.0 * fv["soe_residual_two_high"]
+            + 80.0 * fv["target_share"]
+            - 25.0 * fv["soe_x_two_high"]
+        )
 
     X = build_design_matrix(sample_dicts)
     assert X.shape == (32, 50)
@@ -387,24 +464,26 @@ def test_50_feature_player_interaction_vector_and_ridge_model():
 
 
 def test_213_equation_engine_and_physics_completion_prob():
-    """
-    Verifies the complete 213-equation engine:
-    - 204 features from `build_full_feature_vector` (12 bases + 192 interaction/residual crossings)
+    """Verify the complete 213-equation engine.
+
+    - 204 features from `build_full_feature_vector` (12 bases + 192 interaction/residual
+      crossings)
     - `physics_completion_prob` (Eq. 8: P_c = P_ca * (1 - d_p / d_max) / (1 + n_d))
     - `matchup_cross_entropy_loss` (Eq. 11) and `gat_attention` (Eq. 13)
     - `student_t_copula_cdf` (Eq. 16) and `student_t_tail_dependence` (Eq. 17)
-    - Live WSH @ SF 6:30 PM CDT Steam Exhaustion Gate on Total 52.0 (open 49.0 -> close 52.0, structural 53.8 -> PASS)
+    - Live WSH @ SF 6:30 PM CDT Steam Exhaustion Gate on Total 52.0 (open 49.0 -> close 52.0,
+      structural 53.8 -> PASS)
     """
+    from intelligence.matchups.coverage_matchup import gat_attention, matchup_cross_entropy_loss
     from intelligence.models.gse_213_equation_engine import (
         BASES,
         STATES,
         build_full_feature_vector,
         physics_completion_prob,
+        points_from_epa,
         student_t_tail_dependence,
         win_prob_from_spread,
-        points_from_epa,
     )
-    from intelligence.matchups.coverage_matchup import matchup_cross_entropy_loss, gat_attention
     from intelligence.sgp.copula_sgp import student_t_copula_cdf
 
     player_kittle = {
@@ -439,11 +518,12 @@ def test_213_equation_engine_and_physics_completion_prob():
     assert np.isclose(fv_204["soe_yd_res_two_high_rate"], 0.312 * (1.0 - 0.420))
 
     # Eq. 8: Physics completion probability
-    # Terry McLaurin (deep perimeter aDOT 12.54 vs SF 56.5% two-high bracket: n_d=1, d_p/d_max=0.42)
+    # Terry McLaurin (deep perimeter aDOT 12.54 vs SF 56.5% two-high bracket:
+    # n_d=1, d_p/d_max=0.42)
     p_c_mclaurin = physics_completion_prob(p_ca=0.82, d_p=4.2, d_max=10.0, n_defenders=1)
     # George Kittle (seam route vs vacated WSH middle with Omenihu OUT: n_d=0, d_p/d_max=0.14)
     p_c_kittle = physics_completion_prob(p_ca=0.86, d_p=1.4, d_max=10.0, n_defenders=0)
-    assert np.isclose(p_c_mclaurin, 0.82 * (0.58 / 2.0))  # 0.2378 in tight 2-man bracket window
+    assert np.isclose(p_c_mclaurin, 0.82 * (0.58 / 2.0))  # 0.2378 in tight 2-man bracket
     assert np.isclose(p_c_kittle, 0.86 * 0.86)  # 0.7396 in open seam window
     assert p_c_kittle > p_c_mclaurin
 
@@ -455,7 +535,9 @@ def test_213_equation_engine_and_physics_completion_prob():
 
     W = np.eye(4)
     a = np.ones(8) * 0.25
-    e_ij = gat_attention(np.array([1.0, 0.5, 0.2, 0.1]), np.array([0.8, 0.4, 0.3, 0.2]), W, a)
+    e_ij = gat_attention(
+        np.array([1.0, 0.5, 0.2, 0.1]), np.array([0.8, 0.4, 0.3, 0.2]), W, a
+    )
     assert e_ij > 0.0
 
     # Eq. 16 & 17: Student-t Copula (nu=4) & tail dependence
@@ -470,28 +552,32 @@ def test_213_equation_engine_and_physics_completion_prob():
 
 
 def test_full_market_scanner_roster_grounding_and_two_high_script_deconflation():
-    """
-    Verifies the 3 structural fixes from tonight's MNF (WSH @ SF, game_id 401873008) audit:
+    """Verify the 3 structural fixes from tonight's MNF (WSH @ SF, game_id 401873008) audit.
+
     1. Hard Roster & Injury Grounding Gate:
-       - Blocks stale-roster hallucinations (`Zach Ertz`, `Jake Moody`) with `RosterGroundingError`.
+       - Blocks stale-roster hallucinations (`Zach Ertz`, `Jake Moody`) with
+         `RosterGroundingError`.
        - Blocks ruled-OUT/Suspended players (`Deebo Samuel Sr.`, `Nick Bosa`, `Dre Greenlaw`,
          `Charles Omenihu`, `Jacory Croskey-Merritt`) with `RosterGroundingError`.
-       - Validates active 2026 players (`Chig Okonkwo`, `Eddy Pineiro`, `Drew Stevens`, `Terry McLaurin`).
+       - Validates active 2026 players (`Chig Okonkwo`, `Eddy Pineiro`, `Drew Stevens`,
+         `Terry McLaurin`).
     2. Two-High vs. Trailing Script De-Conflation Law:
-       - `Terry McLaurin` (`route_participation=0.89`, `trailing_prob=0.68`) is scored OVER 49.5 Rec Yds
-         and OVER 3.5 Receptions (with `wr_under_gate_blocked=True`), while `Longest Reception 19.5`
-         is scored UNDER via Gumbel two-high tail compression.
+       - `Terry McLaurin` (`route_participation=0.89`, `trailing_prob=0.68`) is scored OVER 49.5
+         Rec Yds and OVER 3.5 Receptions (with `wr_under_gate_blocked=True`), while
+         `Longest Reception 19.5` is scored UNDER via Gumbel two-high tail compression.
        - `Chig Okonkwo` is scored OVER 24.5 Rec Yds and OVER 2.5 Receptions.
     3. Derivative Pricing Models:
-       - `Jayden Daniels` OVER 0.5 Passing Interceptions & `Brock Purdy` UNDER 0.5 Passing Interceptions.
-       - `Eddy Pineiro` OVER 1.5 FGs / OVER 8.5 Kicking Pts & `Drew Stevens` OVER 1.5 FGs / UNDER 1.5 PATs.
+       - `Jayden Daniels` OVER 0.5 Passing Interceptions & `Brock Purdy` UNDER 0.5 Passing
+         Interceptions.
+       - `Eddy Pineiro` OVER 1.5 FGs / OVER 8.5 Kicking Pts & `Drew Stevens` OVER 1.5 FGs /
+         UNDER 1.5 PATs.
     """
     import pytest
     from intelligence.props.full_market_scanner import (
         RosterGroundingError,
         load_verified_game_entities,
-        validate_player_grounding,
         scan_wsh_sf_full_board,
+        validate_player_grounding,
     )
 
     verified = load_verified_game_entities(
@@ -518,8 +604,9 @@ def test_full_market_scanner_roster_grounding_and_two_high_script_deconflation()
         with pytest.raises(RosterGroundingError, match="BLOCKED_INACTIVE_PLAYER"):
             validate_player_grounding(inactive_player, verified)
 
-    # 3. Full board scan produces verified OVER on McLaurin & Okonkwo, UNDER on McLaurin Longest Rec,
-    #    OVER on Daniels INT, UNDER on Purdy INT, and OVER on Pineiro/Stevens FGs
+    # 3. Full board scan produces verified OVER on McLaurin & Okonkwo,
+    #    UNDER on McLaurin Longest Rec, OVER on Daniels INT, UNDER on Purdy INT,
+    #    and OVER on Pineiro/Stevens FGs
     board = scan_wsh_sf_full_board()
 
     mclaurin = board["mclaurin"]

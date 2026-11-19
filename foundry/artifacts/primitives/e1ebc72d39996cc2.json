@@ -1,0 +1,817 @@
+{
+ "book_id": "e1ebc72d39996cc2",
+ "source_status": "COMPLETE",
+ "source_note": "R. A. Fisher, Statistical Methods for Research Workers, second edition, revised and enlarged, Oliver and Boyd, Edinburgh and London, 1928 (Biological Monographs and Manuals, No. V; general editors F. A. E. Crew and D. Ward Cutler). The local file is a scanned copy of that edition, 16,748,474 bytes. The extracted text (649,880 bytes, about 67,000 words) is legible OCR prose, but displayed formulae and some glyphs are garbled in extraction (chi-square appears as x2 or %2, theta as 6 or 0, the square root sign as V, decimal points variously rendered), so verbatim quotes were taken from prose passages and each was verified as a contiguous substring of the extracted text file; equations given in primitives are the book's printed equations, identified from the surrounding text and its worked examples. Full sha256 scan digest over the PDF (size string plus file bytes): e1ebc72d39996cc23e1e6aefdeb968ea156dc3c9a9b336fa6d9b5d87c5b869d7. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "statistics_three_aspects",
+   "name": "Statistics is the study of populations, of variation, and of the reduction of data",
+   "verbatim_quote": "Statistics may be regarded as (i.) the study of populations, (ii.) as the study of variation, (iii.) as the study of methods of the reduction of data.",
+   "page": "p. 1, Section 1 (text line 270)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Observations are treated as a sample from a population, never as self-explanatory facts",
+    "The population, not the individual record, is the object of knowledge"
+   ],
+   "breakdown_regime": "The trichotomy is a programme, not a testable result; it gives no procedure by itself and breaks down as a classification when a problem mixes all three aspects at once",
+   "domain": "statistical-foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine frames every question in the same three moves Fisher names: specify the population a signal is sampled from, characterise its variation, then reduce the data to the few numbers that carry the relevant information, discarding the rest deliberately rather than accidentally.",
+    "source_operator": "statistics_three_aspects",
+    "telemetry": "Raw observation streams with their sampling context: what population each feed samples, how it was collected, and what was thrown away in reduction"
+   }
+  },
+  {
+   "primitive_id": "parameters_statistics_distinction",
+   "name": "A population is specified by a few parameters; statistics calculated from the sample estimate them",
+   "verbatim_quote": "The distribution of this population will be capable of some kind of mathematical specification, involving a certain number, usually few, of parameters, or \" constants \" entering into the mathematical formula.",
+   "page": "p. 7, Section 2 (text line 467)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The chosen mathematical form adequately represents the population",
+    "The sample is a random sample of the hypothetical infinite population"
+   ],
+   "breakdown_regime": "If the specification is wrong, the parameters are characters of the wrong population and every estimate inherits the error; the framework itself supplies no automatic check except the goodness of fit tests built on it",
+   "domain": "statistical-foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine quantity is typed as one of two things: a parameter of a specified generating population, or a statistic estimating it. The mapping forbids treating a computed number as a fact about the world until its target parameter and specification are named.",
+    "source_operator": "parameters_statistics_distinction",
+    "telemetry": "Model specifications with named parameters, and the sample statistics paired to each parameter"
+   }
+  },
+  {
+   "primitive_id": "inverse_probability_rejected",
+   "name": "Inverse probability is rejected: probability runs from population to sample, never back to the population",
+   "verbatim_quote": "the theory of inverse probability is founded upon an error, and must be wholly rejected.",
+   "page": "p. 10, Section 2 (text line 557)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Probability statements require a specified population and a random sampling rule",
+    "Inferences about populations from samples need a different measure, which Fisher supplies as likelihood"
+   ],
+   "breakdown_regime": "The rejection leaves no probability statement about hypotheses themselves; users who need posterior probabilities must import a prior from outside Fisher’s system, which he permits only when the population is itself a sample from a known super-population",
+   "domain": "statistical-foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine never reports the probability that a hypothesis or a model is true. Forward probabilities (how likely the data are under a specified population) and likelihood orderings are the only currencies allowed at the inference layer, which keeps every confidence statement auditable to a sampling rule.",
+    "source_operator": "inverse_probability_rejected",
+    "telemetry": "Any module output that phrases results as probability of a hypothesis; sampling rules and likelihood ratios for the alternatives actually compared"
+   }
+  },
+  {
+   "primitive_id": "likelihood_vs_probability",
+   "name": "Likelihood is the measure of preference among populations consistent with a sample, distinct from probability",
+   "verbatim_quote": "To distinguish it from probability, I have used the term \" Likelihood \" to designate this quantity",
+   "page": "p. 11, Section 2 (text line 574)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The likelihood of a population is proportional to the probability it assigns to the observed sample",
+    "Likelihoods are comparable across candidate populations for the same data, not across different data"
+   ],
+   "breakdown_regime": "Likelihood does not obey the laws of probability: likelihoods over all populations do not sum to one, and a likelihood ratio alone carries no error rate until paired with sampling distributions",
+   "domain": "estimation-theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Candidate explanations inside the engine are ranked by likelihood, exactly as Fisher defines it: the population that makes the observed sample most probable is preferred, and the strength of preference is the likelihood ratio, never a disguised posterior probability.",
+    "source_operator": "likelihood_vs_probability",
+    "telemetry": "Log-likelihoods of each candidate model on the same observed sample; likelihood ratios between the leading candidates"
+   }
+  },
+  {
+   "primitive_id": "inconsistent_statistics",
+   "name": "An inconsistent statistic tends to a wrong value even in an infinite sample and is outside decent usage",
+   "verbatim_quote": "If it be equated to some other parametric function, we shall be using a statistic which even from an infinite sample does not give the correct value",
+   "page": "p. 12, Section 3 (text line 607)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The statistic tends to a fixed limit as the sample grows",
+    "The parametric function it is equated to is the one it actually estimates"
+   ],
+   "breakdown_regime": "Consistency is only an asymptotic property; a consistent statistic can still be badly biased and highly variable in the small samples that dominate practice, which is why Fisher ranks consistency below efficiency and sufficiency",
+   "domain": "estimation-theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine audits every estimator for its limit: a feature whose large-sample limit is a different quantity from the one it is used as is rejected outright, however good its finite-sample track record looks, because more data then entrenches the error instead of curing it.",
+    "source_operator": "inconsistent_statistics",
+    "telemetry": "Estimator definitions with their probability limits, checked against the parameter each is used to estimate"
+   }
+  },
+  {
+   "primitive_id": "efficiency_information_fraction",
+   "name": "Efficiency is the fraction of the relevant information in the data that a statistic actually uses",
+   "verbatim_quote": "We may say, in this sense, that the statistic B makes use of 50 per cent of the relevant information available in the observations ; or, briefly, that its efficiency is 50 per cent.",
+   "page": "p. 13, Section 3 (text line 660)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Competing statistics are consistent for the same parameter and asymptotically normal",
+    "Variance ratios are compared at fixed sample size in large samples"
+   ],
+   "breakdown_regime": "The percentage is a large-sample concept; in small samples an inefficient statistic can beat an efficient one, and Fisher notes inefficient statistics remain legitimate when extra observations are cheaper than better computation, except for fitting before goodness of fit tests",
+   "domain": "estimation-theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Signals compete for weight in the engine on measured efficiency: an estimator with twice the sampling variance of the best available is treated as if it had seen only half the data, so data volume and estimator quality trade off on one explicit scale.",
+    "source_operator": "efficiency_information_fraction",
+    "telemetry": "Sampling variances of rival estimators for the same quantity, expressed as efficiency percentages against the best known estimator"
+   }
+  },
+  {
+   "primitive_id": "sufficient_statistics",
+   "name": "A sufficient statistic contains the whole of the relevant information in the observations, even in small samples",
+   "verbatim_quote": "Such statistics are distinguished by the term sufficient, and, in the use of small samples, sufficient statistics, when they exist, are definitely superior to other efficient statistics.",
+   "page": "p. 15, Section 3 (text line 718)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A sufficient statistic exists only for particular distribution families",
+    "The rest of the sample, given the sufficient statistic, carries no information about the parameter"
+   ],
+   "breakdown_regime": "Most families have no low-dimensional sufficient statistic; insisting on sufficiency outside those families forces information loss disguised as tidiness, and sufficiency for one parameter need not be sufficiency for another",
+   "domain": "estimation-theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Where a sufficient reduction exists, the engine stores and reasons over the sufficient statistic alone, with a proof obligation: conditional on it, the discarded detail must be uninformative about the target. Where no sufficient statistic exists, the full data or an explicitly lossy summary with measured loss is kept.",
+    "source_operator": "sufficient_statistics",
+    "telemetry": "Sufficient statistics per distribution family in use; information-loss measurements for any summary that replaces raw data"
+   }
+  },
+  {
+   "primitive_id": "maximum_likelihood_efficient_claim",
+   "name": "An efficient statistic can in all cases be found by the method of maximum likelihood",
+   "verbatim_quote": "The researches of the author have led him to the conclusion that an efficient statistic can in all cases be found by the Method of Maximum Likelihood",
+   "page": "p. 14, Section 3 (text line 694)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The specification of the population is correct",
+    "Large-sample theory applies, or approximations to the maximum likelihood solution are used, which Fisher notes are also in most cases efficient"
+   ],
+   "breakdown_regime": "Fisher himself qualifies the claim in Chapter IX: maximum likelihood statistics can fail in small samples with thinly occupied classes, and the claim is a research conclusion of 1928, not a theorem proved in the book for every case",
+   "domain": "estimation-theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maximum likelihood is the engine default estimator factory: when a new quantity must be estimated under a stated specification, the likelihood equation is solved first and rival ad hoc estimators must beat its measured sampling variance to displace it.",
+    "source_operator": "maximum_likelihood_efficient_claim",
+    "telemetry": "Likelihood equations and their solutions per estimated quantity; sampling variances of any challenger estimator"
+   }
+  },
+  {
+   "primitive_id": "infinite_population_fundamental",
+   "name": "The hypothetical infinite population behind the sample is fundamental to all statistical work",
+   "verbatim_quote": "The idea of an infinite population distributed in a frequency distribution in respect of one or more characters is fundamental to all statistical work.",
+   "page": "p. 41, Section 11 (text line 1584)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Observed samples are drawn from a population that could, in principle, be sampled indefinitely",
+    "Conclusions are applied to future samples from the same population"
+   ],
+   "breakdown_regime": "When the sampling process drifts, the second sample is from a different population and the framework reads the change as a material difference; genuinely finite populations with continuous variation cannot be represented exactly",
+   "domain": "statistical-foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every dataset entering the engine is registered as a sample from a named hypothetical population, so a later disagreement between samples is interpreted structurally, as a population change or a changed measurement process, before it is read as noise.",
+    "source_operator": "infinite_population_fundamental",
+    "telemetry": "Population definitions per data source; drift checks comparing new samples against the registered population"
+   }
+  },
+  {
+   "primitive_id": "normal_distribution_characterisation",
+   "name": "The normal law: log frequency falls from the centre in proportion to the squared distance",
+   "verbatim_quote": "The distribution is therefore symmetrical, with the greatest frequency at the centre ; although the variation is unlimited, the frequency falls off to exceedingly small values at any considerable distance from the centre",
+   "page": "p. 43, Section 12 (text line 1667)",
+   "latex": "f(x) = \\frac{1}{a\\sqrt{2\\pi}}\\, e^{-(x-m)^2/(2a^2)}",
+   "symbol_and_unit_ledger": {
+    "m": "centre of the distribution, the population mean",
+    "a": "standard deviation, in the same units as the variate x",
+    "x": "value of the variate"
+   },
+   "assumptions": [
+    "The variate ranges over the whole real line",
+    "Frequency in an infinitesimal range is proportional to the density at that point"
+   ],
+   "breakdown_regime": "Real distributions are bounded and often skewed; Fisher’s own test of departure from normality (Section 14) exists because the normal form is an assumption to be checked, and statistics that are exactly normal only under it inherit its failure",
+   "domain": "probability-distributions",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The normal law is the engine default error model for aggregated quantities, used with its exact tail behaviour (twice the standard deviation exceeded about once in 22 trials, thrice about once in 370) rather than as a vague bell shape, and always paired with a departure check.",
+    "source_operator": "normal_distribution_characterisation",
+    "telemetry": "Residual and error distributions per signal; third and fourth moment diagnostics for departure from normality"
+   }
+  },
+  {
+   "primitive_id": "significance_convention_p05",
+   "name": "The P = 0.05 point (a deviation of 1.96 standard deviations) is the conventional limit of significance",
+   "verbatim_quote": "The value for which P = -05, or 1 in 20, is 1-96 or nearly 2 ; it is convenient to take this point as a limit in judging whether a deviation is to be considered significant or not.",
+   "page": "p. 45, Section 12 (text line 1720)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The deviation is measured against a correctly calculated standard error",
+    "Fisher presents the point as a convenient convention, not a law of nature"
+   ],
+   "breakdown_regime": "Small real effects escape notice when data are too few, and Fisher states plainly that no lowering of the standard of significance meets that difficulty; the convention also invites the fallacy of treating 0.049 and 0.051 as different kinds of fact",
+   "domain": "hypothesis-testing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps Fisher’s original framing: 0.05 is a reporting convention for flagging deviations worth following up, recorded alongside the actual P value and effect size, never as a binary truth gate that deletes everything below the line.",
+    "source_operator": "significance_convention_p05",
+    "telemetry": "Exact P values, effect sizes and standard errors for every flagged deviation, with the 0.05 and 0.01 points marked as conventions"
+   }
+  },
+  {
+   "primitive_id": "normal_mean_sd_sufficiency",
+   "name": "For a normal population the sample mean and standard deviation summarise the whole information in the sample",
+   "verbatim_quote": "are specially related to the normal distribution, in that they summarise the whole of the information which the sample provides as to the distribution from which it was drawn, provided the latter was normal.",
+   "page": "p. 46, Section 13 (text line 1767)",
+   "latex": "s^2 = \\frac{\\sum (x-\\bar{x})^2}{n-1}",
+   "symbol_and_unit_ledger": {
+    "x": "individual observation",
+    "\\bar{x}": "sample mean",
+    "n": "number of observations in the sample",
+    "s^2": "sample variance, estimate of the population variance"
+   },
+   "assumptions": [
+    "The population is normal",
+    "The two statistics are calculated from the first two moments of the sample"
+   ],
+   "breakdown_regime": "The sufficiency is conditional on normality; for skew or otherwise non-normal curves Fisher warns the first two moments may be of little or no use, so the summary silently discards exactly the information that distinguishes those populations",
+   "domain": "probability-distributions",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Normal-family feeds in the engine are reduced to mean and variance with a sufficiency claim attached, and the claim is retested whenever the feed’s distribution is re-examined; a failed normality check revokes the reduction and restores the raw distribution.",
+    "source_operator": "normal_mean_sd_sufficiency",
+    "telemetry": "Mean and variance per normal-modelled feed; normality diagnostics gating the reduction"
+   }
+  },
+  {
+   "primitive_id": "variance_divisor_n_minus_1",
+   "name": "Dividing by n minus 1, not n, gives an unbiased estimate of the variance, decisively so when averaging many small samples",
+   "verbatim_quote": "to obtain an unbiassed estimate of the variance, whereas we should under-estimate it were we to divide by 6.",
+   "page": "p. 52, Section 13 (text line 2012)",
+   "latex": "s^2 = \\frac{\\sum (x-\\bar{x})^2}{n-1}",
+   "symbol_and_unit_ledger": {
+    "n": "number of observations in the sample",
+    "x": "individual observation",
+    "\\bar{x}": "sample mean computed from the same sample"
+   },
+   "assumptions": [
+    "The mean used in the deviations is estimated from the same sample, costing one degree of freedom",
+    "In the quoted passage six parallel observations per experiment are averaged across experiments"
+   ],
+   "breakdown_regime": "For very large samples the two divisors are practically indistinguishable; Fisher also notes the n divisor can claim a theoretical advantage when the variance estimate is used jointly with the mean from the same sample in fitting a frequency curve",
+   "domain": "estimation-theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "All variance estimates in the engine carry their divisor and degrees of freedom explicitly; pooled variances across many small groups use the n minus 1 form, because the bias Fisher identifies is exactly the kind that compounds silently across thousands of small samples.",
+    "source_operator": "variance_divisor_n_minus_1",
+    "telemetry": "Degrees of freedom attached to every variance estimate; pooled variance calculations across replicated small samples"
+   }
+  },
+  {
+   "primitive_id": "poisson_limit_law",
+   "name": "Rare events in many independent trials are distributed in the Poisson series",
+   "verbatim_quote": "It may be shown theoretically that if the probability of an event is exceedingly small, but a sufficiently large number of independent cases are taken to obtain a number of occurrences, then this number will be distributed in the Poisson series.",
+   "page": "p. 55, Section 15 (text line 2149)",
+   "latex": "P(X = x) = e^{-m} \\frac{m^x}{x!}",
+   "symbol_and_unit_ledger": {
+    "m": "mean number of occurrences, the single parameter of the series",
+    "x": "observed count, 0, 1, 2, ...",
+    "x!": "factorial x"
+   },
+   "assumptions": [
+    "Trials are independent",
+    "The event probability is exceedingly small while the expected total count is moderate"
+   ],
+   "breakdown_regime": "Contagion, clustering or a varying underlying rate breaks the limit argument and produces overdispersion; the series has only one parameter, so any failure of the variance to equal the mean falsifies the whole form",
+   "domain": "probability-distributions",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Count data in the engine are first tested against the Poisson form, the natural null for rare independent events; agreement licenses the one-parameter summary, and disagreement is itself the signal that events cluster or rates vary.",
+    "source_operator": "poisson_limit_law",
+    "telemetry": "Event counts per unit exposure; observed mean and variance per count stream"
+   }
+  },
+  {
+   "primitive_id": "poisson_variance_equals_mean",
+   "name": "For every Poisson series the variance is numerically equal to the mean, giving an exact dispersion test",
+   "verbatim_quote": "it is possible to utilise the fact that for all Poisson series the variance is numerically equal to the mean.",
+   "page": "p. 58, Section 16 (text line 2284)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Parallel samples are drawn under comparable conditions",
+    "The index of dispersion formed from the samples follows the chi-square distribution with n equal to the number of parallels minus one"
+   ],
+   "breakdown_regime": "A single small sample gives little information because the permissible range of the dispersion index is wide; the test gains force only when many small samples are aggregated, as in Fisher’s hundred bacterial counts",
+   "domain": "probability-distributions",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The equality becomes a standing diagnostic: every count feed reports its index of dispersion against the chi-square table, so a broken counting process, a changed medium, or genuine clustering is detected from the feed’s own internal consistency before any model is fitted.",
+    "source_operator": "poisson_variance_equals_mean",
+    "telemetry": "Indices of dispersion per count feed with their degrees of freedom; aggregated dispersion across replicated small samples"
+   }
+  },
+  {
+   "primitive_id": "binomial_distribution_bernoulli",
+   "name": "The binomial distribution, Bernoulli’s expansion, is the first theoretical distribution established, with its multinomial generalisation",
+   "verbatim_quote": "The binomial distribution is well known as the first example of a theoretical distribution to be established.",
+   "page": "p. 63, Section 18 (text line 2484)",
+   "latex": "P(X = x) = \\binom{n}{x} p^x q^{n-x}, \\quad q = 1 - p",
+   "symbol_and_unit_ledger": {
+    "n": "number of trials in the sample",
+    "p": "probability of the event on one trial",
+    "q": "probability of non-occurrence, 1 minus p",
+    "x": "number of occurrences"
+   },
+   "assumptions": [
+    "Trials are independent with constant p",
+    "Each trial has exactly two outcomes; the multinomial form extends this to s outcomes with probabilities p1 to ps"
+   ],
+   "breakdown_regime": "If p varies between trials or trials are correlated, frequencies depart from the expansion, as Weldon’s dice depart from true-dice expectations; Fisher uses the fitted-bias comparison to show the departure can be real even when a binomial with estimated p then fits well",
+   "domain": "probability-distributions",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Binary and categorical outcome streams in the engine are modelled on the binomial and multinomial terms directly, with the standard deviation root(npq) as the sampling yardstick, so an observed excess is measured against the exact spread the mechanism allows.",
+    "source_operator": "binomial_distribution_bernoulli",
+    "telemetry": "Outcome counts per category with trial totals; fitted p per stream and the chi-square of the fitted comparison"
+   }
+  },
+  {
+   "primitive_id": "chi_square_statistic",
+   "name": "The chi-square test compares numbers observed in classes with the numbers expected on a hypothesis",
+   "verbatim_quote": "the numbers actually observed to fall into any number of classes with the numbers which upon some hypothesis are expected",
+   "page": "p. 75, Section 20 (text line 3162)",
+   "latex": "\\chi^2 = \\sum \\frac{x^2}{m}",
+   "symbol_and_unit_ledger": {
+    "m": "number expected in a class on the hypothesis",
+    "x": "observed number minus expected number in that class",
+    "the sum": "extends over all classes"
+   },
+   "assumptions": [
+    "Expected numbers are calculated from the hypothesis, with parameters estimated from the data where the hypothesis requires it",
+    "Expected numbers should not be very small; Fisher advises pooling classes so no expectation is less than 5"
+   ],
+   "breakdown_regime": "The calculated distribution of chi-square is not closely realised for very small classes, and the statistic measures discrepancy without identifying which part of the hypothesis failed; that requires the partition of Section 22",
+   "domain": "hypothesis-testing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Classified evidence in the engine is scored by this single discrepancy kernel: observed class counts against hypothesis expectations, summed as squared deviations over expectations, so goodness of fit, independence and homogeneity questions all reduce to one comparable number with one table.",
+    "source_operator": "chi_square_statistic",
+    "telemetry": "Observed and expected class counts per categorical comparison; the chi-square value and its degrees of freedom"
+   }
+  },
+  {
+   "primitive_id": "degrees_of_freedom_rule",
+   "name": "Degrees of freedom equal the number of classes whose frequencies may be filled up arbitrarily",
+   "verbatim_quote": "n is equal to the number of degrees of freedom in which the observed series may differ from the hypothetical ; in other words, it is equal to the number of classes the frequencies in which may be filled up arbitrarily.",
+   "page": "p. 76, Section 20 (text line 3160)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Every parameter estimated from the data to calculate expectations removes one degree of freedom",
+    "The total count fixed by the sample removes one more"
+   ],
+   "breakdown_regime": "The older rule equating n to one less than the number of classes is disproved in this chapter; using it manufactures apparent improvements in fit whenever a hypothesis gains adjustable constants, a bias that disappears only when the change in n is allowed for",
+   "domain": "hypothesis-testing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps a degrees of freedom ledger for every fit: each parameter estimated from the same data is deducted before significance is judged, so a more flexible hypothesis cannot buy a better verdict merely by having more constants.",
+    "source_operator": "degrees_of_freedom_rule",
+    "telemetry": "Parameter counts per fitted hypothesis; the degrees of freedom entered in every chi-square, t, z and variance table lookup"
+   }
+  },
+  {
+   "primitive_id": "goodness_of_fit_high_p_fallacy",
+   "name": "A very high P does not verify a hypothesis; agreement too close is as definite a disproof as a very low P",
+   "verbatim_quote": "The term Goodness of Fit has caused some to fall into the fallacy of believing that the higher the value of P the more satisfactorily is the hypothesis verified.",
+   "page": "p. 78, Section 20 (text line 3235)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "P is read against the exact chi-square distribution for the correct degrees of freedom",
+    "Values of P over 0.999 would occur only once in a thousand trials if the hypothesis were true"
+   ],
+   "breakdown_regime": "Fisher notes most reported cases of impossibly good fit trace to inaccurate formulae rather than to data; the two-tailed reading is a check on method as much as on hypothesis, and single moderately high values remain unremarkable",
+   "domain": "hypothesis-testing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Fit quality in the engine is audited in both tails: a model whose agreements are systematically closer than sampling allows triggers the same investigation as one that misses, because too-good fit is the fingerprint of leaked information, wrong degrees of freedom, or fitted noise.",
+    "source_operator": "goodness_of_fit_high_p_fallacy",
+    "telemetry": "Distribution of P values across repeated fits per model; flags at both the 0.02 and the 0.999 ends"
+   }
+  },
+  {
+   "primitive_id": "partition_of_chi_square",
+   "name": "Chi-square can be partitioned so each degree of freedom tests a separate component of the discrepancy",
+   "verbatim_quote": "Just as values of %2 may be aggregated together to make a more comprehensive test, so in some cases it is possible to separate the contributions to %2 made by the individual degrees of freedom, and so to test the separate components of a discrepancy.",
+   "page": "p. 92, Section 22 (text line 3768)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The components are constructed from linear functions of the frequencies with zero mean and vanishing mean products, so the parts are independent",
+    "The subdivision chosen must be the one of substantive interest; Fisher warns the mathematically possible subdivisions are many but only one separates the causes actually in question"
+   ],
+   "breakdown_regime": "Partitioning multiplies the number of tests made on the same data; a component significant in isolation may be one of many examined, and the components depend on the orthogonalisation chosen",
+   "domain": "hypothesis-testing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When a global discrepancy fires, the engine decomposes it into orthogonal single-degree-of-freedom components matched to named causes, so the verdict names which component failed instead of reporting one undifferentiated bad fit.",
+    "source_operator": "partition_of_chi_square",
+    "telemetry": "Component chi-squares per global test, each labelled with the contrast it measures"
+   }
+  },
+  {
+   "primitive_id": "standard_error_of_mean",
+   "name": "The mean of a random sample of n is normally distributed with standard deviation sigma over root n",
+   "verbatim_quote": "then the mean of a random sample of n such quantities is normally distributed with standard deviation a/Vn",
+   "page": "p. 99, Section 23 (text line 4428)",
+   "latex": "\\sigma_{\\bar{x}} = \\frac{a}{\\sqrt{n}}",
+   "symbol_and_unit_ledger": {
+    "a": "standard deviation of the population (sigma in modern notation)",
+    "n": "number of observations in the sample",
+    "\\bar{x}": "the sample mean"
+   },
+   "assumptions": [
+    "The sample is random",
+    "Even without exact normality of the original distribution, the mean tends to normality as the sample grows, except for an exceptional class of distributions Fisher flags"
+   ],
+   "breakdown_regime": "The proposition presumes the population standard deviation is known; with small samples it is only roughly estimated, which is exactly the defect Student’s distribution repairs in the same chapter",
+   "domain": "hypothesis-testing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every averaged quantity in the engine carries the root-n law as its error model: precision claims scale with the square root of the sample count, and a claimed standard error that does not obey the law exposes a miscounted effective sample size.",
+    "source_operator": "standard_error_of_mean",
+    "telemetry": "Sample sizes behind every reported mean; standard errors recomputed from the root-n law for audit"
+   }
+  },
+  {
+   "primitive_id": "student_t_small_sample",
+   "name": "Student’s 1908 result: with small samples the estimated variance itself is inexact, and exact allowance must be made through the t distribution",
+   "verbatim_quote": "the variance of the population can only be roughly estimated from the sample, and that the errors of estimation seriously affect the use of the standard error",
+   "page": "p. 103, Sections 23-24 (text line 4574)",
+   "latex": "t = \\frac{\\bar{x}}{s/\\sqrt{n}}",
+   "symbol_and_unit_ledger": {
+    "\\bar{x}": "sample mean",
+    "s": "standard deviation estimated from the same sample",
+    "n": "sample size; the distribution depends only on the degrees of freedom n minus 1"
+   },
+   "assumptions": [
+    "Observations are normal and independent",
+    "The distribution of s squared follows the chi-square law scaled by the degrees of freedom, independently of the mean"
+   ],
+   "breakdown_regime": "For any fixed degree of certainty higher values of t are required the smaller the sample; the correction assumes normality, so heavy-tailed data still mislead it, and Fisher’s paired-difference examples show the method also depends on using the values, not merely their signs",
+   "domain": "hypothesis-testing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Small-sample comparisons in the engine never divide by an estimated standard error as if it were known: the t table for the actual degrees of freedom sets the threshold, so a difference from ten observations is priced differently from the same difference from ten thousand.",
+    "source_operator": "student_t_small_sample",
+    "telemetry": "Degrees of freedom per comparison; t values with their exact table probabilities"
+   }
+  },
+  {
+   "primitive_id": "regression_coefficient",
+   "name": "A regression coefficient is the ratio of the increment of the mean of the dependent variate to the increment of the independent variate, with physical dimensions",
+   "verbatim_quote": "The physical dimensions of the regression coefficient depend on those of the variates ; thus, over an age range in which growth is uniform we might express the regression of height on age in inches per annum, in fact as an average growth rate",
+   "page": "p. 115, Section 25 (text line 4960)",
+   "latex": "Y = a + b(x - \\bar{x})",
+   "symbol_and_unit_ledger": {
+    "Y": "mean value of the dependent variate for a given x",
+    "b": "regression coefficient of y on x, in units of y per unit of x",
+    "a": "general mean of y",
+    "\\bar{x}": "mean of the independent variate"
+   },
+   "assumptions": [
+    "The regression function is the mean of the dependent variate at each value of the independent variate",
+    "For the straight-line form the regression function is linear in x"
+   ],
+   "breakdown_regime": "The regression of y on x differs from the regression of x on y and only one may carry the physical meaning; errors in the independent variate distort the line, selection on the dependent variate changes it altogether, while the regression function does not depend on the frequency distribution of the independent variate",
+   "domain": "regression",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Relationships in the engine are stored as regression functions with units, not bare correlations: each carries its direction, its dimensions (change in the outcome per unit change in the driver), and the warning that reversing the regression is a different quantity.",
+    "source_operator": "regression_coefficient",
+    "telemetry": "Paired series per relationship; fitted coefficients with units, direction, and the sampling errors of Section 26"
+   }
+  },
+  {
+   "primitive_id": "z_transformation_correlation",
+   "name": "Fisher’s z transformation makes the correlation coefficient nearly normal with a standard error practically independent of the true correlation",
+   "verbatim_quote": "The distribution of z is not strictly normal, but it tends to normality rapidly as the sample is increased, whatever may be the value of the correlation.",
+   "page": "p. 165, Section 35 (text line 7210)",
+   "latex": "z = \\frac{1}{2} \\ln \\frac{1+r}{1-r}",
+   "symbol_and_unit_ledger": {
+    "r": "observed correlation coefficient",
+    "z": "transformed correlation, approximately normally distributed",
+    "standard error of z": "1 over root(n minus 3), practically independent of the population correlation"
+   },
+   "assumptions": [
+    "Pairs are independent draws from a bivariate population",
+    "The transformation is used for testing against a theoretical value, comparing two correlations, and combining several estimates"
+   ],
+   "breakdown_regime": "The distribution of z is not strictly normal and retains a small bias Fisher treats in Section 36; for simple significance tests against zero Fisher prefers the exact t method, reserving z for the problems t cannot reach",
+   "domain": "correlation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Correlations are never averaged or compared on the r scale inside the engine: they are mapped to z, where errors are near-normal with a known constant variance, combined with weights proportional to n minus 3, and mapped back only for reporting.",
+    "source_operator": "z_transformation_correlation",
+    "telemetry": "Correlation estimates with their sample sizes; z values and inverse-variance weights in every pooled estimate"
+   }
+  },
+  {
+   "primitive_id": "intraclass_correlation",
+   "name": "Intraclass correlation measures resemblance within classes whose members are exchangeable, using a common mean and standard deviation",
+   "verbatim_quote": "When this is done, r is distinguished as an intraclass correlation, since we have treated all the brothers as belonging to the same class, and having the same mean and standard deviation.",
+   "page": "p. 180, Section 38 (text line 7859)",
+   "latex": "k \\sum (\\bar{x}_p - \\bar{x})^2 = n\\u2032 s^2 \\{1 + (k-1) r\\}",
+   "symbol_and_unit_ledger": {
+    "k": "number of observations in each class",
+    "n\\u2032": "number of classes",
+    "s^2": "variance of the whole group of observations",
+    "r": "intraclass correlation from the symmetrical table",
+    "\\bar{x}_p": "mean of one class"
+   },
+   "assumptions": [
+    "Distinctions within the class (such as elder versus younger brother) are irrelevant to the purpose",
+    "Class sizes are equal in the form quoted; Harris’s abbreviated calculation avoids building the full symmetrical table"
+   ],
+   "breakdown_regime": "The intraclass correlation cannot fall below minus 1 over (k minus 1), and where class size is unbounded the population correlation cannot be negative at all; its error distribution therefore differs from the interclass case and must be treated separately, as Fisher does through the variance ratio",
+   "domain": "correlation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Grouped measurements in the engine (repeated observations under one condition, members of one unit) are summarised by intraclass correlation computed from class means and total variance, capturing how much of the variation lives between classes without ever building the quadratic symmetrical table.",
+    "source_operator": "intraclass_correlation",
+    "telemetry": "Class assignments and class sizes per grouped dataset; between-class and within-class sums of squares"
+   }
+  },
+  {
+   "primitive_id": "anova_variance_separation",
+   "name": "The analysis of variance separates the variance ascribable to one group of causes from the variance ascribable to other groups",
+   "verbatim_quote": "it may be more usefully and accurately treated by the analysis of variance, that is by the separation of the variance ascribable to one group of causes, from the variance ascribable to other groups.",
+   "page": "p. 178, Section 38 (text line 7778)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Observations can be classified so that distinct groups of causes correspond to distinct portions of variance",
+    "Tests of significance accurately carried out agree whatever reduction is used, a principle Fisher states at the head of the chapter"
+   ],
+   "breakdown_regime": "The separation is an accounting identity; it attributes variance to the classifications supplied, so an omitted cause hides inside the residual portion and a mis-specified grouping manufactures portions that answer no real question",
+   "domain": "analysis-of-variance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Variation in any engine output is decomposed before it is explained: total variance is split into portions owned by named factor groups and a residual, and discussion is confined to portions that are large against the residual yardstick.",
+    "source_operator": "anova_variance_separation",
+    "telemetry": "Factor classifications per dataset; sums of squares, degrees of freedom and mean squares per portion"
+   }
+  },
+  {
+   "primitive_id": "variance_ratio_z_test",
+   "name": "Every analysis of variance test reduces to comparing two estimates of variance through z, half the difference of their logarithms",
+   "verbatim_quote": "These tests are all reducible to the single problem of testing whether one estimate of variance derived from nx degrees of freedom is significantly greater than a second such estimate derived from n2 degrees of freedom.",
+   "page": "p. 194, Section 41 (text line 8375)",
+   "latex": "z = \\frac{1}{2} \\ln \\frac{s_1^2}{s_2^2}",
+   "symbol_and_unit_ledger": {
+    "s_1^2": "the larger estimate of variance",
+    "s_2^2": "the second estimate of variance",
+    "n_1, n_2": "degrees of freedom of the two estimates; the table is entered with both"
+   },
+   "assumptions": [
+    "Both estimates estimate the same variance under the hypothesis tested",
+    "z is calculated as half the difference of the natural logarithms of the variance estimates, equivalently the difference of the logarithms of the standard deviations"
+   ],
+   "breakdown_regime": "When the degrees of freedom are small and very unequal the distribution of z is perceptibly asymmetrical and the normal approximation through its standard deviation is unsatisfactory; Fisher supplies the table at the 5 and 1 per cent points for those regions",
+   "domain": "analysis-of-variance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Variance comparisons in the engine run through this one kernel (the ancestor of the F test): two mean squares, their degrees of freedom, and the log-ratio statistic, so homogeneity checks, intraclass tests and multi-factor analyses share one audited code path.",
+    "source_operator": "variance_ratio_z_test",
+    "telemetry": "Mean squares and degrees of freedom for every variance comparison; z values with table probabilities"
+   }
+  },
+  {
+   "primitive_id": "replication_requirement",
+   "name": "An experiment must at least duplicate every treatment, so replicates supply the standard against which differences are judged",
+   "verbatim_quote": "all treatments must at least be duplicated, and preferably further replicated, in order that a comparison of replicates may be used as a standard with which to compare the observed differences.",
+   "page": "p. 229, Section 48 (text line 10429)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Replicates are genuine repetitions under the same treatment, exposed to the same field of error as the compared plots",
+    "The comparison of replicates is the sole legitimate source of the error estimate"
+   ],
+   "breakdown_regime": "Replication alone does not protect the test if the arrangement is systematic; Fisher’s next examples show replicated but systematically arranged plots whose error estimate is unrepresentative and whose test is vitiated",
+   "domain": "experimental-design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "No comparison enters the engine’s evidence base without a replication structure behind it: the replicates define the error standard, and a treatment seen once is recorded as an anecdote, not a measurement.",
+    "source_operator": "replication_requirement",
+    "telemetry": "Replication counts per condition in every ingested experiment; the replicate-derived error estimate paired with each effect"
+   }
+  },
+  {
+   "primitive_id": "random_arrangement_unbiased_error",
+   "name": "A purely random arrangement makes the calculated experimental error an unbiased estimate of the errors actually present",
+   "verbatim_quote": "a purely random arrangement of plots ensures that the experimental error calculated shall be an unbiassed estimate of the errors actually present.",
+   "page": "p. 231, Section 48 (text line 10503)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The arrangement is found by an actual random process, in Fisher’s example shuffling twenty cards and setting them out in order",
+    "The heterogeneity of the ground is real and systematic, verified by uniformity trials"
+   ],
+   "breakdown_regime": "Unrestricted randomisation leaves the error estimate accurate but usually unnecessarily large, because all soil heterogeneity remains inside it; that cost is what restricted randomisation is designed to remove without surrendering unbiasedness",
+   "domain": "experimental-design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Assignment mechanisms in the engine’s evaluation harness are random by construction, so the error bars on any comparison are an honest sample of the disturbances that could have produced it; a comparison whose assignment was arranged by hand or by pattern is downgraded automatically.",
+    "source_operator": "random_arrangement_unbiased_error",
+    "telemetry": "Assignment records per evaluation; uniformity or placebo runs measuring the background heterogeneity"
+   }
+  },
+  {
+   "primitive_id": "systematic_arrangement_destroys_test",
+   "name": "A systematic arrangement can leave no trustworthy standard error and no possible test of significance",
+   "verbatim_quote": "With such an arrangement, however, we have no guarantee that an estimate of the standard error derived from the discrepancies between parallel plots is really",
+   "page": "p. 233, Section 48 (text line 10650)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The systematic pattern may share features with the systematic variation of the background, as a regular treatment order shares features with a fertility gradient",
+    "The failure is silent: the arithmetic of the standard error still produces a number"
+   ],
+   "breakdown_regime": "Fisher concedes the systematic arrangement in his example actually produced smaller errors in the treatment totals; the objection is not that it performs worse but that its performance cannot be certified from the experiment itself",
+   "domain": "experimental-design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is a veto the engine applies to incoming evidence: if the allocation of cases to conditions followed a pattern that could align with an unmeasured gradient, the associated significance claims are voided regardless of how small the reported error is, because the error estimate is not representative.",
+    "source_operator": "systematic_arrangement_destroys_test",
+    "telemetry": "Allocation patterns per study; background gradient measurements that a pattern could alias with"
+   }
+  },
+  {
+   "primitive_id": "latin_square_restricted_randomisation",
+   "name": "The Latin square restricts random arrangement so each treatment occurs once in each row and column, eliminating row and column differences while keeping error estimable",
+   "verbatim_quote": "In a block of 25 plots arranged in 5 rows and 5 columns, to be used for testing 5 treatments, we can arrange that each treatment occurs once in each row, and also once in each column, while allowing free scope to chance in the distribution subject to these restrictions.",
+   "page": "p. 234, Section 49 (text line 10636)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Treatments equal the number of rows and columns",
+    "Of the 24 degrees of freedom, 4 represent treatment, 8 row and column differences are eliminated, and 12 remain for error, unbiased provided every pair of plots not in the same row or column belongs equally often to the same treatment"
+   ],
+   "breakdown_regime": "The design spends degrees of freedom on the restrictions; with few treatments the remaining error degrees of freedom shrink, and the elimination only captures differences aligned with rows and columns, not other spatial structure",
+   "domain": "experimental-design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Blocking in the engine’s comparisons follows the Latin square logic: known nuisance dimensions are balanced out by restriction of the random assignment and their degrees of freedom are removed from error, which Fisher shows can more than double the value of the same observations.",
+    "source_operator": "latin_square_restricted_randomisation",
+    "telemetry": "Design layouts per comparison with row, column and treatment assignments; the degrees of freedom budget before and after elimination"
+   }
+  },
+  {
+   "primitive_id": "maximum_likelihood_method",
+   "name": "Maximum likelihood: weight each class log-expectation by its observed count and maximise the sum over the parameter",
+   "verbatim_quote": "This method consists in multiplying the logarithm of the number expected in each class by the number observed",
+   "page": "p. 243, Section 53 (text line 11019)",
+   "latex": "\\ell(\\theta) = a \\ln (2+\\theta) + b \\ln (1-\\theta) + c \\ln (1-\\theta) + d \\ln \\theta",
+   "symbol_and_unit_ledger": {
+    "a, b, c, d": "observed frequencies in the four classes of the linkage example",
+    "\\theta": "the parameter to be estimated (printed as 0 in the text)",
+    "the class probabilities": "proportional to (2 plus theta), (1 minus theta), (1 minus theta), theta, over 4"
+   },
+   "assumptions": [
+    "The specification gives the probability of every class as a function of the single parameter",
+    "The positive root of the likelihood equation is taken as the estimate"
+   ],
+   "breakdown_regime": "The method is computationally the heaviest of Fisher’s five candidate statistics in the example, and its equation can misbehave when classes are thinly occupied, a failure Fisher examines in Section 56",
+   "domain": "estimation-theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the exact computational kernel the engine uses for one-parameter categorical fits: observed counts times log expected counts, summed and maximised, with the worked linkage problem retained as a regression test whose five rival statistics and their chi-squares are known.",
+    "source_operator": "maximum_likelihood_method",
+    "telemetry": "Class counts and class probability functions per categorical fit; the maximised log-likelihood and the solving equation"
+   }
+  },
+  {
+   "primitive_id": "goodness_of_fit_requires_efficiency",
+   "name": "A goodness of fit test is valid only when the statistics used in fitting are efficient",
+   "verbatim_quote": "The general theorem which this illustrates is that the test of goodness of fit is only valid when efficient statistics are used in fitting a hypothesis to the data",
+   "page": "p. 246, Section 54 (text line 11041)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The fitting statistics are consistent and of 100 per cent efficiency",
+    "Degrees of freedom are reduced by the number of parameters fitted"
+   ],
+   "breakdown_regime": "In Fisher’s example the inefficient statistics produce chi-square values nearly double those of the efficient group, so the test built on them is highly erroneous while appearing to be the same test; efficiency of the fit is therefore a precondition, not a refinement",
+   "domain": "estimation-theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine refuses to certify a fit whose parameters were estimated inefficiently: the fitting method’s efficiency is part of the test’s provenance, and a fit produced by an ad hoc estimator is re-estimated by maximum likelihood before its discrepancy is interpreted.",
+    "source_operator": "goodness_of_fit_requires_efficiency",
+    "telemetry": "Fitting method and its efficiency for every certified fit; chi-square before and after re-estimation where they differ"
+   }
+  },
+  {
+   "primitive_id": "efficient_statistics_agreement",
+   "name": "Any two efficient statistics have correlation tending to plus 1, so their conclusions are asymptotically equivalent",
+   "verbatim_quote": "This is in accordance with a general theorem that the correlation between any two efficient statistics tends to +1, as the sample is indefinitely increased.",
+   "page": "p. 254, Section 56 (text line 11366)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Both statistics are efficient for the same parameter",
+    "The sample is increased indefinitely under the same specification"
+   ],
+   "breakdown_regime": "The equivalence is asymptotic and conditional: Fisher shows statistics efficient only at special parameter values (as the moments are at the normal form) fall away rapidly elsewhere, and efficient statistics other than maximum likelihood may fail outright in small samples",
+   "domain": "estimation-theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Disagreement between two nominally efficient estimators is treated by the engine as a diagnostic alarm rather than a tie to break: asymptotically they must agree, so a persistent discrepancy localises a specification error, a small-sample failure, or a coding error.",
+    "source_operator": "efficient_statistics_agreement",
+    "telemetry": "Paired estimates from independent efficient methods per quantity; their discrepancy tracked against sample size"
+   }
+  },
+  {
+   "primitive_id": "ml_chi_square_identity",
+   "name": "Chi-square equals the true discrepancy Q2 exactly at the maximum likelihood value and at no other",
+   "verbatim_quote": "first that %2 = Q2 for the particular value of 6 given by the equation of maximum likelihood, and for no other value.",
+   "page": "p. 259, Section 57 (text line 11513)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Q2 measures the deviation of observation from hypothesis in the free directions (here the two single-factor ratios)",
+    "The remaining part of chi-square measures the deviation of the adopted parameter value from the maximum likelihood solution, weighted by the information I"
+   ],
+   "breakdown_regime": "The clean split holds where the theory of large samples applies and the error of estimation from the maximum likelihood solution is sufficiently small; with inefficient fitting the estimation part contaminates the discrepancy and the test loses its objectivity",
+   "domain": "estimation-theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every reported discrepancy in the engine is decomposed into genuine misfit plus estimation slack: the parameter is moved to its maximum likelihood value first, and only the residual discrepancy is allowed to testify against the hypothesis.",
+    "source_operator": "ml_chi_square_identity",
+    "telemetry": "Chi-square at the adopted parameter and at the maximum likelihood parameter; the information-weighted gap between them"
+   }
+  },
+  {
+   "primitive_id": "information_measurable",
+   "name": "The amount of information supplied by the data is exactly measurable, and the fraction any statistic uses can be calculated",
+   "verbatim_quote": "The amount of information supplied by the data is capable of exact measurement, and the fraction of the information available which is utilised by any inefficient statistic, can thereby be calculated.",
+   "page": "p. 262, Section 58 (text line 11607)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Information is defined through the sampling variance of the maximum likelihood solution (the quantity I of Section 55)",
+    "The same method compares efficient statistics in small samples, though more laboriously"
+   ],
+   "breakdown_regime": "Exact measurement presumes the specification is right; information about a parameter of a mis-specified population is information about the wrong quantity, and the calculus does not itself detect that",
+   "domain": "estimation-theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Information is a budgeted resource in the engine: each dataset carries a measured information content for each parameter of interest, each statistic is debited with the fraction it uses, and acquisition decisions compare the cost of more data against the cost of a more efficient method on Fisher’s single scale.",
+    "source_operator": "information_measurable",
+    "telemetry": "Information values per dataset and parameter; utilisation fractions per statistic in use"
+   }
+  },
+  {
+   "primitive_id": "maximum_likelihood_practice_rule",
+   "name": "In practice: solve the maximum likelihood equation, at least approximately, and calculate the sampling variance of the estimate",
+   "verbatim_quote": "In practice one need seldom do more than solve, at least to a good approximation, the equation of maximum likelihood, and calculate the sampling variance of the estimate so obtained.",
+   "page": "p. 262, Section 58 (text line 11627)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A good approximation to the maximum likelihood solution suffices, since approximations are in most cases efficient",
+    "The sampling variance is calculated for the estimate actually obtained"
+   ],
+   "breakdown_regime": "The rule closes the book’s argument but inherits every earlier caveat: correct specification, adequate sample size for the large-sample variance, and efficient fitting before any goodness of fit interpretation",
+   "domain": "estimation-theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine’s standard operating procedure for new quantities, taken verbatim as policy: default to the likelihood solution, accept a documented approximation, and never ship an estimate without its sampling variance attached.",
+    "source_operator": "maximum_likelihood_practice_rule",
+    "telemetry": "Estimation log per quantity: likelihood equation solved or approximation used, and the sampling variance reported with the estimate"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "e1ebc72d39996cc2-t1",
+   "think": "This book is the operating manual Fisher wrote for working scientists, and its architecture is a single argument repeated at every scale: data are a random sample from a hypothetical infinite population; the population is specified by a few parameters; the whole of the relevant information in the data is to be extracted by statistics that estimate those parameters; and no estimate or test is worth anything until the exact distribution of the statistic in random samples is known. The introductory chapter sets the trichotomy that organises everything after it. Problems of specification choose the mathematical form of the population. Problems of estimation choose statistics fit to estimate its parameters. Problems of distribution deduce how those statistics behave in repeated sampling. Fisher is explicit that probability runs only in the deductive direction, from population to sample; the theory of inverse probability is rejected as founded on an error, and in its place he puts likelihood, a measure of rational preference among populations that does not obey the laws of probability. Within estimation he builds a hierarchy of worth. Inconsistent statistics are outside decent usage because even an infinite sample leaves them wrong. Consistent statistics converge to the truth, and among them the efficient ones have the least possible sampling variance, a variance that can be read as the fraction of the information in the data actually used. Sufficient statistics go further and exhaust the relevant information even in small samples, and the method of maximum likelihood is presented as the universal route to efficient and, where they exist, sufficient statistics. The diagram chapter that follows is not decoration: graphical examination is the preliminary that tells the worker which specification is even plausible before any of this machinery is switched on. The middle chapters then cash the theory out as a toolkit of exact distributions. The normal law is characterised by its log frequency falling with the squared distance from the centre, fitted by its two sufficient statistics, and given the conventional five per cent point as a working limit of significance. The Poisson series handles counts whose variance equals their mean, and its zero class turns sterile sample proportions into density estimates. The binomial and multinomial cover classified frequencies. The chi-square distribution unifies goodness of fit, independence and homogeneity: one statistic compares observed with expected frequencies, its degrees of freedom count the classes that may be filled arbitrarily after fitting, its values add across independent tests, and it can be partitioned so that individual degrees of freedom answer individual questions. Fisher reads the resulting P in both tails: a very small value disproves the hypothesis, and a suspiciously large value disproves it too, because agreement closer than sampling allows is itself evidence against the supposed mechanism. The chapter on means replaces the known variance fiction with Student's t, making exact allowance for estimating the standard deviation from the same small sample, and extends the machinery to regression coefficients, where the regression function, not the correlation, is the primary object and carries physical dimensions. The correlation chapter then stabilises the correlation coefficient by the z transformation, whose standard error is practically independent of the true correlation, so that correlations can be tested against theory, compared with each other, and pooled with inverse variance weights. The next chapter turns correlation inside out: intraclass correlation and the analysis of variance separate the variance ascribable to different groups of causes, and every such test reduces to comparing two estimates of variance through the logarithmic statistic z. The applications chapter shows the design consequences. Replication supplies the error standard. Random arrangement makes the estimated error an unbiased sample of the errors that actually disturb the comparisons. Systematic arrangement destroys the test altogether, however tidy the arithmetic looks. Restricted randomisation in blocks and Latin squares removes background heterogeneity while keeping the error estimate honest, and can more than double the value of the same observations. The final chapter returns to estimation with a five statistic linkage example and proves the deep results: goodness of fit tests are valid only when the fitting statistics are efficient; any two efficient statistics are asymptotically equivalent; at the maximum likelihood value the chi-square discrepancy splits cleanly into real discrepancy plus estimation error; and the amount of information in data is exactly measurable. Two quieter themes deserve emphasis because later practice forgot both. The first is that calculation itself is an information problem: grouping data for arithmetic convenience is shown to cost less than one per cent of the information when the group interval is kept under a quarter of the standard deviation, and to cost a measurable, countable number of observations when it is not, so even bookkeeping choices are priced in the same currency as estimators. The second is that every distribution in the book is offered with its own diagnostic: normality is tested by the third and fourth moments, Poisson agreement by the index of dispersion, binomial behaviour by comparing the fitted and the true dice expectations, so no specification is ever merely assumed when the data themselves can be made to vote on it. For a reasoning engine the book is therefore not a list of tests but a discipline: specify before you estimate, estimate efficiently or not at all, count degrees of freedom honestly, let design rather than hope supply the error term, and treat every statistic as guilty of wasting information until its sampling variance proves otherwise. Its limits are equally clear. The exact distributions lean on normality and independence assumptions that real data violate; the five per cent point is a convention, useful precisely because Fisher never pretends it is more; and the machinery cannot say which hypotheses are worth testing. Fisher knew the first two limits and built diagnostics for them. The third he left, deliberately, to the scientist.",
+   "retrocausal_genealogy": "The lineage runs from Bernoulli's binomial and the Laplace and Gauss error law through Poisson's series and Lexis's dispersion measure to Pearson's 1900 chi-square distribution and the Galton and Pearson correlation school. Gosset, writing as Student in 1908, supplied the small sample distribution of the variance and of the mean divided by its estimated standard error. Fisher's own papers of 1921 to 1925, on the mathematical foundations of theoretical statistics, on the probable error of a correlation from a small sample, on chi-square from contingency tables, and on the conditions under which chi-square measures discrepancy, are the direct sources the book codifies. The worked examples come from Rothamsted field trials and from Mendelian genetics, Weldon's dice, Bortkewitsch's horse kick records, and Student's yeast counts, so the genealogy is experimental as much as mathematical: each distribution in the book exists because a laboratory or field problem demanded it.",
+   "theory_of_mind": "Fisher models his reader as a research worker, usually a biologist, holding real numerical data, with modest mathematics and a problem that cannot wait for a mathematician. He believes the worker's bottleneck is not arithmetic but judgement about what a sample can and cannot say, so every method arrives with a fully worked numerical example that can be checked by hand, and tables replace algebra wherever possible. He assumes the reader designed the experiment as well as analysed it, which is why design and analysis form one subject in the book. He is openly polemical, naming fallacies and banning inconsistent statistics from decent usage, because he holds that wrong method, not wrong data, is the usual cause of wasted research, and that a worker armed with exact distributions will argue more honestly with his own results.",
+   "cross_layer_veto": "Several results in the book veto whole classes of move elsewhere in a reasoning system. The degrees of freedom ledger vetoes any significance claim whose fitted parameters were not deducted before the table was entered. The efficiency theorem vetoes goodness of fit verdicts built on inefficient fits, however impressive the agreement looks. The randomisation requirement vetoes significance claims from systematically arranged comparisons, because their error estimate is not representative, and no smallness of the reported error can rescue them. The two tailed reading of P vetoes complacent acceptance as firmly as over eager rejection. Sufficiency vetoes elaborate statistics when a sufficient pair already exhausts the data. And the rejection of inverse probability vetoes any layer that dresses a likelihood up as the probability of the hypothesis itself."
+  }
+ ],
+ "universal_lens": "Any field drowning in observations can copy the pattern whole: posit a generating population with few parameters behind every sample, demand statistics that provably exhaust or efficiently use the information in the data, derive the exact sampling behaviour of every number before trusting it, design the collection so the error term is an honest sample of the disturbances, and audit every claimed fit in both tails. The book generalises because it is not really about biology; biology is only where its examples grew. Its trichotomy of specification, estimation and distribution is a complete grammar for turning data into knowledge, and its information calculus gives every later field a single scale on which more data and better method can be traded against each other.",
+ "gsi_mapping": "The Institute takes the book as its audit standard for quantitative literacy. The specification, estimation and distribution trichotomy becomes the checklist any quantitative claim must pass before it is taught or published; the information and efficiency calculus becomes the common scale for comparing rival methods across subfields; and the design chapters become the template for teaching experimental design as part of statistics rather than as a preliminary craft. The book also supplies the historical spine of the curriculum: modern inference presented as a sequence of solved distribution problems, each traceable to the experiment that forced it, from Bernoulli's trials to Student's small samples to Fisher's own linkage example.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine the book supplies the evidentiary discipline underneath every signal. Each input is treated as a sample from a specified population; each derived feature carries its sampling distribution or is labelled unverified; fitted parameters consume degrees of freedom before any fit is praised; independent pieces of evidence combine by adding chi-square type discrepancies or by inverse variance weighting on stabilised scales such as z; and design side controls, honest replication and pre arranged comparisons, replace post hoc storytelling. Efficiency becomes a budget rule: a signal that wastes most of the information in its data is downweighted in favour of one that uses it, and too good agreement triggers the same suspicion as disagreement."
+}

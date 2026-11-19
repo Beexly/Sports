@@ -28,7 +28,9 @@ class StubRouter:
         self.answer = answer
         self.calls: list[dict] = []
 
-    def route_query(self, prompt, system_instruction="", conversation_history=None, temperature=0.2):
+    def route_query(
+        self, prompt, system_instruction="", conversation_history=None, temperature=0.2
+    ):
         self.calls.append({"prompt": prompt, "system_instruction": system_instruction})
         return self.answer, "stub:model", 0.0
 
@@ -103,7 +105,10 @@ def test_voice_endpoint_transcribes_then_answers(monkeypatch):
     monkeypatch.setattr(
         appmod, "transcribe_audio_bytes",
         lambda raw, filename="audio.wav": {
-            "ok": True, "transcript": "who leads the division", "provider": "stub_stt", "error": None,
+            "ok": True,
+            "transcript": "who leads the division",
+            "provider": "stub_stt",
+            "error": None,
         },
     )
     app = appmod.create_app(router=StubRouter("Baltimore leads."))
@@ -192,7 +197,9 @@ def test_speak_digest_uses_voice_interface(monkeypatch):
         "intelligence.voice_brain.voice_interface.speak", lambda text, **k: True, raising=False
     )
     monkeypatch.setattr(
-        "intelligence.voice_brain.voice_interface.fish_audio_available", lambda: False, raising=False
+        "intelligence.voice_brain.voice_interface.fish_audio_available",
+        lambda: False,
+        raising=False,
     )
     out = digestmod.speak_digest({"text": "short digest"})
     assert out["spoken"] is True

@@ -253,15 +253,36 @@ export function RedlineWorld({
   };
 
   useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setSystemReduced(media.matches);
+    const update = () => {
+      setSystemReduced(media.matches);
+      if (media.matches) {
+        setUserStatic(true);
+      }
+    };
     update();
     media.addEventListener("change", update);
     return () => media.removeEventListener("change", update);
   }, []);
 
-  // Long, silky 60fps scrub loop (0.085 lerp for extended field travel)
+  // Long, silky 60fps scrub loop (bypassed in static/reduced-motion mode)
   useEffect(() => {
+    if (staticMode) {
+      const value = progressRef.current;
+      const transform = cameraTransformAt(value);
+      const tunnelTransform = tunnelTransformAt(value);
+      const tunnelOpacity = Math.max(0, Math.min(1, (0.44 - value) / 0.20));
+      if (rootRef.current) rootRef.current.style.setProperty("--scrub", value.toFixed(4));
+      if (cameraRef.current) cameraRef.current.style.transform = transform;
+      if (tunnelRef.current) {
+        tunnelRef.current.style.transform = tunnelTransform;
+        tunnelRef.current.style.opacity = tunnelOpacity.toFixed(4);
+      }
+      if (worldCameraRef.current) worldCameraRef.current.style.transform = transform;
+      if (sliderRef.current) sliderRef.current.value = String(value);
+      return;
+    }
     let frame = 0;
     const step = () => {
       const target = progressRef.current;
@@ -378,10 +399,11 @@ export function RedlineWorld({
   const headline = displayWriteups[0];
 
   return (
-    <main
+    <section
       ref={rootRef}
-      id="main-content"
+      id="redline-world"
       data-testid="redline-world"
+      aria-label="RedZone field view and slate packs"
       className={`gse-world stage-active-${stage}${staticMode ? " is-static" : ""}`}
       style={{ "--scrub": initialProgress.toFixed(4) } as CSSProperties}
     >
@@ -493,14 +515,14 @@ export function RedlineWorld({
           </div>
         </section>
 
-        <div className="world-camera" ref={worldCameraRef} style={{ transform: cameraTransformAt(initialProgress) }}>
-          <div className={`world-stage stage-${stage}`}>
+        <div className="world-camera" ref={worldCameraRef} aria-hidden="true" style={{ transform: cameraTransformAt(initialProgress) }}>
+          <div className={`world-stage stage-${stage}`} aria-hidden="true">
             <div className="tunnel-shell" aria-hidden="true">
               <div className="tunnel-side-mark">
                 GALAXY SPORTS EDGE <b>·</b> REDZONE LEDGER
               </div>
             </div>
-            <div className="field-plane" aria-label="Interactive football field">
+            <div className="field-plane" aria-hidden="true">
               <div className="endzone endzone-far">REDZONE LEDGER</div>
               <div className="midfield-mark">GSE</div>
               <div className="endzone endzone-near">CHOOSE YOUR PACK</div>
@@ -571,7 +593,8 @@ export function RedlineWorld({
           className="motion-toggle"
           data-no-camera
           onClick={() => setUserStatic((value) => !value)}
-          aria-pressed={userStatic}
+          aria-pressed={staticMode}
+          aria-label={staticMode ? "Switch to interactive 3D motion view" : "Switch to static reduced-motion view"}
         >
           {staticMode ? "STATIC VIEW" : "MOTION VIEW"} <span>{staticMode ? "●" : "○"}</span>
         </button>
@@ -862,6 +885,6 @@ export function RedlineWorld({
           </PanelFrame>
         )}
       </div>
-    </main>
+    </section>
   );
 }

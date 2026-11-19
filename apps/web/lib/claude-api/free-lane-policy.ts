@@ -10,10 +10,16 @@ export const FREE_LANE_SURFACES: ReadonlySet<ClaudeSurface> = new Set<ClaudeSurf
   "content",
 ]);
 
-/** True when free content lane can attempt at least one $0 host. */
+/** True when an Alibaba Cloud Model Studio / DashScope API key is configured. */
+export function hasAlibabaDashScopeKey(env: Env = process.env): boolean {
+  return Boolean(env["ALIBABA_API_KEY"]?.trim() || env["DASHSCOPE_API_KEY"]?.trim());
+}
+
+/** True when free content lane can attempt at least one $0 or credit-covered host. */
 export function isFreeLaneEnabled(env: Env = process.env): boolean {
   if (env["CONTENT_FREE_LANE_ENABLED"] !== "true") return false;
   if (env["CEREBRAS_API_KEY"]?.trim()) return true;
+  if (hasAlibabaDashScopeKey(env)) return true;
   if (env["FREE_LANE_SECONDARY_BASE_URL"]?.trim() && env["FREE_LANE_SECONDARY_MODEL"]?.trim()) {
     return true;
   }

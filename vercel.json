@@ -30,24 +30,8 @@
       "schedule": "5,20,35,50 * * * *"
     },
     {
-      "path": "/api/cron/generate-drafts",
-      "schedule": "0 11 * * *"
-    },
-    {
       "path": "/api/cron/reconcile-entitlements",
       "schedule": "45 * * * *"
-    },
-    {
-      "path": "/api/cron/ingest-player-stats",
-      "schedule": "0 9 * * *"
-    },
-    {
-      "path": "/api/cron/hydrate-cold-plane",
-      "schedule": "30 9 * * *"
-    },
-    {
-      "path": "/api/cron/drain-ai-telemetry-recovery",
-      "schedule": "30 * * * *"
     },
     {
       "path": "/api/cron/prune-rate-limits",
@@ -56,14 +40,6 @@
     {
       "path": "/api/cron/repair-checkout-attempts",
       "schedule": "50 * * * *"
-    },
-    {
-      "path": "/api/cron/run-formal-receipt",
-      "schedule": "45 9 * * *"
-    },
-    {
-      "path": "/api/cron/jarvis-snapshot",
-      "schedule": "15 * * * *"
     },
     {
       "path": "/api/cron/free-spine-health",
@@ -82,88 +58,16 @@
       "schedule": "40 */6 * * *"
     },
     {
-      "path": "/api/cron/backfill-independent-trueprob",
-      "schedule": "10 */4 * * *"
-    },
-    {
       "path": "/api/cron/refresh-player-stats",
       "schedule": "0,30 * * * *"
-    },
-    {
-      "path": "/api/cron/backfill-team-efficiency",
-      "schedule": "15 7 * * *"
     },
     {
       "path": "/api/ops/daily-truth",
       "schedule": "5 12 * * *"
     },
     {
-      "path": "/api/cron/signal-ledger-write",
-      "schedule": "23 * * * *"
-    },
-    {
-      "path": "/api/cron/game-weather-capture",
-      "schedule": "10 6,12,18 * * *"
-    },
-    {
-      "path": "/api/cron/prediction-market-snapshot",
-      "schedule": "20 6,12,18 * * *"
-    },
-    {
-      "path": "/api/cron/ngs-ingest",
-      "schedule": "30 11 * * 3"
-    },
-    {
-      "path": "/api/cron/watch-scheduler",
-      "schedule": "*/10 * * * *"
-    },
-    {
-      "path": "/api/cron/watch-warm",
-      "schedule": "*/10 * * * *"
-    },
-    {
-      "path": "/api/cron/props-slate-shadow",
-      "schedule": "25 * * * *"
-    },
-    {
-      "path": "/api/cron/engine-dfs-slate",
-      "schedule": "55 * * * *"
-    },
-    {
       "path": "/api/cron/arbiter-adjudication",
       "schedule": "41 * * * *"
-    },
-    {
-      "path": "/api/cron/refresh-wire",
-      "schedule": "*/10 * * * *"
-    },
-    {
-      "path": "/api/cron/gamma",
-      "schedule": "0,30 * * * *"
-    },
-    {
-      "path": "/api/cron/signal-ledger-census",
-      "schedule": "43 * * * *"
-    },
-    {
-      "path": "/api/cron/backfill-player-data",
-      "schedule": "0 4 * * 2"
-    },
-    {
-      "path": "/api/cron/backfill-historical-games",
-      "schedule": "0 3 * * 2"
-    },
-    {
-      "path": "/api/cron/backtest-calibration",
-      "schedule": "0 12 * * 0"
-    },
-    {
-      "path": "/api/cron/feature-recipe-backtest",
-      "schedule": "0 13 * * 0"
-    },
-    {
-      "path": "/api/cron/microstructure-report",
-      "schedule": "35 12 * * *"
     },
     {
       "path": "/api/cron/site-wide-workflows",

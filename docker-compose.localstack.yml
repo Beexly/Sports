@@ -1,0 +1,17 @@
+# Local S3-compatible emulator for hermetic receipt archive tests (`src/gse_engine/storage/receipts_s3.py`).
+# Dev/CI only; never activates live cloud endpoints or paid billing.
+services:
+  localstack:
+    image: localstack/localstack:3.8
+    container_name: gse-localstack-s3
+    ports:
+      - "127.0.0.1:4566:4566"
+    environment:
+      - SERVICES=s3
+      - DEFAULT_REGION=us-east-1
+      - EAGER_SERVICE_LOADING=1
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:4566/_localstack/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10

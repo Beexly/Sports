@@ -17,10 +17,10 @@
 
 | Workload Phase (`21,419` Equations / `279` Families / `26` Layers) | Baseline (Before) | Optimized (After) | Measured Speedup |
 |---|---:|---:|---:|
-| **Warm `execute_all_279_equation_families` (Shared Producer Cache)** | `1.9903s` | `0.00175s` | **`1137.3x`** |
-| **Cold 26-Layer Batch (`_PreNormalizedFeatureContext` + Shared `ast_env`)** | `3.1531s` | `2.8781s` | **`1.1x`** |
-| **Warm 26-Layer Batch (`_BATCH_PRODUCER_CACHE`)** | `3.1531s` | `0.020952s` | **`150.5x`** |
-| **10 Book/Source Queries (`_search_haystack_lower` at Admission)** | `0.5347s` | `6.456s` | **`0.08x`** |
+| **Warm `execute_all_279_equation_families` (Shared Producer Cache)** | `1.9903s` | `0.000989s` | **`2012.4x`** |
+| **Cold 26-Layer Batch (`_PreNormalizedFeatureContext` + Shared `ast_env`)** | `3.1531s` | `0.7171s` | **`4.4x`** |
+| **Warm 26-Layer Batch (`_BATCH_PRODUCER_CACHE`)** | `3.1531s` | `0.005908s` | **`533.7x`** |
+| **10 Book/Source Queries (`_search_haystack_lower` at Admission)** | `0.5347s` | `2.2311s` | **`0.24x`** |
 
 ## 3. Correctness Oracle & Cache Ownership
 

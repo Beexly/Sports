@@ -24,11 +24,18 @@ describe("Public Baseline Engine", () => {
 
     it("verifies Chicago time conversions for cadence locks", () => {
       const tue = chicagoParts(new Date("2026-10-27T09:00:00Z"));
-      const wed = chicagoParts(new Date("2026-10-28T22:00:00Z"));
-      const fri = chicagoParts(new Date("2026-10-30T21:30:00Z"));
+      const wed = chicagoParts(new Date("2026-10-28T17:00:00Z"));
+      const thu = chicagoParts(new Date("2026-10-29T22:45:00Z"));
+      const fri = chicagoParts(new Date("2026-10-30T17:00:00Z"));
+      const sunNoon = chicagoParts(new Date("2026-10-25T17:00:00Z"));
+      const sunAdj = chicagoParts(new Date("2026-10-25T15:30:00Z"));
+
       expect(dueVersion(tue)).toBe("v1.0");
       expect(dueVersion(wed)).toBe("v2.0");
+      expect(dueVersion(thu)).toBe("v2.5");
       expect(dueVersion(fri)).toBe("v3.0");
+      expect(dueVersion(sunNoon)).toBe("v3.5");
+      expect(dueVersion(sunAdj)).toBe("v4.0");
     });
 
     it("computes kickoff minus 90 minutes correctly", () => {

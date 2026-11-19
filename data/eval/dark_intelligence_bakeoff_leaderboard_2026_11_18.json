@@ -1,0 +1,223 @@
+{
+  "schema": "gse.dark_intelligence.bakeoff.v1",
+  "generated_utc": "2026-11-19T04:11:10.443191+00:00",
+  "total_modules": 21,
+  "promoted_count": 7,
+  "hold_rd_count": 14,
+  "cut_count": 0,
+  "real_money_stake_cleared": false,
+  "live_stake_fraction": 0.0,
+  "clinical_ruo_sports_weight": 0.0,
+  "modules": [
+    {
+      "module": "rqmc_tilting_and_regimes",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 2.3e-05,
+      "verdict": "HOLD_RD",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Shadow telemetry only (d_crps=+0.000023); held under 5B rule until N >= 250 prospective CLV settles."
+    },
+    {
+      "module": "rvine_sgp_copula",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 0.0,
+      "verdict": "HOLD_RD",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Shadow telemetry only (d_crps=+0.000000); held under 5B rule until N >= 250 prospective CLV settles."
+    },
+    {
+      "module": "skfolio_allocator",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 2.3e-05,
+      "verdict": "HOLD_RD",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Shadow telemetry only (d_crps=+0.000023); held under 5B rule until N >= 250 prospective CLV settles."
+    },
+    {
+      "module": "lineup_doctor",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 0.0,
+      "verdict": "PROMOTE",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Zero-risk structural/copula/lineup invariant verified with zero OOS regression."
+    },
+    {
+      "module": "etkf_dma_bus",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 2.3e-05,
+      "verdict": "HOLD_RD",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Shadow telemetry only (d_crps=+0.000023); held under 5B rule until N >= 250 prospective CLV settles."
+    },
+    {
+      "module": "biomech_and_ballistics",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 0.000462,
+      "verdict": "HOLD_RD",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Shadow telemetry only (d_crps=+0.000462); held under 5B rule until N >= 250 prospective CLV settles."
+    },
+    {
+      "module": "neural_calibration_and_attention",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 2.3e-05,
+      "verdict": "HOLD_RD",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Shadow telemetry only (d_crps=+0.000023); held under 5B rule until N >= 250 prospective CLV settles."
+    },
+    {
+      "module": "matchup_prose",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 0.0,
+      "verdict": "PROMOTE",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Zero-risk structural/copula/lineup invariant verified with zero OOS regression."
+    },
+    {
+      "module": "foundry_compound_miner",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 2.3e-05,
+      "verdict": "HOLD_RD",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Shadow telemetry only (d_crps=+0.000023); held under 5B rule until N >= 250 prospective CLV settles."
+    },
+    {
+      "module": "worker_daemon",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 0.0,
+      "verdict": "PROMOTE",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Zero-risk structural/copula/lineup invariant verified with zero OOS regression."
+    },
+    {
+      "module": "teammate_routines",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 0.0,
+      "verdict": "PROMOTE",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Zero-risk structural/copula/lineup invariant verified with zero OOS regression."
+    },
+    {
+      "module": "cache_and_sandbox_governor",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 0.0,
+      "verdict": "PROMOTE",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Zero-risk structural/copula/lineup invariant verified with zero OOS regression."
+    },
+    {
+      "module": "vision_and_geofence",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 2.3e-05,
+      "verdict": "HOLD_RD",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Shadow telemetry only (d_crps=+0.000023); held under 5B rule until N >= 250 prospective CLV settles."
+    },
+    {
+      "module": "gcp_warehouse",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 0.0,
+      "verdict": "PROMOTE",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Zero-risk structural/copula/lineup invariant verified with zero OOS regression."
+    },
+    {
+      "module": "kantorovich_mmot",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 0.0,
+      "verdict": "PROMOTE",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Zero-risk structural/copula/lineup invariant verified with zero OOS regression."
+    },
+    {
+      "module": "galaxy_conformal_ot",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 1.2e-05,
+      "verdict": "HOLD_RD",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Shadow telemetry only (d_crps=+0.000012); held under 5B rule until N >= 250 prospective CLV settles."
+    },
+    {
+      "module": "intelligence_props_suite",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 2.3e-05,
+      "verdict": "HOLD_RD",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Shadow telemetry only (d_crps=+0.000023); held under 5B rule until N >= 250 prospective CLV settles."
+    },
+    {
+      "module": "intelligence_dfs_suite",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 1.2e-05,
+      "verdict": "HOLD_RD",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Shadow telemetry only (d_crps=+0.000012); held under 5B rule until N >= 250 prospective CLV settles."
+    },
+    {
+      "module": "intelligence_ratings_suite",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 2.3e-05,
+      "verdict": "HOLD_RD",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Shadow telemetry only (d_crps=+0.000023); held under 5B rule until N >= 250 prospective CLV settles."
+    },
+    {
+      "module": "intelligence_totals_audit_suite",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 1.2e-05,
+      "verdict": "HOLD_RD",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Shadow telemetry only (d_crps=+0.000012); held under 5B rule until N >= 250 prospective CLV settles."
+    },
+    {
+      "module": "intelligence_week10_engines_suite",
+      "samples_evaluated": 18,
+      "activation_rate": 1.0,
+      "oos_crps_delta": 2.3e-05,
+      "verdict": "HOLD_RD",
+      "live_stake_fraction": 0.0,
+      "clinical_ruo_sports_weight": 0.0,
+      "reason": "Shadow telemetry only (d_crps=+0.000023); held under 5B rule until N >= 250 prospective CLV settles."
+    }
+  ]
+}

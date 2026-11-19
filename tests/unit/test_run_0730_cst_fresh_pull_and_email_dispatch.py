@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""
-Unit tests for `scripts/ops/run_0730_cst_fresh_pull_and_email_dispatch.py`:
-  1. Hard time-gate blocking live publish and email dispatch at `23:50 CST`,
-     `03:00 CST`, and `07:29:59 CST`, and unlocking at `07:30:00 CST`.
-  2. Fresh data pull manifest & SHA-256 verification across NFL injuries,
-     stadium weather, DraftKings salaries/ownership/propBets, and sportsbook lines
-     under the Odds API credit governor.
-  3. Full from-scratch execution of the 9/9 armed workflows, 21,419 AST equations
-     across 279 families, 22 proprietary GSE metrics, 360-degree projections,
-     `-300` Heavy-Juice Firewall, Two-Wave `200+` Pt DraftKings DFS lineup generator
-     (`QB + 2 Pass Catchers + 1 Opp Bring-Back`, `<= 35%` exposure, `Hamming >= 3`,
-     `P(>=200 Pts)`, `Top-0.1% Win Rate`), 9-model worker fleet (`inkling/inkling-2`,
-     `inkling/inkling-small-2`), and `10/10 PASS` charge regression suite.
-  4. Morning email composition & outbox receipt generation
-     (`docs/engine/research/2026-11-07/0730-cst-fresh-pull-and-email-dispatch-receipt.json`).
+"""Unit tests for `scripts/ops/run_0730_cst_fresh_pull_and_email_dispatch.py`.
+
+1. Hard time-gate blocking live publish and email dispatch at `23:50 CST`,
+`03:00 CST`, and `07:29:59 CST`, and unlocking at `07:30:00 CST`.
+2. Fresh data pull manifest & SHA-256 verification across NFL injuries,
+stadium weather, DraftKings salaries/ownership/propBets, and sportsbook lines
+under the Odds API credit governor.
+3. Full from-scratch execution of the 9/9 armed workflows, 21,419 AST equations
+across 279 families, 22 proprietary GSE metrics, 360-degree projections,
+`-300` Heavy-Juice Firewall, Two-Wave `200+` Pt DraftKings DFS lineup generator
+(`QB + 2 Pass Catchers + 1 Opp Bring-Back`, `<= 35%` exposure, `Hamming >= 3`,
+`P(>=200 Pts)`, `Top-0.1% Win Rate`), 9-model worker fleet (`inkling/inkling-2`,
+`inkling/inkling-small-2`), and `10/10 PASS` charge regression suite.
+4. Morning email composition & outbox receipt generation
+(`docs/engine/research/2026-11-07/0730-cst-fresh-pull-and-email-dispatch-receipt.json`).
 """
 
 from __future__ import annotations
@@ -21,10 +21,9 @@ from __future__ import annotations
 import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import pytest
-
 from scripts.ops.run_0730_cst_fresh_pull_and_email_dispatch import (
     DEFAULT_OUTBOX_EML_PATH,
     DEFAULT_RECEIPT_PATH,
@@ -44,19 +43,19 @@ CST_TZ = timezone(timedelta(hours=-6), name="CST")
 
 
 @pytest.fixture(scope="module")
-def fresh_manifest_fixture() -> Dict[str, Any]:
+def fresh_manifest_fixture() -> dict[str, Any]:
     return pull_fresh_0730_cst_data()
 
 
 @pytest.fixture(scope="module")
-def pipeline_bundle_fixture(fresh_manifest_fixture: Dict[str, Any]) -> Dict[str, Any]:
+def pipeline_bundle_fixture(fresh_manifest_fixture: dict[str, Any]) -> dict[str, Any]:
     return run_entire_process_from_scratch_on_fresh_data(fresh_manifest_fixture)
 
 
 def test_not_before_0730_cst_gate_blocks_before_0730_and_unlocks_at_0730() -> None:
-    """
-    Verify hard time-gate blocks live publish and email dispatch at `23:50 CST`,
-    `03:00 CST`, and `07:29:59 CST`, and unlocks at `07:30:00 CST`.
+    """Verify hard time-gate blocks live publish and email dispatch before 07:30 CST.
+
+    Blocks `23:50 CST`, `03:00 CST`, and `07:29:59 CST`, and unlocks at `07:30:00 CST`.
     """
     blocked_cases = [
         ("23:50 CST", datetime(2026, 11, 7, 23, 50, 0, tzinfo=CST_TZ)),
@@ -66,7 +65,9 @@ def test_not_before_0730_cst_gate_blocks_before_0730_and_unlocks_at_0730() -> No
 
     for shorthand_str, dt_obj in blocked_cases:
         # Strict mode (allow_overnight_dry_run=False)
-        res_strict = check_not_before_0730_cst_gate(now_utc_or_cst=dt_obj, allow_overnight_dry_run=False)
+        res_strict = check_not_before_0730_cst_gate(
+            now_utc_or_cst=dt_obj, allow_overnight_dry_run=False
+        )
         assert res_strict["timezone"] == "America/Chicago"
         assert res_strict["live_execution_allowed"] is False
         assert res_strict["make_live"] is False
@@ -80,7 +81,9 @@ def test_not_before_0730_cst_gate_blocks_before_0730_and_unlocks_at_0730() -> No
         assert res_strict["gate_status"] == "BLOCKED_BEFORE_0730_CST"
 
         # Shorthand string + allow_overnight_dry_run=True
-        res_dry = check_not_before_0730_cst_gate(now_utc_or_cst=shorthand_str, allow_overnight_dry_run=True)
+        res_dry = check_not_before_0730_cst_gate(
+            now_utc_or_cst=shorthand_str, allow_overnight_dry_run=True
+        )
         assert res_dry["live_execution_allowed"] is False
         assert res_dry["live_publish_blocked_until_0730_cst"] is True
         assert res_dry["email_dispatch_blocked_until_0730_cst"] is True
@@ -88,7 +91,9 @@ def test_not_before_0730_cst_gate_blocks_before_0730_and_unlocks_at_0730() -> No
         assert res_dry["gate_status"] == "DRY_RUN_ONLY_BEFORE_0730_CST"
 
     # Exact boundary: 07:29:59 CST is 1.0 second before unlock
-    res_072959 = check_not_before_0730_cst_gate("2026-11-08T07:29:59-06:00", allow_overnight_dry_run=False)
+    res_072959 = check_not_before_0730_cst_gate(
+        "2026-11-08T07:29:59-06:00", allow_overnight_dry_run=False
+    )
     assert res_072959["seconds_until_0730_cst"] == 1.0
     assert res_072959["live_execution_allowed"] is False
 
@@ -100,7 +105,9 @@ def test_not_before_0730_cst_gate_blocks_before_0730_and_unlocks_at_0730() -> No
         datetime(2026, 11, 8, 7, 30, 0, tzinfo=CST_TZ),
         datetime(2026, 11, 8, 7, 45, 0, tzinfo=CST_TZ),
     ):
-        res_open = check_not_before_0730_cst_gate(now_utc_or_cst=unlock_input, allow_overnight_dry_run=False)
+        res_open = check_not_before_0730_cst_gate(
+            now_utc_or_cst=unlock_input, allow_overnight_dry_run=False
+        )
         assert res_open["live_execution_allowed"] is True
         assert res_open["make_live"] is True
         assert res_open["make_live_allowed"] is True
@@ -113,7 +120,7 @@ def test_not_before_0730_cst_gate_blocks_before_0730_and_unlocks_at_0730() -> No
 
 
 def test_not_before_0730_cst_gate_edge_cases_and_blocked_orchestrator() -> None:
-    """Verify invalid timestamp inputs fail closed, fractional/CDT/lowercase-z timestamps parse accurately, and strict orchestrator blocks before 07:30 CST."""
+    """Verify invalid timestamp inputs fail closed and strict orchestrator blocks early."""
     with pytest.raises(TypeError):
         check_not_before_0730_cst_gate(now_utc_or_cst=["invalid"])
 
@@ -123,7 +130,9 @@ def test_not_before_0730_cst_gate_edge_cases_and_blocked_orchestrator() -> None:
     assert res_subsec["seconds_until_0730_cst"] == 0.001
 
     # Lowercase 'z' UTC string 1 second before unlock
-    res_lower_z = check_not_before_0730_cst_gate("2026-11-08T13:29:59z", allow_overnight_dry_run=False)
+    res_lower_z = check_not_before_0730_cst_gate(
+        "2026-11-08T13:29:59z", allow_overnight_dry_run=False
+    )
     assert res_lower_z["live_execution_allowed"] is False
     assert res_lower_z["seconds_until_0730_cst"] == 1.0
 
@@ -142,16 +151,19 @@ def test_not_before_0730_cst_gate_edge_cases_and_blocked_orchestrator() -> None:
 
 
 def test_pull_fresh_0730_cst_data_manifest_and_sha256_verification(
-    fresh_manifest_fixture: Dict[str, Any],
+    fresh_manifest_fixture: dict[str, Any],
 ) -> None:
-    """
-    Verify `pull_fresh_0730_cst_data()` validates NFL injuries, stadium weather,
-    DraftKings salaries/ownership/propBets, and sportsbook lines under the Odds API
-    credit governor with 64-char SHA-256 checksums.
+    """Verify `pull_fresh_0730_cst_data()` validates inputs with 64-char SHA-256 checksums.
+
+    Covers NFL injuries, stadium weather, DraftKings salaries/ownership/propBets, and
+    sportsbook lines under the Odds API credit governor.
     """
     manifest = fresh_manifest_fixture
     assert manifest["status"] == "VERIFIED_FRESH"
-    assert isinstance(manifest["fresh_pull_completed_at_cst"], str) and "-06:00" in manifest["fresh_pull_completed_at_cst"]
+    assert (
+        isinstance(manifest["fresh_pull_completed_at_cst"], str)
+        and "-06:00" in manifest["fresh_pull_completed_at_cst"]
+    )
     assert manifest["all_sha256_checksums_verified"] is True
     assert len(manifest["manifest_sha256"]) == 64
 
@@ -187,16 +199,16 @@ def test_pull_fresh_0730_cst_data_manifest_and_sha256_verification(
 
 
 def test_run_entire_process_from_scratch_on_fresh_data(
-    pipeline_bundle_fixture: Dict[str, Any],
+    pipeline_bundle_fixture: dict[str, Any],
 ) -> None:
-    """
-    Verify full from-scratch execution of all 6 pipeline stages:
-      1. `9/9 ARMED` workflows
-      2. `21,419` compiled AST equations across `279` families
-      3. `22` proprietary GSE metrics (`M-GSE-01..M-GSE-22`) with 4-fold OOS JS+Ridge weights
-      4. 360-degree projections, `-300` Heavy-Juice Firewall, and Two-Wave `200+` Pt DFS lineups
-      5. `9`-model worker fleet (`inkling/inkling-2` & `inkling/inkling-small-2`)
-      6. `10/10 PASS` charge regression suite.
+    """Verify full from-scratch execution of all 6 pipeline stages.
+
+    1. `9/9 ARMED` workflows
+    2. `21,419` compiled AST equations across `279` families
+    3. `22` proprietary GSE metrics (`M-GSE-01..M-GSE-22`) with 4-fold OOS JS+Ridge weights
+    4. 360-degree projections, `-300` Heavy-Juice Firewall, and Two-Wave `200+` Pt DFS lineups
+    5. `9`-model worker fleet (`inkling/inkling-2` & `inkling/inkling-small-2`)
+    6. `10/10 PASS` charge regression suite.
     """
     with pytest.raises(ValueError):
         run_entire_process_from_scratch_on_fresh_data({})
@@ -229,8 +241,14 @@ def test_run_entire_process_from_scratch_on_fresh_data(
     assert s3["metric_ids"][0] == "M-GSE-01"
     assert s3["metric_ids"][-1] == "M-GSE-22"
     assert s3["all_22_metrics_wired_and_tested"] is True
-    assert s3["out_of_sample_4fold_optimization_benchmark"]["optimized_beats_unoptimized_equal"] is True
-    assert s3["out_of_sample_4fold_optimization_benchmark"]["optimized_beats_market_baseline"] is True
+    assert (
+        s3["out_of_sample_4fold_optimization_benchmark"]["optimized_beats_unoptimized_equal"]
+        is True
+    )
+    assert (
+        s3["out_of_sample_4fold_optimization_benchmark"]["optimized_beats_market_baseline"]
+        is True
+    )
 
     # 4. 360-degree projections, -300 Heavy-Juice Firewall, and Two-Wave 200+ Pt DFS
     s4 = bundle["step_4_360_projections_and_two_wave_200pt_dfs"]
@@ -262,10 +280,17 @@ def test_run_entire_process_from_scratch_on_fresh_data(
     assert guards["hamming_ge_3_satisfied"] is True
     assert guards["realized_min_pairwise_hamming_distance"] >= 3
 
-    curated_pool_path = REPO_ROOT / "data" / "dfs" / "gse_dedicated_curated_dfs_player_pool_week9_2026_11_07.json"
+    curated_pool_path = (
+        REPO_ROOT
+        / "data"
+        / "dfs"
+        / "gse_dedicated_curated_dfs_player_pool_week9_2026_11_07.json"
+    )
     curated_pool_names = {
         str(r.get("player"))
-        for r in json.loads(curated_pool_path.read_text(encoding="utf-8")).get("curated_dfs_player_pool", [])
+        for r in json.loads(curated_pool_path.read_text(encoding="utf-8")).get(
+            "curated_dfs_player_pool", []
+        )
         if str(r.get("pool_status")) == "ACCEPTED_INTO_DEDICATED_GSE_DFS_POOL"
     }
 
@@ -281,7 +306,9 @@ def test_run_entire_process_from_scratch_on_fresh_data(
         assert float(lu["joint_p99_shootout_dk_pts"]) >= 200.0
         assert float(lu["cvar_099_championship_dk_pts"]) >= 200.0
         for p_row in lu["roster"]:
-            assert p_row["player"] in curated_pool_names, f"Non-curated player in lineup: {p_row['player']}"
+            assert p_row["player"] in curated_pool_names, (
+                f"Non-curated player in lineup: {p_row['player']}"
+            )
 
     # 5. 9-model worker fleet including inkling/inkling-2 and inkling/inkling-small-2
     s5 = bundle["step_5_zero_waste_9model_router"]
@@ -301,16 +328,17 @@ def test_run_entire_process_from_scratch_on_fresh_data(
 
 
 def test_compose_and_dispatch_0730_morning_email_and_receipt(
-    pipeline_bundle_fixture: Dict[str, Any],
+    pipeline_bundle_fixture: dict[str, Any],
 ) -> None:
-    """
-    Verify morning email composition & outbox receipt generation:
-      - Before 07:30 CST (`23:50 CST`), live email send is blocked while local `.eml`
-        and JSON receipt (`docs/engine/research/2026-11-07/0730-cst-fresh-pull-and-email-dispatch-receipt.json`)
-        are written and verified.
-      - At `07:30:00 CST` with `dry_run=False`, gate unlocks and multi-channel delivery
-        gracefully falls back to local `.eml` + JSON outbox receipt when SMTP/Resend keys
-        are not set in the local test environment.
+    """Verify morning email composition & outbox receipt generation.
+
+    - Before 07:30 CST (`23:50 CST`), live email send is blocked while local `.eml`
+      and JSON receipt
+      (`docs/engine/research/2026-11-07/0730-cst-fresh-pull-and-email-dispatch-receipt.json`)
+      are written and verified.
+    - At `07:30:00 CST` with `dry_run=False`, gate unlocks and multi-channel delivery
+      gracefully falls back to local `.eml` + JSON outbox receipt when SMTP/Resend keys
+      are not set in the local test environment.
     """
     # 1. Pre-07:30 CST dry-run check
     pre_gate_receipt = compose_and_dispatch_0730_morning_email(
@@ -354,7 +382,7 @@ def test_compose_and_dispatch_0730_morning_email_and_receipt(
         assert "Top-0.1% Win Rate" in body_text
         assert "-300" in body_text
 
-    # Verify canonical receipt file on disk at docs/engine/research/2026-11-07/0730-cst-fresh-pull-and-email-dispatch-receipt.json
+    # Verify canonical receipt file on disk at docs/engine/research/2026-11-07/
     assert DEFAULT_RECEIPT_PATH.is_file()
     assert DEFAULT_OUTBOX_EML_PATH.is_file()
     disk_receipt = json.loads(DEFAULT_RECEIPT_PATH.read_text(encoding="utf-8"))
@@ -367,16 +395,17 @@ def test_compose_and_dispatch_0730_morning_email_and_receipt(
 
 
 def test_multi_channel_email_transports_and_error_fallbacks(
-    pipeline_bundle_fixture: Dict[str, Any],
+    pipeline_bundle_fixture: dict[str, Any],
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
-    """
-    Verify `_try_send_via_resend`, `_try_send_via_cloudflare_email`, and `_try_send_via_smtp`:
-      - When Resend HTTP API succeeds (200 OK), `delivery_channel_used` is `RESEND_HTTP_API`.
-      - When Resend, Cloudflare Email, and SMTP all raise network/SMTP errors, `compose_and_dispatch_0730_morning_email`
-        gracefully falls back to `LOCAL_OUTBOX_EML_AND_JSON_RECEIPT` and records `FAILED_FALLBACK:*`
-        without losing the morning report.
+    """Verify `_try_send_via_resend`, `_try_send_via_cloudflare_email`, and `_try_send_via_smtp`.
+
+    - When Resend HTTP API succeeds (200 OK), `delivery_channel_used` is `RESEND_HTTP_API`.
+    - When Resend, Cloudflare Email, and SMTP all raise network/SMTP errors,
+      `compose_and_dispatch_0730_morning_email` falls back to
+      `LOCAL_OUTBOX_EML_AND_JSON_RECEIPT` and records `FAILED_FALLBACK:*`
+      without losing the morning report.
     """
     import smtplib
     import urllib.error
@@ -384,12 +413,18 @@ def test_multi_channel_email_transports_and_error_fallbacks(
     from email.message import EmailMessage
 
     # Direct helper checks for unconfigured vs error vs success
-    assert _try_send_via_resend("", "a@b.com", "c@d.com", "sub", "txt", "<p>h</p>") == (False, "NOT_CONFIGURED")
-    assert _try_send_via_cloudflare_email("", "a@b.com", "c@d.com", "sub", "txt", "<p>h</p>") == (False, "NOT_CONFIGURED")
+    assert _try_send_via_resend("", "a@b.com", "c@d.com", "sub", "txt", "<p>h</p>") == (
+        False,
+        "NOT_CONFIGURED",
+    )
+    assert _try_send_via_cloudflare_email("", "a@b.com", "c@d.com", "sub", "txt", "<p>h</p>") == (
+        False,
+        "NOT_CONFIGURED",
+    )
     dummy_msg = EmailMessage()
     assert _try_send_via_smtp("", 587, "", "", dummy_msg) == (False, "NOT_CONFIGURED")
 
-    # Case 1: All 3 network channels configured, all 3 fail with network/SMTP exceptions -> graceful outbox fallback
+    # Case 1: All 3 network channels configured & fail -> graceful outbox fallback
     monkeypatch.setenv("RESEND_API_KEY", "re_test_key_123")
     monkeypatch.setenv("CLOUDFLARE_EMAIL_WEBHOOK_URL", "https://email-worker.example.com/send")
     monkeypatch.setenv("SMTP_HOST", "smtp.example.com")
@@ -422,13 +457,13 @@ def test_multi_channel_email_transports_and_error_fallbacks(
     assert fallback_receipt_path.is_file()
     assert fallback_eml_path.is_file()
 
-    # Case 2: Resend HTTP API returns 200 OK (and verifies custom User-Agent & List-Unsubscribe header)
+    # Case 2: Resend HTTP API returns 200 OK (verifies custom User-Agent & List-Unsubscribe)
     captured_requests: list[Any] = []
 
     class _DummyResponse:
         status = 200
 
-        def __enter__(self) -> "_DummyResponse":
+        def __enter__(self) -> _DummyResponse:
             return self
 
         def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> None:

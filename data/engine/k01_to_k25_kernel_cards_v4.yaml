@@ -1,0 +1,1004 @@
+- kernel_id: K01_BREEDEN_LITZENBERGER_SCOP_MARKET_DENSITY
+  pillar: Market_Anchor_Layer_1
+  cadence: C1_Noon_to_T90m_to_Close
+  target_stage: Stage_1_Market_Prior_Surface
+  inputs_and_units:
+    strikes_k: float64[M] (spread points, total points, or player milestone yards)
+    book_decimal_odds: float64[B, M, 2] (over/under decimal odds >= 1.01)
+    vecm_innovations_omega: float64[B, B] (logit-price VECM covariance, dimensionless)
+    long_run_impact_psi: float64[B] (Stock-Watson common-trend vector, dimensionless)
+  closed_form_equation: 'IS_b = ([psi^T * F_star]_b)^2 / (psi^T * Omega * psi); p_shin(q_i) = (2 * q_i^2 / B_sum)
+    / (z + sqrt(z^2 + 4 * (1 - z) * q_i^2 / B_sum)); S_bar(k_m) = sum_b IS_b * S_devig(b, k_m); eta(x) = beta_0
+    - sum_{j=2}^J (sum_{l=2}^j exp(gamma_l)) * B_j(x); f_mkt(x) = -sigma(eta(x)) * (1 - sigma(eta(x))) * eta_prime(x)
+
+    '
+  prior_hyperparameters:
+    hasbrouck_cold_start_weights:
+      pinnacle: 0.42
+      circa: 0.31
+      kalshi: 0.14
+      dk: 0.07
+      fd: 0.06
+    scop_spline_knots_J: 12
+    scop_roughness_lambda: 0.015
+    shin_to_power_hold_cutoff: 1.065
+  clamp_bounds:
+    shin_insider_z:
+    - 1.0e-06
+    - 0.25
+    survival_prob_S:
+    - 1.0e-05
+    - 0.99999
+    implied_density_f:
+    - 0.0
+    - 10.0
+  computational_complexity: O(B^3 + N_iter * M * J^2) (~1.8 ms per market ladder)
+  overfit_failure_modes:
+  - Unpenalized spline knots interpolating illiquid alternate-line bid-ask bounce and creating multi-modal phantom
+    spikes.
+  - Applying Additive/WPO devigging to 80-to-1 milestone longshots, yielding negative probabilities.
+  property_invariants:
+  - 'strict_monotonicity: dS_mkt/dx < 0 everywhere on [x_min, x_max]'
+  - 'non_negativity_and_unit_mass: f_mkt(x) >= 0 and abs(integral(f_mkt) - 1.0) < 1.0e-6'
+  - 'information_share_simplex: sum_b IS_b == 1.0 and min(IS_b) >= 0.0'
+- kernel_id: K02_ENTROPIC_TILTING_NFL_SCORE_LATTICE
+  pillar: Cross_Pillar_Reconciliation
+  cadence: C1_Weekly_and_C3_InterPlay
+  target_stage: Stage_3_Micro_Macro_Reconciliation
+  inputs_and_units:
+    sim_moment_matrix_G: float64[S, 13] (6 team yards/pts moments + 7 key-margin indicators)
+    target_macro_vector_g_bar: float64[13] (Black-Litterman + COM-Poisson key-number targets)
+    slack_precision_Gamma: float64[13, 13] (diagonal L2 dual regularization matrix)
+  closed_form_equation: sigma_G = max(1e-4, std_s(G)); G_std = (G - g_bar) / sigma_G; u_s(lambda_tilde) = dot(lambda_tilde,
+    G_std_s); u_max = max_s u_s(lambda_tilde); L_dual(lambda_tilde) = u_max + log((1/S) * sum_{s=1}^S exp(u_s(lambda_tilde)
+    - u_max)) + 0.5 * lambda_tilde^T * Gamma_std * lambda_tilde; lambda_star = argmin_LBFGS L_dual(lambda_tilde);
+    w_s_star = exp(u_s(lambda_star) - u_max) / sum_{j=1}^S exp(u_j(lambda_star) - u_max)
+  prior_hyperparameters:
+    nfl_key_margins:
+    - 3
+    - 7
+    - 6
+    - 10
+    - 14
+    - 4
+    - 17
+    historical_margin_3_and_7_rates:
+    - 0.151
+    - 0.09
+    dual_slack_yards_tol: 0.25
+    dual_slack_prob_tol: 0.002
+  clamp_bounds:
+    dual_lambda_abs_max: 5.0
+    world_weight_ratio_max:
+    - 0.05
+    - 12.0
+    kish_ess_min_ratio: 0.65
+    kl_divergence_max_nats: 0.25
+  computational_complexity: O(N_BFGS * S * M) (~4.2 ms for S=10,000, M=13 via vectorized BLAS)
+  overfit_failure_modes:
+  - Target macro moments outside the simulated convex hull driving lambda -> inf and collapsing ESS to <50 worlds.
+  - Tilting continuous Gaussian margins without discrete key-number indicators, underpricing push mass at 3 and
+    7 by 35%-52%.
+  - Passing unstandardized yardage moments (~250 yds) alongside binary {3,7} indicators into L-BFGS without sigma_G
+    scaling, causing exp() overflow.
+  property_invariants:
+  - 'simplex_weights: abs(sum_s w_s_star - 1.0) < 1.0e-12 and all(w_s_star > 0)'
+  - 'moment_consistency: max(abs(G^T * w_star - g_bar + Gamma * lambda_star)) < 1.0e-7'
+  - 'sample_preservation: 1.0 / sum(w_s_star^2) >= 0.65 * S'
+- kernel_id: K03_OWEN_SOBOL_RQMC_CONTROL_VARIATE_SAMPLER
+  pillar: Simulation_Fabric
+  cadence: C1_PreKickoff_and_C3_Live
+  target_stage: Stage_3_Monte_Carlo_Engine
+  inputs_and_units:
+    philox_seed_key: uint32[4] (deterministic game_id + cadence_epoch hash)
+    num_worlds_S: int (8192 or 10000)
+    macro_cov_matrix_Sigma: float64[d, d] (d=16 game-level latent factor covariance)
+    market_benchmarks_mu_mkt: float64[4] (fair spread, total, home_pass_yds, away_pass_yds)
+  closed_form_equation: 'U_rqmc = OwenScramble(SobolSequence(S, d), philox_seed_key); Z_macro = Phi_inv(clip(U_rqmc,
+    1e-7, 1 - 1e-7)) * Cholesky_PCA(Sigma)^T; L_IS(z_s) = exp(-dot(mu_IS, z_s) + 0.5 * norm(mu_IS)^2); beta_CV
+    = inv(Cov(M_sim, M_sim) + 1e-6 * I) * Cov(M_sim, J_payoff); J_hat = mean_s(L_IS(z_s) * J_s) - dot(beta_CV,
+    mean_s(L_IS(z_s) * M_s) - mu_mkt)
+
+    '
+  prior_hyperparameters:
+    pca_primary_dims: 16
+    is_tail_activation_prob: 0.03
+    cv_ridge_penalty: 1.0e-06
+  clamp_bounds:
+    uniform_open_interval:
+    - 1.0e-07
+    - 0.9999999
+    is_likelihood_ratio:
+    - 0.01
+    - 50.0
+    cv_beta_abs_max: 3.0
+  computational_complexity: O(S * d * log(S)) generation (~1.1 ms for S=10,000)
+  overfit_failure_modes:
+  - Assigning low-discrepancy early Sobol dimensions to snap-1 noise instead of PCA-ordered game-level pace/QB
+    factors.
+  - In-sample estimation of beta_CV on small S with high-dimensional control variates causing variance inflation.
+  property_invariants:
+  - 'cross_language_bit_exactness: Python_Philox(key) == TypeScript_Philox(key)'
+  - 'unbiasedness: E_scramble[J_hat] == E_true[J]'
+  - 'variance_reduction_ratio: Var(J_hat_RQMC_CV) <= 0.05 * Var(J_hat_CrudeMC)'
+- kernel_id: K04_SINKHORN_VMLS_SUTVA_ROLE_REALLOCATOR
+  pillar: Pillar_4_and_Causal_Transport
+  cadence: C1_Noon_and_C1_T90m_and_C3_LiveInjury
+  target_stage: Stage_2_SUTVA_Volume_Conservation
+  inputs_and_units:
+    vacated_band_shares_v: float64[12] (4 alignments x 3 aDOT bands vacated share, dimensionless)
+    active_player_profiles: float64[K, 7] (4 alignment shares, mean aDOT yds, pass_block_rate, bracket_delta)
+    base_shares_r0: float64[K] (baseline active player target/carry shares)
+    max_share_add_u: float64[K] (physiological cap on added share per player)
+  closed_form_equation: 'I_pos = {i in 1..12 : v_i > 1.0e-12}; P_ik_star = 0 for i not in I_pos; C_ik = 0.35*(1
+    - cos_sim(a_i, a_k)) + 0.30*(abs(d_i - d_k)/20.0) + 0.15*rho_blk_k*I_ol_distress + 0.20*Delta_P_brk_k; for
+    i in I_pos: phi_i = eps*log(v_i) - eps*log(sum_k exp((psi_k - C_ik)/eps)); psi_k = min(0.0, eps*log(u_k_eff)
+    - eps*log(sum_{i in I_pos} exp((phi_i - C_ik)/eps))); delta_r_k = sum_{i in I_pos} exp((phi_i + psi_k - C_ik)/eps);
+    damp_k = 0.25 if has_liquid_two_sided_prop[k] else 1.0; r_k_new = NormalizeSimplex(r0_k + damp_k * delta_r_k)'
+  prior_hyperparameters:
+    entropic_eps: 0.04
+    cost_weights:
+      alignment: 0.35
+      adot: 0.3
+      pass_block: 0.15
+      bracket_shift: 0.2
+    default_max_share_boost:
+      WR: 0.12
+      TE: 0.1
+      RB: 0.09
+    boarded_prop_anchor_damping: 0.25
+  clamp_bounds:
+    cost_matrix_C:
+    - 0.0
+    - 2.0
+    player_final_target_share:
+    - 0.0
+    - 0.38
+    sinkhorn_marginal_tol:
+    - 0.0
+    - 1.0e-12
+  computational_complexity: O(N_iter * 12 * K) (~0.15 ms for K=8 active skill players, N_iter=40)
+  overfit_failure_modes:
+  - Routing vacated slot/ILB-void volume linearly to a Slot WR who is clamped by an elite Nickel CB.
+  - Dumping residual rounding mass into an OTHER_TEAM_WR sink, leaking 3%-8% of team yards.
+  property_invariants:
+  - 'exact_simplex_conservation: abs(sum_k r_k_new - 1.0) < 1.0e-12'
+  - 'zero_orphan_sinks: orphan_bucket_share == 0.0'
+  - 'box_capacity_respected: all(r_k_new - r0_k <= u_k + 1.0e-9)'
+  - 'zero_band_nan_safety: all_finite(P_ik_star) when any v_i == 0.0'
+- kernel_id: K05_SHARED_ETKF_DMA_LATENT_STATE_BUS
+  pillar: Cross_Cadence_State_Space
+  cadence: C0_through_C6_All_Cadences
+  target_stage: Stage_2_and_Stage_3_Unified_State
+  inputs_and_units:
+    ensemble_forecast_Ef: float64[3, 312, 64] (3 DMA regimes x 312 state dims x 64 ensemble members)
+    observation_vector_d: float64[m] (cadence observation vector, mixed canonical units)
+    obs_error_cov_R: float64[m, m] (observation noise covariance)
+    dma_prior_weights_pi: float64[3] (regime probabilities summing to 1)
+  closed_form_equation: 'X_f_k = (E_f_k - mean(E_f_k)) / sqrt(lambda_k * 63); Y_f_k = (h(E_f_k) - mean(h(E_f_k)))
+    / sqrt(lambda_k * 63); U_k, Gamma_k, _ = svd(I_64 + Y_f_k^T * inv(R) * Y_f_k); Theta_bar_a_k = mean(E_f_k)
+    + X_f_k * (U_k * inv(Gamma_k) * U_k^T) * Y_f_k^T * inv(R) * (d - mean(h(E_f_k))); E_a_k = Theta_bar_a_k +
+    sqrt(63) * X_f_k * (U_k * Gamma_k^(-0.5) * U_k^T); pi_post_k = (pi_prev_k^alpha * N(d; mean(h(E_f_k)), Y_f_k*Y_f_k^T
+    + R)) / Z_norm
+
+    '
+  prior_hyperparameters:
+    ensemble_size_K: 64
+    dma_forgetting_lambdas:
+    - 0.995
+    - 0.96
+    - 0.9
+    dma_model_alpha: 0.96
+    gaspari_cohn_radius: 1.0
+  clamp_bounds:
+    dma_regime_weight:
+    - 0.01
+    - 0.98
+    svd_eigenvalue_floor:
+    - 1.0
+    - 1.0e6
+    innovation_mahalanobis_clip:
+    - 0.0
+    - 5.0
+  computational_complexity: O(K_DMA * (64^3 + m * 64^2 + 312 * 64^2)) (~0.38 ms per cadence tick)
+  overfit_failure_modes:
+  - Unlocalized 64-member sample covariance creating spurious cross-talk between weather states and referee states.
+  - Single-filter high forgetting factor chasing 3-play variance as a permanent team-strength shift.
+  property_invariants:
+  - 'psd_covariance_preservation: min_eig(Gamma_k) >= 1.0'
+  - 'zero_split_brain: Readout_Props(Theta_t)_sum == Readout_Team(Theta_t)'
+  - 'dma_simplex: abs(sum_k pi_post_k - 1.0) < 1.0e-12'
+- kernel_id: K06_CATALYTIC_DEBIASED_EP_WP_AL_ROUNDING
+  pillar: Pillar_1_and_Pillar_4_Foundational_Value
+  cadence: C1_C2_C3_C4_C5_C6
+  target_stage: Stage_3_State_Value_Spine
+  inputs_and_units:
+    game_state_x: float64[10] (down, continuous_ydstogo, yardline_100, sec_rem, score_diff, timeouts, regime_2026)
+    unit_quality_theta: float64[2] (pre-game offensive and defensive EPA/play ratings)
+    catalytic_gam_probs: float64[M, 7] (smooth monotonic next-score multinomial prior)
+  closed_form_equation: "L_cat(theta) = -sum_{e=1}^E (1/N_e)*sum_{i in e} log P_theta(y_e | x_i, theta_off, theta_def)\n\
+    \               - (tau_cat/M)*sum_{m=1}^M sum_{k=1}^7 f_smooth_k(x_tilde_m)*log P_theta(k | x_tilde_m, 0,\
+    \ 0);\nEP_0(x) = sum_{k=1}^7 v_pts_k * P_theta(k | x, 0, 0); P_int(Y = k | mu, sigma, kappa) = integral_0^1\
+    \ [F_AL(k + 1 - u) - F_AL(k - u)] du\n"
+  prior_hyperparameters:
+    next_score_values_v:
+    - 7.0
+    - 3.0
+    - 2.0
+    - 0.0
+    - -2.0
+    - -3.0
+    - -7.0
+    catalytic_weight_ratio: 0.15
+    cluster_bootstrap_B: 250
+    effective_sample_deflator: 0.5
+  clamp_bounds:
+    ep_range_pts:
+    - -6.5
+    - 6.95
+    wp_range_prob:
+    - 0.0005
+    - 0.9995
+    al_skew_kappa:
+    - 0.35
+    - 2.85
+  computational_complexity: O(1) LUT/GAM-distilled inference (<0.05 ms per play state)
+  overfit_failure_modes:
+  - Unweighted play-level XGBoost fitting elite offensive selection bias into baseline EP.
+  - Naive play-level i.i.d. bootstrap underestimating WP confidence interval width by ~40%.
+  property_invariants:
+  - 'yardline_monotonicity: dEP_0/d(yardline_100) <= 0 for fixed down and ydstogo'
+  - 'down_monotonicity: EP_0(down=1) >= EP_0(down=2) >= EP_0(down=3) >= EP_0(down=4)'
+  - 'zero_sum_symmetry: WP(Home, state) + WP(Away, mirror_state) == 1.0'
+- kernel_id: K07_FWL_PALEOLOGO_PID_ORTHOGONALIZER
+  pillar: Cross_Pillar_Synthesis
+  cadence: C1_Noon_and_C1_T90m
+  target_stage: Stage_2_Orthogonal_Feature_Fusion
+  inputs_and_units:
+    raw_pillar_matrix_X: float64[N, P] (5-pillar shrunken signals)
+    market_basis_M: float64[N, 5] (intercept, mu_mkt, sigma_mkt, skew_mkt, steam_delta)
+    residual_target_y: float64[N] (realized outcome minus mu_mkt)
+  closed_form_equation: 'X_tilde = X - M * inv(M^T * M + lambda_M * I_5) * (M^T * X); V, Lambda = eigh((1/N) *
+    X_tilde^T * X_tilde); Lambda_MP = clip_marchenko_pastur(Lambda, q = P / N); Z_orth = X_tilde * V * diag(Lambda_MP^(-0.5))
+    * V^T; S_PID(a, b) = I(y; Z_a, Z_b, Phi_ab) - max(I(y; Z_a), I(y; Z_b)) - U_a - U_b; eta_BL = eta_mkt + inv(inv(tau_liq
+    * Sigma_mkt) + P^T * inv(Omega_sci) * P) * P^T * inv(Omega_sci) * Delta_eta_sci
+
+    '
+  prior_hyperparameters:
+    fwl_ridge_lambda_M: 0.001
+    pid_synergy_threshold_nats: 0.008
+    bl_liquidity_tau:
+      wed_noon: 1.0
+      fri_noon: 0.7
+      t_minus_90m: 0.35
+      close: 0.15
+  clamp_bounds:
+    mp_eigenvalue_floor:
+    - 0.05
+    - 50.0
+    max_bl_spread_shift_pts:
+    - -2.75
+    - 2.75
+    max_bl_total_shift_pts:
+    - -3.5
+    - 3.5
+  computational_complexity: O(N * P^2 + P^3) (~3.5 ms per slate)
+  overfit_failure_modes:
+  - Stacking collinear weather, trench, and beat-tweet features that double-count priced market consensus.
+  - First-order linear cancellation masking mutual defensive spine attrition (NE @ CHI 2026-10-22 failure).
+  property_invariants:
+  - 'market_orthogonality: max(abs(M^T * Z_orth / N)) < 1.0e-4'
+  - 'cross_pillar_orthonormality: max(abs(Z_orth^T * Z_orth / N - I_P)) < 1.0e-5'
+  - 'non_negative_pid_atoms: R >= 0 and U_a >= 0 and U_b >= 0 and S_PID >= 0'
+- kernel_id: K08_COX_WEIBULL_MULTIPLICATIVE_TRENCH_HAZARD
+  pillar: Pillar_4_Trench_Physics
+  cadence: C1_PreKickoff_and_C4_C5_Live
+  target_stage: Stage_2_and_Stage_3_Dropback_Survival
+  inputs_and_units:
+    rusher_strain_shrunk: float64[5] (s^-1, chip-adjusted multilevel pass-rush STRAIN)
+    blocker_clipp_eps: float64[5] (EPA/snap saved, AIPW + MMD balanced OL rating)
+    chip_indicators: float64[5] (probability/indicator of RB/TE chip help in [0,1])
+    qb_ttt_params: float64[2] (log-normal mu_TTT and sigma_TTT in log-seconds)
+    disguise_dkl: float64 (nats, post-vs-pre shell KL divergence)
+  closed_form_equation: 'eta_b = beta_str * STRAIN_b - beta_ol * CLIPP_b - beta_chip * Chip_b - beta_vor * A_vor_b;
+    H_0b(t) = (max(0.0, t - t_0) / lambda_W)^k_W * exp(eta_b); S_pocket(t) = (1.0 + theta_f * sum_{b=1}^5 H_0b(t))^(-1.0
+    / theta_f); P_press = integral_0^6 (1.0 - S_pocket(t)) * LogNormalPDF(t; mu_TTT + 0.18 * disguise_dkl, sigma_TTT)
+    dt
+
+    '
+  prior_hyperparameters:
+    weibull_shape_k: 2.35
+    weibull_scale_lambda_sec: 2.7
+    engagement_lag_t0_sec: 1.15
+    gamma_frailty_theta: 0.28
+    coefficients:
+      beta_str: 1.45
+      beta_ol: 1.3
+      beta_chip: 0.55
+      beta_vor: 0.25
+  clamp_bounds:
+    pocket_survival_S:
+    - 0.02
+    - 0.995
+    play_pressure_prob:
+    - 0.1
+    - 0.68
+    sack_given_pressure_prob:
+    - 0.06
+    - 0.42
+  computational_complexity: O(N_quad * 5) (~0.02 ms per dropback with 16-pt Gauss-Legendre)
+  overfit_failure_modes:
+  - Arithmetic averaging of 5 OL grades hiding a 0.68 weak-link backup tackle (0.890 mean vs 0.537 product).
+  - Crediting QB-fault late sacks (t > 3.2s) to offensive line pass-protection failure.
+  property_invariants:
+  - 'am_gm_weak_link_dominance: S_pocket(t; theta_f -> 0) <= (mean_b exp(-H_0b(t)))^5'
+  - 'strict_time_decay: dS_pocket/dt <= 0 for all t >= t_0'
+  - 'chip_monotonicity: S_pocket(t | Chip_b=1) >= S_pocket(t | Chip_b=0)'
+- kernel_id: K09_HURDLE_ZINB_TRUNCATED_PARETO_GAMMA_YARDS
+  pillar: Pillar_1_and_Simulation_Physics
+  cadence: C1_PreKickoff_and_C3_Live
+  target_stage: Stage_3_Player_Micro_Distributions
+  inputs_and_units:
+    zero_hurdle_pi0: float64 (pre-game zero-usage mass in [0,1])
+    mean_opportunities_mu: float64 (expected targets or carries)
+    nb_dispersion_r: float64 (Negative Binomial overdispersion shape > 0)
+    scattering_intermittency: float64 (I_scat S2/S1 ratio in [0.05, 0.85])
+    line_of_scrimmage_b: int (1..99, yards from own goal)
+  closed_form_equation: 'G_s ~ Gamma(r, 1/r); U_s ~ Bernoulli(1 - pi0) * Poisson(mu * survival_frac_s * G_s);
+    pi_exp = sigma(alpha_0 + 2.1 * I_scat + 0.35 * inv_kappa_vM - 0.45 * opp_frac_tackle); M_b = max(0.1, (100
+    - b) - u_0); F_TPG(z) = (1 - (1 + xi * z / beta)^(-1/xi)) / (1 - (1 + xi * M_b / beta)^(-1/xi)) for z in [0,
+    M_b), 1.0 at M_b; Y_play = BodySkewNorm([-8, u_0]) w.p. (1 - pi_exp) else (u_0 + Sample_TPG(xi, beta, M_b))
+
+    '
+  prior_hyperparameters:
+    splice_threshold_u0_yds:
+      pass_catch: 18.0
+      rush_carry: 12.0
+    gpd_tail_xi:
+      WR: 0.21
+      RB: 0.16
+      TE: 0.13
+    rz_td_vmr_floor: 1.82
+  clamp_bounds:
+    nb_dispersion_r:
+    - 0.8
+    - 12.0
+    explosive_prob_pi_exp:
+    - 0.01
+    - 0.32
+    single_play_yards:
+    - -15.0
+    - 99.0
+  computational_complexity: O(1) per simulated touch/reception
+  overfit_failure_modes:
+  - Poisson count assumption underestimating red-zone TD variance (empirical VMR 1.82-1.92).
+  - Unbounded Pareto/LogNormal sampling producing 140-yard single plays and 340+ DFS team scores.
+  property_invariants:
+  - 'field_boundary_exactness: Y_play <= 100 - b on 100% of simulated snaps'
+  - 'overdispersion_respected: Var(U) / E[U] >= 1.0 + E[U] / r'
+  - 'jensen_preservation: P(sum Y > L) evaluated on full sample paths, never Phi((L - E[Y])/sd)'
+- kernel_id: K10_DYNAMIC_KICKOFF_2026_REGIME_AUTOMATON
+  pillar: Pillar_4_and_Rulebook_2026
+  cadence: C1_PreKickoff_and_C2_SpecialTeams
+  target_stage: Stage_3_Drive_Initialization
+  inputs_and_units:
+    kick_line_yard: int (35 standard, 50 after scoring-play penalty)
+    rk4_carry_delta_yds: float64 (aerodynamic carry shift vs dome, yards)
+    kicker_hang_directional_skill: float64[2] (hang-time z-score, landing-zone placement precision)
+    return_unit_epa_rating: float64 (opponent returner von Mises + blocking rating)
+  closed_form_equation: "p_zones = Softmax(W_ko * [I(kick_line==50), rk4_carry_delta, skill_hang, skill_dir]);\
+    \ start_yd = 35 if (zone == FLY_EZ and kick_line == 35)\n           else 20 if (zone == BOUNCE_EZ or (zone\
+    \ == FLY_EZ and kick_line == 50))\n           else 40 if (zone == SHORT_OF_20_OR_OOB)\n           else clip(X_land\
+    \ + SampleReturnYds(return_unit_epa), 1, 100)\n"
+  prior_hyperparameters:
+    empirical_2025_2026_return_rate: 0.745
+    empirical_2025_2026_non_onside_tb_rate: 0.211
+    median_return_spot_yd: 29.0
+    setup_restraining_line_players: 5
+  clamp_bounds:
+    fly_touchback_prob:
+    - 0.03
+    - 0.65
+    penalty_oob_prob:
+    - 0.01
+    - 0.12
+    resulting_yardline_own:
+    - 1
+    - 100
+  computational_complexity: O(1) per kickoff event (<0.01 ms)
+  overfit_failure_modes:
+  - Pooling 2023 fair-catch (74.1% TB at 25) or 2024 trial (30-yd TB) data into 2026 drive starts.
+  - Spotting 2026 50-yard midfield penalty OOB kicks at the 25 instead of the 40 (Rule 6-1-5).
+  property_invariants:
+  - 'rule_6_1_5_compliance: Kickoff(line=50, zone=OOB) == Own_40 and Kickoff(line=50, zone=TB) == Own_20'
+  - 'zone_simplex: abs(sum(p_zones) - 1.0) < 1.0e-12'
+- kernel_id: K11_RULE4_ENDGAME_KNEELDOWN_CHECKDOWN_AUTOMATON
+  pillar: Pillar_5_Game_Control_and_Rulebook
+  cadence: C1_PreKickoff_and_C3_C6_Endgame
+  target_stage: Stage_3_Semi_Markov_Clock_and_Props
+  inputs_and_units:
+    score_diff_off: int (offensive score minus defensive score)
+    sec_remaining_qtr: float64 (seconds in [0, 900])
+    quarter: int (1..5, where 5 = 10-min dual-possession OT)
+    def_timeouts: int (0..3)
+    down: int (1..4)
+    qb_pre_kneel_rush_yds: float64 (accumulated QB rushing yards)
+  closed_form_equation: "can_kill = (quarter == 4) and (1 <= score_diff_off <= 16) and (def_timeouts == 0)\n \
+    \          and (sec_remaining_qtr <= 40.0 * (4 - down) + 1.8 * (4 - down));\nK_kneels = min(4 - down, ceil(sec_remaining_qtr\
+    \ / 41.0)) if can_kill else 0; Y_qb_rush_final = qb_pre_kneel_rush_yds - sum_{k=1}^{K_kneels} Categorical({1.0:\
+    \ 0.80, 2.0: 0.20}); p_scramble_2min = min(0.02, 0.18 * p_scramble_base) if (quarter == 4 and -8 <= score_diff_off\
+    \ <= -1 and sec_remaining_qtr <= 120) else p_scramble_base\n"
+  prior_hyperparameters:
+    mean_yds_per_kneel: -1.2
+    two_min_warning_sec: 120.0
+    ot_cap_sec_reg_season: 600.0
+    hook_guard_band_yds: 2.2
+  clamp_bounds:
+    kneels_per_drive:
+    - 0
+    - 3
+    two_min_scramble_prob:
+    - 0.002
+    - 0.025
+    play_clock_bleed_4min:
+    - 34.0
+    - 40.0
+  computational_complexity: O(1) per snap transition
+  overfit_failure_modes:
+  - Continuous QB rushing prop fits missing the -2.4 to -3.6 yd victory kneeldown deduction (Williams 18 vs 19.5,
+    Maye 26 vs 27.5).
+  - Applying single-possession sudden-death OT instead of 2025-2026 dual-possession 10-minute OT.
+  property_invariants:
+  - 'two_minute_trap: if T_pre > 120 and T_post <= 120 in Q2/Q4 then post_play_bleed == 0.0'
+  - 'kneel_stat_accounting: each kneel increments QB_rush_att by +1 and decrements QB_rush_yds by 1..2'
+  - 'dual_possession_ot: Team_2_possesses == True after Team_1 opening TD if OT_clock > 0'
+- kernel_id: K12_QB2_BACKUP_TOPOLOGY_SHIFT
+  pillar: Pillar_5_and_Causal_Topology
+  cadence: C1_Noon_and_C1_T90m_and_C3_Live
+  target_stage: Stage_2_Team_and_Target_Topology
+  inputs_and_units:
+    qb1_vector: float64[5] (epa_db, adot_yds, ttt_sec, sack_fault, proe)
+    qb2_empirical_vector: float64[5] (career observed metrics)
+    qb2_career_dropbacks_n: int (sample size >= 0)
+    qb2_archetype_prior: float64[5] (GameManager_Vet, Scramble_Rookie, or Gunslinger)
+  closed_form_equation: 'w_qb2 = n / (n + 160.0); theta_qb2 = w_qb2 * qb2_empirical_vector + (1.0 - w_qb2) * qb2_archetype_prior;
+    Delta = theta_qb2 - qb1_vector; b_depth_new = Softmax(log(b_depth_0) + gamma_depth * Delta_adot); r_RB_new
+    = r_RB_0 + clip(-0.022 * Delta_adot, 0.015, 0.055); r_TE_new = r_TE_0 + clip(-0.018 * Delta_adot, 0.010, 0.045)
+
+    '
+  prior_hyperparameters:
+    shrinkage_dropbacks_k: 160.0
+    gamemanager_prior_deltas:
+      epa_db: -0.18
+      adot_yds: -1.45
+      ttt_sec: 0.21
+      sack_mult: 1.36
+      int_mult: 1.42
+      proe_pct: -4.2
+  clamp_bounds:
+    adot_qb2_yds:
+    - 5.2
+    - 10.5
+    proe_shift_pct:
+    - -8.5
+    - 2.0
+    sack_fault_multiplier:
+    - 0.9
+    - 1.85
+  computational_complexity: O(1) topology update followed by O(K) Sinkhorn renormalization
+  overfit_failure_modes:
+  - Extrapolating a 5-to-40 dropback backup stint (+0.38 EPA/db) without 160-dropback shrinkage.
+  - Cutting QB passing yards for QB2 while leaving deep-boundary X-receiver target/air-yard shares unchanged.
+  property_invariants:
+  - 'band_simplex: abs(sum(b_depth_new) - 1.0) < 1.0e-12'
+  - 'shrinkage_zero_sample_limit: theta_qb2(n=0) == qb2_archetype_prior'
+- kernel_id: K13_REGIME_FACTOR_RVINE_SGP_COPULA
+  pillar: Derivative_Copula_Engine
+  cadence: C1_PreKickoff_and_C3_Live
+  target_stage: Stage_4_Correlated_SGP_Pricing
+  inputs_and_units:
+    marginal_pit_bounds_U: float64[5, d, 2] (lower/upper PIT bounds per leg across 5 game regimes)
+    regime_probs_pi: float64[5] (Entropic-Tilted probabilities of Shootout, Neutral, BlowoutH/A, Grind)
+    raw_kendall_corr_A: float64[d, d] (empirical latent correlation matrix, 2 <= d <= 6)
+  closed_form_equation: 'Sigma_PSD = HighamAlternatingProjections(A, eig_floor=1.0e-5); c_mix(u) = sum_{r=1}^5
+    pi_r * integral_0^1 (prod_{j=1}^d c_{j,V0}^{(r)}(u_j, v0)) * c_RVine^{(r)}(F_{1|v0}^{(r)}, ..., F_{d|v0}^{(r)})
+    dv0; P_joint = clip(IntegrateSubCube(c_mix, U), max(0.0, sum_j p_j - (d - 1)), min_j p_j)
+
+    '
+  prior_hyperparameters:
+    student_t_df_nu: 4.0
+    shootout_gumbel_theta_prior: 1.45
+    grind_clayton_theta_prior: 0.65
+    quadrature_nodes_v0: 21
+  clamp_bounds:
+    pair_copula_rho:
+    - -0.88
+    - 0.88
+    gumbel_theta:
+    - 1.001
+    - 4.0
+    clayton_theta:
+    - 0.01
+    - 4.5
+    higham_min_eigenvalue: 1.0e-05
+  computational_complexity: O(5 * 21 * d^2) (~0.9 ms per 6-leg SGP)
+  overfit_failure_modes:
+  - Gaussian copula tail blindness (lambda_U = 0) underpricing 4-leg shootout/OT stacks by 25%-45%.
+  - Point-PIT evaluation on discrete TD counts creating artificial rank-tie correlation bias.
+  property_invariants:
+  - 'frechet_hoeffding_bounds: max(0, sum(p) - d + 1) <= P_joint <= min(p)'
+  - 'psd_guarantee: min_eig(Sigma_PSD) >= 1.0e-5 and all(diag(Sigma_PSD) == 1.0)'
+  - 'subset_monotonicity: P_joint(E_1..E_d) <= P_joint(E_1..E_{d-1})'
+- kernel_id: K14_BIOMECH_RTP_DECAY_EARLY_EXIT_HAZARD
+  pillar: Pillar_4_Sports_Medicine_Biomechanics
+  cadence: C1_Noon_and_C1_T90m
+  target_stage: Stage_2_and_Stage_3_Availability_Hazard
+  inputs_and_units:
+    injury_cohort_d: enum (HighAnkle, Hamstring_G12, TurfToe, RibAC, Concussion)
+    weeks_since_return_w: int (1, 2, ...)
+    weeks_missed_m: float64 (weeks absent prior to return)
+    is_synthetic_turf: bool (True if slit-film/monofilament turf >= 225 N*m torque)
+    planned_snaps_N: int (1..85)
+  closed_form_equation: 'phi_eff(w) = 1.0 - delta_0d * psi_pos * exp(-lambda_rec_d * (w - 1)); tau_surf = 1.28
+    if (is_synthetic_turf and d in {HighAnkle, Hamstring_G12, TurfToe}) else 1.00; h_exit(w) = h_0_pos + Delta_h_d
+    * exp(-eta_d * (w - 1)) * (1.0 + 0.35 * I(m < m_norm_d)) * tau_surf; P(K_exit = k) = (1.0 - h_exit(w))^(k
+    - 1) * h_exit(w) for k = 1..N
+
+    '
+  prior_hyperparameters:
+    delta_0_yac_priors:
+      HighAnkle: 0.22
+      Hamstring_G12: 0.15
+      TurfToe: 0.24
+      RibAC: 0.11
+      Concussion: 0.08
+    delta_h_reinj_priors:
+      HighAnkle: 0.0028
+      Hamstring_G12: 0.0042
+      TurfToe: 0.0031
+      RibAC: 0.0024
+      Concussion: 0.0015
+    half_life_games_priors:
+      HighAnkle: 3.2
+      Hamstring_G12: 2.1
+      TurfToe: 4.0
+      RibAC: 2.5
+      Concussion: 2.0
+  clamp_bounds:
+    efficiency_multiplier_phi:
+    - 0.5
+    - 1.0
+    per_snap_exit_hazard_h:
+    - 0.0005
+    - 0.025
+    cumulative_game_exit_prob:
+    - 0.02
+    - 0.45
+  computational_complexity: O(1) analytic geometric CDF evaluation
+  overfit_failure_modes:
+  - Treating 'Cleared / Active' Week-1 hamstring or high-ankle returnees as having normal 4-quarter floor survival.
+  - Applying turf rotational torque multipliers to upper-body rib or concussion cohorts.
+  property_invariants:
+  - 'recovery_monotonicity: phi_eff(w + 1) >= phi_eff(w) and h_exit(w + 1) <= h_exit(w)'
+  - 'survival_normalization: sum_{k=1}^N P(K_exit=k) + (1 - h_exit)^N == 1.0'
+- kernel_id: K15_DISGUISED_COVERAGE_KL_MOTION_EVALUATOR
+  pillar: Pillar_2_and_Pillar_4_Tracking
+  cadence: C1_PreKickoff_and_C4_PreSnap
+  target_stage: Stage_2_Scheme_Matchup_and_C4_Live
+  inputs_and_units:
+    pre_snap_shell_prob: float64[6] (Cover 0, 1, 2, 3, 4, 6 apparent distribution at snap)
+    post_snap_shell_prob: float64[6] (realized post-snap rotation distribution)
+    motion_class_19: int (0..19 NGS motion taxonomy)
+    qb_processing_tier: float64 (standardized veteran/starter processing z-score)
+  closed_form_equation: 'D_KL = sum_{c=1}^6 P_post[c] * log(P_post[c] / max(1.0e-4, P_pre[c])); Delta_TTT_sec
+    = gamma_ttt * D_KL * exp(-0.25 * qb_processing_tier); Delta_CPOE = gamma_cpoe * D_KL * exp(-0.35 * qb_processing_tier)
+
+    '
+  prior_hyperparameters:
+    league_motion_rate_2026: 0.4438
+    gamma_ttt_sec_per_nat_prior: 0.18
+    gamma_cpoe_per_nat_prior: -0.024
+  clamp_bounds:
+    disguise_dkl_nats:
+    - 0.0
+    - 2.5
+    delta_ttt_sec:
+    - 0.0
+    - 0.55
+    delta_cpoe:
+    - -0.085
+    - 0.0
+  computational_complexity: O(6) per play (<0.005 ms after transformer forward pass)
+  overfit_failure_modes:
+  - Matching static post-snap Cover-3 rates without capturing two-high-to-single-high disguise rotation.
+  property_invariants:
+  - 'gibbs_non_negativity: D_KL >= 0.0 and (D_KL == 0.0 iff P_post == P_pre)'
+  - 'motion_information_reduction: E[D_KL | Motion_Shift] <= E[D_KL | Static_PreSnap]'
+- kernel_id: K16_RK4_PROLATE_AERODYNAMICS_HUMID_DENSITY
+  pillar: Pillar_4_Stadium_Physics
+  cadence: C1_Noon_and_C1_T90m_and_C2_Drive
+  target_stage: Stage_2_Environmental_Ballistics
+  inputs_and_units:
+    temp_celsius_T: float64 (deg C)
+    rel_humidity_RH: float64 (fraction in [0, 1])
+    elevation_m_h: float64 (stadium altitude in meters)
+    wind_vec_3d_w: float64[3] (m/s in stadium field frame)
+    launch_state_y0: float64[6] (r0 in m, v0 in m/s)
+    spin_vec_Omega: float64[3] (rad/s)
+  closed_form_equation: 'P_h = 101325.0 * (1.0 - 0.0065 * h / 288.15)^5.25588; e_sat = 611.21 * exp((18.678 -
+    T/234.5) * T / (257.14 + T)) if T >= 0 else 611.15 * exp((23.036 - T/333.7) * T / (279.82 + T)); rho = (P_h
+    - RH * e_sat) / (287.058 * (T + 273.15)) + (RH * e_sat) / (461.495 * (T + 273.15)); C_D(psi) = C_D0 + (C_D90
+    - C_D0) * sin(psi)^2; dv/dt = g - (0.5 * rho * A * C_D(psi) / m) * norm(v_rel) * v_rel + (C_L * pi * rho *
+    a^3 / m) * cross(Omega, v_rel); y_{n+1} = RK4_Step(y_n, dt=0.01)
+
+    '
+  prior_hyperparameters:
+    ball_mass_kg: 0.415
+    ref_area_m2: 0.0233
+    drag_spiral_CD0: 0.19
+    drag_cross_CD90: 0.76
+    dome_ref_rho: 1.1923
+  clamp_bounds:
+    air_density_rho:
+    - 0.85
+    - 1.42
+    fg_carry_delta_yds:
+    - -12.0
+    - 8.0
+    lateral_drift_yds:
+    - -18.0
+    - 18.0
+  computational_complexity: O(T_flight / 0.01) (~350 RK4 steps = 0.08 ms in Cython/Numba/Rust)
+  overfit_failure_modes:
+  - Binary 'Denver altitude dummy' failing on Mexico City (2,240 m) or cold sea-level crosswinds.
+  - Modeling crosswind only as lateral push while ignoring sin^2(psi) forward-drag range collapse (-6.11 yds).
+  property_invariants:
+  - 'humidity_buoyancy_sign: d(rho)/d(RH) < 0 at fixed T and P (moist air is less dense than dry air)'
+  - 'dome_neutrality: if roof_closed then rho == 1.1923 and w == [0, 0, 0]'
+- kernel_id: K17_HAWKES_DAWID_SKENE_MARKET_ABSORPTION
+  pillar: Pillar_3_Social_Provenance
+  cadence: C1_Noon_and_C1_T90m
+  target_stage: Stage_1_Unstructured_Truth_Discovery
+  inputs_and_units:
+    post_timestamps_t: float64[N] (hours relative to kickoff)
+    author_immigrant_rates_mu: float64[N] (posts/hr primary reporting rate)
+    social_influence_alpha: float64[N, N] (follower/quote excitation matrix)
+    sharp_line_move_delta: float64 (log-odds change from t_i to t_eval)
+    expected_claim_impact: float64 (log-odds full-information move)
+  closed_form_equation: 'p_imm(i) = mu_i / (mu_i + sum_{j < i} alpha_{i,j} * beta_s * exp(-beta_s * (t_i - t_j))
+    * cos_sim(e_i, e_j)); A_mkt(i) = exp(-kappa_abs * max(0.0, t_eval - t_i)) * clip(1.0 - dot(delta_line, delta_exp)
+    / (norm(delta_exp)^2 + 1e-6), 0.0, 1.0); log_P(Z_c = k) = log(nu_k) + sum_{i=1}^N p_imm(i) * A_mkt(i) * log(Pi^{(u_i)}[k,
+    Y_i]) - log_Z
+
+    '
+  prior_hyperparameters:
+    hawkes_decay_half_life_min: 15.0
+    liquid_mkt_half_life_min_prior: 25.0
+    overnight_mkt_half_life_min_prior: 95.0
+    ds_prior_diag_boost: 3.0
+  clamp_bounds:
+    immigrant_prob_p_imm:
+    - 0.0001
+    - 1.0
+    absorption_weight_A_mkt:
+    - 0.0
+    - 1.0
+    effective_sample_size_N_eff:
+    - 0.0
+    - 15.0
+  computational_complexity: O(N^2 + N * K) (~0.3 ms per rumor cluster of N <= 250 posts)
+  overfit_failure_modes:
+  - Counting 200 quote-tweets of 1 rumor as N=200 independent signals, causing posterior overconfidence.
+  - Betting Friday Noon on a Tuesday 2:00 PM injury tweet that is already 100% absorbed into the spread.
+  property_invariants:
+  - 'echo_collapse: if alpha_{i,1} >> mu_i for all i >= 2 then sum_i p_imm(i) <= 1.05'
+  - 'full_absorption_null: if A_mkt(i) == 0 for all i then P(Z_c | Y) == nu_prior'
+- kernel_id: K18_ZERO_DRIFT_VLM_ASSERTION_GATE
+  pillar: Pillar_2_Visual_Charting
+  cadence: C1_Weekly_Ingestion
+  target_stage: Stage_0_Multimodal_Ingestion_Firewall
+  inputs_and_units:
+    vlm_pass1_deplot: float64[32, C] (extracted 32-team table from DePlot)
+    vlm_pass2_json: float64[32, C] (extracted 32-team table from secondary VLM)
+    ref_prior_params: dict (Beta alpha_0, beta_0 or Gaussian mu_0, sigma_0)
+    canonical_db_anchor: float64[32] (internal FTN/nflverse anchor vector)
+  closed_form_equation: 's_star = argmin_{s in {1, 100}} W_1(F_hat(X / s), F_ref); pass_scale = (D_KS(X / s_star,
+    F_ref) < 0.338) and (W_1(X / s_star) < 0.10 * W_1(X / s_other)); X_canon = CenteringClassifier(X / s_star,
+    mu_0, sigma_0); pass_simplex = max_t abs(sum_c X_canon[t, c] - 1.0) <= 0.020; pass_polarity = SpearmanRho(X_canon,
+    canonical_db_anchor) >= 0.85
+
+    '
+  prior_hyperparameters:
+    ks_alpha_001_crit_n32: 0.338
+    dual_vlm_rel_tol: 0.01
+    simplex_sum_tol: 0.02
+    polarity_spearman_min: 0.85
+    canonical_32team_means_2026:
+      light_box_6_or_fewer_pct_ftn: 0.0853
+      non_stacked_box_under7_pct_ngs: 0.515
+      first_read_pct_ftn: 0.626
+      ass_score_ftn: 0.128
+  clamp_bounds:
+    normalized_rate_domain:
+    - 0.0
+    - 1.0
+    team_count_required:
+    - 32
+    - 32
+  computational_complexity: O(32 * log(32) * C) (<0.1 ms post-VLM inference)
+  overfit_failure_modes:
+  - Ingesting 8.5% as 8.5 instead of 0.085 (100x blowup).
+  - 'Treating Defense Rank #1 (lowest EPA allowed) as highest EPA allowed (sign-flip inversion).'
+  - Conflating FTN <=6-defender light_box_pct (mean 0.0853) with NGS <7-defender non-stacked box rate (mean 0.515),
+    triggering false KS quarantine or +43% centering bias.
+  property_invariants:
+  - 'deterministic_scale_quarantine: quarantine == True on [0,1] vs [0,100] mismatch for mu_0 >= 0.015'
+  - 'polarity_lock: sign(Cov(X_ingested, X_db)) > 0 strictly enforced'
+- kernel_id: K19_ROMANO_WOLF_EB_MICROSPLIT_SHRINKAGE
+  pillar: Pillar_2_Charted_Micro_Splits
+  cadence: C1_Weekly_Ingestion
+  target_stage: Stage_1_Signal_Stabilization
+  inputs_and_units:
+    observed_split_values_Y: float64[K] (raw conditional YPRR, ASS, or shell rates)
+    exposure_counts_n: float64[K] (routes run, dropbacks, or snaps)
+    active_filter_cardinalities: int[F] (search space size of post-hoc slice predicates)
+    sos_opponent_adjustments: float64[K] (multilevel opponent random effects)
+  closed_form_equation: 'M_eff = 1.0 + (prod_f C_f - 1.0) * (1.0 - rho_slice); z_defl = sign(z_obs) * max(0.0,
+    abs(z_obs) - 0.85 * sqrt(2.0 * log(M_eff))); n_eff = n / (1.0 + log(M_eff)); V_i = sigma_W^2 / max(1.0, n_eff_i);
+    B_i_plus = max(0.0, 1.0 - ((K - 3) / K) * (V_i / (V_i + tau_B^2))); theta_hat_i = mu_group + B_i_plus * (Y_defl_sos_i
+    - mu_group)
+
+    '
+  prior_hyperparameters:
+    slice_overlap_corr_rho_prior: 0.45
+    routes_50pct_rel_priors:
+      man_yprr: 185.0
+      zone_yprr: 140.0
+      ass: 110.0
+    dropbacks_50pct_rel_priors:
+      cover_shells: 90.0
+      first_read: 85.0
+      light_box: 65.0
+    canonical_priors_mu0:
+      light_box_6_or_fewer_pct_ftn: 0.0853
+      non_stacked_box_under7_pct_ngs: 0.515
+      first_read_pct_ftn: 0.626
+      ass_score_ftn: 0.128
+  clamp_bounds:
+    shrunk_yprr:
+    - 0.35
+    - 3.6
+    shrunk_ass:
+    - -0.35
+    - 0.45
+    shrinkage_factor_B:
+    - 0.0
+    - 0.95
+  computational_complexity: O(K) closed-form (~0.05 ms; O(B * K) if full bootstrap RW run)
+  overfit_failure_modes:
+  - Chasing a 14-route conditional social leaderboard ('since Week 6 vs Cover-1 excluding screens').
+  - Equal-variance James-Stein over-shrinking a 280-route WR1 identically to a 15-route WR5.
+  property_invariants:
+  - 'canonical_table_zero_penalty: if M_eff == 1.0 then z_defl == z_obs and n_eff == n'
+  - 'monotonic_precision: d(B_i_plus)/d(n_i) >= 0'
+- kernel_id: K20_NON_COMMUTATIVE_FILTRATION_CLV_GATE
+  pillar: Market_Microstructure_and_Filtration
+  cadence: C1_Noon_to_T90m_to_Close
+  target_stage: Stage_2_Martingale_Belief_Update
+  inputs_and_units:
+    eta_noon: float64 (Noon Master Lock natural parameter)
+    delta_line_sharp: float64 (sharp market move from Noon to T-90m)
+    delta_inj_causal: float64 (causal SUTVA/RTP shift from confirmed T-90m inactives/wind)
+    t_steam_utc: int64 (timestamp of primary market steam)
+    t_inact_utc: int64 (timestamp of official inactive/weather delta)
+  closed_form_equation: "alpha_priced = clip(dot(delta_line_sharp, delta_inj_causal) / (norm(delta_inj_causal)^2\
+    \ + 1e-6), 0.0, 1.0)\n               if (t_steam_utc < t_inact_utc) else 0.0;\neta_t90m = eta_noon + kappa_steam\
+    \ * delta_line_sharp + (1.0 - alpha_priced) * delta_inj_causal; E_CLV = lambda_eff * (1.0 - alpha_priced)\
+    \ * delta_inj_causal * exp(-kappa_abs * dt_exec)\n"
+  prior_hyperparameters:
+    kalman_steam_gain_kappa_prior: 0.82
+    clv_conversion_lambda_prior: 0.78
+    exec_decay_kappa_per_min_prior: 0.0277
+  clamp_bounds:
+    alpha_priced_frac:
+    - 0.0
+    - 1.0
+    max_t90m_jump_pts:
+    - -6.5
+    - 6.5
+  computational_complexity: O(1) per market (<0.002 ms)
+  overfit_failure_modes:
+  - Double-counting a T-90m inactive confirmation when sharp syndicate steam already moved the spread 3.0 pts
+    at T-150m.
+  property_invariants:
+  - 'martingale_tower_property: E[eta_close - eta_t90m | F_t90m] == 0 under full market absorption'
+  - 'non_commutativity_captured: eta_t90m(t_steam < t_inact) != eta_t90m(t_inact < t_steam)'
+- kernel_id: K21_ANTI_CANNIBALIZATION_CONFORMAL_KELLY
+  pillar: Decision_Theory_and_Risk_Control
+  cadence: C1_PreKickoff_and_C3_Live
+  target_stage: Stage_4_Ticket_Filter_and_Stake_Sizing
+  inputs_and_units:
+    prob_hat_p: float64 (calibrated posterior probability in (0,1))
+    prob_epistemic_var: float64 (posterior variance sigma_p^2)
+    ta_cqr_bounds: float64[2] ([p_L, p_U] 90% Mondrian non-exchangeable conformal interval)
+    decimal_odds_O: float64 (offered sportsbook price > 1.0)
+    fair_market_prob: float64 (Hasbrouck-Shin devigged fair probability)
+  closed_form_equation: 'humility_pass = (p_L > fair_market_prob); b = O - 1.0; mu_e = b * prob_hat_p - (1.0 -
+    prob_hat_p); S_BM = mu_e^2 / (mu_e^2 + (b + 1.0)^2 * prob_epistemic_var); w_scale = min(1.0, w_ref / max(1e-4,
+    0.5 * (p_U - p_L))); f_star = clip(0.25 * S_BM * (mu_e / b) * w_scale, 0.0, f_max) if (humility_pass and mu_e
+    > 0) else 0.0
+
+    ; shadow_kelly_fraction = f_star; live_stake_fraction = f_star if real_money_stake_cleared else 0.0'
+  prior_hyperparameters:
+    fractional_kelly_kappa: 0.25
+    ref_conformal_half_width: 0.045
+    straight_bet_f_max: 0.025
+    sgp_bet_f_max: 0.0075
+    anti_cannibal_ev_hurdle: 0.05
+  clamp_bounds:
+    stake_fraction_f:
+    - 0.0
+    - 0.025
+    bm_shrinkage_factor:
+    - 0.0
+    - 1.0
+  computational_complexity: O(1) standalone; O(d^2) pairwise anti-cannibalization scan
+  overfit_failure_modes:
+  - Plug-in Kelly overbetting noisy 80%-confidence tail projections (causing confidence-inversion drawdowns).
+  - Adaptive volatile conformal widths amplifying position size right before regime shifts.
+  property_invariants:
+  - 'humility_abstention: if p_L <= fair_market_prob then f_star == 0.0 (logged to NO_BET ledger)'
+  - 'uncertainty_zero_limit: limit_{sigma_p -> inf} f_star == 0.0'
+  - 'bankroll_freeze_guard: if not real_money_stake_cleared then live_stake_fraction == 0.0'
+- kernel_id: K22_DRO_DFS_MILP_DPP_LATESWAP_REAL_OPTION
+  pillar: Portfolio_Optimization_MILP
+  cadence: C1_Noon_Lock_and_C1_T90m_LateSwap
+  target_stage: Stage_4_DraftKings_Classic_and_Showdown_MILP
+  inputs_and_units:
+    scenario_pts_F: float64[S, K] (10,000 Entropic-Tilted DK fantasy point scenarios)
+    salaries_Sal: int[K] (DraftKings salaries, $50,000 cap)
+    dirichlet_field_own: float64[K] (Stage 4 public chalk ownership vector)
+    late_window_entropy_states: float64[W_late, K] (conditional T-90m late-game EV scenarios)
+  closed_form_equation: ROV_FLEX_j = E_omega[max_{k in RB_WR_TE_late} EV(k|omega) - max_{k in Pos_j_late} EV(k|omega)]
+    * I(t_kick_j > t_0); c_dup_j = beta_dup * log(1.0 + kappa_dup * dirichlet_field_own_j); c_dpp_prev = (1 /
+    max(1, m - 1)) * sum_{r=1}^{m-1} (Sigma_F * x_prev_r); Cash_MILP = max_x (1 - lam)*(mu^T*x - Gamma*theta -
+    sum(q)) + lam*(zeta - (1/0.20)*sum_s w_s*u_s); GPP_MILP_m = max_x sum_s w_s * (V_01 * z_{s,1} + V_1 * z_{s,2})
+    - c_dup^T * x - tau_DPP * c_dpp_prev^T * x + ROV_FLEX^T * x_FLEX
+  prior_hyperparameters:
+    salary_cap: 50000
+    classic_max_tes: 2
+    cash_cvar_beta: 0.2
+    dro_budget_Gamma: 2.5
+    dpp_ridge_delta: 0.05
+  clamp_bounds:
+    cash_max_zero_floor_prob:
+    - 0.0
+    - 0.12
+    portfolio_size_M:
+    - 1
+    - 150
+    captain_multiplier:
+    - 1.5
+    - 1.5
+  computational_complexity: O(M * MILP_BranchAndCut(K=450, S_sub=1024)) (~0.6 s per lineup in HiGHS/Gurobi)
+  overfit_failure_modes:
+  - Pairwise Hamming overlap constraints generating 150 lineups that all share the exact same QB-WR1 chalk stack.
+  - Placing a 12:00 PM RB in FLEX while locking a 3:25 PM GTD WR into a rigid WR slot.
+  - Passing raw nonlinear 1/(1 + E_dup) or log-quadratic DPP terms directly into HiGHS linear MILP instead of
+    sequential linear cuts.
+  property_invariants:
+  - 'dk_classic_legality: sum(Sal*x) <= 50000 and sum(x) == 9 and x_TE <= 2 and games >= 2'
+  - 'late_swap_dominance: ROV_FLEX_j == 0 for early games and ROV_FLEX_j >= 0 for late games'
+  - 'dpp_submodularity: marginal_log_det_gain(m+1) <= marginal_log_det_gain(m)'
+- kernel_id: K23_COACH_DECEPTION_ACTIVE_DECOY_LEDGER
+  pillar: Pillar_3_and_Pillar_5_Coaching_Linguistics
+  cadence: C1_Noon_and_C1_T90m
+  target_stage: Stage_1_and_Stage_4_Bifurcated_Routing
+  inputs_and_units:
+    ling_features_z: float64[6] (hedging, pronoun_dist, vague_pos, qa_deflect, tense_shift, latency)
+    practice_seq: int[3] (Wed/Thu/Fri DNP=0, LP=1, FP=2)
+    official_tag: enum (None, Questionable, Doubtful)
+    viral_hype_vector: float64[4] (raw social views, tout consensus, ADP delta, last_wk_pts)
+  closed_form_equation: 'D_coach = sigma(alpha_0 + alpha_coach_c + dot(theta_ling, ling_features_z)); R_g_next
+    = clip(R_g * exp(-0.25 * ((p_hat_g - y_real)^2 - B_0)), 0.05, 2.50); pi_regimes = Softmax(W_decoy * [D_coach,
+    practice_seq, I_tag_Q, I_alpha_WR]); f_snap(s) = pi_exit*Beta(s; 1.3, 8.5) + pi_decoy*Beta(s; 4.2, 3.8) +
+    pi_full*Beta(s; a_0, b_0); alpha_DFS_own = kappa_DFS * Softmax(beta_val * Val + dot(beta_chalk, viral_hype_vector))
+
+    '
+  prior_hyperparameters:
+    decoy_tprr_haircut_prior: 0.48
+    brier_learning_rate_eta: 0.25
+    dfs_dirichlet_kappa_gpp_prior: 85.0
+  clamp_bounds:
+    coach_deception_D:
+    - 0.05
+    - 0.95
+    source_reputation_R:
+    - 0.05
+    - 2.5
+    decoy_regime_prob:
+    - 0.01
+    - 0.65
+  computational_complexity: O(1) per active questionable player (<0.02 ms)
+  overfit_failure_modes:
+  - Taking Tuesday coach praise ('he looks great') at face value when Friday practice is LP and hedging modals
+    spike.
+  - Allowing FantasyPros/viral hype to leak into Stage 1-3 true stat means.
+  property_invariants:
+  - 'strict_ownership_firewall: norm(d(Theta_true) / d(viral_hype_vector)) == 0.0'
+  - 'proper_scoring_incentive: E[log(R_g_next / R_g)] maximized iff source reports calibrated true probabilities'
+- kernel_id: K24_REFEREE_CREW_GLMM_HIDDEN_DPI_YARDAGE
+  pillar: Pillar_4_Officiating_Microstructure
+  cadence: C1_Weekly_and_C2_C3_Live
+  target_stage: Stage_2_and_Stage_3_Penalty_Transition
+  inputs_and_units:
+    crew_id_c: int (1..17 named NFL officiating crew)
+    stadium_crowd_db: float64 (dB acoustic baseline, ~70 dome/open to 108 loud)
+    target_air_yards_a: float64 (yards downfield)
+    trench_mismatch_delta: float64 (edge STRAIN minus tackle CLIPP)
+  closed_form_equation: 'logit(pi_m) = mu_m + u_cm + gamma_home_m * Home_def * ((CrowddB - 85.0)/10.0) + dot(x_p,
+    beta_m) + eta_style_m; Delta_EP_DPI = pi_DPI(a) * (EP_0(1, 10, min(99, b + a)) - EP_0(next_down, b)) * I(a
+    >= 15.0); Stat_Pass_Yds_DPI = 0.0; P_clean_sack_vs_hold = (1.0 - pi_OffHold) * P_edge_win
+
+    '
+  prior_hyperparameters:
+    league_accepted_flags_game: 12.5
+    crew_shrinkage_games_k: 14.0
+    dpi_air_yard_threshold: 15.0
+  clamp_bounds:
+    crew_random_effect_u:
+    - -0.45
+    - 0.45
+    dpi_per_deep_target_prob:
+    - 0.02
+    - 0.19
+    crew_pace_delta_sec:
+    - -1.8
+    - 1.8
+  computational_complexity: O(5) per play (<0.005 ms)
+  overfit_failure_modes:
+  - Crediting spot-foul DPI hidden yardage to QB passing or WR receiving yardage props (violating NFL Rule 8-5).
+  - Using Week 1-2 unshrunk crew flag counts as permanent crew personalities.
+  property_invariants:
+  - 'rule_8_5_zero_stat: Stat_Pass_Yds_DPI == 0.0 and Stat_Rec_Yds_DPI == 0.0 while Team_Drive_Yardline += a'
+  - 'three_strikes_tracking: HipDrop/Safety foul increments seasonal player suspension counter'
+- kernel_id: K25_SHAPLEY_SOBOL_AIPW_EPROCESS_PROMOTER
+  pillar: Autonomous_Critic_and_Evolutionary_Gate
+  cadence: C0_Weekly_Tuesday_Autopsy
+  target_stage: Stage_5_Self_Healing_and_Model_Promotion
+  inputs_and_units:
+    coalition_values_v_AIPW: float64[16] (AIPW counterfactual outputs over 2^4 factor subsets)
+    slate_crps_diffs_X: float64[T] (bounded normalized CRPS/log-loss gains in [-1, 1])
+    active_candidates_M: int (number of parallel MAP-Elites candidates)
+  closed_form_equation: 'Delta_k = (1/4) * sum_{S subset D\{k}} (binomial(3, len(S)))^(-1) * (v_AIPW(S U {k})
+    - v_AIPW(S)); R_tilde_critic = Delta_usage + Delta_script + Delta_scheme + 0.0 * Delta_luck; lambda_t = clip(mu_hat_{t-1}
+    / (sigma_hat_{t-1}^2 + mu_hat_{t-1}^2 + 0.25/t), 0.0, 0.50); W_t = W_{t-1} * (1.0 + lambda_t * X_t); Promote_Candidate
+    = (W_t >= 20.0 * M_active) and (ECE_Mondrian <= 0.025)
+
+    '
+  prior_hyperparameters:
+    alpha_type1_error: 0.05
+    wealth_threshold_single: 20.0
+    max_betting_fraction_c: 0.5
+    map_elites_islands: 5
+    ring_migration_slates: 4
+  clamp_bounds:
+    normalized_loss_diff_X:
+    - -1.0
+    - 1.0
+    predictable_bet_lambda:
+    - 0.0
+    - 0.5
+    luck_learning_weight:
+    - 0.0
+    - 0.0
+  computational_complexity: O(16) exact Shapley per player/game; O(1) online martingale wealth update
+  overfit_failure_modes:
+  - Order-dependent residual subtraction misattributing overtime pace spikes to WR efficiency.
+  - Updating pre-game weights on tipped-pass INTs or fumble bounces (chasing boxscore noise).
+  - Fixed-horizon p-value peeking across 50 evolutionary candidates inflating false promotion rate above 50%.
+  property_invariants:
+  - 'shapley_efficiency_exactness: abs((Delta_usage + Delta_script + Delta_scheme + Delta_luck) - (Y_actual -
+    Y_proj)) < 1.0e-9'
+  - 'zero_luck_gradient: d(w_next)/d(Delta_luck) == 0.0'
+  - 'ville_anytime_validity: P_H0(exists t >= 1 : W_t >= 1/alpha) <= alpha'

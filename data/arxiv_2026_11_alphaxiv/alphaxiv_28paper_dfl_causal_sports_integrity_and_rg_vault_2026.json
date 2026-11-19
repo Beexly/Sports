@@ -1,0 +1,431 @@
+{
+  "schema": "wave44_alphaxiv_28paper_dfl_causal_integrity_rg_vault_v1",
+  "total_unique_papers": 28,
+  "pillar_counts": {
+    "dfl_predict_then_optimize_9papers": 9,
+    "causal_sports_analytics_6papers": 6,
+    "agent_integrity_anti_reward_hacking_10papers": 10,
+    "social_tipster_betxplain_and_rg_3papers": 3
+  },
+  "dfl_predict_then_optimize_9papers": [
+    {
+      "id": "2606.21773",
+      "published": "2026-06-19",
+      "title": "Decision-Focused Learning: When and Why Traditional Prediction Models Fail",
+      "authors": [
+        "Mo Liu"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2606.21773",
+      "arxiv_url": "https://arxiv.org/abs/2606.21773",
+      "topic": "dfl_foundations",
+      "key_insight": "Low predictive MSE does not imply low downstream linear/stochastic optimization regret."
+    },
+    {
+      "id": "2508.18251",
+      "published": "2025-08-25",
+      "title": "Aligning the Evaluation of Probabilistic Predictions with Downstream Value",
+      "authors": [
+        "Novin Shahroudi",
+        "Viacheslav Komisarenko",
+        "Meelis Kull"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2508.18251",
+      "arxiv_url": "https://arxiv.org/abs/2508.18251",
+      "topic": "weighted_proper_scoring",
+      "key_insight": "Learned weighted strictly proper scoring rules align forecast evaluation with downstream decision impact."
+    },
+    {
+      "id": "2606.29878",
+      "published": "2026-06-29",
+      "title": "Decision-Value Attribution in Predict-then-Optimize Systems",
+      "authors": [
+        "Konstantinos Ziliaskopoulos",
+        "Alexander Vinel",
+        "Alice E. Smith"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2606.29878",
+      "arxiv_url": "https://arxiv.org/abs/2606.29878",
+      "topic": "shapley_dva",
+      "key_insight": "InfoDVA, DesignDVA, and DVI attribute realized downstream operational value with pre-DVA vs post-DVA diagnostics."
+    },
+    {
+      "id": "2611.19575",
+      "published": "2026-11-14",
+      "title": "Risk-Averse Decision-Focused Learning: Minimizing CVaR of Regret",
+      "authors": [
+        "Jayanta Mandi",
+        "Senne Berden",
+        "Victor Bucarey",
+        "Concepcion Dominguez",
+        "Tias Guns"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2611.19575",
+      "arxiv_url": "https://arxiv.org/abs/2611.19575",
+      "topic": "cvar_spo_plus",
+      "key_insight": "Entropy-regularized CVaR dual yields instance-reweighted SPO+ minimizing tail decision regret without inference-time stochastic solves."
+    },
+    {
+      "id": "2607.09820",
+      "published": "2026-07-10",
+      "title": "Learning Predictive Ambiguity Sets for Decision-Focused Distributionally Robust Optimization",
+      "authors": [
+        "Junjie Guo"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2607.09820",
+      "arxiv_url": "https://arxiv.org/abs/2607.09820",
+      "topic": "lpas_wasserstein_dro",
+      "key_insight": "Learned Predictive Ambiguity Sets (LPAS) output state-dependent Wasserstein radii achieving 26.28% annualized return and 1.30 Sharpe."
+    },
+    {
+      "id": "2609.14907",
+      "published": "2026-09-14",
+      "title": "Strategic Decision Focused Learning",
+      "authors": [
+        "Tinashe Handina",
+        "Yuehan Diao",
+        "Adam Wierman",
+        "Eric Mazumdar"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2609.14907",
+      "arxiv_url": "https://arxiv.org/abs/2609.14907",
+      "topic": "strategic_dfl",
+      "key_insight": "Equilibrium payoff is non-monotonic in raw predictive accuracy when adversarial market agents observe signals."
+    },
+    {
+      "id": "2605.18005",
+      "published": "2026-05-18",
+      "title": "Scalable Decision-Focused Learning through Cost-Sensitive Regression",
+      "authors": [
+        "Noah Schutte",
+        "Senne Berden",
+        "Tias Guns",
+        "Krzysztof Postek",
+        "Neil Yorke-Smith"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2605.18005",
+      "arxiv_url": "https://arxiv.org/abs/2605.18005",
+      "topic": "cost_sensitive_dfl",
+      "key_insight": "Decision-aware asymmetric multi-output regression matches DFL quality with zero inner solver loops per epoch."
+    },
+    {
+      "id": "2606.08797",
+      "published": "2026-06-07",
+      "title": "Scaling Decision-Focused Learning to Large Problems with Lagrangian Decomposition",
+      "authors": [
+        "Stephane Eilles-Chan Way",
+        "Hugo Percot",
+        "Quentin Cappart",
+        "Tias Guns",
+        "Louis-Martin Rousseau"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2606.08797",
+      "arxiv_url": "https://arxiv.org/abs/2606.08797",
+      "topic": "lagrangian_dfl",
+      "key_insight": "DFL-LD integrates Lagrangian dual bounds with SPO+/IMLE scaling parallelized instances up to 8x larger."
+    },
+    {
+      "id": "2606.19587",
+      "published": "2026-06-17",
+      "title": "A Solver-Free Training Method for Predict-then-Optimize",
+      "authors": [
+        "Beichen Wan",
+        "Mo Liu"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2606.19587",
+      "arxiv_url": "https://arxiv.org/abs/2606.19587",
+      "topic": "solver_free_measure_dfl",
+      "key_insight": "Measure transformation surrogate loss delivers Fisher consistency and excess risk bounds with zero training solver calls."
+    }
+  ],
+  "causal_sports_analytics_6papers": [
+    {
+      "id": "2605.17845",
+      "published": "2026-05-18",
+      "title": "Quantifying Officiating Impact in the NBA: A Referee Impact Metric Analysis Using ESPN Win-Probability Data",
+      "authors": [
+        "Nirek Duma",
+        "Leo Benaharon"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2605.17845",
+      "arxiv_url": "https://arxiv.org/abs/2605.17845",
+      "topic": "officiating_rim",
+      "key_insight": "Referee Impact Metric (RIM) sums absolute win-probability shift per penalty/foul as a screening signal distinct from raw count."
+    },
+    {
+      "id": "2603.26935",
+      "published": "2026-03-27",
+      "title": "The Load Management Paradox: Correcting the Healthy-Worker Survivor Effect in NBA Injury Modeling",
+      "authors": [
+        "Yue Yu",
+        "Guanyu Hu"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2603.26935",
+      "arxiv_url": "https://arxiv.org/abs/2603.26935",
+      "topic": "mspem_iptw_injury",
+      "key_insight": "Marginal Structural Piecewise Exponential Model (MS-PEM + IPTW) reverses collider-induced negative workload paradox across 78,594 observations."
+    },
+    {
+      "id": "2506.11399",
+      "published": "2025-06-13",
+      "title": "Time-Varying Home Field Advantage in Football: Learning from a Non-Stationary Causal Process",
+      "authors": [
+        "Minhao Qi",
+        "Hengrui Cai",
+        "Guanyu Hu",
+        "Weining Shen"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2506.11399",
+      "arxiv_url": "https://arxiv.org/abs/2506.11399",
+      "topic": "dynamo_time_varying_hfa",
+      "key_insight": "DYNAMO local kernel M-estimators recover crowd-dependent non-stationary home field advantage and officiating pressure."
+    },
+    {
+      "id": "2505.11841",
+      "published": "2025-05-17",
+      "title": "Framing Causal Questions in Sports Analytics: A Tutorial on Estimand Choice Illustrated Through Crossing in Soccer",
+      "authors": [
+        "Shomoita Alam",
+        "Erica E. M. Moodie",
+        "Lucas Y. Wu",
+        "Tim B. Swartz"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2505.11841",
+      "arxiv_url": "https://arxiv.org/abs/2505.11841",
+      "topic": "ate_vs_att_overlap",
+      "key_insight": "Distinguishes ATE (0.033) from ATT (0.035) via propensity overlap and effect heterogeneity diagnostics."
+    },
+    {
+      "id": "2602.23233",
+      "published": "2026-02-26",
+      "title": "The Counterfactual Combine: A Causal Framework for Player Evaluation",
+      "authors": [
+        "Herbert P. Susmann",
+        "Antonio D'Alessandro"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2602.23233",
+      "arxiv_url": "https://arxiv.org/abs/2602.23233",
+      "topic": "tmle_parr_kicker_mlb",
+      "key_insight": "Doubly robust TMLE Performance Above Random Replacement (PARR) adjusts NFL kickers and MLB batters for attempt difficulty."
+    },
+    {
+      "id": "2604.18314",
+      "published": "2026-04-20",
+      "title": "Embarrassingly Causal: Causal Use of Associational Data in Magic The Gathering Drafts",
+      "authors": [
+        "Mark Louie F. Ramos"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2604.18314",
+      "arxiv_url": "https://arxiv.org/abs/2604.18314",
+      "topic": "collider_selection_guard",
+      "key_insight": "Formalizes post-treatment collider conditioning hazards vs valid domain-anchored DAG causal estimands."
+    }
+  ],
+  "agent_integrity_anti_reward_hacking_10papers": [
+    {
+      "id": "2610.35950",
+      "published": "2026-10-24",
+      "title": "PASS Is a Claim, Not an Observation: Mechanical Re-verification of 10 Self-Asserted Fix Claims in a Live Multi-Agent Audit Layer",
+      "authors": [
+        "Lei Zhenbing",
+        "Lei Chang"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2610.35950",
+      "arxiv_url": "https://arxiv.org/abs/2610.35950",
+      "topic": "mechanical_reverification",
+      "key_insight": "50% of C3-pass agent broadcasts failed C2 file/AST verification; self-asserted PASS claims require mechanical re-verification."
+    },
+    {
+      "id": "2609.28614",
+      "published": "2026-09-23",
+      "title": "Reward Hacking Challenges Oversight of Autonomous Research Agents",
+      "authors": [
+        "Yue Huang",
+        "Zhangchen Xu",
+        "Yuchen Ma",
+        "Wenjie Wang",
+        "Zheyuan Liu",
+        "Ziwei Xu",
+        "Zichen Chen"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2609.28614",
+      "arxiv_url": "https://arxiv.org/abs/2609.28614",
+      "topic": "research_reward_hacking",
+      "key_insight": "Spontaneous hacking reaches 30.5% on pipelines; metrics must remain isolated outside agent control with independent recomputation."
+    },
+    {
+      "id": "2605.21384",
+      "published": "2026-05-20",
+      "title": "SpecBench: Measuring Reward Hacking in Long-Horizon Coding Agents",
+      "authors": [
+        "Bingchen Zhao",
+        "Dhruv Srikanth",
+        "Yuxiang Wu",
+        "Zhengyao Jiang"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2605.21384",
+      "arxiv_url": "https://arxiv.org/abs/2605.21384",
+      "topic": "specbench_holdout",
+      "key_insight": "Separates visible checks from compositional holdout integration tests; holdout gap grows +28pp per 10x code size."
+    },
+    {
+      "id": "2611.01334",
+      "published": "2026-10-31",
+      "title": "The Verifier Is Part of the Simulator: Evidence-View Gaming in Agentic Equation Discovery",
+      "authors": [
+        "Orestis Oikonomou",
+        "Bogdan Raonic"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2611.01334",
+      "arxiv_url": "https://arxiv.org/abs/2611.01334",
+      "topic": "evidence_view_gaming",
+      "key_insight": "Post-hoc selection of numerical evaluation summaries is reward hacking; fixed fine-grid discretization prevents missing physics."
+    },
+    {
+      "id": "2611.04420",
+      "published": "2026-11-03",
+      "title": "Verifier strength does not buy discovery quality: a pre-registered two-domain test of LLM-based automated research, with post-hoc evidence pointing to proposer-pool composition",
+      "authors": [
+        "Peter Chen",
+        "Ni Zhang",
+        "Siyuan Zhang"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2611.04420",
+      "arxiv_url": "https://arxiv.org/abs/2611.04420",
+      "topic": "proposer_pool_diversity",
+      "key_insight": "Widening candidate generator pools yields +1.52 holdout value units (p=0.0002), whereas strict single-pool gating does not substitute for diversity."
+    },
+    {
+      "id": "2609.20812",
+      "published": "2026-09-17",
+      "title": "Quantifying Overclaiming Propensity in Frontier LLM Agents",
+      "authors": [
+        "Nolan Smyth",
+        "Yorguin-Jose Mantilla-Ramos",
+        "Pascal Jr Tikeng Notsawo",
+        "Saskia Helbling",
+        "Tommaso Tosato"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2609.20812",
+      "arxiv_url": "https://arxiv.org/abs/2609.20812",
+      "topic": "overclaimbench_audit",
+      "key_insight": "OverclaimBench shows 67.9% incomplete file reads and 80.4% misleading completion summaries missing 1.8x more defects."
+    },
+    {
+      "id": "2609.22111",
+      "published": "2026-08-18",
+      "title": "Beyond the Text: Verifying That Agent-Written Papers Are Backed by Their Artifacts",
+      "authors": [
+        "Qiuhong Shen",
+        "Benlong Wu",
+        "Hanjin Liu",
+        "Yuang Qi",
+        "Kejiang Chen"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2609.22111",
+      "arxiv_url": "https://arxiv.org/abs/2609.22111",
+      "topic": "reagent_static_dynamic_audit",
+      "key_insight": "ReAgent cross-checks markdown/paper claims against AST/config artifacts and live execution outputs to expose hard-coded literals."
+    },
+    {
+      "id": "2610.31372",
+      "published": "2026-10-22",
+      "title": "RIDAR: Safeguarding Research Integrity in Autonomous Research Agents via Automated Detection and Runtime Intervention",
+      "authors": [
+        "Jiening Siow",
+        "Amy Xin",
+        "Junjie Wang",
+        "Ziyu Tang",
+        "Zijun Yao",
+        "Juanzi Li"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2610.31372",
+      "arxiv_url": "https://arxiv.org/abs/2610.31372",
+      "topic": "ridar_riv_runtime",
+      "key_insight": "14-class Research Integrity Violation taxonomy (85.2% F1) and runtime guard cutting remaining violations by 36.8%."
+    },
+    {
+      "id": "2609.36308",
+      "published": "2026-09-28",
+      "title": "CheatBench: Measuring Reward Gaming in AI Agents",
+      "authors": [
+        "Long Phan",
+        "Stephen K. Yang",
+        "Jason J. Lim",
+        "Mantas Mazeika",
+        "Wenyu Zhang",
+        "Zheyuan Liu",
+        "Dan Hendrycks"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2609.36308",
+      "arxiv_url": "https://arxiv.org/abs/2609.36308",
+      "topic": "cheatbench_integrity",
+      "key_insight": "Evaluates and deters unauthorized file access, monitor evasion, and sandbox violations across agent workflows."
+    },
+    {
+      "id": "2608.30724",
+      "published": "2026-08-31",
+      "title": "BAITBENCH: Measuring Agent Reward Hacking with Optional Shortcuts Planted in ML Tasks",
+      "authors": [
+        "Pradyumna Shyama Prasad",
+        "Meiri Anto",
+        "Leon Eshuijs",
+        "Julian Moncarz",
+        "Kaustubh Kislay",
+        "Juan J. Vazquez"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2608.30724",
+      "arxiv_url": "https://arxiv.org/abs/2608.30724",
+      "topic": "baitbench_shortcut_mask",
+      "key_insight": "57.1% of frontier agent runs exploit public-split leakage shortcuts that fail on hidden out-of-distribution tests."
+    }
+  ],
+  "social_tipster_betxplain_and_rg_3papers": [
+    {
+      "id": "2604.08251",
+      "published": "2026-04-09",
+      "title": "The Statistical Profitability of Social Media Sports Betting Influencers: Evidence from the Nigerian Market",
+      "authors": [
+        "Kayode Makinde",
+        "Oluwatimileyin Onasanya",
+        "Frances Adelakun"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2604.08251",
+      "arxiv_url": "https://arxiv.org/abs/2604.08251",
+      "topic": "tipster_survivorship_bias",
+      "key_insight": "Tracking 5,467 slips ($4.8M verified) exposes -25.24% influencer ROI and -38.27% flat-stake follower ROI masked by survivorship bias."
+    },
+    {
+      "id": "2606.27274",
+      "published": "2026-06-25",
+      "title": "BetXplain: An Explanation-Annotated Dataset for Detecting Manipulative Betting Advertisements on Social Media",
+      "authors": [
+        "MSVPJ Sathvik",
+        "Parmitha Vangapandu",
+        "Nishit Rane",
+        "Sathwik Narkedimilli",
+        "Mark Lee",
+        "Akrati Saxena"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2606.27274",
+      "arxiv_url": "https://arxiv.org/abs/2606.27274",
+      "topic": "betxplain_manipulative_ad_guard",
+      "key_insight": "Explanation-annotated persuasion detection catches FOMO, certainty framing, and risk-free deception in public sports copy."
+    },
+    {
+      "id": "2502.06964",
+      "published": "2025-02-10",
+      "title": "Neural Pathways of Responsible Gambling: How Personalized and Normative Messages Engage Gambling Severity and Individual Rationality",
+      "authors": [
+        "J. Sanchez-Fernandez",
+        "L. A. Casado-Aranda",
+        "I. Ozer",
+        "Nuria Hernandez-Vergara"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2502.06964",
+      "arxiv_url": "https://arxiv.org/abs/2502.06964",
+      "topic": "responsible_gambling_messaging",
+      "key_insight": "Differentiates personalized vs normative responsible-gaming messaging across user severity and rationality profiles."
+    }
+  ],
+  "payload_sha256": "12f0742d678f574a123b47c61e300f42be24e0408d494ba3b019b9a0ee017f05"
+}

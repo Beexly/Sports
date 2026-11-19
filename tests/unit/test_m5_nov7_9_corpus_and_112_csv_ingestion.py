@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Unit & Verification Suite for Milestone M5 (Nov 7–9 Corpus Filing, 112-CSV Ingestion,
-Anti-Fabrication Invariants, and 503-Book Crosswalk Reconciliation).
+"""Unit & Verification Suite for Milestone M5.
 
-Covers:
+Covers Nov 7–9 Corpus Filing, 112-CSV Ingestion, Anti-Fabrication Invariants, and
+503-Book Crosswalk Reconciliation:
   - M5.1 (`test_m5_1_canonical_filed_research_docs_and_index`): Canonical filing of
     `INTEL-LOOP-Q52-Q54-CONSOLIDATED-2026-11-09.md`,
     `RESEARCH-CONSOLIDATION-2026-11-07-to-09.md`, and
@@ -12,10 +12,11 @@ Covers:
     and entity normalization of all 112 CSV tables (`35` Nov 7 + `39` Nov 8 + `38` Nov 9 = `112`
     tables, `1,790` data rows) across all 32 NFL teams (`ARI`..`WAS`) and Q52/Q53/Q54 shadow
     kernels in `data/mind/nov7_9_112_csv_feature_store_2026.json`.
-  - M5.2 Boundary/Anti-Fabrication (`test_m5_2_partial_rows_and_health_unresolved_anti_fabrication`):
-    Strict preservation of `PARTIAL` CSV tables/rows (`17` partial-flagged tables) and
-    `HEALTH-UNRESOLVED` injury items (`Patrick Mahomes` MRI truncated & `CLE vs NO` concussion
-    player) with `fabricated == False`.
+  - M5.2 Boundary/Anti-Fabrication
+    (`test_m5_2_partial_rows_and_health_unresolved_anti_fabrication`): Strict preservation of
+    `PARTIAL` CSV tables/rows (`17` partial-flagged tables) and `HEALTH-UNRESOLVED` injury
+    items (`Patrick Mahomes` MRI truncated & `CLE vs NO` concussion player) with
+    `fabricated == False`.
   - M5.3 (`test_m5_3_manifest_skeleton_books_and_503_book_crosswalk_reconciliation`):
     Elimination of `_(pending wave merges)_` in `MANIFEST.md`, reconciliation of the 13
     skeleton-shelf books in `SKELETON-BOOKS-2026-11-06.md`, and synchronization of
@@ -30,7 +31,7 @@ import math
 import sys
 import unittest
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
@@ -48,8 +49,8 @@ BOOK_DOMAIN_CROSSWALK_PATH = REPO_ROOT / "data" / "mind" / "book_domain_crosswal
 COMPLETE_458_BOOK_REGISTRY_PATH = REPO_ROOT / "data" / "mind" / "complete_458_book_registry.json"
 
 
-def _load_or_build_m5_feature_store() -> Dict[str, Any]:
-    """Load `data/mind/nov7_9_112_csv_feature_store_2026.json`, triggering the ingestor if needed."""
+def _load_or_build_m5_feature_store() -> dict[str, Any]:
+    """Load `nov7_9_112_csv_feature_store_2026.json`, triggering the ingestor if needed."""
     if not M5_FEATURE_STORE_PATH.is_file():
         try:
             from intelligence.ingestion import nov7_9_sweep_and_112_csv_ingestor as m5_ingestor
@@ -80,9 +81,10 @@ class TestM5Nov7To9CorpusAnd112CsvIngestion(unittest.TestCase):
     """M5 unit verification suite covering M5.1, M5.2, M5.2 anti-fabrication, and M5.3."""
 
     def test_m5_1_canonical_filed_research_docs_and_index(self) -> None:
-        """M5.1: Verify all 3 root research markdown docs are filed into their canonical
-        dated bucket folders (`docs/<bucket>/research/2026-11-09/`), indexed in `docs/INDEX.md`,
-        and have zero unbucketed copies at repo root or `docs/` root.
+        """M5.1: Verify all 3 root research markdown docs are filed canonically.
+
+        Checks dated bucket folders (`docs/<bucket>/research/2026-11-09/`), index entries in
+        `docs/INDEX.md`, and zero unbucketed copies at repo root or `docs/` root.
         """
         canonical_docs = {
             "INTEL-LOOP-Q52-Q54-CONSOLIDATED-2026-11-09.md": (
@@ -165,12 +167,20 @@ class TestM5Nov7To9CorpusAnd112CsvIngestion(unittest.TestCase):
         )
 
     def test_m5_2_all_112_csv_tables_and_entity_normalization(self) -> None:
-        """M5.2: Verify all 112 CSV tables (35 Nov 7 + 39 Nov 8 + 38 Nov 9) are deterministically
-        ingested and normalized across all 32 NFL teams and Q52/Q53/Q54 shadow kernels.
+        """M5.2: Verify all 112 CSV tables are ingested and normalized.
+
+        Checks 35 Nov 7 + 39 Nov 8 + 38 Nov 9 tables across all 32 NFL teams and
+        Q52/Q53/Q54 shadow kernels.
         """
-        csv_nov7 = sorted((REPO_ROOT / "docs" / "research" / "2026-11-07" / "full-tables").glob("*.csv"))
-        csv_nov8 = sorted((REPO_ROOT / "docs" / "research" / "2026-11-08" / "full-tables").glob("*.csv"))
-        csv_nov9 = sorted((REPO_ROOT / "docs" / "research" / "2026-11-09" / "full-tables").glob("*.csv"))
+        csv_nov7 = sorted(
+            (REPO_ROOT / "docs" / "research" / "2026-11-07" / "full-tables").glob("*.csv")
+        )
+        csv_nov8 = sorted(
+            (REPO_ROOT / "docs" / "research" / "2026-11-08" / "full-tables").glob("*.csv")
+        )
+        csv_nov9 = sorted(
+            (REPO_ROOT / "docs" / "research" / "2026-11-09" / "full-tables").glob("*.csv")
+        )
 
         self.assertEqual(len(csv_nov7), 35, f"Expected 35 Nov 7 CSVs, got {len(csv_nov7)}")
         self.assertEqual(len(csv_nov8), 39, f"Expected 39 Nov 8 CSVs, got {len(csv_nov8)}")
@@ -185,7 +195,11 @@ class TestM5Nov7To9CorpusAnd112CsvIngestion(unittest.TestCase):
                 reader = list(csv.reader(f))
                 if len(reader) > 1:
                     expected_total_rows += sum(1 for r in reader[1:] if any(c.strip() for c in r))
-        self.assertEqual(expected_total_rows, 1790, f"Expected 1,790 data rows across 112 CSVs, got {expected_total_rows}")
+        self.assertEqual(
+            expected_total_rows,
+            1790,
+            f"Expected 1,790 data rows across 112 CSVs, got {expected_total_rows}",
+        )
 
         store = _load_or_build_m5_feature_store()
         summary = store.get("summary") or store.get("ingestion_summary") or store
@@ -196,7 +210,9 @@ class TestM5Nov7To9CorpusAnd112CsvIngestion(unittest.TestCase):
             or summary.get("csv_tables_count")
             or len(store.get("tables", store.get("csv_tables", [])))
         )
-        self.assertEqual(total_tables, 112, f"Expected 112 ingested CSV tables in M5 store, got {total_tables}")
+        self.assertEqual(
+            total_tables, 112, f"Expected 112 ingested CSV tables in M5 store, got {total_tables}"
+        )
 
         date_counts = (
             summary.get("tables_by_date")
@@ -224,7 +240,11 @@ class TestM5Nov7To9CorpusAnd112CsvIngestion(unittest.TestCase):
             or store.get("teams")
             or {}
         )
-        self.assertEqual(len(teams_map), 32, f"Expected 32 NFL teams in M5 feature store, got {len(teams_map)}")
+        self.assertEqual(
+            len(teams_map),
+            32,
+            f"Expected 32 NFL teams in M5 feature store, got {len(teams_map)}",
+        )
         self.assertEqual(set(teams_map.keys()), set(NFL_32_TEAMS))
 
         for tm, feat_dict in teams_map.items():
@@ -236,7 +256,9 @@ class TestM5Nov7To9CorpusAnd112CsvIngestion(unittest.TestCase):
             )
             for k, v in feat_dict.items():
                 if isinstance(v, (int, float)) and not isinstance(v, bool):
-                    self.assertTrue(math.isfinite(float(v)), f"Non-finite feature {k} for team {tm}")
+                    self.assertTrue(
+                        math.isfinite(float(v)), f"Non-finite feature {k} for team {tm}"
+                    )
 
         # Verify Q52, Q53, Q54 Intel Loop shadow features are present
         store_json_str = json.dumps(store)
@@ -248,14 +270,20 @@ class TestM5Nov7To9CorpusAnd112CsvIngestion(unittest.TestCase):
             )
 
     def test_m5_2_partial_rows_and_health_unresolved_anti_fabrication(self) -> None:
-        """M5.2 Boundary & Corner Cases: Verify PARTIAL rows and HEALTH-UNRESOLVED items
-        are strictly preserved without fabricating or guessing missing values.
+        """M5.2 Boundary & Corner Cases: Verify PARTIAL rows and HEALTH-UNRESOLVED items.
+
+        Ensures they are strictly preserved without fabricating or guessing missing values.
         """
         store = _load_or_build_m5_feature_store()
         summary = store.get("summary") or store.get("ingestion_summary") or store
 
-        # 1. Verify PARTIAL tables/rows preservation (17 partial-flagged tables across Nov 8 & Nov 9)
-        tables_collection = store.get("tables") or store.get("csv_tables") or store.get("tables_catalog") or []
+        # 1. Verify PARTIAL tables/rows preservation (17 partial tables across Nov 8 & Nov 9)
+        tables_collection = (
+            store.get("tables")
+            or store.get("csv_tables")
+            or store.get("tables_catalog")
+            or []
+        )
         if isinstance(tables_collection, dict):
             tables_list = list(tables_collection.values())
         else:
@@ -278,7 +306,7 @@ class TestM5Nov7To9CorpusAnd112CsvIngestion(unittest.TestCase):
         self.assertGreaterEqual(
             partial_tables_count,
             17,
-            f"Expected at least 17 PARTIAL-flagged CSV tables preserved, got {partial_tables_count}",
+            f"Expected at least 17 PARTIAL-flagged CSV tables, got {partial_tables_count}",
         )
 
         # Verify anti-fabrication flag in store
@@ -291,7 +319,7 @@ class TestM5Nov7To9CorpusAnd112CsvIngestion(unittest.TestCase):
         if isinstance(anti_fab, dict) and "fabricated_rows_count" in anti_fab:
             self.assertEqual(int(anti_fab["fabricated_rows_count"]), 0)
 
-        # 2. Verify HEALTH-UNRESOLVED injury items (Patrick Mahomes MRI truncated & CLE vs NO concussion player)
+        # 2. Verify HEALTH-UNRESOLVED injury items (Mahomes MRI truncated & CLE vs NO concussion)
         health_section = (
             store.get("health_and_injury_signals")
             or store.get("health_signals")
@@ -316,7 +344,7 @@ class TestM5Nov7To9CorpusAnd112CsvIngestion(unittest.TestCase):
         )
 
         # Inspect individual health items if structured as list/dict to confirm fabricated is False
-        unresolved_items: List[Dict[str, Any]] = []
+        unresolved_items: list[dict[str, Any]] = []
         if isinstance(health_section, list):
             unresolved_items = [
                 item for item in health_section
@@ -341,9 +369,11 @@ class TestM5Nov7To9CorpusAnd112CsvIngestion(unittest.TestCase):
                 )
 
     def test_m5_3_manifest_skeleton_books_and_503_book_crosswalk_reconciliation(self) -> None:
-        """M5.3: Verify MANIFEST.md has zero `_(pending wave merges)_` placeholders,
-        the 13 skeleton-shelf books in `SKELETON-BOOKS-2026-11-06.md` are reconciled,
-        and `data/mind/book_domain_crosswalk_2026.json` is synced across all 503 books.
+        """M5.3: Verify MANIFEST.md and skeleton-shelf books reconciliation.
+
+        Checks zero `_(pending wave merges)_` placeholders, reconciliation of the 13
+        skeleton-shelf books in `SKELETON-BOOKS-2026-11-06.md`, and synchronization of
+        `data/mind/book_domain_crosswalk_2026.json` across all 503 books.
         """
         primary_manifest = (
             REPO_ROOT
@@ -383,7 +413,7 @@ class TestM5Nov7To9CorpusAnd112CsvIngestion(unittest.TestCase):
             self.assertNotIn(
                 "_(pending wave merges)_",
                 ext_text,
-                "mega-sweep-extended/MANIFEST.md must have zero `_(pending wave merges)_` placeholders",
+                "mega-sweep-extended/MANIFEST.md must have zero pending placeholders",
             )
 
         # Verify SKELETON-BOOKS-2026-11-06.md exists and documents all 13 skeleton books
@@ -429,11 +459,13 @@ class TestM5Nov7To9CorpusAnd112CsvIngestion(unittest.TestCase):
             self.assertIn(
                 expected_author,
                 skel_text,
-                f"Expected skeleton-shelf book author {expected_author} in SKELETON-BOOKS-2026-11-06.md",
+                f"Expected skeleton author {expected_author} in SKELETON-BOOKS-2026-11-06.md",
             )
 
         # Verify 503-book crosswalk in data/mind/book_domain_crosswalk_2026.json
-        self.assertTrue(BOOK_DOMAIN_CROSSWALK_PATH.is_file(), f"Missing {BOOK_DOMAIN_CROSSWALK_PATH}")
+        self.assertTrue(
+            BOOK_DOMAIN_CROSSWALK_PATH.is_file(), f"Missing {BOOK_DOMAIN_CROSSWALK_PATH}"
+        )
         crosswalk = json.loads(BOOK_DOMAIN_CROSSWALK_PATH.read_text(encoding="utf-8"))
         self.assertEqual(crosswalk.get("total_books_mapped"), 503)
         self.assertEqual(crosswalk.get("mega_sweep_458_books_mapped"), 458)
@@ -455,7 +487,7 @@ class TestM5Nov7To9CorpusAnd112CsvIngestion(unittest.TestCase):
         self.assertEqual(
             len(skel_books_list),
             13,
-            f"Expected 13 skeleton-shelf books in book_domain_crosswalk_2026.json, got {len(skel_books_list)}",
+            f"Expected 13 skeleton-shelf books in crosswalk, got {len(skel_books_list)}",
         )
 
 

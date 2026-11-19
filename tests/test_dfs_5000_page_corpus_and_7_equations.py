@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""
-tests/test_dfs_5000_page_corpus_and_7_equations.py
+"""tests/test_dfs_5000_page_corpus_and_7_equations.py.
+
 ==================================================
 Verifies:
   1. The 5,000+ Page DFS / DraftKings / Lineup Optimization Research Corpus
@@ -67,15 +67,42 @@ def test_7_dfs_equations_execute_and_wire_into_layer_4_gate():
     assert l4["dfs_literature_optimization_engine"]["verified_total_pages_harvested"] >= 5000
 
     sample_lineup = [
-        {"player": "Jared Goff", "position": "QB", "team": "DET", "opponent": "MIA", "salary": 6600, "projection": 30.02, "sd": 9.2},
-        {"player": "Ollie Gordon II", "position": "RB", "team": "MIA", "opponent": "DET", "salary": 5600, "projection": 21.27, "sd": 8.6},
-        {"player": "Malik Davis", "position": "RB", "team": "DAL", "opponent": "IND", "salary": 4000, "projection": 16.10, "sd": 7.2},
-        {"player": "Jameson Williams", "position": "WR", "team": "DET", "opponent": "MIA", "salary": 6100, "projection": 17.68, "sd": 7.4},
-        {"player": "Malik Nabers", "position": "WR", "team": "NYG", "opponent": "PHI", "salary": 7300, "projection": 22.64, "sd": 8.1},
-        {"player": "Jaxon Smith-Njigba", "position": "WR", "team": "SEA", "opponent": "ARI", "salary": 9300, "projection": 29.57, "sd": 8.8},
-        {"player": "Sam LaPorta", "position": "TE", "team": "DET", "opponent": "MIA", "salary": 5100, "projection": 19.43, "sd": 6.5},
-        {"player": "Greg Dulcich", "position": "TE", "team": "MIA", "opponent": "DET", "salary": 3100, "projection": 12.39, "sd": 5.9},
-        {"player": "Broncos DST", "position": "DST", "team": "DEN", "opponent": "CAR", "salary": 3000, "projection": 10.96, "sd": 4.1},
+        {
+            "player": "Jared Goff", "position": "QB", "team": "DET",
+            "opponent": "MIA", "salary": 6600, "projection": 30.02, "sd": 9.2,
+        },
+        {
+            "player": "Ollie Gordon II", "position": "RB", "team": "MIA",
+            "opponent": "DET", "salary": 5600, "projection": 21.27, "sd": 8.6,
+        },
+        {
+            "player": "Malik Davis", "position": "RB", "team": "DAL",
+            "opponent": "IND", "salary": 4000, "projection": 16.10, "sd": 7.2,
+        },
+        {
+            "player": "Jameson Williams", "position": "WR", "team": "DET",
+            "opponent": "MIA", "salary": 6100, "projection": 17.68, "sd": 7.4,
+        },
+        {
+            "player": "Malik Nabers", "position": "WR", "team": "NYG",
+            "opponent": "PHI", "salary": 7300, "projection": 22.64, "sd": 8.1,
+        },
+        {
+            "player": "Jaxon Smith-Njigba", "position": "WR", "team": "SEA",
+            "opponent": "ARI", "salary": 9300, "projection": 29.57, "sd": 8.8,
+        },
+        {
+            "player": "Sam LaPorta", "position": "TE", "team": "DET",
+            "opponent": "MIA", "salary": 5100, "projection": 19.43, "sd": 6.5,
+        },
+        {
+            "player": "Greg Dulcich", "position": "TE", "team": "MIA",
+            "opponent": "DET", "salary": 3100, "projection": 12.39, "sd": 5.9,
+        },
+        {
+            "player": "Broncos DST", "position": "DST", "team": "DEN",
+            "opponent": "CAR", "salary": 3000, "projection": 10.96, "sd": 4.1,
+        },
     ]
     sim_matrix = np.array([[155.0, 182.0, 195.0, 171.0], [160.0, 175.0, 202.0, 168.0]])
     gains = eq_dfs_03_submodular_p99_marginal_gain(sim_matrix, win_threshold_p99=180.0)
@@ -100,19 +127,22 @@ def test_python_packaging_pyproject_and_init_files():
         for py_file in (REPO_ROOT / sub).rglob("*.py"):
             if "__pycache__" in py_file.parts:
                 continue
-            assert (py_file.parent / "__init__.py").is_file(), f"Missing __init__.py in {py_file.parent}"
+            assert (py_file.parent / "__init__.py").is_file(), (
+                f"Missing __init__.py in {py_file.parent}"
+            )
 
 
 def test_10_gate_dfs_and_fantasy_accuracy_engine_eliminates_all_traps():
-    classic_pkt = json.loads(
-        (REPO_ROOT / "data" / "dfs" / "week9_sunday_main_11_game_packet_2026_11_07.json").read_text(encoding="utf-8")
+    classic_path = REPO_ROOT / "data" / "dfs" / "week9_sunday_main_11_game_packet_2026_11_07.json"
+    showdown_path = (
+        REPO_ROOT / "data" / "dfs" / "week9_tnf_showdown_jax_bal_packet_2026_11_07.json"
     )
-    showdown_pkt = json.loads(
-        (REPO_ROOT / "data" / "dfs" / "week9_tnf_showdown_jax_bal_packet_2026_11_07.json").read_text(encoding="utf-8")
+    fantasy_path = (
+        REPO_ROOT / "data" / "fantasy" / "week9_unified_fantasy_and_dfs_rankings_2026_11_07.json"
     )
-    fantasy_pkt = json.loads(
-        (REPO_ROOT / "data" / "fantasy" / "week9_unified_fantasy_and_dfs_rankings_2026_11_07.json").read_text(encoding="utf-8")
-    )
+    classic_pkt = json.loads(classic_path.read_text(encoding="utf-8"))
+    showdown_pkt = json.loads(showdown_path.read_text(encoding="utf-8"))
+    fantasy_pkt = json.loads(fantasy_path.read_text(encoding="utf-8"))
 
     banned_sub_floor_traps = {
         "isaac teslaa",
@@ -131,9 +161,13 @@ def test_10_gate_dfs_and_fantasy_accuracy_engine_eliminates_all_traps():
         assert lu["salary"] <= 49900
         for p in lu["players"]:
             nm_low = str(p["player"]).lower().strip()
-            assert nm_low not in banned_sub_floor_traps, f"Sub-floor trap leaked into Classic lineup: {nm_low}"
+            assert nm_low not in banned_sub_floor_traps, (
+                f"Sub-floor trap leaked into Classic lineup: {nm_low}"
+            )
             if p["position"] == "DST":
-                assert nm_low not in banned_punt_dsts, f"Punt road-dog DST leaked into Classic lineup: {nm_low}"
+                assert nm_low not in banned_punt_dsts, (
+                    f"Punt road-dog DST leaked into Classic lineup: {nm_low}"
+                )
             if p["position"] == "QB":
                 qbs_used.add(nm_low)
     # 3 distinct QBs across the 3-Max Classic portfolio
@@ -147,7 +181,9 @@ def test_10_gate_dfs_and_fantasy_accuracy_engine_eliminates_all_traps():
         names = set()
         for p in lu["players"]:
             nm_low = str(p["name"]).lower().strip()
-            assert nm_low not in banned_sub_floor_traps, f"Sub-floor trap leaked into Showdown lineup: {nm_low}"
+            assert nm_low not in banned_sub_floor_traps, (
+                f"Sub-floor trap leaked into Showdown lineup: {nm_low}"
+            )
             names.add(nm_low)
             if p["slot"] == "CPT":
                 cpts_used.add(nm_low)
@@ -176,7 +212,7 @@ def test_10_gate_dfs_and_fantasy_accuracy_engine_eliminates_all_traps():
     assert (REPO_ROOT / two_stage["stage1_gse_projections_file"]).is_file()
     assert (REPO_ROOT / two_stage["stage2_curated_pool_file"]).is_file()
 
-    # Enterprise Ecosystem (NVIDIA Inception, NVIDIA Developer, Sentry, PostHog, RunPod, Google Cloud)
+    # Enterprise Ecosystem (NVIDIA, Sentry, PostHog, RunPod, Google Cloud)
     ent = prov["enterprise_ecosystem_and_cloud_router"]
     assert ent["verified"] is True
     assert ent["nvidia_inception_and_developer_program"]["status"] == "ACTIVE_AND_WIRED"
@@ -184,11 +220,24 @@ def test_10_gate_dfs_and_fantasy_accuracy_engine_eliminates_all_traps():
     assert ent["posthog_product_and_model_telemetry"]["status"] == "ACTIVE_AND_WIRED"
     assert ent["google_cloud_colab_and_runpod_compute"]["status"] == "ACTIVE_HYBRID_DISPATCH"
 
-    # Continuous Run Self-Improvement Ledger & Stealth-Skeleton External Eval + Distillation Flywheel
+    # Continuous Run Self-Improvement Ledger & Stealth-Skeleton Flywheel
     assert prov["continuous_run_improvement_receipt"]["run_sequence_number"] >= 1
     assert (REPO_ROOT / "data" / "engine" / "continuous_run_improvement_ledger.jsonl").is_file()
-    assert (REPO_ROOT / "data" / "audits" / "stealth_skeleton_official_external_eval_manifest_2026_11_07.json").is_file()
-    assert (REPO_ROOT / "data" / "mind" / "feeds" / "stealth_skeleton_distillation_flywheel_2026_11_07.jsonl").is_file()
+    eval_manifest = (
+        REPO_ROOT
+        / "data"
+        / "audits"
+        / "stealth_skeleton_official_external_eval_manifest_2026_11_07.json"
+    )
+    flywheel = (
+        REPO_ROOT
+        / "data"
+        / "mind"
+        / "feeds"
+        / "stealth_skeleton_distillation_flywheel_2026_11_07.jsonl"
+    )
+    assert eval_manifest.is_file()
+    assert flywheel.is_file()
 
 
 @pytest.mark.skipif(
@@ -278,8 +327,15 @@ def test_c11_cpp20_native_kernels_and_c4_architecture_suite() -> None:
 
 def test_deep_research_12_domains_20_books_and_19_dfs_equations() -> None:
     corpus_file = REPO_ROOT / "data" / "dfs" / "deep_research_12_domain_dfs_corpus_2026_11_07.json"
-    dataset_file = REPO_ROOT / "data" / "dfs" / "deep_research_12_domain_empirical_dfs_dataset_2026_11_07.json"
-    curated_pool_file = REPO_ROOT / "data" / "dfs" / "gse_dedicated_curated_dfs_player_pool_week9_2026_11_07.json"
+    dataset_file = (
+        REPO_ROOT
+        / "data"
+        / "dfs"
+        / "deep_research_12_domain_empirical_dfs_dataset_2026_11_07.json"
+    )
+    curated_pool_file = (
+        REPO_ROOT / "data" / "dfs" / "gse_dedicated_curated_dfs_player_pool_week9_2026_11_07.json"
+    )
     report_file = (
         REPO_ROOT
         / "docs"
@@ -302,8 +358,11 @@ def test_deep_research_12_domains_20_books_and_19_dfs_equations() -> None:
     assert corpus["downloaded_arxiv_pdfs_on_disk_count"] >= 10
 
     dataset = json.loads(dataset_file.read_text(encoding="utf-8"))
-    assert set(dataset["positional_evt_gpd_and_tweedie_profiles"].keys()) == {"QB", "RB", "WR", "TE"}
-    assert dataset["empirical_c_vine_upper_tail_dependence_lambda_u"]["qb_to_wr1_upper_tail_lambda_u_q85"] > 0.25
+    assert set(dataset["positional_evt_gpd_and_tweedie_profiles"].keys()) == {
+        "QB", "RB", "WR", "TE",
+    }
+    c_vine = dataset["empirical_c_vine_upper_tail_dependence_lambda_u"]
+    assert c_vine["qb_to_wr1_upper_tail_lambda_u_q85"] > 0.25
 
     pool = json.loads(curated_pool_file.read_text(encoding="utf-8"))
     assert pool["frontier_19_equations_summary"]["total_dfs_equations_active"] == 19

@@ -122,14 +122,12 @@ export function PaywallRevealCard({
       const searchParams = new URLSearchParams(window.location.search);
       const urlSessionId = searchParams.get("session_id") || searchParams.get("whop_token");
       const urlPackage = searchParams.get("package");
-      const matchesThisCard =
-        !urlPackage || urlPackage === pkg.slug || urlPackage === "week8-all-access";
+      const matchesThisCard = !urlPackage || urlPackage === pkg.slug;
 
       const candidateToken =
         initialSessionId ||
         (urlSessionId && matchesThisCard ? urlSessionId : null) ||
-        window.localStorage.getItem(`gse_unlock_${pkg.slug}`) ||
-        window.localStorage.getItem("gse_unlock_global");
+        window.localStorage.getItem(`gse_unlock_${pkg.slug}`);
 
       if (candidateToken) {
         void handleInlineVerify(candidateToken, true);
@@ -161,7 +159,6 @@ export function PaywallRevealCard({
         setUnlockedWriteups(data.writeups);
         try {
           window.localStorage.setItem(`gse_unlock_${pkg.slug}`, token);
-          window.localStorage.setItem("gse_unlock_global", token);
         } catch {
           // ignore
         }

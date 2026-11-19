@@ -1,0 +1,633 @@
+{
+  "schema": "wave36_gsi_icu_and_360_board_benchmark_v1",
+  "generated_utc": "2026-11-18T05:48:01.595253+00:00",
+  "real_money_stake_cleared": false,
+  "live_stake_fraction": 0.0,
+  "sample_kc_at_den": {
+    "schema": "wave36_360_board_matchup_suite_v1",
+    "wired": true,
+    "matchup": "KC @ DEN",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "gsi_icu_and_throwing": {
+      "schema": "wave36_gsi_icu_and_throwing_suite_v1",
+      "wired": true,
+      "matchup": "KC @ DEN",
+      "as_of_week": 10,
+      "adr0003_rule_in_only_doctrine": true,
+      "clinical_ruo_sports_weight": 0.0,
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "mimic_iv_icu_early_warning": {
+        "schema": "wave36_gsi_mimic_iv_icu_ews_v1",
+        "clean_checkout_fallback": false,
+        "adr0003_rule_in_only_doctrine": true,
+        "clinical_ruo_sports_weight": 0.0,
+        "icu_stays_count": 140,
+        "chartevents_total_rows": 668862,
+        "icd_diagnoses_count": 4506,
+        "mean_heart_rate_bpm": 91.122,
+        "mean_systolic_bp_mmhg": 114.69,
+        "mean_map_mmhg": 76.355,
+        "mean_spo2_pct": 96.811,
+        "mean_resp_rate_bpm": 19.953,
+        "estimated_pao2_mmhg": 94.161,
+        "hypoxic_events_spo2_lt92": 453,
+        "compensated_shock_stays_si_ge090": 112,
+        "hypotensive_stays_map_lt65": 106,
+        "baxley_rule_in_stays_e_ge20": 82,
+        "max_baxley_e_value": 1000000.0,
+        "hill_slope_90pct_per_mmhg": 0.004049,
+        "hill_slope_98pct_per_mmhg": 0.000471,
+        "hill_hypoxia_cliff_ratio": 8.6013
+      },
+      "glenohumeral_throwing_chain": {
+        "schema": "wave36_gsi_glenohumeral_chain_v1",
+        "surgical_prior_cases_count": 19,
+        "surgical_prior_mean_age": 27.385,
+        "surgical_prior_mean_exp": 4.579,
+        "away": {
+          "team": "KC",
+          "qb_week_injury_logs": 2,
+          "prior_qb_arm_events": 1,
+          "trunk_kinetic_efficiency": 1.0,
+          "glenohumeral_internal_rotation_torque_ratio": 1.05625,
+          "ucl_varus_stress_ratio": 1.0475,
+          "deep_pass_velocity_retention_mult": 0.9825,
+          "high_pitch_q4_accuracy_mult": 0.9875
+        },
+        "home": {
+          "team": "DEN",
+          "qb_week_injury_logs": 0,
+          "prior_qb_arm_events": 0,
+          "trunk_kinetic_efficiency": 1.0,
+          "glenohumeral_internal_rotation_torque_ratio": 1.0,
+          "ucl_varus_stress_ratio": 1.0,
+          "deep_pass_velocity_retention_mult": 1.0,
+          "high_pitch_q4_accuracy_mult": 1.0
+        }
+      }
+    },
+    "away_w1_w10_profile": {
+      "play_action_epa": 0.28299,
+      "read1_epa": 0.41464,
+      "read2_progression_epa": 0.03588,
+      "out_of_pocket_epa": 0.05604,
+      "motion_rate": 0.4599,
+      "no_huddle_rate": 0.0064,
+      "ol_clean_sack_rate": 0.01603,
+      "qb_fault_sack_rate": 0.0016,
+      "q1_script_epa": 0.02999,
+      "h1_epa": 0.0423,
+      "h2_epa": 0.03822,
+      "halftime_2h_adjust_delta": -0.00408,
+      "q4_closeout_epa": -0.02327,
+      "kicker_fgoe_per_att": 0.14576,
+      "punt_inside20_rate": 0.4652,
+      "penalty_yards_per_game": 57.4
+    },
+    "home_w1_w10_profile": {
+      "play_action_epa": 0.0445,
+      "read1_epa": 0.26395,
+      "read2_progression_epa": -0.00902,
+      "out_of_pocket_epa": 0.109,
+      "motion_rate": 0.4725,
+      "no_huddle_rate": 0.0536,
+      "ol_clean_sack_rate": 0.01269,
+      "qb_fault_sack_rate": 0.00282,
+      "q1_script_epa": -0.01903,
+      "h1_epa": 0.01255,
+      "h2_epa": 0.00315,
+      "halftime_2h_adjust_delta": -0.00941,
+      "q4_closeout_epa": 0.0224,
+      "kicker_fgoe_per_att": 0.22468,
+      "punt_inside20_rate": 0.4237,
+      "penalty_yards_per_game": 57.64
+    },
+    "officiating_crews": {
+      "referee_crews_indexed": 17,
+      "league_mean_penalty_yds_per_game": 101.66,
+      "top_high_flag_crews": [
+        {
+          "referee": "Alex Moore",
+          "games_worked": 17,
+          "mean_game_penalty_yds": 130.94
+        },
+        {
+          "referee": "Adrian Hill",
+          "games_worked": 16,
+          "mean_game_penalty_yds": 120.75
+        },
+        {
+          "referee": "Shawn Hochuli",
+          "games_worked": 18,
+          "mean_game_penalty_yds": 118.61
+        }
+      ],
+      "top_low_flag_crews": [
+        {
+          "referee": "Brad Allen",
+          "games_worked": 17,
+          "mean_game_penalty_yds": 81.06
+        },
+        {
+          "referee": "Land Clark",
+          "games_worked": 17,
+          "mean_game_penalty_yds": 85.12
+        },
+        {
+          "referee": "Alan Eck",
+          "games_worked": 18,
+          "mean_game_penalty_yds": 89.5
+        }
+      ]
+    },
+    "pbp26_snaps_available": 26246,
+    "ftn26_snaps_available": 25310,
+    "full_360_board_w2_w10_oos": {
+      "schema": "wave36_360_board_w2_w10_oos_v1",
+      "clean_checkout_fallback": false,
+      "max_week_evaluated": 10,
+      "total_oos_evaluations": 4784,
+      "qb_passing_yards_w2_w10": {
+        "n_eval": 250,
+        "weeks_evaluated": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "naive_mae": 64.542,
+        "eb_w36_mae": 57.997,
+        "mae_reduction_pct": 10.14,
+        "beats_naive": true
+      },
+      "rb_rushing_yards_w2_w10": {
+        "n_eval": 364,
+        "weeks_evaluated": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "naive_mae": 26.59,
+        "eb_w36_mae": 24.774,
+        "mae_reduction_pct": 6.83,
+        "beats_naive": true
+      },
+      "wr_te_receiving_yards_w2_w10": {
+        "n_eval": 1141,
+        "weeks_evaluated": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "naive_mae": 26.211,
+        "eb_w36_mae": 24.429,
+        "mae_reduction_pct": 6.8,
+        "beats_naive": true
+      },
+      "kicker_total_points_w2_w10": {
+        "n_eval": 263,
+        "weeks_evaluated": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "naive_mae": 3.302,
+        "eb_w36_mae": 2.979,
+        "mae_reduction_pct": 9.77,
+        "beats_naive": true
+      },
+      "idp_tackles_combined_w2_w10": {
+        "n_eval": 2766,
+        "weeks_evaluated": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "naive_mae": 1.623,
+        "eb_w36_mae": 1.551,
+        "mae_reduction_pct": 4.49,
+        "beats_naive": true
+      },
+      "idp_half_sack_events_count": 613,
+      "idp_half_sack_hit_rate": 0.1873,
+      "all_5_suites_beat_naive": true
+    },
+    "contract_year_5b_audit": {
+      "schema": "wave36_contract_year_5b_audit_v1",
+      "clean_checkout_fallback": false,
+      "otc_contracts_rows": 31893,
+      "active_2026_contracts": 2883,
+      "contract_year_players_2026_matched": 4,
+      "contract_year_mean_ppr": 18.094,
+      "non_contract_year_mean_ppr": 19.711,
+      "contract_year_ppr_delta": -1.617,
+      "agents_5b_backtest_or_cut_gate": "LOGGED_EVIDENCE_ONLY",
+      "live_spread_weight": 0.0
+    },
+    "live_honest_ast": {
+      "schema": "wave36_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 6,
+      "equations_evaluated": [
+        {
+          "eq_id": "allgower_shock_index",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.794507,
+          "operators": 1
+        },
+        {
+          "eq_id": "hill_oxyhemoglobin_sat",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.96811,
+          "operators": 5
+        },
+        {
+          "eq_id": "fleisig_gh_torque_ratio",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.0,
+          "operators": 2
+        },
+        {
+          "eq_id": "kicker_fgoe_expectation",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.298,
+          "operators": 3
+        },
+        {
+          "eq_id": "progression_read2_lift",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.093515,
+          "operators": 5
+        },
+        {
+          "eq_id": "halftime_script_surge",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.003417,
+          "operators": 3
+        }
+      ]
+    },
+    "w36_close_residual_signal": -0.233267,
+    "stage2_deltas": {
+      "away_epa_delta": 0.001951,
+      "home_epa_delta": -0.000135,
+      "away_comp_delta": -0.000862,
+      "home_comp_delta": -0.000135,
+      "away_sack_prob_delta": -0.001699,
+      "home_sack_prob_delta": -0.001866
+    }
+  },
+  "sample_cin_at_buf": {
+    "schema": "wave36_360_board_matchup_suite_v1",
+    "wired": true,
+    "matchup": "CIN @ BUF",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "gsi_icu_and_throwing": {
+      "schema": "wave36_gsi_icu_and_throwing_suite_v1",
+      "wired": true,
+      "matchup": "CIN @ BUF",
+      "as_of_week": 10,
+      "adr0003_rule_in_only_doctrine": true,
+      "clinical_ruo_sports_weight": 0.0,
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "mimic_iv_icu_early_warning": {
+        "schema": "wave36_gsi_mimic_iv_icu_ews_v1",
+        "clean_checkout_fallback": false,
+        "adr0003_rule_in_only_doctrine": true,
+        "clinical_ruo_sports_weight": 0.0,
+        "icu_stays_count": 140,
+        "chartevents_total_rows": 668862,
+        "icd_diagnoses_count": 4506,
+        "mean_heart_rate_bpm": 91.122,
+        "mean_systolic_bp_mmhg": 114.69,
+        "mean_map_mmhg": 76.355,
+        "mean_spo2_pct": 96.811,
+        "mean_resp_rate_bpm": 19.953,
+        "estimated_pao2_mmhg": 94.161,
+        "hypoxic_events_spo2_lt92": 453,
+        "compensated_shock_stays_si_ge090": 112,
+        "hypotensive_stays_map_lt65": 106,
+        "baxley_rule_in_stays_e_ge20": 82,
+        "max_baxley_e_value": 1000000.0,
+        "hill_slope_90pct_per_mmhg": 0.004049,
+        "hill_slope_98pct_per_mmhg": 0.000471,
+        "hill_hypoxia_cliff_ratio": 8.6013
+      },
+      "glenohumeral_throwing_chain": {
+        "schema": "wave36_gsi_glenohumeral_chain_v1",
+        "surgical_prior_cases_count": 19,
+        "surgical_prior_mean_age": 27.385,
+        "surgical_prior_mean_exp": 4.579,
+        "away": {
+          "team": "CIN",
+          "qb_week_injury_logs": 0,
+          "prior_qb_arm_events": 2,
+          "trunk_kinetic_efficiency": 1.0,
+          "glenohumeral_internal_rotation_torque_ratio": 1.0,
+          "ucl_varus_stress_ratio": 1.0,
+          "deep_pass_velocity_retention_mult": 1.0,
+          "high_pitch_q4_accuracy_mult": 1.0
+        },
+        "home": {
+          "team": "BUF",
+          "qb_week_injury_logs": 0,
+          "prior_qb_arm_events": 1,
+          "trunk_kinetic_efficiency": 1.0,
+          "glenohumeral_internal_rotation_torque_ratio": 1.0,
+          "ucl_varus_stress_ratio": 1.0,
+          "deep_pass_velocity_retention_mult": 1.0,
+          "high_pitch_q4_accuracy_mult": 1.0
+        }
+      }
+    },
+    "away_w1_w10_profile": {
+      "play_action_epa": 0.03819,
+      "read1_epa": 0.48368,
+      "read2_progression_epa": 0.09095,
+      "out_of_pocket_epa": 0.24713,
+      "motion_rate": 0.4105,
+      "no_huddle_rate": 0.0349,
+      "ol_clean_sack_rate": 0.01902,
+      "qb_fault_sack_rate": 0.00475,
+      "q1_script_epa": 0.03426,
+      "h1_epa": 0.04443,
+      "h2_epa": 0.05369,
+      "halftime_2h_adjust_delta": 0.00926,
+      "q4_closeout_epa": 0.00059,
+      "kicker_fgoe_per_att": 0.3861,
+      "punt_inside20_rate": 0.5091,
+      "penalty_yards_per_game": 42.8
+    },
+    "home_w1_w10_profile": {
+      "play_action_epa": 0.14585,
+      "read1_epa": 0.43469,
+      "read2_progression_epa": 0.22239,
+      "out_of_pocket_epa": 0.3187,
+      "motion_rate": 0.5045,
+      "no_huddle_rate": 0.0404,
+      "ol_clean_sack_rate": 0.01946,
+      "qb_fault_sack_rate": 0.00599,
+      "q1_script_epa": 0.04698,
+      "h1_epa": 0.08147,
+      "h2_epa": 0.13648,
+      "halftime_2h_adjust_delta": 0.05501,
+      "q4_closeout_epa": 0.15094,
+      "kicker_fgoe_per_att": 0.35626,
+      "punt_inside20_rate": 0.3683,
+      "penalty_yards_per_game": 56.96
+    },
+    "officiating_crews": {
+      "referee_crews_indexed": 17,
+      "league_mean_penalty_yds_per_game": 101.66,
+      "top_high_flag_crews": [
+        {
+          "referee": "Alex Moore",
+          "games_worked": 17,
+          "mean_game_penalty_yds": 130.94
+        },
+        {
+          "referee": "Adrian Hill",
+          "games_worked": 16,
+          "mean_game_penalty_yds": 120.75
+        },
+        {
+          "referee": "Shawn Hochuli",
+          "games_worked": 18,
+          "mean_game_penalty_yds": 118.61
+        }
+      ],
+      "top_low_flag_crews": [
+        {
+          "referee": "Brad Allen",
+          "games_worked": 17,
+          "mean_game_penalty_yds": 81.06
+        },
+        {
+          "referee": "Land Clark",
+          "games_worked": 17,
+          "mean_game_penalty_yds": 85.12
+        },
+        {
+          "referee": "Alan Eck",
+          "games_worked": 18,
+          "mean_game_penalty_yds": 89.5
+        }
+      ]
+    },
+    "pbp26_snaps_available": 26246,
+    "ftn26_snaps_available": 25310,
+    "full_360_board_w2_w10_oos": {
+      "schema": "wave36_360_board_w2_w10_oos_v1",
+      "clean_checkout_fallback": false,
+      "max_week_evaluated": 10,
+      "total_oos_evaluations": 4784,
+      "qb_passing_yards_w2_w10": {
+        "n_eval": 250,
+        "weeks_evaluated": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "naive_mae": 64.542,
+        "eb_w36_mae": 57.997,
+        "mae_reduction_pct": 10.14,
+        "beats_naive": true
+      },
+      "rb_rushing_yards_w2_w10": {
+        "n_eval": 364,
+        "weeks_evaluated": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "naive_mae": 26.59,
+        "eb_w36_mae": 24.774,
+        "mae_reduction_pct": 6.83,
+        "beats_naive": true
+      },
+      "wr_te_receiving_yards_w2_w10": {
+        "n_eval": 1141,
+        "weeks_evaluated": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "naive_mae": 26.211,
+        "eb_w36_mae": 24.429,
+        "mae_reduction_pct": 6.8,
+        "beats_naive": true
+      },
+      "kicker_total_points_w2_w10": {
+        "n_eval": 263,
+        "weeks_evaluated": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "naive_mae": 3.302,
+        "eb_w36_mae": 2.979,
+        "mae_reduction_pct": 9.77,
+        "beats_naive": true
+      },
+      "idp_tackles_combined_w2_w10": {
+        "n_eval": 2766,
+        "weeks_evaluated": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "naive_mae": 1.623,
+        "eb_w36_mae": 1.551,
+        "mae_reduction_pct": 4.49,
+        "beats_naive": true
+      },
+      "idp_half_sack_events_count": 613,
+      "idp_half_sack_hit_rate": 0.1873,
+      "all_5_suites_beat_naive": true
+    },
+    "contract_year_5b_audit": {
+      "schema": "wave36_contract_year_5b_audit_v1",
+      "clean_checkout_fallback": false,
+      "otc_contracts_rows": 31893,
+      "active_2026_contracts": 2883,
+      "contract_year_players_2026_matched": 4,
+      "contract_year_mean_ppr": 18.094,
+      "non_contract_year_mean_ppr": 19.711,
+      "contract_year_ppr_delta": -1.617,
+      "agents_5b_backtest_or_cut_gate": "LOGGED_EVIDENCE_ONLY",
+      "live_spread_weight": 0.0
+    },
+    "live_honest_ast": {
+      "schema": "wave36_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 6,
+      "equations_evaluated": [
+        {
+          "eq_id": "allgower_shock_index",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.794507,
+          "operators": 1
+        },
+        {
+          "eq_id": "hill_oxyhemoglobin_sat",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.96811,
+          "operators": 5
+        },
+        {
+          "eq_id": "fleisig_gh_torque_ratio",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.0,
+          "operators": 2
+        },
+        {
+          "eq_id": "kicker_fgoe_expectation",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.298,
+          "operators": 3
+        },
+        {
+          "eq_id": "progression_read2_lift",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.038248,
+          "operators": 5
+        },
+        {
+          "eq_id": "halftime_script_surge",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.017825,
+          "operators": 3
+        }
+      ]
+    },
+    "w36_close_residual_signal": 0.009244,
+    "stage2_deltas": {
+      "away_epa_delta": 0.000349,
+      "home_epa_delta": 0.002459,
+      "away_comp_delta": 0.001364,
+      "home_comp_delta": 0.003336,
+      "away_sack_prob_delta": -0.001549,
+      "home_sack_prob_delta": -0.001527
+    }
+  },
+  "benchmark_sha256": "c25712554500179122a90989a9abf39916c126481709934256d2d711b54fe9ab"
+}

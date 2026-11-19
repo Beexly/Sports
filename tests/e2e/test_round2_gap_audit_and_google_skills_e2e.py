@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""Comprehensive 4-Tier End-to-End Verification Suite for Round 2 Deep Gap Remediation,
-`https://github.com/google/skills` (187 Skills + 17 Plugins) Integration, All 6 Plugin Launchers,
+"""Comprehensive 4-Tier E2E Suite for Round 2 Deep Gap Remediation & Google Skills Integration.
+
+Covers `https://github.com/google/skills` (187 Skills + 17 Plugins), all 6 Plugin Launchers,
 Live MongoDB Atlas Administration API (`Galaxy Sports Edge` `6af23d2bfdbda62efc136f07`),
 Google Drive 49 Nov 7 Self-Added Books Inventory, Zero Synthetic Repo Placeholders,
 36/36 CI Guardrails, Vitest Remediation, and Connected 5-Stage Gameday Workflow (`F13`–`F18`)
 (`tests/e2e/test_round2_gap_audit_and_google_skills_e2e.py`).
 
-Covers all 6 Round 2 Features (`F13`–`F18`) specified in `/home/antigravity/.agents/teamwork/PROJECT.md`:
+Covers all 6 Round 2 Features (`F13`–`F18`) specified in
+`/home/antigravity/.agents/teamwork/PROJECT.md`:
   - Tier 1 — Feature Coverage: 30 tests (5 per feature across F13–F18)
   - Tier 2 — Boundary & Corner Cases: 30 tests (5 per feature across F13–F18)
   - Tier 3 — Cross-Feature Combinations: 10 pairwise interaction tests across F1–F18
@@ -17,11 +19,8 @@ Covers all 6 Round 2 Features (`F13`–`F18`) specified in `/home/antigravity/.a
 from __future__ import annotations
 
 import csv
-import gzip
-import importlib.util
 import inspect
 import json
-import math
 import os
 import re
 import shutil
@@ -32,7 +31,7 @@ import types
 import unittest
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Dict, List, Set, Tuple
+from typing import Any
 
 # ---------------------------------------------------------------------------
 # HISTORICAL SESSION AUDIT — NOT A CI GATE.
@@ -67,33 +66,26 @@ except ModuleNotFoundError:
     _pytest_shim.fixture = lambda *args, **kwargs: (lambda fn: fn)  # type: ignore[attr-defined]
     sys.modules["pytest"] = _pytest_shim
 
-from intelligence.metrics.book_equations_to_stats_compiler import (
+from intelligence.metrics.book_equations_to_stats_compiler import (  # noqa: E402
     BOOK_DOMAIN_CROSSWALK_PATH,
     COMPLETE_458_BOOK_REGISTRY_PATH,
-    BookEquationsToStatsCompiler,
 )
-from intelligence.ops.gse_143_skills_orchestrator_and_router import (
-    CANONICAL_7_AGY_PLUGINS,
+from intelligence.ops.gse_143_skills_orchestrator_and_router import (  # noqa: E402
     DOMAIN_SKILL_ASSIGNMENTS,
-    IMPORT_MANIFEST_PATH,
     evaluate_143_skills_pre_projection_and_workflow_readiness,
     load_143_skills_catalog,
-    route_task_to_143_skills,
 )
-from intelligence.retrieval.pinecone_hybrid_corpus_index import (
+from intelligence.retrieval.pinecone_hybrid_corpus_index import (  # noqa: E402
     BM25PlusScorer,
     CorpusDocument,
     MongoDBDossierArchiveAdapter,
     build_uncompressed_full_corpus_documents,
-    load_env_local_secrets,
 )
-from scripts.ops.enforce_stage0_roster_and_board_allowlist import (
-    Stage0RosterContaminationError,
+from scripts.ops.enforce_stage0_roster_and_board_allowlist import (  # noqa: E402
     load_stage0_game_roster_allowlist,
 )
-from scripts.ops.execute_all_installed_skills_suite import (
+from scripts.ops.execute_all_installed_skills_suite import (  # noqa: E402
     RECEIPT_JSON_PATH,
-    REPORT_MD_PATH,
     run_all_758_skills_execution_suite,
 )
 
@@ -126,7 +118,7 @@ CADENCE_V40_JSON_PATH = (
 CADENCE_V40_PY_PATH = REPO_ROOT / "scripts" / "ops" / "run_cadence_v40_sun_late_w9.py"
 NOVA_DOSSIER_DIR = REPO_ROOT / "docs" / "predictions" / "research" / "2026-11-07" / "nova-dossier"
 
-EXPECTED_6_NOVA_DOSSIER_FILES: Tuple[str, ...] = (
+EXPECTED_6_NOVA_DOSSIER_FILES: tuple[str, ...] = (
     "2026-11-08-review.md",
     "NOVA-REALISM-RESEARCH-PACKET-2026-11-07.md",
     "NOVA-UPDATE-V2-2026-11-07.md",
@@ -135,7 +127,7 @@ EXPECTED_6_NOVA_DOSSIER_FILES: Tuple[str, ...] = (
     "personality-spec.md",
 )
 
-EXPECTED_17_CLAUDE_GSE_SKILLS: Tuple[str, ...] = (
+EXPECTED_17_CLAUDE_GSE_SKILLS: tuple[str, ...] = (
     "autonomy-kernel",
     "calibration-pipeline",
     "checkout-attempt",
@@ -155,7 +147,7 @@ EXPECTED_17_CLAUDE_GSE_SKILLS: Tuple[str, ...] = (
     "stripe-webhook",
 )
 
-EXPECTED_5_REPO_LOCAL_SKILLS: Tuple[str, ...] = (
+EXPECTED_5_REPO_LOCAL_SKILLS: tuple[str, ...] = (
     "gse",
     "pickpilot-design",
     "claims-check",
@@ -163,7 +155,7 @@ EXPECTED_5_REPO_LOCAL_SKILLS: Tuple[str, ...] = (
     "session-close",
 )
 
-EXPECTED_16_CURATED_GOOGLE_SKILLS: Tuple[str, ...] = (
+EXPECTED_16_CURATED_GOOGLE_SKILLS: tuple[str, ...] = (
     "finding-google-skills",
     "retrieving-developer-knowledge",
     "gcloud",
@@ -182,7 +174,7 @@ EXPECTED_16_CURATED_GOOGLE_SKILLS: Tuple[str, ...] = (
     "google-analytics-data-api-basics",
 )
 
-EXPECTED_15_ROUND1_SPORTS_SKILLS: Tuple[str, ...] = (
+EXPECTED_15_ROUND1_SPORTS_SKILLS: tuple[str, ...] = (
     "continuous-corpus-ingestion-and-wiring-loop",
     "continuous-post-game-learning-and-pathwise-calibration-loop",
     "dk-200pt-dfs-contest-simulation-loop",
@@ -200,12 +192,32 @@ EXPECTED_15_ROUND1_SPORTS_SKILLS: Tuple[str, ...] = (
     "overnight-autonomous-projection-loop",
 )
 
-EXPECTED_6_CONNECTED_PLUGINS: Tuple[Tuple[str, str, str], ...] = (
-    ("gdocs", "/opt/antigravity/plugins/gdocs/skills/gdocs/scripts/gdocs", "/opt/antigravity/bin/gdocs"),
-    ("gdrive", "/opt/antigravity/plugins/gdrive/skills/gdrive/scripts/gdrive", "/opt/antigravity/bin/gdrive"),
-    ("github", "/opt/antigravity/plugins/github/skills/github/scripts/gh", "/opt/antigravity/bin/gh"),
-    ("gsheets", "/opt/antigravity/plugins/gsheets/skills/gsheets/scripts/gsheets", "/opt/antigravity/bin/gsheets"),
-    ("gslides", "/opt/antigravity/plugins/gslides/skills/gslides/scripts/gslides", "/opt/antigravity/bin/gslides"),
+EXPECTED_6_CONNECTED_PLUGINS: tuple[tuple[str, str, str], ...] = (
+    (
+        "gdocs",
+        "/opt/antigravity/plugins/gdocs/skills/gdocs/scripts/gdocs",
+        "/opt/antigravity/bin/gdocs",
+    ),
+    (
+        "gdrive",
+        "/opt/antigravity/plugins/gdrive/skills/gdrive/scripts/gdrive",
+        "/opt/antigravity/bin/gdrive",
+    ),
+    (
+        "github",
+        "/opt/antigravity/plugins/github/skills/github/scripts/gh",
+        "/opt/antigravity/bin/gh",
+    ),
+    (
+        "gsheets",
+        "/opt/antigravity/plugins/gsheets/skills/gsheets/scripts/gsheets",
+        "/opt/antigravity/bin/gsheets",
+    ),
+    (
+        "gslides",
+        "/opt/antigravity/plugins/gslides/skills/gslides/scripts/gslides",
+        "/opt/antigravity/bin/gslides",
+    ),
     (
         "gcalendar",
         "/opt/antigravity/plugins/gcalendar/skills/gcalendar/scripts/gcalendar",
@@ -213,7 +225,7 @@ EXPECTED_6_CONNECTED_PLUGINS: Tuple[Tuple[str, str, str], ...] = (
     ),
 )
 
-ALLOWED_FRONTMATTER_KEYS: Set[str] = {
+ALLOWED_FRONTMATTER_KEYS: set[str] = {
     "name",
     "description",
     "license",
@@ -229,7 +241,7 @@ ALLOWED_FRONTMATTER_KEYS: Set[str] = {
 
 
 @lru_cache(maxsize=64)
-def _run_cached_cmd(cmd: Tuple[str, ...], timeout: int = 120) -> subprocess.CompletedProcess[str]:
+def _run_cached_cmd(cmd: tuple[str, ...], timeout: int = 120) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         list(cmd),
         cwd=str(REPO_ROOT),
@@ -241,9 +253,9 @@ def _run_cached_cmd(cmd: Tuple[str, ...], timeout: int = 120) -> subprocess.Comp
 
 
 @lru_cache(maxsize=1)
-def _get_npx_node_modules_dirs() -> Tuple[str, ...]:
+def _get_npx_node_modules_dirs() -> tuple[str, ...]:
     npx_root = HOME_DIR / ".npm" / "_npx"
-    dirs: List[str] = []
+    dirs: list[str] = []
     if npx_root.is_dir():
         for child in sorted(npx_root.iterdir()):
             nm = child / "node_modules"
@@ -252,10 +264,13 @@ def _get_npx_node_modules_dirs() -> Tuple[str, ...]:
     return tuple(dirs)
 
 
-_CANONICAL_FAST_VITEST_SUITES: Tuple[str, ...] = (
+_CANONICAL_FAST_VITEST_SUITES: tuple[str, ...] = (
     "packages/mcp-equations-server/src/__tests__/seal-pot-cognitive-router.test.ts",
     "packages/prediction-engine/src/metrics/__tests__/metric-asset-graduation.test.ts",
-    "packages/prediction-engine/src/engine/__tests__/universal-nfl-metric-and-situational-engine.test.ts",
+    (
+        "packages/prediction-engine/src/engine/__tests__/"
+        "universal-nfl-metric-and-situational-engine.test.ts"
+    ),
     "packages/prediction-engine/src/__tests__/model-registry.test.ts",
     "packages/prediction-engine/src/__tests__/zero-orphan-engine-audit.test.ts",
     "packages/prediction-engine/test/public-picks-enabled-readers.t21.spec.ts",
@@ -265,7 +280,9 @@ _CANONICAL_FAST_VITEST_SUITES: Tuple[str, ...] = (
 
 
 @lru_cache(maxsize=16)
-def _run_vitest_subprocess(test_files: Tuple[str, ...], timeout: int = 120) -> subprocess.CompletedProcess[str]:
+def _run_vitest_subprocess(
+    test_files: tuple[str, ...], timeout: int = 120
+) -> subprocess.CompletedProcess[str]:
     env = dict(os.environ)
     nm_dirs = list(_get_npx_node_modules_dirs())
     root_nm = REPO_ROOT / "node_modules"
@@ -281,7 +298,11 @@ def _run_vitest_subprocess(test_files: Tuple[str, ...], timeout: int = 120) -> s
         if cand.exists():
             vitest_bin = cand
             break
-    cmd = [str(vitest_bin), "run", *test_files] if vitest_bin else ["npx", "vitest", "run", *test_files]
+    cmd = (
+        [str(vitest_bin), "run", *test_files]
+        if vitest_bin
+        else ["npx", "vitest", "run", *test_files]
+    )
     return subprocess.run(
         cmd,
         cwd=str(REPO_ROOT),
@@ -293,30 +314,32 @@ def _run_vitest_subprocess(test_files: Tuple[str, ...], timeout: int = 120) -> s
     )
 
 
-def _run_cached_vitest(test_files: Tuple[str, ...], timeout: int = 120) -> subprocess.CompletedProcess[str]:
+def _run_cached_vitest(
+    test_files: tuple[str, ...], timeout: int = 120
+) -> subprocess.CompletedProcess[str]:
     if set(test_files).issubset(set(_CANONICAL_FAST_VITEST_SUITES)):
         return _run_vitest_subprocess(_CANONICAL_FAST_VITEST_SUITES, timeout=timeout)
     return _run_vitest_subprocess(tuple(test_files), timeout=timeout)
 
 
 @lru_cache(maxsize=1)
-def _get_758_skills_summary() -> Dict[str, Any]:
+def _get_758_skills_summary() -> dict[str, Any]:
     return run_all_758_skills_execution_suite()
 
 
 @lru_cache(maxsize=1)
-def _get_143_skills_catalog() -> Dict[str, Any]:
+def _get_143_skills_catalog() -> dict[str, Any]:
     return load_143_skills_catalog()
 
 
 @lru_cache(maxsize=1)
-def _get_624_corpus_docs() -> List[CorpusDocument]:
+def _get_624_corpus_docs() -> list[CorpusDocument]:
     return build_uncompressed_full_corpus_documents()
 
 
 @lru_cache(maxsize=1)
-def _get_mongodb_env_map() -> Dict[str, str]:
-    out: Dict[str, str] = {}
+def _get_mongodb_env_map() -> dict[str, str]:
+    out: dict[str, str] = {}
     if MONGODB_ATLAS_SECRET_PATH.is_file():
         for raw_line in MONGODB_ATLAS_SECRET_PATH.read_text(encoding="utf-8").splitlines():
             line = raw_line.strip()
@@ -328,16 +351,25 @@ def _get_mongodb_env_map() -> Dict[str, str]:
 
 
 @lru_cache(maxsize=32)
-def _find_skill_md_files(root_dir_str: str, max_depth: int = 3) -> Tuple[Path, ...]:
-    found: List[Path] = []
-    stack: List[Tuple[str, int]] = [(root_dir_str, 0)]
+def _find_skill_md_files(root_dir_str: str, max_depth: int = 3) -> tuple[Path, ...]:
+    found: list[Path] = []
+    stack: list[tuple[str, int]] = [(root_dir_str, 0)]
     while stack:
         curr, depth = stack.pop()
         try:
             with os.scandir(curr) as it:
                 for entry in it:
                     name = entry.name
-                    if name in (".git", "node_modules", "__pycache__", "references", "scripts", "assets", "examples", "resources"):
+                    if name in (
+                        ".git",
+                        "node_modules",
+                        "__pycache__",
+                        "references",
+                        "scripts",
+                        "assets",
+                        "examples",
+                        "resources",
+                    ):
                         continue
                     if name == "SKILL.md" and entry.is_file(follow_symlinks=False):
                         found.append(Path(entry.path))
@@ -349,9 +381,9 @@ def _find_skill_md_files(root_dir_str: str, max_depth: int = 3) -> Tuple[Path, .
 
 
 @lru_cache(maxsize=16)
-def _find_symlinks(root_dir_str: str, max_depth: int = 2) -> Tuple[str, ...]:
-    symlinks: List[str] = []
-    stack: List[Tuple[str, int]] = [(root_dir_str, 0)]
+def _find_symlinks(root_dir_str: str, max_depth: int = 2) -> tuple[str, ...]:
+    symlinks: list[str] = []
+    stack: list[tuple[str, int]] = [(root_dir_str, 0)]
     while stack:
         curr, depth = stack.pop()
         try:
@@ -377,7 +409,7 @@ def _find_symlinks(root_dir_str: str, max_depth: int = 2) -> Tuple[str, ...]:
 class TestTier1FeatureCoverage(unittest.TestCase):
     """Tier 1 — Primary behavioral & specification coverage for Round 2 features F13–F18."""
 
-    # --- F13: google/skills (187 Skills + 17 Plugins), .claude/skills Migration & 758-Skill Parity ---
+    # --- F13: google/skills (187 Skills + 17 Plugins) & 758-Skill Parity ---
 
     def test_t1_f13_01_google_skills_plugin_repo_and_187_index_json_catalog(self) -> None:
         self.assertTrue(
@@ -388,17 +420,27 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         self.assertTrue(index_json_path.is_file(), "Missing google-skills/index.json")
         index_data = json.loads(index_json_path.read_text(encoding="utf-8"))
         skills_list = index_data.get("skills", [])
-        self.assertEqual(len(skills_list), 187, f"Expected 187 skills in index.json, got {len(skills_list)}")
+        self.assertEqual(
+            len(skills_list), 187, f"Expected 187 skills in index.json, got {len(skills_list)}"
+        )
 
         skill_md_files = _find_skill_md_files(str(GOOGLE_SKILLS_PLUGIN_DIR / "skills"))
         self.assertEqual(len(skill_md_files), 187)
 
         mp_path = GOOGLE_SKILLS_PLUGIN_DIR / ".agents" / "plugins" / "marketplace.json"
-        self.assertTrue(mp_path.is_file(), "Missing .agents/plugins/marketplace.json in google-skills")
+        self.assertTrue(
+            mp_path.is_file(), "Missing .agents/plugins/marketplace.json in google-skills"
+        )
         mp_data = json.loads(mp_path.read_text(encoding="utf-8"))
         self.assertEqual(len(mp_data.get("plugins", [])), 17)
         self.assertTrue(
-            (GOOGLE_SKILLS_PLUGIN_DIR / "plugins" / "cloud" / "google-cloud-developer" / "skills").is_dir()
+            (
+                GOOGLE_SKILLS_PLUGIN_DIR
+                / "plugins"
+                / "cloud"
+                / "google-cloud-developer"
+                / "skills"
+            ).is_dir()
         )
 
     def test_t1_f13_02_gemini_config_skills_and_agents_skills_google_and_143_union_installed(
@@ -409,7 +451,9 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         self.assertGreaterEqual(len(gemini_skill_mds), 299)
         gemini_skill_names = {p.parent.name for p in gemini_skill_mds}
 
-        index_data = json.loads((GOOGLE_SKILLS_PLUGIN_DIR / "index.json").read_text(encoding="utf-8"))
+        index_data = json.loads(
+            (GOOGLE_SKILLS_PLUGIN_DIR / "index.json").read_text(encoding="utf-8")
+        )
         for item in index_data["skills"]:
             skill_name = item["name"]
             self.assertIn(
@@ -475,19 +519,34 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         self.assertEqual(len(expected_all_53), 53)
 
         present_dirs = {
-            d.name for d in SPORTS_AGENTS_SKILLS_DIR.iterdir() if d.is_dir() and (d / "SKILL.md").is_file()
+            d.name
+            for d in SPORTS_AGENTS_SKILLS_DIR.iterdir()
+            if d.is_dir() and (d / "SKILL.md").is_file()
         }
         missing = expected_all_53 - present_dirs
-        self.assertEqual(len(missing), 0, f"Missing expected skills in Sports/.agents/skills: {sorted(missing)}")
+        self.assertEqual(
+            len(missing),
+            0,
+            f"Missing expected skills in Sports/.agents/skills: {sorted(missing)}",
+        )
         self.assertEqual(len(present_dirs), 53)
 
         proc = _run_cached_cmd(
-            ("node", str(VALIDATE_SKILLS_JS), "--strict", "--skills-dir", str(SPORTS_AGENTS_SKILLS_DIR))
+            (
+                "node",
+                str(VALIDATE_SKILLS_JS),
+                "--strict",
+                "--skills-dir",
+                str(SPORTS_AGENTS_SKILLS_DIR),
+            )
         )
         self.assertEqual(
             proc.returncode,
             0,
-            f"validate-skills.js --strict failed on {SPORTS_AGENTS_SKILLS_DIR}:\n{proc.stdout}\n{proc.stderr}",
+            (
+                f"validate-skills.js --strict failed on {SPORTS_AGENTS_SKILLS_DIR}:\n"
+                f"{proc.stdout}\n{proc.stderr}"
+            ),
         )
         self.assertIn("Validation passed for 53 skills.", proc.stdout)
 
@@ -515,11 +574,13 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         self,
     ) -> None:
         for tool_name in ("gsheets", "gslides", "gcalendar"):
-            script_path = Path(f"/opt/antigravity/plugins/{tool_name}/skills/{tool_name}/scripts/{tool_name}")
+            script_path = Path(
+                f"/opt/antigravity/plugins/{tool_name}/skills/{tool_name}/scripts/{tool_name}"
+            )
             self.assertTrue(script_path.is_file(), f"Missing launcher script: {script_path}")
             txt = script_path.read_text(encoding="utf-8")
             self.assertIn(
-                'PREBAKED_TARGET="/opt/antigravity/plugin_data/$PLUGIN_DIR_NAME/bin/$TOOL-$CLI_VERSION"',
+                'PREBAKED_TARGET="/opt/antigravity/plugin_data/$PLUGIN_DIR_NAME/bin/$TOOL-$CLI_VERSION"',  # noqa: E501
                 txt,
             )
             self.assertIn('if [ -x "$PREBAKED_TARGET" ]; then', txt)
@@ -539,7 +600,9 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         ]
         for bin_path in expected_prebaked:
             self.assertTrue(bin_path.is_file(), f"Missing pre-baked binary: {bin_path}")
-            self.assertTrue(os.access(bin_path, os.X_OK), f"Pre-baked binary not executable: {bin_path}")
+            self.assertTrue(
+                os.access(bin_path, os.X_OK), f"Pre-baked binary not executable: {bin_path}"
+            )
 
     def test_t1_f14_03_gsheets_gslides_gcalendar_cli_version_executes_cleanly(self) -> None:
         for tool_name in ("gsheets", "gslides", "gcalendar"):
@@ -563,13 +626,17 @@ class TestTier1FeatureCoverage(unittest.TestCase):
             self.assertTrue(len((proc.stdout + proc.stderr).strip()) > 0)
 
     def test_t1_f14_05_stale_gdrive_tmp_2646_removed_and_zero_leftover_tmp_binaries(self) -> None:
-        stale_tmp = HOME_DIR / ".gemini" / "jetski" / "plugin_data" / "gdrive" / "bin" / ".gdrive.tmp.2646"
+        stale_tmp = (
+            HOME_DIR / ".gemini" / "jetski" / "plugin_data" / "gdrive" / "bin" / ".gdrive.tmp.2646"
+        )
         self.assertFalse(stale_tmp.exists(), f"Stale temp binary still exists: {stale_tmp}")
 
         plugin_data_root = HOME_DIR / ".gemini" / "jetski" / "plugin_data"
         if plugin_data_root.is_dir():
             leftover_tmps = list(plugin_data_root.rglob("*.tmp.*"))
-            self.assertEqual(len(leftover_tmps), 0, f"Found leftover temp binaries: {leftover_tmps}")
+            self.assertEqual(
+                len(leftover_tmps), 0, f"Found leftover temp binaries: {leftover_tmps}"
+            )
 
     # --- F15: Live MongoDB Atlas Administration API & Project Galaxy Sports Edge Wiring ---
 
@@ -628,9 +695,11 @@ class TestTier1FeatureCoverage(unittest.TestCase):
 
         priv_key = _get_mongodb_env_map().get("MONGODB_ATLAS_PRIVATE_KEY", "")
         if priv_key:
-            self.assertNotIn(priv_key, raw_txt, "Private key leaked into MongoDB Atlas receipt JSON!")
+            self.assertNotIn(
+                priv_key, raw_txt, "Private key leaked into MongoDB Atlas receipt JSON!"
+            )
 
-    # --- F16: Google Drive 49 Nov 7 Books, Per-File Drive IDs, DK CSV, Branch Artifacts & 0 Synthetic Repos ---
+    # --- F16: Google Drive 49 Nov 7 Books, Drive IDs, DK CSV, Branch Artifacts & 0 Synthetic ---
 
     def test_t1_f16_01_all_49_nov7_self_added_books_inventoried_in_manifests_and_index_books_a_2(
         self,
@@ -694,7 +763,10 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         self.assertEqual(
             len(non_empty_drive_ids),
             len(books),
-            f"Expected all {len(books)} books in complete_458_book_registry.json to have drive_id, got {len(non_empty_drive_ids)}",
+            (
+                f"Expected all {len(books)} books in complete_458_book_registry.json "
+                f"to have drive_id, got {len(non_empty_drive_ids)}"
+            ),
         )
 
         primary_manifest = (
@@ -739,12 +811,12 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         self.assertIn("nova-dossier", docs_index_txt)
         self.assertIn("cadence_v40_gameday_lock_sun_late_w9.json", docs_index_txt)
 
-    def test_t1_f16_05_build_uncompressed_full_corpus_documents_has_zero_synthetic_repo_placeholders(
+    def test_t1_f16_05_build_uncompressed_full_corpus_documents_has_zero_synthetic_repo_placeholders(  # noqa: E501
         self,
     ) -> None:
         docs = _get_624_corpus_docs()
         self.assertEqual(len(docs), 624)
-        by_type: Dict[str, List[CorpusDocument]] = {}
+        by_type: dict[str, list[CorpusDocument]] = {}
         for d in docs:
             by_type.setdefault(d.source_type, []).append(d)
         self.assertEqual(len(by_type.get("book", [])), 210)
@@ -754,12 +826,16 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         synthetic_repos = [
             d
             for d in docs
-            if "gse-gsi-verified-url-repo-" in d.title or "github.com/gse-atlas/repo-" in d.source_url
+            if "gse-gsi-verified-url-repo-" in d.title
+            or "github.com/gse-atlas/repo-" in d.source_url
         ]
         self.assertEqual(
             len(synthetic_repos),
             0,
-            f"Found {len(synthetic_repos)} synthetic repo placeholders: {[d.title for d in synthetic_repos[:5]]}",
+            (
+                f"Found {len(synthetic_repos)} synthetic repo placeholders: "
+                f"{[d.title for d in synthetic_repos[:5]]}"
+            ),
         )
 
     # --- F17: All 36 CI Guardrails (run-all.mjs) & 7 Failing Vitest Suites Remediated ---
@@ -775,7 +851,10 @@ class TestTier1FeatureCoverage(unittest.TestCase):
             self.assertEqual(
                 proc.returncode,
                 0,
-                f"Guardrail {script_rel} failed (rc={proc.returncode}):\n{proc.stdout}\n{proc.stderr}",
+                (
+                    f"Guardrail {script_rel} failed (rc={proc.returncode}):\n"
+                    f"{proc.stdout}\n{proc.stderr}"
+                ),
             )
 
     def test_t1_f17_02_seal_pot_cognitive_router_exports_pillars_and_router_fn(self) -> None:
@@ -830,7 +909,10 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         self.assertEqual(
             proc.returncode,
             0,
-            f"metric-asset-graduation / model-registry Vitest failed:\n{proc.stdout}\n{proc.stderr}",
+            (
+                "metric-asset-graduation / model-registry Vitest failed:\n"
+                f"{proc.stdout}\n{proc.stderr}"
+            ),
         )
 
     def test_t1_f17_04_universal_nfl_metric_engine_exponential_tanh_identity_and_zero_literal_tanh(
@@ -849,21 +931,31 @@ class TestTier1FeatureCoverage(unittest.TestCase):
 
         proc = _run_cached_vitest(
             (
-                "packages/prediction-engine/src/engine/__tests__/universal-nfl-metric-and-situational-engine.test.ts",
+                "packages/prediction-engine/src/engine/__tests__/"
+                "universal-nfl-metric-and-situational-engine.test.ts",
             )
         )
         self.assertEqual(
             proc.returncode,
             0,
-            f"universal-nfl-metric-and-situational-engine.test.ts failed:\n{proc.stdout}\n{proc.stderr}",
+            (
+                "universal-nfl-metric-and-situational-engine.test.ts failed:\n"
+                f"{proc.stdout}\n{proc.stderr}"
+            ),
         )
 
     def test_t1_f17_05_mutation_sweeps_and_red_team_specs_use_os_tmpdir_and_import_meta_url(
         self,
     ) -> None:
-        periodic_src = (
-            REPO_ROOT / "packages" / "prediction-engine" / "src" / "causal" / "periodic-timeseries-id.ts"
-        ).read_text(encoding="utf-8")
+        periodic_path = (
+            REPO_ROOT
+            / "packages"
+            / "prediction-engine"
+            / "src"
+            / "causal"
+            / "periodic-timeseries-id.ts"
+        )
+        periodic_src = periodic_path.read_text(encoding="utf-8")
         self.assertNotIn("MUTANT:", periodic_src)
         for sweep_rel in (
             "packages/prediction-engine/reconciliation/_mutation_sweep_r5_r10.mjs",
@@ -903,7 +995,10 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         self.assertEqual(
             proc.returncode,
             0,
-            f"run_overnight_20h_hermes_opencode_nvidia_openrouter_shift.py --dry-run failed:\n{proc.stderr}",
+            (
+                "run_overnight_20h_hermes_opencode_nvidia_openrouter_shift.py --dry-run failed:\n"
+                f"{proc.stderr}"
+            ),
         )
         self.assertIn("47-19-1", proc.stdout)
         self.assertNotIn("72.9%", proc.stdout)
@@ -948,12 +1043,22 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         self,
     ) -> None:
         target_scripts = [
-            REPO_ROOT / "scripts" / "ops" / "run_overnight_20h_hermes_opencode_nvidia_openrouter_shift.py",
+            (
+                REPO_ROOT
+                / "scripts"
+                / "ops"
+                / "run_overnight_20h_hermes_opencode_nvidia_openrouter_shift.py"
+            ),
             REPO_ROOT / "scripts" / "ops" / "gse_connected_game_workflow.py",
             REPO_ROOT / "scripts" / "ops" / "run_week9_full_slate_connected_workflow.py",
             REPO_ROOT / "scripts" / "ops" / "gse_structured_workflow_runner.py",
             REPO_ROOT / "scripts" / "ops" / "workflow_runner.py",
-            REPO_ROOT / "intelligence" / "dfs" / "full_stack_post_sim_projection_and_200pt_dfs_orchestrator.py",
+            (
+                REPO_ROOT
+                / "intelligence"
+                / "dfs"
+                / "full_stack_post_sim_projection_and_200pt_dfs_orchestrator.py"
+            ),
             REPO_ROOT / "intelligence" / "seo" / "seo_and_lcp_optimization_engine.py",
         ]
         for script_path in target_scripts:
@@ -1007,7 +1112,8 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
             bad_skill_dir = Path(tmpdir) / "bad-skill"
             bad_skill_dir.mkdir(parents=True, exist_ok=True)
             (bad_skill_dir / "SKILL.md").write_text(
-                "---\nname: bad-skill\ndescription: Invalid skill\neffort: high\n---\n# Bad Skill\nNo required H2 sections.\n",
+                "---\nname: bad-skill\ndescription: Invalid skill\neffort: high\n"
+                "---\n# Bad Skill\nNo required H2 sections.\n",
                 encoding="utf-8",
             )
             proc = subprocess.run(
@@ -1018,13 +1124,17 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
                 timeout=30,
                 check=False,
             )
-            self.assertNotEqual(proc.returncode, 0, "validate-skills.js --strict must reject malformed skill")
+            self.assertNotEqual(
+                proc.returncode, 0, "validate-skills.js --strict must reject malformed skill"
+            )
 
     def test_t2_f13_03_all_53_sports_workspace_skills_under_500_lines_and_valid_frontmatter_keys(
         self,
     ) -> None:
         skill_dirs = sorted(
-            d for d in SPORTS_AGENTS_SKILLS_DIR.iterdir() if d.is_dir() and (d / "SKILL.md").is_file()
+            d
+            for d in SPORTS_AGENTS_SKILLS_DIR.iterdir()
+            if d.is_dir() and (d / "SKILL.md").is_file()
         )
         self.assertEqual(len(skill_dirs), 53)
         for sdir in skill_dirs:
@@ -1052,7 +1162,7 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
             for req_h2 in ("## Use this skill when", "## Do not use", "## Instructions"):
                 self.assertIn(req_h2, parts[2], f"Skill {sdir.name} missing '{req_h2}'")
 
-    def test_t2_f13_04_bigquery_optimization_local_references_resolved_without_broken_cross_skill_links(
+    def test_t2_f13_04_bigquery_optimization_local_references_resolved_without_broken_cross_skill_links(  # noqa: E501
         self,
     ) -> None:
         bq_opt_dir = SPORTS_AGENTS_SKILLS_DIR / "bigquery-optimization"
@@ -1070,7 +1180,10 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
             self.assertEqual(
                 proc.returncode,
                 0,
-                f"Isolated bigquery-optimization failed strict validation:\n{proc.stdout}\n{proc.stderr}",
+                (
+                    "Isolated bigquery-optimization failed strict validation:\n"
+                    f"{proc.stdout}\n{proc.stderr}"
+                ),
             )
 
     def test_t2_f13_05_758_skills_receipt_and_143_skills_catalog_contain_zero_raw_home_paths_or_etc(
@@ -1132,7 +1245,9 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
                 timeout=15,
                 check=False,
             )
-            self.assertEqual(proc.returncode, 0, f"{bin_shim} failed with minimal PATH: {proc.stderr}")
+            self.assertEqual(
+                proc.returncode, 0, f"{bin_shim} failed with minimal PATH: {proc.stderr}"
+            )
 
     def test_t2_f14_04_plugin_launcher_scripts_pass_bash_n_syntax_check(self) -> None:
         for _, script_path, _ in EXPECTED_6_CONNECTED_PLUGINS:
@@ -1143,13 +1258,23 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
                 timeout=10,
                 check=False,
             )
-            self.assertEqual(proc.returncode, 0, f"sh -n syntax check failed on {script_path}: {proc.stderr}")
+            self.assertEqual(
+                proc.returncode,
+                0,
+                f"sh -n syntax check failed on {script_path}: {proc.stderr}",
+            )
 
     def test_t2_f14_05_plugin_launchers_do_not_leave_temp_files_in_plugin_data_after_invocation(
         self,
     ) -> None:
         for _, _, bin_shim in EXPECTED_6_CONNECTED_PLUGINS:
-            subprocess.run([bin_shim, "--version"], capture_output=True, text=True, timeout=15, check=False)
+            subprocess.run(
+                [bin_shim, "--version"],
+                capture_output=True,
+                text=True,
+                timeout=15,
+                check=False,
+            )
         plugin_data_root = HOME_DIR / ".gemini" / "jetski" / "plugin_data"
         if plugin_data_root.is_dir():
             tmps = list(plugin_data_root.rglob("*.tmp.*"))
@@ -1232,7 +1357,9 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
     def test_t2_f16_01_corpus_documents_unique_doc_ids_and_valid_https_urls(self) -> None:
         docs = _get_624_corpus_docs()
         doc_ids = [d.doc_id for d in docs]
-        self.assertEqual(len(doc_ids), len(set(doc_ids)), "Duplicate doc_id found in 624 corpus docs")
+        self.assertEqual(
+            len(doc_ids), len(set(doc_ids)), "Duplicate doc_id found in 624 corpus docs"
+        )
         for d in docs:
             self.assertTrue(bool(d.title.strip()), f"Empty title on {d.doc_id}")
             if d.source_type == "github_repo":
@@ -1274,12 +1401,20 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
         self,
     ) -> None:
         # Verify dated bucket path compliance: docs/<bucket>/research/<YYYY-MM-DD>/
-        self.assertIn("docs/predictions/research/2026-11-07/nova-dossier", CADENCE_V40_JSON_PATH.as_posix().replace("2026-11-08/cadence_v40_gameday_lock_sun_late_w9.json", "2026-11-07/nova-dossier"))
+        normalized_cadence = CADENCE_V40_JSON_PATH.as_posix().replace(
+            "2026-11-08/cadence_v40_gameday_lock_sun_late_w9.json",
+            "2026-11-07/nova-dossier",
+        )
+        self.assertIn("docs/predictions/research/2026-11-07/nova-dossier", normalized_cadence)
         self.assertTrue(
-            str(NOVA_DOSSIER_DIR.relative_to(REPO_ROOT)).startswith("docs/predictions/research/2026-11-07/")
+            str(NOVA_DOSSIER_DIR.relative_to(REPO_ROOT)).startswith(
+                "docs/predictions/research/2026-11-07/"
+            )
         )
         self.assertTrue(
-            str(CADENCE_V40_JSON_PATH.relative_to(REPO_ROOT)).startswith("docs/predictions/research/2026-11-08/")
+            str(CADENCE_V40_JSON_PATH.relative_to(REPO_ROOT)).startswith(
+                "docs/predictions/research/2026-11-08/"
+            )
         )
 
     def test_t2_f16_05_books_a_sports_index_and_manifests_handle_duplicate_and_crdownload_notes(
@@ -1303,10 +1438,13 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
     def test_t2_f17_01_exponential_tanh_identity_numerical_stability_under_extreme_beta_h(
         self,
     ) -> None:
-        # Verify the exact algebraic identity ((exp(2x) - 1) / (exp(2x) + 1)) with clamping is stable
+        # Verify ((exp(2x) - 1) / (exp(2x) + 1)) with clamping is stable
         script = """
         const fs = require('fs');
-        const src = fs.readFileSync('packages/prediction-engine/src/engine/universal-nfl-metric-and-situational-engine.ts', 'utf8');
+        const src = fs.readFileSync(
+          'packages/prediction-engine/src/engine/universal-nfl-metric-and-situational-engine.ts',
+          'utf8'
+        );
         if (src.includes('tanh(')) process.exit(2);
         const expTanh = (x) => {
           const c = Math.max(-20, Math.min(20, 2 * x));
@@ -1326,7 +1464,9 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
             timeout=15,
             check=False,
         )
-        self.assertEqual(proc.returncode, 0, f"Exponential tanh stability check failed: {proc.stderr}")
+        self.assertEqual(
+            proc.returncode, 0, f"Exponential tanh stability check failed: {proc.stderr}"
+        )
 
     def test_t2_f17_02_seal_pot_quad_frontier_router_wasserstein_drift_abstention_and_log_odds_cap(
         self,
@@ -1350,19 +1490,25 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
     def test_t2_f17_04_mcp_cognitive_router_t14_resolves_reconciliation_script_from_any_cwd(
         self,
     ) -> None:
-        t14_spec = (
-            REPO_ROOT / "packages" / "prediction-engine" / "test" / "mcp-cognitive-router.t14.spec.ts"
-        ).read_text(encoding="utf-8")
+        t14_path = (
+            REPO_ROOT
+            / "packages"
+            / "prediction-engine"
+            / "test"
+            / "mcp-cognitive-router.t14.spec.ts"
+        )
+        t14_spec = t14_path.read_text(encoding="utf-8")
         self.assertIn("import.meta.url", t14_spec)
 
     def test_t2_f17_05_reconciliation_mutation_sweeps_contain_zero_hardcoded_windows_drive_paths(
         self,
     ) -> None:
+        pe_dir = REPO_ROOT / "packages" / "prediction-engine"
         files_to_check = [
-            REPO_ROOT / "packages" / "prediction-engine" / "reconciliation" / "_mutation_sweep_r5_r10.mjs",
-            REPO_ROOT / "packages" / "prediction-engine" / "reconciliation" / "_mutation_sweep_periodic_id.mjs",
-            REPO_ROOT / "packages" / "prediction-engine" / "reconciliation" / "_mutation_sweep_t13_proximal.mjs",
-            REPO_ROOT / "packages" / "prediction-engine" / "test" / "adversary-red-team.t6.spec.ts",
+            pe_dir / "reconciliation" / "_mutation_sweep_r5_r10.mjs",
+            pe_dir / "reconciliation" / "_mutation_sweep_periodic_id.mjs",
+            pe_dir / "reconciliation" / "_mutation_sweep_t13_proximal.mjs",
+            pe_dir / "test" / "adversary-red-team.t6.spec.ts",
         ]
         for fpath in files_to_check:
             txt = fpath.read_text(encoding="utf-8")
@@ -1394,13 +1540,15 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
         self.assertIn("LAR", src)
 
     def test_t2_f18_03_stage0_allowlist_raises_contamination_error_for_invalid_week(self) -> None:
-        with self.assertRaises(Exception):
+        with self.assertRaises((RuntimeError, ValueError)):
             load_stage0_game_roster_allowlist(away="BUF", home="MIN", week=99)
 
     def test_t2_f18_04_overnight_20h_shift_track5_verifies_ledger_without_false_degraded_status(
         self,
     ) -> None:
-        from scripts.ops import run_overnight_20h_hermes_opencode_nvidia_openrouter_shift as shift_mod
+        from scripts.ops import (
+            run_overnight_20h_hermes_opencode_nvidia_openrouter_shift as shift_mod,
+        )
 
         t5 = shift_mod.run_track_5()
         self.assertIn(t5["status"], ("VERIFIED", "PASS"))
@@ -1412,7 +1560,9 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
     def test_t2_f18_05_overnight_20h_shift_week9_priority_games_use_2026_matchups_not_2024(
         self,
     ) -> None:
-        from scripts.ops import run_overnight_20h_hermes_opencode_nvidia_openrouter_shift as shift_mod
+        from scripts.ops import (
+            run_overnight_20h_hermes_opencode_nvidia_openrouter_shift as shift_mod,
+        )
 
         matchups = [g["matchup"] for g in shift_mod.WEEK9_PRIORITY_GAMES]
         self.assertGreaterEqual(len(matchups), 4)
@@ -1442,7 +1592,7 @@ class TestTier3CrossFeatureCombinations(unittest.TestCase):
             proc = _run_cached_cmd((bin_shim, "--version"))
             self.assertEqual(proc.returncode, 0)
 
-    def test_t3_02_f13_and_f09_f10_workspace_53_skills_coexist_with_round1_migrated_workflows_and_143_router(
+    def test_t3_02_f13_and_f09_f10_workspace_53_skills_coexist_with_round1_migrated_workflows_and_143_router(  # noqa: E501
         self,
     ) -> None:
         core_17 = set(DOMAIN_SKILL_ASSIGNMENTS["gse_core_engine_calibration_and_money_path"])
@@ -1481,7 +1631,7 @@ class TestTier3CrossFeatureCombinations(unittest.TestCase):
             assert fetched is not None
             self.assertEqual(fetched["title"], d.title)
 
-    def test_t3_04_f16_and_f05_f07_complete_458_book_registry_drive_ids_crosswalk_and_compiler_parity(
+    def test_t3_04_f16_and_f05_f07_complete_458_book_registry_drive_ids_crosswalk_and_compiler_parity(  # noqa: E501
         self,
     ) -> None:
         reg_data = json.loads(COMPLETE_458_BOOK_REGISTRY_PATH.read_text(encoding="utf-8"))
@@ -1511,17 +1661,21 @@ class TestTier3CrossFeatureCombinations(unittest.TestCase):
         self.assertEqual(
             proc.returncode,
             0,
-            f"zero-orphan-engine-audit + metric-asset-graduation failed:\n{proc.stdout}\n{proc.stderr}",
+            (
+                "zero-orphan-engine-audit + metric-asset-graduation failed:\n"
+                f"{proc.stdout}\n{proc.stderr}"
+            ),
         )
 
     def test_t3_07_f18_and_f01_seo_engine_and_overnight_shift_match_public_surface_47_19_1_ledger(
         self,
     ) -> None:
-        from scripts.ops import run_overnight_20h_hermes_opencode_nvidia_openrouter_shift as shift_mod
-
-        seo_ts = (REPO_ROOT / "apps" / "web" / "lib" / "seo" / "ai-agent-and-search-seo.ts").read_text(
-            encoding="utf-8"
+        from scripts.ops import (
+            run_overnight_20h_hermes_opencode_nvidia_openrouter_shift as shift_mod,
         )
+
+        seo_path = REPO_ROOT / "apps" / "web" / "lib" / "seo" / "ai-agent-and-search-seo.ts"
+        seo_ts = seo_path.read_text(encoding="utf-8")
         self.assertIn("47-19-1 (+24.92u)", seo_ts)
         self.assertEqual(shift_mod.OFFICIAL_VERIFIED_RECORD, "47-19-1")
         self.assertAlmostEqual(float(shift_mod.OFFICIAL_VERIFIED_WIN_PCT), 71.2, places=1)
@@ -1540,10 +1694,13 @@ class TestTier3CrossFeatureCombinations(unittest.TestCase):
         stage0 = load_stage0_game_roster_allowlist("BUF", "MIN", week=9)
         self.assertEqual(stage0["matchup"], "BUF@MIN")
 
-    def test_t3_09_f15_and_f17_mongodb_atlas_receipt_and_all_new_r2_artifacts_pass_secret_scan_and_trust_gate(
+    def test_t3_09_f15_and_f17_mongodb_atlas_receipt_and_all_new_r2_artifacts_pass_secret_scan_and_trust_gate(  # noqa: E501
         self,
     ) -> None:
-        for script_rel in ("scripts/guardrails/trust-gate.mjs", "scripts/guardrails/secret-scan.mjs"):
+        for script_rel in (
+            "scripts/guardrails/trust-gate.mjs",
+            "scripts/guardrails/secret-scan.mjs",
+        ):
             proc = _run_cached_cmd(("node", script_rel))
             self.assertEqual(
                 proc.returncode,
@@ -1551,14 +1708,15 @@ class TestTier3CrossFeatureCombinations(unittest.TestCase):
                 f"{script_rel} failed on Round 2 artifacts:\n{proc.stdout}\n{proc.stderr}",
             )
 
-    def test_t3_10_f17_and_f18_gameday_orchestrator_workflow_yaml_steps_match_verified_cli_entrypoints(
+    def test_t3_10_f17_and_f18_gameday_orchestrator_workflow_yaml_steps_match_verified_cli_entrypoints(  # noqa: E501
         self,
     ) -> None:
         wf_yml = (
             REPO_ROOT / ".github" / "workflows" / "gse-connected-5stage-gameday-orchestrator.yml"
         ).read_text(encoding="utf-8")
         self.assertIn(
-            "python scripts/ops/run_overnight_20h_hermes_opencode_nvidia_openrouter_shift.py --dry-run",
+            "python scripts/ops/"
+            "run_overnight_20h_hermes_opencode_nvidia_openrouter_shift.py --dry-run",
             wf_yml,
         )
         self.assertIn("python scripts/ops/run_week9_full_slate_connected_workflow.py", wf_yml)
@@ -1576,7 +1734,9 @@ class TestTier4RealWorldApplicationScenarios(unittest.TestCase):
     def test_t4_01_e2e_google_skills_758_suite_and_143_router_full_linux_vm_execution(
         self,
     ) -> None:
-        """Scenario 1: Full execution of `test_all_installed_skills_execution.py`,
+        """Scenario 1: Run installed-skills, 143-router, and validate-skills.js suites.
+
+        Covers full execution of `test_all_installed_skills_execution.py`,
         `test_143_skills_and_agy_plugins.py`, and `validate-skills.js --strict` on the 53
         workspace skills in `Beexly/Sports/.agents/skills/`.
         """
@@ -1592,20 +1752,33 @@ class TestTier4RealWorldApplicationScenarios(unittest.TestCase):
         self.assertEqual(
             proc_py.returncode,
             0,
-            f"Skills execution / 143 router unit suites failed:\n{proc_py.stdout}\n{proc_py.stderr}",
+            (
+                "Skills execution / 143 router unit suites failed:\n"
+                f"{proc_py.stdout}\n{proc_py.stderr}"
+            ),
         )
 
         proc_val = _run_cached_cmd(
-            ("node", str(VALIDATE_SKILLS_JS), "--strict", "--skills-dir", str(SPORTS_AGENTS_SKILLS_DIR))
+            (
+                "node",
+                str(VALIDATE_SKILLS_JS),
+                "--strict",
+                "--skills-dir",
+                str(SPORTS_AGENTS_SKILLS_DIR),
+            )
         )
-        self.assertEqual(proc_val.returncode, 0, f"validate-skills.js --strict failed:\n{proc_val.stderr}")
+        self.assertEqual(
+            proc_val.returncode, 0, f"validate-skills.js --strict failed:\n{proc_val.stderr}"
+        )
 
     def test_t4_02_e2e_all_6_connected_plugins_live_workspace_and_drive_inventory_pipeline(
         self,
     ) -> None:
-        """Scenario 2: Live execution of all 6 connected Antigravity plugins (`gdocs`, `gdrive`,
-        `gh`, `gsheets`, `gslides`, `gcalendar`) and verification of the 79 files (30 Wave A +
-        49 Nov 7 self-added files) in Google Drive `books-a-sports` (`1n3K5UDjVxpKbdW1I1o4yo_StuzvyGd-p`).
+        """Scenario 2: Execute all 6 connected plugins and verify Drive folder inventory.
+
+        Tests live execution of `gdocs`, `gdrive`, `gh`, `gsheets`, `gslides`, and
+        `gcalendar`, plus verification of the 79 files (30 Wave A + 49 Nov 7 self-added
+        files) in Google Drive `books-a-sports` (`1n3K5UDjVxpKbdW1I1o4yo_StuzvyGd-p`).
         """
         for _, _, bin_shim in EXPECTED_6_CONNECTED_PLUGINS:
             proc = _run_cached_cmd((bin_shim, "--version"))
@@ -1625,14 +1798,20 @@ class TestTier4RealWorldApplicationScenarios(unittest.TestCase):
         self.assertEqual(p_ls.returncode, 0, f"gdrive readonly ls failed: {p_ls.stderr}")
         listing = json.loads(p_ls.stdout)
         files = listing if isinstance(listing, list) else listing.get("files", [])
-        self.assertEqual(len(files), 79, f"Expected 79 files in books-a-sports Drive folder, got {len(files)}")
+        self.assertEqual(
+            len(files),
+            79,
+            f"Expected 79 files in books-a-sports Drive folder, got {len(files)}",
+        )
 
     def test_t4_03_e2e_uncompressed_624_corpus_pinecone_bm25_and_live_mongodb_atlas_verification(
         self,
     ) -> None:
-        """Scenario 3: Build the 624-document uncompressed corpus (0 synthetic repo placeholders),
-        index with `BM25PlusScorer`, query for newly added Nov 7–9 GitHub repositories, archive
-        into `MongoDBDossierArchiveAdapter`, and verify Project `Galaxy Sports Edge` (`6af23d2bfdbda62efc136f07`).
+        """Scenario 3: Build 624-document corpus, index with BM25+, and archive to MongoDB.
+
+        Indexes with `BM25PlusScorer`, queries for newly added Nov 7–9 GitHub repositories,
+        archives into `MongoDBDossierArchiveAdapter`, and verifies Project
+        `Galaxy Sports Edge` (`6af23d2bfdbda62efc136f07`).
         """
         docs = _get_624_corpus_docs()
         self.assertEqual(len(docs), 624)
@@ -1652,8 +1831,10 @@ class TestTier4RealWorldApplicationScenarios(unittest.TestCase):
     def test_t4_04_e2e_connected_5stage_gameday_and_overnight_20h_shift_full_dry_run(
         self,
     ) -> None:
-        """Scenario 4: Execute the connected 5-stage gameday workflow, 20-hour overnight shift
-        `--dry-run`, Stage 0 allowlist loader, and SEO/LCP engine end-to-end.
+        """Scenario 4: Execute connected 5-stage gameday workflow and overnight shift dry-run.
+
+        Runs 20-hour overnight shift `--dry-run`, Stage 0 allowlist loader, and SEO/LCP
+        engine end-to-end.
         """
         for cmd in (
             (
@@ -1672,14 +1853,18 @@ class TestTier4RealWorldApplicationScenarios(unittest.TestCase):
             )
 
     def test_t4_05_e2e_vitest_7_remediated_suites_execution_pass(self) -> None:
-        """Scenario 5: Run Vitest across all 7 remediated TypeScript test files in
-        `packages/prediction-engine` and `packages/mcp-equations-server`.
+        """Scenario 5: Run Vitest across all 7 remediated TypeScript test files.
+
+        Covers `packages/prediction-engine` and `packages/mcp-equations-server`.
         """
         proc = _run_cached_vitest(
             (
                 "packages/mcp-equations-server/src/__tests__/seal-pot-cognitive-router.test.ts",
                 "packages/prediction-engine/src/metrics/__tests__/metric-asset-graduation.test.ts",
-                "packages/prediction-engine/src/engine/__tests__/universal-nfl-metric-and-situational-engine.test.ts",
+                (
+                    "packages/prediction-engine/src/engine/__tests__/"
+                    "universal-nfl-metric-and-situational-engine.test.ts"
+                ),
                 "packages/prediction-engine/src/__tests__/model-registry.test.ts",
                 "packages/prediction-engine/test/public-picks-enabled-readers.t21.spec.ts",
                 "packages/prediction-engine/test/mcp-cognitive-router.t14.spec.ts",
@@ -1695,8 +1880,10 @@ class TestTier4RealWorldApplicationScenarios(unittest.TestCase):
     def test_t4_06_e2e_all_36_ci_guardrails_and_round1_plus_round2_regression_gatekeeper(
         self,
     ) -> None:
-        """Scenario 6: Execute `node scripts/guardrails/run-all.mjs` (36/36 CI guardrails),
-        `connected-workflow-dossier-guard.py`, and `apps/mobile/scripts/lint-rules.js`.
+        """Scenario 6: Execute all 36 CI guardrails, dossier guard, and mobile lint rules.
+
+        Runs `node scripts/guardrails/run-all.mjs`, `connected-workflow-dossier-guard.py`,
+        and `apps/mobile/scripts/lint-rules.js`.
         """
         proc_all = _run_cached_cmd(("node", "scripts/guardrails/run-all.mjs"), timeout=180)
         self.assertEqual(

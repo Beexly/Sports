@@ -104,8 +104,6 @@ def test_prior_strength_equals_observed_evidence(out):
     alpha + beta for each team must equal the number of that team's plays the
     trainer actually saw -- one count per play, not one per play per epoch.
     """
-    import pandas as pd
-
     raw, _ = trainer._load_pbp(None)
     df = trainer._clean(raw)
     observed = df["posteam"].value_counts().to_dict()

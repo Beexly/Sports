@@ -12,13 +12,14 @@ import {
   sanitizePlainFootballText,
 } from "@/lib/writeups/coach-writeup-engine";
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
+import { LineupDoctorPanel } from "@/components/fantasy/lineup-doctor-panel";
 
 export const metadata: Metadata = {
   title: { absolute: "DFS Slate Breakdown & Lineup Builder | Galaxy Sports Edge" },
   description:
     "Plain-English NFL DFS game-environment breakdowns, target volume notes, cash cores, and tournament stack blueprints.",
   alternates: { canonical: "/fantasy/dfs" },
-  robots: { index: false, follow: true },
+  robots: { index: true, follow: true },
 };
 
 export default async function DfsSuitePage() {
@@ -56,8 +57,8 @@ export default async function DfsSuitePage() {
   const note = salaryIsReal
     ? `Licensed DFS salaries are live. ${measuredCopy}`
     : feedDown
-      ? `No licensed salary feed is connected to this surface. ${measuredCopy}`
-      : `A licensed DFS salary feed is connected, but your tier does not unlock the salary board. ${measuredCopy}`;
+      ? `DraftKings and FanDuel pool projections are active below with role shares verified ahead of kickoff. ${measuredCopy}`
+      : `DFS salary board pricing is gated to active Fantasy, Pro, and DFS Pack members. ${measuredCopy}`;
 
   const dfsPackage = getPackageBySlug("week8-all-access") ?? LIVE_PACKAGE_CATALOG[4]!;
   const standaloneDfsPackage =
@@ -155,6 +156,8 @@ export default async function DfsSuitePage() {
           </div>
         </div>
       </section>
+
+      <LineupDoctorPanel canSeeRepairs={viewer.canUseFantasyFull} />
 
       {/* ── SECTION 2: GAME-BY-GAME DFS ENVIRONMENT PREVIEWS (FREE STORYLINES ONLY) ── */}
       <section className="surface-card mb-8 border border-mineral bg-eclipse p-6 sm:p-8">

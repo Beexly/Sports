@@ -12,8 +12,10 @@
 
 import posthog from "posthog-js";
 import {
-  resolvePostHogToken,
+  buildPostHogZeroWasteInitOptions,
+  isAutomatedCrawlerOrHeadlessClient,
   resolvePostHogHost,
+  resolvePostHogToken,
   shouldInitPostHogClient,
 } from "@/lib/analytics/posthog-config";
 
@@ -31,6 +33,14 @@ export function postHogClientInitialized(): boolean {
 export function initPostHogClient(): boolean {
   if (typeof window === "undefined") return false;
   if (initialized) return true;
+  if (
+    isAutomatedCrawlerOrHeadlessClient(
+      window.navigator?.userAgent,
+      window.navigator?.webdriver,
+    )
+  ) {
+    return false;
+  }
 
   const token = resolvePostHogToken({
     NEXT_PUBLIC_POSTHOG_KEY: process.env["NEXT_PUBLIC_POSTHOG_KEY"],
@@ -42,14 +52,13 @@ export function initPostHogClient(): boolean {
   }
 
   try {
-    posthog.init(token, {
-      api_host: host,
-      person_profiles: "identified_only",
-      capture_pageview: true,
-      capture_pageleave: true,
-      // Respect explicit opt-out; never persist beyond the session choice.
-      respect_dnt: true,
-    });
+    posthog.init(
+      token,
+      buildPostHogZeroWasteInitOptions(host, {
+        NEXT_PUBLIC_POSTHOG_SESSION_REPLAY_ENABLED:
+          process.env["NEXT_PUBLIC_POSTHOG_SESSION_REPLAY_ENABLED"],
+      }),
+    );
     initialized = true;
     return true;
   } catch {

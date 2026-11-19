@@ -1,0 +1,79 @@
+{
+  "generated_date": "2026-11-17",
+  "rlvr_feed_path": "brain/feeds/2026-11-17/aws_ngs_going_deep_gse_to_gsi_rlvr_feed.jsonl",
+  "sources": [
+    {
+      "gse_gsi_seam": "End-to-end 6-episode architectural integration across GSE Stage-2/3 and GSI sulcal TBI",
+      "id": "AWS-NGS-GD-HUB",
+      "status": "WIRED_V3",
+      "title": "Going Deep: AWS + NFL Next Gen Stats Video Series",
+      "url": "https://aws.amazon.com/sports/nfl/going-deep/"
+    },
+    {
+      "gse_gsi_seam": "75-model <1000ms critical-path budget & Digital Athlete biomechanical safety alignment",
+      "id": "AWS-NGS-PARENT-HUB",
+      "status": "WIRED_V3",
+      "title": "NFL Powered by AWS (500M+ Data Points/Season, 75 ML Models in <1s, Digital Athlete, NFL IQ)",
+      "url": "https://aws.amazon.com/sports/nfl/"
+    },
+    {
+      "duration": "PT6M10S",
+      "gse_gsi_seam": "StadiumEdgeRFIDSmoother: 10 Hz dual-epaulet + ball tag yaw & cross-body release kinematics",
+      "id": "AWS-NGS-GD-EP1",
+      "published": "2026-02-02",
+      "status": "WIRED_V3",
+      "title": "Ep. 1: How AWS Captures Every Play",
+      "url": "https://www.youtube.com/watch?v=tG_GlFFoc-M"
+    },
+    {
+      "duration": "PT6M21S",
+      "gse_gsi_seam": "InProcessKafkaTopicDAG + PolyglotFourTierStorageRouter (>2 GB/game O(1) partition + 8-box/blitz splits)",
+      "id": "AWS-NGS-GD-EP2",
+      "published": "2026-02-02",
+      "status": "WIRED_V3",
+      "title": "Ep. 2: The Storage Playbook",
+      "url": "https://www.youtube.com/watch?v=ntz36SUsUrE"
+    },
+    {
+      "duration": "PT6M45S",
+      "gse_gsi_seam": "ProductionShipGateVerifier: >=5 feature ML cutoff, population rate ratio guard, player-season rollup rho",
+      "id": "AWS-NGS-GD-EP3",
+      "published": "2026-02-02",
+      "status": "WIRED_V3",
+      "title": "Ep. 3: From Snap to Stat",
+      "url": "https://www.youtube.com/watch?v=4U3H5xVDXsQ"
+    },
+    {
+      "duration": "PT5M4S",
+      "gse_gsi_seam": "GlassBoxMonotoneXGBoostCompletionEngine: exact 2nd-order monotone trees + exact path log-odds attribution",
+      "id": "AWS-NGS-GD-EP4",
+      "published": "2026-02-02",
+      "status": "WIRED_V3",
+      "title": "Ep. 4: Completion Probability",
+      "url": "https://www.youtube.com/watch?v=6y_0NGtQXz0"
+    },
+    {
+      "duration": "PT5M28S",
+      "gse_gsi_seam": "ElasticWaveShardController: dynamic replica bin-packing, <1000ms SLA, zero-downtime rolling hotfixes",
+      "id": "AWS-NGS-GD-EP5",
+      "published": "2026-02-02",
+      "status": "WIRED_V3",
+      "title": "Ep. 5: The Stack Behind the Stats",
+      "url": "https://www.youtube.com/watch?v=jASX3ZlSm64"
+    },
+    {
+      "duration": "PT4M37S",
+      "gse_gsi_seam": "HybridRFIDOpticalSkeletalFuser + 45->14 dynamic analytical cubes + ManagedPartnerAPIGateway redaction",
+      "id": "AWS-NGS-GD-EP6",
+      "published": "2026-02-02",
+      "status": "WIRED_V3",
+      "title": "Ep. 6: Game Day Ops",
+      "url": "https://www.youtube.com/watch?v=dreUomzuUhc"
+    }
+  ],
+  "status": "WIRED_V3",
+  "target_branch": "feat/pregame-engine-dfs-harmony-2026-11-15",
+  "unit_test_module": "tests/unit/test_aws_ngs_going_deep_gse_gsi_suite.py",
+  "wave": "Wave_22_AWS_NGS_Going_Deep_Dual_Use",
+  "wired_module": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py"
+}

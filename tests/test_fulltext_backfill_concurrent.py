@@ -20,7 +20,9 @@ from pathlib import Path
 
 import pytest
 
-_SRC = Path(__file__).resolve().parents[1] / "scripts" / "research" / "fulltext_backfill_concurrent.py"
+_SRC = (
+    Path(__file__).resolve().parents[1] / "scripts" / "research" / "fulltext_backfill_concurrent.py"
+)
 
 
 @pytest.fixture(scope="module")
@@ -52,7 +54,7 @@ def test_limiter_spaces_requests_globally(conc):
         t.join()
 
     starts.sort()
-    gaps = [b - a for a, b in zip(starts, starts[1:])]
+    gaps = [b - a for a, b in zip(starts, starts[1:], strict=False)]
     assert len(starts) == 4
     # Allow scheduling slop, but no gap may be materially shorter than the
     # interval: that is the difference between politeness and a 429 wall.

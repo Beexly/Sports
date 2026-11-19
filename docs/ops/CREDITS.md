@@ -7,6 +7,8 @@ Agent wires env after keys land. **Applications = founder-only.** Never invent g
 | Neon Startup | https://neon.com/startups | Self-funded ≤$1k or VC up to $100k | | DATABASE_URL / DIRECT_URL |
 | Vercel for Startups | https://vercel.com/startups | Partner-affiliated preferred | | Pro credits on project |
 | Anthropic Claude Startups | https://claude.com/programs/startups | Claude Console account; partner VC for higher tiers | | ANTHROPIC_API_KEY |
+| Alibaba Cloud Model Studio (DashScope) | https://www.alibabacloud.com/product/modelstudio | Qwen / DashScope OpenAI-compatible credits (`qwen-plus` / coder) | | ALIBABA_API_KEY / DASHSCOPE_API_KEY |
+| PostHog for Startups | https://posthog.com/startups | Project 516325; bot/crawler suppression + replay off by default | | NEXT_PUBLIC_POSTHOG_KEY |
 | OpenAI Startups | https://openai.com/startups | Partner VC preferred | | OPENAI_API_KEY optional |
 | AWS Activate | https://aws.amazon.com/activate/ | Founders vs Portfolio | | CLAUDE_PROVIDER=bedrock path |
 | Stripe Atlas / Activate | https://stripe.com/atlas | Once-ever traps — time carefully | | STRIPE_* live |

@@ -1,0 +1,720 @@
+{
+  "book_id": "9a0e04ac5da1005c",
+  "source_status": "COMPLETE",
+  "source_note": "Microsoft, .NET Microservices: Architecture for Containerized .NET Applications, Edition v7.0 (updated to ASP.NET Core 7.0), Microsoft Corporation, 2023. Co-authors: Cesar de la Torre, Bill Wagner, Mike Rousos. Local file is the official English PDF e-book from the Microsoft .NET guide series, the companion to the eShopOnContainers reference application. PDF size 12252888 bytes; scan digest sha256 9a0e04ac5da1005c38b92608348d1ff2c23d734c9a5bd2a1d67a2c42b387a4fc (sha256 over str(size) plus full file bytes); book_id is the first 16 hex characters. Text layer is a clean born-digital extraction (15885 lines, 828045 bytes) with page footers interleaved; all quotes were chosen inside single pages and verified as contiguous substrings of the extracted text file. No catalog or title corrections needed. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "container_image_immutable_environment",
+      "name": "A container image packages an application with all its dependencies and is immutable once created, so the environment is identical across deployments",
+      "verbatim_quote": "An image is immutable once it has been created.",
+      "page": "Chapter 1, Docker terminology (printed p. 5); text line 915",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The image carries every dependency and the deployment and execution configuration the runtime needs",
+        "Images are usually built by stacking layers derived from base images"
+      ],
+      "breakdown_regime": "Immutability breaks down if teams mutate running containers instead of rebuilding images, or if unpinned base images and tags let the same name resolve to different content over time. No equations in this work; no_equation_domain.",
+      "domain": "containers and deployment",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In the engine, a sealed model or data snapshot plays the role of the image: once sealed it never mutates, and any change ships as a new versioned artifact. That makes every reasoning run reproducible against the exact artifact it consumed, the same guarantee the image gives a deployment.",
+        "source_operator": "container_image_immutable_environment",
+        "telemetry": "Artifact hashes and version tags for every sealed model, dataset snapshot, and configuration bundle the engine runs"
+      }
+    },
+    {
+      "primitive_id": "container_single_process_boundary",
+      "name": "A container image instance represents a single process, and that process boundary is the unit that gets scaled or batched",
+      "verbatim_quote": "In the container model, a container image instance represents a single process.",
+      "page": "Chapter 3, Container design principles (printed p. 18); text line 1470",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "One ENTRYPOINT per container defines the process whose lifetime controls the container lifetime",
+        "Multiple processes per container are possible with a supervisor but are not the common pattern"
+      ],
+      "breakdown_regime": "The single-process rule strains for workloads that genuinely need tightly coupled helper processes side by side; forcing them apart adds network hops and operational surface. No equations in this work; no_equation_domain.",
+      "domain": "containers and deployment",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each engine stage (ingest, normalize, reason, emit) is one process with one lifetime, so a stage can be scaled, restarted, or replaced without touching the others. The process boundary is what makes independent scaling of the bottleneck stage possible.",
+        "source_operator": "container_single_process_boundary",
+        "telemetry": "Per-stage process counts, restart counts, and stage-level latency and throughput"
+      }
+    },
+    {
+      "primitive_id": "orchestrator_heals_and_scales",
+      "name": "An orchestrator runs, distributes, scales, and heals workloads across a collection of nodes, replacing failed container instances to hold the configured count",
+      "verbatim_quote": "An orchestrator is responsible for running, distributing, scaling, and healing workloads across a collection of nodes.",
+      "page": "Chapter 1, Docker terminology (printed p. 6); text line 1002",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The orchestrator was configured with a desired instance count for each workload",
+        "When the entry process fails, the container ends and the orchestrator takes over"
+      ],
+      "breakdown_regime": "Healing only restores the configured shape; it cannot fix a defect that crashes every new instance the same way, and it adds a control plane whose own failure must be planned for. No equations in this work; no_equation_domain.",
+      "domain": "containers and deployment",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's scheduling layer holds desired worker counts per job family and replaces failed workers automatically, so a crashed ingest or evaluation worker is a replaced instance, not a stalled pipeline waiting for a human.",
+        "source_operator": "orchestrator_heals_and_scales",
+        "telemetry": "Desired versus actual worker counts, replacement events, and time from failure to replacement per job family"
+      }
+    },
+    {
+      "primitive_id": "microservice_autonomous_unit",
+      "name": "A microservice implements one end-to-end business capability within a context boundary and must be developed autonomously and deployable independently",
+      "verbatim_quote": "Each microservice implements a specific end-to-end domain or business capability within a certain context boundary, and each must be developed autonomously and be deployable independently.",
+      "page": "Chapter 3, Microservices architecture (printed p. 25); text line 1759",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Each service runs in its own process and communicates over protocols such as HTTP/HTTPS, WebSockets, or AMQP",
+        "Size is not the important point; loose coupling, internal cohesion, and independence from other services are"
+      ],
+      "breakdown_regime": "Autonomy collapses when a service cannot serve its capability without synchronous help from others, or when boundaries are drawn so fine that every operation fans out across many services. No equations in this work; no_equation_domain.",
+      "domain": "distributed systems architecture",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each signal family processor in the engine is an autonomous unit owning one capability (usage, health, matchup context) with its own lifecycle, so a family can be revised, redeployed, or taken offline without redeploying the whole engine.",
+        "source_operator": "microservice_autonomous_unit",
+        "telemetry": "Per-service deployment history, independent release cadence, and cross-service dependency counts"
+      }
+    },
+    {
+      "primitive_id": "data_sovereignty_per_microservice",
+      "name": "Each microservice must own its domain data and logic under an autonomous lifecycle with independent deployment",
+      "verbatim_quote": "An important rule for microservices architecture is that each microservice must own its domain data and logic.",
+      "page": "Chapter 3, Data sovereignty per microservice (printed p. 27); text line 1844",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The conceptual model of the domain legitimately differs between subsystems, as a CRM, a purchasing subsystem, and a support subsystem each model the customer differently",
+        "Each microservice correlates to a DDD Bounded Context with its own model and database"
+      ],
+      "breakdown_regime": "Sovereignty is expensive where the same fact must be consistent everywhere at once; it trades that away for autonomy and accepts duplicated, translated copies of shared entities. No equations in this work; no_equation_domain.",
+      "domain": "distributed data management",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Every engine data domain (games, players, health, market) has exactly one owning service. Other services hold translated local copies keyed by the same identity, never the owner's tables, which is what keeps one domain's schema change from becoming everyone's outage.",
+        "source_operator": "data_sovereignty_per_microservice",
+        "telemetry": "Ownership registry mapping each data domain to its single owning service, plus counts of cross-domain copy relationships"
+      }
+    },
+    {
+      "primitive_id": "private_data_api_messaging_only",
+      "name": "Data owned by a microservice is private to it and can only be accessed through its microservice API (or asynchronously via messaging)",
+      "verbatim_quote": "As stated previously, the data owned by each microservice is private to that microservice and can only be accessed using its microservice API.",
+      "page": "Chapter 3, Challenge #3 (printed p. 33); text line 2105",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Encapsulating the data keeps microservices loosely coupled and able to evolve independently",
+        "If multiple services accessed the same data, schema updates would require coordinated updates to all of them"
+      ],
+      "breakdown_regime": "The rule forbids the convenient shared-database shortcut, so cross-service reads pay API or replication costs, and ad hoc cross-domain questions need gateways or prepared read models instead of a join. No equations in this work; no_equation_domain.",
+      "domain": "distributed data management",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "In the engine, no component reads another domain's store directly. Cross-domain reads go through the owner's API for live questions or through replicated event-fed copies for repeated questions, which keeps every store free to change its internal shape.",
+        "source_operator": "private_data_api_messaging_only",
+        "telemetry": "API call volumes per domain boundary and counts of replicated attributes maintained per consuming service"
+      }
+    },
+    {
+      "primitive_id": "eventual_consistency_cross_service",
+      "name": "No single ACID transaction can span microservices, so a business process that spans microservices must use eventual consistency",
+      "verbatim_quote": "But distributed data structures mean that you can’t make a single ACID transaction across microservices. This in turn means you must use eventual consistency when a business process spans multiple microservices.",
+      "page": "Chapter 3, Data sovereignty per microservice (printed p. 28); text line 1894",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "ACID transactions still work inside one microservice or Bounded Context",
+        "The business and the end user must explicitly accept that results may not be visible immediately"
+      ],
+      "breakdown_regime": "Eventual consistency is the wrong tool where a process truly cannot tolerate stale or divergent intermediate states; the guide offers no way to recover strong consistency across services, only techniques for working with weak consistency. No equations in this work; no_equation_domain.",
+      "domain": "distributed data management",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine state that spans contexts (a player's health status reaching the matchup context, a usage change reaching the projection context) converges by events, and every consumer records how stale its copy is, so the reasoning layer can weigh a fact by its convergence state instead of pretending it is transactionally fresh.",
+        "source_operator": "eventual_consistency_cross_service",
+        "telemetry": "Event propagation lag per context pair and per-entity staleness at read time"
+      }
+    },
+    {
+      "primitive_id": "bounded_context_microservice_equivalence",
+      "name": "A microservice is a Bounded Context made distributed: its own model, database, and ubiquitous language, built as a separate process per context",
+      "verbatim_quote": "A microservice is therefore like a Bounded Context, but it also specifies that it’s a distributed service.",
+      "page": "Chapter 3, The relationship between microservices and the Bounded Context pattern (printed p. 29); text line 1928",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Terms in the ubiquitous language can differ between contexts even when entities share the same identity, as User in one context is Buyer in another",
+        "One service per Bounded Context is a starting point, not a constraint; a context can be several physical services"
+      ],
+      "breakdown_regime": "The equivalence misleads if it is read as a rigid one-to-one rule; the guide itself warns the mapping is a starting heuristic, and some contexts need several services while some simple services need no rich domain model at all. No equations in this work; no_equation_domain.",
+      "domain": "domain-driven design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's contexts mirror this directly: the same player exists as different models in the usage context, the health context, and the matchup context, sharing only identity. Each context's model carries just the attributes its reasoning needs, in its own vocabulary.",
+        "source_operator": "bounded_context_microservice_equivalence",
+        "telemetry": "Context map of the engine: entities per context, shared identities, and the attributes each context keeps for a shared entity"
+      }
+    },
+    {
+      "primitive_id": "materialized_view_cqrs_query_tables",
+      "name": "Cross-microservice queries are served by materialized view tables: denormalized read-only tables prepared in advance in the exact shape the client needs",
+      "verbatim_quote": "Another solution for aggregating data from multiple microservices is the Materialized View pattern. In this approach, you generate, in advance (prepare denormalized data before the actual queries happen), a read-only table with the data that’s owned by multiple microservices.",
+      "page": "Chapter 3, Challenge #2 (printed p. 32); text line 2058",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The query table has a one-to-one relationship between the fields a screen needs and the columns of the table",
+        "Keeping the tables current is done by propagating changes with event-driven communication, the same mechanism as CQRS query tables generally"
+      ],
+      "breakdown_regime": "Prepared read tables cost storage, build time, and eventual consistency; if an application constantly aggregates across services for complex queries, the guide warns that may be a symptom of bad boundaries and a reason to merge services. No equations in this work; no_equation_domain.",
+      "domain": "distributed data management",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Pregame read models in the engine are materialized views: usage, health, matchup, and situational facts joined in advance into the exact shape a reasoning pass consumes, refreshed by the events that changed them, instead of the reasoning pass joining live stores under time pressure.",
+        "source_operator": "materialized_view_cqrs_query_tables",
+        "telemetry": "Refresh lag per read model, row counts, and the event volume feeding each view"
+      }
+    },
+    {
+      "primitive_id": "cap_availability_over_strong_consistency",
+      "name": "Per the CAP theorem, microservice scenarios choose availability and high scalability over ACID strong consistency",
+      "verbatim_quote": "As stated by the CAP theorem, you need to choose between availability and ACID strong consistency.",
+      "page": "Chapter 3, Challenge #3 (printed pp. 33-34); text line 2134",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Mission-critical applications must remain up and running, so developers work around strong consistency with eventual consistency techniques",
+        "Most NoSQL stores used per-service do not support two-phase commit across databases in any case"
+      ],
+      "breakdown_regime": "The choice is forced, not free: domains that genuinely need strong consistency must be pulled back inside one service boundary, because no pattern in the book restores it across services. No equations in this work; no_equation_domain.",
+      "domain": "distributed data management",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine makes the same election explicitly: projections stay available with labeled staleness during a feed or store partition, rather than the whole reasoning surface going dark waiting for cross-context consistency it cannot have.",
+        "source_operator": "cap_availability_over_strong_consistency",
+        "telemetry": "Partition and degradation events, and which read models served stale data during each event"
+      }
+    },
+    {
+      "primitive_id": "no_cross_microservice_table_access",
+      "name": "A microservice must never include tables or storage owned by another microservice in its own transactions, not even in direct queries",
+      "verbatim_quote": "No microservice should ever include tables/storage owned by another microservice in its own transactions, not even in direct queries, as shown in Figure 4-9.",
+      "page": "Chapter 3, Challenge #3 (printed p. 33); text line 2122",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Cross-service updates travel as eventual consistency over asynchronous communication such as integration events",
+        "The owning service alone decides its schema and its transaction boundaries"
+      ],
+      "breakdown_regime": "The prohibition removes the fastest integration path (a shared table) and forces every cross-service need into an API, an event, or a replicated copy, which is deliberate friction, not an oversight. No equations in this work; no_equation_domain.",
+      "domain": "distributed data management",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This is a hard design-review rule for the engine: any proposed component that reads or writes another domain's tables is rejected at review, and the need is re-expressed as an API call, an event subscription, or a local replica.",
+        "source_operator": "no_cross_microservice_table_access",
+        "telemetry": "Static dependency scans of engine code for cross-domain store access, reported as violations per component"
+      }
+    },
+    {
+      "primitive_id": "synchronous_chain_antipattern",
+      "name": "Long chains of synchronous HTTP calls across microservices are an anti-pattern: they block, couple the services, and fail as a whole when any link fails",
+      "verbatim_quote": "But if you create long chains of synchronous HTTP calls across microservices, communicating across their boundaries as if the microservices were objects in a monolithic application, your application will eventually run into problems.",
+      "page": "Chapter 3, Challenge #4 (printed p. 35); text line 2172",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Synchronous request and response is acceptable from client applications and API Gateways into the first level of services",
+        "Retries with exponential backoff and circuit breakers soften but do not fix deep chains; the failure strategy grows with the chain"
+      ],
+      "breakdown_regime": "Short, shallow synchronous calls at the edge remain fine; the anti-pattern is depth and internal chaining, and teams that cannot move a flow to events must at least keep chains short and guarded. No equations in this work; no_equation_domain.",
+      "domain": "service communication",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine's reasoning pass never walks a synchronous chain across context services to answer one question. Inputs are replicated ahead of time or read from prepared views, so one slow context cannot stretch or sink the whole pass.",
+        "source_operator": "synchronous_chain_antipattern",
+        "telemetry": "Call-chain depth measurements per request path and latency contribution per hop"
+      }
+    },
+    {
+      "primitive_id": "api_gateway_single_entry_point",
+      "name": "An API Gateway is a single entry point and reverse proxy for groups of microservices, also carrying cross-cutting features such as authentication, SSL termination, and cache",
+      "verbatim_quote": "This pattern is a service that provides a single-entry point for certain groups of microservices.",
+      "page": "Chapter 3, What is the API Gateway pattern? (printed p. 42); text line 2480",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Gateways aggregate multiple client requests into one and offload cross-cutting concerns (authentication, retry policies, rate limiting, logging, tracing) from individual services",
+        "Gateways should be segregated by business boundaries and client apps, in the Backend for Frontend pattern, one facade per client type"
+      ],
+      "breakdown_regime": "A single gateway aggregating everything becomes a monolithic aggregator and a choke point that violates service autonomy; the pattern breaks down exactly when it is applied without segregation. No equations in this work; no_equation_domain.",
+      "domain": "service communication",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine consumers (web surfaces, pack builders, internal tools) enter through gateways shaped per consumer type, which route, aggregate, and enforce authentication and rate limits in one tier instead of every context service re-implementing them.",
+        "source_operator": "api_gateway_single_entry_point",
+        "telemetry": "Request volume, aggregation fan-out, and error rates per gateway and per client type"
+      }
+    },
+    {
+      "primitive_id": "async_internal_communication_rule",
+      "name": "Communication between internal microservices should be asynchronous: propagate data asynchronously and never depend on another internal service inside the initial request and response operation",
+      "verbatim_quote": "When you need to do that, the critical rule here is that the communication between the microservices should be asynchronous.",
+      "page": "Chapter 3, Asynchronous microservice integration enforces microservice's autonomy (printed p. 50); text line 2810",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The rule is about dependency shape, not protocol; asynchronous messaging or asynchronous HTTP polling both satisfy it",
+        "Synchronous communication is reserved for client apps reaching the front-end services and API Gateways"
+      ],
+      "breakdown_regime": "Some interactions genuinely need an immediate answer; the guide's escape hatches are polling and pre-replication, and flows that cannot tolerate either are evidence the boundary may be drawn wrong. No equations in this work; no_equation_domain.",
+      "domain": "service communication",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Inside the engine, contexts integrate by events and queues only. A context that needs another context's fact holds a replicated copy fed by events, so every context stays available and answerable while its neighbors are down.",
+        "source_operator": "async_internal_communication_rule",
+        "telemetry": "Ratio of asynchronous to synchronous internal calls per context pair, with synchronous internal calls flagged as violations"
+      }
+    },
+    {
+      "primitive_id": "replicate_data_instead_of_sync_query",
+      "name": "Data owned by other microservices is replicated into the local database (only the needed attributes) via eventual consistency instead of being fetched with synchronous requests",
+      "verbatim_quote": "Instead, replicate or propagate that data (only the attributes you need) into the initial service’s database by using eventual consistency (typically by using integration events, as explained in upcoming sections).",
+      "page": "Chapter 3, Asynchronous microservice integration enforces microservice's autonomy (printed p. 51); text line 2851",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Duplicating some data across services is explicitly not an incorrect design; the copy is translated into the receiving context's language and terms",
+        "The copy shares identity with the source entity but holds only the attributes the receiving domain needs, as Buyer holds a subset of User"
+      ],
+      "breakdown_regime": "Replication creates staleness and storage duplication by design, and it fails the design if the copied attribute set grows until the replica is a shadow of the whole source model. No equations in this work; no_equation_domain.",
+      "domain": "service communication",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Each engine context keeps small local replicas of the foreign facts it reasons over (a health context's view inside the matchup context, for example), translated into local terms and refreshed by integration events, which is what lets a reasoning pass run at full depth with a neighboring context offline.",
+        "source_operator": "replicate_data_instead_of_sync_query",
+        "telemetry": "Replica attribute counts per context pair, refresh lag, and divergence checks between replica and source"
+      }
+    },
+    {
+      "primitive_id": "service_registry_discovery",
+      "name": "Microservices are addressable by unique name through a service registry, a highly available database of service instance network locations",
+      "verbatim_quote": "The service registry pattern is a key part of service discovery. The registry is a database containing the network locations of service instances.",
+      "page": "Chapter 3, Microservices addressability and the service registry (printed p. 60); text line 3208",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Clients may cache locations from the registry, but cached information goes out of date, so the registry itself must stay current",
+        "The registry is a cluster of servers using a replication protocol to maintain consistency; some platforms (AKS) build registration and deregistration in"
+      ],
+      "breakdown_regime": "Discovery fails soft and dangerously when clients trust stale cached locations after instances move; the registry is also one more piece of infrastructure that must itself be highly available. No equations in this work; no_equation_domain.",
+      "domain": "service communication",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine services find each other by stable logical names resolved through the registry, never by hard-coded locations, so workers can move, scale, or be replaced without any consumer changing configuration.",
+        "source_operator": "service_registry_discovery",
+        "telemetry": "Registry lookup rates, stale-cache discovery failures, and instance registration churn per service"
+      }
+    },
+    {
+      "primitive_id": "api_contract_versioning",
+      "name": "A microservice API is a contract; a service can evolve independently only if it does not break that contract, so old and new contract versions run simultaneously during transitions",
+      "verbatim_quote": "A microservice API is a contract between the service and its clients. You’ll be able to evolve a microservice independently only if you do not break its API contract, which is why the contract is so important.",
+      "page": "Chapter 3, Creating, evolving, and versioning microservice APIs and contracts (printed p. 59); text line 3150",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Small additive changes are safe when clients can ignore extra response attributes and the service supplies defaults for missing ones",
+        "For HTTP APIs the version can ride in the URL or a header, and a mediator can decouple versions into independent handlers"
+      ],
+      "breakdown_regime": "Supporting multiple versions indefinitely multiplies maintenance and test surface; the strategy works only if old versions are actually retired once clients migrate. No equations in this work; no_equation_domain.",
+      "domain": "service communication",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Every engine context publishes versioned contracts for its APIs and events. A context may change its internals freely, but a contract change ships as a new version running beside the old one until consumers migrate, which is what makes independent evolution real rather than aspirational.",
+        "source_operator": "api_contract_versioning",
+        "telemetry": "Active contract versions per service, consumer counts per version, and age of the oldest still-supported version"
+      }
+    },
+    {
+      "primitive_id": "integration_events_state_sync",
+      "name": "Integration events bring domain state in sync across microservices: an event is published outside the service and each subscribed receiver handles it in its own handler",
+      "verbatim_quote": "Integration events are used for bringing domain state in sync across multiple microservices or external systems.",
+      "page": "Chapter 5, Integration events (printed p. 135); text line 6431",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "An integration event is a data-holding class carrying the committed change, such as old and new price in a price-changed event",
+        "Events are defined per microservice at its application level; sharing one common event library across services couples them and is not recommended"
+      ],
+      "breakdown_regime": "Event payloads must be sized just right: too little data forces receivers to call back for more, too much couples receivers to the publisher's internal model. No equations in this work; no_equation_domain.",
+      "domain": "event-driven integration",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "All cross-context synchronization in the engine travels as integration events carrying the committed change itself, so receivers update their local models without calling back into the publisher, and the publisher never knows who consumed the change.",
+        "source_operator": "integration_events_state_sync",
+        "telemetry": "Event publication and handling counts per event type, handler lag, and handler failure rates"
+      }
+    },
+    {
+      "primitive_id": "event_bus_pubsub_decoupling",
+      "name": "An event bus gives publish/subscribe communication where publisher and subscribers are decoupled by the broker middleman and need not be aware of each other",
+      "verbatim_quote": "An event bus allows publish/subscribe-style communication between microservices without requiring the components to explicitly be aware of each other, as shown in Figure 6-19.",
+      "page": "Chapter 5, The event bus (printed p. 136); text line 6472",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The event bus is an abstraction or interface (subscribe, unsubscribe, publish) with one or more implementations over brokers such as RabbitMQ or Azure Service Bus",
+        "This differs from the Observer pattern, where the broadcast is direct and the parties know each other; the broker is what removes that knowledge"
+      ],
+      "breakdown_regime": "The bus becomes a critical shared dependency: its availability and ordering behavior bound the whole system's, and a simple development-grade bus is not sufficient for mission-critical scale. No equations in this work; no_equation_domain.",
+      "domain": "event-driven integration",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's event bus is an interface with swappable broker implementations per environment. New reasoning consumers subscribe to existing event streams without any publisher change, which is the open/closed property the guide credits to publish/subscribe.",
+        "source_operator": "event_bus_pubsub_decoupling",
+        "telemetry": "Subscriber counts per event type, publish rates, and broker delivery latency"
+      }
+    },
+    {
+      "primitive_id": "outbox_pattern_atomic_publish",
+      "name": "The Outbox pattern records the event in a transactional database table used as a message queue, so the state update and the event creation are atomic and the event is published resiliently",
+      "verbatim_quote": "Using the Outbox pattern: a transactional database table as a message queue that will be the base for an event-creator component that would create the event and publish it.",
+      "page": "Chapter 3, Resiliently publishing to the event bus (printed p. 58); text line 3111",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The problem it solves: atomically updating state in the origin microservice while resiliently publishing its integration event",
+        "The guide lists the alternatives it competes with: transactional DTC queues, transaction log mining, and full Event Sourcing"
+      ],
+      "breakdown_regime": "The outbox adds a relay component that must itself be monitored; if the event-creator relay stalls, state is correct but events silently stop flowing, so the pattern moves the failure rather than deleting it. No equations in this work; no_equation_domain.",
+      "domain": "event-driven integration",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Every engine service that emits integration events writes the event row in the same transaction as the state change, and a relay drains the outbox to the bus. A crash between commit and publish therefore loses nothing: the event is still in the table, waiting to be sent.",
+        "source_operator": "outbox_pattern_atomic_publish",
+        "telemetry": "Outbox depth per service, relay drain lag, and events published per relay cycle"
+      }
+    },
+    {
+      "primitive_id": "idempotent_message_design",
+      "name": "Messages should be designed idempotent: state-setting messages (set the price to a value) can be processed any number of times with the same result, while delta messages (add an amount) cannot",
+      "verbatim_quote": "For example, you can create an event that says “set the product price to $25” instead of “add $5 to the product price.” You could safely process the first message any number of times and the result will be the same.",
+      "page": "Chapter 5, Idempotency in update message events (printed p. 149); text line 7137",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Retries and redelivery are assumed: a failure at any point in the communication should cause the message to be retried",
+        "Even a state-setting message can be unsafe if a newer event has superseded it, so ordering still matters"
+      ],
+      "breakdown_regime": "Not all operations can be made idempotent by design (charging a payment is the guide's example); those need explicit deduplication, and blindly treating every message as idempotent hides real duplicate effects. No equations in this work; no_equation_domain.",
+      "domain": "event-driven integration",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine events carry absolute state (the player's current status, the current line, the current usage share) rather than increments, so at-least-once delivery from the bus is safe by construction and handlers do not need to guess how many times an event already ran.",
+        "source_operator": "idempotent_message_design",
+        "telemetry": "Redelivery rates per event type and handler outcomes on duplicate deliveries"
+      }
+    },
+    {
+      "primitive_id": "event_identity_deduplication",
+      "name": "Each event carries an identity so a receiver can enforce processing only once per receiver, with deduplication validated at both the transport level and the application level",
+      "verbatim_quote": "It is convenient to have some kind of identity per event so that you can create logic that enforces that each event is processed only once per receiver.",
+      "page": "Chapter 5, Idempotency in update message events and Deduplicating integration event messages (printed pp. 149-150); text line 7147",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In eShopOnContainers the checkout event's RequestId wraps the resulting command in an IdentifiedCommand so the handler can recognize a repeat",
+        "With RabbitMQ, a set redelivered flag means the message might already have been processed; an unset flag guarantees it has not been sent more than once"
+      ],
+      "breakdown_regime": "Deduplication state must be kept as long as duplicates can arrive; expiring it early reopens the duplicate window, and transport-level features alone are not sufficient, which is why the guide wants both levels. No equations in this work; no_equation_domain.",
+      "domain": "event-driven integration",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Every engine event carries a unique ID, and every handler records processed IDs before applying effects. A duplicated injury, lineup, or market event is detected and discarded at the handler, so exactly-once effects are achieved over an at-least-once bus.",
+        "source_operator": "event_identity_deduplication",
+        "telemetry": "Duplicate detection counts per handler and the size and retention of processed-ID stores"
+      }
+    },
+    {
+      "primitive_id": "cqrs_read_write_separation",
+      "name": "CQRS separates the models for reading and writing data: queries and commands live in separate layers, each with its own data model, optionally in separate processes or databases",
+      "verbatim_quote": "CQRS is an architectural pattern that separates the models for reading and writing data.",
+      "page": "Chapter 6, Apply simplified CQRS and DDD patterns in a microservice (printed p. 184); text line 8650",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The guide uses the simplest form: separation of queries from commands within one microservice and one database, not a full event-sourced design",
+        "CQRS builds on Meyer's Command Query Separation: a method either returns state or mutates state, but not both"
+      ],
+      "breakdown_regime": "Full CQRS with separate read and write stores buys query freedom at the price of replication lag and a second model to maintain; applied where reads are simple, it is complexity without payoff. No equations in this work; no_equation_domain.",
+      "domain": "domain-driven design",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine contexts split the same way: the write side enforces domain rules through aggregates, while the read side serves denormalized, question-shaped models that ignore aggregate constraints. Reasoning queries therefore never pay the cost of write-side rules.",
+        "source_operator": "cqrs_read_write_separation",
+        "telemetry": "Read versus write latency per context and replication lag between write and read models"
+      }
+    },
+    {
+      "primitive_id": "queries_side_effect_free",
+      "name": "Queries are idempotent and side-effect free: querying a system any number of times never changes its state, which is why queries may bypass domain model restrictions",
+      "verbatim_quote": "The essence of those patterns, and the important point here, is that queries are idempotent: no matter how many times you query a system, the state of that system won’t change.",
+      "page": "Chapter 6, Apply CQRS and CQS approaches in a DDD microservice (printed p. 186); text line 8721",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Because queries do not change state, they can be implemented with direct SQL through a micro ORM such as Dapper instead of repositories",
+        "DDD constraints are reserved for commands, where state changes and business rules live"
+      ],
+      "breakdown_regime": "The separation fails if a supposed query secretly writes (caches that mutate shared state, read-triggered updates), because every guarantee built on side-effect-free reads (free retries, caching, scaling) silently stops holding. No equations in this work; no_equation_domain.",
+      "domain": "domain-driven design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every engine read path is contractually side-effect free, so reasoning passes can be re-run, cached, parallelized, and retried without bookkeeping about what a previous read may have changed.",
+        "source_operator": "queries_side_effect_free",
+        "telemetry": "Read-path audit results: any state mutation detected under a query operation is logged as a contract violation"
+      }
+    },
+    {
+      "primitive_id": "aggregate_root_single_gate",
+      "name": "An aggregate's invariants are enforced through a single entry point, the aggregate root, which controls the group of entities as one unit",
+      "verbatim_quote": "When tackling complexity, it is important to have a domain model controlled by aggregate roots that make sure that all the invariants and rules related to that group of entities (aggregate) are performed through a single entry-point or gate, the aggregate root.",
+      "page": "Chapter 6, Layers in DDD microservices (printed p. 195); text line 9128",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Entities must be always valid, controlled by aggregate roots, and must not be bound directly to client views; ViewModels exist for presentation",
+        "One repository exists per aggregate root, and updates flow only through repositories and roots"
+      ],
+      "breakdown_regime": "Oversized aggregates become contention and loading bottlenecks; the guide balances this with relatively small context boundaries and, where needed, eventual consistency between aggregates within the same domain. No equations in this work; no_equation_domain.",
+      "domain": "domain-driven design",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "In engine domain models, any cluster of facts with joint invariants (a game state, a player's availability record) is mutated only through its root object, which checks the invariants on every change. No side door can put the cluster into a state the rules would reject.",
+        "source_operator": "aggregate_root_single_gate",
+        "telemetry": "Invariant violation attempts blocked at aggregate roots, per aggregate type"
+      }
+    },
+    {
+      "primitive_id": "domain_events_explicit_side_effects",
+      "name": "A domain event is something that happened in the domain that other parts of the same domain should be aware of; using domain events makes side effects and domain rules explicit instead of buried in code",
+      "verbatim_quote": "An event is something that has happened in the past. A domain event is, something that happened in the domain that you want other parts of the same domain (in-process) to be aware of.",
+      "page": "Chapter 6, Domain events: Design and implementation, What is a domain event? (printed p. 228); text line 10685",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Domain events and their side effects occur within the same domain, usually in process, and can be synchronous or asynchronous",
+        "Like a database transaction, either all operations related to a domain event finish successfully or none of them do"
+      ],
+      "breakdown_regime": "Domain events do not cross service boundaries; using them as if they were integration events couples contexts to in-process timing and loses the durability and decoupling the bus provides. No equations in this work; no_equation_domain.",
+      "domain": "domain-driven design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Inside an engine context, consequential facts (an order started, a status changed) are raised as named domain events with explicit handlers, so the rule that reacts to a fact is discoverable from the event catalog instead of hidden inside unrelated code paths.",
+        "source_operator": "domain_events_explicit_side_effects",
+        "telemetry": "Domain event catalog size per context and handler counts per event"
+      }
+    },
+    {
+      "primitive_id": "integration_events_only_after_persistence",
+      "name": "Integration events propagate committed transactions only: they should occur only if the entity was successfully persisted, otherwise it is as if the operation never happened",
+      "verbatim_quote": "Hence, they should occur only if the entity is successfully persisted, otherwise it’s as if the entire operation never happened.",
+      "page": "Chapter 6, Domain events versus integration events (printed p. 228); text line 10736",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Integration events are always asynchronous and cross microservices, Bounded Contexts, or external systems",
+        "Domain events are pushed to an in-process dispatcher or mediator; integration events need inter-process distributed infrastructure"
+      ],
+      "breakdown_regime": "Publishing before commit advertises phantom state to every subscriber, and rolling back afterward cannot retract an event already consumed; this ordering rule is the precondition for the outbox pattern to mean anything. No equations in this work; no_equation_domain.",
+      "domain": "event-driven integration",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine services raise integration events strictly after the state transaction commits, so subscribers never react to a fact that was rolled back. The event stream is therefore a truthful log of committed state, safe to build read models and audits on.",
+        "source_operator": "integration_events_only_after_persistence",
+        "telemetry": "Event-to-commit ordering checks in tests, and any detected phantom event (event without committed state) per service"
+      }
+    },
+    {
+      "primitive_id": "value_object_immutable_no_identity",
+      "name": "A value object has no identity and is immutable: its values must be set at construction and must not change during its lifetime, and equality is by its components",
+      "verbatim_quote": "Immutability is an important requirement. The values of a value object must be immutable once the object is created.",
+      "page": "Chapter 6, Important characteristics of value objects (printed p. 214); text line 9978",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The two main characteristics are no identity and immutability",
+        "Immutability makes value objects safely reusable and interchangeable when their values are the same, which the guide notes can matter for performance at scale"
+      ],
+      "breakdown_regime": "Modeling something with a real lifecycle and identity as a value object loses the ability to track its history; the pattern applies only where identity genuinely does not matter. No equations in this work; no_equation_domain.",
+      "domain": "domain-driven design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine quantities that are pure values (a date range, a scoreline, a rate with its window) are modeled as immutable value objects compared by content, so they can be shared, cached, and hashed without identity bookkeeping or defensive copying.",
+        "source_operator": "value_object_immutable_no_identity",
+        "telemetry": "Value object type count in engine models and equality-check outcomes in tests"
+      }
+    },
+    {
+      "primitive_id": "repository_per_aggregate",
+      "name": "The Repository pattern keeps persistence concerns outside the domain model: repository interfaces live in the domain layer, implementations live in infrastructure, one repository per aggregate root",
+      "verbatim_quote": "The Repository pattern is a Domain-Driven Design pattern intended to keep persistence concerns outside of the system’s domain model.",
+      "page": "Chapter 6, The Repository pattern (printed p. 238); text line 11224",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In a DDD microservice the only channel for updating the database is the repositories, because they pair one-to-one with the aggregate roots that control invariants and transactional consistency",
+        "Queries may bypass repositories entirely under CQRS, since queries do not change state"
+      ],
+      "breakdown_regime": "Repositories over simple CRUD services add ceremony without protection; the guide reserves DDD machinery for microservices with significant business rules and keeps simple services simple. No equations in this work; no_equation_domain.",
+      "domain": "domain-driven design",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine write paths load and save aggregates only through repositories defined as domain interfaces, so storage technology can change underneath a context without the domain model, or any reasoning code built on it, changing at all.",
+        "source_operator": "repository_per_aggregate",
+        "telemetry": "Repository coverage: aggregates with a repository versus aggregates reached by direct data access, per context"
+      }
+    },
+    {
+      "primitive_id": "partial_failure_amplification",
+      "name": "Partial failure is guaranteed in distributed systems and amplifies through dependencies: 50 dependencies each at 99.99 percent availability compound into several hours of downtime per month",
+      "verbatim_quote": "As an example, 50 dependencies each with 99.99% of availability would result in several hours of downtime each month because of this ripple effect.",
+      "page": "Chapter 7, Handle partial failure (printed p. 293); text line 13865",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The 50-dependency figure is the guide's illustrative arithmetic for the ripple effect, not a measured result",
+        "Blocked threads are the amplification mechanism: an unresponsive dependency consumes threads until the caller itself becomes unresponsive"
+      ],
+      "breakdown_regime": "The compounding argument assumes independent failures and synchronous dependence; asynchronous decoupling and bulkheads change the arithmetic, which is precisely why the guide prescribes them. No equations in this work; no_equation_domain.",
+      "domain": "resiliency",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine plans capacity and degradation with the same compounding logic: the availability of a full reasoning pass is the product of its dependencies' behavior under synchronous dependence, so the design goal is to remove dependencies from the synchronous path until the product is acceptable.",
+        "source_operator": "partial_failure_amplification",
+        "telemetry": "Dependency counts per reasoning pass and observed pass-level availability versus per-dependency availability"
+      }
+    },
+    {
+      "primitive_id": "retry_exponential_backoff",
+      "name": "Retries with exponential backoff retry an operation with exponentially increasing wait times up to a maximum retry count, absorbing transient unavailability such as a container being moved between nodes",
+      "verbatim_quote": "Retries with exponential backoff is a technique that retries an operation, with an exponentially increasing wait time, up to a maximum retry count has been reached (the exponential backoff).",
+      "page": "Chapter 7, Implement retries with exponential backoff (printed p. 295); text line 13954",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The guide's Polly sample retries six times starting at two seconds",
+        "A jitter strategy (the guide cites Polly's decorrelated jitter backoff) should spread retry spikes from many clients during partial outages"
+      ],
+      "breakdown_regime": "Retries without a circuit breaker aggravate ripple effects and can become a self-inflicted denial of service against a failing service; retries are only for transient faults, and retrying a non-transient failure wastes the budget. No equations in this work; no_equation_domain.",
+      "domain": "resiliency",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Every engine call to an external feed or a neighboring service retries transient failures with capped exponential backoff and decorrelated jitter, so a brief provider hiccup self-heals while a fleet of workers does not synchronize its retries into a thundering herd.",
+        "source_operator": "retry_exponential_backoff",
+        "telemetry": "Retry counts, backoff delays applied, and success-after-retry rates per dependency"
+      }
+    },
+    {
+      "primitive_id": "circuit_breaker_trip",
+      "name": "A circuit breaker tracks failed requests and, once the error rate exceeds a configured limit, trips so further attempts fail immediately; after a timeout the client tries again and closes the breaker on success",
+      "verbatim_quote": "In this approach, the client process tracks the number of failed requests. If the error rate exceeds a configured limit, a “circuit breaker” trips so that further attempts fail immediately.",
+      "page": "Chapter 7, Strategies to handle partial failure (printed p. 294); text line 13911",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The guide's Polly sample opens the circuit after five consecutive faults and keeps it open for 30 seconds",
+        "Retry logic must be sensitive to the breaker and abandon retries when the breaker signals a non-transient fault"
+      ],
+      "breakdown_regime": "A breaker tuned too sensitively sheds load during brief blips; tuned too loosely it lets failing calls consume threads until the bulkhead or the process gives out. It also cannot distinguish a dead dependency from a slow one without timeouts beside it. No equations in this work; no_equation_domain.",
+      "domain": "resiliency",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Each engine dependency sits behind a circuit breaker: when a data provider is down, calls fail fast and the reasoning pass proceeds with that input marked absent, instead of every worker queueing retries against a dead endpoint.",
+        "source_operator": "circuit_breaker_trip",
+        "telemetry": "Breaker state transitions (closed, open, half-open) per dependency and requests shed while open"
+      }
+    },
+    {
+      "primitive_id": "bulkhead_request_limit",
+      "name": "Clients impose an upper bound on outstanding requests to any one service; when the limit is reached, further attempts fail immediately instead of queueing without limit",
+      "verbatim_quote": "Clients should also impose an upper bound on the number of outstanding requests that a client microservice can send to a particular service.",
+      "page": "Chapter 7, Strategies to handle partial failure (printed p. 294); text line 13921",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The guide implements this with Polly's Bulkhead Isolation policy, a parallelization throttle built on SemaphoreSlim with an optional queue outside the bulkhead",
+        "Bulkhead fullness and overflow events can also drive automated horizontal scaling"
+      ],
+      "breakdown_regime": "Bulkheads trade peak throughput for isolation: a cap set for the failure case idles capacity in the healthy case, and a cap set too high lets one dependency monopolize the caller's threads anyway. No equations in this work; no_equation_domain.",
+      "domain": "resiliency",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine workers cap concurrent calls per dependency, so one slow provider can consume only its own allotment of threads while calls to healthy providers continue at full rate in the same process.",
+        "source_operator": "bulkhead_request_limit",
+        "telemetry": "Per-dependency concurrency, bulkhead occupancy, and overflow rejections per worker"
+      }
+    },
+    {
+      "primitive_id": "health_check_alive_signal",
+      "name": "Services must emit health signals, on demand or on schedule, aggregating the state of their dependencies, so orchestrators and watchdogs can detect failure early and stop cascading failures",
+      "verbatim_quote": "If services cannot send some sort of “I’m alive” signal, either on demand or on a schedule, your application might face risks when you deploy updates, or it might just detect failures too late and not be able to stop cascading failures that can end up in major outages.",
+      "page": "Chapter 7, Health monitoring (printed p. 310); text line 14729",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A microservice reports healthy only when all its checks are healthy, including external resources such as its database or a remote API",
+        "A watchdog is a separate service that queries each service's health endpoint and can perform remediation for known conditions"
+      ],
+      "breakdown_regime": "Health checks are only as honest as their definitions: a shallow check that reports healthy while a critical dependency is dead defeats the mechanism, and overly strict checks cause needless restarts during partial degradation. No equations in this work; no_equation_domain.",
+      "domain": "resiliency",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Every engine service exposes a health endpoint that aggregates its real dependencies (store reachable, bus reachable, feed fresh), and the watchdog view drives replacement and alerting, so a silently dead input is detected in minutes rather than at the next reasoning pass.",
+        "source_operator": "health_check_alive_signal",
+        "telemetry": "Health status per service and dependency, check failure durations, and watchdog remediation actions"
+      }
+    },
+    {
+      "primitive_id": "bearer_token_authentication",
+      "name": "Web APIs consumed by SPAs, native clients, and other APIs authenticate with bearer <redacted> under OAuth 2.0 and OpenID Connect rather than cookies",
+      "verbatim_quote": "For example, in an ASP.NET Core Web API that exposes RESTful endpoints that might be accessed by Single Page Applications (SPAs), by native clients, or even by other Web APIs, you typically want to use bearer token authentication instead.",
+      "page": "Chapter 8, Authenticate with bearer <redacted> (printed p. 323); text line 15270",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Clients retrieve a bearer <redacted> and include it in the authorization header of subsequent requests",
+        "ASP.NET Core supports several options for OAuth 2.0 and OpenID Connect token authentication, including external identity providers"
+      ],
+      "breakdown_regime": "Token authentication shifts the burden to token protection and lifetime management: a leaked bearer <redacted> is usable by whoever holds it until expiry, so transport security and short lifetimes are part of the pattern, not extras. No equations in this work; no_equation_domain.",
+      "domain": "security",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine APIs authenticate machine and user clients with short-lived bearer <redacted> from an identity provider, so internal services, partner tools, and user-facing apps share one authorization model at the gateway instead of per-service cookie schemes that do not fit API clients.",
+        "source_operator": "bearer_token_authentication",
+        "telemetry": "Token issuance and validation counts, rejection reasons, and token lifetime configuration per client type"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9a0e04ac5da1005c-t1",
+      "think": "This guide is Microsoft's canonical statement of how to build a distributed application as a set of small, independently deployable services, and its real subject is not .NET or Docker but autonomy: how to carve a system so that each piece can change, fail, scale, and be understood on its own. The machinery starts at the bottom with the container. A container image packages an application with all of its dependencies into an immutable artifact, and a running container is a single process whose lifetime is the container's lifetime. Because the image is immutable and identical across environments, the environment stops being a variable. Because the container is one process, it becomes a unit that an orchestrator can start, stop, replicate, and replace, and the orchestrator takes over healing: when a process fails, the container ends and the orchestrator creates a replacement to hold the configured replica count. On top of that substrate the guide builds the microservice: a service that implements one end-to-end business capability inside a context boundary, developed autonomously and deployed independently. Size is explicitly not the criterion; loose coupling and internal cohesion are. Each microservice owns its domain data and logic, a rule the guide calls data sovereignty, and that single rule forces almost everything else in the book. If each service's data is private and reachable only through its API or through messaging, then no cross-service ACID transaction exists, so any business process spanning services must accept eventual consistency, and the CAP theorem is invoked to justify choosing availability over strong consistency. If services cannot join each other's tables, then cross-service queries need another mechanism, and the guide offers API Gateway aggregation, GraphQL federation, and CQRS materialized view tables that are prepared in advance in the exact shape the client needs. If services must not depend on each other synchronously, then communication between internal services must be asynchronous, because long chains of synchronous HTTP calls multiply latency, couple the services, and let one failure cascade through the whole chain. Asynchronous integration is therefore done with integration events published to an event bus: a service commits a state change, publishes an event, and subscribers update their own local copies, translating the data into their own context's language, the way the ordering context stores a Buyer where the identity context stores a User. That event flow has its own hard sub-problems, and the guide names the standard solutions: the Outbox pattern so the state change and the event are recorded atomically, idempotent message design so a redelivery does not corrupt state (state-setting messages such as set the price to a value, not deltas such as add an amount), and a per-event identity so each receiver can enforce processing exactly once. Inside a service that has real business complexity, the guide switches registers from architecture to domain modeling: DDD with aggregates whose roots are the single gate through which invariants are enforced, value objects that are immutable and have no identity, domain events that make side effects explicit inside the context, repositories that keep persistence concerns out of the domain model with one repository per aggregate, and a simplified CQRS that separates side-effect-free queries from state-changing commands so reads are not constrained by aggregate rules. The final register is operations under partial failure, which the guide treats as guaranteed rather than exceptional: fifty dependencies at 99.99 percent availability still compound into hours of monthly downtime, so clients must use timeouts, retries with exponential backoff and jitter, circuit breakers that fail fast once an error threshold trips, bulkheads that cap outstanding requests per dependency, fallbacks, and health checks that let orchestrators and watchdogs see and act on service state. For a reasoning engine, the transferable core is the discipline of boundaries: every unit owns its state, every cross-boundary effect travels as an explicit, identified, idempotent event, every read model is built for its question rather than borrowed from the write model, and every dependency is assumed to fail, so the system is designed to degrade in pieces instead of collapsing as a whole. The book's limits are the limits of its genre: it is a vendor guide, so its examples are one reference application, its numbers are illustrative rather than measured, and it teaches patterns as decisions with tradeoffs rather than as results with evidence. Read that way, as a decision catalog with named failure modes, it is unusually complete: nearly every primitive names the condition under which it breaks, from the API Gateway that bloats into a monolith if it aggregates everything, to retries that become a self-inflicted denial of service without a circuit breaker beside them. What changes for a reasoning engine that absorbs this book is mostly negative space, the set of designs it rules out. A shared database that every component reads and writes directly is ruled out. A synchronous request chain that walks five services to answer one question is ruled out. A delta message whose effect depends on how many times it is delivered is ruled out. An event published before its transaction commits is ruled out. A read path that mutates state as a side effect is ruled out. Each prohibition corresponds to a failure the guide has watched happen in production systems, and each one converts directly into a design review question for any new component: who owns this state, what event carries this change, what happens when this dependency is down, and what does the receiver do when this message arrives twice. A system that can answer those four questions for every component has internalized most of what this book teaches, whatever language or platform it is built in.",
+      "retrocausal_genealogy": "The ideas descend from several named lineages the guide itself cites. The Bounded Context and aggregate machinery comes from Eric Evans's domain-driven design, with Bertrand Meyer's Command Query Separation as the root of CQRS as promoted by Greg Young and Udi Dahan. The microservice framing follows Martin Fowler and Sam Newman's Building Microservices. The consistency reasoning rests on Eric Brewer's CAP theorem, and the messaging patterns (publish and subscribe channels, event-driven messaging) come from the enterprise integration patterns tradition. Docker's container model, dating to 2013, supplies the deployment substrate, and the resiliency patterns (retry, circuit breaker, bulkhead) come from Microsoft's own cloud architecture guidance.",
+      "theory_of_mind": "The authors write for .NET developers and solution architects who are competent inside a monolith and new to distributed systems. Their model of the reader is someone who will reach for familiar tools, a shared database, a synchronous call, a distributed transaction, and must be shown, failure by failure, why each familiar tool breaks at distribution scale. They believe architecture is a set of tradeoffs that should be made explicitly, so nearly every pattern is presented with its drawback attached. They also believe a running reference application teaches more than abstraction, so every claim is anchored to eShopOnContainers, the sample system the reader can clone and inspect.",
+      "cross_layer_veto": "Several primitives in this book veto designs at other layers outright. Data sovereignty vetoes any shared-database integration, however convenient, because shared tables force coordinated schema changes and destroy lifecycle autonomy. The asynchronous integration rule vetoes synchronous call chains between internal services, however natural they feel to an object-oriented programmer. The aggregate root vetoes any write path that bypasses the root and mutates an entity directly, because invariants would no longer be enforceable. The contract rule vetoes breaking API changes, because a service that breaks its contract loses the independent evolvability that justified making it a service. And the circuit breaker vetoes naive retry logic, because retries without a breaker convert a partial outage into a self-inflicted denial of service."
+    }
+  ],
+  "universal_lens": "Read generally, this book is a template for decomposing any large system into autonomous units that cooperate without sharing state. The pattern is always the same: draw a boundary around a capability, give the unit inside the boundary sole ownership of its data, let it communicate with the outside only through explicit contracts and identified events, make every repeated delivery harmless, and assume every neighbor will fail sometimes. That template transfers to organizations, research pipelines, and multi-agent systems as directly as it applies to software services, because the underlying problem, coordination without coupling, is the same problem in each case.",
+  "gsi_mapping": "For the Galaxy Sports Institute, the book supplies the systems architecture for a durable research platform. Each research domain (ingest, normalization, situation modeling, evaluation) can be run as an autonomous service that owns its store and publishes committed results as integration events, so new domains can be added without renegotiating a shared schema. CQRS read models give the institute precomputed, question-shaped tables for study and publication instead of ad hoc joins across every store. Health checks, watchdogs, and bulkheads give long-running research jobs the operational discipline to fail in pieces and recover without corrupting neighboring work.",
+  "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the load-bearing transfers are the boundary rules. Each signal family can live in its own context with its own model of a player or a team, sharing identity but not attributes, exactly as the ordering context's Buyer differs from the identity context's User. Cross-context facts move as integration events with per-event identity and idempotent handlers, so a re-delivered injury or usage update can never double-count. Pregame read models are materialized views, built in advance in the shape the reasoning layer needs. Retries with jitter, circuit breakers, and bulkheads govern every external data dependency, so one dead feed degrades one input instead of stalling the whole reasoning pass."
+}

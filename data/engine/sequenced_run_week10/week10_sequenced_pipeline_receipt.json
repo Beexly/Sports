@@ -3,7 +3,9 @@
   "season": 2026,
   "resolved_week": 10,
   "season_type": "REG",
-  "mode": "dry-run-audit",
+  "mode": "t90m-adjust",
+  "target": "all-remaining",
+  "window": "sun_late",
   "gate_order_executed": [
     "Gate_0A_Live_32Team_ESPN_And_Stage0_Unification",
     "Gate_0B_Bitemporal_CSV_And_Lessons_Learned_12Gates",
@@ -14,25 +16,25 @@
     "Gate_5_Fence2_DeVig_Conjunction_And_CopyGuards"
   ],
   "all_gates_passed": true,
-  "final_receipt_sha256": "d0364a131b0e47b085f5d6c0d3549f4f287eaaf588aa7123c020877548cdc568",
+  "final_receipt_sha256": "5d942aab120c262a9e3e45cba3e0b30c4f020d777d1695395396b4749206cef2",
   "gates": {
     "Gate_0A_Live_32Team_ESPN_And_Stage0_Unification": {
       "gate": "Gate_0A_Live_32Team_ESPN_And_Stage0_Unification",
       "passed": true,
       "parent_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
       "payload": {
-        "unified_truth_path": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\data\\engine\\week10_unified_stage0_truth.json",
+        "unified_truth_path": "C:\\Users\\Garrett\\Sports-wt-triage\\data\\engine\\week10_unified_stage0_truth.json",
         "teams_covered": 32,
         "events_count": 14,
-        "scoreboard_source": "live_espn_api"
+        "scoreboard_source": "local_snapshot"
       },
-      "timestamp_utc": "2026-11-14T03:11:47.276377+00:00",
-      "receipt_sha256": "5212d33b87470503622c80b37cc67ff14a38434fc37048faff7a978e1382737d"
+      "timestamp_utc": "2026-11-16T21:50:42.671811+00:00",
+      "receipt_sha256": "0a0deb2392e8cd1b5992b4b337c9dfb26055598422d3b53b89fce243ecc42195"
     },
     "Gate_0B_Bitemporal_CSV_And_Lessons_Learned_12Gates": {
       "gate": "Gate_0B_Bitemporal_CSV_And_Lessons_Learned_12Gates",
       "passed": true,
-      "parent_sha256": "5212d33b87470503622c80b37cc67ff14a38434fc37048faff7a978e1382737d",
+      "parent_sha256": "0a0deb2392e8cd1b5992b4b337c9dfb26055598422d3b53b89fce243ecc42195",
       "payload": {
         "lessons_total": 12,
         "lessons_passed": 12,
@@ -44,15 +46,38 @@
           "active_week_team": "BUF",
           "week": 10,
           "remapped": true
+        },
+        "gse_engine_v3": {
+          "feed_guard_all_ok": true,
+          "feeds_checked": [
+            {
+              "path": "data/nflverse/stage0_truth_s2026_w10.json",
+              "ok": true,
+              "detected_kind": "json",
+              "sha256": "9b8edbccba4970f2db6af9a9affae5c7bd39cc10c27cab263b31017e4b8b369f"
+            },
+            {
+              "path": "data/engine/game_boards_360_s2026_w10.json",
+              "ok": true,
+              "detected_kind": "json",
+              "sha256": "c302f85d305c770dba0b09eeaf64eba51a65b8521b30a39f553b161fa6940a75"
+            }
+          ],
+          "props_audited": 20,
+          "cage_policy_id": "gse-cage-prop-gate-v3",
+          "cage_receipt_sha256": "279c6726dcd23fd2ee1eaf29958a277dc5a2b0c72399dd1bba99164d5c490bf2",
+          "archived_key": "s2026/w10/gse_v3_cage_receipt.json",
+          "archived_receipt_sha256": "12889cee7ccddd8773107fce0c2a6e8d5720223edee543280cd7fd91baeba4e8",
+          "receipt_verified": true
         }
       },
-      "timestamp_utc": "2026-11-14T03:11:47.577627+00:00",
-      "receipt_sha256": "5caf1fd47edc3a593f36e2776cace72e6d6ca39b9613a26a676ebbd728643689"
+      "timestamp_utc": "2026-11-16T21:50:42.885776+00:00",
+      "receipt_sha256": "3b4dfb5506555f470431555ec92f4155b61f42204adeabb9f009ce6811791ba1"
     },
     "Gate_1_Coaching_Weather_Circadian_FoundryRO": {
       "gate": "Gate_1_Coaching_Weather_Circadian_FoundryRO",
       "passed": true,
-      "parent_sha256": "5caf1fd47edc3a593f36e2776cace72e6d6ca39b9613a26a676ebbd728643689",
+      "parent_sha256": "3b4dfb5506555f470431555ec92f4155b61f42204adeabb9f009ce6811791ba1",
       "payload": {
         "coaching_python_files_count": 59,
         "foundry_db_readonly_ok": true,
@@ -61,7 +86,7 @@
           "matchup": "NE@DET",
           "espn_event_id": "401873053",
           "kickoff_utc": "2026-11-15T14:30Z",
-          "status": "STATUS_SCHEDULED",
+          "status": "STATUS_FINAL",
           "venue": "FC Bayern Munich Stadium",
           "city": "Munich",
           "state": null,
@@ -75,7 +100,7 @@
           "matchup": "KC@ATL",
           "espn_event_id": "401873058",
           "kickoff_utc": "2026-11-15T18:00Z",
-          "status": "STATUS_SCHEDULED",
+          "status": "STATUS_FINAL",
           "venue": "Mercedes-Benz Stadium",
           "city": "Atlanta",
           "state": "GA",
@@ -86,72 +111,119 @@
           "outdoor_weather_suppressed": true
         }
       },
-      "timestamp_utc": "2026-11-14T03:11:47.596895+00:00",
-      "receipt_sha256": "81fb8dce8e42725d288de8a28daa9ef40238efebff34fcdabe59cb4f536402b8"
+      "timestamp_utc": "2026-11-16T21:50:42.890025+00:00",
+      "receipt_sha256": "b04153d2df9f04ec48534e3efd1314609cec2248921afc6d9cd323c2da302825"
     },
     "Gate_2_Situational_Overlay_80Rules_CognitiveRouter": {
       "gate": "Gate_2_Situational_Overlay_80Rules_CognitiveRouter",
       "passed": true,
-      "parent_sha256": "81fb8dce8e42725d288de8a28daa9ef40238efebff34fcdabe59cb4f536402b8",
+      "parent_sha256": "b04153d2df9f04ec48534e3efd1314609cec2248921afc6d9cd323c2da302825",
       "payload": {
         "x_situational_80_rules_exists": true,
         "master_situational_aggregator_exists": true,
         "mcp_cognitive_router_exists": true
       },
-      "timestamp_utc": "2026-11-14T03:11:47.597410+00:00",
-      "receipt_sha256": "e4cdd3b1627bc1270d1b940008bf01718de5d32c19913365235189c64e74b57b"
+      "timestamp_utc": "2026-11-16T21:50:42.890582+00:00",
+      "receipt_sha256": "70853593690b681c5dc8bc1862ae9561fb727b3ba549c66a6aa3242aec964066"
     },
     "Gate_3_Fence1_LineFree_Trajectory_Sim_Check": {
       "gate": "Gate_3_Fence1_LineFree_Trajectory_Sim_Check",
       "passed": true,
-      "parent_sha256": "e4cdd3b1627bc1270d1b940008bf01718de5d32c19913365235189c64e74b57b",
+      "parent_sha256": "70853593690b681c5dc8bc1862ae9561fb727b3ba549c66a6aa3242aec964066",
       "payload": {
         "week": 10,
         "line_free_games_verified": 13,
         "stage0_eligible_target_violations": 0
       },
-      "timestamp_utc": "2026-11-14T03:11:47.600608+00:00",
-      "receipt_sha256": "1450e4c21d15ea8826fdf2567f60cbd25be7dd8f7998e184e5cbada5444e1d3e"
+      "timestamp_utc": "2026-11-16T21:50:42.894330+00:00",
+      "receipt_sha256": "0207c67a192e6c80136e0887db556240a54000fe51f6d9b8086d3c47fe18cd0a"
     },
     "Gate_4_Conformal_Calibration_And_RLVR_Bridge": {
       "gate": "Gate_4_Conformal_Calibration_And_RLVR_Bridge",
       "passed": true,
-      "parent_sha256": "1450e4c21d15ea8826fdf2567f60cbd25be7dd8f7998e184e5cbada5444e1d3e",
+      "parent_sha256": "0207c67a192e6c80136e0887db556240a54000fe51f6d9b8086d3c47fe18cd0a",
       "payload": {
         "calibration_heads_present": true,
         "rlvr_scenarios_verified": 18,
         "rlvr_all_passed": true,
         "bridge_smoke_approved": true
       },
-      "timestamp_utc": "2026-11-14T03:11:47.636241+00:00",
-      "receipt_sha256": "5d87d98971a4ae20e33a994f2689c8d9808c63215ed7f66b84d8282305c64fdc"
+      "timestamp_utc": "2026-11-16T21:50:42.923965+00:00",
+      "receipt_sha256": "1e864095461e255f4ffa7a1dd74dc6d843b5a21dad26640546c3bbbe7afb01c1"
     },
     "Gate_5_Fence2_DeVig_Conjunction_And_CopyGuards": {
       "gate": "Gate_5_Fence2_DeVig_Conjunction_And_CopyGuards",
       "passed": true,
-      "parent_sha256": "5d87d98971a4ae20e33a994f2689c8d9808c63215ed7f66b84d8282305c64fdc",
+      "parent_sha256": "1e864095461e255f4ffa7a1dd74dc6d843b5a21dad26640546c3bbbe7afb01c1",
       "payload": {
-        "js_and_dossier_guards_executed": true,
-        "guard_runs": [
-          {
-            "command": "node scripts/trust-gate.mjs",
-            "returncode": 0,
-            "stdout_tail": "[trust-gate] OK - scanned 4785 file(s); no banned phrases.\n"
-          },
-          {
-            "command": "node apps/mobile/scripts/lint-rules.js",
-            "returncode": 0,
-            "stdout_tail": "lint-rules: 48 files scanned\ntype tokens 20 \u00b7 colour tokens 22\nviolations 0\n\n\n"
-          },
-          {
-            "command": "C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\python.exe scripts/guardrails/connected-workflow-dossier-guard.py",
-            "returncode": 0,
-            "stdout_tail": "  PASS  connected-workflow-dossier-guard \u2014 cryptographic Stage 0..5 receipt & zero-contamination verified\n"
-          }
-        ]
+        "js_and_dossier_guards_executed": false,
+        "guard_runs": []
       },
-      "timestamp_utc": "2026-11-14T03:12:37.587061+00:00",
-      "receipt_sha256": "d0364a131b0e47b085f5d6c0d3549f4f287eaaf588aa7123c020877548cdc568"
+      "timestamp_utc": "2026-11-16T21:50:42.924028+00:00",
+      "receipt_sha256": "5d942aab120c262a9e3e45cba3e0b30c4f020d777d1695395396b4749206cef2"
     }
+  },
+  "gse_engine_v3": {
+    "feed_guard_all_ok": true,
+    "feeds_checked": [
+      {
+        "path": "data/nflverse/stage0_truth_s2026_w10.json",
+        "ok": true,
+        "detected_kind": "json",
+        "sha256": "9b8edbccba4970f2db6af9a9affae5c7bd39cc10c27cab263b31017e4b8b369f"
+      },
+      {
+        "path": "data/engine/game_boards_360_s2026_w10.json",
+        "ok": true,
+        "detected_kind": "json",
+        "sha256": "c302f85d305c770dba0b09eeaf64eba51a65b8521b30a39f553b161fa6940a75"
+      }
+    ],
+    "props_audited": 20,
+    "cage_policy_id": "gse-cage-prop-gate-v3",
+    "cage_receipt_sha256": "279c6726dcd23fd2ee1eaf29958a277dc5a2b0c72399dd1bba99164d5c490bf2",
+    "archived_key": "s2026/w10/gse_v3_cage_receipt.json",
+    "archived_receipt_sha256": "12889cee7ccddd8773107fce0c2a6e8d5720223edee543280cd7fd91baeba4e8",
+    "receipt_verified": true
+  },
+  "remaining_slate_orchestration": {
+    "schema": "gse-remaining-slate-full-engine-master-packet-v1",
+    "season": 2026,
+    "week": 10,
+    "mode": "t90m-adjust",
+    "target": "all-remaining",
+    "window": "sun_late",
+    "generated_utc": "2026-11-16T21:50:42.955606+00:00",
+    "elapsed_seconds": 0.031,
+    "sla_badge_180s": true,
+    "sla_badge_label": "<180s T-90m SLA ACHIEVED",
+    "fast_diff_applied": true,
+    "inactives_diff_count": 0,
+    "orchestrated_games": [
+      "SEA@LV",
+      "LAR@ARI",
+      "SF@DAL"
+    ],
+    "stage_statuses": {
+      "stage0": "VERIFIED_EXISTING",
+      "stage2": "VERIFIED_STANDBY",
+      "stage4_boards": "VERIFIED_STANDBY",
+      "stage3_5_simulation": "FAST_DIFF_ZERO_INACTIVE_CHANGES_REUSED",
+      "stage6_dfs_packets": "VERIFIED_STANDBY",
+      "stage6_lineup_doctor": "VERIFIED_STANDBY"
+    },
+    "manifest_paths": {
+      "stage0_truth": "C:\\Users\\Garrett\\Sports-wt-triage\\data\\engine\\week10_unified_stage0_truth.json",
+      "stage2_ts_overlay": "C:\\Users\\Garrett\\Sports-wt-triage\\scripts\\ops\\run_live_game_ts_overlay_and_grounding.ts",
+      "stage4_boards": "C:\\Users\\Garrett\\Sports-wt-triage\\scripts\\ops\\build_game_boards_360.py",
+      "stage3_5_connected_dossiers": [
+        "C:\\Users\\Garrett\\Sports-wt-triage\\data\\engine\\connected_workflow_dossier_sea_lv_week10.json",
+        "C:\\Users\\Garrett\\Sports-wt-triage\\data\\engine\\connected_workflow_dossier_lar_ari_week10.json",
+        "C:\\Users\\Garrett\\Sports-wt-triage\\data\\engine\\connected_workflow_dossier_sf_dal_week10.json"
+      ],
+      "stage6_dfs": "C:\\Users\\Garrett\\Sports-wt-triage\\scripts\\dfs\\build_weekly_dfs_packets.py"
+    },
+    "summary_json_path": "C:\\Users\\Garrett\\Sports-wt-triage\\docs\\predictions\\research\\2026-11-15\\week10_remaining_slate_full_engine_master_packet.json",
+    "summary_md_path": "C:\\Users\\Garrett\\Sports-wt-triage\\docs\\predictions\\research\\2026-11-15\\week10_remaining_slate_full_engine_master_packet.md"
   }
 }

@@ -237,28 +237,13 @@ def extract_normalized_game_state_bindings(game_ctx: Dict[str, Any]) -> Dict[str
     }
 
 
-def evaluate_single_catalog_equation(
+def _eval_eq_prenormalized(
     eq: Dict[str, Any],
-    game_ctx: Dict[str, Any],
-    bindings: Optional[Dict[str, float]] = None,
-    use_ast_executor: Optional[bool] = None,
+    norm_bindings: Dict[str, float],
+    ast_env: Dict[str, float],
+    ast_enabled: bool,
 ) -> float:
-    """
-    Evaluate a single cataloged equation (`EQ_00001`..`EQ_12304`) via compiled safe AST
-    parsing of `formula_expression`/`formula_spec` (behind AST_FORMULA_SPEC_EXECUTOR_ENABLED=true)
-    or its authentic corpus-derived `operator_type`, enforcing unit normalization,
-    `sample_size_n >= min_sample_size` gating, and Stage D clamping to [-0.35, +0.35].
-    """
-    n_obs = int(eq.get("sample_size_n", 100))
-    min_n = int(eq.get("min_sample_size", eq.get("min_sample_size_n", 30)))
-    if n_obs < min_n:
-        return 0.0
-
-    if bindings is None:
-        norm_bindings = normalize_feature_vector(extract_normalized_game_state_bindings(game_ctx))
-    else:
-        norm_bindings = normalize_feature_vector(bindings)
-
+    """Fast-path evaluator reusing pre-normalized bindings and env dict across 12,304 equations."""
     p0, p1, p2 = eq["parameter_bindings"][:3]
     x0 = float(norm_bindings.get(p0, 0.0))
     x1 = float(norm_bindings.get(p1, 0.0))
@@ -269,17 +254,11 @@ def evaluate_single_catalog_equation(
     w2 = float(coeffs["w_interaction"])
     op_type = str(eq.get("operator_type") or eq.get("formula_type") or "linear_logit")
 
-    ast_enabled = (
-        use_ast_executor
-        if use_ast_executor is not None
-        else os.environ.get("AST_FORMULA_SPEC_EXECUTOR_ENABLED", "true").lower() in ("1", "true", "yes", "on")
-    )
     fspec = str(eq.get("formula_expression") or eq.get("formula_spec") or "")
     raw_val: Optional[float] = None
     if ast_enabled and fspec:
         try:
             closure = compile_formula_spec_ast(fspec)
-            ast_env = dict(norm_bindings)
             ast_env["x0"] = x0
             ast_env["x1"] = x1
             ast_env["x2"] = x2
@@ -322,6 +301,36 @@ def evaluate_single_catalog_equation(
     return max(-MAX_ABS_DELTA_LOG_ODDS, min(MAX_ABS_DELTA_LOG_ODDS, float(raw_val)))
 
 
+def evaluate_single_catalog_equation(
+    eq: Dict[str, Any],
+    game_ctx: Dict[str, Any],
+    bindings: Optional[Dict[str, float]] = None,
+    use_ast_executor: Optional[bool] = None,
+) -> float:
+    """
+    Evaluate a single cataloged equation (`EQ_00001`..`EQ_12304`) via compiled safe AST
+    parsing of `formula_expression`/`formula_spec` (behind AST_FORMULA_SPEC_EXECUTOR_ENABLED=true)
+    or its authentic corpus-derived `operator_type`, enforcing unit normalization,
+    `sample_size_n >= min_sample_size` gating, and Stage D clamping to [-0.35, +0.35].
+    """
+    n_obs = int(eq.get("sample_size_n", 100))
+    min_n = int(eq.get("min_sample_size", eq.get("min_sample_size_n", 30)))
+    if n_obs < min_n:
+        return 0.0
+
+    if bindings is None:
+        norm_bindings = normalize_feature_vector(extract_normalized_game_state_bindings(game_ctx))
+    else:
+        norm_bindings = normalize_feature_vector(bindings)
+
+    ast_enabled = (
+        use_ast_executor
+        if use_ast_executor is not None
+        else os.environ.get("AST_FORMULA_SPEC_EXECUTOR_ENABLED", "true").lower() in ("1", "true", "yes", "on")
+    )
+    return _eval_eq_prenormalized(eq, norm_bindings, dict(norm_bindings), ast_enabled)
+
+
 def evaluate_all_12304_catalog_equations(game_ctx: Dict[str, Any]) -> Dict[str, Any]:
     """
     Execute all 12,304 real corpus equations in `equation_executable_catalog_12304.json`
@@ -330,6 +339,9 @@ def evaluate_all_12304_catalog_equations(game_ctx: Dict[str, Any]) -> Dict[str, 
     catalog = load_equation_executable_catalog_12304()
     equations = catalog["equations"]
     bindings = extract_normalized_game_state_bindings(game_ctx)
+    norm_bindings = normalize_feature_vector(bindings)
+    ast_env = dict(norm_bindings)
+    ast_enabled = os.environ.get("AST_FORMULA_SPEC_EXECUTOR_ENABLED", "true").lower() in ("1", "true", "yes", "on")
 
     authentic_count = 0
     held_below_min_sample = 0
@@ -341,7 +353,6 @@ def evaluate_all_12304_catalog_equations(game_ctx: Dict[str, Any]) -> Dict[str, 
     for eq in equations:
         if eq.get("real_source_file") and eq.get("real_source_locator") and eq.get("operator_type") != "tanh_template":
             authentic_count += 1
-        raw_val = evaluate_single_catalog_equation(eq, game_ctx, bindings)
         n_obs = int(eq.get("sample_size_n", 100))
         min_n = int(eq.get("min_sample_size", eq.get("min_sample_size_n", 30)))
         if n_obs < min_n:
@@ -349,7 +360,7 @@ def evaluate_all_12304_catalog_equations(game_ctx: Dict[str, Any]) -> Dict[str, 
             val = 0.0
         else:
             active_above_min_sample += 1
-            val = raw_val
+            val = _eval_eq_prenormalized(eq, norm_bindings, ast_env, ast_enabled)
         total_val += val
         tr = str(eq.get("reasoning_track") or "1_qb_behavior")
         st = str(eq.get("weekly_cycle_step") or "1_usage")
@@ -380,6 +391,9 @@ def evaluate_12304_equations_cognitive_router(game_ctx: Dict[str, Any]) -> Dict[
     catalog = load_equation_executable_catalog_12304()
     equations = catalog["equations"]
     bindings = extract_normalized_game_state_bindings(game_ctx)
+    norm_bindings = normalize_feature_vector(bindings)
+    ast_env = dict(norm_bindings)
+    ast_enabled = os.environ.get("AST_FORMULA_SPEC_EXECUTOR_ENABLED", "true").lower() in ("1", "true", "yes", "on")
 
     family_displacements = [0.0] * SIGNAL_FAMILIES
     family_max_n = [0] * SIGNAL_FAMILIES
@@ -389,7 +403,6 @@ def evaluate_12304_equations_cognitive_router(game_ctx: Dict[str, Any]) -> Dict[
     held_below_min_sample = 0
     for eq in equations:
         coeffs = eq["coefficients"]
-        raw_val = evaluate_single_catalog_equation(eq, game_ctx, bindings)
         fam_id = int(eq["family_id"])
         n_obs = int(eq["sample_size_n"])
         min_n = int(eq.get("min_sample_size", eq.get("min_sample_size_n", MIN_SAMPLE_N)))
@@ -397,7 +410,7 @@ def evaluate_12304_equations_cognitive_router(game_ctx: Dict[str, Any]) -> Dict[
             held_below_min_sample += 1
             val = 0.0
         else:
-            val = raw_val
+            val = _eval_eq_prenormalized(eq, norm_bindings, ast_env, ast_enabled)
             if n_obs > family_max_n[fam_id]:
                 family_max_n[fam_id] = n_obs
         family_displacements[fam_id] += val

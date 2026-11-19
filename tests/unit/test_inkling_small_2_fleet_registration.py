@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""
-Unit tests verifying that both `Inkling Small 2 (New)` (`inkling/inkling-small-2`, alias `inkling-small-2`)
-and `Inkling 2` (`inkling/inkling-2`, alias `inkling-2`) are registered alongside the 7 approved fleet models
-(`DeepSeek V3.2`, `GLM-5.1`, `GLM-5-Turbo`, `Grok 4.1 Fast`, `Grok 4.20 Beta`, `MiMo-V2-Pro`, `MiniMax M2.7`)
-in `workers/stealth-skeleton-provider/opencode.json` and `scripts/ops/zero_waste_model_router.py`,
+"""Unit tests verifying registration of `Inkling Small 2 (New)` and `Inkling 2`.
+
+Both `Inkling Small 2 (New)` (`inkling/inkling-small-2`, alias `inkling-small-2`) and
+`Inkling 2` (`inkling/inkling-2`, alias `inkling-2`) are registered alongside the 7
+approved fleet models (`DeepSeek V3.2`, `GLM-5.1`, `GLM-5-Turbo`, `Grok 4.1 Fast`,
+`Grok 4.20 Beta`, `MiMo-V2-Pro`, `MiniMax M2.7`) in
+`workers/stealth-skeleton-provider/opencode.json` and `scripts/ops/zero_waste_model_router.py`,
 with task-specific strongest-agent routing and Santa verification council participation.
 """
 from __future__ import annotations
@@ -16,7 +18,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.ops.zero_waste_model_router import (
+from scripts.ops.zero_waste_model_router import (  # noqa: E402
     APPROVED_VERIFICATION_MODELS,
     CLAUDE_CLI_AND_HERMES_SUBSCRIPTION_SPINE,
     DUAL_PROVIDER_BUDGET_GOVERNOR,
@@ -43,7 +45,9 @@ EXPECTED_9_FLEET_MODELS = [
 ]
 
 
-def test_opencode_json_registers_all_9_fleet_models_including_inkling_small_2_and_inkling_2() -> None:
+def test_opencode_json_registers_all_9_fleet_models_including_inkling_small_2_and_inkling_2() -> (
+    None
+):
     opencode_path = REPO_ROOT / "workers" / "stealth-skeleton-provider" / "opencode.json"
     assert opencode_path.exists()
     cfg = json.loads(opencode_path.read_text(encoding="utf-8"))
@@ -57,7 +61,9 @@ def test_opencode_json_registers_all_9_fleet_models_including_inkling_small_2_an
     for model_id, alias, display_name in EXPECTED_9_FLEET_MODELS:
         assert model_id in ss_models, f"Missing {model_id} in stealth-skeleton.models"
         assert model_id in or_models, f"Missing {model_id} in openrouter.models"
-        assert model_id in fleet_by_id, f"Missing {model_id} in approved_verification_and_routing_fleet"
+        assert model_id in fleet_by_id, (
+            f"Missing {model_id} in approved_verification_and_routing_fleet"
+        )
         assert fleet_by_id[model_id]["alias"] == alias
         assert fleet_by_id[model_id]["display_name"] == display_name
         assert ss_models[model_id]["display_name"] == display_name
@@ -138,7 +144,9 @@ def test_select_strongest_agent_for_task_and_model_routing_table() -> None:
     assert r_long["primary_model_id"] == "minimax/minimax-m2.7"
 
     # 4. high_throughput_pbp_snap_and_wave2_dfs_lineup_dispatch
-    r_fast = select_strongest_agent_for_task("high_throughput_pbp_snap_and_wave2_dfs_lineup_dispatch")
+    r_fast = select_strongest_agent_for_task(
+        "high_throughput_pbp_snap_and_wave2_dfs_lineup_dispatch"
+    )
     assert r_fast["models"] == [
         "inkling/inkling-small-2",
         "x-ai/grok-4.1-fast",
@@ -153,16 +161,37 @@ def test_select_strongest_agent_for_task_and_model_routing_table() -> None:
     ]
     assert r_fast["primary_model_id"] == "inkling/inkling-small-2"
 
-    # Keyword routing edge cases (including whole-token anti-collision & compound task scoring)
-    assert select_strongest_agent_for_task("wave2_dfs_lineup_sim")["primary_alias"] == "inkling-small-2"
-    assert select_strongest_agent_for_task("milp_equation_ast_check")["primary_alias"] == "deepseek-v3.2"
+    # Keyword routing edge cases (whole-token anti-collision & compound task scoring)
+    assert (
+        select_strongest_agent_for_task("wave2_dfs_lineup_sim")["primary_alias"]
+        == "inkling-small-2"
+    )
+    assert (
+        select_strongest_agent_for_task("milp_equation_ast_check")["primary_alias"]
+        == "deepseek-v3.2"
+    )
     assert select_strongest_agent_for_task("santa_corpus_audit")["primary_alias"] == "minimax-m2.7"
     assert select_strongest_agent_for_task("")["primary_alias"] == "grok-4.20-beta"
-    assert select_strongest_agent_for_task("master_situational_reasoning")["primary_alias"] == "grok-4.20-beta"
-    assert select_strongest_agent_for_task("forecast_5stage_gate")["primary_alias"] == "grok-4.20-beta"
-    assert select_strongest_agent_for_task("sportsbook_5stage_gate")["primary_alias"] == "grok-4.20-beta"
-    assert select_strongest_agent_for_task("smallest_edge_5stage_gate")["primary_alias"] == "grok-4.20-beta"
-    assert select_strongest_agent_for_task("pbp_math_equation_milp_solver")["primary_alias"] == "deepseek-v3.2"
+    assert (
+        select_strongest_agent_for_task("master_situational_reasoning")["primary_alias"]
+        == "grok-4.20-beta"
+    )
+    assert (
+        select_strongest_agent_for_task("forecast_5stage_gate")["primary_alias"]
+        == "grok-4.20-beta"
+    )
+    assert (
+        select_strongest_agent_for_task("sportsbook_5stage_gate")["primary_alias"]
+        == "grok-4.20-beta"
+    )
+    assert (
+        select_strongest_agent_for_task("smallest_edge_5stage_gate")["primary_alias"]
+        == "grok-4.20-beta"
+    )
+    assert (
+        select_strongest_agent_for_task("pbp_math_equation_milp_solver")["primary_alias"]
+        == "deepseek-v3.2"
+    )
 
     # Deep-copy immutability check: mutating returned list must not corrupt MODEL_ROUTING_TABLE
     r_mut = select_strongest_agent_for_task("mathematical_equations_milp_and_conformal_coding")
@@ -234,7 +263,7 @@ def test_overnight_9model_fleet_catalog_canonical_model_ids_match_router() -> No
 
 
 def test_opencode_free_and_cheaper_glm_model_routing_hierarchy() -> None:
-    # Verify len(APPROVED_VERIFICATION_MODELS) == 9 stays intact while aliases & free endpoints resolve
+    # Verify len(APPROVED_VERIFICATION_MODELS) == 9 stays intact while aliases & free resolve
     assert len(APPROVED_VERIFICATION_MODELS) == 9
 
     assert MODEL_ID_ALIASES["x-ai/grok-4.20-beta"] == "x-ai/grok-4.20-multi-agent-beta-0309"
@@ -267,13 +296,13 @@ def test_opencode_free_and_cheaper_glm_model_routing_hierarchy() -> None:
         assert glm_spec["free_opencode_alternative"] == "glm-5.3-flash-free"
         assert glm_spec["cheaper_glm_tier"] == "z-ai/glm-5-turbo"
 
-    # Verify select_zero_waste_cost_optimized_model routes GLM/MiMo/Inkling to $0.00 Free OpenCode when prefer_free_opencode=True
+    # Verify select_zero_waste_cost_optimized_model routes GLM/MiMo/Inkling to $0.00 Free OpenCode
     r_glm_free = select_zero_waste_cost_optimized_model("z-ai/glm-5.1", prefer_free_opencode=True)
     assert r_glm_free["selected_model_id"] == "glm-5.3-flash-free"
     assert r_glm_free["free_on_opencode"] is True
     assert r_glm_free["pricing_per_1m_in_out_usd"] == (0.0, 0.0)
 
-    # And routes to cheaper paid tier z-ai/glm-5-turbo ($0.02/$0.08 vs $0.10/$0.40) when prefer_free_opencode=False
+    # And routes to cheaper paid tier z-ai/glm-5-turbo when prefer_free_opencode=False
     r_glm_paid = select_zero_waste_cost_optimized_model("z-ai/glm-5.1", prefer_free_opencode=False)
     assert r_glm_paid["selected_model_id"] == "z-ai/glm-5-turbo"
     assert r_glm_paid["pricing_per_1m_in_out_usd"] == (0.02, 0.08)
@@ -288,7 +317,9 @@ def test_opencode_free_and_cheaper_glm_model_routing_hierarchy() -> None:
     assert r_ink2["free_on_opencode"] is True
     assert r_ink2["pricing_per_1m_in_out_usd"] == (0.0, 0.0)
 
-    r_inks = select_zero_waste_cost_optimized_model("inkling/inkling-small-2", prefer_free_opencode=True)
+    r_inks = select_zero_waste_cost_optimized_model(
+        "inkling/inkling-small-2", prefer_free_opencode=True
+    )
     assert r_inks["selected_model_id"] == "inkling/inkling-small-2"
     assert r_inks["free_on_opencode"] is True
     assert r_inks["pricing_per_1m_in_out_usd"] == (0.0, 0.0)
@@ -325,14 +356,44 @@ def test_dual_provider_budget_governor_heavy_math_spots_and_claude_cli_subscript
         assert spot["subscription_lead"]["transport"] == "claude_cli_and_hermes_subscription"
         assert "anthropic/claude-opus-5.5" in spot["models"]
 
-    assert "deepseek/deepseek-v3.2" in HEAVY_MATH_FIRST_SPOT_ASSIGNMENTS["spot_1_symbolic_ast_21419_equations_and_jacobian"]["models"]
-    assert "prism-ml/ternary-bonsai-2-27b" in HEAVY_MATH_FIRST_SPOT_ASSIGNMENTS["spot_2_two_wave_200pt_dfs_milp_and_knapsack_portfolio"]["models"]
-    assert "inkling/inkling-2" in HEAVY_MATH_FIRST_SPOT_ASSIGNMENTS["spot_3_conformal_cqr_venn_abers_and_james_stein_shrinkage"]["models"]
-    assert "xiaomi/mimo-v2-flash" in HEAVY_MATH_FIRST_SPOT_ASSIGNMENTS["spot_4_sinkhorn_optimal_transport_and_non_stationary_kernels"]["models"]
-    assert "stealth/crouton-alpha" in HEAVY_MATH_FIRST_SPOT_ASSIGNMENTS["spot_5_adversarial_santa_and_5stage_conjunction_big_guns"]["models"]
-    assert "x-ai/grok-4.20-multi-agent-beta-0309" in HEAVY_MATH_FIRST_SPOT_ASSIGNMENTS["spot_5_adversarial_santa_and_5stage_conjunction_big_guns"]["paid_big_guns"]
+    assert (
+        "deepseek/deepseek-v3.2"
+        in HEAVY_MATH_FIRST_SPOT_ASSIGNMENTS[
+            "spot_1_symbolic_ast_21419_equations_and_jacobian"
+        ]["models"]
+    )
+    assert (
+        "prism-ml/ternary-bonsai-2-27b"
+        in HEAVY_MATH_FIRST_SPOT_ASSIGNMENTS[
+            "spot_2_two_wave_200pt_dfs_milp_and_knapsack_portfolio"
+        ]["models"]
+    )
+    assert (
+        "inkling/inkling-2"
+        in HEAVY_MATH_FIRST_SPOT_ASSIGNMENTS[
+            "spot_3_conformal_cqr_venn_abers_and_james_stein_shrinkage"
+        ]["models"]
+    )
+    assert (
+        "xiaomi/mimo-v2-flash"
+        in HEAVY_MATH_FIRST_SPOT_ASSIGNMENTS[
+            "spot_4_sinkhorn_optimal_transport_and_non_stationary_kernels"
+        ]["models"]
+    )
+    assert (
+        "stealth/crouton-alpha"
+        in HEAVY_MATH_FIRST_SPOT_ASSIGNMENTS[
+            "spot_5_adversarial_santa_and_5stage_conjunction_big_guns"
+        ]["models"]
+    )
+    assert (
+        "x-ai/grok-4.20-multi-agent-beta-0309"
+        in HEAVY_MATH_FIRST_SPOT_ASSIGNMENTS[
+            "spot_5_adversarial_santa_and_5stage_conjunction_big_guns"
+        ]["paid_big_guns"]
+    )
 
-    # 4. Workhorse & Babysitting routing defaults strictly to $0.00 Free OpenCode and NEVER uses Claude Opus 5.5
+    # 4. Workhorse & Babysitting routing defaults strictly to $0.00 Free OpenCode
     workhorse = check_dual_provider_budget_and_route(
         "pbp_snap_schema_ingest",
         opencode_spent_usd=1.25,
@@ -341,22 +402,40 @@ def test_dual_provider_budget_governor_heavy_math_spots_and_claude_cli_subscript
     )
     assert workhorse["big_guns_unlocked"] is False
     assert workhorse["never_use_claude_for_babysitting_or_workhorse"] is True
-    assert workhorse["selected_model_id"] in ("inkling/inkling-small-2", "xiaomi/mimo-v2-flash", "glm-5.3-flash-free")
+    assert workhorse["selected_model_id"] in (
+        "inkling/inkling-small-2",
+        "xiaomi/mimo-v2-flash",
+        "glm-5.3-flash-free",
+    )
     assert workhorse["selected_model_id"] != "anthropic/claude-opus-5.5"
     assert "anthropic/claude-opus-5.5" not in workhorse["active_models"]
     assert workhorse["subscription_api_budget_burn_usd"] == 0.0
-    assert workhorse["claude_cli_and_hermes_subscription_lead"]["model_id"] == "anthropic/claude-opus-5.5"
+    assert (
+        workhorse["claude_cli_and_hermes_subscription_lead"]["model_id"]
+        == "anthropic/claude-opus-5.5"
+    )
     assert workhorse["pricing_per_1m_in_out_usd"] == (0.0, 0.0)
     assert workhorse["opencode_remaining_usd"] == 8.75
     assert workhorse["openrouter_remaining_usd"] == 9.50
 
-    allowed_free_workhorse_models = {"inkling/inkling-small-2", "xiaomi/mimo-v2-flash", "glm-5.3-flash-free"}
-    for task_kw in ("babysit_agent_run", "monitor_pipeline", "poll_job_status", "healthcheck_worker", "workhorse_pbp_loop"):
+    allowed_free_workhorse_models = {
+        "inkling/inkling-small-2",
+        "xiaomi/mimo-v2-flash",
+        "glm-5.3-flash-free",
+    }
+    for task_kw in (
+        "babysit_agent_run",
+        "monitor_pipeline",
+        "poll_job_status",
+        "healthcheck_worker",
+        "workhorse_pbp_loop",
+    ):
         routed_budget = check_dual_provider_budget_and_route(
             task_kw,
             opencode_spent_usd=1.00,
             openrouter_spent_usd=1.00,
-            is_adversarial_or_hard_math=True,  # even if caller passes True, babysitting/workhorse must never use Opus 5.5
+            # even if caller passes True, babysitting/workhorse must never use Opus 5.5
+            is_adversarial_or_hard_math=True,
         )
         assert routed_budget["never_use_claude_for_babysitting_or_workhorse"] is True
         assert routed_budget["is_babysitting_or_workhorse_task"] is True
@@ -373,7 +452,7 @@ def test_dual_provider_budget_governor_heavy_math_spots_and_claude_cli_subscript
         assert routed_opt["free_on_opencode"] is True
         assert routed_opt["pricing_per_1m_in_out_usd"] == (0.0, 0.0)
 
-    # 5. Adversarial / Heavy-Math within $10+$10 budget unlocks Big Guns alongside Opus 5.5 CLI & Free OpenCode
+    # 5. Adversarial / Heavy-Math within $10+$10 budget unlocks Big Guns
     adv_ok = check_dual_provider_budget_and_route(
         "spot_5_adversarial_santa_and_5stage_conjunction_big_guns",
         opencode_spent_usd=3.00,
@@ -387,7 +466,7 @@ def test_dual_provider_budget_governor_heavy_math_spots_and_claude_cli_subscript
     assert "anthropic/claude-opus-5.5" in adv_ok["active_models"]
     assert "stealth/crouton-alpha" in adv_ok["active_models"]
 
-    # 6. Exhausted budget (>= 95% of $10.00) trips circuit breaker and falls back to $0.00 Free OpenCode + Opus 5.5 CLI
+    # 6. Exhausted budget (>= 95% of $10.00) trips breaker and falls back to Free + Opus 5.5
     adv_exhausted = check_dual_provider_budget_and_route(
         "spot_5_adversarial_santa_and_5stage_conjunction_big_guns",
         opencode_spent_usd=9.60,
@@ -401,7 +480,7 @@ def test_dual_provider_budget_governor_heavy_math_spots_and_claude_cli_subscript
     assert adv_exhausted["pricing_per_1m_in_out_usd"] == (0.0, 0.0)
     assert "anthropic/claude-opus-5.5" in adv_exhausted["active_models"]
 
-    # 7. Verify extra_aliases resolve in run_multi_brain_santa_verification_council()["model_verdicts"]
+    # 7. Verify extra_aliases resolve in run_multi_brain_santa_verification_council
     santa_verdicts = run_multi_brain_santa_verification_council()["model_verdicts"]
     for extra_alias_key in (
         "x-ai/grok-4.20-beta",

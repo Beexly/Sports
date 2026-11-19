@@ -1,0 +1,720 @@
+{
+ "book_id": "0c18f45f28464f47",
+ "source_status": "COMPLETE",
+ "source_note": "Parke H. Davis, Football: The American Intercollegiate Game, Charles Scribner's Sons, New York, published September 1911. Davis (Princeton '93) was Princeton's member of the Intercollegiate Rules Committee, which the Appendix's 1911 roster confirms, so the author is a participant-legislator, not an outside historian. The local file is a Google Books public-domain scan of the printed book: PDF 26,587,401 bytes, sha256 0c18f45f28464f47b6a52d98bf0ca735e6d2da7a067aa54910e1dd5103c19c8c, book_id 0c18f45f28464f47. The extracted text (1,079,764 bytes) is complete for the whole work, Part I narrative history (Chapters I-VIII), Part II game accounts (Chapters IX-XVIII) and the Appendix of convention proceedings 1876-1911, but OCR quality is uneven, with garbled words and broken passages, worst in the Appendix; every verbatim quote in this artifact was verified as a contiguous substring of the extracted text before inclusion, and clean passages were chosen. Catalog note: the folder filename 'Davis-1911' matches the title page (Parke H. Davis, 1911); the parent inventory's author tag is correct. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "harpastum_field_structure",
+   "name": "The Spartan game harpastum was already a structured invasion game: a rectangular field with side lines, goal-lines and a centre line, equal sides, and the ball driven across the opposite goal-line by passing, kicking and carrying.",
+   "verbatim_quote": "It was played upon a rectangular field marked with side lines, goal-lines, and centre line. There was no limitation upon the number of players, but these were equally divided between the two sides.",
+   "page": "Chapter I, p. 4",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Davis relies on Greek lexicon definitions and antiquarian reconstruction, not on a surviving rule book.",
+    "The account treats harpastum as a genuine ancestor of Rugby rather than a merely similar game."
+   ],
+   "breakdown_regime": "no_equation_domain; the reconstruction is conjectural and Davis flags the evidence as meagre, so it cannot bear precise tactical inference.",
+   "domain": "game_structure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats every sport it models as an invasion game on a bounded field with a target line, so era and sport comparisons start from shared field geometry and scoring direction rather than from surface resemblance.",
+    "source_operator": "harpastum_field_structure",
+    "telemetry": "Field dimensions, goal-line orientation and side counts per era and league, from rules records and venue data."
+   }
+  },
+  {
+   "primitive_id": "westminster_offside_origin",
+   "name": "Off-side play originates at Westminster as the invented restriction called outsiding, layered on top of the older prohibition against using the hands.",
+   "verbatim_quote": "a new restriction was invented which was called \" outsiding.\" This restriction was identical with what to day is known as \" off-side play.",
+   "page": "Chapter II, p. 22",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The Westminster game was played in cloisters and then on the Green, so the restriction answered crowded local conditions.",
+    "Davis equates outsiding with the modern off-side rule without qualification."
+   ],
+   "breakdown_regime": "no_equation_domain; a local school custom, not yet a general law, and its exact enforcement at Westminster is described only in outline.",
+   "domain": "rules_evolution",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Off-side is a positional legality constraint on attackers relative to the ball and the defence; the engine encodes such constraints as hard feasibility filters on player positioning features rather than as soft tendencies.",
+    "source_operator": "westminster_offside_origin",
+    "telemetry": "Player tracking positions relative to the ball and the last defender at the moment of a pass or snap."
+   }
+  },
+  {
+   "primitive_id": "eton_eleven_principle",
+   "name": "The eleven-player side, the defining roster size of the American game, comes from the Eton Wall Game, where eleven a side put the ball in play in a bully against the wall.",
+   "verbatim_quote": "The players, numbering eleven upon a side, put the ball in play by a scrimmage against the wall, by them called a bully.",
+   "page": "Chapter II, p. 23",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The number eleven at Eton was fitted to a narrow strip of ground six yards from a wall, not derived from any theory of the game.",
+    "Davis asserts the American game is indebted to Eton for this principle."
+   ],
+   "breakdown_regime": "no_equation_domain; the number is a historical inheritance from a constrained playground, and Davis offers no functional argument that eleven is optimal.",
+   "domain": "game_structure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Roster size is a structural parameter of the state space: the engine conditions formation and coverage models on the number of players per side instead of assuming it as a universal constant.",
+    "source_operator": "eton_eleven_principle",
+    "telemetry": "Roster sizes and substitution rules per league and era from rules records."
+   }
+  },
+  {
+   "primitive_id": "camp_eleven_adoption_1880",
+   "name": "Yale pressed for the Eton eleven against the Rugby fifteen from 1877 onward, and in 1880 Walter Camp persuaded the convention to adopt it.",
+   "verbatim_quote": "until finally, in 1880, Walter Camp, Yale's delegate, succeeded in persuading the convention to adopt the Eton rule.",
+   "page": "Chapter II, p. 24",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The change required a convention vote; Yale had been defeated on the same proposal in earlier years.",
+    "Davis credits Camp personally as the persuading delegate."
+   ],
+   "breakdown_regime": "no_equation_domain; adoption was political as much as technical, and the fifteen-man Rugby game continued elsewhere.",
+   "domain": "rules_evolution",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Personnel-count changes alter spacing and collision density everywhere downstream; the engine versions its formation models by the roster-size regime in force, with 1880 as a regime boundary for American football.",
+    "source_operator": "camp_eleven_adoption_1880",
+    "telemetry": "Season-level rules parameters joined to play data, so features are computed within the correct personnel regime."
+   }
+  },
+  {
+   "primitive_id": "ellis_run_unrestricted",
+   "name": "William Webb Ellis running with the ball in 1823 began a staged legalization: carrying was first allowed from fair catches, then from catches on the bound, then without restriction as a basic Rugby rule.",
+   "verbatim_quote": "and finally the right to run with the ball without restriction was incorporated as a basic rule in the Rugby game.",
+   "page": "Chapter II, p. 27",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The Ellis story rests on recollections collected by the Old Rugbeian Society in 1897, decades after the event.",
+    "Legalization was gradual and granted by the school levee, not immediate."
+   ],
+   "breakdown_regime": "no_equation_domain; the founding anecdote was questioned even in Davis's time, and the staged extension of the privilege matters more than the single run.",
+   "domain": "rules_evolution",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A prohibited action becoming legal in stages is a template for how new play types enter a sport; the engine flags newly legalized actions as underpriced by defences during their adoption window.",
+    "source_operator": "ellis_run_unrestricted",
+    "telemetry": "Introduction dates of play types and their usage rates season by season after legalization."
+   }
+  },
+  {
+   "primitive_id": "princeton_first_written_code_1871",
+   "name": "Princeton's mass meeting of October 15, 1871 created the pioneer football association and transferred the ancient rules of play from tradition to an authoritative written code of ten rules.",
+   "verbatim_quote": "Another great advance made by this mass meeting was the transference of the ancient rules of play at Princeton from tradition to an authoritative, written code.",
+   "page": "Chapter V, p. 51",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Before this code the rules at each college were traditionary and differed from school to school.",
+    "The code fixed 25 men a side, goals 25 feet apart, and no throwing or carrying the ball."
+   ],
+   "breakdown_regime": "no_equation_domain; a written code at one college did not bind others, and intercollegiate play still required negotiating whose code governed each game.",
+   "domain": "governance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Codification is the moment a domain becomes machine-readable; the engine treats the first written code as the start of the reliable record and weights pre-code accounts as tradition, not data.",
+    "source_operator": "princeton_first_written_code_1871",
+    "telemetry": "Dates of codification per institution, used as provenance and reliability weights on historical records."
+   }
+  },
+  {
+   "primitive_id": "first_game_spatial_roles_1869",
+   "name": "The first intercollegiate game of 1869 already had spatial specialization: one section of each team was assigned to fixed tracts of the field which they were to cover and not leave, the fielders, while another section, the bulldogs, followed the ball.",
+   "verbatim_quote": "The players of one section were assigned to certain tracts of the field, which they were to cover and not to leave.",
+   "page": "Chapter IV, p. 47",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The account was reconstructed from surviving players forty years later, so assignments are as remembered, not as recorded at the time.",
+    "Each side also stationed two men in front of the opponents' goal as captains of the enemy's goal."
+   ],
+   "breakdown_regime": "no_equation_domain; with 25 men a side and a kicking game, fixed tracts were coverage of space rather than of men, and the scheme dissolved once carrying and interference arrived.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Zone assignment versus ball-following is the original form of the coverage question; the engine represents defensive schemes on a spectrum from fixed spatial zones to ball-tracking pressure, with the 1869 split as the ancestral case.",
+    "source_operator": "first_game_spatial_roles_1869",
+    "telemetry": "Defensive alignment and assignment data from play charts and tracking, classified by zone versus follow responsibility."
+   }
+  },
+  {
+   "primitive_id": "leggett_low_ball_adaptation",
+   "name": "In the 1869 game Rutgers captain Leggett neutralized Princeton's height advantage, used to bat the ball in the air, by ordering the ball kept close to the ground, and Rutgers kicked the deciding goals.",
+   "verbatim_quote": "On the resumption of play Rutgers was ordered to keep the ball close to the ground.",
+   "page": "Chapter IV, p. 50",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The advantage being countered was specific: taller Princeton men reaching above others to bat the ball in advantageous directions.",
+    "The stratagem worked within a kicking game where ball height was a controllable channel."
+   ],
+   "breakdown_regime": "no_equation_domain; the counter is specific to an aerial batting game and does not transfer once the ball is carried rather than batted.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Identify the single physical channel through which an opponent's edge flows and remove that channel from the game; the engine searches matchup data for the one measurable trait, such as height at the catch point, that carries an opponent advantage, then values game plans that deny it.",
+    "source_operator": "leggett_low_ball_adaptation",
+    "telemetry": "Player measurables joined to play outcomes by channel, for example contested catches versus ground-level plays."
+   }
+  },
+  {
+   "primitive_id": "harvard_code_run_when_pursued",
+   "name": "Harvard's 1872 code was a Rugby and Association hybrid whose eighth rule let a player catch or pick up the ball but run with it only while pursued by an opponent, and only so long as pursued.",
+   "verbatim_quote": "Rule 8 permitted ''any player to catch or pick up the ball but not to run with it unless pursued by an opponent and then only so long as pursued.\"",
+   "page": "Chapter V, p. 53",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The code also limited sides to between ten and fifteen players and barred throwing or passing unless pursued.",
+    "Harvard declined the 1873 convention because its game was too different to harmonize."
+   ],
+   "breakdown_regime": "no_equation_domain; a conditional legality tied to pursuit is nearly unenforceable, and Harvard abandoned the hybrid for Rugby in 1875.",
+   "domain": "rules_evolution",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Conditional rules whose legality depends on game state, here pursuit, are early examples of state-dependent action sets; the engine represents such rules as action masks that switch with the state rather than as fixed playbooks.",
+    "source_operator": "harvard_code_run_when_pursued",
+    "telemetry": "Rule texts encoded as state-dependent constraints, with pursuit and pressure states from tracking data."
+   }
+  },
+  {
+   "primitive_id": "uniform_code_1873",
+   "name": "The Springfield convention of October 19, 1873 produced the first common intercollegiate code: twelve rules, a 400 by 250 foot ground, and twenty men to a side.",
+   "verbatim_quote": "The number for match games shall be 20 to a side,",
+   "page": "Chapter V, p. 60",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Harvard refused to attend, so the code bound only Princeton, Rutgers, Yale and nominally Columbia.",
+    "The code still forbade throwing or carrying the ball entirely."
+   ],
+   "breakdown_regime": "no_equation_domain; the code failed within a season, and no intercollegiate games were played under it in 1874, because it codified the kicking game just as Rugby arrived.",
+   "domain": "governance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A shared schema is what makes results comparable across institutions; the engine treats the 1873 code as the first interoperability layer and refuses to pool statistics across incompatible codes without an era key.",
+    "source_operator": "uniform_code_1873",
+    "telemetry": "Code and rules identifiers attached to every historical game record before any aggregation."
+   }
+  },
+  {
+   "primitive_id": "mcgill_rugby_demonstration_1874",
+   "name": "Harvard's two games with McGill in May 1874, the second under the All-Canada Rugby code, demonstrated the surpassing superiority of the Rugby rules and converted Harvard, which adopted Rugby wholesale in 1875.",
+   "verbatim_quote": "still was sufficient to demon strate to all the surpassing superiority of the Rugby rules.",
+   "page": "Chapter V, p. 65",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The demonstration was a single scoreless game played with a spherical ball because no Rugby oval was obtainable in Boston.",
+    "Harvard's players learned the scrummage and tackling by imitating McGill during the game itself."
+   ],
+   "breakdown_regime": "no_equation_domain; superiority was judged by spectator and player impression, not by any measured comparison, and the verdict was delivered by the adopting institution's own press.",
+   "domain": "rules_evolution",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Head-to-head demonstration under both rule sets is the strongest adoption evidence a new system can get; the engine weights direct comparative trials over reputation when a new signal family or play type is evaluated for promotion.",
+    "source_operator": "mcgill_rugby_demonstration_1874",
+    "telemetry": "Controlled comparison results when a new feature or play family is trialled against the incumbent approach."
+   }
+  },
+  {
+   "primitive_id": "snapback_transition",
+   "name": "Between 1878 and 1880 the players themselves evolved the snap-back: first bounding the ball back with a deft foot movement into a waiting back's hands, the transitional play that preceded the formal snap by a designated snapper-back.",
+   "verbatim_quote": "but it was the transitional play that preceded the formal snapping back of the ball by a player designated therefor and now known as the snapper-back.",
+   "page": "Chapter V, p. 72",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The innovation arose in play, not in committee; the 1880 convention recognized a practice the collegians had already developed.",
+    "Under the English scrummage the ball could bound out to either side, which prevented any predetermined plan of play."
+   ],
+   "breakdown_regime": "no_equation_domain; the transitional foot snap was still imprecise compared with the later hand snap, and possession out of a scrummage remained partly chance until the scrimmage was formalized.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Deterministic ball delivery is the precondition for planned offense; the engine treats snap reliability as a gating variable, since every downstream play probability is conditioned on a controlled start.",
+    "source_operator": "snapback_transition",
+    "telemetry": "Snap accuracy and exchange error rates by team and season from play-by-play and charting data."
+   }
+  },
+  {
+   "primitive_id": "guarding_interference_forerunner",
+   "name": "The 1879 method of guarding, a player at each side of the runner though never in advance of him, to increase the difficulty of tackling, is the recognizable forerunner of modern interference.",
+   "verbatim_quote": "a play easily recognizable as the forerunner of modem interference.",
+   "page": "Chapter V, p. 73",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The guards stayed at the runner's side because the off-side rule still forbade blocking an opponent while in advance of the ball.",
+    "Davis calls this perhaps the most important innovation of the 1879 season although unrealized at the time."
+   ],
+   "breakdown_regime": "no_equation_domain; guarding protected the runner only laterally, and its power grew only as officials relaxed enforcement of the off-side rule and the interferers moved in front of the runner.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Escorting a ball carrier with lateral protection is the minimal unit of interference; the engine models blocker value as a function of position relative to the runner, with beside, ahead and behind as distinct regimes with distinct legal histories.",
+    "source_operator": "guarding_interference_forerunner",
+    "telemetry": "Blocker and runner relative positions from tracking data, joined to tackle success rates."
+   }
+  },
+  {
+   "primitive_id": "possession_retention_doctrine",
+   "name": "An anonymous Princetonian tactician stated the possession doctrine in 1879: keeping the ball and working it by passing, running and rushing is superior to the kicking game, because as long as one side has the ball the other cannot score.",
+   "verbatim_quote": "Keeping the ball and working it by by passing, running, and rushing is superior to the kicking game now in vogue.",
+   "page": "Chapter V, p. 73",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The argument assumes a fair catch rarely fails, so a long punt almost always surrenders the ball to the other side.",
+    "It was written as advocacy in the college press, not as a rule or a measured result."
+   ],
+   "breakdown_regime": "no_equation_domain; pure retention without a surrender rule produced the block game of 1880 and 1881, the doctrine's own reductio, and forced the downs rule.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Possession has option value independent of yardage: while held, the opponent's scoring rate is zero; the engine prices possession and field position jointly and treats surrendering the ball as a cost that must be bought back with expected yards.",
+    "source_operator": "possession_retention_doctrine",
+    "telemetry": "Drive-level possession time, starting field position and scoring rates by method of surrender, punt, turnover or downs."
+   }
+  },
+  {
+   "primitive_id": "scrimmage_recognition_1880",
+   "name": "The 1880 convention did not invent the American scrimmage but recognized it: in defining the scrimmage it merely extended the recognition of the rules to a play that had evolved in actual play, establishing orderly retention of the ball and prearranged strategy.",
+   "verbatim_quote": "It is true that in defining the scrimmage the convention did not invent it, but merely extended to it the recognition of the rules.",
+   "page": "Chapter VI, p. 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The scrimmage replaced the English scrummage, in which chance governed possession at every put-in.",
+    "The same convention adopted the eleven-man side."
+   ],
+   "breakdown_regime": "no_equation_domain; recognition lagged practice, and the 1880 definition still lacked any rule compelling surrender of the ball, the gap the block game exploited within weeks.",
+   "domain": "rules_evolution",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Formalizing an emergent practice is how governing systems absorb innovation; the engine watches for emergent player behavior that the current feature set does not name, because that is where the next structural edge forms.",
+    "source_operator": "scrimmage_recognition_1880",
+    "telemetry": "Frequencies of unclassified play shapes in charting data, reviewed for new recurring patterns each season."
+   }
+  },
+  {
+   "primitive_id": "block_game_failure_mode",
+   "name": "The block game of 1880 and 1881 is the failure mode of retention without surrender: Princeton and then Yale held the ball for entire halves without gaining, forcing 0 to 0 draws and championship claims on precedent.",
+   "verbatim_quote": "unable to gain a yard of ground, the Orange and Black retained the ball throughout the remainder of the game, thereby forcing the contest to terminate in a draw at 0 to 0.",
+   "page": "Chapter VI, p. 77",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Safeties did not count in the scoring until 1881, so conceding ground cost nothing on the scoreboard.",
+    "Both clubs then claimed the championship through the 1879 precedent of awarding it on a prior year's results."
+   ],
+   "breakdown_regime": "no_equation_domain; the strategy is rational only under a ruleset with no downs limit and no safety scoring, and it collapsed as soon as both defects were repaired.",
+   "domain": "game_structure",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any possession system without a forced-surrender mechanism admits a degenerate stall equilibrium; the engine checks every strategy it evaluates for stall equilibria and prices the rules that prevent them as part of the strategy's true value.",
+    "source_operator": "block_game_failure_mode",
+    "telemetry": "Drive outcomes under clock and score states, screened for zero-progress retention patterns."
+   }
+  },
+  {
+   "primitive_id": "downs_rule_1882",
+   "name": "The convention of October 14, 1882 abolished the block game with the downs rule: a team that on three consecutive downs has not advanced the ball five yards, or has lost ten, must give up the ball to the other side at the spot.",
+   "verbatim_quote": "If on three consecutive fairs and downs a team shall not have advanced the ball five yards or lost ten, they must give up the ball to the other side at the spot",
+   "page": "Chapter VI, pp. 80-81",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The rule was the complement to two press proposals of 1881 and 1882 that suggested limiting a team to a fixed number of scrimmages.",
+    "Five yards in three downs was the original gain requirement, later raised to ten."
+   ],
+   "breakdown_regime": "no_equation_domain; the rule as adopted counts a loss of ten yards as failure on the same terms as insufficient gain, and its spot-of-surrender clause made field position a direct stake of failure.",
+   "domain": "game_structure",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The downs rule converts offense into a finite-horizon stochastic control problem: gain a threshold distance within a fixed number of trials or surrender possession at the spot; the engine's drive model is built on exactly this state, down, distance, and field position.",
+    "source_operator": "downs_rule_1882",
+    "telemetry": "Down, distance and yard-line for every play, from play-by-play data across eras with the threshold set to the value in force."
+   }
+  },
+  {
+   "primitive_id": "signals_origin",
+   "name": "Signals were the first improvement produced by the downs rule and undisturbed possession: at first whole sentences in which any portion of the sentence called the same play, with letters at Princeton and numerical systems arriving about 1885.",
+   "verbatim_quote": "The first improvement to appear was signals. In the beginning these consisted of sentences.",
+   "page": "Chapter VI, p. 81",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Signals are impossible under the scrummage, because possession and the next play cannot be known in advance.",
+    "Yale's first signals were the sentences Play up sharp, Charlie, and Look out, quick, Deac."
+   ],
+   "breakdown_regime": "no_equation_domain; sentence signals carried very little information, one play per sentence, and were easily read once opponents learned the code words.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A play-calling channel exists only when the next action can be prearranged; the engine treats the information content and secrecy of the call channel as part of an offense's value, not as decoration.",
+    "source_operator": "signals_origin",
+    "telemetry": "Play-call tendencies by formation, personnel and game state, measuring how predictable the called play is."
+   }
+  },
+  {
+   "primitive_id": "signal_disguise_encoding",
+   "name": "Early signal systems were disguised by redundancy: any portion of the sentence called the same play, and the captain confused opponents by omitting first one word and then another.",
+   "verbatim_quote": "The signal was disguised by making any portion of the sentence call for the same play.",
+   "page": "Chapter VI, p. 81",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The disguise assumes opponents are listening and will decode a fixed signal if it is repeated plainly.",
+    "Princeton used initial letters of sentences instead, as a sentence beginning with W sent the ball to the full-back."
+   ],
+   "breakdown_regime": "no_equation_domain; redundancy protects the message but caps its bandwidth, and the scheme fails once the opponent learns that every fragment means the same play.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Redundant encoding with variable omission is an early form of deceptive signaling; the engine measures an offense's disguise quality by how much its pre-snap presentation varies for the same called play.",
+    "source_operator": "signal_disguise_encoding",
+    "telemetry": "Pre-snap formation and motion variation conditioned on the play actually run, from charting and tracking data."
+   }
+  },
+  {
+   "primitive_id": "scoring_values_rationalized",
+   "name": "The convention of 1883 ended referee discretion by assigning numerical values to scoring plays, amended in 1884 to safety 2, touchdown 4, and goal following touchdown 2, an arrangement that lasted until 1897.",
+   "verbatim_quote": "These values lasted only one season, when they were amended by increasing the safety to 2, the touchdown to 4, and by decreasing the goal following touchdown to 2, an arrangement that existed without change until 1897.",
+   "page": "Chapter VI, p. 82",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Before 1883 the proportion among touchdowns, goals and safeties was left to referees and produced disputes in important games.",
+    "The 1883 values were safety 1, touchdown 2, goal following touchdown 4, goal from field 5."
+   ],
+   "breakdown_regime": "no_equation_domain; the values are incentive prices set by committee judgment, not derived from play frequencies, so they can misprice a play type for years, as the five-point field goal did.",
+   "domain": "game_structure",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Scoring values are prices that steer strategy; the engine recomputes optimal decisions, such as kick versus run, whenever the price vector changes, and never carries a decision rule across a scoring-value regime change.",
+    "source_operator": "scoring_values_rationalized",
+    "telemetry": "Scoring value tables by season joined to decision outcomes, for example fourth-down and try choices."
+   }
+  },
+  {
+   "primitive_id": "v_trick_invention_1884",
+   "name": "The V Trick, the original wedge and forerunner of the mass play, was improvised by Princeton's R. M. Hodge in the crisis of the Pennsylvania game of October 25, 1884: the rush line jumped into a V with apex forward and the runner inside, and carried the ball from midfield to the five-yard line.",
+   "verbatim_quote": "It suddenly struck me that if the rush-line would jump into the shape of a V with the apex forward and with Baker inside, the formation ought to gain ground.",
+   "page": "Chapter VI, p. 83",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The account is Hodge's own, given to Davis; the play was then reserved for the Yale game and became general by 1888.",
+    "The V formed ten yards back and started on a technical kick-off, the ball touched to toe and ground but not released."
+   ],
+   "breakdown_regime": "no_equation_domain; the V disregarded the off-side rule against blocking in advance of the ball and survived on custom and lax enforcement until legislated away in 1894.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Concentrating the whole team's mass at one point with the runner sheltered inside is the ancestral form of every mass play; the engine models blocking mass at the point of attack as a distinct variable from the number of blockers on the play.",
+    "source_operator": "v_trick_invention_1884",
+    "telemetry": "Blocker counts and mass at the point of attack from tracking data, joined to yards gained on line plunges."
+   }
+  },
+  {
+   "primitive_id": "low_tackle_mass_play_transition",
+   "name": "The 1888 extension of legal tackling from the waist to the knees was so powerful a defensive weapon that it ended the open running game and forced the contracted line and the mass play designed to overcome it.",
+   "verbatim_quote": "in its place came the mass play, ugly and uncouth in construction, but which, designed to be useful rather than handsome, overcame the low tackle and won its long list of victories.",
+   "page": "Chapter VI, p. 87",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same 1888 convention barred the defensive line from clasping hands and stretching across the field like a chain.",
+    "To answer the low tackle the rush line contracted shoulder to shoulder and the backs came up within four yards of the line."
+   ],
+   "breakdown_regime": "no_equation_domain; the balance restored by mass play was bought with collision density, and the injury record of the mass era eventually brought legislative correction in 1894 and 1910.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A single technique change on defence can invalidate an entire offensive style; the engine stress-tests its offensive evaluations against technique-level defensive changes, such as tackle height, rather than only against scheme changes.",
+    "source_operator": "low_tackle_mass_play_transition",
+    "telemetry": "Tackle attempt heights and success rates, and offensive success before and after technique rule changes."
+   }
+  },
+  {
+   "primitive_id": "secondary_defence_invention",
+   "name": "The secondary defence was invented in the late 1880s by placing a half-back immediately behind each tackle, the first layered defence behind the rush line.",
+   "verbatim_quote": "On defence a great advance was made by placing a half-back inmiediately behind each tackle, thus presenting a new invention in the game, a secondary defence.",
+   "page": "Chapter VI, p. 87",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The new layer answered the contracted line and the quick plunges the low tackle had forced.",
+    "The two supporting half-backs held the position until the forward pass sent them back in 1908 to cover the pass zone."
+   ],
+   "breakdown_regime": "no_equation_domain; a two-man second layer behind the tackles left the deep field thin, a weakness that stayed latent until the forward pass and the on-side kick attacked it.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Layered defence, a first line and a support layer behind its most attacked points, is the template for every modern coverage structure; the engine represents defences as layers with responsibilities, not as eleven independent positions.",
+    "source_operator": "secondary_defence_invention",
+    "telemetry": "Defensive depth charts by alignment, second-level defender positions relative to the line from tracking data."
+   }
+  },
+  {
+   "primitive_id": "flying_wedge_1892",
+   "name": "Harvard's flying wedge, invented by Lorin F. DeLand and first shown against Yale in 1892, split the team into two sections twenty yards back that converged at full speed on the ball carrier at the centre, launching a running mass against a stationary line.",
+   "verbatim_quote": "Without putting the ball in play Trafford waved his hand and the two sections came swiftly forward in lock step, converging toward Trafford and gathering tremendous momentum as they ran.",
+   "page": "Chapter VII, pp. 93-94",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The play depended on momentum gathered before the ball was in play, the feature later rules targeted directly.",
+    "Yale's line broke it by leaping against the mass and pulling it apart, bringing the runner down on the 25-yard line."
+   ],
+   "breakdown_regime": "no_equation_domain; the wedge was a kick-off play only, unusable in ordinary scrimmage, and it was abolished in the 1894 revision along with the V.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Pre-snap momentum is a resource separate from mass: the same men arriving at speed multiply impact; the engine separates static blocking mass from moving mass in its line-play model and treats rules against moving starts as removing the second term.",
+    "source_operator": "flying_wedge_1892",
+    "telemetry": "Pre-snap motion speed of blockers at the snap from tracking data, joined to line-play outcomes."
+   }
+  },
+  {
+   "primitive_id": "tandem_tackle_principle",
+   "name": "Philip King's 1893 Princeton device, placing the ends with the backs in a straight line behind the tackles, originated the tandem-tackle principle, which Davis calls the chief feature in the invention of offensive tactics from that day to his own.",
+   "verbatim_quote": "This famous player conceived the idea of placing the ends with the backs in a straight line behind the tackles, thus originating the tandem-tackle principle of offensive play.",
+   "page": "Chapter VII, p. 97",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Harvard modified the formation within two weeks by playing the tackles back instead.",
+    "The principle stacks blockers and runner in a file aimed at one point of the line, the tackle."
+   ],
+   "breakdown_regime": "no_equation_domain; concentrating on the tackle advertised the point of attack, and the defence answered by massing behind the tackles until the forward pass forced the second layer back.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Stacking force in file behind a single point trades deception for certainty of numbers at the point of attack; the engine values point-of-attack numbers advantage as a primary driver of short-yardage success.",
+    "source_operator": "tandem_tackle_principle",
+    "telemetry": "Numbers advantage at the point of attack per play from formation charting, joined to conversion rates."
+   }
+  },
+  {
+   "primitive_id": "guards_back_formation",
+   "name": "Woodruff's guards-back at Pennsylvania withdrew both guards from the line and played them in tandem against the objective point, supported by the backs, one of the most effective offensive formations of the mass era and the reason Pennsylvania demanded unrestricted formations in 1895.",
+   "verbatim_quote": "a formation executed by withdrawing both guards from the line and playing them in tandem style against the objective point, further supported by a powerful arrangement of the backs",
+   "page": "Chapter VII, p. 100",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The formation converts interior linemen into lead blockers, weakening the line itself at the snap.",
+    "Its effectiveness was the substantive cause of the two rival rule codes of 1895."
+   ],
+   "breakdown_regime": "no_equation_domain; pulling both guards strips the centre of protection and fails against quick penetration, and the formation depended on the pre-1906 freedom to group men behind the line.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Moving line mass into the backfield as lead blockers is the ancestor of pulling-guard and fullback-lead designs; the engine tracks blocker origin, line or backfield, because arrival timing at the point of attack differs by origin.",
+    "source_operator": "guards_back_formation",
+    "telemetry": "Blocker starting positions and arrival times at the point of attack from tracking data."
+   }
+  },
+  {
+   "primitive_id": "rules_reform_1894",
+   "name": "The 1894 revision, the most radical since 1882, abolished the V and the flying wedge, prohibited momentum plays that started before the snap, and modified mass plays by forbidding players to group more than five yards behind the line.",
+   "verbatim_quote": "and mass plays were greatly modified by forbid ding players to group more than five yards behind the line.",
+   "page": "Chapter VII, p. 99",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The committee first surveyed every former player on injuries and published the returns, which showed the accident charges exaggerated.",
+    "The reform modified mass plays rather than eradicating them, which the public had demanded, so pressure on the rules continued."
+   ],
+   "breakdown_regime": "no_equation_domain; restricting grouping distance slowed but did not end mass play, and rival codes in 1895 and the reforms of 1906 and 1910 were needed to finish the work.",
+   "domain": "rules_evolution",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Constraining where force may assemble is a more durable intervention than banning named plays, because inventors route around named bans; the engine expresses rule changes as constraint changes on formations, not as play-name lists.",
+    "source_operator": "rules_reform_1894",
+    "telemetry": "Formation geometry distributions by season, checked against the grouping constraints in force."
+   }
+  },
+  {
+   "primitive_id": "long_snap_direct_1895",
+   "name": "Yale's 1895 long pass direct from centre to the full-back, derided as impracticable, was used by every team in the United States within two years and retired the quarter-back's long underhand pass.",
+   "verbatim_quote": "Two years later it was used by every team in the United States, and the long, underhand pass of the quarter-back had gone into the lumber-room of discarded plays.",
+   "page": "Chapter VII, p. 101",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Removing the quarter-back relay shortened the path from snap to punter and to runners.",
+    "Davis notes the idea was apparently simple and sound, yet drew a storm of hostile criticism at first."
+   ],
+   "breakdown_regime": "no_equation_domain; the direct snap raises the cost of a mishandled exchange, and its adoption waited on centres who could deliver the ball accurately over distance.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Deleting an intermediate handling step speeds every play built on the exchange and removes a failure point; the engine counts handling steps in a play's design as a risk and tempo variable.",
+    "source_operator": "long_snap_direct_1895",
+    "telemetry": "Exchange types by play and their fumble and timing outcomes from play-by-play data."
+   }
+  },
+  {
+   "primitive_id": "tackle_back_play_1900",
+   "name": "Camp's 1900 tackle-back play rested on a theory of defensive momentum: the rush line was taught to charge forward at the snap, so a play aimed into the opening a charging forward vacated could gain before he recovered his balance.",
+   "verbatim_quote": "This theory eventually shaped itself into Yale's famous tackle-back play, thus utilizing an old formation, but executing the play in a wholly new manner.",
+   "page": "Chapter VIII, p. 106",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The play used an old formation executed in a new manner, and its own younger strategists at Yale demanded its abandonment before its perfection mid-season.",
+    "It produced the largest scores Yale had ever made against Princeton and Harvard."
+   ],
+   "breakdown_regime": "no_equation_domain; the device depends on the defence charging on schedule, and a defence that reads or delays its charge removes the opening the play is built to enter.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Attack the space a defender vacates by his own committed motion; the engine models defender momentum and recovery time, valuing plays that enter a gap inside the defender's recovery window.",
+    "source_operator": "tackle_back_play_1900",
+    "telemetry": "Defender first-step direction and recovery time from tracking data, joined to gains through the vacated gap."
+   }
+  },
+  {
+   "primitive_id": "dexter_injury_statistics",
+   "name": "Professor Edwin G. Dexter of Illinois kept a precise record of football injuries and a table of players' scholarship whose deductions were so strongly in favor of the game that the 1902 abolition agitation subsided as quickly as it arose.",
+   "verbatim_quote": "The deductions from these figures were so strongly in favor of the game and its players",
+   "page": "Chapter VIII, p. 109",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Davis reports the effect of the figures without reproducing the tables, so the underlying counts cannot be audited from this book.",
+    "The same evidence-first method was used by the 1894 committee's survey of former players."
+   ],
+   "breakdown_regime": "no_equation_domain; the episode shows data settling a policy argument, but Davis gives conclusions only, and the 1905 and 1909 injury crises show the settlement did not hold when new fatalities occurred.",
+   "domain": "measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A maintained injury and participation record is the model for evidence-governed rule making; the engine keeps its own audited outcome records so that claims about danger, value or player quality can be answered from tables rather than from anecdote.",
+    "source_operator": "dexter_injury_statistics",
+    "telemetry": "Injury reports and participation records maintained as structured tables with provenance, not as narrative claims."
+   }
+  },
+  {
+   "primitive_id": "forward_pass_1906",
+   "name": "The forward pass was introduced in the 1906 revision at the suggestion of John C. Bell of Pennsylvania and Paul J. Dashiell of the Naval Academy, a play at variance with the traditions of both the intercollegiate and Rugby games.",
+   "verbatim_quote": "At the suggestion of John C. Bell, of Pennsylvania, and Paul J. Dashiell, of the Naval Academy, the forward pass was introduced",
+   "page": "Chapter VIII, p. 112",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Davis traces an ancestor to harpastum, whose name he derives from its long forward pass.",
+    "The 1906 pass was hedged with restrictions, including the five-yard limit beyond the line that lasted until 1910."
+   ],
+   "breakdown_regime": "no_equation_domain; players treated the play lightly for two seasons, and its possibilities appeared only in single famous plays, Yale's thirty-yard pass against Harvard in 1906, before general adoption in 1908.",
+   "domain": "rules_evolution",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A newly legalized throwing dimension changes the geometry of the whole defence, not only the plays on which it is used; the engine introduces new action types with an adoption curve and prices their threat value separately from their usage value.",
+    "source_operator": "forward_pass_1906",
+    "telemetry": "Forward pass usage rates, depths and outcomes by season from legalization onward."
+   }
+  },
+  {
+   "primitive_id": "forward_pass_defensive_spread",
+   "name": "The chief value of the forward pass proved to be the fear of it: the defence was compelled to spread and weaken, and the two half-backs of the secondary defence were sent back to cover the forward-pass zone, which invited massed attack on the tackles.",
+   "verbatim_quote": "The chief value of the play, however, soon appeared to be in the fear of its use by the defensive team, which thereby was compelled to spread and weaken its defence.",
+   "page": "Chapter VIII, p. 114",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Davis records the unintended consequence: weakening the tackle position recreated the massed attack the pass was meant to displace, and tackles became giants.",
+    "The effect operates on plays where no pass is thrown, through defensive alignment alone."
+   ],
+   "breakdown_regime": "no_equation_domain; the spread effect depends on the pass being a credible threat, which the restrictive early rules and low completion skill limited until about 1908.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Threat value exceeds usage value for geometry-changing plays; the engine credits a play family with the defensive distortion it causes on all snaps, measured by alignment changes, not only with the yards it gains when called.",
+    "source_operator": "forward_pass_defensive_spread",
+    "telemetry": "Defensive alignment and personnel by offensive tendency, measuring distortion caused by a credible pass threat."
+   }
+  },
+  {
+   "primitive_id": "rules_1910_abolish_mass_play",
+   "name": "The 1910 code removed the mass play wholly: seven men must be on the line of scrimmage when the ball is put in play, no player may use hands or arms to assist the runner, and attackers may not interlock arms or bodies, the runner going unassisted and alone.",
+   "verbatim_quote": "This was accomplished by prescribing that when the ball was put in play seven men should be on the line of scrimmage",
+   "page": "Chapter VIII, p. 116",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Equilibrium was restored by also forbidding the flying tackle and by freeing the receiver of the snap to run forward, a privilege denied for thirty years.",
+    "The same code replaced halves with quarters and removed the five-yard restriction from the quarter-back run and the forward pass."
+   ],
+   "breakdown_regime": "no_equation_domain; Davis notes every element of the 1910 change was a return to tactics of former days rather than an untried condition, and the offence was prodigiously weakened before the compensating changes are counted.",
+   "domain": "rules_evolution",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The mass play died only when the rules attacked its mechanism, assistance to the runner, instead of its formations; the engine encodes interference legality as a mechanism constraint, so new formations are evaluated against the mechanism and not against a list of banned shapes.",
+    "source_operator": "rules_1910_abolish_mass_play",
+    "telemetry": "Interference and assistance events per play from officiating and charting data, under the mechanism rules in force."
+   }
+  },
+  {
+   "primitive_id": "minnesota_shift_1910",
+   "name": "The Minnesota shift of H. L. Williams was the one new formation of 1910: the men formed out of position and leapt into position just before the snap, masking the attack so the defence could not shift to meet the formation.",
+   "verbatim_quote": "thereby masking the attack in order to prevent the defence likewise from shifting to meet the formation.",
+   "page": "Chapter VIII, p. 117",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Davis stresses the shift was new only in this masking feature, not in the formations it shifted into.",
+    "Coaches otherwise clung to old formations in 1910, leaving the new code's possibilities for gradual development."
+   ],
+   "breakdown_regime": "no_equation_domain; the shift's value decays as defences learn to hold their own shift until the offense settles, and later rules required the shift to pause before the snap.",
+   "domain": "tactics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Late revelation of the true formation denies the defence its adjustment move; the engine values pre-snap disguise by the defence's lost adjustment, measured as the gap between the defence's final alignment quality against early-shown and late-shown formations.",
+    "source_operator": "minnesota_shift_1910",
+    "telemetry": "Timing of formation settlement versus snap, and defensive alignment error, from tracking data."
+   }
+  },
+  {
+   "primitive_id": "appendix_legislative_record",
+   "name": "The Appendix prints the complete proceedings of the intercollegiate conventions and rules committees from 1876 to 1911, a continuous legislative record in which every rule change, vote and compromise can be dated, beginning with the Springfield convention of November 23, 1876.",
+   "verbatim_quote": "It was voted that no other institution should be admitted to membership in the association except by unanimous consent.",
+   "page": "Appendix, p. 461",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The rules are reprinted by permission of the American Sports Publishing Company, as Davis's footnote states.",
+    "Yale declined membership in the association while taking part in adopting the code, an early sign of the governance friction the record documents throughout."
+   ],
+   "breakdown_regime": "no_equation_domain; the record is proceedings and rule texts, not play data, and its OCR in this scan is the roughest in the book, so individual rule wordings need care.",
+   "domain": "governance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A dated, complete parameter-change log is what makes era-adjusted analysis possible; the engine maintains the same discipline for its own models, every parameter change versioned with its date and reason, so any historical output can be recomputed under the rules that produced it.",
+    "source_operator": "appendix_legislative_record",
+    "telemetry": "Versioned rule and parameter tables keyed by effective date, joined to game and model records."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "0c18f45f28464f47-t1",
+   "think": "This book is two instruments in one binding. The first is a narrative history of football from the Greek harpastum to the spring of 1911, written by Parke H. Davis, who sat on the Intercollegiate Rules Committee and therefore writes as a participant in the events of his later chapters. The second is the Appendix, a near-verbatim legislative record of every convention and rules committee session from 1876 to 1911. Read together they show a single mechanism repeating for forty years: players invent inside the current rules, the invention unbalances the game, injuries or public outrage accumulate, and the legislature answers by changing a constraint, after which invention begins again on the new ground. The founding American act in this account is not a play but a property right. The English scrummage left possession to chance at every put-in, which made prearranged strategy impossible. The snap-back, evolved by the players themselves and recognized by the convention of 1880 along with the eleven-man side, gave one team orderly retention of the ball. Everything distinctively American follows from that single change: signals, because the next play can now be chosen in advance; the quarter-back as a distributor; interference, because blockers can be assigned to known paths; and mass formations, because the whole team can be aimed at one point on a known snap. Davis is explicit that the convention did not invent the scrimmage but recognized it, and that pattern, practice first and legislation second, recurs with the long snap of 1895 and the treatment of the forward pass after 1906. Retention without a surrender rule immediately produced its degenerate case, the block game, in which Princeton and Yale each held the ball for a half without gaining and claimed championships on precedent. The downs rule of 1882 is therefore the second founding act: it converts possession from an indefinite right into a finite contract, five yards in three downs or the ball changes hands at the spot. From that moment the sport is a down-and-distance optimization problem, and Davis's narrative can be read as the history of solutions to it. The low tackle of 1888 destroyed the open running game, so the offense answered with contracted lines and mass; mass produced the V, the flying wedge, the tandem and guards-back; the legislature answered in 1894 by constraining where men could group, in 1906 by legalizing the forward pass and doubling the required gain to ten yards, and in 1910 by attacking the mechanism of mass itself, assistance to the runner, rather than its shapes. The forward pass chapters carry the book's most modern lesson. The pass gained little when thrown in 1906 and 1907, yet Davis identifies its chief value as the fear of it: the defence had to spread, the secondary half-backs went back to cover the pass zone, and the tackles were left to be battered by the very massed attack the reformers had hoped to displace. A play's threat value, realized through the opponent's alignment on every snap, can exceed its usage value, and a rule change aimed at one style can resurrect another. The same sophistication appears in the scoring chapters, where the values of touchdowns, goals and safeties are repeatedly repriced by convention, and in Dexter's injury statistics, where a kept record, not rhetoric, ended an abolition campaign. Part II, the nine rivalry chapters and the eight famous games, is the narrative's evidence locker, and it deserves a measured reading. These accounts were assembled from college and public press reports and then submitted for correction to the men who played, a method Davis describes in his preface with unusual honesty about its limits. The famous plays preserved there, the forward pass that beat Harvard in 1906, De Witt's blocked kick and field goal in 1903, the tandem drives of 1893, are therefore best treated as attested events with unreliable detail: the score, the scorer and the decisive mechanism are likely right, while distances, sequences and timings carry the error of the original reporting. Even so, the selection itself is information, because the games a rules-committee insider chose to memorialize mark the plays his generation believed had changed the sport. The governance thread running beside the tactical one is just as systematic. The book records the association's founding in 1876, Yale's refusal to join it, the championship precedents invented to fill vacant years, the eligibility wars of 1889 and 1893, the schism of 1895 with two rival codes in force at once, and the coalescence of 1906 that produced a single national committee under public pressure, with the President of the United States intervening in 1905. Twice the response to an injury panic was a data collection: the 1894 committee's survey of every former player, and Dexter's standing record. The pattern is that legitimacy in this sport is repeatedly rebuilt by widening representation and by answering anecdote with enumeration. For a reasoning engine the book's uses are structural. It supplies the regime boundaries without which historical football data cannot be pooled honestly: roster size, field size, scoring values, the gain requirement, and the legality of interference forms all change across the period, and the Appendix dates every change. It supplies a taxonomy of tactical ideas in their original form, the wedge, the tandem, the secondary defence, the shift, each defined by the problem it solved. And it supplies a standing warning, in the block game and in the mass-play injury crises, that any optimization pursued without its constraints will find the degenerate solution. Its limits are equally clear. It is a narrative by an interested party, strongest on the eastern colleges he knew, dependent on press accounts he himself warns are inaccurate, and it contains no play-by-play data and no mathematics. Its numbers are rule parameters and dates, not measurements. Used as a map of regimes and mechanisms it is load-bearing; used as a record of what actually happened in any single game it must be corroborated.",
+   "retrocausal_genealogy": "The lineage Davis constructs runs from the Spartan harpastum, whose long forward pass he treats as the ancestor of the 1906 play, through Roman adoption and centuries of English folk football that survived repeated royal prohibition from Edward II onward. The modern game is then invented three times over in the English schools: Westminster contributes off-side, Eton contributes the eleven, and Rugby contributes the run with the ball after Ellis in 1823. The American branch begins when these school games cross the Atlantic as incompatible local codes, are unified imperfectly in 1873, and are then transformed by the Harvard and McGill meetings of 1874, by Camp's legislative career from 1876 to 1911, and by a line of named inventors, Hodge, DeLand, Woodruff, King, Williams, whose devices fill the later chapters.",
+   "theory_of_mind": "Davis believes his reader is a football man who already loves the game and wants its pedigree. His model of the domain is legislative and heroic at once: the game improves because inventors create and committees correct, and controversy is not a defect but the mechanism of improvement. He is candid about his sources, warning in the preface that football has no official scorer and that press accounts are more or less inaccurate, yet he writes with a legislator's confidence in the current code, presenting the 1910 settlement as the mature form toward which the whole history was tending. Opponents of the game appear in his pages mainly as exaggerators to be answered with records.",
+   "cross_layer_veto": "This book vetoes three things in any engine that ingests it. It vetoes pooling statistics across rule regimes, because the Appendix proves that scoring values, roster sizes, field dimensions and the gain requirement all changed, so a touchdown or a yard in 1885 is not the same object as in 1910. It vetoes evaluating a play only by its outcomes when used, because the forward pass chapters show threat and alignment effects dominating usage effects. And it vetoes unconstrained optimization for power, because the mass-play era demonstrates that an offense optimized without its safety and legality constraints will be legislated out of existence, taking its accumulated value with it."
+  }
+ ],
+ "universal_lens": "Any competitive system with a rule-maker evolves in the same cycle this book documents: practitioners innovate inside the current constraints, the innovation finds the constraint that is missing rather than the one that is written, a crisis forces the rule-maker to legislate the mechanism instead of the instance, and innovation resumes on the new ground. Possession, pricing and legality are the three levers throughout: who may hold the asset and for how long, what each outcome is worth, and which forms of assistance are permitted. Read this way the book is a general theory of governed competition, of which football is the worked example.",
+ "gsi_mapping": "For the Galaxy Sports Institute the book is a primary-source curriculum in how a sport's knowledge accumulates: school customs become written codes, codes become conventions, and conventions become a dated legislative record that later students can audit. Its preface is equally instructive as method, since Davis states plainly that his game accounts rest on fallible press reports corrected by participants, a provenance discipline any research institute should copy. The Dexter episode gives the Institute its model of evidence in public argument: a quietly kept statistical record that settled what rhetoric could not.",
+ "gse_mapping": "For the Galaxy Sports Edge engine the book supplies the era layer: dated boundaries for roster size, scoring values, downs requirements and interference legality, without which a century of football results cannot be compared or used for training. Its tactical primitives, the wedge, tandem, secondary defence, shift and the rest, are the original definitions of mechanisms the modern game still runs, and its two analytical findings transfer directly: possession is worth value beyond the yards it gains, and a credible threat is worth value on every snap it is not used. The block game stands in the engine as the canonical warning against strategies that exploit a missing constraint."
+}

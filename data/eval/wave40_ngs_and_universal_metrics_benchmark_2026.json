@@ -1,0 +1,969 @@
+{
+  "schema": "wave40_ngs_and_universal_metrics_benchmark_v1",
+  "generated_utc": "2026-11-18T05:48:01.611153+00:00",
+  "real_money_stake_cleared": false,
+  "live_stake_fraction": 0.0,
+  "sample_kc_at_den": {
+    "schema": "wave40_ngs_ftn_and_universal_metrics_suite_v1",
+    "wired": true,
+    "matchup": "KC @ DEN",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "universal_multisport_summary": {
+      "schema": "wave40_universal_multisport_metrics_suite_v1",
+      "wired": true,
+      "clean_checkout_fallback": false,
+      "total_canonical_metrics": 284,
+      "sports_covered_count": 10,
+      "sports_metric_counts": {
+        "NFL": 58,
+        "NCAAF": 29,
+        "NBA": 33,
+        "NCAAB_WNBA": 14,
+        "MLB": 40,
+        "SOCCER": 31,
+        "NHL": 30,
+        "TENNIS": 24,
+        "GOLF_PGA": 13,
+        "MMA_UFC": 12
+      },
+      "founder_probe_resolutions": {
+        "barrel_pct": "mlb_barrel_pct",
+        "corner_kicks": "soccer_corner_kicks_pg",
+        "penalty_play_pts": "nhl_power_play_points",
+        "tennis_handicaps": "tennis_game_handicap",
+        "cfb_havoc": "cfb_havoc_rate",
+        "nba_efg": "nba_efg_pct"
+      },
+      "mlb_statcast_summary": {
+        "schema": "wave40_mlb_statcast_barrel_and_pitch_v1",
+        "clean_checkout_fallback": false,
+        "qualified_batters_count": 251,
+        "teams_count": 30,
+        "league_barrel_pct_mean": 9.1566,
+        "league_barrel_pct_p90": 14.4,
+        "batter_barrel_pct": 12.941,
+        "batter_barrel_z_score": 0.859,
+        "batter_brl_pa_pct": 7.586,
+        "batter_hard_hit_pct": 49.412,
+        "batter_sweet_spot_pct": 37.059,
+        "xwoba_minus_woba_delta": 0.017,
+        "pitcher_fip": 3.01,
+        "pitcher_csw_pct": 32.37,
+        "pitcher_whiff_pct": 30.11,
+        "pitcher_stuff_plus_est": 112.0,
+        "park_weather_run_mult": 1.04,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0
+      },
+      "soccer_corners_asian_handicap": {
+        "schema": "wave40_soccer_corners_and_asian_handicap_v1",
+        "clean_checkout_fallback": false,
+        "matchup": "Arsenal vs Chelsea",
+        "epl_matches_sample_n": 380,
+        "epl_clubs_count": 20,
+        "league_total_corners_mean": 10.2974,
+        "expected_home_corners": 5.442,
+        "expected_away_corners": 4.24,
+        "expected_total_corners": 9.682,
+        "over_9_5_corners_prob": 0.5017,
+        "over_10_5_corners_prob": 0.3772,
+        "over_11_5_corners_prob": 0.2677,
+        "home_corner_handicap_minus_1_5_prob": 0.4583,
+        "set_piece_corner_xg_home": 0.174,
+        "field_tilt_home_pct": 55.79,
+        "dixon_coles_1x2": {
+          "home_win": 0.50718,
+          "draw": 0.26509,
+          "away_win": 0.22773
+        },
+        "asian_handicaps_home": {
+          "ah_minus_0_25": {
+            "line": -0.25,
+            "win_prob": 0.50718,
+            "half_win_prob": 0.0,
+            "push_prob": 0.0,
+            "half_loss_prob": 0.26509,
+            "loss_prob": 0.22773,
+            "expected_settlement_share": 0.57345
+          },
+          "ah_minus_0_50": {
+            "line": -0.5,
+            "win_prob": 0.50718,
+            "half_win_prob": 0.0,
+            "push_prob": 0.0,
+            "half_loss_prob": 0.0,
+            "loss_prob": 0.49282,
+            "expected_settlement_share": 0.50718
+          },
+          "ah_minus_0_75": {
+            "line": -0.75,
+            "win_prob": 0.28028,
+            "half_win_prob": 0.22689,
+            "push_prob": 0.0,
+            "half_loss_prob": 0.0,
+            "loss_prob": 0.49282,
+            "expected_settlement_share": 0.45045
+          },
+          "ah_plus_0_25": {
+            "line": 0.25,
+            "win_prob": 0.50718,
+            "half_win_prob": 0.26509,
+            "push_prob": 0.0,
+            "half_loss_prob": 0.0,
+            "loss_prob": 0.22773,
+            "expected_settlement_share": 0.70599
+          },
+          "ah_plus_0_75": {
+            "line": 0.75,
+            "win_prob": 0.77227,
+            "half_win_prob": 0.0,
+            "push_prob": 0.0,
+            "half_loss_prob": 0.13892,
+            "loss_prob": 0.08882,
+            "expected_settlement_share": 0.80699
+          }
+        },
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0
+      },
+      "nhl_special_teams_ppp_shp": {
+        "schema": "wave40_nhl_special_teams_ppp_and_shp_v1",
+        "clean_checkout_fallback": false,
+        "nhl_teams_count": 32,
+        "league_pp_pct_mean": 21.632,
+        "league_pk_pct_mean": 78.197,
+        "expected_home_pp_goals": 0.8281,
+        "expected_away_pp_goals": 0.5443,
+        "expected_home_sh_goals": 0.0796,
+        "net_special_teams_goal_diff": 0.2795,
+        "skater_expected_ppp_match": 0.5202,
+        "skater_prob_1plus_ppp": 0.4056,
+        "skater_prob_2plus_ppp": 0.0964,
+        "pk_skater_expected_shp_match": 0.086,
+        "pk_skater_prob_1plus_shp": 0.0824,
+        "team_5v5_xgf_pct": 54.2,
+        "team_5v5_pdo": 100.3,
+        "pdo_regression_signal": "NEUTRAL",
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0
+      },
+      "tennis_markov_atp_hard": {
+        "schema": "wave40_tennis_markov_handicaps_v1",
+        "clean_checkout_fallback": false,
+        "tour": "ATP",
+        "surface": "Hard",
+        "best_of": 3,
+        "court_pace_index": 36.5,
+        "atp_top100_count": 100,
+        "wta_top100_count": 100,
+        "player_a_spw_prob": 0.7086,
+        "player_b_spw_prob": 0.6024,
+        "player_a_hold_prob": 0.91068,
+        "player_b_hold_prob": 0.74071,
+        "player_a_dominance_ratio": 1.3644,
+        "pmf_total_mass": 1.0,
+        "player_a_match_win_prob": 0.90326,
+        "player_b_match_win_prob": 0.09674,
+        "expected_games_a": 13.591,
+        "expected_games_b": 9.424,
+        "expected_total_games": 23.015,
+        "expected_game_handicap_margin": 4.167,
+        "set_handicaps": {
+          "a_minus_1_5": 0.65234,
+          "a_plus_1_5": 0.96301
+        },
+        "game_handicaps": {
+          "-5.5": {
+            "win_prob": 0.33764,
+            "push_prob": 0,
+            "loss_prob": 0.66236
+          },
+          "-4.5": {
+            "win_prob": 0.51358,
+            "push_prob": 0,
+            "loss_prob": 0.48642
+          },
+          "-3.5": {
+            "win_prob": 0.68314,
+            "push_prob": 0,
+            "loss_prob": 0.31686
+          },
+          "-3.0": {
+            "win_prob": 0.68314,
+            "push_prob": 0.11916,
+            "loss_prob": 0.19769
+          },
+          "-2.5": {
+            "win_prob": 0.80231,
+            "push_prob": 0,
+            "loss_prob": 0.19769
+          },
+          "-1.5": {
+            "win_prob": 0.86374,
+            "push_prob": 0,
+            "loss_prob": 0.13626
+          },
+          "+1.5": {
+            "win_prob": 0.93378,
+            "push_prob": 0,
+            "loss_prob": 0.06622
+          },
+          "+2.5": {
+            "win_prob": 0.95093,
+            "push_prob": 0,
+            "loss_prob": 0.04907
+          },
+          "+3.0": {
+            "win_prob": 0.95093,
+            "push_prob": 0.01814,
+            "loss_prob": 0.03093
+          },
+          "+3.5": {
+            "win_prob": 0.96907,
+            "push_prob": 0,
+            "loss_prob": 0.03093
+          },
+          "+4.5": {
+            "win_prob": 0.98432,
+            "push_prob": 0,
+            "loss_prob": 0.01568
+          },
+          "+5.5": {
+            "win_prob": 0.99354,
+            "push_prob": 0,
+            "loss_prob": 0.00646
+          }
+        },
+        "total_games_thresholds": {
+          "over_20.5": 0.56344,
+          "over_21.5": 0.5013,
+          "over_22.5": 0.41388,
+          "over_23.5": 0.35286
+        },
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0
+      },
+      "tennis_markov_wta_clay": {
+        "schema": "wave40_tennis_markov_handicaps_v1",
+        "clean_checkout_fallback": false,
+        "tour": "WTA",
+        "surface": "Clay",
+        "best_of": 3,
+        "court_pace_index": 24.0,
+        "atp_top100_count": 100,
+        "wta_top100_count": 100,
+        "player_a_spw_prob": 0.6146,
+        "player_b_spw_prob": 0.5084,
+        "player_a_hold_prob": 0.76535,
+        "player_b_hold_prob": 0.52099,
+        "player_a_dominance_ratio": 1.2756,
+        "pmf_total_mass": 1.0,
+        "player_a_match_win_prob": 0.91958,
+        "player_b_match_win_prob": 0.08042,
+        "expected_games_a": 13.175,
+        "expected_games_b": 7.957,
+        "expected_total_games": 21.132,
+        "expected_game_handicap_margin": 5.218,
+        "set_handicaps": {
+          "a_minus_1_5": 0.68202,
+          "a_plus_1_5": 0.96967
+        },
+        "game_handicaps": {
+          "-5.5": {
+            "win_prob": 0.53502,
+            "push_prob": 0,
+            "loss_prob": 0.46498
+          },
+          "-4.5": {
+            "win_prob": 0.6783,
+            "push_prob": 0,
+            "loss_prob": 0.3217
+          },
+          "-3.5": {
+            "win_prob": 0.793,
+            "push_prob": 0,
+            "loss_prob": 0.207
+          },
+          "-3.0": {
+            "win_prob": 0.793,
+            "push_prob": 0.06617,
+            "loss_prob": 0.14083
+          },
+          "-2.5": {
+            "win_prob": 0.85917,
+            "push_prob": 0,
+            "loss_prob": 0.14083
+          },
+          "-1.5": {
+            "win_prob": 0.89387,
+            "push_prob": 0,
+            "loss_prob": 0.10613
+          },
+          "+1.5": {
+            "win_prob": 0.94287,
+            "push_prob": 0,
+            "loss_prob": 0.05713
+          },
+          "+2.5": {
+            "win_prob": 0.95409,
+            "push_prob": 0,
+            "loss_prob": 0.04591
+          },
+          "+3.0": {
+            "win_prob": 0.95409,
+            "push_prob": 0.01221,
+            "loss_prob": 0.03369
+          },
+          "+3.5": {
+            "win_prob": 0.96631,
+            "push_prob": 0,
+            "loss_prob": 0.03369
+          },
+          "+4.5": {
+            "win_prob": 0.97903,
+            "push_prob": 0,
+            "loss_prob": 0.02097
+          },
+          "+5.5": {
+            "win_prob": 0.98847,
+            "push_prob": 0,
+            "loss_prob": 0.01153
+          }
+        },
+        "total_games_thresholds": {
+          "over_20.5": 0.42978,
+          "over_21.5": 0.37798,
+          "over_22.5": 0.32441,
+          "over_23.5": 0.29223
+        },
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0
+      },
+      "cfb_nba_golf_mma": {
+        "schema": "wave40_cfb_nba_golf_mma_baselines_v1",
+        "clean_checkout_fallback": false,
+        "nba_teams_count": 30,
+        "nba_ppg_mean": 113.572,
+        "nba_four_factors_composite_baseline": 0.2677,
+        "cfb_fbs_teams_count": 138,
+        "cfb_ppg_mean": 27.931,
+        "cfb_havoc_rate_mean": 0.168,
+        "cfb_adj_line_yards_mean": 3.05,
+        "pga_driving_dist_mean": 300.2,
+        "pga_gir_pct_mean": 66.5,
+        "ufc_slpm_mean": 3.85,
+        "ufc_td_def_pct_mean": 62.5,
+        "cross_sport_signal_tau2": 0.0,
+        "cross_sport_signal_i2": 0.0
+      },
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "suite_sha256": "bd19d4886cbffc10d3297d36c7c7d4ad2e10568c15d3d47614e7c8bedbe92335"
+    },
+    "ngs_vault_audit": {
+      "schema": "wave40_nfl_ngs_vault_audit_v1",
+      "clean_checkout_fallback": false,
+      "ngs_passing_rows": 866,
+      "ngs_rushing_rows": 896,
+      "ngs_receiving_rows": 1970,
+      "ngs_passing_2026_w1_w10_rows": 303,
+      "ngs_rushing_2026_w1_w10_rows": 299,
+      "ngs_receiving_2026_w1_w10_rows": 688,
+      "zero_post_w10_leakage": true,
+      "zero_week0_aggregate_leakage": true,
+      "w1_w10_2026_league_baselines": {
+        "mean_cpoe": 0.2362,
+        "mean_time_to_throw": 2.8348,
+        "mean_intended_air_yards": 8.0199,
+        "mean_aggressiveness": 15.0715,
+        "mean_ryoe_per_att": 0.2878,
+        "mean_rush_efficiency": 4.1474,
+        "mean_eight_box_pct": 23.9515,
+        "mean_cushion": 6.0611,
+        "mean_separation": 2.949,
+        "mean_yac_above_expectation": 0.5823
+      }
+    },
+    "max_prior_week_used": 9,
+    "quarantined_ngs_weights": {
+      "ngs_raw_cpoe_net": 0.0,
+      "ngs_raw_time_to_throw_net": 0.0,
+      "ngs_raw_ryoe_per_att_net": 0.0,
+      "ngs_raw_eight_box_pct_net": 0.0,
+      "ngs_raw_yac_above_exp_net": 0.0
+    },
+    "away_w40_ngs_ftn_profile": {
+      "def_box_discipline_norm": 0.07146,
+      "def_int_worthy_forced_norm": -0.25334,
+      "def_blitz_rate_norm": -0.10113,
+      "off_screen_mitigation_norm": 1.0,
+      "ngs_rec_cushion_norm": 0.19399,
+      "ngs_sep_created_rec_norm": 1.0
+    },
+    "home_w40_ngs_ftn_profile": {
+      "def_box_discipline_norm": 0.38046,
+      "def_int_worthy_forced_norm": 0.22213,
+      "def_blitz_rate_norm": -0.03834,
+      "off_screen_mitigation_norm": 0.251,
+      "ngs_rec_cushion_norm": 0.16553,
+      "ngs_sep_created_rec_norm": 0.49981
+    },
+    "live_honest_ast": {
+      "schema": "wave40_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 8,
+      "equations_evaluated": [
+        {
+          "eq_id": "mlb_statcast_barrel_rate_pct",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 12.941176,
+          "operators": 2
+        },
+        {
+          "eq_id": "mlb_fielding_independent_pitching_fip",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 3.010465,
+          "operators": 7
+        },
+        {
+          "eq_id": "soccer_corner_set_piece_expected_goals",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.2482,
+          "operators": 2
+        },
+        {
+          "eq_id": "nhl_special_teams_net_goal_expectation",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.2514,
+          "operators": 4
+        },
+        {
+          "eq_id": "tennis_dominance_ratio",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.177215,
+          "operators": 2
+        },
+        {
+          "eq_id": "nba_dean_oliver_four_factors_index",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.2843,
+          "operators": 7
+        },
+        {
+          "eq_id": "cfb_havoc_and_adj_line_yards_edge",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.7079,
+          "operators": 5
+        },
+        {
+          "eq_id": "nfl_w40_ftn_box_intworthy_ngs_cushion_edge",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.465512,
+          "operators": 11
+        }
+      ]
+    },
+    "w40_close_residual_signal": 0.465512,
+    "stage2_deltas": {
+      "away_epa_delta": -0.000466,
+      "home_epa_delta": 0.000466,
+      "away_comp_delta": -0.002,
+      "home_comp_delta": 0.001,
+      "away_sack_prob_delta": 0.000152,
+      "home_sack_prob_delta": 5.8e-05
+    }
+  },
+  "sample_cin_at_buf": {
+    "schema": "wave40_ngs_ftn_and_universal_metrics_suite_v1",
+    "wired": true,
+    "matchup": "CIN @ BUF",
+    "as_of_week": 10,
+    "is_indoor": false,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "universal_multisport_summary": {
+      "schema": "wave40_universal_multisport_metrics_suite_v1",
+      "wired": true,
+      "clean_checkout_fallback": false,
+      "total_canonical_metrics": 284,
+      "sports_covered_count": 10,
+      "sports_metric_counts": {
+        "NFL": 58,
+        "NCAAF": 29,
+        "NBA": 33,
+        "NCAAB_WNBA": 14,
+        "MLB": 40,
+        "SOCCER": 31,
+        "NHL": 30,
+        "TENNIS": 24,
+        "GOLF_PGA": 13,
+        "MMA_UFC": 12
+      },
+      "founder_probe_resolutions": {
+        "barrel_pct": "mlb_barrel_pct",
+        "corner_kicks": "soccer_corner_kicks_pg",
+        "penalty_play_pts": "nhl_power_play_points",
+        "tennis_handicaps": "tennis_game_handicap",
+        "cfb_havoc": "cfb_havoc_rate",
+        "nba_efg": "nba_efg_pct"
+      },
+      "mlb_statcast_summary": {
+        "schema": "wave40_mlb_statcast_barrel_and_pitch_v1",
+        "clean_checkout_fallback": false,
+        "qualified_batters_count": 251,
+        "teams_count": 30,
+        "league_barrel_pct_mean": 9.1566,
+        "league_barrel_pct_p90": 14.4,
+        "batter_barrel_pct": 12.941,
+        "batter_barrel_z_score": 0.859,
+        "batter_brl_pa_pct": 7.586,
+        "batter_hard_hit_pct": 49.412,
+        "batter_sweet_spot_pct": 37.059,
+        "xwoba_minus_woba_delta": 0.017,
+        "pitcher_fip": 3.01,
+        "pitcher_csw_pct": 32.37,
+        "pitcher_whiff_pct": 30.11,
+        "pitcher_stuff_plus_est": 112.0,
+        "park_weather_run_mult": 1.04,
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0
+      },
+      "soccer_corners_asian_handicap": {
+        "schema": "wave40_soccer_corners_and_asian_handicap_v1",
+        "clean_checkout_fallback": false,
+        "matchup": "Arsenal vs Chelsea",
+        "epl_matches_sample_n": 380,
+        "epl_clubs_count": 20,
+        "league_total_corners_mean": 10.2974,
+        "expected_home_corners": 5.442,
+        "expected_away_corners": 4.24,
+        "expected_total_corners": 9.682,
+        "over_9_5_corners_prob": 0.5017,
+        "over_10_5_corners_prob": 0.3772,
+        "over_11_5_corners_prob": 0.2677,
+        "home_corner_handicap_minus_1_5_prob": 0.4583,
+        "set_piece_corner_xg_home": 0.174,
+        "field_tilt_home_pct": 55.79,
+        "dixon_coles_1x2": {
+          "home_win": 0.50718,
+          "draw": 0.26509,
+          "away_win": 0.22773
+        },
+        "asian_handicaps_home": {
+          "ah_minus_0_25": {
+            "line": -0.25,
+            "win_prob": 0.50718,
+            "half_win_prob": 0.0,
+            "push_prob": 0.0,
+            "half_loss_prob": 0.26509,
+            "loss_prob": 0.22773,
+            "expected_settlement_share": 0.57345
+          },
+          "ah_minus_0_50": {
+            "line": -0.5,
+            "win_prob": 0.50718,
+            "half_win_prob": 0.0,
+            "push_prob": 0.0,
+            "half_loss_prob": 0.0,
+            "loss_prob": 0.49282,
+            "expected_settlement_share": 0.50718
+          },
+          "ah_minus_0_75": {
+            "line": -0.75,
+            "win_prob": 0.28028,
+            "half_win_prob": 0.22689,
+            "push_prob": 0.0,
+            "half_loss_prob": 0.0,
+            "loss_prob": 0.49282,
+            "expected_settlement_share": 0.45045
+          },
+          "ah_plus_0_25": {
+            "line": 0.25,
+            "win_prob": 0.50718,
+            "half_win_prob": 0.26509,
+            "push_prob": 0.0,
+            "half_loss_prob": 0.0,
+            "loss_prob": 0.22773,
+            "expected_settlement_share": 0.70599
+          },
+          "ah_plus_0_75": {
+            "line": 0.75,
+            "win_prob": 0.77227,
+            "half_win_prob": 0.0,
+            "push_prob": 0.0,
+            "half_loss_prob": 0.13892,
+            "loss_prob": 0.08882,
+            "expected_settlement_share": 0.80699
+          }
+        },
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0
+      },
+      "nhl_special_teams_ppp_shp": {
+        "schema": "wave40_nhl_special_teams_ppp_and_shp_v1",
+        "clean_checkout_fallback": false,
+        "nhl_teams_count": 32,
+        "league_pp_pct_mean": 21.632,
+        "league_pk_pct_mean": 78.197,
+        "expected_home_pp_goals": 0.8281,
+        "expected_away_pp_goals": 0.5443,
+        "expected_home_sh_goals": 0.0796,
+        "net_special_teams_goal_diff": 0.2795,
+        "skater_expected_ppp_match": 0.5202,
+        "skater_prob_1plus_ppp": 0.4056,
+        "skater_prob_2plus_ppp": 0.0964,
+        "pk_skater_expected_shp_match": 0.086,
+        "pk_skater_prob_1plus_shp": 0.0824,
+        "team_5v5_xgf_pct": 54.2,
+        "team_5v5_pdo": 100.3,
+        "pdo_regression_signal": "NEUTRAL",
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0
+      },
+      "tennis_markov_atp_hard": {
+        "schema": "wave40_tennis_markov_handicaps_v1",
+        "clean_checkout_fallback": false,
+        "tour": "ATP",
+        "surface": "Hard",
+        "best_of": 3,
+        "court_pace_index": 36.5,
+        "atp_top100_count": 100,
+        "wta_top100_count": 100,
+        "player_a_spw_prob": 0.7086,
+        "player_b_spw_prob": 0.6024,
+        "player_a_hold_prob": 0.91068,
+        "player_b_hold_prob": 0.74071,
+        "player_a_dominance_ratio": 1.3644,
+        "pmf_total_mass": 1.0,
+        "player_a_match_win_prob": 0.90326,
+        "player_b_match_win_prob": 0.09674,
+        "expected_games_a": 13.591,
+        "expected_games_b": 9.424,
+        "expected_total_games": 23.015,
+        "expected_game_handicap_margin": 4.167,
+        "set_handicaps": {
+          "a_minus_1_5": 0.65234,
+          "a_plus_1_5": 0.96301
+        },
+        "game_handicaps": {
+          "-5.5": {
+            "win_prob": 0.33764,
+            "push_prob": 0,
+            "loss_prob": 0.66236
+          },
+          "-4.5": {
+            "win_prob": 0.51358,
+            "push_prob": 0,
+            "loss_prob": 0.48642
+          },
+          "-3.5": {
+            "win_prob": 0.68314,
+            "push_prob": 0,
+            "loss_prob": 0.31686
+          },
+          "-3.0": {
+            "win_prob": 0.68314,
+            "push_prob": 0.11916,
+            "loss_prob": 0.19769
+          },
+          "-2.5": {
+            "win_prob": 0.80231,
+            "push_prob": 0,
+            "loss_prob": 0.19769
+          },
+          "-1.5": {
+            "win_prob": 0.86374,
+            "push_prob": 0,
+            "loss_prob": 0.13626
+          },
+          "+1.5": {
+            "win_prob": 0.93378,
+            "push_prob": 0,
+            "loss_prob": 0.06622
+          },
+          "+2.5": {
+            "win_prob": 0.95093,
+            "push_prob": 0,
+            "loss_prob": 0.04907
+          },
+          "+3.0": {
+            "win_prob": 0.95093,
+            "push_prob": 0.01814,
+            "loss_prob": 0.03093
+          },
+          "+3.5": {
+            "win_prob": 0.96907,
+            "push_prob": 0,
+            "loss_prob": 0.03093
+          },
+          "+4.5": {
+            "win_prob": 0.98432,
+            "push_prob": 0,
+            "loss_prob": 0.01568
+          },
+          "+5.5": {
+            "win_prob": 0.99354,
+            "push_prob": 0,
+            "loss_prob": 0.00646
+          }
+        },
+        "total_games_thresholds": {
+          "over_20.5": 0.56344,
+          "over_21.5": 0.5013,
+          "over_22.5": 0.41388,
+          "over_23.5": 0.35286
+        },
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0
+      },
+      "tennis_markov_wta_clay": {
+        "schema": "wave40_tennis_markov_handicaps_v1",
+        "clean_checkout_fallback": false,
+        "tour": "WTA",
+        "surface": "Clay",
+        "best_of": 3,
+        "court_pace_index": 24.0,
+        "atp_top100_count": 100,
+        "wta_top100_count": 100,
+        "player_a_spw_prob": 0.6146,
+        "player_b_spw_prob": 0.5084,
+        "player_a_hold_prob": 0.76535,
+        "player_b_hold_prob": 0.52099,
+        "player_a_dominance_ratio": 1.2756,
+        "pmf_total_mass": 1.0,
+        "player_a_match_win_prob": 0.91958,
+        "player_b_match_win_prob": 0.08042,
+        "expected_games_a": 13.175,
+        "expected_games_b": 7.957,
+        "expected_total_games": 21.132,
+        "expected_game_handicap_margin": 5.218,
+        "set_handicaps": {
+          "a_minus_1_5": 0.68202,
+          "a_plus_1_5": 0.96967
+        },
+        "game_handicaps": {
+          "-5.5": {
+            "win_prob": 0.53502,
+            "push_prob": 0,
+            "loss_prob": 0.46498
+          },
+          "-4.5": {
+            "win_prob": 0.6783,
+            "push_prob": 0,
+            "loss_prob": 0.3217
+          },
+          "-3.5": {
+            "win_prob": 0.793,
+            "push_prob": 0,
+            "loss_prob": 0.207
+          },
+          "-3.0": {
+            "win_prob": 0.793,
+            "push_prob": 0.06617,
+            "loss_prob": 0.14083
+          },
+          "-2.5": {
+            "win_prob": 0.85917,
+            "push_prob": 0,
+            "loss_prob": 0.14083
+          },
+          "-1.5": {
+            "win_prob": 0.89387,
+            "push_prob": 0,
+            "loss_prob": 0.10613
+          },
+          "+1.5": {
+            "win_prob": 0.94287,
+            "push_prob": 0,
+            "loss_prob": 0.05713
+          },
+          "+2.5": {
+            "win_prob": 0.95409,
+            "push_prob": 0,
+            "loss_prob": 0.04591
+          },
+          "+3.0": {
+            "win_prob": 0.95409,
+            "push_prob": 0.01221,
+            "loss_prob": 0.03369
+          },
+          "+3.5": {
+            "win_prob": 0.96631,
+            "push_prob": 0,
+            "loss_prob": 0.03369
+          },
+          "+4.5": {
+            "win_prob": 0.97903,
+            "push_prob": 0,
+            "loss_prob": 0.02097
+          },
+          "+5.5": {
+            "win_prob": 0.98847,
+            "push_prob": 0,
+            "loss_prob": 0.01153
+          }
+        },
+        "total_games_thresholds": {
+          "over_20.5": 0.42978,
+          "over_21.5": 0.37798,
+          "over_22.5": 0.32441,
+          "over_23.5": 0.29223
+        },
+        "real_money_stake_cleared": false,
+        "live_stake_fraction": 0.0
+      },
+      "cfb_nba_golf_mma": {
+        "schema": "wave40_cfb_nba_golf_mma_baselines_v1",
+        "clean_checkout_fallback": false,
+        "nba_teams_count": 30,
+        "nba_ppg_mean": 113.572,
+        "nba_four_factors_composite_baseline": 0.2677,
+        "cfb_fbs_teams_count": 138,
+        "cfb_ppg_mean": 27.931,
+        "cfb_havoc_rate_mean": 0.168,
+        "cfb_adj_line_yards_mean": 3.05,
+        "pga_driving_dist_mean": 300.2,
+        "pga_gir_pct_mean": 66.5,
+        "ufc_slpm_mean": 3.85,
+        "ufc_td_def_pct_mean": 62.5,
+        "cross_sport_signal_tau2": 0.0,
+        "cross_sport_signal_i2": 0.0
+      },
+      "real_money_stake_cleared": false,
+      "live_stake_fraction": 0.0,
+      "suite_sha256": "bd19d4886cbffc10d3297d36c7c7d4ad2e10568c15d3d47614e7c8bedbe92335"
+    },
+    "ngs_vault_audit": {
+      "schema": "wave40_nfl_ngs_vault_audit_v1",
+      "clean_checkout_fallback": false,
+      "ngs_passing_rows": 866,
+      "ngs_rushing_rows": 896,
+      "ngs_receiving_rows": 1970,
+      "ngs_passing_2026_w1_w10_rows": 303,
+      "ngs_rushing_2026_w1_w10_rows": 299,
+      "ngs_receiving_2026_w1_w10_rows": 688,
+      "zero_post_w10_leakage": true,
+      "zero_week0_aggregate_leakage": true,
+      "w1_w10_2026_league_baselines": {
+        "mean_cpoe": 0.2362,
+        "mean_time_to_throw": 2.8348,
+        "mean_intended_air_yards": 8.0199,
+        "mean_aggressiveness": 15.0715,
+        "mean_ryoe_per_att": 0.2878,
+        "mean_rush_efficiency": 4.1474,
+        "mean_eight_box_pct": 23.9515,
+        "mean_cushion": 6.0611,
+        "mean_separation": 2.949,
+        "mean_yac_above_expectation": 0.5823
+      }
+    },
+    "max_prior_week_used": 9,
+    "quarantined_ngs_weights": {
+      "ngs_raw_cpoe_net": 0.0,
+      "ngs_raw_time_to_throw_net": 0.0,
+      "ngs_raw_ryoe_per_att_net": 0.0,
+      "ngs_raw_eight_box_pct_net": 0.0,
+      "ngs_raw_yac_above_exp_net": 0.0
+    },
+    "away_w40_ngs_ftn_profile": {
+      "def_box_discipline_norm": -0.4689,
+      "def_int_worthy_forced_norm": 0.11456,
+      "def_blitz_rate_norm": -0.44285,
+      "off_screen_mitigation_norm": -0.25902,
+      "ngs_rec_cushion_norm": -0.25835,
+      "ngs_sep_created_rec_norm": -0.25263
+    },
+    "home_w40_ngs_ftn_profile": {
+      "def_box_discipline_norm": -0.46248,
+      "def_int_worthy_forced_norm": 0.6271,
+      "def_blitz_rate_norm": 0.07975,
+      "off_screen_mitigation_norm": 0.04352,
+      "ngs_rec_cushion_norm": 0.0266,
+      "ngs_sep_created_rec_norm": 0.7121
+    },
+    "live_honest_ast": {
+      "schema": "wave40_live_honest_ast_v1",
+      "zero_fabricated_bindings": true,
+      "parsed_evaluated_count": 8,
+      "equations_evaluated": [
+        {
+          "eq_id": "mlb_statcast_barrel_rate_pct",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 12.941176,
+          "operators": 2
+        },
+        {
+          "eq_id": "mlb_fielding_independent_pitching_fip",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 3.010465,
+          "operators": 7
+        },
+        {
+          "eq_id": "soccer_corner_set_piece_expected_goals",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.2482,
+          "operators": 2
+        },
+        {
+          "eq_id": "nhl_special_teams_net_goal_expectation",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.2514,
+          "operators": 4
+        },
+        {
+          "eq_id": "tennis_dominance_ratio",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.177215,
+          "operators": 2
+        },
+        {
+          "eq_id": "nba_dean_oliver_four_factors_index",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.2843,
+          "operators": 7
+        },
+        {
+          "eq_id": "cfb_havoc_and_adj_line_yards_edge",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 0.7079,
+          "operators": 5
+        },
+        {
+          "eq_id": "nfl_w40_ftn_box_intworthy_ngs_cushion_edge",
+          "status": "PARSED_EVALUATED",
+          "mode": "bound_inputs",
+          "value": 1.828802,
+          "operators": 11
+        }
+      ]
+    },
+    "w40_close_residual_signal": 1.828802,
+    "stage2_deltas": {
+      "away_epa_delta": -0.001829,
+      "home_epa_delta": 0.001829,
+      "away_comp_delta": 0.000505,
+      "home_comp_delta": 0.001424,
+      "away_sack_prob_delta": 0.000664,
+      "home_sack_prob_delta": -0.00012
+    }
+  },
+  "benchmark_sha256": "a18ee8777101b0ded1ff2a038d03ba6e7464e9ddf2b8bd12700aa0d8715efdb9"
+}

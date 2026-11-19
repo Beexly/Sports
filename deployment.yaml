@@ -1,0 +1,10 @@
+environments:
+  dev:
+    project: "galaxysportsedge"
+    region: "us-central1"
+    composer_environment: "gse-composer-dev"
+    artifact_storage:
+      bucket: "galaxysportsedge-gse-data"
+      path_prefix: "orchestration-"
+    pipelines:
+      - source: "orchestration_pipeline.yaml"

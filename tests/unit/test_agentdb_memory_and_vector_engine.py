@@ -1,4 +1,4 @@
-"""Unit tests for RuView AgentDB Memory Patterns & AgentDB Vector Search (`agentdb_memory_and_vector_engine.py`)."""
+"""Unit tests for RuView AgentDB Memory Patterns and Vector Search."""
 
 from __future__ import annotations
 

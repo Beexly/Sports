@@ -159,6 +159,18 @@ A task is NOT complete until: tests pass, types pass, build succeeds, and `npm r
 
 ## Agent skills (process capital)
 
+### Issue tracker
+
+Local markdown tickets primarily in `.scratch/<feature>/issues/`, mirrored to GitHub Issues on `Beexly/Sports`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Canonical labels (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context domain glossary (`GLOSSARY.md`), MADR ADRs (`docs/adr/`), and language/review standards (`CODING_STANDARDS.md`). See `docs/agents/domain.md`.
+
 Domain runbooks live in `.claude/skills/<name>/SKILL.md` (canonical, indexed by `.claude/skills/README.md`) so Claude Code loads them directly. Path-scoped rules live in `.claude/rules/`. Operator console steps: `docs/ops/OPERATOR.md`; operator-only remediation items: `docs/ops/OPERATOR_TASKS.md`. Run `npm run agent:eval` for the thin harness.
 
 Per-developer overrides go in `CLAUDE.local.md` and `.claude/settings.local.json` (both gitignored); the shared files are frozen by AGENTS.md law 2.

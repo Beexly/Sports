@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""
-Unit tests for `intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py`.
+"""Unit tests for `intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py`.
+
 Covers the 30 Frontier DFS & Projection Equations (`EQ-DFS-01..30`), Standing Lessons `L-1`
 and `L-2` environment scalars, 360-Degree Picks/Props/Parlays/SGP evaluation with the
 `-250` / `-300+` Heavy-Juice Sportsbook Firewall, and Two-Wave `200+` Pt DraftKings DFS
@@ -106,8 +106,9 @@ def test_200pt_dk_championship_portfolio_and_full_omniverse_suite() -> None:
     assert suite_res["reasoning_5_tracks_and_7_steps_summary"]["families_consumed"] == 279
     assert RECEIPT_PATH.exists()
 
-    # Verify no layer has status == "UNKNOWN", salary caps are respected across all 120 X_cand & 500 X_field lineups,
-    # L-1/L-2 scalars applied to player pool, and context_packet metadata attached to 360 board tickets
+    # Verify no layer has status == "UNKNOWN", salary caps are respected across all
+    # 120 X_cand & 500 X_field lineups, L-1/L-2 scalars applied to player pool, and
+    # context_packet metadata attached to 360 board tickets.
     for _l_key, layer_entry in suite_res["context_26_layers_summary"]["per_layer_audit"].items():
         assert layer_entry["status"] == "EXECUTED"
     assert dfs_res["lessons_l1_and_l2_verification"]["pool_players_l1_l2_evaluated_count"] > 0

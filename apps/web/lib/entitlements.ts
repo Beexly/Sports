@@ -6,6 +6,7 @@
 import { db } from "@sports/db";
 import { getEntitlements, type Entitlements, type SubscriptionTier } from "@sports/types";
 import { logEntitlementFailClosed } from "@/lib/entitlement-observability";
+import { higherEntitlementTier, resolvePackEntitlementTier } from "@/lib/packages/purchase-ledger";
 
 export { getEntitlements };
 export type { Entitlements };
@@ -93,6 +94,8 @@ export async function getUserEntitlements(
     return getEntitlements("ELITE");
   }
 
+  let resolvedEmail: string | null | undefined = sessionEmail;
+
   // Owner bypass runs before the subscription lookup. Tests that mock only
   // db.subscription skip this when db.user is absent.
   const users = (db as unknown as { user?: { findUnique?: (args: {
@@ -105,6 +108,9 @@ export async function getUserEntitlements(
         where: { id: userId },
         select: { role: true, email: true },
       });
+      if (user?.email && !resolvedEmail) {
+        resolvedEmail = user.email;
+      }
       if (user && ownerBypassesPaywall(user.role, user.email)) {
         return getEntitlements("ELITE");
       }
@@ -116,6 +122,7 @@ export async function getUserEntitlements(
   const graceCutoff = new Date(Date.now() - PAST_DUE_GRACE_DAYS * 24 * 60 * 60 * 1000);
 
   let subscription: { tier: string } | null;
+  let packTier: SubscriptionTier = "FREE";
   try {
     subscription = await db.subscription.findFirst({
       where: {
@@ -128,6 +135,13 @@ export async function getUserEntitlements(
       },
       select: { tier: true },
     });
+    const subTier = (subscription?.tier ?? "FREE") as SubscriptionTier;
+    if (subTier !== "ELITE") {
+      packTier = await resolvePackEntitlementTier({
+        userId,
+        email: resolvedEmail,
+      });
+    }
   } catch (error) {
     if (isDatabaseUnreachable(error)) {
       // Unchanged verdict (FREE), newly audible. Without this line a total
@@ -138,15 +152,16 @@ export async function getUserEntitlements(
     throw error;
   }
 
-  const tier = (subscription?.tier ?? "FREE") as SubscriptionTier;
+  const tier = higherEntitlementTier((subscription?.tier ?? "FREE") as SubscriptionTier, packTier);
   return getEntitlements(tier);
 }
 
 export async function requireEntitlement(
   userId: string,
-  check: (entitlements: Entitlements) => boolean
+  check: (entitlements: Entitlements) => boolean,
+  sessionEmail?: string | null,
 ): Promise<Entitlements> {
-  const entitlements = await getUserEntitlements(userId);
+  const entitlements = await getUserEntitlements(userId, sessionEmail);
   if (!check(entitlements)) {
     throw new EntitlementError("Subscription required for this feature");
   }

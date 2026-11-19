@@ -12,9 +12,9 @@ from __future__ import annotations
 import json
 import os
 import re
+from collections.abc import Iterable, Mapping
 from datetime import date, datetime
 from pathlib import Path
-from typing import Iterable, Mapping
 
 try:
     import pandas as pd
@@ -22,7 +22,10 @@ except ImportError:  # pragma: no cover
     pd = None  # type: ignore[assignment]
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_CONFIG = ROOT / "data" / "nflverse" / "week9_live_roster_transactions_and_starters_2026.json"
+DEFAULT_CONFIG = (
+    ROOT / "data" / "nflverse" / "week9_live_roster_transactions_and_starters_2026.json"
+)
+_PRINTED_STAGE0_SIGNATURES: set[tuple[int, str, int]] = set()
 
 
 class PreflightRosterGateError(RuntimeError):
@@ -30,6 +33,7 @@ class PreflightRosterGateError(RuntimeError):
 
 
 def load_config(path: str | Path = DEFAULT_CONFIG, today: date | None = None) -> dict:
+    """Load and validate the Stage-0 roster transaction config."""
     cfg = json.loads(Path(path).read_text(encoding="utf-8"))
     today = today or date.today()
     as_of = datetime.strptime(cfg["as_of"], "%Y-%m-%d").date()
@@ -43,10 +47,23 @@ def load_config(path: str | Path = DEFAULT_CONFIG, today: date | None = None) ->
 
 
 def _norm(s: str) -> str:
+    """Normalize player names for resilient cross-feed matching."""
+    cleaned = (
+        str(s)
+        .strip()
+        .lower()
+        .replace("'", "")
+        .replace("\u2019", "")
+        .replace("-", "")
+        .replace(".", "")
+        .replace(",", "")
+    )
+    if cleaned.startswith("matthew "):
+        cleaned = "matt " + cleaned[8:]
     parts = [
         w
-        for w in str(s).lower().replace(".", "").replace(",", "").split()
-        if w not in ("jr", "sr", "ii", "iii", "iv")
+        for w in cleaned.split()
+        if w not in ("jr", "sr", "ii", "iii", "iv", "v")
     ]
     return " ".join(parts)
 
@@ -61,7 +78,7 @@ def apply_gate(
     salary_col: str = "salary",
     qb_gate: bool = True,
 ) -> tuple[pd.DataFrame, list[dict]]:
-    """Return (clean_df, removal_log). status_col may be absent from df."""
+    """Apply Stage-0 roster gate; return (clean_df, removal_log)."""
     blocked = {s.upper() for s in cfg["blocked_statuses"]}
     excl = {_norm(p["name"]): p for p in cfg["excluded_players"]}
     traded = {_norm(p["name"]): p for p in cfg["traded_players"]}
@@ -71,8 +88,12 @@ def apply_gate(
 
     def drop(i, reason):
         keep.loc[i] = False
-        log.append({"name": df.at[i, name_col], "team": df.at[i, team_col],
-                    "position": df.at[i, pos_col], "reason": reason})
+        log.append({
+            "name": df.at[i, name_col],
+            "team": df.at[i, team_col],
+            "position": df.at[i, pos_col],
+            "reason": reason,
+        })
 
     for i in df.index:
         n = _norm(df.at[i, name_col])
@@ -98,25 +119,37 @@ def apply_gate(
             if team in qb1:
                 starter = qb1[team]
                 if not (grp[name_col].map(_norm) == starter).any():
-                    # confirmed starter absent from pool (e.g. not on the DK slate): drop every QB of that team
-                    # to avoid silently promoting a backup.
+                    # Confirmed starter absent from pool (e.g. not on the DK slate):
+                    # drop every QB of that team to avoid silently promoting a backup.
                     for i in grp.index:
                         keep.loc[i] = False
-                        log.append({"name": clean.at[i, name_col], "team": team, "position": "QB",
-                                    "reason": f"confirmed QB1 {cfg['confirmed_qb1'][team]} not in pool"})
+                        log.append({
+                            "name": clean.at[i, name_col],
+                            "team": team,
+                            "position": "QB",
+                            "reason": f"confirmed QB1 {cfg['confirmed_qb1'][team]} not in pool",
+                        })
                 else:
                     for i in grp.index:
                         if _norm(clean.at[i, name_col]) != starter:
                             keep.loc[i] = False
-                            log.append({"name": clean.at[i, name_col], "team": team, "position": "QB",
-                                        "reason": f"not confirmed QB1 ({cfg['confirmed_qb1'][team]})"})
+                            log.append({
+                                "name": clean.at[i, name_col],
+                                "team": team,
+                                "position": "QB",
+                                "reason": f"not confirmed QB1 ({cfg['confirmed_qb1'][team]})",
+                            })
             else:
                 top = grp[salary_col].idxmax()
                 for i in grp.index:
                     if i != top:
                         keep.loc[i] = False
-                        log.append({"name": clean.at[i, name_col], "team": team, "position": "QB",
-                                    "reason": "backup QB (QB1 UNVERIFIED = highest salary)"})
+                        log.append({
+                            "name": clean.at[i, name_col],
+                            "team": team,
+                            "position": "QB",
+                            "reason": "backup QB (QB1 UNVERIFIED = highest salary)",
+                        })
         clean = df[keep & df.index.isin(clean.index)].copy()
     return clean, log
 
@@ -126,6 +159,7 @@ def assert_lineup_clean(
     cfg: dict,
     player_teams: Mapping[str, str] | None = None,
 ) -> None:
+    """Assert that a lineup contains no Stage-0-blocked or traded-away players."""
     bad = []
     confirmed_starters = {_norm(v) for v in cfg.get("confirmed_qb1", {}).values()}
     names = {_norm(p["name"]) for p in cfg["excluded_players"]}
@@ -148,36 +182,47 @@ def assert_lineup_clean(
     }
     for n in players:
         nn = _norm(n)
-        if nn in names:
+        if nn in names or (
+            nn in traded_from_by_name
+            and nn in norm_player_teams
+            and norm_player_teams[nn] == traded_from_by_name[nn]
+        ):
             bad.append(n)
-        elif nn in traded_from_by_name and nn in norm_player_teams:
-            if norm_player_teams[nn] == traded_from_by_name[nn]:
-                bad.append(n)
     if bad:
         raise PreflightRosterGateError(f"lineup contains Stage-0-blocked players: {bad}")
 
 
-def assert_lineup_rules(salary: int, teams: list[str], classic: bool = True,
-                        min_salary: int = 48500, max_per_team: int = 4) -> None:
+def assert_lineup_rules(
+    salary: int,
+    teams: list[str],
+    classic: bool = True,
+    min_salary: int = 48500,
+    max_per_team: int = 4,
+) -> None:
+    """Assert classic DFS roster construction rules (salary floor and team limits)."""
     if not classic:
         return
     if salary < min_salary:
         raise PreflightRosterGateError(f"classic lineup salary {salary} < floor {min_salary}")
     worst = max(teams.count(t) for t in set(teams))
     if worst > max_per_team:
-        raise PreflightRosterGateError(f"classic lineup has {worst} players from one team (max {max_per_team})")
+        raise PreflightRosterGateError(
+            f"classic lineup has {worst} players from one team (max {max_per_team})"
+        )
 
 
 def _week_config_path(week: int, season: int = 2026) -> Path:
     """Canonical per-week roster/transaction config naming convention."""
-    return ROOT / "data" / "nflverse" / f"week{week}_live_roster_transactions_and_starters_{season}.json"
+    filename = f"week{week}_live_roster_transactions_and_starters_{season}.json"
+    return ROOT / "data" / "nflverse" / filename
 
 
 def resolve_active_week(season: int = 2026, today: date | None = None) -> int:
-    """Resolve current NFL week dynamically from repo scoreboard / Stage-0 files (never pinned to Week 9)."""
+    """Resolve current NFL week dynamically from repo scoreboard / Stage-0 files."""
     _ = today  # reserved for calendar refinement
     candidates: list[int] = []
-    for p in (ROOT / "data" / "nflverse").glob(f"week*_live_roster_transactions_and_starters_{season}.json"):
+    pattern = f"week*_live_roster_transactions_and_starters_{season}.json"
+    for p in (ROOT / "data" / "nflverse").glob(pattern):
         m = re.search(rf"week(\d+)_live_roster_transactions_and_starters_{season}\.json$", p.name)
         if m:
             candidates.append(int(m.group(1)))
@@ -190,7 +235,10 @@ def resolve_active_week(season: int = 2026, today: date | None = None) -> int:
     raise PreflightRosterGateError(f"Unable to auto-resolve active NFL week for season {season}")
 
 
-def discover_latest_stage0_config(season: int = 2026, week: int | str = "auto") -> tuple[int, Path]:
+def discover_latest_stage0_config(
+    season: int = 2026,
+    week: int | str = "auto",
+) -> tuple[int, Path]:
     """Return `(resolved_week, config_path)` for `week='auto'` or an explicit week number."""
     if str(week).strip().lower() == "auto":
         resolved_wk = resolve_active_week(season=season)
@@ -198,14 +246,21 @@ def discover_latest_stage0_config(season: int = 2026, week: int | str = "auto") 
         resolved_wk = int(week)
     cfg_path = _week_config_path(resolved_wk, season=season)
     if not cfg_path.is_file():
-        raise PreflightRosterGateError(f"Missing Stage-0 config for week {resolved_wk}: {cfg_path}")
+        raise PreflightRosterGateError(
+            f"Missing Stage-0 config for week {resolved_wk}: {cfg_path}"
+        )
     return resolved_wk, cfg_path
 
 
-def require_week(week: int | str, config_path: str | Path = DEFAULT_CONFIG, today: date | None = None) -> dict:
-    """Hard gate for any simulation/pick entry point: a roster config for `week` must exist and be fresh.
+def require_week(
+    week: int | str,
+    config_path: str | Path = DEFAULT_CONFIG,
+    today: date | None = None,
+) -> dict:
+    """Hard gate for simulation/pick entry points: roster config must be fresh.
 
-    Explicit, logged retrospective path: STAGE0_RETROSPECTIVE=1 (returns {} - never for publishable output).
+    Explicit, logged retrospective path: STAGE0_RETROSPECTIVE=1 (returns {} -
+    never for publishable output).
     """
     if os.environ.get("STAGE0_RETROSPECTIVE") == "1":
         print("[STAGE 0] RETROSPECTIVE mode - output is NOT publishable")
@@ -214,9 +269,6 @@ def require_week(week: int | str, config_path: str | Path = DEFAULT_CONFIG, toda
         week, auto_path = discover_latest_stage0_config(week="auto")
         if Path(config_path) == DEFAULT_CONFIG:
             config_path = auto_path
-    # Week-aware default (2026-11-13): when the caller did not pin a config,
-    # prefer the config named for the requested week. Fail-closed: if it does
-    # not exist, load_config below still raises on stale/mismatched defaults.
     elif Path(config_path) == DEFAULT_CONFIG:
         week_specific = _week_config_path(int(week))
         if week_specific.is_file():
@@ -225,14 +277,22 @@ def require_week(week: int | str, config_path: str | Path = DEFAULT_CONFIG, toda
     if int(cfg["week"]) != int(week):
         raise PreflightRosterGateError(
             f"no roster/transaction config for week {week} (config is week {cfg['week']}); "
-            "refusing to run on stale rosters. Use STAGE0_RETROSPECTIVE=1 only for non-publishable replays."
+            "refusing to run on stale rosters. Use STAGE0_RETROSPECTIVE=1 only for "
+            "non-publishable replays."
         )
-    print(f"[STAGE 0] LIVE | as_of {cfg['as_of']} | excluded {len(cfg['excluded_players'])} | QB1s {sorted(cfg['confirmed_qb1'])}")
+    sig = (int(week), str(cfg["as_of"]), len(cfg["excluded_players"]))
+    if sig not in _PRINTED_STAGE0_SIGNATURES:
+        _PRINTED_STAGE0_SIGNATURES.add(sig)
+        print(
+            f"[STAGE 0] LIVE | as_of {cfg['as_of']} | "
+            f"excluded {len(cfg['excluded_players'])} | "
+            f"QB1s {sorted(cfg['confirmed_qb1'])}"
+        )
     return cfg
 
 
 def qb1_out_roles(cfg: dict) -> dict[str, list[str]]:
-    """team -> ['QB1'] for teams whose QB1 slot is vacated by an excluded QB (feeds injury reallocation)."""
+    """Team -> ['QB1'] for teams whose QB1 slot is vacated by an excluded QB."""
     out: dict[str, list[str]] = {}
     for p in cfg.get("excluded_players", []):
         if str(p.get("position", "")).upper() == "QB":

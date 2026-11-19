@@ -50,6 +50,7 @@ import {
   freezeSlateCommitments,
   computeScheduledWindow,
   drainPendingTeamGameLogs,
+  markClosingSnapshotsIfEnabled,
   runSettlementLearningLoop,
   type SlateFreezeResult,
 } from "@sports/ingestion-pipeline";
@@ -318,11 +319,34 @@ export async function GET(request: Request) {
         result: true,
         settledAt: true,
         clvLockPrice: true,
-        game: { select: { sport: { select: { key: true } } } },
+        game: { select: { commenceTime: true, sport: { select: { key: true } } } },
       },
       take: 200,
       orderBy: { settledAt: "desc" },
     });
+    if (process.env["LINE_ARCHIVE_ENABLED"] === "true") {
+      const seenClosingGames = new Map<string, Date>();
+      for (const row of recentSettled) {
+        if (row.game?.commenceTime && !seenClosingGames.has(row.gameId)) {
+          seenClosingGames.set(row.gameId, row.game.commenceTime);
+        }
+      }
+      for (const [gameId, commenceTime] of seenClosingGames) {
+        try {
+          const closeRes = await markClosingSnapshotsIfEnabled(db, gameId, commenceTime);
+          if (closeRes.enabled && closeRes.error) {
+            console.warn(
+              `[cron:settle-picks] markClosingSnapshots failed for ${gameId}: ${closeRes.error}`,
+            );
+          }
+        } catch (closeErr) {
+          console.warn(
+            `[cron:settle-picks] markClosingSnapshots failed for ${gameId}: ` +
+              `${closeErr instanceof Error ? closeErr.message : closeErr}`,
+          );
+        }
+      }
+    }
     // The model probability lives in the pick's factorBreakdown, not a column
     // (independentEdge.trueProb). Rows without one carry nothing the loop can
     // learn from and are skipped rather than fabricated.

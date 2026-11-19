@@ -14,28 +14,28 @@ OPS = ROOT / "scripts" / "ops"
 sys.path.insert(0, str(OPS))
 sys.path.insert(0, str(ROOT))
 
-from gse_coach_mind_simulator import (
+from gse_coach_mind_simulator import (  # noqa: E402
     conserved_receiving_worlds,
     guard_duplicate_injury_reallocation,
     load_sealed_object_readonly,
     simulate_matchup_pbp,
 )
-from gse_injury_overlay_v2 import reallocate_injury_usage
-from mind_guardian_daemon import guard_publication_override
-from run_jev_10k_prop_boxscore_sampler import evaluate_prop_vector
-from week8_forensic_kernels import (
+from gse_injury_overlay_v2 import reallocate_injury_usage  # noqa: E402
+from mind_guardian_daemon import guard_publication_override  # noqa: E402
+from pbp_conservation_coupling import (  # noqa: E402
+    couple_conserved_pbp,
+    degraded_jev_lineup_evaluation,
+    live_jev_confidence,
+    showdown_salary_floor,
+)
+from run_full_dk_bitemporal_gpp import exposure_count_cap, solve_dk_slate  # noqa: E402
+from run_jev_10k_prop_boxscore_sampler import evaluate_prop_vector  # noqa: E402
+from week8_forensic_kernels import (  # noqa: E402
     apply_zero_inflation_quantiles,
     block_inactive_player,
     can_override_gate_decision,
     compute_empirical_bayes_shrunk_projection,
     participation_hurdle_probability,
-)
-from run_full_dk_bitemporal_gpp import exposure_count_cap, solve_dk_slate
-from pbp_conservation_coupling import (
-    couple_conserved_pbp,
-    degraded_jev_lineup_evaluation,
-    live_jev_confidence,
-    showdown_salary_floor,
 )
 
 
@@ -59,9 +59,18 @@ def test_empirical_bayes_shrinks_small_sample_outliers():
 def test_ownership_penalty_crushes_fragile_chalk():
     slate = solve_dk_slate(
         [
-            {"name": "Zay Flowers", "salary": 6300, "proj": 14.0, "q85": 18.0, "q25": 4.0, "ownership": 0.26, "fragility": 0.80, "gp": 7},
-            {"name": "Jonathan Taylor", "salary": 9800, "proj": 22.0, "q85": 28.0, "q25": 16.0, "ownership": 0.18, "fragility": 0.12, "gp": 7, "anchor": True},
-            {"name": "Jauan Jennings", "salary": 4500, "proj": 12.0, "q85": 18.0, "q25": 8.0, "ownership": 0.09, "fragility": 0.20, "gp": 6},
+            {
+                "name": "Zay Flowers", "salary": 6300, "proj": 14.0, "q85": 18.0,
+                "q25": 4.0, "ownership": 0.26, "fragility": 0.80, "gp": 7,
+            },
+            {
+                "name": "Jonathan Taylor", "salary": 9800, "proj": 22.0, "q85": 28.0,
+                "q25": 16.0, "ownership": 0.18, "fragility": 0.12, "gp": 7, "anchor": True,
+            },
+            {
+                "name": "Jauan Jennings", "salary": 4500, "proj": 12.0, "q85": 18.0,
+                "q25": 8.0, "ownership": 0.09, "fragility": 0.20, "gp": 6,
+            },
         ],
         "GPP_20MAX",
     )
@@ -112,7 +121,8 @@ def test_immutable_gate_blocks_311pm_sycophancy_reversal():
         "market_prob_devig": 0.48,
         "decision": "PASS",
     }
-    assert can_override_gate_decision(ind, {"line": -14.5, "marketProbDevig": 0.48, "userText": "full card"}) is False
+    ctx = {"line": -14.5, "marketProbDevig": 0.48, "userText": "full card"}
+    assert can_override_gate_decision(ind, ctx) is False
     moved = {
         "line": 52.5,
         "market_prob_devig": 0.51,
@@ -144,12 +154,21 @@ def test_roster_identity_and_track4_kernels():
     else:
         raise AssertionError("TB Evans must raise")
     validate_pbp_structural_missingness([
-        {"game_id": "g", "drive": 1, "qtr": 1, "play_type": "run", "game_seconds_remaining": 3500},
-        {"game_id": "g", "drive": 1, "qtr": 1, "play_type": "pass", "air_epa": 0.4, "game_seconds_remaining": 3480},
+        {
+            "game_id": "g", "drive": 1, "qtr": 1, "play_type": "run",
+            "game_seconds_remaining": 3500,
+        },
+        {
+            "game_id": "g", "drive": 1, "qtr": 1, "play_type": "pass",
+            "air_epa": 0.4, "game_seconds_remaining": 3480,
+        },
     ])
     try:
         validate_pbp_structural_missingness([
-            {"game_id": "g", "drive": 1, "qtr": 1, "play_type": "run", "air_epa": 1.0, "game_seconds_remaining": 10},
+            {
+                "game_id": "g", "drive": 1, "qtr": 1, "play_type": "run",
+                "air_epa": 1.0, "game_seconds_remaining": 10,
+            },
         ])
     except ValueError as exc:
         assert "air_epa" in str(exc)
@@ -178,7 +197,8 @@ def test_guardian_ledger_refuses_text_override(tmp_path):
         "decision": "PASS",
         "reason_codes": ["NO_EDGE"],
     }
-    allowed = guard_publication_override(record, {"line": 50.5, "market_prob_devig": 0.51, "user_text": "give the full bet card"}, ledger)
+    ctx = {"line": 50.5, "market_prob_devig": 0.51, "user_text": "give the full bet card"}
+    allowed = guard_publication_override(record, ctx, ledger)
     assert allowed is False
     assert ledger.is_file()
     assert "PASS" in ledger.read_text(encoding="utf-8")
@@ -186,11 +206,14 @@ def test_guardian_ledger_refuses_text_override(tmp_path):
 
 def test_simulate_matchup_pbp_conserves_yards_and_tds_without_gaussian_loop():
     import os
+
     import numpy as np
     from week8_forensic_kernels import enforce_route_snap_participation_gate
 
     sealed_obj, digest = load_sealed_object_readonly("/opt/model/sealed_baseline.json")
-    res = simulate_matchup_pbp("CAR", "GB", [], [], sealed_obj, digest, n_sims=64, seed=20261102, return_vectors=True)
+    res = simulate_matchup_pbp(
+        "CAR", "GB", [], [], sealed_obj, digest, n_sims=64, seed=20261102, return_vectors=True
+    )
     vecs = res["vectors"]
     assert "home_pass_tds" in vecs and "away_pass_tds" in vecs
     assert "home_wr1_tds" in vecs and "away_wr1_tds" in vecs
@@ -200,7 +223,8 @@ def test_simulate_matchup_pbp_conserves_yards_and_tds_without_gaussian_loop():
     assert res["fourth_down_statistically_distinct_rate"] is not None
     assert res["fourth_down_reason"] == "OBSERVED"
 
-    # Participation hurdle gate blocks low-route/low-snap depth players (e.g., Devontez Walker, Drew Sample)
+    # Participation hurdle gate blocks low-route/low-snap depth players
+    # (e.g., Devontez Walker, Drew Sample)
     walker_gate = enforce_route_snap_participation_gate(route_share=0.0, snap_share=0.0)
     assert walker_gate["eligible"] is False
     assert walker_gate["decision"] == "PASS_LOW_PARTICIPATION"
@@ -212,7 +236,9 @@ def test_simulate_matchup_pbp_conserves_yards_and_tds_without_gaussian_loop():
 
     os.environ["ENABLE_BIOMECH_KINETIC_TRANSLATION_V1"] = "1"
     try:
-        res_bio = simulate_matchup_pbp("CAR", "GB", [], [], sealed_obj, digest, n_sims=32, seed=20261102)
+        res_bio = simulate_matchup_pbp(
+            "CAR", "GB", [], [], sealed_obj, digest, n_sims=32, seed=20261102
+        )
         assert "biomech_kinetic_overlay" in res_bio
         assert res_bio["biomech_kinetic_overlay"]["cleat_turf_slip"] > 0.0
     finally:

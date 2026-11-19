@@ -5,10 +5,8 @@ from __future__ import annotations
 import importlib.util
 import json
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
-
-import pytest
 
 REPO = Path(__file__).resolve().parents[1]
 _MOD = REPO / "scripts" / "ops" / "data_quality.py"
@@ -27,7 +25,7 @@ def _row(**over):
         "abstract": "We model per-defender coverage assignment.",
         "year": 2026,
         "url": "https://example.org/x",
-        "retrieved_at": datetime.now(timezone.utc).isoformat(),
+        "retrieved_at": datetime.now(UTC).isoformat(),
     }
     base.update(over)
     return base
@@ -162,7 +160,7 @@ def test_repaired_stamp_satisfies_provenance():
 # --- timeliness -----------------------------------------------------------
 
 def test_stale_rows_fail_timeliness():
-    old = (datetime.now(timezone.utc) - timedelta(hours=400)).isoformat()
+    old = (datetime.now(UTC) - timedelta(hours=400)).isoformat()
     st = _statuses(_run([_row(retrieved_at=old)], max_age_hours=168))
     assert st["timeliness/stale_rows"] == dq.FAIL
 

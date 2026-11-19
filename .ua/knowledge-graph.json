@@ -18,8 +18,8 @@
       "Bazel",
       "NumPy/SciPy"
     ],
-    "analyzedAt": "2026-11-14T02:56:32.863957+00:00",
-    "gitCommitHash": "c7b897c75d2bd758bcf15e8a8680dfce2708a376",
+    "analyzedAt": "2026-11-16T04:08:22.165876+00:00",
+    "gitCommitHash": "648991cffd3c6169c6150d0a6ad190abe847ec33",
     "figmaTokenConfigured": false
   },
   "nodes": [
@@ -485,8 +485,8 @@
       "type": "file",
       "name": "master-situational-reasoning-aggregator.ts",
       "filePath": "packages/prediction-engine/src/nfl/master-situational-reasoning-aggregator.ts",
-      "sizeLines": 1089,
-      "summary": "master-situational-reasoning-aggregator.ts (1089 lines) in Stage 1 & 2 Coaching Tendencies & Situational Reasoning Layer.",
+      "sizeLines": 1154,
+      "summary": "master-situational-reasoning-aggregator.ts (1154 lines) in Stage 1 & 2 Coaching Tendencies & Situational Reasoning Layer.",
       "tags": [
         "ts",
         "situational-and-coaching-intelligence"
@@ -524,8 +524,8 @@
       "type": "file",
       "name": "gse_connected_game_workflow.py",
       "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "sizeLines": 5427,
-      "summary": "gse_connected_game_workflow.py (5427 lines) in Stage 1 & 2 Coaching Tendencies & Situational Reasoning Layer.",
+      "sizeLines": 6382,
+      "summary": "gse_connected_game_workflow.py (6382 lines) in Stage 1 & 2 Coaching Tendencies & Situational Reasoning Layer.",
       "tags": [
         "py",
         "situational-and-coaching-intelligence"
@@ -537,9 +537,54 @@
       "type": "function",
       "name": "build_armed_context_and_reasoning_trace",
       "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 103,
-      "lineEnd": 112,
+      "lineStart": 104,
+      "lineEnd": 113,
       "summary": "Build a point-in-time ContextPacket and execute the 26-layer ReasoningTrace workflow.",
+      "tags": [
+        "python",
+        "function",
+        "gse_connected_game_workflow"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/ops/gse_connected_game_workflow.py:_is_week10_corpus_wire_first_ready",
+      "type": "function",
+      "name": "_is_week10_corpus_wire_first_ready",
+      "filePath": "scripts/ops/gse_connected_game_workflow.py",
+      "lineStart": 118,
+      "lineEnd": 145,
+      "summary": "Release Week 10+ hold once 07_corpus_wired receipt shows drain complete and corpus priors ran.",
+      "tags": [
+        "python",
+        "function",
+        "gse_connected_game_workflow"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/ops/gse_connected_game_workflow.py:redistribute_vacated_team_volume",
+      "type": "function",
+      "name": "redistribute_vacated_team_volume",
+      "filePath": "scripts/ops/gse_connected_game_workflow.py",
+      "lineStart": 195,
+      "lineEnd": 286,
+      "summary": "Vacated-volume conservation using Sinkhorn-style proportional reallocation and role caps.",
+      "tags": [
+        "python",
+        "function",
+        "gse_connected_game_workflow"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/ops/gse_connected_game_workflow.py:assert_pbp_conservation",
+      "type": "function",
+      "name": "assert_pbp_conservation",
+      "filePath": "scripts/ops/gse_connected_game_workflow.py",
+      "lineStart": 289,
+      "lineEnd": 315,
+      "summary": "Tightened PBP conservation assert ensuring exact world-level conservation",
       "tags": [
         "python",
         "function",
@@ -552,8 +597,8 @@
       "type": "function",
       "name": "_lookup_espn_scoreboard_kickoff",
       "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 555,
-      "lineEnd": 583,
+      "lineStart": 731,
+      "lineEnd": 761,
       "summary": "Resolve the real kickoff from the repo's ESPN week scoreboard (no fabrication).",
       "tags": [
         "python",
@@ -563,13 +608,58 @@
       "complexity": "moderate"
     },
     {
+      "id": "function:scripts/ops/gse_connected_game_workflow.py:_parse_american_int",
+      "type": "function",
+      "name": "_parse_american_int",
+      "filePath": "scripts/ops/gse_connected_game_workflow.py",
+      "lineStart": 764,
+      "lineEnd": 775,
+      "summary": "Function `_parse_american_int` in `scripts/ops/gse_connected_game_workflow.py`.",
+      "tags": [
+        "python",
+        "function",
+        "gse_connected_game_workflow"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/ops/gse_connected_game_workflow.py:_get_espn_scoreboard_odds_lookup",
+      "type": "function",
+      "name": "_get_espn_scoreboard_odds_lookup",
+      "filePath": "scripts/ops/gse_connected_game_workflow.py",
+      "lineStart": 778,
+      "lineEnd": 848,
+      "summary": "Function `_get_espn_scoreboard_odds_lookup` in `scripts/ops/gse_connected_game_workflow.py`.",
+      "tags": [
+        "python",
+        "function",
+        "gse_connected_game_workflow"
+      ],
+      "complexity": "complex"
+    },
+    {
       "id": "function:scripts/ops/gse_connected_game_workflow.py:_get_espn_week9_odds_lookup",
       "type": "function",
       "name": "_get_espn_week9_odds_lookup",
       "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 586,
-      "lineEnd": 630,
+      "lineStart": 851,
+      "lineEnd": 852,
       "summary": "Function `_get_espn_week9_odds_lookup` in `scripts/ops/gse_connected_game_workflow.py`.",
+      "tags": [
+        "python",
+        "function",
+        "gse_connected_game_workflow"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/ops/gse_connected_game_workflow.py:_get_espn_week10_odds_lookup",
+      "type": "function",
+      "name": "_get_espn_week10_odds_lookup",
+      "filePath": "scripts/ops/gse_connected_game_workflow.py",
+      "lineStart": 855,
+      "lineEnd": 856,
+      "summary": "Function `_get_espn_week10_odds_lookup` in `scripts/ops/gse_connected_game_workflow.py`.",
       "tags": [
         "python",
         "function",
@@ -582,23 +672,23 @@
       "type": "function",
       "name": "_get_matchup_env",
       "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 633,
-      "lineEnd": 691,
+      "lineStart": 859,
+      "lineEnd": 977,
       "summary": "Function `_get_matchup_env` in `scripts/ops/gse_connected_game_workflow.py`.",
       "tags": [
         "python",
         "function",
         "gse_connected_game_workflow"
       ],
-      "complexity": "moderate"
+      "complexity": "complex"
     },
     {
       "id": "function:scripts/ops/gse_connected_game_workflow.py:_get_2026_team_pbp_ftn_stats",
       "type": "function",
       "name": "_get_2026_team_pbp_ftn_stats",
       "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 694,
-      "lineEnd": 860,
+      "lineStart": 980,
+      "lineEnd": 1146,
       "summary": "Compute and cache all 32 NFL teams' real 2026 PBP + FTN charting metrics from",
       "tags": [
         "python",
@@ -612,8 +702,8 @@
       "type": "function",
       "name": "_run_l1_to_l5_specialist_reasoning_trace",
       "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 863,
-      "lineEnd": 1051,
+      "lineStart": 1149,
+      "lineEnd": 1337,
       "summary": "Execute the real Python L1-L5 Specialist Reasoning Engine (`intelligence/reasoning/orchestrator.py`)",
       "tags": [
         "python",
@@ -627,8 +717,8 @@
       "type": "function",
       "name": "_sanitize_json",
       "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 1054,
-      "lineEnd": 1063,
+      "lineStart": 1340,
+      "lineEnd": 1349,
       "summary": "Function `_sanitize_json` in `scripts/ops/gse_connected_game_workflow.py`.",
       "tags": [
         "python",
@@ -642,8 +732,8 @@
       "type": "function",
       "name": "_sha256_obj",
       "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 1066,
-      "lineEnd": 1069,
+      "lineStart": 1352,
+      "lineEnd": 1355,
       "summary": "Function `_sha256_obj` in `scripts/ops/gse_connected_game_workflow.py`.",
       "tags": [
         "python",
@@ -657,8 +747,8 @@
       "type": "function",
       "name": "_american_to_implied",
       "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 1072,
-      "lineEnd": 1075,
+      "lineStart": 1358,
+      "lineEnd": 1361,
       "summary": "Function `_american_to_implied` in `scripts/ops/gse_connected_game_workflow.py`.",
       "tags": [
         "python",
@@ -672,8 +762,8 @@
       "type": "function",
       "name": "_devig_two_way",
       "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 1078,
-      "lineEnd": 1082,
+      "lineStart": 1364,
+      "lineEnd": 1368,
       "summary": "Function `_devig_two_way` in `scripts/ops/gse_connected_game_workflow.py`.",
       "tags": [
         "python",
@@ -687,8 +777,8 @@
       "type": "function",
       "name": "_quantiles_from_vec",
       "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 1085,
-      "lineEnd": 1117,
+      "lineStart": 1371,
+      "lineEnd": 1403,
       "summary": "Function `_quantiles_from_vec` in `scripts/ops/gse_connected_game_workflow.py`.",
       "tags": [
         "python",
@@ -702,99 +792,9 @@
       "type": "function",
       "name": "_ensure_dynamic_jev_spine",
       "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 1120,
-      "lineEnd": 1277,
+      "lineStart": 1406,
+      "lineEnd": 1564,
       "summary": "Resolve or dynamically generate the 158-snap JEV Full-Game Spine for (away, home, week)",
-      "tags": [
-        "python",
-        "function",
-        "gse_connected_game_workflow"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "function:scripts/ops/gse_connected_game_workflow.py:run_stage1a_all_38_coaching_and_scheme_layers",
-      "type": "function",
-      "name": "run_stage1a_all_38_coaching_and_scheme_layers",
-      "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 1280,
-      "lineEnd": 1692,
-      "summary": "Stage 1A: Import, verify, and execute all 38 coaching mind & scheme modules in",
-      "tags": [
-        "python",
-        "function",
-        "gse_connected_game_workflow"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "function:scripts/ops/gse_connected_game_workflow.py:run_stage1b_all_5367_equations_pre_sim_review",
-      "type": "function",
-      "name": "run_stage1b_all_5367_equations_pre_sim_review",
-      "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 1695,
-      "lineEnd": 2020,
-      "summary": "Stage 1B: Pre-Simulation Review of the Entire 12,304+ Equation & Premise Corpus:",
-      "tags": [
-        "python",
-        "function",
-        "gse_connected_game_workflow"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "function:scripts/ops/gse_connected_game_workflow.py:_invoke_optional_situational_engine",
-      "type": "function",
-      "name": "_invoke_optional_situational_engine",
-      "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 2023,
-      "lineEnd": 2049,
-      "summary": "Dynamically resolve and invoke Agent 6 / Agent 7 situational engines with graceful fallback.",
-      "tags": [
-        "python",
-        "function",
-        "gse_connected_game_workflow"
-      ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "function:scripts/ops/gse_connected_game_workflow.py:compile_stage1_to_stage2_simulation_priors",
-      "type": "function",
-      "name": "compile_stage1_to_stage2_simulation_priors",
-      "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 2052,
-      "lineEnd": 2903,
-      "summary": "SG-2: Dynamically compile Stage 1A (38 coaching modules / scheme synthesis),",
-      "tags": [
-        "python",
-        "function",
-        "gse_connected_game_workflow"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "function:scripts/ops/gse_connected_game_workflow.py:run_stage2_jev_spine_and_10k_world_simulation",
-      "type": "function",
-      "name": "run_stage2_jev_spine_and_10k_world_simulation",
-      "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 2906,
-      "lineEnd": 3101,
-      "summary": "Stage 2: Execute the 10,000-world Coach-Mind Sinkhorn Simulator",
-      "tags": [
-        "python",
-        "function",
-        "gse_connected_game_workflow"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "function:scripts/ops/gse_connected_game_workflow.py:run_stage3_and_4_conserved_post_sim_projections",
-      "type": "function",
-      "name": "run_stage3_and_4_conserved_post_sim_projections",
-      "filePath": "scripts/ops/gse_connected_game_workflow.py",
-      "lineStart": 3104,
-      "lineEnd": 4139,
-      "summary": "Stage 3 & 4: Allocate conserved post-simulation box-score distributions across both teams",
       "tags": [
         "python",
         "function",
@@ -1672,11 +1672,26 @@
       "type": "file",
       "name": "dfs_literature_optimization_engine.py",
       "filePath": "intelligence/dfs/dfs_literature_optimization_engine.py",
-      "sizeLines": 268,
-      "summary": "dfs_literature_optimization_engine.py (268 lines) in Two-Stage Sim-to-DFS Player Pool, 19-Equation Frontier & MILP Layer.",
+      "sizeLines": 349,
+      "summary": "dfs_literature_optimization_engine.py (349 lines) in Two-Stage Sim-to-DFS Player Pool, 19-Equation Frontier & MILP Layer.",
       "tags": [
         "py",
         "dfs-stochastic-milp-and-19-equations"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:intelligence/dfs/dfs_literature_optimization_engine.py:resolve_dynamic_late_window_teams",
+      "type": "function",
+      "name": "resolve_dynamic_late_window_teams",
+      "filePath": "intelligence/dfs/dfs_literature_optimization_engine.py",
+      "lineStart": 43,
+      "lineEnd": 85,
+      "summary": "Resolve teams playing in the late afternoon (4:00+ PM ET) or Primetime (SNF/MNF) windows.",
+      "tags": [
+        "python",
+        "function",
+        "dfs_literature_optimization_engine"
       ],
       "complexity": "moderate"
     },
@@ -1685,8 +1700,8 @@
       "type": "function",
       "name": "load_dfs_5000_page_corpus_summary",
       "filePath": "intelligence/dfs/dfs_literature_optimization_engine.py",
-      "lineStart": 43,
-      "lineEnd": 66,
+      "lineStart": 88,
+      "lineEnd": 111,
       "summary": "Load summary metadata from the harvested 5,000+ page DFS research corpus.",
       "tags": [
         "python",
@@ -1700,8 +1715,8 @@
       "type": "function",
       "name": "eq_dfs_01_stack_and_overlap_audit",
       "filePath": "intelligence/dfs/dfs_literature_optimization_engine.py",
-      "lineStart": 69,
-      "lineEnd": 106,
+      "lineStart": 114,
+      "lineEnd": 168,
       "summary": "EQ-DFS-01 (Hunter, Vielma & Zaman 2019):",
       "tags": [
         "python",
@@ -1715,8 +1730,8 @@
       "type": "function",
       "name": "eq_dfs_02_kl_contrarian_leverage",
       "filePath": "intelligence/dfs/dfs_literature_optimization_engine.py",
-      "lineStart": 109,
-      "lineEnd": 128,
+      "lineStart": 171,
+      "lineEnd": 190,
       "summary": "EQ-DFS-02 (Haugh & Singal 2021):",
       "tags": [
         "python",
@@ -1730,8 +1745,8 @@
       "type": "function",
       "name": "eq_dfs_03_submodular_p99_marginal_gain",
       "filePath": "intelligence/dfs/dfs_literature_optimization_engine.py",
-      "lineStart": 131,
-      "lineEnd": 151,
+      "lineStart": 193,
+      "lineEnd": 213,
       "summary": "EQ-DFS-03 (Nemhauser, Wolsey & Fisher 1978; Krause & Golovin 2014):",
       "tags": [
         "python",
@@ -1745,8 +1760,8 @@
       "type": "function",
       "name": "eq_dfs_04_bertsimas_sim_gamma_robust_floor",
       "filePath": "intelligence/dfs/dfs_literature_optimization_engine.py",
-      "lineStart": 154,
-      "lineEnd": 172,
+      "lineStart": 216,
+      "lineEnd": 234,
       "summary": "EQ-DFS-04 (Bertsimas & Sim 2004, Operations Research):",
       "tags": [
         "python",
@@ -1760,8 +1775,8 @@
       "type": "function",
       "name": "eq_dfs_05_stack_covariance_bonus",
       "filePath": "intelligence/dfs/dfs_literature_optimization_engine.py",
-      "lineStart": 175,
-      "lineEnd": 202,
+      "lineStart": 237,
+      "lineEnd": 264,
       "summary": "EQ-DFS-05 (Bergman & Imbrogno 2018; Ledoit-Wolf Shrinkage):",
       "tags": [
         "python",
@@ -1775,8 +1790,8 @@
       "type": "function",
       "name": "eq_dfs_06_duplication_uniqueness_score",
       "filePath": "intelligence/dfs/dfs_literature_optimization_engine.py",
-      "lineStart": 205,
-      "lineEnd": 224,
+      "lineStart": 267,
+      "lineEnd": 294,
       "summary": "EQ-DFS-06 (Beal, Norman & Ramchurn 2020):",
       "tags": [
         "python",
@@ -1790,8 +1805,8 @@
       "type": "function",
       "name": "eq_dfs_07_late_swap_recourse_value",
       "filePath": "intelligence/dfs/dfs_literature_optimization_engine.py",
-      "lineStart": 227,
-      "lineEnd": 245,
+      "lineStart": 297,
+      "lineEnd": 325,
       "summary": "EQ-DFS-07 (Newell & Easton 2021; Shapiro et al. 2014):",
       "tags": [
         "python",
@@ -1805,8 +1820,8 @@
       "type": "function",
       "name": "evaluate_lineup_with_7_dfs_equations",
       "filePath": "intelligence/dfs/dfs_literature_optimization_engine.py",
-      "lineStart": 248,
-      "lineEnd": 268,
+      "lineStart": 328,
+      "lineEnd": 349,
       "summary": "Evaluate a single DFS lineup across all 7 literature-backed equations (EQ-DFS-01..07).",
       "tags": [
         "python",
@@ -2176,8 +2191,8 @@
       "type": "file",
       "name": "dfs_stochastic_milp_optimizer.py",
       "filePath": "scripts/ops/dfs_stochastic_milp_optimizer.py",
-      "sizeLines": 812,
-      "summary": "dfs_stochastic_milp_optimizer.py (812 lines) in Two-Stage Sim-to-DFS Player Pool, 19-Equation Frontier & MILP Layer.",
+      "sizeLines": 892,
+      "summary": "dfs_stochastic_milp_optimizer.py (892 lines) in Two-Stage Sim-to-DFS Player Pool, 19-Equation Frontier & MILP Layer.",
       "tags": [
         "py",
         "dfs-stochastic-milp-and-19-equations"
@@ -2205,7 +2220,7 @@
       "name": "optimize_dfs_portfolio",
       "filePath": "scripts/ops/dfs_stochastic_milp_optimizer.py",
       "lineStart": 86,
-      "lineEnd": 461,
+      "lineEnd": 480,
       "summary": "Optimize a portfolio of K distinct, covariance-aware DraftKings Classic lineups",
       "tags": [
         "python",
@@ -2219,8 +2234,8 @@
       "type": "function",
       "name": "evaluate_newell_tiered_gpp_expected_payout",
       "filePath": "scripts/ops/dfs_stochastic_milp_optimizer.py",
-      "lineStart": 464,
-      "lineEnd": 488,
+      "lineStart": 483,
+      "lineEnd": 507,
       "summary": "Sarah Newell (2017, Kansas State Univ. M.S. Thesis \u2014 `SarahNewell2017.pdf`):",
       "tags": [
         "python",
@@ -2234,8 +2249,8 @@
       "type": "function",
       "name": "select_submodular_marginal_win_portfolio",
       "filePath": "scripts/ops/dfs_stochastic_milp_optimizer.py",
-      "lineStart": 491,
-      "lineEnd": 536,
+      "lineStart": 510,
+      "lineEnd": 555,
       "summary": "Hunter, Vielma & Zaman (2019, *Operations Research* / `Picking-Winners (1).pdf`):",
       "tags": [
         "python",
@@ -2249,8 +2264,8 @@
       "type": "class",
       "name": "GSEFullSlateSimulator",
       "filePath": "scripts/ops/dfs_stochastic_milp_optimizer.py",
-      "lineStart": 539,
-      "lineEnd": 690,
+      "lineStart": 558,
+      "lineEnd": 733,
       "summary": "`gpp_architecture.py` & `Quantitative Bitemporal Simulation Architectures for DraftKings NFL Optimization.docx`:",
       "tags": [
         "python",
@@ -2264,23 +2279,23 @@
       "type": "function",
       "name": "simulate_dirichlet_multinomial_field",
       "filePath": "scripts/ops/dfs_stochastic_milp_optimizer.py",
-      "lineStart": 693,
-      "lineEnd": 750,
+      "lineStart": 736,
+      "lineEnd": 830,
       "summary": "Hierarchical Dirichlet-Multinomial adversarial field simulator (`gpp_architecture.py` Module 2).",
       "tags": [
         "python",
         "function",
         "dfs_stochastic_milp_optimizer"
       ],
-      "complexity": "moderate"
+      "complexity": "complex"
     },
     {
       "id": "function:scripts/ops/dfs_stochastic_milp_optimizer.py:verify_dk_salaries_slate_identity",
       "type": "function",
       "name": "verify_dk_salaries_slate_identity",
       "filePath": "scripts/ops/dfs_stochastic_milp_optimizer.py",
-      "lineStart": 755,
-      "lineEnd": 771,
+      "lineStart": 835,
+      "lineEnd": 851,
       "summary": "Inspect a DraftKings `DKSalaries.csv` file's `Game Info` column to determine whether",
       "tags": [
         "python",
@@ -2294,8 +2309,8 @@
       "type": "function",
       "name": "build_sample_week9_dfs_slate_pool",
       "filePath": "scripts/ops/dfs_stochastic_milp_optimizer.py",
-      "lineStart": 774,
-      "lineEnd": 800,
+      "lineStart": 854,
+      "lineEnd": 880,
       "summary": "Construct a canonical 2026 Week 9 multi-team NFL DFS slate pool (with Marvin Harrison Jr. EB prior",
       "tags": [
         "python",
@@ -2309,13 +2324,13 @@
       "type": "file",
       "name": "index.ts",
       "filePath": "workers/stealth-skeleton-provider/src/index.ts",
-      "sizeLines": 4378,
-      "summary": "index.ts (4378 lines) in Cloudflare Edge Worker (`stealth-skeleton-provider`) & Telemetry Layer.",
+      "sizeLines": 13,
+      "summary": "index.ts (13 lines) in Cloudflare Edge Worker (`stealth-skeleton-provider`) & Telemetry Layer.",
       "tags": [
         "ts",
         "stealth-skeleton-worker-and-eval-suite"
       ],
-      "complexity": "complex"
+      "complexity": "simple"
     },
     {
       "id": "file:intelligence/providers/enterprise_ecosystem_and_cloud_router.py",
@@ -2365,8 +2380,8 @@
       "type": "file",
       "name": "sgp-copula.ts",
       "filePath": "packages/prediction-engine/src/nfl/sgp-copula.ts",
-      "sizeLines": 100,
-      "summary": "sgp-copula.ts (100 lines) in Cloudflare Edge Worker (`stealth-skeleton-provider`) & Telemetry Layer.",
+      "sizeLines": 101,
+      "summary": "sgp-copula.ts (101 lines) in Cloudflare Edge Worker (`stealth-skeleton-provider`) & Telemetry Layer.",
       "tags": [
         "ts",
         "stealth-skeleton-worker-and-eval-suite"
@@ -2378,8 +2393,8 @@
       "type": "file",
       "name": "no-bet-gate.ts",
       "filePath": "packages/prediction-engine/src/nfl/no-bet-gate.ts",
-      "sizeLines": 110,
-      "summary": "no-bet-gate.ts (110 lines) in Cloudflare Edge Worker (`stealth-skeleton-provider`) & Telemetry Layer.",
+      "sizeLines": 112,
+      "summary": "no-bet-gate.ts (112 lines) in Cloudflare Edge Worker (`stealth-skeleton-provider`) & Telemetry Layer.",
       "tags": [
         "ts",
         "stealth-skeleton-worker-and-eval-suite"
@@ -2391,8 +2406,8 @@
       "type": "file",
       "name": "coach-writeup-engine.ts",
       "filePath": "apps/web/lib/writeups/coach-writeup-engine.ts",
-      "sizeLines": 2600,
-      "summary": "coach-writeup-engine.ts (2600 lines) in Next.js Web Storefront, Mobile Client, Performance & 8-Skill SEO/LCP Layer.",
+      "sizeLines": 3306,
+      "summary": "coach-writeup-engine.ts (3306 lines) in Next.js Web Storefront, Mobile Client, Performance & 8-Skill SEO/LCP Layer.",
       "tags": [
         "ts",
         "web-mobile-and-seo-surfaces"
@@ -2404,8 +2419,8 @@
       "type": "file",
       "name": "redline-world.tsx",
       "filePath": "apps/web/components/redline/redline-world.tsx",
-      "sizeLines": 856,
-      "summary": "redline-world.tsx (856 lines) in Next.js Web Storefront, Mobile Client, Performance & 8-Skill SEO/LCP Layer.",
+      "sizeLines": 890,
+      "summary": "redline-world.tsx (890 lines) in Next.js Web Storefront, Mobile Client, Performance & 8-Skill SEO/LCP Layer.",
       "tags": [
         "tsx",
         "web-mobile-and-seo-surfaces"
@@ -3026,6 +3041,27 @@
     },
     {
       "source": "file:scripts/ops/gse_connected_game_workflow.py",
+      "target": "function:scripts/ops/gse_connected_game_workflow.py:_is_week10_corpus_wire_first_ready",
+      "type": "contains",
+      "direction": "directed",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/ops/gse_connected_game_workflow.py",
+      "target": "function:scripts/ops/gse_connected_game_workflow.py:redistribute_vacated_team_volume",
+      "type": "contains",
+      "direction": "directed",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/ops/gse_connected_game_workflow.py",
+      "target": "function:scripts/ops/gse_connected_game_workflow.py:assert_pbp_conservation",
+      "type": "contains",
+      "direction": "directed",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/ops/gse_connected_game_workflow.py",
       "target": "function:scripts/ops/gse_connected_game_workflow.py:_lookup_espn_scoreboard_kickoff",
       "type": "contains",
       "direction": "directed",
@@ -3033,7 +3069,28 @@
     },
     {
       "source": "file:scripts/ops/gse_connected_game_workflow.py",
+      "target": "function:scripts/ops/gse_connected_game_workflow.py:_parse_american_int",
+      "type": "contains",
+      "direction": "directed",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/ops/gse_connected_game_workflow.py",
+      "target": "function:scripts/ops/gse_connected_game_workflow.py:_get_espn_scoreboard_odds_lookup",
+      "type": "contains",
+      "direction": "directed",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/ops/gse_connected_game_workflow.py",
       "target": "function:scripts/ops/gse_connected_game_workflow.py:_get_espn_week9_odds_lookup",
+      "type": "contains",
+      "direction": "directed",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/ops/gse_connected_game_workflow.py",
+      "target": "function:scripts/ops/gse_connected_game_workflow.py:_get_espn_week10_odds_lookup",
       "type": "contains",
       "direction": "directed",
       "weight": 1.0
@@ -3097,48 +3154,6 @@
     {
       "source": "file:scripts/ops/gse_connected_game_workflow.py",
       "target": "function:scripts/ops/gse_connected_game_workflow.py:_ensure_dynamic_jev_spine",
-      "type": "contains",
-      "direction": "directed",
-      "weight": 1.0
-    },
-    {
-      "source": "file:scripts/ops/gse_connected_game_workflow.py",
-      "target": "function:scripts/ops/gse_connected_game_workflow.py:run_stage1a_all_38_coaching_and_scheme_layers",
-      "type": "contains",
-      "direction": "directed",
-      "weight": 1.0
-    },
-    {
-      "source": "file:scripts/ops/gse_connected_game_workflow.py",
-      "target": "function:scripts/ops/gse_connected_game_workflow.py:run_stage1b_all_5367_equations_pre_sim_review",
-      "type": "contains",
-      "direction": "directed",
-      "weight": 1.0
-    },
-    {
-      "source": "file:scripts/ops/gse_connected_game_workflow.py",
-      "target": "function:scripts/ops/gse_connected_game_workflow.py:_invoke_optional_situational_engine",
-      "type": "contains",
-      "direction": "directed",
-      "weight": 1.0
-    },
-    {
-      "source": "file:scripts/ops/gse_connected_game_workflow.py",
-      "target": "function:scripts/ops/gse_connected_game_workflow.py:compile_stage1_to_stage2_simulation_priors",
-      "type": "contains",
-      "direction": "directed",
-      "weight": 1.0
-    },
-    {
-      "source": "file:scripts/ops/gse_connected_game_workflow.py",
-      "target": "function:scripts/ops/gse_connected_game_workflow.py:run_stage2_jev_spine_and_10k_world_simulation",
-      "type": "contains",
-      "direction": "directed",
-      "weight": 1.0
-    },
-    {
-      "source": "file:scripts/ops/gse_connected_game_workflow.py",
-      "target": "function:scripts/ops/gse_connected_game_workflow.py:run_stage3_and_4_conserved_post_sim_projections",
       "type": "contains",
       "direction": "directed",
       "weight": 1.0
@@ -3527,6 +3542,13 @@
       "type": "imports",
       "direction": "directed",
       "weight": 0.9
+    },
+    {
+      "source": "file:intelligence/dfs/dfs_literature_optimization_engine.py",
+      "target": "function:intelligence/dfs/dfs_literature_optimization_engine.py:resolve_dynamic_late_window_teams",
+      "type": "contains",
+      "direction": "directed",
+      "weight": 1.0
     },
     {
       "source": "file:intelligence/dfs/dfs_literature_optimization_engine.py",

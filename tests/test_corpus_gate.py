@@ -5,16 +5,20 @@ corpus claims refused at L4+. Fail-closed on upgrade attempts.
 """
 
 from __future__ import annotations
+
 import sys
 from pathlib import Path
+
 import pytest
+
 REPO = Path(__file__).resolve().parents[1]
 if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
-from intelligence.research import corpus_gate as gate
-from intelligence.reasoning.enums import ReasoningDepth, Verification
-from intelligence.reasoning.schemas import Claim
-from intelligence.research.corpus_retriever import GATE_STATUS
+from intelligence.reasoning.enums import ReasoningDepth, Verification  # noqa: E402
+from intelligence.reasoning.schemas import Claim  # noqa: E402
+from intelligence.research import corpus_gate as gate  # noqa: E402
+from intelligence.research.corpus_retriever import GATE_STATUS  # noqa: E402
+
 
 def test_gate_status_pinned_to_retriever():
     assert gate.GATE_STATUS == GATE_STATUS == "UNVALIDATED"
@@ -31,16 +35,33 @@ def test_corpus_claim_rejects_non_corpus_source():
         gate.corpus_claim("x", "market feed")
 
 def test_upgrade_to_corpus_is_violation():
-    bad = Claim(text="x", verification=Verification.CORPUS, source="research_corpus/arxiv/1", note="GATE: UNVALIDATED")
+    bad = Claim(
+        text="x",
+        verification=Verification.CORPUS,
+        source="research_corpus/arxiv/1",
+        note="GATE: UNVALIDATED",
+    )
     v = gate.validate_claims([bad])
     assert any("must be INFERENCE" in x for x in v)
 
+
 def test_upgrade_to_computed_is_violation():
-    bad = Claim(text="x", verification=Verification.COMPUTED, source="research_corpus/arxiv/1", note="GATE: UNVALIDATED")
+    bad = Claim(
+        text="x",
+        verification=Verification.COMPUTED,
+        source="research_corpus/arxiv/1",
+        note="GATE: UNVALIDATED",
+    )
     assert gate.validate_claims([bad])
 
+
 def test_missing_gate_note_is_violation():
-    bad = Claim(text="x", verification=Verification.INFERENCE, source="research_corpus/arxiv/1", note="")
+    bad = Claim(
+        text="x",
+        verification=Verification.INFERENCE,
+        source="research_corpus/arxiv/1",
+        note="",
+    )
     assert gate.validate_claims([bad])
 
 def test_non_corpus_claim_not_checked():
@@ -55,10 +76,14 @@ def test_load_bearing_refused_at_l4():
     assert gate.validate_claims([c], depth=ReasoningDepth.L1) == []
 
 def test_validate_trace_raises():
-    bad = Claim(text="x", verification=Verification.CORPUS, source="research_corpus/arxiv/1", note="")
+    bad = Claim(
+        text="x", verification=Verification.CORPUS, source="research_corpus/arxiv/1", note=""
+    )
     with pytest.raises(ValueError):
         gate.validate_trace_claims([bad])
 
 def test_unmarked_corpus_cite_caught():
-    bad = Claim(text="x", verification=Verification.CORPUS, source="feed", note="research_corpus/arxiv/1")
+    bad = Claim(
+        text="x", verification=Verification.CORPUS, source="feed", note="research_corpus/arxiv/1"
+    )
     assert gate.validate_claims([bad])

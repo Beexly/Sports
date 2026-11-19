@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-"""
-Unit & Integration Tests for `bojieli_ai_agent_book_and_multi_agent_patterns_engine.py`
-======================================================================================
+"""Unit & Integration Tests for `bojieli_ai_agent_book_and_multi_agent_patterns_engine.py`.
+
 Tests all 10 chapters, 93 companion projects, and 23 external repos of `bojieli/ai-agent-book`
 (`AI-Agents-in-Depth-tr.pdf`), all 12 chapters of `bojieli/ai-infra-book`, all 15 Multi-Agent
 Design Patterns from `bsbodden/design-patterns-for-multi-agent-systems`, the 4-Tier Hybrid
@@ -12,13 +11,11 @@ verifier, the GSE Two-Wave 200+ Point DraftKings DFS Workflow, and Two-Host Rule
 
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor
 import json
-from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
 
 import pytest
-
-from intelligence.multi_agent_and_hybrid_memory.bojieli_ai_agent_book_and_multi_agent_patterns_engine import (
+from intelligence.multi_agent_and_hybrid_memory.bojieli_ai_agent_book_and_multi_agent_patterns_engine import (  # noqa: E501
     BOJIELI_10_CHAPTERS_CATALOG,
     BOJIELI_23_EXTERNAL_REPOS_CATALOG,
     BOJIELI_93_EXPERIMENTS_SUMMARY,
@@ -191,7 +188,13 @@ def test_goap_astar_planner_contract_net_and_critic_loop() -> None:
     # Edge case: cyclic graph with positive-cost back-edges terminates cleanly without looping
     orch_cyclic = BlackboardContractNetCriticOrchestrator()
     orch_cyclic.goap_actions.append(
-        GoapAction("CyclicBackEdge", "ReasoningOverlayReady", "RawSlateInput", 0.05, "Cycle back-edge")
+        GoapAction(
+            "CyclicBackEdge",
+            "ReasoningOverlayReady",
+            "RawSlateInput",
+            0.05,
+            "Cycle back-edge",
+        )
     )
     cyclic_plan = orch_cyclic.plan_goap_astar_path("RawSlateInput", "Verified200PtPortfolio")
     assert cyclic_plan["actions_count"] == 7
@@ -200,14 +203,26 @@ def test_goap_astar_planner_contract_net_and_critic_loop() -> None:
     # Edge case: zero-cost or negative-cost action raises ValueError
     orch_zero = BlackboardContractNetCriticOrchestrator()
     orch_zero.goap_actions.append(
-        GoapAction("ZeroCostInvalid", "RawSlateInput", "SituationalContextReady", 0.0, "Invalid zero cost")
+        GoapAction(
+            "ZeroCostInvalid",
+            "RawSlateInput",
+            "SituationalContextReady",
+            0.0,
+            "Invalid zero cost",
+        )
     )
     with pytest.raises(ValueError, match="strictly positive finite action costs"):
         orch_zero.plan_goap_astar_path("RawSlateInput", "Verified200PtPortfolio")
 
     orch_neg = BlackboardContractNetCriticOrchestrator()
     orch_neg.goap_actions.append(
-        GoapAction("NegCostInvalid", "RawSlateInput", "SituationalContextReady", -0.10, "Invalid negative cost")
+        GoapAction(
+            "NegCostInvalid",
+            "RawSlateInput",
+            "SituationalContextReady",
+            -0.10,
+            "Invalid negative cost",
+        )
     )
     with pytest.raises(ValueError, match="strictly positive finite action costs"):
         orch_neg.plan_goap_astar_path("RawSlateInput", "Verified200PtPortfolio")
@@ -326,7 +341,12 @@ def test_auml_mda_arxiv_1204_1581_and_discrete_event_simulation_verifier() -> No
     infra = compute_ai_infra_roofline_and_five_data_movement_metrics()
     assert infra["ai_infra_chapters_wired"] == 12
     assert infra["prefill_is_compute_bound_and_decode_is_memory_bound"] is True
-    assert len(infra["five_data_movement_answers" if "five_data_movement_answers" in infra else "five_data_movement_questions"]) == 5
+    dm_key = (
+        "five_data_movement_answers"
+        if "five_data_movement_answers" in infra
+        else "five_data_movement_questions"
+    )
+    assert len(infra[dm_key]) == 5
 
 
 def test_end_to_end_two_wave_projections_and_200pt_dfs_workflow(full_engine_receipt: dict) -> None:
@@ -372,10 +392,7 @@ def test_end_to_end_two_wave_projections_and_200pt_dfs_workflow(full_engine_rece
 
 
 def test_two_host_rule_zero_hardcoded_local_user_paths() -> None:
-    """
-    Verifies that zero committed `.py` files under `intelligence/` contain literal
-    local host user paths.
-    """
+    """Verifies zero committed `.py` files under `intelligence/` contain local host paths."""
     forbidden_substrings = [
         "C:\\Users\\" + "Garrett",
         "c:\\users\\" + "garrett",

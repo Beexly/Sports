@@ -1,0 +1,25 @@
+{
+  "schema": "gse_agent_bus_note_v1",
+  "timestamp_utc": "2026-11-17T15:06:00Z",
+  "timestamp_ct": "2026-11-17T09:06:00-06:00",
+  "branch": "feat/pregame-engine-dfs-harmony-2026-11-15",
+  "pr": 1291,
+  "wave": 28,
+  "ledger_id": "LL-2026-11-17-049",
+  "summary": "Completed /deep-research Wave 28 report and Stage-2/RLVR kernel suite (LoBoost, GEPA, llm-d EPP, ERA FUTS, Harness2, Sana linear attention, tiny-cuda-nn hash encoding), raised OSS registry to 226/226 WIRED_V3 and RLVR batches to 182 deduped trajectories, and remediated all 5 PR #1291 CodeQL High alerts.",
+  "holds_verified": {
+    "operator_sim_hold_week11_plus": true,
+    "polymarket_compliance_cleared": false,
+    "real_money_stake_cleared": false,
+    "live_stage2_weight": 0.0,
+    "google_health_ruo_weight": 0.0
+  },
+  "artifacts": [
+    "docs/engine/research/2026-11-17/deep-research-wave28-loboost-gepa-llmd-and-world-models.md",
+    "src/gse_engine/memory/wave28_loboost_gepa_llmd_and_world_attention_suite.py",
+    "tests/unit/test_wave28_loboost_gepa_llmd_and_world_models.py",
+    "docs/data-sources/research/2026-11-15/oss-corpus-registry.json",
+    "brain/feeds/2026-11-16/gse_to_gsi_verifiable_reasoning_rlvr_feed.jsonl",
+    "brain/feeds/2026-11-17/gse_to_gsi_overnight_rlvr_feed.jsonl"
+  ]
+}

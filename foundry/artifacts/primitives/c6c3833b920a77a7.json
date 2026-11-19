@@ -1,0 +1,724 @@
+{
+ "book_id": "c6c3833b920a77a7",
+ "source_status": "COMPLETE",
+ "source_note": "Edited volume: Brain Injury and Neurodegeneration: Molecular, Functional and Translational Approaches, edited by Kumar Vaibhav, Meenakshi Ahluwalia, and Pankaj Gaur, MDPI, 2023. It reprints 18 articles from Biomedicines (2020-2022) plus the editors' 2023 editorial (Biomedicines 2023, 11, 1947), 417 printed pages by the table of contents. The local file is the publisher PDF, 54375605 bytes, full sha256 c6c3833b920a77a71a71de42201769fcaf4a98c0f8c2ac5febb637902ad5c884, book_id is the first 16 hex of sha256(str(size) + PDF bytes). Extracted text (2028822 bytes, 23121 lines) is clean born-digital text in the MDPI two-column layout; first pages of chapters interleave citation and license columns into body lines, so all verbatim quotes were chosen from passages proven contiguous in the text file under the fleet normalization, and each quote was machine-checked as a normalized substring before inclusion. One real source equation exists and is used (Hentig percent fluid). Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "si_scope_multicausal_brain_injury",
+   "name": "The volume frames brain injury, hypoxia, ischemia, and neurodegeneration as one connected problem space spanning pathology, mechanism, and translation",
+   "verbatim_quote": "In conclusion, this Special Issue represents a novel and exciting perspective on brain injury, hypoxia, ischemia, and neurodegeneration, and it represents a comprehensive research resource for readers on disease-related pathology, mechanisms, and translational approach.",
+   "page": "Editorial (Vaibhav, Ahluwalia, Gaur), Conclusion, Biomedicines 2023, 11, 1947, printed pp. 2-3",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The 18 reprinted articles plus the editorial are treated as one curated evidence base, not 19 independent claims",
+    "Cross-condition mechanisms (inflammation, oxidative stress, mitochondrial failure) recur often enough to justify a shared frame"
+   ],
+   "breakdown_regime": "The frame is an editorial synthesis, not a tested model; it breaks where a mechanism is condition-specific and does not transfer across TBI, stroke, and genetic neurodegeneration",
+   "domain": "evidence_synthesis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A multi-front problem (several distinct insults converging on shared downstream cascades) maps onto any forecasting domain where distinct event types converge on shared state variables; the engine should model the shared cascade layer once and hang condition-specific triggers off it, rather than building one model per event type",
+    "source_operator": "si_scope_multicausal_brain_injury",
+    "telemetry": "counts of distinct trigger types versus shared downstream markers in incoming evidence"
+   }
+  },
+  {
+   "primitive_id": "fdg_pet_biomarker_tracks_long_term_sequelae",
+   "name": "FDG-PET cortical hypometabolism is a sensitive biomarker that tracks long-term brain functional sequelae after SARS-CoV-2 infection",
+   "verbatim_quote": "the availability of sensitive biomarkers tracking disease substrates might speed up the investigation of CNS involvement in patients with SARS-CoV-2 infection and might be used to monitor and better predict the risk of long-term effects",
+   "page": "Donegani et al., Introduction, printed p. 8 (Biomedicines 2021, 9, 287)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Persistent isolated hyposmia is a valid clinical marker of CNS involvement",
+    "Relative hypometabolism in parahippocampal and fusiform gyri and left insula reflects disease substrate rather than noise in a 22-patient cohort"
+   ],
+   "breakdown_regime": "Small single-center cohort scanned for unrelated clinical reasons; the signature is associational and does not establish that the virus caused the hypometabolism",
+   "domain": "biomarker_imaging",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A cheap observable proxy (a metabolic scan pattern) standing in for an unobservable long-term state maps onto the engine use of proxy telemetry: when the true state cannot be measured directly, a validated proxy with a known anatomical signature can carry the signal, provided its cohort limits are stored with it",
+    "source_operator": "fdg_pet_biomarker_tracks_long_term_sequelae",
+    "telemetry": "proxy measurement values, cohort size, and time since the index event"
+   }
+  },
+  {
+   "primitive_id": "secondary_injury_is_the_targetable_layer",
+   "name": "Secondary injury mechanisms are the principal targetable layer after TBI because the primary mechanical damage cannot be treated",
+   "verbatim_quote": "Blood-brain barrier (BBB)-disturbance, excitotoxicity, mitochondrial dysfunction, oxidative stress, inflammation, and cell loss are the principal identified mechanisms orchestrating secondary injury mechanisms",
+   "page": "Jarrahi et al., Introduction, printed p. 20 (Biomedicines 2020, 8, 389)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Primary mechanical damage is fixed at impact and not therapeutically reversible",
+    "The six named mechanisms are the principal drivers, so intervening on them changes outcome"
+   ],
+   "breakdown_regime": "Breaks for injuries where the primary lesion itself is surgically addressable (hematoma evacuation), and where secondary cascades have already run to completion before any intervention window",
+   "domain": "tbi_pathophysiology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Split every adverse event into a fixed component set at the moment of the event and a dynamic component that keeps evolving afterward; forecasting and intervention value live almost entirely in the dynamic component, so the engine should spend its modeling budget on the post-event cascade, not on re-litigating the initial event",
+    "source_operator": "secondary_injury_is_the_targetable_layer",
+    "telemetry": "time-stamped post-event state variables for each cascade mechanism"
+   }
+  },
+  {
+   "primitive_id": "gcs_severity_banding",
+   "name": "Glasgow Coma Scale bands define TBI severity: 13-15 mild, 9-12 moderate, below 9 severe",
+   "verbatim_quote": "A GCS score of 13-15 is classified as mild injury, a score of 9-12 is classified as moderate injury, and a score of <9 is classified as severe injury",
+   "page": "Jarrahi et al., Introduction, printed p. 19 (Biomedicines 2020, 8, 389)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Assessment follows initial resuscitation and occurs within 48 h post-injury",
+    "A single ordinal score adequately stratifies a heterogeneous pathology for triage purposes"
+   ],
+   "breakdown_regime": "Breaks in intubated or sedated patients where components cannot be scored, which is why the FOUR score exists as an alternative; banding also hides within-band heterogeneity",
+   "domain": "clinical_scoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Coarse ordinal banding of a continuous severity signal is a deliberate information-losing compression that buys triage speed; the engine analogue is tiering entities into severity bands for fast routing while keeping the raw score available for any decision that needs finer resolution",
+    "source_operator": "gcs_severity_banding",
+    "telemetry": "raw ordinal scores plus the band assignment and assessment timing"
+   }
+  },
+  {
+   "primitive_id": "damp_triggered_immune_timeline",
+   "name": "DAMP release after impact triggers a timed immune sequence: neutrophils first, then monocytes and glia, then T and B cells at 3-7 days",
+   "verbatim_quote": "An impact to the head leads to cellular damage and results in the rapid release of damage-associated molecular patterns (DAMPs).",
+   "page": "Jarrahi et al., Figure 2 caption, printed p. 21 (Biomedicines 2020, 8, 389)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The staged cellular timeline generalizes across injury severities",
+    "Early immune activity is containment and debris removal; the same cells become harmful when unregulated"
+   ],
+   "breakdown_regime": "The timeline is a schematic average; severe injuries with persistent DAMP release blur the stages, and chronic activation can sustain neurodegeneration for years, outside the acute schedule",
+   "domain": "neuroimmunology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A triggering event emits a danger signal that recruits a staged response whose later stages can overshoot and cause the damage they were recruited to prevent; the engine should model responder overshoot as a distinct failure mode with its own timing, not as a continuation of the initial signal",
+    "source_operator": "damp_triggered_immune_timeline",
+    "telemetry": "time since trigger, responder stage markers, and markers of response overshoot"
+   }
+  },
+  {
+   "primitive_id": "stretch_induced_gsk3b_tau_insulin_defect",
+   "name": "Mechanical stretching of neurons downregulates insulin signaling and forms a GSK-3beta p-Tau complex, a core mechanism linking mechanical injury to neurodegeneration",
+   "verbatim_quote": "our results suggest that this neuronal insulin signaling defect is a core mechanism that induces a form of p-TauS396 and pGSK3βS9 complex, implying that the neuron cells were under stress and that inactivation of the GSK3β may alleviate this defect",
+   "page": "Cheng et al., Introduction, printed p. 62 (Biomedicines 2021, 9, 1650)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "SH-SY5Y neuroblastoma cells on stretchable membranes are a valid in vitro model of neuronal mechanical injury",
+    "Cyclic stretching at 25% elongation and 1 Hz approximates injurious strain"
+   ],
+   "breakdown_regime": "In vitro single-cell-type system; breaks where in vivo injury involves vasculature, glia, and immune components absent from the dish, and the GSK-3beta inhibitor rescue (TWS119) is shown only in this model",
+   "domain": "mechanotransduction",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A purely mechanical input is transduced into a durable molecular state change (a kinase complex that impairs a signaling pathway); the engine analogue is that physical shocks should be encoded as state transitions with persistent downstream effects, not as one-period impulses that decay immediately",
+    "source_operator": "stretch_induced_gsk3b_tau_insulin_defect",
+    "telemetry": "strain magnitude and frequency of mechanical events, pathway activity markers before and after"
+   }
+  },
+  {
+   "primitive_id": "tbi_raises_dementia_risk_fourfold",
+   "name": "A moderate to severe TBI is sufficient to increase the risk of developing dementia up to four-fold",
+   "verbatim_quote": "A moderate to severe TBI is sufficient to increase the risk of developing dementia up to four-fold",
+   "page": "Cheng et al., Introduction, printed p. 62 (Biomedicines 2021, 9, 1650)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The cited epidemiological association reflects a causal contribution of TBI to dementia risk",
+    "Risk elevation persists long after the acute injury resolves clinically"
+   ],
+   "breakdown_regime": "Association-level evidence; breaks as a precise multiplier for any individual, since genetic and environmental modifiers change the realized risk substantially",
+   "domain": "epidemiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A single past event permanently re-rates the long-horizon risk of a later outcome; the engine should carry event history as a persistent risk multiplier on future-state probabilities rather than letting old events expire out of the feature window",
+    "source_operator": "tbi_raises_dementia_risk_fourfold",
+    "telemetry": "dated event history with severity grades, elapsed time since event"
+   }
+  },
+  {
+   "primitive_id": "stress_induced_trna_cleavage_trfs",
+   "name": "Stress conditions induce tRNA cleavage into tRNA-derived fragments (tRFs) with miRNA-like regulatory activity",
+   "verbatim_quote": "Interestingly, various stress conditions can induce tRNA cleavage into short tRNA-derived fragments (tRFs)",
+   "page": "Puhakka et al., Introduction, printed p. 80 (Biomedicines 2022, 10, 136)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cleavage is potentially mediated by endoribonucleases such as angiogenin and dicer",
+    "tRFs exert post-transcriptional regulation on mRNA targets despite incomplete knowledge of their biogenesis"
+   ],
+   "breakdown_regime": "Biogenesis details are not well known; the regulatory role is inferred largely from association in sequencing data, so causal claims break without perturbation experiments",
+   "domain": "small_rna_biology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Under stress, a system fragments its standard components into smaller units that acquire new regulatory functions; the engine analogue is watching for regime stress to repurpose existing signals into new roles instead of assuming each signal keeps one fixed meaning",
+    "source_operator": "stress_induced_trna_cleavage_trfs",
+    "telemetry": "stress indicators plus abundance of fragment species derived from standard components"
+   }
+  },
+  {
+   "primitive_id": "trf_mir146a_signature_worse_outcome",
+   "name": "Fragments from 16 thalamic and 13 cortical tRNAs, plus upregulated 3-prime tRF-IleAAT, 3-prime tRF-LysTTT, and the full miR-146a profile, associate with worse behavioral outcome in chronic post-TBI neuroinflammation",
+   "verbatim_quote": "Surprisingly, we found fragments originating from 16 and 13 tRNAs in the thalamus and cortex, respectively.",
+   "page": "Puhakka et al., Abstract, printed p. 79 (Biomedicines 2022, 10, 136)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rats selected for a chronic inflammatory endophenotype represent the relevant human subgroup",
+    "Small RNA sequencing at three months post-TBI captures a stable signature rather than a transient state"
+   ],
+   "breakdown_regime": "Association in a selected animal subgroup; breaks as a human biomarker until the signature is validated in human tissue or biofluids",
+   "domain": "small_rna_biology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A molecular signature measured in the chronic phase stratifies outcome better than acute-phase measures; the engine analogue is that late, settled-state features can carry more outcome information than the noisy measurements taken during the event itself",
+    "source_operator": "trf_mir146a_signature_worse_outcome",
+    "telemetry": "late-phase signature features with outcome labels for validation"
+   }
+  },
+  {
+   "primitive_id": "exomirna_biomarker_stability",
+   "name": "Exosomal miRNAs in biofluids are candidate diagnostic and prognostic biomarkers because exosome encapsulation makes them stable and RNase-resistant",
+   "verbatim_quote": "Exosomal miRNAs (exomiRNAs) in biofluids are potential biomarker candidates for diagnosis and prognosis of neurodegenerative disorders",
+   "page": "Vorn et al., Introduction, printed p. 108 (Biomedicines 2022, 10, 36)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Plasma exomiRNA profiles reflect brain molecular changes after injury",
+    "Stability in biofluids preserves the signal between sampling and assay"
+   ],
+   "breakdown_regime": "Breaks where peripheral (non-brain) sources dominate the plasma exosome pool, diluting or mimicking the brain signal",
+   "domain": "biomarker_biology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Packaging a fragile signal inside a protective carrier makes it measurable far from its source and long after emission; the engine analogue is preferring telemetry channels that preserve signal integrity over raw channels that degrade in transit",
+    "source_operator": "exomirna_biomarker_stability",
+    "telemetry": "signal measurements with carrier type and sample handling metadata"
+   }
+  },
+  {
+   "primitive_id": "exosome_encapsulation_protects_mirna",
+   "name": "Circulating miRNAs survive in biofluids because they are encapsulated into extracellular vesicles called exosomes",
+   "verbatim_quote": "are stable and resistant to RNase digestion because they are encapsulated into extracellular vesicles called exosomes",
+   "page": "Vorn et al., Introduction, printed p. 108 (Biomedicines 2022, 10, 36)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Exosomal cargo is actively sorted, so vesicle content is informative rather than random cellular debris",
+    "The 25 dysregulated exomiRNAs found in chronic mTBI plasma reflect ongoing neuronal inflammation"
+   ],
+   "breakdown_regime": "Sorting mechanisms are incompletely understood; the claim weakens if vesicle cargo proves to be mostly passive sampling of parent-cell content",
+   "domain": "biomarker_biology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The durability of a signal in transit is a property of its packaging, not its content; when the engine ranks incoming data sources, channel survivability should be scored separately from content quality, and fragile channels discounted accordingly",
+    "source_operator": "exosome_encapsulation_protects_mirna",
+    "telemetry": "channel-level signal survival rates measured against source ground truth"
+   }
+  },
+  {
+   "primitive_id": "shh_eaat2a_glutamate_axis",
+   "name": "Prophylactic Sonic hedgehog activation via purmorphamine upregulates the glutamate transporter Eaat2a and attenuates post-traumatic seizures by reducing extracellular glutamate",
+   "verbatim_quote": "prophylactic activation of Shh via purmorphamine attenuated TBI-induced PTS by reducing extracellular glutamate",
+   "page": "Hentig et al., Introduction, printed p. 120 (Biomedicines 2022, 10, 32)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The zebrafish modified Marmarou weight-drop model recapitulates human post-traumatic seizure mechanisms",
+    "Eaat2a upregulation is the operative path, supported by ceftriaxone cotreatment rescuing cyclopamine worsening"
+   ],
+   "breakdown_regime": "Prophylactic (pre-injury) activation in zebrafish; breaks as a post-injury human therapy claim, and Shh inhibition made fish unresponsive to traditional anti-seizure medications, showing pathway dependence",
+   "domain": "excitotoxicity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Clearance capacity, not production rate, is the controllable lever on an accumulating excitatory signal: raising transporter expression drains the pool. The engine analogue is modeling accumulation problems through their removal rate and treating removal capacity as an intervention variable",
+    "source_operator": "shh_eaat2a_glutamate_axis",
+    "telemetry": "pool level of the accumulating quantity plus measured clearance or removal rates"
+   }
+  },
+  {
+   "primitive_id": "percent_fluid_edema_formula",
+   "name": "Brain edema is quantified as percent fluid: (wet weight minus dry weight) divided by wet weight, times 100 percent",
+   "verbatim_quote": "with the percent fluid calculated using the following formula:",
+   "page": "Hentig et al., Methods 2.4 Fluid Content Measurement, printed p. 121 (Biomedicines 2022, 10, 32)",
+   "latex": "\\%\\mathrm{Fluid} = \\frac{\\mathrm{wet\\ weight} - \\mathrm{dry\\ weight}}{\\mathrm{wet\\ weight}} \\times 100\\%",
+   "symbol_and_unit_ledger": {
+    "wet weight": "mass of the freshly isolated whole brain before drying, grams",
+    "dry weight": "mass of the same brain after drying at 60 degrees C for 12 h, grams",
+    "%Fluid": "water content of the brain as a percentage of wet mass, percent"
+   },
+   "assumptions": [
+    "Drying at 60 degrees C for 12 h removes essentially all tissue water without removing solids",
+    "Whole-brain measurement represents the injured region, since edema is assessed on isolated whole brains from 9 fish per group"
+   ],
+   "breakdown_regime": "Whole-brain averaging dilutes focal edema; breaks for small localized injuries where regional water content changes are swamped by uninvolved tissue",
+   "domain": "measurement_methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A ratio estimator that normalizes a change (water gained) by the total (wet mass) makes measurements comparable across subjects of different sizes; the engine should prefer such self-normalizing ratios over absolute differences whenever subjects vary in scale",
+    "source_operator": "percent_fluid_edema_formula",
+    "telemetry": "paired before and after masses, or any paired total and residual quantities"
+   }
+  },
+  {
+   "primitive_id": "aed_remission_and_drug_resistance_rates",
+   "name": "Present anti-epileptic drugs bring remission in about 70-80% of new-onset epilepsy patients, while 20-30% cannot achieve seizure control",
+   "verbatim_quote": "Around 70-80% of patients enter remission with present AEDs who have new onset of epilepsy. Among 20-30% of patients, these medications are not able to control seizures.",
+   "page": "Ghosh et al., Introduction, printed p. 138 (Biomedicines 2021, 9, 470)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Remission rates from the cited literature generalize across epilepsy types and care settings",
+    "The uncontrolled minority represents true drug resistance rather than pseudo-resistance from nonadherence or misdiagnosis, both of which the review separately discusses"
+   ],
+   "breakdown_regime": "Breaks at the individual level: syndrome, etiology, and genetics move a given patient far from the population rates, and no current drug prevents epileptogenesis before the first seizure",
+   "domain": "pharmacology_outcomes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A mature intervention class saturates: most responders are captured, and a hard residual minority remains that incremental variants of the same approach will not move. The engine analogue is recognizing saturation in any signal family and switching search to a different mechanism instead of refining the saturated one",
+    "source_operator": "aed_remission_and_drug_resistance_rates",
+    "telemetry": "response rates by intervention generation, size of the non-responder residual"
+   }
+  },
+  {
+   "primitive_id": "mirna_dysregulation_in_epilepsy",
+   "name": "Differential expression of more than 100 miRNAs has been reported in epilepsy, with miR-132, miR-155, and miR-146a highlighted for roles in neurodegeneration, neuronal growth, and neuroinflammation",
+   "verbatim_quote": "Differential expression of more than 100 miRNAs has been reported in epilepsy.",
+   "page": "Ghosh et al., Section 2, printed p. 138 (Biomedicines 2021, 9, 470)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Reported differential expression reflects disease biology rather than medication or tissue-source artifacts",
+    "The highlighted miRNAs are predominant because of their biological roles, not only because they are the most studied"
+   ],
+   "breakdown_regime": "Expression association does not establish that a miRNA drives seizures; the claim breaks where expression changes are downstream echoes of seizure activity itself",
+   "domain": "epigenetics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A very wide differential signal set (over 100 changed regulators) with a small highlighted core is the classic signature of a system-level state change rather than a single-cause defect; the engine should read breadth of change as evidence about the level of the cause",
+    "source_operator": "mirna_dysregulation_in_epilepsy",
+    "telemetry": "count and identity of changed features per condition, concentration of change in a core subset"
+   }
+  },
+  {
+   "primitive_id": "alcohol_hhv6_synergy_microglia",
+   "name": "HHV-6 positivity heightens every microglial change seen in chronic alcoholism, a compounding (synergistic) relationship promoting microglia-mediated neuroinflammation in the substantia nigra",
+   "verbatim_quote": "Amongst HHV-6 positive alcoholics, all the above-mentioned changes were found to be heightened",
+   "page": "Jain et al., Abstract, printed p. 151 (Biomedicines 2021, 9, 1216)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Postmortem substantia nigra from 44 subjects represents the living alcoholic brain",
+    "All controls being HHV-6 negative while alcoholics show positivity reflects biology rather than sampling or assay differences"
+   ],
+   "breakdown_regime": "Cross-sectional postmortem design cannot order cause and effect; breaks if HHV-6 positivity is a consequence of alcohol-related immune suppression rather than a co-driver",
+   "domain": "neuroimmunology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Two exposures that are each moderate can interact super-additively when both act on the same effector cell population; the engine must include interaction terms for co-occurring risk factors that share a mechanism, not just additive main effects",
+    "source_operator": "alcohol_hhv6_synergy_microglia",
+    "telemetry": "co-occurrence matrix of risk factors with shared-mechanism annotations and joint outcome rates"
+   }
+  },
+  {
+   "primitive_id": "chronic_microglial_activation_harms_neurons",
+   "name": "Microglia that stay chronically active under persistent stimuli upregulate pro-inflammatory cytokines and jeopardize neuronal survival, reversing their initial protective role",
+   "verbatim_quote": "cells can become chronically active, resulting in upregulation of pro-inflammatory cytokines which jeopardizes neuronal survival",
+   "page": "Jain et al., Introduction, printed p. 152 (Biomedicines 2021, 9, 1216)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The ramified-to-ameboid activation cascade observed morphologically tracks functional state",
+    "Persistence of the stimulus is the variable that flips protection into harm"
+   ],
+   "breakdown_regime": "Breaks where chronic activation is contained or where cytokine upregulation is compensatory; duration alone does not prove harm without outcome data",
+   "domain": "neuroimmunology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A protective response has a duration limit: past it, the response itself becomes the pathology. The engine should attach a persistence clock to every activated response signal and flip its sign in the model when the clock exceeds the regime where the response is protective",
+    "source_operator": "chronic_microglial_activation_harms_neurons",
+    "telemetry": "activation onset time, persistence duration, and downstream damage markers"
+   }
+  },
+  {
+   "primitive_id": "agtpbp1_tubulin_deglutamylase",
+   "name": "AGTPBP1 (CCP1) is a tubulin deglutamylase that removes polyglutamates from the C-terminal region of tubulin",
+   "verbatim_quote": "In particular, AGTPBP1 acts as a deglutamylase, catalysing the removal of polyglutamates at the C-terminal region of tubulin",
+   "page": "Baltanas et al., Introduction, printed p. 176 (Biomedicines 2021, 9, 1157)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The enzymatic assignment from structural and functional analyses is the physiologically relevant activity",
+    "Tubulin processing is the main route to the disease phenotype, though chromosomal stability and mitochondrial energy roles are also proposed"
+   ],
+   "breakdown_regime": "Breaks if the non-tubulin proposed functions dominate in a given tissue; enzyme identity alone does not fix which substrate matters clinically",
+   "domain": "molecular_enzymology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A single editing enzyme that removes accumulated modifications from a structural polymer is a maintenance operator; losing it lets modification accumulate until transport fails. The engine analogue is tracking un-maintained accumulation variables whose editor or reset mechanism has been knocked out",
+    "source_operator": "agtpbp1_tubulin_deglutamylase",
+    "telemetry": "modification load on the substrate plus activity status of the editing mechanism"
+   }
+  },
+  {
+   "primitive_id": "polyglutamylation_blocks_axonal_transport",
+   "name": "Excessive tubulin polyglutamylation from AGTPBP1 dysfunction alters axonal transport of vesicles and appears to be the main mechanism of neurodegeneration in CONDCA and the pcd mouse",
+   "verbatim_quote": "excessive tubulin polyglutamylation in neurons, which results from AGTPBP1 dysfunction, alters the axonal transport of vesicles and appears to be the main mechanism of neurodegeneration",
+   "page": "Baltanas et al., Introduction, printed p. 176 (Biomedicines 2021, 9, 1157)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The pcd mouse, with loss-of-function AGTPBP1 mutations and massive Purkinje cell loss, faithfully models human CONDCA",
+    "Transport failure is upstream of cell death rather than a parallel symptom"
+   ],
+   "breakdown_regime": "Stated as appearance, not proof; breaks if transport changes are secondary to an earlier defect such as DNA damage accumulation, which the same review documents in Purkinje cells",
+   "domain": "neurodegeneration_mechanism",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When a logistics substrate degrades, the failure shows up as transport and delivery failure before it shows up as production failure; the engine should monitor flow and delivery metrics as earlier warning signals than output totals",
+    "source_operator": "polyglutamylation_blocks_axonal_transport",
+    "telemetry": "flow rates and delivery latency on the transport network, substrate modification load"
+   }
+  },
+  {
+   "primitive_id": "abeta_multisystem_cascade",
+   "name": "Amyloid-beta is the key factor in Alzheimer pathogenesis, triggering tau hyperphosphorylation and NFT formation, ER stress, calcium homeostasis disruption, mitochondrial dysfunction, and gliosis-driven neuroinflammation leading to neuronal death",
+   "verbatim_quote": "Aβ peptide is the key factor in AD pathogenesis and fibrogenesis of Aβ peptide, triggers a cascade of events such as hyperphosphorylation of tau and NFT formation, ER stress, disruption in Ca2+",
+   "page": "Asik et al., Introduction, printed p. 202 (Biomedicines 2021, 9, 1126)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The amyloid cascade ordering (Abeta upstream of tau and organelle stress) holds as the primary frame",
+    "Findings across model systems aggregate into one cascade despite different preparations"
+   ],
+   "breakdown_regime": "The review itself notes most anti-amyloid drug molecules failed in clinical trials, which is the standing challenge to cascade primacy; organelle-specific effects may proceed in parallel rather than in one chain",
+   "domain": "alzheimer_pathogenesis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "One upstream species with effects in many compartments (membrane, mitochondria, ER, Golgi, lysosome, nucleus) is a hub node: the engine should represent such hubs explicitly, because intervening on any single downstream compartment leaves the hub driving the rest",
+    "source_operator": "abeta_multisystem_cascade",
+    "telemetry": "hub activity measure plus per-compartment downstream effect markers"
+   }
+  },
+  {
+   "primitive_id": "apoe4_threefold_load_risk",
+   "name": "The APOE4 allele confers a threefold increased risk of late-onset Alzheimer disease, the major genetic risk factor for the sporadic form",
+   "verbatim_quote": "Among the alleles ApoE4 exhibited threefold increased risk for AD development",
+   "page": "Asik et al., Introduction, printed p. 202 (Biomedicines 2021, 9, 1126)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "APOE genotyping (E2, E3, E4) is stable across populations for risk ranking, though absolute risks vary",
+    "Late-onset disease (95% of cases, above age 65) is the relevant population for this multiplier"
+   ],
+   "breakdown_regime": "A population relative risk; breaks as an individual prediction, and effect size varies by ancestry, sex, and dose (one versus two copies)",
+   "domain": "genetic_risk",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A static inherited attribute that multiplies baseline risk roughly threefold is a prior-setting variable: the engine should let such slow variables set the prior and reserve fast signals for updating, rather than re-deriving risk from fast signals alone",
+    "source_operator": "apoe4_threefold_load_risk",
+    "telemetry": "static risk attributes with published relative-risk multipliers"
+   }
+  },
+  {
+   "primitive_id": "ros_abeta_positive_feedback_loop",
+   "name": "Reactive oxygen species accelerate Abeta production and Abeta plaques release ROS, a positive feedback loop resulting in neuronal cell death",
+   "verbatim_quote": "ROS accelerates Aβ production, and Aβ plaques release ROS, resulting in neuronal cell death",
+   "page": "Yoshida et al., Introduction, printed p. 248 (Biomedicines 2022, 10, 281)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Both directions of the loop operate in vivo at meaningful rates, supported by vitamin E deficiency and high-oxygen rat observations",
+    "The loop, not a single linear pathway, explains accelerating progression"
+   ],
+   "breakdown_regime": "Breaks if one direction is negligible in a given stage or region; loop gain below one makes the system self-limiting rather than runaway",
+   "domain": "oxidative_stress",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A two-variable positive feedback loop predicts accelerating, not linear, deterioration and implies that breaking either arm lowers loop gain; the engine should test candidate variable pairs for mutual reinforcement and, where found, model growth as compounding with a gain parameter",
+    "source_operator": "ros_abeta_positive_feedback_loop",
+    "telemetry": "time series of both loop variables to estimate cross-effects and loop gain"
+   }
+  },
+  {
+   "primitive_id": "mitochondrial_oxidation_drives_ad_progression",
+   "name": "Mitochondrial dysfunction via oxidation is strongly related to the onset and progression of Alzheimer disease, with hippocampal oxidative stress highest among brain regions in 5xFAD mice",
+   "verbatim_quote": "These results indicate that mitochondrial dysfunction via oxidation is strongly related to the onset and progression of AD.",
+   "page": "Yoshida et al., Introduction, printed p. 248 (Biomedicines 2022, 10, 281)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The 5xFAD transgenic model at 3, 6, and 20 months represents human disease staging",
+    "Isolated-mitochondria protein markers (NMNAT-3, SOD-2, 3-NT, NQO-1) faithfully report regional oxidative state"
+   ],
+   "breakdown_regime": "Marker expression differences are correlational with age and genotype; breaks as causation without an intervention that protects mitochondria and preserves cognition in the same model",
+   "domain": "oxidative_stress",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Regional heterogeneity matters: the most vulnerable region shows the strongest marker deviation first. The engine analogue is monitoring the most exposed sub-unit as the leading indicator for the whole system rather than averaging across sub-units",
+    "source_operator": "mitochondrial_oxidation_drives_ad_progression",
+    "telemetry": "per-region or per-unit marker deviations ranked against the system average"
+   }
+  },
+  {
+   "primitive_id": "brain_oxygen_budget",
+   "name": "The brain is 2% of body weight but consumes at least 20% of total oxygen, making nerve tissue disproportionately vulnerable to oxygen deprivation",
+   "verbatim_quote": "Although the brain represents only 2% of the body's weight, it is the organ that consumes the most energy, needing at least 20% of the total oxygen to function normally",
+   "page": "Stoica et al., Introduction, printed p. 262 (Biomedicines 2022, 10, 481)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The 2% mass and 20% oxygen figures are adult human resting values",
+    "Consumption share is the right proxy for vulnerability to supply interruption"
+   ],
+   "breakdown_regime": "Shares shift with activity, age, and anesthesia; the vulnerability argument breaks for tissues with anaerobic reserve or collateral supply that the brain largely lacks",
+   "domain": "physiology_budgets",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Resource consumption share divided by mass share is a criticality index: components consuming far above their size are the fragility points of any system. The engine can rank sub-systems by this ratio to decide where supply interruptions hurt first",
+    "source_operator": "brain_oxygen_budget",
+    "telemetry": "per-component resource consumption and size or capacity shares"
+   }
+  },
+  {
+   "primitive_id": "hif_alpha_hypoxia_adaptation_switch",
+   "name": "Cells adapt to hypoxia by stabilizing HIF alpha, which regulates genes for angiogenesis and oxygen transport; the HIF, FIH, HRE, VHL, and PHD circuit is the molecular oxygen-sensing mechanism",
+   "verbatim_quote": "Each cell and tissue has characteristic abilities to adapt to hypoxia conditions by stabilizing HIF alpha and regulating the various genes involved in angiogenesis and oxygen transport",
+   "page": "Stoica et al., Introduction, printed p. 262 (Biomedicines 2022, 10, 481)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stabilization (blocked degradation under low oxygen) rather than increased synthesis is the control point",
+    "The same sensing circuit operates across CNS cell types, with cell-specific gene targets"
+   ],
+   "breakdown_regime": "Adaptation is bounded: prolonged or severe hypoxia exceeds the HIF program and proceeds to apoptosis, necrosis, and autophagic death, as in perinatal hypoxic-ischemic lesions",
+   "domain": "oxygen_sensing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A degradation-gated switch (signal accumulates only when its destroyer is starved of a resource) is a robust sensor design; the engine analogue is detecting state changes by the disappearance of a normally constant clearing process, not only by the appearance of a new signal",
+    "source_operator": "hif_alpha_hypoxia_adaptation_switch",
+    "telemetry": "clearing-process activity rates and accumulation of the gated signal"
+   }
+  },
+  {
+   "primitive_id": "fabp_inhibitor_mf6_neuroprotection",
+   "name": "The FABP inhibitor MF6, given once at 0.5 h post-reperfusion, effectively reduced infarct volumes and neurological deficits after transient middle cerebral artery occlusion in mice",
+   "verbatim_quote": "A single MF6 administration (3.0 mg/kg, per os) at 0.5 h post-reperfusion effectively reduced brain infarct volumes and neurological deficits.",
+   "page": "Guo et al., Abstract, printed p. 281 (Biomedicines 2021, 9, 529)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The tMCAO mouse model predicts human ischemic stroke response",
+    "FABP3, FABP5, and FABP7 upregulation after occlusion is pathogenic rather than compensatory, since blocking it helps"
+   ],
+   "breakdown_regime": "Single-dose early-window mouse result; breaks for later administration, other stroke subtypes, and until human pharmacology confirms target engagement",
+   "domain": "stroke_pharmacology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A post-event intervention inside a short window (0.5 h after reperfusion) changed the outcome materially, quantifying how fast value decays after an event; the engine should attach explicit decay clocks to post-event action opportunities instead of treating them as standing options",
+    "source_operator": "fabp_inhibitor_mf6_neuroprotection",
+    "telemetry": "event timestamps, intervention timestamps, outcome deltas by delay"
+   }
+  },
+  {
+   "primitive_id": "mf6_fabp7_affinity_selectivity",
+   "name": "MF6 binds FABP7 with high affinity (Kd 20 plus or minus 9 nM) and far weaker affinity for FABP3 (1038 plus or minus 155 nM) and FABP5 (874 plus or minus 66 nM), an roughly 50-fold selectivity window",
+   "verbatim_quote": "which has a high affinity for FABP7 (dissociation constant [Kd] value: 20 ± 9 nM)",
+   "page": "Guo et al., Introduction, printed p. 282 (Biomedicines 2021, 9, 529)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "In vitro dissociation constants predict in vivo target engagement ordering",
+    "The weaker FABP3 and FABP5 binding values are as reported in the cited ligand studies"
+   ],
+   "breakdown_regime": "Affinity is not efficacy; breaks where tissue concentration, protein binding, or blood-brain barrier penetration reorder the effective selectivity in vivo",
+   "domain": "pharmacology_binding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A measured affinity ratio across sibling targets is a selectivity profile, and decisions should use the whole profile rather than the headline target alone; the engine analogue is scoring any lever by its effect ratios across all affected variables, not only the intended one",
+    "source_operator": "mf6_fabp7_affinity_selectivity",
+    "telemetry": "effect size of an intervention on the intended variable and on each sibling variable"
+   }
+  },
+  {
+   "primitive_id": "mcao_apoptosis_marker_shift",
+   "name": "After MCAO, cleaved caspase-3, cleaved PARP, and Bax rise markedly while anti-apoptotic Bcl-2 falls dramatically in cortex and hippocampus; icariin and icaritin pretreatment reverse the shift",
+   "verbatim_quote": "the levels of protein expression for cleaved caspase-3, cleaved PARP, and Bax were markedly increased, while the protein expression of Bcl-2 was dramatically decreased in the MCAO group",
+   "page": "Wu et al., Results 3.2, printed p. 305 (Biomedicines 2021, 9, 1719)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Western blot densitometry normalized to beta-actin reports true expression change",
+    "The pro- versus anti-apoptotic protein balance is a valid readout of apoptotic commitment"
+   ],
+   "breakdown_regime": "Pretreatment design (drug given 1 h before occlusion) limits translation to post-stroke treatment; marker shifts at 24 h reperfusion may not predict long-term outcome",
+   "domain": "apoptosis_signaling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Commitment to an irreversible outcome is best read as a balance shift between opposing marker families (pro- versus anti-apoptotic), not as any single marker crossing a line; the engine should build ratio features from opposing signal families for commitment-type predictions",
+    "source_operator": "mcao_apoptosis_marker_shift",
+    "telemetry": "paired pro- and anti- marker levels forming balance ratios over time"
+   }
+  },
+  {
+   "primitive_id": "mnss_composite_neurological_score",
+   "name": "The modified neurological severity score grades motor, sensory, reflex, and balance behavior on a 0 to 14 scale, banded 1-5 mild, 6-10 moderate, 10-14 severe",
+   "verbatim_quote": "It was scored on a scale of 0 to 14 (normal score, 0; maximal deficit score, 14), which was detected for the behavior of motor, sensory, reflex, and balance.",
+   "page": "Wu et al., Methods 2.2, printed p. 303 (Biomedicines 2021, 9, 1719)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Four behavioral domains summed into one score capture overall neurological injury",
+    "Banding cut points from the cited Li et al. modification transfer across laboratories"
+   ],
+   "breakdown_regime": "Composite scores hide which domain drives the deficit; breaks when a treatment improves one domain and worsens another, netting to no score change",
+   "domain": "clinical_scoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A composite score over named domains is useful for ranking but must keep its domain decomposition attached, because equal totals with different compositions imply different actions; the engine should never let a composite travel without its components",
+    "source_operator": "mnss_composite_neurological_score",
+    "telemetry": "composite score plus the per-domain component values"
+   }
+  },
+  {
+   "primitive_id": "ischemia_collapses_h3k9_acetylation",
+   "name": "Ischemia collapses histone H3 lysine 9 acetylation in the penumbra: twofold down at 1 h and more than fourfold down at 4 and 24 h after photothrombotic stroke, localized to neuronal nuclei",
+   "verbatim_quote": "The antibody microarray study and immunofluorescence microscopy have shown the twofold decrease in the acetylation of lysine 9 in histone H3 (H3K9Ac) in the ischemic penumbra at 1 h after photothrombotic stroke in the rat brain cortex, and more than fourfold decrease at 4 and 24 h.",
+   "page": "Demyanenko et al., Section 2, printed p. 316 (Biomedicines 2021, 9, 1445)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Antibody microarray and immunofluorescence measurements agree on the fold changes",
+    "The decrease reflects HAT downregulation or HDAC overexpression, the two candidate causes the review names"
+   ],
+   "breakdown_regime": "Rat photothrombotic model and penumbra-specific; breaks for the infarct core, other species, and other marks, since global expression suppression is mark- and site-specific",
+   "domain": "epigenetics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A global expression collapse after an insult can be measured as fold-change of an activating mark over time, giving a recovery trajectory to track; the engine analogue is defining one canonical activation marker per system and charting its fold-recovery after shocks",
+    "source_operator": "ischemia_collapses_h3k9_acetylation",
+    "telemetry": "activation marker levels at fixed post-event times, expressed as fold change from baseline"
+   }
+  },
+  {
+   "primitive_id": "hdac1_partner_switch_survival_death",
+   "name": "HDAC1 acts as a survival-death switch set by its binding partner: with HDRP it promotes neuron survival, with HDAC3 it leads to apoptosis, and HDRP blocks the HDAC1-HDAC3 interaction",
+   "verbatim_quote": "HDAC1 interaction with HDRP promotes neuron survival, whereas its interaction with HDAC3 leads to apoptosis",
+   "page": "Demyanenko et al., Section 3.1, printed p. 318 (Biomedicines 2021, 9, 1445)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Knockdown epistasis (each knockdown suppressing the other's neurotoxicity) establishes the interaction as causal in the cited models",
+    "HDRP expression falls during neuronal death, removing the protective partner at the worst time"
+   ],
+   "breakdown_regime": "Context-dependent: HDAC3 also suppresses the pro-apoptotic factor E2F1 and can support survival, so the switch reading breaks when complex composition differs by cell state",
+   "domain": "epigenetics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The sign of a component's effect can be set entirely by which partner it is bound to; the engine should model such components as interaction-defined, carrying partner state as a required feature, and refuse to assign them a fixed positive or negative weight",
+    "source_operator": "hdac1_partner_switch_survival_death",
+    "telemetry": "component activity plus binding-partner or complex-membership state"
+   }
+  },
+  {
+   "primitive_id": "mitoq_mitochondria_targeted_antioxidant",
+   "name": "Mitoquinone is a mitochondria-targeted antioxidant made by conjugating ubiquinone to a triphenylphosphonium cation, which drives accumulation at the inner mitochondrial membrane where complex II reduces it to the active quinol form",
+   "verbatim_quote": "It is synthesized by conjugating a ubiquinone moiety to a triphenylphosphonium cation (TPP+ )",
+   "page": "Haidar et al., Introduction, printed p. 336 (Biomedicines 2022, 10, 250)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The high inner-membrane electrochemical potential concentrates the lipophilic cation as designed",
+    "MitoQ crosses the blood-brain barrier and activates the Nrf2-ARE pathway as reported"
+   ],
+   "breakdown_regime": "Targeting depends on membrane potential, which collapses in severely damaged mitochondria, so the drug may accumulate least where damage is worst; chronic benefit is shown in one moderate CCI mouse model",
+   "domain": "mitochondrial_pharmacology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Attaching a payload to a carrier that is actively concentrated by the target's own gradient is a delivery design pattern; the engine analogue is weighting evidence channels by their intrinsic concentration mechanism, trusting self-concentrating channels more than passive ones",
+    "source_operator": "mitoq_mitochondria_targeted_antioxidant",
+    "telemetry": "target gradient strength and measured payload accumulation at the target"
+   }
+  },
+  {
+   "primitive_id": "cci_moderate_tbi_protocol_parameters",
+   "name": "The moderate open-head CCI protocol is fixed by parameters: impact velocity 4 m/s, dwell time 1 s, depth 1.5 mm, tip diameter 1 mm over the somatosensory parietal cortex",
+   "verbatim_quote": "The duration of impact was kept constant with a dwell time of 1 s, at a velocity of 4 m/s. The depth of the injury was set to 1.5 mm.",
+   "page": "Haidar et al., Methods 2.2, printed p. 337 (Biomedicines 2022, 10, 250)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Holding velocity, dwell, and depth constant makes injury severity reproducible across animals",
+    "MitoQ dosing (8 mg/kg intraperitoneal, three times per week for 30 days from 30 min post-injury) is the tested regimen, adopted from prior work"
+   ],
+   "breakdown_regime": "Parameter values are model-specific; breaks when transferred across species, impactor geometry, or closed-head injury, where the same numbers produce different severity",
+   "domain": "experimental_methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A reproducible intervention is a parameter vector, not a label: two studies both called moderate CCI differ if their vectors differ. The engine should key evidence by full parameter vectors and treat label-only matches as weak evidence",
+    "source_operator": "cci_moderate_tbi_protocol_parameters",
+    "telemetry": "complete parameter vectors attached to every experimental or observational record"
+   }
+  },
+  {
+   "primitive_id": "phytochemicals_as_multitarget_adjuncts",
+   "name": "Phytochemical multi-target approaches are a promising adjunct to conventional neurodegeneration treatment because single-target drugs give only symptomatic relief",
+   "verbatim_quote": "the various nutraceuticals [12] and phytochemicals multi-target approaches have proved to be a promising adjunct to the present treatment",
+   "page": "Khan et al., Introduction, printed p. 360 (Biomedicines 2020, 8, 284)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Preclinical efficacy across 115 selected publications (from 873 screened) indicates real multi-pathway activity on oxidative stress, inflammation, apoptosis, and gene regulation",
+    "Adjunct status is the realistic claim, since clinical results are mixed"
+   ],
+   "breakdown_regime": "Clinical translation is the weak point: the review itself calls for further trials with appropriate biomarkers and populations, so the adjunct claim breaks if read as proven clinical benefit",
+   "domain": "pharmacology_strategy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "In a multifactorial system, a broad weak intervention across many pathways can beat a strong single-pathway intervention once the single pathway saturates; the engine should keep a portfolio option of diversified weak signals alongside its strongest single signal",
+    "source_operator": "phytochemicals_as_multitarget_adjuncts",
+    "telemetry": "per-pathway effect sizes for broad interventions versus the best single-pathway effect"
+   }
+  },
+  {
+   "primitive_id": "mitochondrial_quality_control_balance",
+   "name": "Neural mitochondrial quality control is a balance among biogenesis, fusion-fission dynamics, and mitophagy; disorders of the three reduce mitochondrial quantity and quality and produce respiratory deficiency in Parkinson disease",
+   "verbatim_quote": "Disorders of biogenesis, fusion/fission, and mitophagy reduce the quantity and quality of neural mitochondria, leading to a neural mitochondrial respiratory deficiency in PD",
+   "page": "Nhu et al., Introduction, printed p. 398 (Biomedicines 2021, 9, 1011)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The systematic review of 10 controlled animal trials (median CAMARADES score 5.7 of 10) supports treadmill exercise attenuating both respiratory deficiency and quality-control dysregulation",
+    "Fission segregating damaged mitochondria for mitophagy is the coupling that keeps the three processes one system"
+   ],
+   "breakdown_regime": "Animal-study evidence with moderate methodological quality; breaks as a human disease-modification claim until exercise trials measure mitochondrial endpoints in patients",
+   "domain": "mitochondrial_biology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Fleet health of any population of working units is a three-term balance: production of new units, merging and splitting of existing units, and removal of damaged units. The engine should track all three rates for any maintained population and diagnose which term is off when quality declines",
+    "source_operator": "mitochondrial_quality_control_balance",
+    "telemetry": "creation rate, merge and split rates, and removal rate for the unit population, plus a quality distribution"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "c6c3833b920a77a7-t1",
+   "think": "This edited volume is a reprint collection: eighteen Biomedicines articles from 2020 to 2022 plus a 2023 editorial, bound as one Special Issue on brain injury and neurodegeneration across molecular, functional, and translational approaches. Reading it as one work, the first thing to see is that it is not eighteen separate topics. It is one causal architecture drawn eighteen times from different entry points. The architecture has four layers. The bottom layer is the insult: mechanical impact in the TBI chapters, vessel occlusion in the stroke chapters, a gene deletion in the CONDCA chapter, a peptide in the Alzheimer chapters, oxygen loss in the hypoxia review, a virus plus alcohol in the substantia nigra chapter. The second layer is transduction: the insult is converted into a small set of recurring intermediate states, namely excitotoxicity with calcium overload, oxidative stress from reactive oxygen species, mitochondrial dysfunction, blood-brain barrier breakdown, and neuroinflammation driven by microglia. Nearly every chapter, whatever its disease, passes through at least three of these five states, which is the strongest structural fact in the book. The third layer is the molecular machinery that sets the gain on those states: HDAC enzymes setting chromatin accessibility after ischemia, GSK-3beta binding tau after mechanical stretch, AGTPBP1 failing to edit tubulin, amyloid-beta acting as a hub across organelles, HIF alpha accumulating when its degradation machinery is starved of oxygen, and small RNAs including miRNAs, isomiRs, and tRNA-derived fragments tuning gene expression in the chronic phase. The fourth layer is measurement and intervention: GCS and mNSS composite scores, FDG-PET hypometabolism signatures, exosomal miRNA panels in plasma, percent fluid as an edema ratio, and interventions as different as a mitochondria-targeted antioxidant, a FABP inhibitor, two flavonoids, HDAC inhibitors, phytochemical mixtures, treadmill exercise, and prophylactic activation of a developmental signaling pathway. A reasoning engine should notice the shape here: many insults, few intermediate states, many gain-setting mechanisms, and a measurement layer that mostly reads the intermediate states rather than the insults. That shape is a modeling instruction. It says to build the state layer explicitly and let each condition be a different forcing function on shared states, instead of building one model per disease. The volume also teaches a timing doctrine. Primary injury is fixed at the moment of the event and is not targetable; secondary injury unfolds over minutes to years and is where all therapeutic value sits. The immune sequence after impact is staged, neutrophils first, monocytes and glia next, T and B cells at three to seven days, and the same response that protects early becomes the pathology when it persists, as the microglia chapters show twice from independent directions. Chronic-phase signals behave differently from acute-phase signals: the tRF and exomiRNA signatures at three months and at a mean of 4.48 years post-injury stratify outcome in a way acute measures do not, which argues for late settled-state features in any prognostic model. The book is equally instructive about failure. More than thirty phase III TBI trials failed, anti-amyloid drugs mostly failed, anti-epileptic drugs saturate at seventy to eighty percent response with a hard resistant residual, and phytochemicals that look strong in animals give mixed clinical results. The common thread is that single-target interventions aimed at one node of a multi-state cascade underperform, while the successes reported here are either multi-target by nature, like the phytochemicals and exercise, or aimed at a genuine hub or clearance mechanism, like Eaat2a upregulation draining glutamate or MitoQ concentrating at the membrane where ROS are produced. For a reasoning engine the transferable assets are concrete: model shared intermediate states, split events into fixed and evolving components, attach persistence clocks to protective responses, read commitment as a balance between opposing marker families, rank components by consumption-to-size criticality, key experimental evidence by full parameter vectors rather than labels, and treat interaction terms between co-occurring insults as first-class because the alcohol and HHV-6 chapter shows super-additive harm through a shared effector. The limits are just as clear. Almost everything here is rodent or zebrafish work, postmortem human tissue, or small human cohorts; several headline claims are explicitly association-level; and the volume is a reprint collection, so its coherence is partly the editors' curation rather than a single tested theory. The engine should therefore ingest the architecture at full strength and the individual effect sizes at a discount, tagged with their model systems. A second pass over the chapters sharpens three of these lessons. The first concerns clearance versus production. The glutamate story is the cleanest case: excitotoxicity is a pool problem, and the interventions that worked raised the drainage rate through Eaat2a rather than trying to suppress glutamate release, while blocking the drainage side with cyclopamine made fish refractory to standard anti-seizure drugs. Any engine modeling an accumulating quantity should therefore ask first what sets the removal rate and whether that rate is itself a variable under stress. The second concerns balance ratios as commitment detectors. The apoptosis readout in the stroke chapter is not any single protein but the joint movement of cleaved caspase-3, cleaved PARP, and Bax upward against Bcl-2 downward; commitment to cell death is legible only in the opposition. The third concerns selectivity profiles. MF6 is interesting not because it binds FABP7 but because its affinity ratios across three sibling proteins define what it will and will not touch at a given dose, and the same whole-profile thinking applies to HDAC inhibitors, where the review shows isoform by isoform that the same enzyme family contains both neurotoxic and protective members, so a nonselective inhibitor is a bet on the net of opposing effects. The volume also quietly demonstrates a measurement hierarchy worth copying: molecular markers for mechanism, imaging signatures for state, composite behavioral scores for function, and hard outcomes for truth, with each level checked against the next rather than substituted for it. Where the levels disagreed, as with phytochemicals strong in animals and mixed in patients, the honest conclusion was to demand better biomarker-anchored trials, not to average the disagreement away.",
+   "retrocausal_genealogy": "The lineage of this work runs through three older traditions that converge in the volume. First, the secondary injury doctrine from decades of neurotrauma research: the idea, formalized in the Jarrahi review's history of failed targets, that the mechanical lesion is only the opening move and that a biochemical cascade decides the final deficit. Second, the molecular medicine tradition that followed the sequencing era: single-gene disorders like CONDCA mapped from the pcd mouse, epigenetic regulation through histone acetylation, and small RNA biology expanding from miRNAs to isomiRs and tRNA fragments as sequencing made each new class visible. Third, the systems pharmacology reaction against single-target drugs, visible in the phytochemical review, the exercise review, and the multi-mechanism framing of the editorial itself, which descends from repeated phase III failures in TBI and Alzheimer trials. The zebrafish chapter adds a fourth root: regenerative biology from organisms that repair CNS damage, imported into mammalian injury questions through conserved pathways like Sonic hedgehog.",
+   "theory_of_mind": "The editors and authors model their reader as a translational researcher who already believes single-mechanism explanations have failed and who needs mechanism-level raw material, not clinical directives. Their model of the domain is that brain injury and neurodegeneration are network diseases: heterogeneous at the surface, convergent in the middle layers, and chronic in their time course. They assume the reader accepts animal models as evidence with a discount rather than as proof, accepts association-level human data as hypothesis-generating, and wants every claim tied to a molecule, a cell type, and a time window. The editorial voice is curatorial and optimistic about convergence; the individual chapters are more cautious, and the tension between the editorial's synthesis and the chapters' hedges is itself information about how much weight the synthesis should carry.",
+   "cross_layer_veto": "Several findings in this volume veto naive moves in any reasoning system built on it. The HDAC1 partner-switch result vetoes fixed-sign modeling: a component whose effect flips with its binding partner cannot carry a constant weight. The chronic microglial activation findings veto duration-blind response modeling: a protective signal that persists becomes harmful, so any layer that treats activation as uniformly good is wrong. The drug resistance and trial failure record vetoes single-target confidence: strong preclinical effects on one node do not license strong outcome predictions. The pcd and CONDCA pairing vetoes species-blind transfer in both directions, since the mouse model both illuminates and bounds the human claim. Finally, the percent fluid and composite score chapters veto unlabeled aggregation: measurements must keep their construction visible, or later layers will mistake a ratio or a band for a direct observation."
+  }
+ ],
+ "universal_lens": "Read as a general template, this volume describes any system where many different shocks converge on a few shared intermediate states, where the initial damage is fixed but the cascade afterward is governable, and where protective responses have a duration limit past which they become the problem. Its method is to catalog the gain-setting mechanisms on the shared states, to measure the states rather than the shocks, and to prefer interventions that drain an accumulating quantity, break a feedback loop, or act on several states at once over interventions that push a single node harder. That template transfers to any engineered or biological system with cascaded failure.",
+ "gsi_mapping": "The Galaxy Sports Institute takes three things. First, a worked example of convergent-state modeling for teaching: one architecture diagram (insult, transduction states, gain mechanisms, measurement layer) that organizes eighteen papers is a model for how institute research should compress a literature. Second, the measurement discipline: composite scores that keep their components, ratio estimators like percent fluid, and parameter-vector protocols like the CCI settings are standards for how institute studies should report methods. Third, the failure record: saturation of a drug class, failed phase III translation, and mixed clinical results after strong animal data form a calibration curriculum for judging any intervention claim.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes the state-layer architecture: distinct event types should force a small set of shared intermediate states rather than each driving its own model, because that is how this literature found its predictive structure. It takes the timing rules as hard features: fixed versus evolving components of an event, staged response timelines, and persistence clocks that flip the sign of a protective response. It takes the interaction rule from the alcohol and HHV-6 synergy: co-occurring factors sharing an effector get interaction terms. And it takes the evidence discipline: preclinical or small-cohort effect sizes are ingested with their model system attached and discounted, while the architecture they support is ingested at full strength."
+}

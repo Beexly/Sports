@@ -15,7 +15,6 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-
 from intelligence.vision import broadcast_cv as bc
 from intelligence.vision import factorized_coverage_bdb25 as fc
 

@@ -1,0 +1,544 @@
+{
+  "schema": "wave43_alphaxiv_31paper_frontier_and_arithmetic_vault_v1",
+  "total_unique_papers": 31,
+  "frontier_6papers_count": 6,
+  "calibration_arithmetic_25papers_count": 25,
+  "frontier_total_pages": 217,
+  "frontier_6papers": [
+    {
+      "id": "2611.17334",
+      "url": "https://www.alphaxiv.org/pdf/2611.17334",
+      "arxiv_url": "https://arxiv.org/abs/2611.17334",
+      "published": "2026-11-12",
+      "pages": 53,
+      "title": "Unbundling Multimodal Vision Encoding",
+      "authors": [
+        "Ellis Brown",
+        "Chris Hoang",
+        "Shengyi Qian",
+        "Shang-Wen Li",
+        "Mike Lewis",
+        "Marjan Ghazvininejad",
+        "Luke Zettlemoyer",
+        "Lucas Beyer",
+        "Mengye Ren",
+        "Jakob Verbeek",
+        "Saining Xie",
+        "Hu Xu"
+      ],
+      "institutions": [
+        "Meta FAIR",
+        "New York University"
+      ],
+      "key_findings": {
+        "upstream_pretrain_share_threshold_pct": 15.0,
+        "vqa_encoder_free_flop_disadvantage_min_x": 3.0,
+        "vqa_encoder_free_flop_disadvantage_max_x": 4.4,
+        "matched_lifetime_flops_1_7b": 1.04e+22,
+        "matched_lifetime_flops_4b": 3e+22,
+        "early_infusion_lowers_ttft": true
+      }
+    },
+    {
+      "id": "2611.latent-feedback-transformers-scaling-law",
+      "url": "https://www.alphaxiv.org/pdf/2611.latent-feedback-transformers-scaling-law",
+      "code_url": "https://github.com/ifm-ai/LoRM",
+      "published": "2026-11-11",
+      "pages": 23,
+      "title": "Latent Feedback Is a Compute and Data Amplifier: Scaling Law for Latent Feedback Transformers on Repeated Data",
+      "authors": [
+        "Benhao Huang",
+        "Chaitanya Dwivedi",
+        "Xuezhe Ma",
+        "Alexander Moreno",
+        "Hector Liu"
+      ],
+      "institutions": [
+        "Institute of Foundation Models",
+        "USC",
+        "CMU"
+      ],
+      "eq8_table4_constants": {
+        "E": 0.5,
+        "A": 1.755,
+        "alpha": 0.112,
+        "B": 1.401,
+        "beta": 0.126,
+        "q": 3.748,
+        "R_T_star": 14.6,
+        "rho": 0.45,
+        "v0": 1.139,
+        "omega": 0.01,
+        "gamma": 0.007,
+        "N0": 100000000.0,
+        "D0": 10000000000.0,
+        "c_s_60m": 1.197,
+        "c_s_134m": 1.232,
+        "c_s_271m": 1.2514,
+        "c_s_778m_heldout": 1.2677,
+        "N_nonembed_778m": 679558656.0,
+        "max_reported_compute_saved_pct": 0.48,
+        "max_reported_data_saved_pct": 0.47,
+        "heldout_778m_max_error_pct": 0.3
+      },
+      "table1_778m_heldout_cells": [
+        {
+          "u_mult_N": 12.5,
+          "F": 1,
+          "tf_loss": 2.2054,
+          "lf_loss": 2.2211
+        },
+        {
+          "u_mult_N": 12.5,
+          "F": 2,
+          "tf_loss": 2.1434,
+          "lf_loss": 2.1501
+        },
+        {
+          "u_mult_N": 12.5,
+          "F": 3,
+          "tf_loss": 2.1136,
+          "lf_loss": 2.1162
+        },
+        {
+          "u_mult_N": 12.5,
+          "F": 4,
+          "tf_loss": 2.095,
+          "lf_loss": 2.095
+        },
+        {
+          "u_mult_N": 50.0,
+          "F": 1,
+          "tf_loss": 2.0878,
+          "lf_loss": 2.0893
+        },
+        {
+          "u_mult_N": 50.0,
+          "F": 2,
+          "tf_loss": 2.0452,
+          "lf_loss": 2.0421
+        },
+        {
+          "u_mult_N": 100.0,
+          "F": 1,
+          "tf_loss": 2.0448,
+          "lf_loss": 2.0413
+        }
+      ]
+    },
+    {
+      "id": "2611.interpretable-weight-space-programming",
+      "url": "https://www.alphaxiv.org/pdf/2611.interpretable-weight-space-programming",
+      "code_url": "https://github.com/csinva/weight-space-programming-autoresearch",
+      "published": "2026-11-12",
+      "pages": 33,
+      "title": "Interpretable weight-space programming builds transparent transformers and brain encoding models",
+      "authors": [
+        "Yash Mehta",
+        "Chandan Singh",
+        "Weijia Xu",
+        "Richard J. Antonello",
+        "Adeen Flinker",
+        "Nima Mesgarani",
+        "Michael F. Bonner",
+        "Nebojsa Jojic",
+        "Jianfeng Gao"
+      ],
+      "institutions": [
+        "Microsoft Research",
+        "Johns Hopkins University",
+        "Columbia University",
+        "New York University"
+      ],
+      "key_findings": {
+        "zero_backprop": true,
+        "visual_cortex_corr_laion_fmri": 0.49,
+        "boundary_confound_trs": 40,
+        "uncovers_position_confounds": true
+      }
+    },
+    {
+      "id": "2611.slam-dunk",
+      "url": "https://www.alphaxiv.org/pdf/2611.slam-dunk",
+      "code_url": "https://github.com/jacobvm04/slam-dunk",
+      "published": "2026-11-15",
+      "pages": 14,
+      "title": "SLAM Dunk: A recipe for long-horizon egocentric SLAM in the wild",
+      "authors": [
+        "Jacob Van Meter",
+        "Ayush Paul"
+      ],
+      "institutions": [
+        "UC Berkeley"
+      ],
+      "key_findings": {
+        "constant_cam_floor_m_per_km": 0.77,
+        "time_varying_cam_floor_m_per_km": 0.09,
+        "cp_baseline": 69.1,
+        "cp_with_tv_and_gyro": 82.4,
+        "ate_baseline_m": 1.02,
+        "ate_with_tv_and_gyro_m": 0.43,
+        "lamaria_categories_beating_aria": [
+          "Medium (78.9 vs 78.5)",
+          "Long (71.1 vs 70.9)",
+          "Low light (85.4 vs 84.2)"
+        ],
+        "mean_cat_cp": 75.46,
+        "mean_rec_cp": 76.68
+      }
+    },
+    {
+      "id": "2611.14383",
+      "url": "https://www.alphaxiv.org/pdf/2611.14383",
+      "arxiv_url": "https://arxiv.org/abs/2611.14383",
+      "published": "2026-11-10",
+      "pages": 78,
+      "title": "An Energy-Based Perspective on Machine Learning",
+      "authors": [
+        "Bo Dai",
+        "Yilun Du"
+      ],
+      "institutions": [
+        "Georgia Institute of Technology",
+        "Harvard University"
+      ],
+      "key_equations": {
+        "eq158_prefix_soft_value": "pi*(y_t | x, y_<t) = pi0(y_t | x, y_<t) * psi_t / psi_{t-1}",
+        "eq162_composed_energy": "E(x, y) = sum_k E_theta(c_k, y_{S_k})",
+        "eq163_kl_verifier_rl": "E[r(x,y)] - lambda * KL(pi_theta || pi0) = -lambda * KL(pi_theta || pi*) + lambda * log Z(x)",
+        "eq167_bon_residual_ebm": "pi_BoN(y|x) proportional to pi_theta(y|x) * exp(beta_N * w_theta(x,y))",
+        "fig12_power_alpha2_prob_a": 0.571429,
+        "fig12_low_temp_prob_a": 0.307692
+      }
+    },
+    {
+      "id": "2611.weight-space-reading-language-models",
+      "url": "https://www.alphaxiv.org/pdf/2611.weight-space-reading-language-models",
+      "code_url": "https://github.com/suayptalha/wsr",
+      "cross_cited_arxiv": "2611.08070",
+      "published": "2026-11-13",
+      "pages": 16,
+      "title": "Weight-Space Reading",
+      "authors": [
+        "Suayp Talha Kocabay"
+      ],
+      "institutions": [
+        "Poindexter Labs"
+      ],
+      "key_findings": {
+        "qwen27b_weights_bal_acc": 0.73,
+        "qwen27b_text_bal_acc": 0.578,
+        "qwen27b_over_muse30b_bal_acc": 0.615,
+        "muse30b_self_bal_acc": 0.468,
+        "muse30b_uncalibrated_false_alarm_rate": 0.85,
+        "standard_edits_inert_count": 34,
+        "noop_controls_count": 6
+      }
+    }
+  ],
+  "calibration_arithmetic_25papers": [
+    {
+      "id": "2608.11505",
+      "published": "2026-08-11",
+      "topic": "closing_price_benchmark",
+      "title": "Does a Structural Model Add Anything to the Closing Price? Calibrated forecasting, incremental information, and match leverage in the Italian Serie A",
+      "authors": [
+        "Yannik Pitcan"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2608.11505",
+      "arxiv_url": "https://arxiv.org/abs/2608.11505"
+    },
+    {
+      "id": "2607.27301",
+      "published": "2026-07-29",
+      "topic": "isotonic_df",
+      "title": "An analysis of binary isotonic regression: degrees of freedom and implications for calibration",
+      "authors": [
+        "Raphael Rossellini",
+        "Rina Foygel Barber",
+        "Zhimei Ren",
+        "Jake A. Soloff"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2607.27301",
+      "arxiv_url": "https://arxiv.org/abs/2607.27301"
+    },
+    {
+      "id": "2610.31258",
+      "published": "2026-10-22",
+      "topic": "isotonic_distributional_reg",
+      "title": "On the Calibration of Isotonic Distributional Regression",
+      "authors": [
+        "Tobias Biegert",
+        "Johannes Resin",
+        "Alexander Jordan",
+        "Sebastian Lerch"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2610.31258",
+      "arxiv_url": "https://arxiv.org/abs/2610.31258"
+    },
+    {
+      "id": "2303.06021",
+      "published": "2023-03-10",
+      "topic": "calibration_vs_accuracy",
+      "title": "Machine learning for sports betting: should model selection be based on accuracy or calibration?",
+      "authors": [
+        "Conor Walsh",
+        "Alok Joshi"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2303.06021",
+      "arxiv_url": "https://arxiv.org/abs/2303.06021"
+    },
+    {
+      "id": "2607.14430",
+      "published": "2026-07-15",
+      "topic": "prediction_market_flb_parlays",
+      "title": "Prices, Probabilities, and Parlays: Systematic Bias in Sports Prediction Markets",
+      "authors": [
+        "Niusha Moshrefi"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2607.14430",
+      "arxiv_url": "https://arxiv.org/abs/2607.14430"
+    },
+    {
+      "id": "2610.07701",
+      "published": "2026-10-06",
+      "topic": "admission_gates",
+      "title": "On the Boundary of Admission Gates: An Injected-Truth Study of Falsification-First Selection in Quantitative Strategy Research",
+      "authors": [
+        "Tianlun Zheng"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2610.07701",
+      "arxiv_url": "https://arxiv.org/abs/2610.07701"
+    },
+    {
+      "id": "2607.27544",
+      "published": "2026-07-30",
+      "topic": "noise_ess_skill",
+      "title": "Lucky or Good? Outcome Noise, Effective Sample Size, and the Attribution of Skill",
+      "authors": [
+        "Karl T. Ulrich"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2607.27544",
+      "arxiv_url": "https://arxiv.org/abs/2607.27544"
+    },
+    {
+      "id": "2611.14539",
+      "published": "2026-10-14",
+      "topic": "in_loop_deflation",
+      "title": "Can a search hold its own bar? In-loop deflation and its exploits in autonomous strategy discovery",
+      "authors": [
+        "Eray Gencay"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2611.14539",
+      "arxiv_url": "https://arxiv.org/abs/2611.14539"
+    },
+    {
+      "id": "2608.01494",
+      "published": "2026-08-02",
+      "topic": "conformal_kelly",
+      "title": "Conformal Kelly: When Marginal Coverage Transfers and the Economics Do Not",
+      "authors": [
+        "Robert Jacob Ryan"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2608.01494",
+      "arxiv_url": "https://arxiv.org/abs/2608.01494"
+    },
+    {
+      "id": "2607.01722",
+      "published": "2026-07-02",
+      "topic": "adaptive_glicko2",
+      "title": "An Adaptive Glicko-2 Rating Framework for Probabilistic Football Forecasting and Season Simulation",
+      "authors": [
+        "Bich Van Nguyen",
+        "Nam Anh Tran"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2607.01722",
+      "arxiv_url": "https://arxiv.org/abs/2607.01722"
+    },
+    {
+      "id": "1710.02824",
+      "published": "2017-10-08",
+      "topic": "market_calibration_inefficiency",
+      "title": "Beating the bookies with their own numbers - and how the online sports betting market is rigged",
+      "authors": [
+        "Lisandro Kaunitz",
+        "Shenjun Zhong",
+        "Javier Kreiner"
+      ],
+      "url": "https://www.alphaxiv.org/abs/1710.02824",
+      "arxiv_url": "https://arxiv.org/abs/1710.02824"
+    },
+    {
+      "id": "2604.15531",
+      "published": "2026-04-16",
+      "topic": "spurious_predictability",
+      "title": "Spurious Predictability in Financial Machine Learning",
+      "authors": [
+        "Sotirios D. Nikolopoulos"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2604.15531",
+      "arxiv_url": "https://arxiv.org/abs/2604.15531"
+    },
+    {
+      "id": "2501.03938",
+      "published": "2025-01-07",
+      "topic": "is_oos_sharpe",
+      "title": "In-Sample and Out-of-Sample Sharpe Ratios for Linear Predictive Models",
+      "authors": [
+        "Antoine Jacquier",
+        "Johannes Muhle-Karbe",
+        "Joseph Mulligan"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2501.03938",
+      "arxiv_url": "https://arxiv.org/abs/2501.03938"
+    },
+    {
+      "id": "2605.16066",
+      "published": "2026-05-15",
+      "topic": "market_init_weibull_aft",
+      "title": "A market-initialised accelerated failure time model for in-play football forecasting",
+      "authors": [
+        "Lawrence Clegg",
+        "Zixing Song",
+        "John Cartlidge"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2605.16066",
+      "arxiv_url": "https://arxiv.org/abs/2605.16066"
+    },
+    {
+      "id": "2602.09982",
+      "published": "2026-02-10",
+      "topic": "kelly_bayesian_eval",
+      "title": "Kelly Betting as Bayesian Model Evaluation: A Framework for Time-Updating Probabilistic Forecasts",
+      "authors": [
+        "Michael Beuoy"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2602.09982",
+      "arxiv_url": "https://arxiv.org/abs/2602.09982"
+    },
+    {
+      "id": "2609.06739",
+      "published": "2026-09-06",
+      "topic": "profit_bias_identity",
+      "title": "The profit-bias identity in sports betting: bookmaker profit as the public's prediction error",
+      "authors": [
+        "Jacek P. Dmochowski"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2609.06739",
+      "arxiv_url": "https://arxiv.org/abs/2609.06739"
+    },
+    {
+      "id": "2609.12878",
+      "published": "2026-09-11",
+      "topic": "polymarket_flb",
+      "title": "The Favorite-Longshot Bias in Prediction Markets: Evidence from Polymarket",
+      "authors": [
+        "Marcos Cardozo",
+        "Jose Ignacio Rivero-Wildemauwe"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2609.12878",
+      "arxiv_url": "https://arxiv.org/abs/2609.12878"
+    },
+    {
+      "id": "2501.05873",
+      "published": "2025-01-10",
+      "topic": "soccer_distributions_rps",
+      "title": "Forecasting Soccer Matches through Distributions",
+      "authors": [
+        "Tiago Mendes-Neves",
+        "Yassine Baghoussi",
+        "Luis Meireles",
+        "Carlos Soares"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2501.05873",
+      "arxiv_url": "https://arxiv.org/abs/2501.05873"
+    },
+    {
+      "id": "2608.23808",
+      "published": "2026-08-24",
+      "topic": "minerva_score",
+      "title": "Equity Strategy Backtesting: Luck or Edge? The MinervaScore as a Statistical Robustness Grade",
+      "authors": [
+        "Maria Laura Santoni",
+        "Vincent Jouanne",
+        "Matthew L. Scullin"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2608.23808",
+      "arxiv_url": "https://arxiv.org/abs/2608.23808"
+    },
+    {
+      "id": "2603.09219",
+      "published": "2026-03-10",
+      "topic": "is_wfa_oos_protocol",
+      "title": "AlgoXpert Alpha Research Framework. A Rigorous IS WFA OOS Protocol for Mitigating Overfitting in Quantitative Strategies",
+      "authors": [
+        "The Anh Pham",
+        "Bao Chan Nguyen",
+        "Nguyet Nguyen Thi"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2603.09219",
+      "arxiv_url": "https://arxiv.org/abs/2603.09219"
+    },
+    {
+      "id": "2604.17194",
+      "published": "2026-04-19",
+      "topic": "emh_odds_glm",
+      "title": "Forecast Sports Outcomes under Efficient Market Hypothesis: Theoretical and Experimental Analysis of Odds-Only and Generalised Linear Models",
+      "authors": [
+        "Kaito Goto",
+        "Naoya Takeishi",
+        "Takehisa Yairi"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2604.17194",
+      "arxiv_url": "https://arxiv.org/abs/2604.17194"
+    },
+    {
+      "id": "2609.07617",
+      "published": "2026-09-07",
+      "topic": "live_tennis_forecasting",
+      "title": "Forecasting the Winner of a Live Tennis Match",
+      "authors": [
+        "Charles Xie",
+        "Aneesh Muppidi"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2609.07617",
+      "arxiv_url": "https://arxiv.org/abs/2609.07617"
+    },
+    {
+      "id": "2608.00127",
+      "published": "2026-07-31",
+      "topic": "drawdown_beyond_brownian",
+      "title": "Drawdown Risk Beyond Brownian Motion: A Monte-Carlo Framework, Non-Gaussian Extensions, and Long Memory",
+      "authors": [
+        "Francesco Landolfi"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2608.00127",
+      "arxiv_url": "https://arxiv.org/abs/2608.00127"
+    },
+    {
+      "id": "2602.00080",
+      "published": "2026-01-22",
+      "topic": "gt_score",
+      "title": "The GT-Score: A Robust Objective Function for Reducing Overfitting in Data-Driven Trading Strategies",
+      "authors": [
+        "Alexander Sheppert"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2602.00080",
+      "arxiv_url": "https://arxiv.org/abs/2602.00080"
+    },
+    {
+      "id": "2611.15456",
+      "published": "2026-11-11",
+      "topic": "sequential_testing_by_betting",
+      "title": "Bet Imaginatively, not Historically in Independent-Data Sequential Testing",
+      "authors": [
+        "Nathaniel Xu",
+        "Feng Liu",
+        "Danica J. Sutherland"
+      ],
+      "url": "https://www.alphaxiv.org/abs/2611.15456",
+      "arxiv_url": "https://arxiv.org/abs/2611.15456"
+    }
+  ],
+  "payload_sha256": "a28d242a8bdd4566e593b26751942d2362c2ea1fd1ba2b8907debf239001bb0d"
+}

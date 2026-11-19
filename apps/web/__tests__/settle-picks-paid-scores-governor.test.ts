@@ -39,6 +39,7 @@ vi.mock("@sports/ingestion-pipeline", () => ({
   freezeSlateCommitments: vi.fn(async () => []),
   computeScheduledWindow: () => "2026-09-06T12Z",
   drainPendingTeamGameLogs: vi.fn(async () => ({ attempted: 0, done: 0, failed: 0 })),
+  markClosingSnapshotsIfEnabled: vi.fn(async () => ({ enabled: false, updated: 0 })),
 }));
 vi.mock("@/lib/settlement-outbox/worker", () => ({
   drainSettlementOutbox: vi.fn(async () => null),

@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OPS = ROOT / "scripts" / "ops"
 sys.path.insert(0, str(OPS))
 
-from pbp_conservation_coupling import (
+from pbp_conservation_coupling import (  # noqa: E402
     couple_conserved_pbp,
     degraded_jev_lineup_evaluation,
     live_jev_confidence,

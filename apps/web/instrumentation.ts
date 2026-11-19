@@ -112,6 +112,17 @@ export async function register(): Promise<void> {
   // Initialise observability (Sentry) at startup. No-op when SENTRY_DSN is absent.
   initObservability();
 
+  // Keep local `next dev` fast and offline-safe on constrained laptops unless opted in.
+  if (
+    process.env.NODE_ENV === "development" &&
+    process.env.GSE_DEV_BOOT_INGEST !== "true"
+  ) {
+    console.info(
+      "[startup] Development mode: skipping background nflverse boot ingest (set GSE_DEV_BOOT_INGEST=true to enable).",
+    );
+    return;
+  }
+
   // Literal NEXT_RUNTIME check + dynamic import → graded-pool (and its node:zlib
   // dep) is excluded from the Edge instrumentation bundle by dead-code elimination.
   if (process.env.NEXT_RUNTIME === "nodejs") {
