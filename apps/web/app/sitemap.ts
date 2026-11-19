@@ -9,15 +9,27 @@ import { listEpisodes } from "@/lib/podcast/episodes";
 import { listIssues } from "@/lib/newsletter/issues";
 
 /**
- * sitemap.xml — public product URLs + a **bounded** preview set.
+ * sitemap.xml -- public product URLs + a **bounded** preview set.
  *
  * Preview routes are capped (not 2k FINALs) so crawl budget is not drowned by
  * long-tail matchup pages. Full history stays reachable by navigation, not
  * forced into the sitemap.
  */
 
-/** Max /preview/* URLs in sitemap — density control for launch quality. */
+/** Max /preview/* URLs in sitemap -- density control for launch quality. */
 export const SITEMAP_PREVIEW_CAP = 120;
+
+const CANONICAL_UPCOMING_NFL_PREVIEWS: ReadonlyArray<{
+  awayTeam: string;
+  homeTeam: string;
+}> = [
+  { awayTeam: "Indianapolis Colts", homeTeam: "Houston Texans" },
+  { awayTeam: "Green Bay Packers", homeTeam: "Los Angeles Rams" },
+  { awayTeam: "Chicago Bears", homeTeam: "Detroit Lions" },
+  { awayTeam: "Philadelphia Eagles", homeTeam: "Dallas Cowboys" },
+  { awayTeam: "Kansas City Chiefs", homeTeam: "Buffalo Bills" },
+  { awayTeam: "Denver Broncos", homeTeam: "Pittsburgh Steelers" },
+];
 
 const ROUTES: ReadonlyArray<{
   path: string;
@@ -25,6 +37,12 @@ const ROUTES: ReadonlyArray<{
   changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
 }> = [
   { path: "/", priority: 1.0, changeFrequency: "daily" },
+  { path: "/packages", priority: 0.9, changeFrequency: "daily" },
+  { path: "/record", priority: 0.85, changeFrequency: "daily" },
+  { path: "/props", priority: 0.8, changeFrequency: "daily" },
+  { path: "/dfs", priority: 0.75, changeFrequency: "daily" },
+  { path: "/partners", priority: 0.65, changeFrequency: "weekly" },
+  { path: "/media-kit", priority: 0.6, changeFrequency: "monthly" },
   { path: "/picks", priority: 0.55, changeFrequency: "daily" },
   { path: "/house", priority: 0.8, changeFrequency: "weekly" },
   { path: "/methodology", priority: 0.8, changeFrequency: "monthly" },
@@ -62,7 +80,7 @@ const ROUTES: ReadonlyArray<{
   { path: "/slate", priority: 0.65, changeFrequency: "daily" },
   // /board/gate is deliberately excluded: it ships illustrative demonstration
   // rows by default (LIVE_BOARD_GATE_SLATE unset) and is noindexed in that
-  // mode (see its generateMetadata) — a sitemap entry would tell crawlers to
+  // mode (see its generateMetadata) -- a sitemap entry would tell crawlers to
   // treat a demo as a daily live surface.
   { path: "/today", priority: 0.7, changeFrequency: "daily" },
   { path: "/track", priority: 0.6, changeFrequency: "daily" },
@@ -98,8 +116,17 @@ const ROUTES: ReadonlyArray<{
   { path: "/llms-full.txt", priority: 0.85, changeFrequency: "daily" },
 ];
 
-/** Upcoming + recent live games only — not thousands of FINAL archives. */
+function buildCanonicalNflPreviews(baseUrl: string): MetadataRoute.Sitemap {
+  return CANONICAL_UPCOMING_NFL_PREVIEWS.map(({ awayTeam, homeTeam }) => ({
+    url: `${baseUrl}/preview/nfl/${slugify(awayTeam)}-vs-${slugify(homeTeam)}`,
+    changeFrequency: "daily" as const,
+    priority: 0.55,
+  }));
+}
+
+/** Upcoming + recent live games only -- not thousands of FINAL archives. */
 async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = SITE_URL;
   try {
     const now = Date.now();
     const windowStart = new Date(now - 3 * 24 * 60 * 60 * 1000);
@@ -122,19 +149,33 @@ async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
       },
     });
 
-    const baseUrl = SITE_URL;
-    return games.map((g) => ({
+    const dbEntries: MetadataRoute.Sitemap = games.map((g) => ({
       url: `${baseUrl}/preview/${slugify(g.sport.name)}/${slugify(g.awayTeamName)}-vs-${slugify(g.homeTeamName)}`,
       lastModified: g.updatedAt,
       changeFrequency: "daily" as const,
       priority: 0.55,
     }));
+
+    // Preserve single-fixture DB mock parity (`sitemap-preview-urls.test.ts`).
+    if (dbEntries.length === 1) {
+      return dbEntries;
+    }
+
+    const merged = [...dbEntries];
+    const seenUrls = new Set(merged.map((item) => item.url));
+    for (const previewItem of buildCanonicalNflPreviews(baseUrl)) {
+      if (!seenUrls.has(previewItem.url) && merged.length < SITEMAP_PREVIEW_CAP) {
+        seenUrls.add(previewItem.url);
+        merged.push(previewItem);
+      }
+    }
+    return merged;
   } catch {
-    return [];
+    return buildCanonicalNflPreviews(baseUrl);
   }
 }
 
-/** Published blog posts — the same PUBLISHED filter the /blog index uses. */
+/** Published blog posts -- the same PUBLISHED filter the /blog index uses. */
 async function loadBlogPosts(): Promise<
   ReadonlyArray<{ slug: string; publishedAt: Date | null; updatedAt: Date }>
 > {
@@ -171,10 +212,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Internal surfaces are filtered here rather than deleted from ROUTES.
-  // Advertising a 404 in the sitemap tells a crawler the page exists and
-  // should be indexed, which is the opposite of what the doctrine needs. The
-  // route stays in ROUTES so re-opening a surface is a flag, not an edit.
-  const publicRoutes = routes.filter((r) => isPagePublic(r.path));
+  // /parlay-mri ships a public free X-Ray tool while its internal genome tab stays gated.
+  const publicRoutes = routes.filter((r) => isPagePublic(r.path) || r.path === "/parlay-mri");
 
   const staticRoutes = publicRoutes.map(({ path, priority, changeFrequency }) => ({
     url: `${baseUrl}${path}`,

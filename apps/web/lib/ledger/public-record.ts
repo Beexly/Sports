@@ -1,5 +1,5 @@
 /**
- * Public record line — the single set of record numbers any crawlable or
+ * Public record line -- the single set of record numbers any crawlable or
  * marketing surface is allowed to print.
  *
  * Why this module exists (2026-11-15): `/llms.txt`, `/llms-full.txt`,
@@ -22,21 +22,21 @@ const gate = verifiedLedger.official.gate;
 /** Artifact generation date, YYYY-MM-DD. */
 export const PUBLIC_RECORD_AS_OF = verifiedLedger.generatedAt.slice(0, 10);
 
-/** "79-46-0" — counts only. */
+/** "79-46-0" -- counts only. */
 export const PUBLIC_RECORD_COUNTS = formatWlp(verifiedLedger.official.wlp);
 
-/** "+81.47u" — signed units at flat 1u staking. */
+/** "+81.47u" -- signed units at flat 1u staking. */
 export const PUBLIC_RECORD_UNITS = formatUnits(verifiedLedger.official.units.total);
 
-/** "53/200" — CLV-backed settled plays against the calibration gate. */
+/** "53/200" -- CLV-backed settled plays against the calibration gate. */
 export const PUBLIC_CALIBRATION_PROGRESS = `${gate.clvBackedSettled}/${gate.target}`;
 
 /**
  * One line, no percentage, gate state included.
- * Example: "79-46-0 +81.47u verified · win rate locked until 200 CLV-backed
- * settled plays (53/200) · as of 2026-11-13".
+ * Example: "79-46-0 +81.47u verified - win rate locked until 200 CLV-backed
+ * settled plays (53/200) - as of 2026-11-13".
  */
-export const PUBLIC_RECORD_LINE = `${PUBLIC_RECORD_COUNTS} ${PUBLIC_RECORD_UNITS} verified · win rate locked until ${gate.target} CLV-backed settled plays (${PUBLIC_CALIBRATION_PROGRESS}) · as of ${PUBLIC_RECORD_AS_OF}`;
+export const PUBLIC_RECORD_LINE = `${PUBLIC_RECORD_COUNTS} ${PUBLIC_RECORD_UNITS} verified - win rate locked until ${gate.target} CLV-backed settled plays (${PUBLIC_CALIBRATION_PROGRESS}) - as of ${PUBLIC_RECORD_AS_OF}`;
 
 /** The sentence that must accompany the line wherever the record is claimed. */
 export const PUBLIC_RECORD_POLICY = `No win-rate percentage is published until ${gate.target} official plays are settled and graded against the closing line. Every number is recomputed from the settlement database at /record.`;
@@ -64,4 +64,4 @@ export const PUBLIC_RECORD_SIZING_MULTIPLIER = (
 ).toFixed(2);
 
 /** Dual-disclosure banner showing weighted units alongside 1u-normalized flat -110 units. */
-export const PUBLIC_RECORD_NORMALIZED_BANNER = `${PUBLIC_RECORD_COUNTS} (${PUBLIC_RECORD_UNITS} actual · ${PUBLIC_RECORD_FLAT_1U_MINUS110_UNITS} 1u-normalized flat -110 · ${PUBLIC_RECORD_SIZING_MULTIPLIER}x weighted)`;
+export const PUBLIC_RECORD_NORMALIZED_BANNER = `${PUBLIC_RECORD_COUNTS} (${PUBLIC_RECORD_UNITS} actual - ${PUBLIC_RECORD_FLAT_1U_MINUS110_UNITS} 1u-normalized flat -110 - ${PUBLIC_RECORD_SIZING_MULTIPLIER}x weighted)`;
