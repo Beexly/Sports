@@ -459,3 +459,20 @@ NO-ID slug-keyed), 4 duplicates skipped, 1 slug-collision skip,
 4 sportsbook/trading items excluded, 130,560 bytes appended to
 x-for-you-feed.jsonl (now 6,510 records). Running feed total:
 12,083 records.
+
+## Delta 2026-11-18 X For You PM (landed 2026-11-18)
+
+Source: ~/workspace/x-for-you-sweep/reports/2026-11-18-PM.md.
+Sweep: feed route 80 organic + 20 ads inventoried, 2 trading-bot
+rows excluded; watchlist 15 accounts (79 NEW + 38 SEEN); deduped
+to 87 unique NEW with verified IDs; 71 feed rows inventoried
+without status IDs (named loss). Delta: 156 records (39 dossier +
+48 inventoried with IDs + 69 NO-ID slug-keyed), 0 duplicates,
+0 slug-collision skips, 2 sportsbook/trading items excluded,
+162,871 bytes appended to x-for-you-feed.jsonl (now 6,666
+records). Key finds: W1 Timo Riske / SumerSports frame-level
+threat study; F2 repo set with corrected stars and licenses
+(Screenpipe not OSI, Chatterbox retired); F8 CS329Z lectures
+verified; the W5/W7/W8/W9 pressure stack. Running feed total:
+12,239 records. All 2026-11-18 runs are now ingested (IG AM,
+analytics AM, IG PM, X AM, X PM).
