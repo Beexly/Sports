@@ -150,6 +150,15 @@ from gse_engine.tracking.wave48_stage0_weather_sentiment_trade_and_showdown_engi
     evaluate_wave48_stage0_weather_sentiment_and_showdown_suite,
     run_wave48_stage0_weather_showdown_benchmark,
 )
+from gse_engine.tracking.wave49_ngs_pfr_advstats_and_bdb27_athletic_engine import (  # noqa: E501
+    WAVE49_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_causal_w49_game_total_blitz_pressure_and_box_shift,
+    evaluate_causal_w49_ngs_pfr_and_bdb27_features,
+    evaluate_w49_martingale_and_shortcut_audit,
+    evaluate_wave49_live_honest_ast_equations,
+    evaluate_wave49_ngs_pfr_and_bdb27_suite,
+    run_wave49_bdb27_and_ngs_benchmark,
+)
 
 __all__ = [
     "AWS_NGS_GOING_DEEP_SOURCES",
@@ -170,6 +179,7 @@ __all__ = [
     "WAVE45_TRACKING_RLVR_TRAJECTORIES",
     "WAVE46_TRACKING_RLVR_TRAJECTORIES",
     "WAVE48_TRACKING_RLVR_TRAJECTORIES",
+    "WAVE49_TRACKING_RLVR_TRAJECTORIES",
     "ChalkContaminationError",
     "ClusterScalingPlan",
     "DualEpauletKinematics",
@@ -217,6 +227,8 @@ __all__ = [
     "evaluate_causal_w46_memtx_ftn_and_fieldpos_features",
     "evaluate_causal_w48_early_down_motion_4man_and_rz_features",
     "evaluate_causal_w48_game_total_obv_stop_divisional_and_weather_shift",
+    "evaluate_causal_w49_game_total_blitz_pressure_and_box_shift",
+    "evaluate_causal_w49_ngs_pfr_and_bdb27_features",
     "evaluate_contract_year_5b_incentive_audit",
     "evaluate_dated_csv_and_live_ast_equations",
     "evaluate_longitudinal_3yr_ftn_and_2025_baseline_vaults",
@@ -234,6 +246,7 @@ __all__ = [
     "evaluate_w46_walk_forward_7props_and_stacked_portfolio_dfs",
     "evaluate_w48_martingale_and_shortcut_audit",
     "evaluate_w48_walk_forward_hydrated_spine_and_showdown",
+    "evaluate_w49_martingale_and_shortcut_audit",
     "evaluate_wave35_player_micro_matchup_suite",
     "evaluate_wave36_360_board_matchup_suite",
     "evaluate_wave36_live_honest_ast_equations",
@@ -259,6 +272,8 @@ __all__ = [
     "evaluate_wave46_memtx_picks_7props_and_stacked_dfs_suite",
     "evaluate_wave48_live_honest_ast_equations",
     "evaluate_wave48_stage0_weather_sentiment_and_showdown_suite",
+    "evaluate_wave49_live_honest_ast_equations",
+    "evaluate_wave49_ngs_pfr_and_bdb27_suite",
     "evaluate_wr_separation_vs_db_coverage",
     "run_wave35_gsi_and_micro_metrics_benchmark",
     "run_wave36_gsi_icu_and_360_board_benchmark",
@@ -273,5 +288,6 @@ __all__ = [
     "run_wave45_78paper_picks_props_and_milp_dfs_benchmark",
     "run_wave46_66paper_picks_7props_and_stacked_dfs_benchmark",
     "run_wave48_stage0_weather_showdown_benchmark",
+    "run_wave49_bdb27_and_ngs_benchmark",
     "verify_nonzero_stage2_jacobians",
 ]

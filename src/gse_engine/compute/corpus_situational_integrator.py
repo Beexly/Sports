@@ -170,6 +170,9 @@ from gse_engine.science.wave45_alphaxiv_59new_conformal_copula_parlay_dfs_and_re
 from gse_engine.science.wave46_alphaxiv_66paper_transactional_memory_durable_ci_upa_and_spec_ledger_engine import (  # noqa: E501
     evaluate_wave46_alphaxiv_66paper_memory_ci_upa_ledger_suite,
 )
+from gse_engine.science.wave49_arxiv_openalex_bdb27_kinematic_and_conformal_engine import (  # noqa: E501
+    evaluate_wave49_arxiv_openalex_bdb27_suite,
+)
 from gse_engine.tracking.aws_ngs_going_deep_gse_gsi_suite import (
     evaluate_aws_ngs_going_deep_stage2_bridge,
 )
@@ -211,6 +214,9 @@ from gse_engine.tracking.wave46_causal_picks_combo_props_and_stacked_portfolio_d
 )
 from gse_engine.tracking.wave48_stage0_weather_sentiment_trade_and_showdown_engine import (  # noqa: E501
     evaluate_wave48_stage0_weather_sentiment_and_showdown_suite,
+)
+from gse_engine.tracking.wave49_ngs_pfr_advstats_and_bdb27_athletic_engine import (  # noqa: E501
+    evaluate_wave49_ngs_pfr_and_bdb27_suite,
 )
 from gse_engine.workflows.unified_reasoning_simulation_projection_spine import (  # noqa: E501
     evaluate_unified_reasoning_simulation_projection_spine_suite,
@@ -2936,6 +2942,19 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
                 repo_root=REPO_ROOT,
             )
         ),
+        "wave49_arxiv_openalex_bdb27_science_pillar": (
+            evaluate_wave49_arxiv_openalex_bdb27_suite(REPO_ROOT)
+        ),
+        "wave49_ngs_pfr_bdb27_tracking_pillar": (
+            wave32_res.get("wave49_arxiv_openalex_bdb27_and_ngs_pfr_matchups")
+            or evaluate_wave49_ngs_pfr_and_bdb27_suite(
+                away_team=away_u,
+                home_team=home_u,
+                as_of_week=int(week),
+                is_indoor=bool(is_indoor),
+                repo_root=REPO_ROOT,
+            )
+        ),
         "revenue_orchestration_4plane_pillar": (
             evaluate_revenue_and_4plane_orchestration_readiness_suite()
         ),
@@ -3645,6 +3664,27 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         else:
             w48_wired = True
 
+    w49_sci_blk = priors.get("wave49_arxiv_openalex_bdb27_science_pillar")
+    w49_trk_blk = priors.get("wave49_ngs_pfr_bdb27_tracking_pillar")
+    w49_wired = False
+    if w49_sci_blk is not None or w49_trk_blk is not None:
+        if (
+            not isinstance(w49_sci_blk, Mapping)
+            or w49_sci_blk.get("all_science_gates_passed") is not True
+            or float(w49_sci_blk.get("clinical_ruo_w49_sports_weight", 1.0)) != 0.0
+            or w49_sci_blk.get("real_money_stake_cleared") is not False
+        ):
+            missing_or_unwired.append("wave49_arxiv_openalex_bdb27_science_pillar")
+        elif (
+            not isinstance(w49_trk_blk, Mapping)
+            or w49_trk_blk.get("wired") is not True
+            or w49_trk_blk.get("real_money_stake_cleared") is not False
+            or float(w49_trk_blk.get("clinical_ruo_sports_weight", 1.0)) != 0.0
+        ):
+            missing_or_unwired.append("wave49_ngs_pfr_bdb27_tracking_pillar")
+        else:
+            w49_wired = True
+
     rev_blk = priors.get("revenue_orchestration_4plane_pillar")
     rev_wired = False
     if rev_blk is not None:
@@ -3751,6 +3791,7 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         "wave45_skill_harmony_props_dfs_wired": w45_wired,
         "wave46_memtx_picks_7props_stacked_dfs_wired": w46_wired,
         "wave48_stage0_weather_sentiment_showdown_wired": w48_wired,
+        "wave49_arxiv_openalex_bdb27_and_ngs_pfr_wired": w49_wired,
         "revenue_orchestration_4plane_wired": rev_wired,
         "executive_credit_zero_waste_wired": cred_wired,
         "unified_reasoning_sim_projection_spine_wired": sp47_wired,

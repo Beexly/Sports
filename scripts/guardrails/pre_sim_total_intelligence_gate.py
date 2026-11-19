@@ -92,6 +92,8 @@ MASTER_PLAN_V3_REQUIRED_ARTIFACTS: dict[str, list[str]] = {
         "src/gse_engine/governance/credit_and_zero_waste_router.py",
         "src/gse_engine/workflows/unified_reasoning_simulation_projection_spine.py",
         "src/gse_engine/tracking/wave48_stage0_weather_sentiment_trade_and_showdown_engine.py",
+        "src/gse_engine/science/wave49_arxiv_openalex_bdb27_kinematic_and_conformal_engine.py",
+        "src/gse_engine/tracking/wave49_ngs_pfr_advstats_and_bdb27_athletic_engine.py",
         "src/gse_engine/governance/wave19_agentic_fleet_and_registry_97.py",
         "src/gse_engine/memory/knowledge_continuity_and_gsi_rlvr_flywheel.py",
         "src/gse_engine/memory/monorepo_omnibus_vault_indexer.py",
@@ -447,6 +449,16 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "Pillar1_Wave48_GSE_Stage0_Weather_Sentiment_Showdown_And_Speedup",
         "wave48_stage0_weather_sentiment_trade_and_showdown_engine",
         "src/gse_engine/tracking/wave48_stage0_weather_sentiment_trade_and_showdown_engine.py",
+    ),
+    (
+        "Pillar1_Wave49_GSI_ArXiv_OpenAlex_BDB27_Kinematic_Conformal_Science",
+        "wave49_arxiv_openalex_bdb27_kinematic_and_conformal_engine",
+        "src/gse_engine/science/wave49_arxiv_openalex_bdb27_kinematic_and_conformal_engine.py",
+    ),
+    (
+        "Pillar1_Wave49_GSE_Causal_NGS_PFR_AdvStats_And_BDB27_Tracking",
+        "wave49_ngs_pfr_advstats_and_bdb27_athletic_engine",
+        "src/gse_engine/tracking/wave49_ngs_pfr_advstats_and_bdb27_athletic_engine.py",
     ),
 )
 

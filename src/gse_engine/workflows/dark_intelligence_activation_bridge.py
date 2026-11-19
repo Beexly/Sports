@@ -72,6 +72,10 @@ from gse_engine.multisport.wave40_universal_sports_metrics_encyclopedia_and_hand
     LIVE_STAKE_FRACTION,
     REAL_MONEY_STAKE_CLEARED,
 )
+from gse_engine.science.wave49_arxiv_openalex_bdb27_kinematic_and_conformal_engine import (
+    CLINICAL_RUO_W49_SPORTS_WEIGHT,
+    evaluate_wave49_arxiv_openalex_bdb27_suite,
+)
 from gse_engine.state_space.etkf_dma_bus import STATE_VECTOR_DIM, EtkfDmaLatentBus
 from gse_engine.storage.cache_and_sandbox_governor import (
     InProcessCacheGovernor,
@@ -80,6 +84,9 @@ from gse_engine.storage.cache_and_sandbox_governor import (
     unpack_flatbuffer_envelope,
 )
 from gse_engine.storage.receipts_s3 import InMemoryObjectStore
+from gse_engine.tracking.wave49_ngs_pfr_advstats_and_bdb27_athletic_engine import (
+    evaluate_wave49_ngs_pfr_and_bdb27_suite,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 CLINICAL_RUO_DARK_BRIDGE_SPORTS_WEIGHT: float = 0.0
@@ -100,6 +107,8 @@ _CROWN_JEWEL_REGISTRY: tuple[str, ...] = (
     "vision_and_geofence",
     "gcp_warehouse",
     "gcp_path36_stack",
+    "wave49_arxiv_openalex_bdb27_science",
+    "wave49_ngs_pfr_bdb27_tracking",
     "kantorovich_mmot",
     "galaxy_conformal_ot",
     "intelligence_props_suite",
@@ -416,6 +425,18 @@ def evaluate_dark_intelligence_pack_for_matchup(
     activated.append("gcp_warehouse")
     _path36_gke_lock = PATH36_DEFERRAL_LOCKS["gke_cluster_build"]
     activated.append("gcp_path36_stack")
+    _w49_sci = evaluate_wave49_arxiv_openalex_bdb27_suite(REPO_ROOT)
+    if CLINICAL_RUO_W49_SPORTS_WEIGHT == 0.0 and bool(_w49_sci.get("all_science_gates_passed")):
+        activated.append("wave49_arxiv_openalex_bdb27_science")
+    _w49_trk = evaluate_wave49_ngs_pfr_and_bdb27_suite(
+        away_team=aw,
+        home_team=hm,
+        as_of_week=min(10, wk),
+        is_indoor=bool(is_indoor),
+        repo_root=REPO_ROOT,
+    )
+    if bool(_w49_trk.get("wired")):
+        activated.append("wave49_ngs_pfr_bdb27_tracking")
 
     # 8. Kantorovich MMOT + Birkhoff Certificate
     mmot_mod = _safe_import("engine.transport.kantorovich_mmot")

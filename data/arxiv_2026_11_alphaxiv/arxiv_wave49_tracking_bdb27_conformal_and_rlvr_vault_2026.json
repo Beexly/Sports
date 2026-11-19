@@ -1,0 +1,1013 @@
+{
+  "schema": "wave49_arxiv_tracking_bdb27_conformal_rlvr_vault_v1",
+  "harvested_at_utc": "2026-11-19T07:53:31Z",
+  "source_api": "https://export.arxiv.org/api/query",
+  "total_unique_papers": 45,
+  "unique_paper_count": 45,
+  "brand_new_wave49_count": 45,
+  "cross_wave_overlap_count": 0,
+  "clinical_ruo_sports_weight": 0.0,
+  "real_money_stake_cleared": false,
+  "required_anchors": [
+    "2610.36183",
+    "2609.33664",
+    "2607.00164"
+  ],
+  "pillar_counts": {
+    "pillar_b_motion_quantile_conformal": 1,
+    "pillar_a_nfl_tracking_bdb27": 13,
+    "pillar_d_rlvr_brier_calibration": 14,
+    "pillar_c_sinkhorn_assignment_trench": 9,
+    "pillar_e_conformal_time_series_venn_abers": 8
+  },
+  "papers": [
+    {
+      "id": "2610.36183",
+      "versioned_id": "2610.36183v1",
+      "published": "2026-10-26",
+      "updated": "2026-10-26",
+      "title": "Learning Human Sports Motion Feasibility via Quantile Regression on Tracking Data",
+      "authors": [
+        "Marc Gutierrez-Perez",
+        "Antonio Agudo"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "pillar": "pillar_b_motion_quantile_conformal",
+      "url": "https://www.alphaxiv.org/abs/2610.36183",
+      "arxiv_url": "https://arxiv.org/abs/2610.36183",
+      "summary": "We study time-to-arrival (TTA) in sports: the shortest plausible time a player needs to reach an arbitrary location on the pitch given their current kinematic state, estimated as the lower envelope of observed locomotion times. Rather than modeling space ownership through position density estimation or closed-form physics-based models, we cast TTA as a conditional quantile regression problem, estimating the lower quantile of locomotion time so the model learns a player's lower-envelope arrival time. We train the model on optical tracking data from all 64 matches of the PFF FC FIFA World Cup 2022 dataset, and evaluate a lightweight multilayer perceptron against six player-motion models from the literature, re-expressed as TTA predictors, and a learned reachable- hull baseline. Across our evaluation metrics, the MLP consistently outperforms every physics-based baseline. To probe the genera"
+    },
+    {
+      "id": "2609.33664",
+      "versioned_id": "2609.33664v2",
+      "published": "2026-09-27",
+      "updated": "2026-09-29",
+      "title": "Who Blocks Whom? Probabilistic Pass-Blocking Assignments for Evaluating Blockers and Pass Rushers in American Football",
+      "authors": [
+        "Abhijit Brahme",
+        "Ishan Mehta",
+        "Gregory J. Matthews",
+        "Alexander Franks"
+      ],
+      "primary_category": "stat.AP",
+      "categories": [
+        "stat.AP"
+      ],
+      "pillar": "pillar_a_nfl_tracking_bdb27",
+      "url": "https://www.alphaxiv.org/abs/2609.33664",
+      "arxiv_url": "https://arxiv.org/abs/2609.33664",
+      "summary": "Historically, statistical analysis of offensive lineman has been hindered by the lack of easily measurable quantities. More recently, with the introduction of player tracking data new methodological advances are now possible. Using high-dimensional spatio-temporal data, we adapt the defensive-matchup hidden Markov model of \\cite{franks2015characterizing} from basketball to football pass protection, producing frame-by-frame probabilistic assignments of each pass blocker to the rushers. We show how this probabilistic assignment is a usable modeling artifact that augments existing player-evaluation frameworks. We directly quantify the attention a rusher commands, upgrade adjusted plus-minus \\citep{Macdonald+2012} from all-or-nothing stints to partial, continuous blocking credit in continuous time, yield block-shedding survival metrics, and measure the space a rusher generates for his teamma"
+    },
+    {
+      "id": "2607.00164",
+      "versioned_id": "2607.00164v1",
+      "published": "2026-06-30",
+      "updated": "2026-06-30",
+      "title": "Verifiable Rewards for Calibrated Probabilistic Forecasting",
+      "authors": [
+        "Sadanand Singh",
+        "Allam Reddy",
+        "Manan Chopra"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "pillar": "pillar_d_rlvr_brier_calibration",
+      "url": "https://www.alphaxiv.org/abs/2607.00164",
+      "arxiv_url": "https://arxiv.org/abs/2607.00164",
+      "summary": "Reinforcement learning with verifiable rewards can in principle train calibrated probabilistic forecasters, since a proper scoring rule such as the Brier score is computed from outcomes alone and is minimized in expectation by the true probability. In practice it degrades calibration, and existing remedies address epistemic uncertainty, where a model's confidence accompanies a verifiably correct or incorrect answer. We study aleatoric forecasting, where the forecast itself is the output and the label is one stochastic outcome, taking NFL in-game win probability as a testbed with the betting market as a reference. Rewarding the realized per-play outcome fails, because the single outcome is a noisy target and the policy gradient corrupts the chain of thought. We introduce a verifiable, label-free reward, a state-conditioned empirical win rate estimated from past outcomes, that removes the "
+    },
+    {
+      "id": "2511.00808",
+      "versioned_id": "2511.00808v1",
+      "published": "2025-11-02",
+      "updated": "2025-11-02",
+      "title": "Do Math Reasoning LLMs Help Predict the Impact of Public Transit Events?",
+      "authors": [
+        "Bowen Fang",
+        "Ruijian Zha",
+        "Xuan Di"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "pillar": "pillar_d_rlvr_brier_calibration",
+      "url": "https://www.alphaxiv.org/abs/2511.00808",
+      "arxiv_url": "https://arxiv.org/abs/2511.00808",
+      "summary": "Predicting public transit incident duration from unstructured text alerts is a critical but challenging task. Addressing the domain sparsity of transit operations with standard Supervised Fine-Tuning (SFT) is difficult, as the task involves noisy, continuous labels and lacks reliable expert demonstrations for reasoning. While Reinforcement Learning from Verifiable Rewards (RLVR) excels at tasks with binary correctness, like mathematics, its applicability to noisy, continuous forecasting is an open question. This work, to our knowledge, is the first to bridge the gap between RLVR LLM training with the critical, real-world forecasting challenges in public transit operations. We adapt RLVR to this task by introducing a tolerance-based, shaped reward function that grants partial credit within a continuous error margin, rather than demanding a single correct answer. We systematically evaluate"
+    },
+    {
+      "id": "2511.01425",
+      "versioned_id": "2511.01425v1",
+      "published": "2025-11-03",
+      "updated": "2025-11-03",
+      "title": "Learning to Seek Evidence: A Verifiable Reasoning Agent with Causal Faithfulness Analysis",
+      "authors": [
+        "Yuhang Huang",
+        "Zekai Lin",
+        "Fan Zhong",
+        "Lei Liu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV"
+      ],
+      "pillar": "pillar_d_rlvr_brier_calibration",
+      "url": "https://www.alphaxiv.org/abs/2511.01425",
+      "arxiv_url": "https://arxiv.org/abs/2511.01425",
+      "summary": "Explanations for AI models in high-stakes domains like medicine often lack verifiability, which can hinder trust. To address this, we propose an interactive agent that produces explanations through an auditable sequence of actions. The agent learns a policy to strategically seek external visual evidence to support its diagnostic reasoning. This policy is optimized using reinforcement learning, resulting in a model that is both efficient and generalizable. Our experiments show that this action-based reasoning process significantly improves calibrated accuracy, reducing the Brier score by 18\\% compared to a non-interactive baseline. To validate the faithfulness of the agent's explanations, we introduce a causal intervention method. By masking the visual evidence the agent chooses to use, we observe a measurable degradation in its performance ($$Brier=+0.029), confirming that the evidence i"
+    },
+    {
+      "id": "2601.06336",
+      "versioned_id": "2601.06336v2",
+      "published": "2026-01-09",
+      "updated": "2026-01-14",
+      "title": "Future-as-Label: Scalable Supervision from Real-World Outcomes",
+      "authors": [
+        "Benjamin Turtel",
+        "Paul Wilczewski",
+        "Danny Franklin",
+        "Kris Skothiem"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "pillar": "pillar_d_rlvr_brier_calibration",
+      "url": "https://www.alphaxiv.org/abs/2601.06336",
+      "arxiv_url": "https://arxiv.org/abs/2601.06336",
+      "summary": "Time creates free supervision: forecasts about real-world events resolve to verifiable outcomes. The passage of time provides labels that require no annotation. To exploit this structure, we extend reinforcement learning with verifiable rewards to real-world prediction over time. We train language models to make probabilistic forecasts from causally masked information, using proper scoring rules as the reward function once events resolve. Learning is driven entirely by realized outcomes, enabling scalable outcome-based supervision in open-world prediction. On real-world forecasting benchmarks, Qwen3-32B trained using Foresight Learning improves Brier score by 27% and halves calibration error relative to its pretrained baseline, and outperforms Qwen3-235B on both constructed future-event prediction tasks and the Metaculus benchmark despite a 7x parameter disadvantage."
+    },
+    {
+      "id": "2604.02447",
+      "versioned_id": "2604.02447v1",
+      "published": "2026-04-02",
+      "updated": "2026-04-02",
+      "title": "PlayGen-MoG: Framework for Diverse Multi-Agent Play Generation via Mixture-of-Gaussians Trajectory Prediction",
+      "authors": [
+        "Kevin Song"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "pillar": "pillar_a_nfl_tracking_bdb27",
+      "url": "https://www.alphaxiv.org/abs/2604.02447",
+      "arxiv_url": "https://arxiv.org/abs/2604.02447",
+      "summary": "Multi-agent trajectory generation in team sports requires models that capture both the diversity of possible plays and realistic spatial coordination between players on plays. Standard generative approaches such as Conditional Variational Autoencoders (CVAE) and diffusion models struggle with this task, exhibiting posterior collapse or convergence to the dataset mean. Moreover, most trajectory prediction methods operate in a forecasting regime that requires multiple frames of observed history, limiting their use for play design where only the initial formation is available. We present PlayGen-MoG, an extensible framework for formation-conditioned play generation that addresses these challenges through three design choices: 1/ a Mixture-of-Gaussians (MoG) output head with shared mixture weights across all agents, where a single set of weights selects a play scenario that couples all playe"
+    },
+    {
+      "id": "2604.11786",
+      "versioned_id": "2604.11786v1",
+      "published": "2026-04-13",
+      "updated": "2026-04-13",
+      "title": "GenTac: Generative Modeling and Forecasting of Soccer Tactics",
+      "authors": [
+        "Jiayuan Rao",
+        "Tianlin Gui",
+        "Haoning Wu",
+        "Yanfeng Wang",
+        "Weidi Xie"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.MA"
+      ],
+      "pillar": "pillar_a_nfl_tracking_bdb27",
+      "url": "https://www.alphaxiv.org/abs/2604.11786",
+      "arxiv_url": "https://arxiv.org/abs/2604.11786",
+      "summary": "Modeling open-play soccer tactics is a formidable challenge due to the stochastic, multi-agent nature of the game. Existing computational approaches typically produce single, deterministic trajectory forecasts or focus on highly structured set-pieces, fundamentally failing to capture the inherent variance and branching possibilities of real-world match evolution. Here, we introduce GenTac, a diffusion-based generative framework that conceptualizes soccer tactics as a stochastic process over continuous multi-player trajectories and discrete semantic events. By learning the underlying distribution of player movements from historical tracking data, GenTac samples diverse, plausible, long-horizon future trajectories. The framework supports rich contextual conditioning, including opponent behavior, specific team or league playing styles, and strategic objectives, while grounding continuous sp"
+    },
+    {
+      "id": "2604.20472",
+      "versioned_id": "2604.20472v1",
+      "published": "2026-04-22",
+      "updated": "2026-04-22",
+      "title": "Temporal Difference Calibration in Sequential Tasks: Application to Vision-Language-Action Models",
+      "authors": [
+        "Shelly Francis-Meretzki",
+        "Mirco Mutti",
+        "Yaniv Romano",
+        "Aviv Tamar"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.LG"
+      ],
+      "pillar": "pillar_d_rlvr_brier_calibration",
+      "url": "https://www.alphaxiv.org/abs/2604.20472",
+      "arxiv_url": "https://arxiv.org/abs/2604.20472",
+      "summary": "Recent advances in vision-language-action (VLA) models for robotics have highlighted the importance of reliable uncertainty quantification in sequential tasks. However, assessing and improving calibration in such settings remains mostly unexplored, especially when only partial trajectories are observed. In this work, we formulate sequential calibration for episodic tasks, where task-success confidence is produced along an episode, while success is determined at the end of it. We introduce a sequential extension of the Brier score and show that, for binary outcomes, its risk minimizer coincides with the VLA policy's value function. This connection bridges uncertainty calibration and reinforcement learning, enabling the use of temporal-difference (TD) value estimation as a principled calibration mechanism over time. We empirically show that TD calibration improves performance relative to t"
+    },
+    {
+      "id": "2604.27840",
+      "versioned_id": "2604.27840v3",
+      "published": "2026-04-30",
+      "updated": "2026-10-16",
+      "title": "CastFlow: Bridging Evidence Acquisition and Accurate Prediction in Agentic Time Series Forecasting",
+      "authors": [
+        "Bokai Pan",
+        "Mingyue Cheng",
+        "Xiaoyu Tao",
+        "Zhiding Liu",
+        "Shuo Yu",
+        "Yuchong Wu",
+        "Qi Liu",
+        "Defu Lian"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "pillar": "pillar_d_rlvr_brier_calibration",
+      "url": "https://www.alphaxiv.org/abs/2604.27840",
+      "arxiv_url": "https://arxiv.org/abs/2604.27840",
+      "summary": "Time series forecasting is a fundamental task in temporal data analytics, and large language model (LLM)-based agents offer a promising paradigm through autonomous tool interaction and evidence-grounded reasoning. However, two fundamental challenges remain: how to acquire forecast-relevant evidence through adaptive tool interactions, and how to translate such evidence into accurate numerical predictions. To address these challenges, we propose CastFlow, a role-specialized agentic forecasting framework that bridges general-purpose tool reasoning and specialized temporal forecasting. Specifically, CastFlow introduces an Experience Memory that distills successful tool-use trajectories from training data, guiding a frozen LLM to orchestrate a multi-view toolkit for evidence acquisition. A lightweight specialized LLM then performs evidence-grounded temporal reasoning to refine an ensemble for"
+    },
+    {
+      "id": "2605.17792",
+      "versioned_id": "2605.17792v1",
+      "published": "2026-05-18",
+      "updated": "2026-05-18",
+      "title": "HydroAgent: Closing the Gap Between Frontier LLMs and Human Experts in Hydrologic Model Calibration via Simulator-Grounded RL",
+      "authors": [
+        "Zhi Li",
+        "Songkun Yan",
+        "Jie Cao",
+        "Mofan Zhang",
+        "Anjiang Wei",
+        "Jinwoong Yoo",
+        "Yang Hong"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "physics.geo-ph"
+      ],
+      "pillar": "pillar_d_rlvr_brier_calibration",
+      "url": "https://www.alphaxiv.org/abs/2605.17792",
+      "arxiv_url": "https://arxiv.org/abs/2605.17792",
+      "summary": "Calibrating distributed hydrologic models is a critical bottleneck across operational water resources management - streamflow prediction, reservoir operation, drought monitoring, infrastructure design, and flood forecasting all depend on it. Each basin demands an expert to translate hydrograph signatures into adjustments of a high-dimensional parameter vector, and the resulting workflow does not transfer between watersheds. We ask: can frontier large language model (LLM) agents replace the human hydrologic modeler, and if not, what would it take? We benchmark nine frontier LLM agents - Claude Opus 4.6/4.7, Sonnet 4.6, GPT-5/5.4/5.4-pro, and Gemini 2.5-pro/3.1-pro/3-flash - on the operational CREST distributed hydrologic model used by the U.S. National Weather Service for flash-flood forecasting. Best-of-twenty-rounds Nash-Sutcliffe Efficiency (NSE) across four held-out gauges spanning 32"
+    },
+    {
+      "id": "2605.21491",
+      "versioned_id": "2605.21491v1",
+      "published": "2026-04-06",
+      "updated": "2026-04-06",
+      "title": "Teaching Language Models to Forecast Research Success Through Comparative Idea Evaluation",
+      "authors": [
+        "Srujan P Mule",
+        "Aniketh Garikaparthi",
+        "Manasi Patwardhan"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CL"
+      ],
+      "pillar": "pillar_d_rlvr_brier_calibration",
+      "url": "https://www.alphaxiv.org/abs/2605.21491",
+      "arxiv_url": "https://arxiv.org/abs/2605.21491",
+      "summary": "As language models accelerate scientific research by automating hypothesis generation and implementation, a new bottleneck emerges: evaluating and filtering hundreds of AI-generated ideas without exhaustive experimentation. We ask whether LMs can learn to forecast the empirical success of research ideas before any experiments are run. We study comparative empirical forecasting: given a benchmark-specific research goal and two candidate ideas, predict which will achieve better benchmark performance. We construct a dataset of 11,488 idea pairs grounded in objective outcomes from PapersWithCode. While off-the-shelf 8B-parameter models struggle (30% acc.), SFT dramatically boosts performance to 77.1%, outperforming GPT-5 (61.1%). By framing evaluation as a reasoning task via Reinforcement Learning with Verifiable Rewards (RLVR), we train models to discover latent reasoning paths, achieving 7"
+    },
+    {
+      "id": "2605.25739",
+      "versioned_id": "2605.25739v2",
+      "published": "2026-05-25",
+      "updated": "2026-07-19",
+      "title": "The Behavioral Credibility Trilemma: When Calibrated Autonomy Becomes Impossible",
+      "authors": [
+        "Lauri Loven",
+        "Nam Do",
+        "Hassan Mehmood",
+        "Dinesh Kumar Sah",
+        "Sasu Tarkoma"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.GT",
+        "stat.ML"
+      ],
+      "pillar": "pillar_d_rlvr_brier_calibration",
+      "url": "https://www.alphaxiv.org/abs/2605.25739",
+      "arxiv_url": "https://arxiv.org/abs/2605.25739",
+      "summary": "We prove that no reinforcement learning policy with confidence-gated autonomy can simultaneously achieve maximum helpfulness, optimal calibration, and full autonomy under rational oversight, whenever some tasks exceed the agent's reliable competence: the Behavioral Credibility Trilemma. The impossibility is geometric: adding any non-affine autonomy incentive to a strictly proper scoring rule destroys strict properness, so an agent rewarded for both calibrated confidence and autonomous action systematically inflates its reported confidence on tasks below the principal's approval threshold whenever the autonomy stake exceeds the calibration cost of clearing it. The Behavioral Perturbation Lemma quantifies the inflation (scaling as $w_A/(2 w_C)$ for the Brier score) and shows detection requires $(1/^2)$ observations for interior reports. We prove that, in the unsaturated regime, no affine o"
+    },
+    {
+      "id": "2605.29401",
+      "versioned_id": "2605.29401v1",
+      "published": "2026-05-28",
+      "updated": "2026-05-28",
+      "title": "Rethinking Post-Training Recipes for Multimodal Time-Series Forecasting",
+      "authors": [
+        "Haoxin Liu",
+        "Yichen Zhou",
+        "Rajat Sen",
+        "B. Aditya Prakash",
+        "Abhimanyu Das"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "pillar": "pillar_d_rlvr_brier_calibration",
+      "url": "https://www.alphaxiv.org/abs/2605.29401",
+      "arxiv_url": "https://arxiv.org/abs/2605.29401",
+      "summary": "Time-Series Foundation Models (TSFMs) excel at zero-shot unimodal forecasting using numerical data, but unlike LLMs they cannot consume multimodal, non-numerical context that often shape real-world trajectories. In this work, we bridge this gap and argue for a multimodal time-series forecasting approach that post-trains LLMs to act as context-guided revisors over strong numerical TSFM priors. We introduce PostTime, a post-training recipe combining Supervised Fine-Tuning (SFT) and Reinforcement Learning with Verifiable Rewards (RLVR), along with a methodology to generate automated reasoning traces for forecast revisions. PostTime teaches an LLM to generate context-conditioned forecast interventions -- decisions to revise, preserve, or ignore the TSFM prior based on the multimodal context. We evaluate this approach on the TimesX multimodal forecasting benchmark using a Gemma-3-4B LLM and T"
+    },
+    {
+      "id": "2606.02534",
+      "versioned_id": "2606.02534v1",
+      "published": "2026-06-01",
+      "updated": "2026-06-01",
+      "title": "Reduce dimensional quantum criticality for Non-Fermi liquids",
+      "authors": [
+        "Phumudzo T. Rabambi",
+        "Mario Solis"
+      ],
+      "primary_category": "cond-mat.str-el",
+      "categories": [
+        "cond-mat.str-el",
+        "cond-mat.supr-con",
+        "hep-th"
+      ],
+      "pillar": "pillar_a_nfl_tracking_bdb27",
+      "url": "https://www.alphaxiv.org/abs/2606.02534",
+      "arxiv_url": "https://arxiv.org/abs/2606.02534",
+      "summary": "We present a reduced dimension theoretical framework for studying quantum field theories at finite density, providing a tractable model for investigating non-Fermi liquid (NFL) behavior near quantum phase transitions. Our approach departs from the standard paradigm by placing bosons and fermions in different spatial dimensions: bosonic fields reside in a $(d+1)$-dimensional bulk, while fermionic fields are confined on a $d$-dimensional boundary. This dimensional separation significantly simplifies the renormalization group (RG) analysis of gapless boson-fermion coupling. We demonstrate that the tree-level boson exchange contributions, which typically exhibit logarithmic divergences, become finite in our reduced-dimension scheme. Furthermore, the $\\log^2$ and $\\log^3$ divergences that characterize 1-loop four-fermion interactions in conventional treatments are reduced to logarithmic diver"
+    },
+    {
+      "id": "2606.08633",
+      "versioned_id": "2606.08633v1",
+      "published": "2026-06-07",
+      "updated": "2026-06-07",
+      "title": "Towards Long-Horizon Vessel Trajectory and Destination Forecasting with Reasoning Large Language Models",
+      "authors": [
+        "Hongwei Wang",
+        "Miao Zhou",
+        "Fengde Wang",
+        "Yuting Wang",
+        "Jiewen Yu",
+        "Jun-Yan He",
+        "Bohao Qu",
+        "Wanbing Zhang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "pillar": "pillar_d_rlvr_brier_calibration",
+      "url": "https://www.alphaxiv.org/abs/2606.08633",
+      "arxiv_url": "https://arxiv.org/abs/2606.08633",
+      "summary": "Long-horizon maritime trajectory prediction is important for shipping management, logistics planning, and maritime risk analysis, yet month-level forecasting remains insufficiently studied. Existing deep learning methods mainly focus on short- and mid-term coordinate extrapolation and often struggle to preserve route feasibility and destination correctness over extended horizons. This paper investigates joint long-horizon vessel trajectory and destination forecasting with reasoning-capable large language models, and develops a Maritime LLM post-training framework based on Reinforcement Learning with Verifiable Reward (RLVR). An AIS-based benchmark is constructed with 60-day historical trajectories and 30-day forecasting horizons, where trajectories are converted into semantic textual representations for RL prompt construction. RLVR aligns LLMs with maritime forecasting objectives by enfo"
+    },
+    {
+      "id": "2606.18512",
+      "versioned_id": "2606.18512v3",
+      "published": "2026-06-16",
+      "updated": "2026-08-31",
+      "title": "From Control to Treatment: Causal Forecasting Beyond the Observed Panel",
+      "authors": [
+        "Dennis Shen"
+      ],
+      "primary_category": "econ.EM",
+      "categories": [
+        "econ.EM",
+        "stat.ME"
+      ],
+      "pillar": "pillar_a_nfl_tracking_bdb27",
+      "url": "https://www.alphaxiv.org/abs/2606.18512",
+      "arxiv_url": "https://arxiv.org/abs/2606.18512",
+      "summary": "Conventional panel data methods recover retrospective counterfactuals within the observed horizon. Many policy decisions, however, are prospective: how would an untreated unit evolve beyond the observed panel under an intervention it has not previously experienced? We develop a causal forecasting framework that combines the counterfactual logic of synthetic controls with multivariate time-series extrapolation. Under a latent factor model, we impose low-rank structure on the treated-state time factors. This yields the Two-Way Synthetic Forecasting estimator, which learns cross-unit weights from pre-treatment outcomes and temporal dynamics from treated donors' post-treatment trajectories. We establish pointwise identification, finite-sample error bounds, consistency, asymptotic normality, and inference for prespecified linear summaries over fixed forecast horizons. Simulations support the "
+    },
+    {
+      "id": "2606.18805",
+      "versioned_id": "2606.18805v1",
+      "published": "2026-06-17",
+      "updated": "2026-06-17",
+      "title": "Emotional driving: Reference-dependent emotions and risky driving behavior after sporting events",
+      "authors": [
+        "Travis Richardson",
+        "Steve Bickley",
+        "Ho Fai Ben Chan",
+        "Benno Torgler",
+        "Shamsunnahar Yasmin",
+        "Tim Pawlowski"
+      ],
+      "primary_category": "econ.GN",
+      "categories": [
+        "econ.GN"
+      ],
+      "pillar": "pillar_a_nfl_tracking_bdb27",
+      "url": "https://www.alphaxiv.org/abs/2606.18805",
+      "arxiv_url": "https://arxiv.org/abs/2606.18805",
+      "summary": "Using average vehicle speed data in 10-minute increments at the Traffic Message Channel (TMC) location level, along with precise crash timing and location information, we analyze driving behavior around five Florida stadiums before and after NFL and NBA regular season games from 2015 to 2019. We find no evidence of emotional driving following NBA games, but strong and consistent effects following NFL games, concentrated in predicted-close games that end in disappointing home-team losses -- combining high pre-game suspense with negative outcome valence. These games are associated with significant increases in average vehicle speed within 3 km of stadiums during the first post-game hour, dissipating with increasing time and distance from the stadium. Average vehicle speed increases by up to 3 mph relative to predicted-close games that ended in a win -- an effect several times larger than t"
+    },
+    {
+      "id": "2606.24443",
+      "versioned_id": "2606.24443v1",
+      "published": "2026-06-23",
+      "updated": "2026-06-23",
+      "title": "Verifiable Auto-Formalization of Mathematics Using a Relaxed Natural Formal Language",
+      "authors": [
+        "Zhicheng Hui",
+        "Lihan Xie",
+        "Xingzhi Qi",
+        "Zhehao Li",
+        "Yingjun Lan",
+        "Qinxiang Cao"
+      ],
+      "primary_category": "cs.LO",
+      "categories": [
+        "cs.LO",
+        "cs.PL"
+      ],
+      "pillar": "pillar_a_nfl_tracking_bdb27",
+      "url": "https://www.alphaxiv.org/abs/2606.24443",
+      "arxiv_url": "https://arxiv.org/abs/2606.24443",
+      "summary": "Auto-formalization aims to translate informal mathematical content into formal languages that can be processed by theorem provers. However, directly targeting existing theorem provers requires LLMs to bridge a substantial representational gap between informal mathematical writing and formal proof languages. This gap also makes semantic consistency difficult to evaluate. We address these difficulties by introducing a Relaxed Natural Formal Language (Relaxed NFL) as an intermediate target for auto-formalization. The Relaxed NFL is designed to remain close to informal mathematical writing: it preserves the usual structure of informal reasoning and allows partially specified expressions and propositions, without requiring their precise interpretation to be fixed at the auto-formalization stage. The remaining ambiguity and implicitness inherited from informal reasoning are resolved during a l"
+    },
+    {
+      "id": "2606.28973",
+      "versioned_id": "2606.28973v1",
+      "published": "2026-06-27",
+      "updated": "2026-06-27",
+      "title": "Sharp $O(1/k)$ convergence rate for the Sinkhorn algorithm via a local analysis",
+      "authors": [
+        "Guillaume Wang"
+      ],
+      "primary_category": "math.OC",
+      "categories": [
+        "math.OC"
+      ],
+      "pillar": "pillar_c_sinkhorn_assignment_trench",
+      "url": "https://www.alphaxiv.org/abs/2606.28973",
+      "arxiv_url": "https://arxiv.org/abs/2606.28973",
+      "summary": "We prove that the Sinkhorn algorithm converges at the rate of $O(1/k)$ in $\\ell_1$-norm marginal error and in joint relative entropy, which is known to be sharp in the asymptotically scalable case. The proof is based on examining the bipartite graph associated to the entropy-regularized optimal transport problem, and treating differently the edges that are assigned a positive mass in the optimal transport plan vs. those that are not. This yields a local convergence bound with the sharp rate, which is bootstrapped into a global bound using the author's previous result in arXiv:2604.26265 where we showed an almost-sharp rate up to a logarithmic factor."
+    },
+    {
+      "id": "2606.31028",
+      "versioned_id": "2606.31028v1",
+      "published": "2026-06-30",
+      "updated": "2026-06-30",
+      "title": "Tunable Extended Magnetic Non-Fermi Liquid in Graphene Moire Heterostructures",
+      "authors": [
+        "Yongqin Xie",
+        "Jian Wang",
+        "Moyu Chen",
+        "Chen Zhao",
+        "Fanqiang Chen",
+        "Qiao Li",
+        "Sicheng Chen",
+        "Jiao Xie"
+      ],
+      "primary_category": "cond-mat.mes-hall",
+      "categories": [
+        "cond-mat.mes-hall"
+      ],
+      "pillar": "pillar_a_nfl_tracking_bdb27",
+      "url": "https://www.alphaxiv.org/abs/2606.31028",
+      "arxiv_url": "https://arxiv.org/abs/2606.31028",
+      "summary": "Exploring exotic quantum metallic states beyond Landau's Fermi liquid theory remains a central focus in condensed matter physics. Such non-Fermi liquid behavior is mostly observed near quantum criticality, yet growing attention is directed toward extended NFL phases with intrinsic quantum fluctuations rooted in the extended ground state. While these extended NFL states have been previously reported only in a limited set of d- and f-electron systems, realizing a single, highly tunable platform capable of exhibiting multiple resistance exponent values is essential for uncovering the connection between the resistance exponent and the dominant quantum fluctuations coupled to quasiparticles. However, corresponding experimental progress remains elusive. Here, we report the observation of tunable extended non-Fermi liquid behavior in twisted double bilayer graphene encapsulated by aligned hBN l"
+    },
+    {
+      "id": "2607.00190",
+      "versioned_id": "2607.00190v1",
+      "published": "2026-06-30",
+      "updated": "2026-06-30",
+      "title": "Play Like Champions: Counterfactual Feedback Generation in Latent Space",
+      "authors": [
+        "Andrzej Biaecki",
+        "Adam Mastalerz",
+        "Han Zhou"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "pillar": "pillar_c_sinkhorn_assignment_trench",
+      "url": "https://www.alphaxiv.org/abs/2607.00190",
+      "arxiv_url": "https://arxiv.org/abs/2607.00190",
+      "summary": "Recent advances in reinforcement learning have produced superhuman agents across a wide range of competitive games. As a byproduct, researchers have begun studying how these agents play, extracting behavioral representations, analyzing decision structure, and modeling the latent geometry of expert performance. However, this growing body of work has overwhelmingly focused on defeating human players rather than providing feedback, leaving a critical gap in creating model solutions to improve human players. Unlike chess and Go, where AI has become integral to player training, real-time strategy (RTS) games lack principled frameworks for translating expert knowledge into actionable feedback. We introduce Latent Maps of Performance, a framework for counterfactual path generation. We focus on StarCraft~II data to model player improvement as an algorithmic recourse within a learned representati"
+    },
+    {
+      "id": "2607.02722",
+      "versioned_id": "2607.02722v1",
+      "published": "2026-07-02",
+      "updated": "2026-07-02",
+      "title": "Weighted Conformal Prediction for Lab-to-Track Thermal Transfer in EV Motorsport Powertrains",
+      "authors": [
+        "Varshith Roy Kotla"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "pillar": "pillar_e_conformal_time_series_venn_abers",
+      "url": "https://www.alphaxiv.org/abs/2607.02722",
+      "arxiv_url": "https://arxiv.org/abs/2607.02722",
+      "summary": "Predicting thermal volatility in high-performance EV powertrains is difficult as internal temperatures are rarely observable outside the lab, and models calibrated on lab drive cycles fail when deployed against real-world loads. We study this lab-to-track transfer problem using conformal prediction, offering distribution-free uncertainty bounds. We implement Ensemble Batch Prediction Intervals (EnbPI; Xu & Xie, 2021), a leave-one-out bootstrap-ensemble conformal method for autocorrelated time series, and calibrate it on real CALCE lithium-ion cycler data (A123 SP20 cells, FUDS profile). We evaluate it under a genuine, measured covariate shift: a second real CALCE test condition (US06 Highway Driving Schedule at 45C). The unweighted EnbPI bound, achieving its nominal 95% coverage in-distribution (measured: 95.00%), degrades to 70.13% empirical coverage under this real shift. We introduce "
+    },
+    {
+      "id": "2607.06690",
+      "versioned_id": "2607.06690v1",
+      "published": "2026-07-07",
+      "updated": "2026-07-07",
+      "title": "tsbootstrap: Distribution-Free Uncertainty Quantification and Conformal Prediction for Time Series",
+      "authors": [
+        "Sankalp Gilda"
+      ],
+      "primary_category": "stat.ME",
+      "categories": [
+        "stat.ME",
+        "cs.AI",
+        "cs.MS",
+        "q-fin.ST",
+        "stat.AP"
+      ],
+      "pillar": "pillar_e_conformal_time_series_venn_abers",
+      "url": "https://www.alphaxiv.org/abs/2607.06690",
+      "arxiv_url": "https://arxiv.org/abs/2607.06690",
+      "summary": "Finance, sensing, and demand streams violate the exchangeability that IID conformal prediction and the IID bootstrap assume, and existing libraries implement either a general resampling engine or conformal calibration without the other. tsbootstrap provides block, residual, sieve, and wild resampling, classical bootstrap confidence intervals, and adaptive conformal calibrators (EnbPI, ACI, NexCP, AgACI) through a single typed API in which a specification object selects each method. In a controlled coverage study the IID bootstrap undercovers sharply under dependence; dependence-aware methods reduce the coverage deficit, the sieve nearest to nominal under short-memory linear dependence. On the shared fixed-statistic path a compiled backend runs several times faster than arch, and a streaming reduce avoids materializing the $O(Bn)$ replicate tensor, limiting peak extra memory to $O(B)$ for"
+    },
+    {
+      "id": "2607.09542",
+      "versioned_id": "2607.09542v1",
+      "published": "2026-07-10",
+      "updated": "2026-07-10",
+      "title": "A nonstandard statistics for strongly correlated systems: Two simple examples",
+      "authors": [
+        "Jozef Spaek",
+        "Piotr Kuterba",
+        "Mateusz Wojcik",
+        "Danuta Goc-Jago",
+        "Maciej Fidrysiak",
+        "Leszek Spaek",
+        "Wodzimierz Wojcik"
+      ],
+      "primary_category": "cond-mat.str-el",
+      "categories": [
+        "cond-mat.str-el"
+      ],
+      "pillar": "pillar_a_nfl_tracking_bdb27",
+      "url": "https://www.alphaxiv.org/abs/2607.09542",
+      "arxiv_url": "https://arxiv.org/abs/2607.09542",
+      "summary": "We discuss two different cases of strongly correlated fermions statistics. The first of them is the non-Fermi liquid (NFL) case, $i.e.$, that of fermions with exclusion of doubly occupancy of quasimomentum states $\\{\\bf k\\}$ with opposite spins ($\\uparrow\\downarrow$). The second is that of statistical spin liquid (SSL) case, in which the fermion spins hop around and mix with the holes (unoccupied) states. For both cases we calculate the system entropy and the corresponding statistical distribution function, analyzed for a two-dimensional square-lattice filling $n\\in [0,1]$ and relative temperature $k_B T/|t|$, where $t<0$ is the nearest neighbor hopping integral. We are particularly interested in the situation when the system of itinerant fermions reduce to the Mott-insulator state for the half-filled band ($n\\to1$). This limiting situation signals a qualitative difference between the pr"
+    },
+    {
+      "id": "2607.11272",
+      "versioned_id": "2607.11272v1",
+      "published": "2026-07-13",
+      "updated": "2026-07-13",
+      "title": "Long-Memory Reservoir Computing for Data-Scarce Dengue Forecasting",
+      "authors": [
+        "Rahul Goswami",
+        "Shinjini Paul",
+        "Palash Ghosh",
+        "Tanujit Chakraborty"
+      ],
+      "primary_category": "stat.ML",
+      "categories": [
+        "stat.ML",
+        "cs.LG"
+      ],
+      "pillar": "pillar_e_conformal_time_series_venn_abers",
+      "url": "https://www.alphaxiv.org/abs/2607.11272",
+      "arxiv_url": "https://arxiv.org/abs/2607.11272",
+      "summary": "Accurate dengue forecasting is crucial for public health planning, but remains challenging because incidence series are often short, noisy, non-stationary, nonlinear, and often affected by long-range temporal dependence. Fractional differencing in Autoregressive Fractionally Integrated Moving Average (ARFIMA) helps balance non-stationarity and persistence, but its linear structure limits its ability to capture nonlinear dynamics. Deep neural networks can model nonlinear patterns, but usually require large training samples and do not explicitly encode statistical long memory. Echo State Networks (ESNs), a widely used reservoir computing framework, are attractive in this setting because they retain nonlinear recurrent dynamics while training only a simple readout, making them suitable for data-scarce scenarios. However, standard ESNs lack long-term memory from a time-series perspective. Th"
+    },
+    {
+      "id": "2607.12856",
+      "versioned_id": "2607.12856v1",
+      "published": "2026-07-14",
+      "updated": "2026-07-14",
+      "title": "Verifier-Based Reinforcement Fine-Tuning of Reasoning Models for Thermal Energy Storage Control",
+      "authors": [
+        "Takumi Shioda",
+        "Kohei Terashima",
+        "Tatsuo Nagai"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "pillar": "pillar_d_rlvr_brier_calibration",
+      "url": "https://www.alphaxiv.org/abs/2607.12856",
+      "arxiv_url": "https://arxiv.org/abs/2607.12856",
+      "summary": "Buildings are expected to shift cooling loads in response to grid conditions. Thermal energy storage (TES) enables this shift, but scheduling it well requires planning hours ahead under storage constraints. Model predictive control (MPC) and reinforcement learning are difficult to scale across buildings. This study instead adapts an open-weight reasoning model through reinforcement learning with verifiable rewards (RLVR). We convert exact offline dynamic-programming (DP) action values into dense rewards for every candidate action. Using only 30 training prompts, reinforcement fine-tuning (RFT) trains the model as an upper-level scheduler that outputs hourly heat-pump setpoints from text-based states and forecasts. Evaluation uses a deliberately simple office-building TES benchmark where exact DP is tractable and the optimum is known. RFT reduces the open-weight model's emissions from 70."
+    },
+    {
+      "id": "2607.13850",
+      "versioned_id": "2607.13850v1",
+      "published": "2026-07-15",
+      "updated": "2026-07-15",
+      "title": "Bias Correction for Relative Importance Measures via Doubly Stochastic Reallocation",
+      "authors": [
+        "Tien-En Chang",
+        "Argon Chen"
+      ],
+      "primary_category": "stat.ME",
+      "categories": [
+        "stat.ME"
+      ],
+      "pillar": "pillar_c_sinkhorn_assignment_trench",
+      "url": "https://www.alphaxiv.org/abs/2607.13850",
+      "arxiv_url": "https://arxiv.org/abs/2607.13850",
+      "summary": "Relative importance (RI) analysis quantifies each predictor's contribution to the explained variance of a linear model. General Dominance (GD), a widely used benchmark, requires evaluating $2^p-1$ sub-models and becomes computationally intensive as the number of predictors $p$ grows. Orthogonalization-Reallocation Measures (ORMs), including Relative Weights (RW) and the Green--Carroll--DeSarbo measure (GCD), provide efficient alternatives by assigning importance to orthogonalized predictors and reallocating it to the original predictors. Each, however, has a structural limitation: RW exhibits a leveling problem that compresses differences among predictor importance values, whereas GCD exhibits an a priori bias that systematically favors certain predictors before a response is observed. We show that this bias is governed by the row-sums of the reallocation matrix. A closed-form analysis u"
+    },
+    {
+      "id": "2607.18394",
+      "versioned_id": "2607.18394v1",
+      "published": "2026-07-20",
+      "updated": "2026-07-20",
+      "title": "Non-Fermi-Liquid Behaviors in Weakly Interacting Two-Dimensional Quasicrystals",
+      "authors": [
+        "Junmo Jeon",
+        "Shiro Sakai"
+      ],
+      "primary_category": "cond-mat.str-el",
+      "categories": [
+        "cond-mat.str-el",
+        "cond-mat.dis-nn"
+      ],
+      "pillar": "pillar_a_nfl_tracking_bdb27",
+      "url": "https://www.alphaxiv.org/abs/2607.18394",
+      "arxiv_url": "https://arxiv.org/abs/2607.18394",
+      "summary": "Non-Fermi-liquid (NFL) behavior is usually associated with strong electronic correlations, quantum criticality, or singular fluctuations that invalidate the quasiparticle picture. Quasicrystals are known to provide a fundamentally different route to such physics: their lack of translational symmetry gives rise to critical single-particle states and fragmented spectra even in the absence of electron-electron interactions. Here, we numerically study the NFL behaviors in quasicrystals with weak interactions. Using Penrose and Ammann--Beenker tilings as representative quasiperiodic systems, we analyze thermodynamic, magnetic, and transport properties within a weak-coupling perturbative framework. The Sommerfeld coefficient and magnetic susceptibility show anomalous temperature dependences governed by the singular energy dependence of the density of states near the Fermi level. The Wilson rat"
+    },
+    {
+      "id": "2607.18461",
+      "versioned_id": "2607.18461v1",
+      "published": "2026-07-20",
+      "updated": "2026-07-20",
+      "title": "The triumphs and tragedies of fandom: Emotional arcs in NFL tweets",
+      "authors": [
+        "Elisabeth Kollrack",
+        "Michael V. Arnold",
+        "Peter Sheridan Dodds",
+        "Christopher M. Danforth"
+      ],
+      "primary_category": "cs.CY",
+      "categories": [
+        "cs.CY",
+        "physics.soc-ph"
+      ],
+      "pillar": "pillar_a_nfl_tracking_bdb27",
+      "url": "https://www.alphaxiv.org/abs/2607.18461",
+      "arxiv_url": "https://arxiv.org/abs/2607.18461",
+      "summary": "Online fandom communities influence public opinion toward movies, musicians, and sports teams. Using a corpus of game-referencing tweets, we measure variation in sentiment toward National Football League (NFL) teams driven by geography, game outcomes, and team performance for the 2011--2014 NFL seasons. We estimate a fandom radius for each team, identifying regions where engagement exceeds background levels of discussion. We find sentiment for both winning and losing teams is positive immediately prior to games, drops at kickoff, and rebounds slightly during halftime. After halftime however, the trajectories diverge: Sentiment for winning teams increases toward the end of the game, while sentiment for losing teams remains low, though both end up below their start of game levels. Finally, a comparison between sentiment and win percentage reveals a weak positive relationship, suggesting th"
+    },
+    {
+      "id": "2607.23165",
+      "versioned_id": "2607.23165v1",
+      "published": "2026-07-25",
+      "updated": "2026-07-25",
+      "title": "Adaptive Multi-Scale Forecasting and Gate-Localized Conformal Prediction for Multivariate Nonstationary Time Series",
+      "authors": [
+        "Ziling Ma",
+        "Junshu Jiang",
+        "Angel Lopez-Oriona",
+        "Ying Sun",
+        "Hernando Ombao"
+      ],
+      "primary_category": "stat.ML",
+      "categories": [
+        "stat.ML",
+        "cs.LG",
+        "stat.AP",
+        "stat.ME"
+      ],
+      "pillar": "pillar_e_conformal_time_series_venn_abers",
+      "url": "https://www.alphaxiv.org/abs/2607.23165",
+      "arxiv_url": "https://arxiv.org/abs/2607.23165",
+      "summary": "We propose ABF-T-GLCP, a model-agnostic framework for forecasting and uncertainty quantification in nonstationary multivariate time series. The central idea is to learn an adaptive predictive state representation for point forecasting and reuse it for conformal calibration. The forecasting module combines horizon-specific temporal experts through a learned gate and refines predictions using sparse predictive transfer across related series. The uncertainty module, Gate-Localized Conformal Prediction (GLCP), uses the learned gate state, together with temporal recency, to select locally relevant calibration residuals, thereby coupling uncertainty calibration to the predictive regimes used by the forecasting model. This shared representation allows point forecasts and prediction intervals to adapt consistently under evolving temporal dynamics while retaining the model-agnostic nature of conf"
+    },
+    {
+      "id": "2607.24741",
+      "versioned_id": "2607.24741v4",
+      "published": "2026-07-27",
+      "updated": "2026-11-14",
+      "title": "DrainSinkhorn: Instance-Resident Batched Entropic Optimal Transport on GPUs",
+      "authors": [
+        "Xinyang Wen"
+      ],
+      "primary_category": "cs.DC",
+      "categories": [
+        "cs.DC",
+        "cs.LG"
+      ],
+      "pillar": "pillar_c_sinkhorn_assignment_trench",
+      "url": "https://www.alphaxiv.org/abs/2607.24741",
+      "arxiv_url": "https://arxiv.org/abs/2607.24741",
+      "summary": "Many learning pipelines call entropic optimal transport (OT) inside a loop, and each call is a batch of small, independent problems: one per image in detection label assignment, per patch pair in point-cloud registration, per frame pair in tracking, and per tile in domain decomposition. General GPU solvers launch every Sinkhorn update over the whole batch and run the batch until its slowest problem stops, so practitioners write a kernel for each shape or drop OT. We present DrainSinkhorn, a batched Sinkhorn solver that makes each problem of the batch, an instance, the unit of GPU execution. Wherever an instance fits on chip, one GPU thread block solves it from start to finish and exits as soon as the instance converges, freeing its slot for a pending instance. With a fixed iteration count, several instances share a thread block, and the forward map and its exact gradient take one launch "
+    },
+    {
+      "id": "2607.26854",
+      "versioned_id": "2607.26854v1",
+      "published": "2026-07-29",
+      "updated": "2026-07-29",
+      "title": "TREA-Net: A Transferable Residual Epidemiological Adaptation Network for Dengue Incidence Forecasting",
+      "authors": [
+        "Inesh Shukla",
+        "Madhurima Panja",
+        "Tanujit Chakraborty",
+        "Chittaranjan Hens"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "q-bio.QM"
+      ],
+      "pillar": "pillar_e_conformal_time_series_venn_abers",
+      "url": "https://www.alphaxiv.org/abs/2607.26854",
+      "arxiv_url": "https://arxiv.org/abs/2607.26854",
+      "summary": "Accurate multi-week dengue forecasting supports timely vector-control interventions, outbreak preparedness, and healthcare resource allocation. However, newly established surveillance systems often lack the historical data needed to train reliable neural forecasting models. Although pretrained time-series models offer promising zero-shot forecasts, their cross-domain training may not capture local epidemiological dynamics. We propose TREA-Net, a Transferable Residual Epidemiological Adaptation Network for dengue forecasting under limited data. TREA-Net augments neural forecasting backbones with projections from an Environmental Time-Series Susceptible-Infected-Recovered model and learns a lightweight gated residual correction transferable from data-rich to data-scarce regions. Its node-invariant design accommodates surveillance systems with different numbers of locations, while target ad"
+    },
+    {
+      "id": "2608.02181",
+      "versioned_id": "2608.02181v1",
+      "published": "2026-08-03",
+      "updated": "2026-08-03",
+      "title": "Start Classifying: Categorical Critics for LLM Reinforcement Learning",
+      "authors": [
+        "Zhijian Zhou",
+        "Long Li",
+        "Xuan Zhang",
+        "Zongkai Liu",
+        "Yulei Qin",
+        "Ke Li",
+        "Xing Sun",
+        "Xiaoyu Tan"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "pillar": "pillar_d_rlvr_brier_calibration",
+      "url": "https://www.alphaxiv.org/abs/2608.02181",
+      "arxiv_url": "https://arxiv.org/abs/2608.02181",
+      "summary": "Proximal Policy Optimization (PPO) for large language models typically trains its critic by mean-squared-error (MSE) regression on scalar value targets. Although scalar MSE is statistically valid for estimating the conditional expected return, sparse binary rewards in reinforcement learning with verifiable rewards (RLVR) make critic optimization and calibration especially consequential: small value errors directly distort the scalar advantages used by PPO. We study whether a classification-based training objective can improve this critic signal. HL-Gauss PPO replaces the scalar MSE head with a categorical predictor over a discretized value support, trained by cross-entropy against smoothed HL-Gauss targets. Its output is decoded to a scalar expectation for standard GAE and PPO; the actor update is therefore unchanged and is not distributional. Across mathematical reasoning, tool-augmente"
+    },
+    {
+      "id": "2608.03676",
+      "versioned_id": "2608.03676v1",
+      "published": "2026-08-04",
+      "updated": "2026-08-04",
+      "title": "TAOT: Topology-Aware Optimal Transport for Dynamic Expert Replica Placement in MoE Training",
+      "authors": [
+        "Lingyun Zhang",
+        "Henghua Zhang",
+        "Shilei Gu",
+        "Kai Mo",
+        "Shuai Han",
+        "Shiyong Li",
+        "Yanpeng Wang",
+        "Dou Shen"
+      ],
+      "primary_category": "cs.DC",
+      "categories": [
+        "cs.DC"
+      ],
+      "pillar": "pillar_c_sinkhorn_assignment_trench",
+      "url": "https://www.alphaxiv.org/abs/2608.03676",
+      "arxiv_url": "https://arxiv.org/abs/2608.03676",
+      "summary": "Mixture-of-Experts (MoE) has become a key architecture for scaling large language models (LLMs), yet its dynamic routing causes severe load imbalance in expert-parallel training. Existing dynamic-replica methods copy hot experts onto idle ranks to share computation, but they optimize load balance alone and ignore the cost of moving expert weights across a multi-node topology, so the resulting cross-node communication can outweigh the balancing gain and inflate training cost. We present TAOT, a topology-aware optimal transport method for dynamic expert-replica placement. TAOT models the overload on hot ranks and the spare capacity on lightly loaded ranks as a balanced entropy-regularized optimal transport problem with a communication-cost matrix, solves it with Sinkhorn-Knopp iterations to produce rank-level flow hints, and combines integer replica matching with token assignment into an e"
+    },
+    {
+      "id": "2608.10553",
+      "versioned_id": "2608.10553v1",
+      "published": "2026-08-11",
+      "updated": "2026-08-11",
+      "title": "Retrieval-Corrected Conformal Prediction for Time Series",
+      "authors": [
+        "Sangjin Jin",
+        "Kangmin Kim",
+        "Junhyeong Lee",
+        "Yongjae Lee"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "pillar": "pillar_e_conformal_time_series_venn_abers",
+      "url": "https://www.alphaxiv.org/abs/2608.10553",
+      "arxiv_url": "https://arxiv.org/abs/2608.10553",
+      "summary": "Conformal prediction (CP) provides distribution-free prediction intervals for fixed forecasters, but its standard calibration procedure is often inefficient for time series data, where forecast errors are temporally dependent and change across time and operating conditions. Recent time series CP methods improve local calibration using recent, weighted, or localized residuals. Yet local calibration can remain indirect, since broad residual weighting or additional adaptation procedures may dilute the evidence most relevant to the current prediction. This motivates a simple retrieval and correction strategy that selects similar past residuals as local evidence and then corrects the coverage error left by retrieval. In this paper, we propose Retrieval--Corrected Conformal Prediction (RCCP), a retrieval-augmented calibration method for time series prediction intervals. RCCP builds an asymmetr"
+    },
+    {
+      "id": "2608.16101",
+      "versioned_id": "2608.16101v1",
+      "published": "2026-08-17",
+      "updated": "2026-08-17",
+      "title": "EMS Coreset: An Efficient Expectation-Maximization Algorithm for Sinkhorn Coreset",
+      "authors": [
+        "Haoyun Yin",
+        "Chuanhui Liu",
+        "Xiao Wang"
+      ],
+      "primary_category": "stat.ML",
+      "categories": [
+        "stat.ML",
+        "cs.LG"
+      ],
+      "pillar": "pillar_c_sinkhorn_assignment_trench",
+      "url": "https://www.alphaxiv.org/abs/2608.16101",
+      "arxiv_url": "https://arxiv.org/abs/2608.16101",
+      "summary": "Coresets distill large datasets into small, representative subsets for efficient downstream learning. Yet Optimal Transport (OT)-based selection typically requires intensive computation of transport plans, limiting scalability. We introduce a scalable Sinkhorn coreset method that permits closed-form updates of the entropically regularized OT coupling by allowing non-uniform coreset weights. This produces centroids that generalize k-means via soft assignments. We establish asymptotic consistency of the selected measure and Lipschitz stability to data perturbations, providing accuracy and robustness guarantees. Across synthetic and real-world benchmarks, the proposed method achieves competitive or improved approximation quality while substantially reducing runtime compared to Wasserstein- and standard Sinkhorn-based coreset selection, especially at large scale."
+    },
+    {
+      "id": "2608.16642",
+      "versioned_id": "2608.16642v2",
+      "published": "2026-08-17",
+      "updated": "2026-10-09",
+      "title": "Throwing a Tight Spiral American Football by a Humanoid Robot",
+      "authors": [
+        "Zaid Mahboob",
+        "Bowen Weng"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "pillar": "pillar_a_nfl_tracking_bdb27",
+      "url": "https://www.alphaxiv.org/abs/2608.16642",
+      "arxiv_url": "https://arxiv.org/abs/2608.16642",
+      "summary": "Accurate throwing of the American football requires precise regulation of release conditions, where coupled linear and angular momentum determine flight stability and targeting accuracy. While prior work on robotic object throwing has largely focused on generating dynamically feasible release velocities using open-gripper paradigms, explicit control of spin injection at detachment remains underexplored, particularly for aerodynamically anisotropic objects like the American football. In this paper, we present the spin-stabilized controlled tight spiral throw of an American football by a humanoid robot. Achieving this requires (i) accurately reaching the desired coupled momentum, which often involves high degrees-of-freedom (DoF) movements completed within approximately half a second, and (ii) managing the complex transient contact dynamics that arise during the sub-100-millisecond release"
+    },
+    {
+      "id": "2608.28262",
+      "versioned_id": "2608.28262v1",
+      "published": "2026-08-28",
+      "updated": "2026-08-28",
+      "title": "SinkSLOT: Sinkhorn via Sparse Lifted Optimal Transport",
+      "authors": [
+        "Ian Hsieh",
+        "Soumya Snigdha Kundu",
+        "Tom Vercauteren",
+        "Reuben Dorent"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "pillar": "pillar_c_sinkhorn_assignment_trench",
+      "url": "https://www.alphaxiv.org/abs/2608.28262",
+      "arxiv_url": "https://arxiv.org/abs/2608.28262",
+      "summary": "Entropic optimal transport (EOT) has been shown to offer a computationally tractable approximation to exact optimal transport. However, the standard Sinkhorn-Knopp algorithm has two main limitations. First, given discrete measures with $N$ points, each iteration requires $O(N^2)$ operations, which restricts its use on large-scale datasets (e.g. $N\\geq10^4$). Second, it uses the independent coupling as a reference measure for regularisation. This assigns mass to high-cost transport edges at moderate regularisation strengths. We propose SinkSLOT, which addresses both limitations by putting forth the expected sliced lifted transport plan as a natural way to sparsify the Gibbs kernel with a non-independent prior coupling. We prove that: 1) SinkSLOT converges; 2) with $L$ slices, each resulting sparse Sinkhorn iteration costs $O(LN)$; and 3) the resulting objective is a divergence requiring n"
+    },
+    {
+      "id": "2609.14519",
+      "versioned_id": "2609.14519v1",
+      "published": "2026-09-13",
+      "updated": "2026-09-13",
+      "title": "Robustness of Hidden-Variable Theories and Matrix Scaling",
+      "authors": [
+        "Giulio Malavolta",
+        "Harold Nieuwboer",
+        "Akshay Ramachandran",
+        "Michael Walter"
+      ],
+      "primary_category": "quant-ph",
+      "categories": [
+        "quant-ph",
+        "math-ph",
+        "math.OC"
+      ],
+      "pillar": "pillar_c_sinkhorn_assignment_trench",
+      "url": "https://www.alphaxiv.org/abs/2609.14519",
+      "arxiv_url": "https://arxiv.org/abs/2609.14519",
+      "summary": "Motivated by quantum foundations and complexity theory, Aaronson formalized a hidden-variable theory inspired by a proposal by Schrodinger. To any quantum state and unitary, this Schrodinger theory assigns a joint probability distribution via the Sinkhorn algorithm: rescale the columns and rows of the entrywise modulus of the unitary so that the marginals match the Born rule for the initial and final quantum states, respectively. He conjectured that this map is robust, i.e., inverse polynomially small perturbations in the inputs lead to inverse polynomially small perturbations of the joint distribution, which is important for complexity theoretic applications. We present a counterexample to this conjecture: We construct a pure state and two unitaries that are exponentially close, yet the joint probability distributions assigned by the Schrodinger theory differ by at least an inverse-line"
+    },
+    {
+      "id": "2609.21664",
+      "versioned_id": "2609.21664v1",
+      "published": "2026-09-18",
+      "updated": "2026-09-18",
+      "title": "Multi-Domain Clustering via Measure Quantization",
+      "authors": [
+        "Rafael Pereira Eufrazio",
+        "Eduardo Fernandes Montesuma",
+        "Charles Casimiro Cavalcante"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "stat.ML"
+      ],
+      "pillar": "pillar_c_sinkhorn_assignment_trench",
+      "url": "https://www.alphaxiv.org/abs/2609.21664",
+      "arxiv_url": "https://arxiv.org/abs/2609.21664",
+      "summary": "Clustering is a fundamental task in data analysis, typically addressed through centroid-based methods such as K-means. In this work, we present a general framework for multi-domain clustering via measure quantization: given samples from multiple domains, we learn a shared set of cluster prototypes by minimizing a probability metric, such as the Sinkhorn divergence or the Maximum Mean Discrepancy, between each domain's probability measure and the measure of prototypes. Data points are then assigned to clusters either via nearest centroid, or via optimal transport, a collaborative strategy that couples all samples within a domain. A mini-batch optimization strategy makes both fitting and assignment scalable, reducing memory and computational cost while preserving clustering performance. Experimental results on 5 multi-domain benchmarks spanning image, audio and sensor data show that our Si"
+    },
+    {
+      "id": "2609.32470",
+      "versioned_id": "2609.32470v1",
+      "published": "2026-09-26",
+      "updated": "2026-09-26",
+      "title": "On the Pitfalls of Verbalized Confidence Priors for Calibrating Large Reasoning Models",
+      "authors": [
+        "Shuoyuan Wang",
+        "Beier Luo",
+        "Hao Zeng",
+        "Chengyao Yu",
+        "Songxin Zhang",
+        "Zejian Xie",
+        "Bingyi Jing",
+        "Hongxin Wei"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "pillar": "pillar_d_rlvr_brier_calibration",
+      "url": "https://www.alphaxiv.org/abs/2609.32470",
+      "arxiv_url": "https://arxiv.org/abs/2609.32470",
+      "summary": "Large reasoning models (LRMs) often suffer from overconfidence when expressing their uncertainty. Confidence-aware reinforcement learning (RL) offers a promising way to optimize calibration. However, it relies on on-policy rollouts and is thus constrained by the model's pre-RL confidence distribution, which we term confidence prior. In this work, we reveal that off-the-shelf LRMs exhibit a confidence prior heavily concentrated on a few high values, which persists throughout RL. Theoretically, we prove that this concentration suppresses policy gradient updates for rarely sampled confidence values and inflates the lower bound on expected Brier risk. To overcome this exploration bottleneck, we propose CalibSFT, a plug-and-play supervised fine-tuning stage that shapes a calibrated confidence prior with broad support before RL. For each question, CalibSFT constructs confidence targets combini"
+    },
+    {
+      "id": "2609.33866",
+      "versioned_id": "2609.33866v1",
+      "published": "2026-09-27",
+      "updated": "2026-09-27",
+      "title": "Valid and Efficient Split Conformal Regression for Time Series",
+      "authors": [
+        "Percy S. Zhai",
+        "Maggie Cheng",
+        "Wei Biao Wu"
+      ],
+      "primary_category": "math.ST",
+      "categories": [
+        "math.ST",
+        "stat.ML"
+      ],
+      "pillar": "pillar_e_conformal_time_series_venn_abers",
+      "url": "https://www.alphaxiv.org/abs/2609.33866",
+      "arxiv_url": "https://arxiv.org/abs/2609.33866",
+      "summary": "We study conformalized quantile regression and conformalized median regression that fit a model on one block of a time series and calibrate the conformal interval on the adjacent block. The existing theory of conformal prediction for time series rests largely on mixing conditions, which are hard to verify from a time-series model and fail for many standard processes, including simple ones with short memory. We replace this theoretical toolbox with the functional dependence measure, which in principle accommodates long-memory observations. The accuracy of the conformal interval length for time series has been understudied. To the best of our knowledge, this paper is the first work that establishes non-asymptotic coverage guarantees and accuracy of interval length simultaneously for split conformal regression on time series. Furthermore, for Gaussian linear processes with long memory, wher"
+    },
+    {
+      "id": "2609.33868",
+      "versioned_id": "2609.33868v1",
+      "published": "2026-09-27",
+      "updated": "2026-09-27",
+      "title": "Conformal Coverage of Time Series: Validity and Inference",
+      "authors": [
+        "Percy S. Zhai",
+        "Maggie Cheng",
+        "Wei Biao Wu"
+      ],
+      "primary_category": "math.ST",
+      "categories": [
+        "math.ST",
+        "stat.ME",
+        "stat.ML"
+      ],
+      "pillar": "pillar_e_conformal_time_series_venn_abers",
+      "url": "https://www.alphaxiv.org/abs/2609.33868",
+      "arxiv_url": "https://arxiv.org/abs/2609.33868",
+      "summary": "Conformal prediction provides marginal coverage guarantees, yet practitioners may wonder if the observed coverage is truly abnormal or consistent with sampling variation. Inference for realized coverage has received comparatively little attention, especially for time series. We study split conformal prediction with adjacent calibration and test sets of temporally dependent data. Using the functional dependence measure, we derive non-asymptotic bounds on marginal coverage error without mixing assumptions, which can be difficult to verify and may fail even for simple short-memory models. We establish a Bahadur representation to derive, to our knowledge, the first central limit theorem for realized coverage of split conformal prediction under temporal dependence. A consistent block-based estimator of the standard error yields an asymptotically justified test. We further study long-memory ti"
+    },
+    {
+      "id": "2609.34458",
+      "versioned_id": "2609.34458v2",
+      "published": "2026-09-28",
+      "updated": "2026-11-04",
+      "title": "Understanding Generalization Requires Universal Induction",
+      "authors": [
+        "Aram Ebtekar",
+        "Marcus Hutter",
+        "Danica J. Sutherland"
+      ],
+      "primary_category": "stat.ML",
+      "categories": [
+        "stat.ML",
+        "cs.AI",
+        "cs.IT",
+        "cs.LG",
+        "math.ST"
+      ],
+      "pillar": "pillar_a_nfl_tracking_bdb27",
+      "url": "https://www.alphaxiv.org/abs/2609.34458",
+      "arxiv_url": "https://arxiv.org/abs/2609.34458",
+      "summary": "Classical statistical theory is insufficient to explain the successes of general-purpose AI models, because it depends on handcrafted inductive biases that it cannot justify. No Free Lunch (NFL) theorems force any learner that beats chance on some environments to underperform on others. We might hope that past experience informs which environments to expect, but NFL applies equally to meta-learning. Thus, any method that makes meaningful predictions necessarily begins with an inductive bias external to the data. Choosing to bias toward short programs yields Solomonoff induction (SI), whose performance is competitive against all computable learners - albeit up to \"constants\" that become large when comparing against specialized methods that exploit background information. We therefore relativize SI to an information vantage point, biasing toward short programs with access to all preexistin"
+    }
+  ],
+  "payload_sha256": "d8a03c2e2ce937da24fc3dd02dfcfd0812ac7075cf01fd63c278d57943991075"
+}

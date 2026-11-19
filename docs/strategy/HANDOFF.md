@@ -3,6 +3,20 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-19 (2026-11-19 CT) -- Wave 49 Live arXiv, OpenAlex, Kaggle BDB 2027 & Causal NGS/PFR AdvStats Engine (`400 + 24 = 424` RLVR)
+
+- **What changed**:
+  - Built and ran `scripts/ops/harvest_wave49_arxiv_openalex_kaggle_bdb27.py`, pulling live records from arXiv Atom API (`45` brand-new unique preprints with `0` cross-wave overlap, `248` total across vaults including `2610.36183`, `2609.33664`, `2607.00164`), OpenAlex REST API (`75` works, `140,565` total citations including `W2972466551`, `W2966516178`, `W1948300859`, `W4400728177`, `W2103691499`), and Kaggle API + `kagglehub` (`55` catalog entries + `4` compact CC0 CSVs, `88,619` bytes), sealed with SHA-256 checksums and `.licenses/*wave49*` notices.
+  - Added `src/gse_engine/science/wave49_arxiv_openalex_bdb27_kinematic_and_conformal_engine.py` (BDB27 Combine-to-NFL LODCO ridge `54.3026` vs `65.0941` RMSE, `2610.36183` Split-CQR `2026 W1-10` separation coverage `0.8939 >= 0.85`, `2609.33664` Sinkhorn 5x5 `1e-12` marginal error, `2607.00164` strictly proper Brier/Log RLVR comparator, and OpenAlex RUO isolation `CLINICAL_RUO_W49_SPORTS_WEIGHT = 0.0`).
+  - Added `src/gse_engine/tracking/wave49_ngs_pfr_advstats_and_bdb27_athletic_engine.py` unifying causal EWMA NGS passing/receiving/rushing, PFR AdvStats def/rec/rush, and `<= 2025` BDB27 snap-weighted agility across `32` normalized teams (`LA -> LAR`, `W1 max_prior_wk = 0`, `W10 max_prior_wk = 9`), with `500`-draw Rademacher martingale significance (`margin r = +0.204772, p = 0.00599`; `total r = +0.258291, p = 0.00200`), `0.0` BAITBENCH perturbation across 5 quarantined probes, and `8/8` Honest AST evaluations.
+  - Wired Wave 49 across all 6 core layers (`walk_forward_ablation.py` at `alpha_m = 0.12`, `wave32_unified_sports_situational_live_fusion.py`, `corpus_situational_integrator.py`, `pre_sim_total_intelligence_gate.py`, `dark_intelligence_activation_bridge.py`, and `knowledge_continuity_and_gsi_rlvr_flywheel.py` Group Z `388 -> 400`, `+ 24 = 424`), plus research doc `docs/engine/research/2026-11-19/wave49-arxiv-openalex-kaggle-bdb27-and-ngs-pfr-causal-engine.md`, agent-bus receipt, and `tests/unit/test_wave49_arxiv_openalex_bdb27_and_ngs_pfr_engine.py`.
+- **What was proven**:
+  - Across all `147` completed 2026 games in `run_weeks1_to_10_walk_forward_ablation`, Wave 49 strictly beats Wave 48 on every metric: `norm CRPS 7.0051 -> 7.0017`, `raw CRPS 6.9069 -> 6.9035`, `Margin MAE 9.6415 -> 9.6350`, `Total MAE 10.2730 -> 10.2308`, `Brier 0.21915 -> 0.21912`, `ECE 0.07017 -> 0.07016`, `rliable_iqm 0.733604 -> 0.733633`, `all_floors_held = True`, `benchmark_sha256 = 558c473485bd6eff709ead7799d993ea8fb9ed4f707f9d915f2373fabbd34490`.
+- **What was not**:
+  - `REAL_MONEY_STAKE_CLEARED = False`, `LIVE_STAKE_FRACTION = 0.0`, `CLINICAL_RUO_W49_SPORTS_WEIGHT = 0.0`, and `OperatorSimulationHoldError` (`week >= 11`) remain held; `brain/mind.jsonl` remains untouched.
+- **Next role must**:
+  - Keep `REAL_MONEY_STAKE_CLEARED = False` and zero-weight quarantines active until prospective `N >= 250` Ville gate clearance.
+
 ## 2026-11-19 (2026-11-19 CT) -- Path 36 Foundations Backlog Implementation (TS + Python), AWS `hq@galaxysportsedge.com` OAuth Confirmation & Exact Status Sync
 
 - **What changed**:

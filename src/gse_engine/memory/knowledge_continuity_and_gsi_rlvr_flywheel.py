@@ -100,6 +100,10 @@ from gse_engine.science.wave46_alphaxiv_66paper_transactional_memory_durable_ci_
     WAVE46_GSI_RLVR_TRAJECTORIES,
     evaluate_wave46_alphaxiv_66paper_memory_ci_upa_ledger_suite,
 )
+from gse_engine.science.wave49_arxiv_openalex_bdb27_kinematic_and_conformal_engine import (  # noqa: E501
+    WAVE49_SCIENCE_RLVR_TRAJECTORIES,
+    evaluate_wave49_arxiv_openalex_bdb27_suite,
+)
 from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine import (  # noqa: E501
     WAVE35_TRACKING_RLVR_TRAJECTORIES,
     evaluate_wave35_player_micro_matchup_suite,
@@ -155,6 +159,11 @@ from gse_engine.tracking.wave48_stage0_weather_sentiment_trade_and_showdown_engi
     WAVE48_TRACKING_RLVR_TRAJECTORIES,
     evaluate_w48_martingale_and_shortcut_audit,
     evaluate_wave48_stage0_weather_sentiment_and_showdown_suite,
+)
+from gse_engine.tracking.wave49_ngs_pfr_advstats_and_bdb27_athletic_engine import (  # noqa: E501
+    WAVE49_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_w49_martingale_and_shortcut_audit,
+    evaluate_wave49_ngs_pfr_and_bdb27_suite,
 )
 from gse_engine.workflows.unified_reasoning_simulation_projection_spine import (
     WAVE47_SPINE_RLVR_TRAJECTORIES,
@@ -4525,6 +4534,105 @@ def compile_gse_to_gsi_rlvr_training_batch(
                 think=str(spec_w48["think"]),
                 ground_truth=gt_w48,
                 verifier_src=_formula_exact_verifier_src(gt_w48),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    # Tier 3 Group Z: Wave 49 arXiv, OpenAlex, Kaggle BDB27 & Causal NGS/PFR Engine (388 -> 400)
+    w49_sci = evaluate_wave49_arxiv_openalex_bdb27_suite(root)
+    w49_trk = evaluate_wave49_ngs_pfr_and_bdb27_suite(
+        away_team="KC", home_team="DEN", as_of_week=10, is_indoor=False, repo_root=root
+    )
+    w49_pl = evaluate_w49_martingale_and_shortcut_audit(root)
+    w49_bdb = w49_sci["bdb27_lodco_benchmark"]
+    w49_cqr = w49_sci["arxiv2610_cqr_motion_envelope"]
+    w49_sk = w49_sci["arxiv2609_sinkhorn_trench"]
+    w49_rv = w49_sci["arxiv2607_rlvr_brier_rewards"]
+    w49_oa = w49_sci["openalex_biomech_ruo"]
+    w49_hm = w49_trk["home_w49_profile"]
+    w49_tot = w49_trk["game_total_blitz_pressure_box_shift"]
+    w49_quar = w49_trk["quarantined_metrics_weights"]
+    w49_ast = w49_trk["live_honest_ast"]
+    w49_gt_map: dict[str, dict[str, Any]] = {
+        "w49_sci_bdb27_lodco_kinematic_vs_stopwatch_00": {
+            "kaggle_sha_valid": bool(w49_bdb["kaggle_manifest_sha256_valid"]),
+            "kinematic_beats_stopwatch": bool(w49_bdb["kinematic_beats_stopwatch"]),
+            "lodco_rmse_gain_positive": bool(float(w49_bdb["rmse_improvement"]) > 5.0),
+        },
+        "w49_sci_arxiv2610_split_conformal_motion_envelope_00": {
+            "coverage_cleared": bool(w49_cqr["coverage_cleared"]),
+            "oos_coverage_ge_085": bool(float(w49_cqr["oos_2026_empirical_coverage"]) >= 0.85),
+        },
+        "w49_sci_arxiv2609_sinkhorn_trench_assignment_00": {
+            "doubly_stochastic_exact": bool(w49_sk["doubly_stochastic_exact"]),
+            "entropy_reduction_positive": bool(w49_sk["entropy_reduction_positive"]),
+        },
+        "w49_sci_arxiv2607_verifiable_brier_rlvr_rewards_00": {
+            "arxiv_sha_valid": bool(w49_rv["arxiv_vault_sha256_valid"]),
+            "strict_properness_verified": bool(w49_rv["strict_properness_verified"]),
+        },
+        "w49_sci_openalex_biomech_decel_rotational_ruo_00": {
+            "openalex_sha_valid": bool(w49_oa["openalex_vault_sha256_valid"]),
+            "all_5_anchors_present": bool(w49_oa["all_5_anchors_present"]),
+            "ruo_quarantine_enforced": bool(w49_oa["ruo_quarantine_enforced"]),
+        },
+        "w49_sci_wave49_suite_all_five_kernels_gate_00": {
+            "all_science_gates_passed": bool(w49_sci["all_science_gates_passed"]),
+            "clinical_weight_zero": bool(float(w49_sci["clinical_ruo_w49_sports_weight"]) == 0.0),
+        },
+        "w49_ngs_cushion_sep_xcomp_and_bdb27_agility_00": {
+            "max_prior_week_lt10": bool(int(w49_trk["max_prior_week_used"]) < 10),
+            "signals_bounded": bool(
+                -5.0 <= float(w49_hm.get("ngs_xcomp_norm", 0.0)) <= 5.0
+                and -5.0 <= float(w49_hm.get("pfr_def_blitz_norm", 0.0)) <= 5.0
+                and -5.0 <= float(w49_hm.get("bdb27_agility_norm", 0.0)) <= 5.0
+            ),
+        },
+        "w49_pfr_blitz_press_ybc_box8_and_total_shift_00": {
+            "total_shift_bounded": bool(-0.85 <= float(w49_tot["total_shift_pts"]) <= 0.85),
+            "total_driver_bounded": bool(
+                -5.0 <= float(w49_hm.get("pfr_rush_ybc_norm", 0.0)) <= 5.0
+            ),
+        },
+        "w49_team_alias_normalization_la_lar_causality_00": {
+            "normalized_32_teams": bool(int(w49_trk["normalized_team_count"]) == 32),
+            "prior_week_causal": bool(int(w49_trk["max_prior_week_used"]) <= 9),
+        },
+        "w49_martingale_500_placebo_and_quarantine_5_00": {
+            "all_five_zero": bool(
+                len(w49_quar) == 5 and all(float(v) == 0.0 for v in w49_quar.values())
+            ),
+            "placebo_and_mask_ok": bool(
+                w49_pl["beats_null_95pct"]
+                and w49_pl["total_beats_null_99pct"]
+                and w49_pl["shortcut_invariance_verified"]
+                and float(w49_pl["shortcut_max_output_perturbation"]) == 0.0
+            ),
+        },
+        "w49_honest_ast_8eq_zero_fabricated_bindings_00": {
+            "all_eight_ast": bool(
+                int(w49_ast["parsed_evaluated_count"]) == 8 and w49_ast["zero_fabricated_bindings"]
+            ),
+        },
+        "w49_integrated_bdb27_ngs_pfr_science_bridge_00": {
+            "suite_wired_and_ruo_zero": bool(
+                w49_trk["wired"]
+                and float(w49_trk["clinical_ruo_sports_weight"]) == 0.0
+                and not bool(w49_trk["real_money_stake_cleared"])
+            ),
+        },
+    }
+    for spec_w49 in (*WAVE49_SCIENCE_RLVR_TRAJECTORIES, *WAVE49_TRACKING_RLVR_TRAJECTORIES):
+        rid_w49 = str(spec_w49["record_id"])
+        gt_w49 = w49_gt_map[rid_w49]
+        records.append(
+            _build_rlvr_record(
+                record_id=rid_w49,
+                domain=str(spec_w49["domain"]),
+                prompt=str(spec_w49["prompt"]),
+                think=str(spec_w49["think"]),
+                ground_truth=gt_w49,
+                verifier_src=_formula_exact_verifier_src(gt_w49),
                 curriculum_tier="TIER_3_BEHEMOTH",
             )
         )
