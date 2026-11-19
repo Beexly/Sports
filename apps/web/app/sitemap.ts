@@ -40,7 +40,7 @@ const ROUTES: ReadonlyArray<{
   { path: "/packages", priority: 0.9, changeFrequency: "daily" },
   { path: "/record", priority: 0.85, changeFrequency: "daily" },
   { path: "/props", priority: 0.8, changeFrequency: "daily" },
-  { path: "/fantasy/dfs", priority: 0.75, changeFrequency: "daily" },
+  { path: "/dfs", priority: 0.75, changeFrequency: "daily" },
   { path: "/partners", priority: 0.65, changeFrequency: "weekly" },
   { path: "/media-kit", priority: 0.6, changeFrequency: "monthly" },
   { path: "/picks", priority: 0.55, changeFrequency: "daily" },

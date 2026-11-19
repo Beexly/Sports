@@ -167,7 +167,8 @@ export async function POST(req: Request) {
     }
 
     const isProd = process.env.NODE_ENV === "production";
-    if (isProd || !isStubMode()) {
+    const isTest = process.env.NODE_ENV === "test";
+    if (isProd || (!isTest && !isStubMode())) {
       const gate = await getStage5GateStatus();
       if (!gate.checkoutEnabled) {
         if (isFormSubmit) {

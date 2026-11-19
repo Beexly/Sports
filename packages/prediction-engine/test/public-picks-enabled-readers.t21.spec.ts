@@ -78,7 +78,7 @@ const READERS = [
   },
   {
     file: "apps/web/app/api/ops/public-surface-truth/route.ts",
-    line: 786,
+    line: 778,
     defaultWhenUnset: "off",
     expression: 'process.env["PUBLIC_PICKS_ENABLED"]?.trim().toLowerCase() === "true"',
     gates: "the operator-facing surface-truth report",
@@ -99,7 +99,7 @@ const READERS = [
   },
   {
     file: "apps/web/app/api/cron/autonomy-cycle/route.ts",
-    line: 117,
+    line: 120,
     defaultWhenUnset: "off",
     expression: 'envFlag("PUBLIC_PICKS_ENABLED")',
     gates: "the autonomy cycle cron",

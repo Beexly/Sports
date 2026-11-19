@@ -61,11 +61,11 @@ describe("Task 5: Sitemap, llms.txt, OG images, and revenue operating ledger", (
       "/tools/parlay-calculator",
       "/tools/line-movement",
       "/preview/nfl/indianapolis-colts-vs-houston-texans",
-      "/preview/nfl/green-bay-packers-vs-los-angeles-rams",
-      "/preview/nfl/chicago-bears-vs-detroit-lions",
-      "/preview/nfl/philadelphia-eagles-vs-dallas-cowboys",
-      "/preview/nfl/kansas-city-chiefs-vs-buffalo-bills",
-      "/preview/nfl/denver-broncos-vs-pittsburgh-steelers",
+      "/preview/nfl/miami-dolphins-vs-buffalo-bills",
+      "/preview/nfl/new-york-jets-vs-los-angeles-chargers",
+      "/preview/nfl/new-orleans-saints-vs-chicago-bears",
+      "/preview/nfl/carolina-panthers-vs-tampa-bay-buccaneers",
+      "/preview/nfl/minnesota-vikings-vs-san-francisco-49ers",
     ];
 
     for (const route of requiredRoutes) {

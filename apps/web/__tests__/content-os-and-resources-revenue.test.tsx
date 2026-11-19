@@ -121,7 +121,9 @@ describe("Content OS Daily Packet API Route", () => {
     vi.resetModules();
     vi.stubEnv("CONTENT_OS_PACKET_ENABLED", "");
     const route = await import("@/app/api/content-os/packet/route");
-    const response = await route.GET();
+    const response = await route.GET(
+      new Request("https://www.galaxysportsedge.com/api/content-os/packet"),
+    );
 
     expect(response.status).toBe(404);
     vi.unstubAllEnvs();
@@ -130,10 +132,21 @@ describe("Content OS Daily Packet API Route", () => {
   it("GET() returns 200, packet_id: PKT-2026-10-29, ROUNDUP (Host: Nova), and attribution kit", async () => {
     vi.resetModules();
     vi.stubEnv("CONTENT_OS_PACKET_ENABLED", "true");
-    const route = await import("@/app/api/content-os/packet/route");
-    const response = await route.GET();
+    vi.stubEnv("OPS_READ_SECRET", "test-ops-secret");
+    try {
+      const route = await import("@/app/api/content-os/packet/route");
+      const unauth = await route.GET(
+        new Request("https://www.galaxysportsedge.com/api/content-os/packet"),
+      );
+      expect(unauth.status).toBe(401);
 
-    expect(response.status).toBe(200);
+      const response = await route.GET(
+        new Request("https://www.galaxysportsedge.com/api/content-os/packet", {
+          headers: { authorization: "Bearer test-ops-secret" },
+        }),
+      );
+
+      expect(response.status).toBe(200);
 
     const data = await response.json();
 
@@ -166,60 +179,54 @@ describe("Content OS Daily Packet API Route", () => {
     expect(Array.isArray(data.board)).toBe(true);
     expect(data.board.length).toBeGreaterThan(0);
 
-    const firstGame = data.board[0];
-    expect(firstGame.matchup).toBeDefined();
-    expect(firstGame.reasoning).toBeDefined();
-    vi.unstubAllEnvs();
-    expect(firstGame.price_check).toBeDefined();
+      const firstGame = data.board[0];
+      expect(firstGame.matchup).toBeDefined();
+      expect(firstGame.reasoning).toBeDefined();
+      expect(firstGame.price_check).toBeDefined();
 
-    const allCalls = data.board.flatMap((g: { calls: Array<{ decision: string; reasoning: string; price_check: string }> }) => g.calls);
-    const playCalls = allCalls.filter((c: { decision: string }) => c.decision === "PLAY");
-    const passCalls = allCalls.filter((c: { decision: string }) => c.decision === "PASS");
+      const allCalls = data.board.flatMap((g: { calls: Array<{ decision: string; reasoning: string; price_check: string }> }) => g.calls);
+      const playCalls = allCalls.filter((c: { decision: string }) => c.decision === "PLAY");
+      const passCalls = allCalls.filter((c: { decision: string }) => c.decision === "PASS");
 
-    expect(playCalls.length).toBeGreaterThan(0);
-    expect(passCalls.length).toBeGreaterThan(0);
+      expect(playCalls.length).toBeGreaterThan(0);
+      expect(passCalls.length).toBeGreaterThan(0);
 
-    allCalls.forEach((call: { decision: string; reasoning: string; price_check: string }) => {
-      expect(["PLAY", "PASS"]).toContain(call.decision);
-      expect(call.reasoning).toBeTruthy();
-      expect(call.price_check).toBeTruthy();
-    });
+      allCalls.forEach((call: { decision: string; reasoning: string; price_check: string }) => {
+        expect(["PLAY", "PASS"]).toContain(call.decision);
+        expect(call.reasoning).toBeTruthy();
+        expect(call.price_check).toBeTruthy();
+      });
 
-    // Visual Packs (W-16) & Approval Digest (W-38)
-    expect(Array.isArray(data.visual_packs)).toBe(true);
-    expect(data.visual_packs.length).toBeGreaterThan(0);
-    expect(data.visual_packs[0].printed_line).toBeDefined();
-    expect(data.visual_packs[0].record_line).toBeDefined();
+      // Visual Packs (W-16) & Approval Digest (W-38)
+      expect(Array.isArray(data.visual_packs)).toBe(true);
+      expect(data.visual_packs.length).toBeGreaterThan(0);
+      expect(data.visual_packs[0].printed_line).toBeDefined();
+      expect(data.visual_packs[0].record_line).toBeDefined();
 
-    expect(data.approval_digest).toBeDefined();
-    expect(data.approval_digest.gate_status).toBe("PASS");
-    expect(typeof data.approval_digest.total_calls).toBe("number");
-    expect(typeof data.approval_digest.play_count).toBe("number");
-    expect(typeof data.approval_digest.pass_count).toBe("number");
+      expect(data.approval_digest).toBeDefined();
+      expect(data.approval_digest.gate_status).toBe("PASS");
+      expect(typeof data.approval_digest.total_calls).toBe("number");
+      expect(typeof data.approval_digest.play_count).toBe("number");
+      expect(typeof data.approval_digest.pass_count).toBe("number");
+    } finally {
+      vi.unstubAllEnvs();
+    }
   });
 });
 
 describe("llms.txt Discoverability Block (W-72)", () => {
-  it("public/llms.txt lists all canonical live sections and summary", () => {
-    const candidatePaths = [
-      path.join(process.cwd(), "public", "llms.txt"),
-      path.join(process.cwd(), "apps", "web", "public", "llms.txt"),
-      "C:\\Users\\Garrett\\Sports\\apps\\web\\public\\llms.txt",
-    ];
+  it("dynamic /llms.txt route lists canonical live sections without static public/llms.txt shadowing", async () => {
+    expect(fs.existsSync(path.join(process.cwd(), "public", "llms.txt"))).toBe(false);
 
-    let content = "";
-    for (const p of candidatePaths) {
-      if (fs.existsSync(p)) {
-        content = fs.readFileSync(p, "utf-8");
-        break;
-      }
-    }
+    const { GET } = await import("@/app/llms.txt/route");
+    const res = await GET();
+    const content = await res.text();
 
     expect(content).toBeTruthy();
     expect(content).toContain("Galaxy Sports Edge");
     expect(content).toContain("/packages");
     expect(content).toContain("/fantasy/dfs");
     expect(content).toContain("/resources/card-supplies");
-    expect(content).toContain("/api/content-os/packet");
+    expect(content).toContain("/llms-full.txt");
   });
 });

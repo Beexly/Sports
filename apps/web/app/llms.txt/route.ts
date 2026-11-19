@@ -34,6 +34,7 @@ export async function GET() {
 - [Free Parlay X-Ray Scanner](${siteUrl}/parlay-mri): Paste multi-leg tickets to diagnose correlation and compounding vigorish.
 - [DraftKings & FanDuel NFL DFS Hub](${siteUrl}/fantasy/dfs): Cash-game cores, tournament stacks, and injury value plays.
 - [Sports Betting Calculators & Tools](${siteUrl}/tools): CLV calculator, EV calculator, no-vig calculator, odds converter, parlay calculator, and line-movement tracker.
+- [Sports Card & Hobby Supplies](${siteUrl}/resources/card-supplies): Curated trading card sleeves, top loaders, and storage essentials for collectors.
 - [Creator & Sponsor Partnerships](${siteUrl}/partners): Affiliate revenue sharing and non-gambling sponsor inquiries.
 - [Extended Football Guide](${siteUrl}/llms-full.txt): Complete overview of our 5-step football grading workflow.
 `;

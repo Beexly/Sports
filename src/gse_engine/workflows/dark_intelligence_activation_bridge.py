@@ -658,7 +658,15 @@ def evaluate_dark_intelligence_pack_for_matchup(
             "gvisor_profile": gv_runtime,
             "warehouse_protocols": _warehouse_protocols,
             "path36_verified_complete": bool(PATH36_VERIFIED_STATUS["overall_complete"]),
-            "path36_credits_remaining": int(PATH36_VERIFIED_STATUS["total_credits_remaining"]),
+            "path36_credits_remaining": (
+                int(PATH36_VERIFIED_STATUS["total_credits_remaining"])
+                if isinstance(PATH36_VERIFIED_STATUS["total_credits_remaining"], int)
+                or (
+                    isinstance(PATH36_VERIFIED_STATUS["total_credits_remaining"], str)
+                    and PATH36_VERIFIED_STATUS["total_credits_remaining"].isdigit()
+                )
+                else str(PATH36_VERIFIED_STATUS["total_credits_remaining"])
+            ),
             "path36_gke_lock": _path36_gke_lock,
             "cache_entries": cache_hits,
             "prose_preview": prose_out,

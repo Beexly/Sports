@@ -463,7 +463,8 @@ describe("/api/ops/public-surface-truth — P13-03 rate limiting + Stripe gating
       const body = await mod.GET(req).then((r) => r.json());
 
       // F-20: the handled list, read from the handler's own switch.
-      expect(body.stripe.handledEventCount).toBe(10);
+      expect(body.stripe.handledEventCount).toBe(11);
+      expect(body.stripe.handledEvents).toContain("checkout.session.async_payment_succeeded");
       expect(body.stripe.handledEvents).toContain("checkout.session.expired");
       expect(body.stripe.handledEvents).toContain("invoice.paid");
       expect(body.stripe.handledEvents).toContain("charge.refunded");

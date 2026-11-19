@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   description:
     "Plain-English NFL DFS game-environment breakdowns, target volume notes, cash cores, and tournament stack blueprints.",
   alternates: { canonical: "/fantasy/dfs" },
+  robots: { index: false, follow: true },
 };
 
 export default async function DfsSuitePage() {
