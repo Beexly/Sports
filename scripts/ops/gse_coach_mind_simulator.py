@@ -1451,6 +1451,26 @@ def simulate_matchup_pbp(
                 home_qb_tier = str(qb_t_map["home"])
         aw_ov = w1_w7_override.get("away") or {}
         hm_ov = w1_w7_override.get("home") or {}
+        if w1_w7_override.get("away_off_epa") is not None:
+            tr_away["off_epa"] = float(w1_w7_override["away_off_epa"])
+        elif aw_ov.get("off_epa") is not None:
+            tr_away["off_epa"] = float(aw_ov["off_epa"])
+        if w1_w7_override.get("away_def_epa") is not None:
+            tr_away["def_epa"] = float(w1_w7_override["away_def_epa"])
+        elif aw_ov.get("def_epa") is not None:
+            tr_away["def_epa"] = float(aw_ov["def_epa"])
+        if aw_ov.get("pace_sec") is not None:
+            tr_away["pace_sec"] = float(aw_ov["pace_sec"])
+        if w1_w7_override.get("home_off_epa") is not None:
+            tr_home["off_epa"] = float(w1_w7_override["home_off_epa"])
+        elif hm_ov.get("off_epa") is not None:
+            tr_home["off_epa"] = float(hm_ov["off_epa"])
+        if w1_w7_override.get("home_def_epa") is not None:
+            tr_home["def_epa"] = float(w1_w7_override["home_def_epa"])
+        elif hm_ov.get("def_epa") is not None:
+            tr_home["def_epa"] = float(hm_ov["def_epa"])
+        if hm_ov.get("pace_sec") is not None:
+            tr_home["pace_sec"] = float(hm_ov["pace_sec"])
         if aw_ov.get("qb_tier"):
             away_qb_tier = str(aw_ov["qb_tier"])
         if hm_ov.get("qb_tier"):
@@ -1688,13 +1708,14 @@ def simulate_matchup_pbp(
     trauma_comp_pen_scalar = float(traj_cond["qb_trauma_per_sack_comp_penalty"])
     ddqn_4th_boost_scalar = float(traj_cond["double_dqn_4th_down_conv_boost"])
 
-    away_net_epa = ((tr_away["off_epa"] + away_sit_epa_delta - away_drop) * away_eff_mult) - tr_home["def_epa"]
-    home_net_epa = ((tr_home["off_epa"] + home_sit_epa_delta - home_drop) * home_eff_mult) - tr_away["def_epa"] + (tr_home["hfa"] / 79.1)
+    # def_epa is offensive EPA allowed per play (<0 = strong defense, >0 = weak defense).
+    away_net_epa = ((tr_away["off_epa"] + away_sit_epa_delta - away_drop) * away_eff_mult) + tr_home["def_epa"]
+    home_net_epa = ((tr_home["off_epa"] + home_sit_epa_delta - home_drop) * home_eff_mult) + tr_away["def_epa"] + (tr_home["hfa"] / 79.1)
     if has_lb_stage2 and away_qb_tier != "EMERGENCY_QB3_UDFA" and home_qb_tier != "EMERGENCY_QB3_UDFA":
-        st2_away_net = float(lb_priors["away_off_epa_adj"]) - float(lb_priors.get("home_def_epa_adj", tr_home["def_epa"]))
+        st2_away_net = float(lb_priors["away_off_epa_adj"]) + float(lb_priors.get("home_def_epa_adj", tr_home["def_epa"]))
         st2_home_net = (
             float(lb_priors["home_off_epa_adj"])
-            - float(lb_priors.get("away_def_epa_adj", tr_away["def_epa"]))
+            + float(lb_priors.get("away_def_epa_adj", tr_away["def_epa"]))
             + (tr_home["hfa"] / 79.1)
         )
         away_net_epa = 0.45 * away_net_epa + 0.55 * st2_away_net

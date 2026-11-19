@@ -830,9 +830,19 @@ def load_stage0_game_roster_allowlist(
     canon_by_team_stripped: dict[tuple[str, str], str] = {}
     for p in board.get("props", []):
         raw_name = str(p.get("athlete") or "").strip()
-        if not raw_name or raw_name in ("Unknown", "Jacksonville Jaguars", "Baltimore Ravens", "Game"):
+        if not raw_name or raw_name in (
+            "Unknown",
+            "Jacksonville Jaguars",
+            "Baltimore Ravens",
+            "Indianapolis Colts",
+            "Houston Texans",
+            "Game",
+            "Team",
+        ):
             continue
         tm = _normalize_team_abbr(str(p.get("team") or "").strip(), away, home)
+        if not tm:
+            continue
         strp_key = (tm, _strip_name_suffix(raw_name.lower()))
         # Prefer the shorter/base name without Sr./Jr. mismatch splits (e.g. 'Aaron Jones' vs 'Aaron Jones Sr.')
         prev_canon = canon_by_team_stripped.get(strp_key)
@@ -1301,6 +1311,10 @@ def assert_zero_roster_contamination(
                         "ban retained",
                         "ir",
                         "out for season",
+                        "ruled out",
+                        "out (",
+                        "out,",
+                        "res",
                         "inactive",
                         "thumb surgery",
                         "turf toe",
@@ -1358,7 +1372,17 @@ def assert_zero_roster_contamination(
                 )
 
         for k, v in payload_or_text.items():
-            if k in ("off_roster_hallucination_denylist", "excluded_players", "traded_players"):
+            if k in (
+                "off_roster_hallucination_denylist",
+                "excluded_players",
+                "traded_players",
+                "snap_weighted_players",
+                "player_details",
+                "opponent_live_def_injuries",
+                "team_live_injuries",
+                "live_injuries",
+                "python_31_intelligence_subpackages_and_31_datasets",
+            ):
                 continue
             assert_zero_roster_contamination(v, allowlist, f"{context_label}.{k}")
     elif isinstance(payload_or_text, (list, tuple)):

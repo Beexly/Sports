@@ -79,8 +79,8 @@ const WEEK11_SLATE_WINDOW_LABEL =
   "Week 11 - TNF IND @ HOU (Thu) - Sunday Main Slate (Miami at Buffalo, NO @ CHI, TEN @ DAL, TB @ DET, ARI @ KC, PIT @ PHI, BAL @ CAR) - Late (NYJ @ LAC, LV @ DEN, JAX @ NYG) - SNF MIN @ SF - MNF CIN @ WSH";
 
 export const WEEK8_GAME_DAY_CATALOG_METADATA = {
-  asOfCt: "2026-11-18T18:00:00-06:00",
-  kickoffCountdownMinutes: 195,
+  asOfCt: "2026-11-19T16:15:00-06:00",
+  kickoffCountdownMinutes: 180,
   slateWindowLabel: WEEK11_SLATE_WINDOW_LABEL,
   verifiedRecordBanner: `${formatWlp(verifiedLedger.official.wlp)} - ${formatUnits(verifiedLedger.official.units.total)} - recomputed from the settlement database (see /record)`,
   seasonLedgerOfRecord: {
@@ -206,11 +206,11 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
   {
     id: "tnf-all-in-pack",
     slug: "tnf-all-in-pack",
-    title: "Week 10 Standalone Primetime Game Pack (Closed Window)",
+    title: "Week 11 TNF Game Pack (Colts @ Texans + 77-Market Board & Showdown DFS)",
     subtitle:
-      "Window Closed - Pivot to Week 11 TNF IND @ HOU ($9 Impulse Door), Thanksgiving 5-Game ($14), & Week 11 Sunday Main Slate",
+      "Thursday Night Football IND @ HOU (7:15 PM CT): Full 77-Market Price Limits, 5:45 PM CT Inactive Pivot & Showdown Lineups",
     description:
-      "This standalone primetime window (Washington @ NY Giants) is closed and archived. Explore our active Week 11 TNF IND @ HOU ($9 Whop impulse door), Week 12 Thanksgiving 5-Game ($14), Week 11 Sunday Main Slate, and MNF CIN @ WSH packages below. The verified record is recomputed from the settlement database and lives at /record.",
+      "Complete Week 11 Thursday Night Football packet for Indianapolis Colts at Houston Texans inside Reliant Stadium. Unlocks full game-script projections, honest Stage 5 pass discipline on main lines, exact play-to odds limits across all 77 DraftKings market families (1Q/1H, QB, RB/WR/TE, Kicking, IDP sacks and tackles, Longest Plays, TD scorers), our 5:45 PM CT Sauce Gardner active/inactive contingency split, and DraftKings Showdown Cash and GPP rosters. Verified record lives at /record.",
     windowSlot: "TNF",
     standardPriceCents: 1900,
     creditBackPriceCents: null,
@@ -219,13 +219,16 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     stripeLookupKey: "gse-pack-tnf-all-in",
     gamesCount: 1,
     highlights: [
-      "Prior Week 10 Primetime Window Closed - Pivot to Active Week 11 TNF IND @ HOU ($9) & Sunday Main Slate Packs",
+      "Week 11 TNF IND @ HOU (7:15 PM CT): Complete 77-Market Board with Exact Play-To American Odds Ceilings",
+      "5:45 PM CT Sauce Gardner Active/Inactive Game-Script Pivot + Full Injury Impact Read",
+      "1Q/1H Derivatives, QB & Skill Props, Kicking, IDP Sacks/Tackles, Longest Plays & Anytime TD Probabilities",
+      "DraftKings Showdown Cash & GPP Optimal Lineups with Zero Excluded/Injured Players",
     ],
-    badge: "CLOSED WINDOW - ARCHIVED",
+    badge: "LIVE TONIGHT - TNF IND @ HOU ($19)",
     includesProps: true,
     includesSgp: true,
     includesDfs: true,
-    forSale: false,
+    forSale: true,
   },
   {
     id: "sunday-nfl-5pct-slate",

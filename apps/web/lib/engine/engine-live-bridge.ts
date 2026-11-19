@@ -68,11 +68,11 @@ export const FREE_TNF_GAME_ENVIRONMENT_ANALYTICS = {
   status: "SCHEDULED",
   finalScore: null,
   totalMarket: {
-    opened: 43.5,
-    closed: 43.5,
+    opened: 45.5,
+    closed: 44.5,
   },
   environmentNote:
-    "Week 11 Thursday Night Football matches Daniel Jones (IND) at C.J. Stroud (HOU) indoors at Reliant Stadium (market HOU -12.5, total 43.5). Pace sits near 27.2s per play with HOU active at WR/TE (Tank Dell cleared from IR; Nico Collins and Dalton Schultz healthy) while defensive and offensive line inactives keep pressure protection in focus. Zero free picks are published here; official plays stay sealed behind /packages and graded outcomes live at /record.",
+    "Week 11 Thursday Night Football matches Daniel Jones (IND) at C.J. Stroud (HOU) indoors at Reliant Stadium (market HOU -12.5, total 44.5, opened 45.5). Indianapolis enters allowing a 17.8 percent QB hit and sack rate (7.1 percent dropback sack rate) into a Houston defense generating a 9.2 percent sack rate and 25.1 percent blitz rate even with Danielle Hunter ruled out. Houston protects at a 4.8 percent dropback sack rate against a Colts secondary already missing Charvarius Ward with Sauce Gardner (Calf) on the 5:45 PM CT inactive watch. Zero free picks are published here; official member breakdowns, all 77 market price limits, and Showdown rosters stay sealed behind /packages and graded outcomes live at /record.",
   recordUrl: "/record",
 } as const;
 

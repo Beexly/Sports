@@ -1,8 +1,8 @@
 {
   "schema": "gse.preflight_roster_gate.v1",
   "week": 11,
-  "as_of": "2026-11-16",
-  "generated_utc": "2026-11-17T02:14:20.430890+00:00",
+  "as_of": "2026-11-19",
+  "generated_utc": "2026-11-19T21:25:00+00:00",
   "verified_by": "build_live_stage0_truth (ADR-0007 / ADR-0008 unified truth v2)",
   "note": "Synced from gse-unified-stage0-truth-v2",
   "max_age_days": 3,
@@ -37,12 +37,6 @@
       "reason": "OUT / Master-Plan Stage 0 Ban"
     },
     {
-      "name": "D.J. Moore",
-      "team": "CHI",
-      "position": "WR",
-      "reason": "OUT / Master-Plan Stage 0 Ban"
-    },
-    {
       "name": "Zack Moss",
       "team": "CIN",
       "position": "RB",
@@ -64,13 +58,15 @@
       "name": "Azeez Al-Shaair",
       "team": "HOU",
       "position": "LB",
-      "reason": "OUT - Groin (ESPN T-90m live)"
+      "status": "RES",
+      "reason": "Week 11 nflverse roster status=RES"
     },
     {
       "name": "Brevin Jordan",
       "team": "HOU",
       "position": "TE",
-      "reason": "OUT - ESPN roster injury (ESPN T-90m live)"
+      "status": "OUT",
+      "reason": "ESPN W11 live injury report Out (Foot)"
     },
     {
       "name": "British Brooks",
@@ -106,7 +102,8 @@
       "name": "Danielle Hunter",
       "team": "HOU",
       "position": "DE",
-      "reason": "OUT - Hamstring (ESPN T-90m live)"
+      "status": "OUT",
+      "reason": "ESPN W11 live injury report Out (Hamstring)"
     },
     {
       "name": "Dylan Horton",
@@ -118,13 +115,15 @@
       "name": "E.J. Speed",
       "team": "HOU",
       "position": "LB",
-      "reason": "OUT - ESPN roster injury (ESPN T-90m live)"
+      "status": "RES",
+      "reason": "Week 11 nflverse roster status=RES"
     },
     {
       "name": "Graham Mertz",
       "team": "HOU",
       "position": "QB",
-      "reason": "INJURED RESERVE - ESPN roster injury (ESPN T-90m live)"
+      "status": "RES",
+      "reason": "Week 11 nflverse roster status=RES"
     },
     {
       "name": "Jaden Crumedy",
@@ -154,19 +153,15 @@
       "name": "Jayden Higgins",
       "team": "HOU",
       "position": "WR",
-      "reason": "INJURED RESERVE - ESPN roster injury (ESPN T-90m live)"
+      "status": "RES",
+      "reason": "Week 11 nflverse roster status=RES"
     },
     {
       "name": "Jaylin Noel",
       "team": "HOU",
       "position": "WR",
-      "reason": "INJURED RESERVE - ESPN roster injury (ESPN T-90m live)"
-    },
-    {
-      "name": "Jaylin Smith",
-      "team": "HOU",
-      "position": "CB",
-      "reason": "INJURED RESERVE - ESPN roster injury (ESPN T-90m live)"
+      "status": "RES",
+      "reason": "Week 11 nflverse roster status=RES"
     },
     {
       "name": "Josh Kelly",
@@ -191,6 +186,13 @@
       "team": "HOU",
       "position": "LB",
       "reason": "INJURED RESERVE - ESPN roster injury (ESPN T-90m live)"
+    },
+    {
+      "name": "Mario Edwards",
+      "team": "HOU",
+      "position": "DL",
+      "status": "RES",
+      "reason": "Week 11 nflverse roster status=RES"
     },
     {
       "name": "Mario Edwards Jr.",
@@ -250,7 +252,8 @@
       "name": "Alec Pierce",
       "team": "IND",
       "position": "WR",
-      "reason": "INJURED RESERVE - ESPN roster injury (ESPN T-90m live)"
+      "status": "RES",
+      "reason": "Week 11 nflverse roster status=RES"
     },
     {
       "name": "Cam Taylor-Britt",
@@ -283,6 +286,13 @@
       "reason": "INJURED RESERVE - ESPN roster injury (ESPN T-90m live)"
     },
     {
+      "name": "Charvarius Ward",
+      "team": "IND",
+      "position": "CB",
+      "status": "OUT",
+      "reason": "ESPN W11 live injury report Out (Knee)"
+    },
+    {
       "name": "D.J. Montgomery",
       "team": "IND",
       "position": "WR",
@@ -310,7 +320,8 @@
       "name": "Jalen Travis",
       "team": "IND",
       "position": "OT",
-      "reason": "OUT - Knee (ESPN T-90m live)"
+      "status": "OUT",
+      "reason": "ESPN W11 live injury report Out (Knee)"
     },
     {
       "name": "Jaylon Carlies",
@@ -322,13 +333,28 @@
       "name": "Jerry Tillery",
       "team": "IND",
       "position": "DT",
-      "reason": "OUT - ESPN roster injury (ESPN T-90m live)"
+      "status": "OUT",
+      "reason": "ESPN W11 live injury report Out (Calf)"
+    },
+    {
+      "name": "Josh Downs",
+      "team": "IND",
+      "position": "WR",
+      "status": "OFF_ROSTER",
+      "reason": "Not on IND active Week 11 roster / 0 DraftKings props"
     },
     {
       "name": "Joshua Gray",
       "team": "IND",
       "position": "G",
       "reason": "PRACTICE-SQUAD - ESPN roster status (ESPN T-90m live)"
+    },
+    {
+      "name": "Keenan Allen",
+      "team": "IND",
+      "position": "WR",
+      "status": "OFF_ROSTER",
+      "reason": "Not on IND active Week 11 roster / 0 DraftKings props"
     },
     {
       "name": "Luke Rhodes",
@@ -341,6 +367,13 @@
       "team": "IND",
       "position": "WR",
       "reason": "PRACTICE-SQUAD - ESPN roster status (ESPN T-90m live)"
+    },
+    {
+      "name": "Michael Pittman Jr.",
+      "team": "IND",
+      "position": "WR",
+      "status": "OFF_ROSTER",
+      "reason": "Not on IND active Week 11 roster / 0 DraftKings props"
     },
     {
       "name": "Micheal Clemons",
@@ -358,7 +391,8 @@
       "name": "Mo Alie-Cox",
       "team": "IND",
       "position": "TE",
-      "reason": "INJURED RESERVE - ESPN roster injury (ESPN T-90m live)"
+      "status": "RES",
+      "reason": "Week 11 nflverse roster status=RES"
     },
     {
       "name": "Natrone Brooks",
@@ -652,5 +686,10 @@
   ],
   "situational_flags": {
     "hou_rb_woody_marks": "DOUBTFUL/DNP - Concussion protocol on short TNF week"
+  },
+  "situational_multipliers_unfitted": {
+    "IND@HOU": {
+      "HOU RB:David Montgomery": 2.15
+    }
   }
 }

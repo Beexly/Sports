@@ -10,10 +10,10 @@ import {
 export async function GET() {
   const hedonicFraming = computeThalerHedonicBundleFraming(
     [
-      { label: "Week 10 TNF (WSH @ NYG) Full-Board Matchup & Prop Call Sheet", standaloneValueUsd: 29 },
-      { label: "Trench Protection, Blitz & Coverage Matchup Breakdown", standaloneValueUsd: 19 },
-      { label: "DK/FD Showdown Captain & Optimal Lineup Packet", standaloneValueUsd: 15 },
-      { label: "Active Injury Replacements & Pass Discipline Notes", standaloneValueUsd: 12 },
+      { label: "Week 11 TNF (IND @ HOU) Full 77-Market Board & Play-To Price Sheet", standaloneValueUsd: 29 },
+      { label: "Trench Protection, Blitz & 5:45 PM CT Inactive Pivot Breakdown", standaloneValueUsd: 19 },
+      { label: "DraftKings Showdown Cash & GPP Optimal Lineup Packet", standaloneValueUsd: 15 },
+      { label: "Strict Stage-5 Pass Discipline & Active Injury Exclusions", standaloneValueUsd: 12 },
     ],
     9.99,
     49.0,
@@ -28,14 +28,14 @@ export async function GET() {
 
   const emailDispatch = buildSahniPersonalizedEmailDispatch(
     "Member",
-    "WSH @ NYG",
+    "IND @ HOU",
     PUBLIC_RECORD_LINE,
-    "Mark Andrews OVER 2.5 Receptions (88/100 Free Teaser) + 9 Locked TNF Plays & 3-Leg SGP",
+    "Week 11 TNF IND @ HOU Free Trench Brief + Locked 77-Market Board & Showdown Lineups",
   );
 
   return NextResponse.json({
     status: "LIVE_READY",
-    generatedAt: "2026-11-05T16:55:00-06:00",
+    generatedAt: "2026-11-19T16:15:00-06:00",
     officialRecord: {
       wins: verifiedLedger.official.wlp.wins,
       losses: verifiedLedger.official.wlp.losses,
@@ -44,38 +44,62 @@ export async function GET() {
       netUnits: verifiedLedger.official.units.total,
       recordDisplay: PUBLIC_RECORD_LINE,
     },
-    tnfMatchup: "WSH @ NYG",
+    tnfMatchup: "IND @ HOU",
     stage0ActiveStarters: {
-      balQb1: "Joe Fagnano / Jacoby Brissett",
-      balRb1: "Derrick Henry",
-      jaxQb1: "Trevor Lawrence",
-      jaxRb1: "Bhayshul Tuten",
-      blockedInactives: ["Lamar Jackson (Out)", "Tyler Huntley (Out)", "Travis Etienne Jr. (Out)"],
+      indQb1: "Daniel Jones",
+      indRb1: "Jonathan Taylor",
+      houQb1: "C.J. Stroud",
+      houRb1: "David Montgomery",
+      blockedInactives: [
+        "Danielle Hunter (Out)",
+        "Charvarius Ward (Out)",
+        "Jalen Travis (Out)",
+        "Jerry Tillery (Out)",
+        "Brevin Jordan (Out)",
+      ],
+      watchAt1745Ct: [
+        "Sauce Gardner (Questionable - Calf)",
+        "Jaylin Smith (Questionable - Hamstring)",
+      ],
     },
     decisivePlays: [
       {
-        market: "Player Receptions Prop (Free Teaser)",
-        selection: "Mark Andrews OVER 2.5 Receptions",
-        modelProb: 0.684,
-        devigMarketProb: 0.542,
-        edgePct: 14.2,
-        confidenceScore: "88/100",
+        market: "Game Environment Brief (Free Public Read)",
+        selection:
+          "IND OL 17.8 percent QB hit/sack rate vs HOU D 9.2 percent sack rate & 25.1 percent blitz; 5:45 PM CT Sauce Gardner watch (Zero Free Picks Leaked)",
+        modelProb: 0.5943,
+        devigMarketProb: 0.4913,
+        edgePct: 10.3,
+        confidenceScore: "62/100",
         publishAllowed: true,
       },
       {
-        market: "9 Locked Top-Confidence TNF Plays (88/100)",
-        selection: "🔒 LOCKED BEHIND TNF PACK (9 Player Matchups + 3-Leg SGP + Showdown Captain Lineups)",
-        modelProb: 0.665,
-        devigMarketProb: 0.535,
-        edgePct: 13.0,
-        confidenceScore: "88/100",
+        market: "Week 11 TNF Locked 77-Market Board & Showdown Pack",
+        selection:
+          "LOCKED BEHIND TNF PACK (77 DraftKings Markets, Play-To Odds Limits, 5:45 PM CT Pivot & Showdown Lineups)",
+        modelProb: 0.697,
+        devigMarketProb: 0.5,
+        edgePct: 19.7,
+        confidenceScore: "70/100",
         publishAllowed: true,
       },
     ],
     conformalPassGrades: [
-      { selection: "WSH @ NYG Spread PASS at -7.5 (Steamed from -3.5)", decision: "PASS", publishAllowed: false },
-      { selection: "WSH @ NYG Full-Game Total (UNDER 44.5 PASS)", decision: "PASS", publishAllowed: false },
-      { selection: "Parker Washington Receiving Yards (PASS)", decision: "PASS", publishAllowed: false },
+      {
+        selection: "IND @ HOU Main Spread HOU -12.5 (-106) PASS (62/100 below 65/100 gate)",
+        decision: "PASS",
+        publishAllowed: false,
+      },
+      {
+        selection: "IND @ HOU Full-Game Total Over 44.5 (-104) PASS (53/100)",
+        decision: "PASS",
+        publishAllowed: false,
+      },
+      {
+        selection: "All 77 Unpriced ESPN Core DK Props PASS (Live Play-To Odds Ceilings Inside Member Pack)",
+        decision: "PASS",
+        publishAllowed: false,
+      },
     ],
     hedonicFraming,
     upliftDefault,

@@ -151,7 +151,7 @@ export function formatWindowSlotLabel(windowSlot: string, matchup?: string): str
   }
   switch (windowSlot) {
     case "TNF":
-      return "Week 10 Thursday Night Football (WSH @ NYG)";
+      return "Week 11 Thursday Night Football (IND @ HOU)";
     case "SUN_EARLY":
       return "Week 10 Sunday Early Slate (1:00 PM ET)";
     case "SUN_LATE":
@@ -310,103 +310,383 @@ export function buildCoachGameWriteup(input: Partial<CoachGameWriteup> & {
 
 export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
   {
-    "id": "writeup-tnf-401873052",
-    "gameId": "401873052",
-    "matchup": "Washington Commanders @ New York Giants",
-    "awayTeam": "Washington Commanders",
-    "homeTeam": "New York Giants",
-    "kickoff": "2026-11-13T01:15Z",
+    "id": "writeup-tnf-401873066",
+    "gameId": "401873066",
+    "matchup": "Indianapolis Colts @ Houston Texans",
+    "awayTeam": "Indianapolis Colts",
+    "homeTeam": "Houston Texans",
+    "kickoff": "2026-11-20T01:15Z",
     "windowSlot": "TNF",
     "paceOfPlay": {
-      "neutralSecPerSnap": 27.4,
-      "passEpaPlay": 0.045,
-      "rushEpaPlay": 0.012,
-      "noHuddleRate": 0.092,
-      "notes": "Thursday Night Football division opener at MetLife Stadium with Jayden Daniels leading Washington and J.J. McCarthy starting at home for New York."
+      "neutralSecPerSnap": 27.5,
+      "passEpaPlay": 0.1279,
+      "rushEpaPlay": -0.0761,
+      "noHuddleRate": 0.043,
+      "notes": "Live Anchor: HOU -12.5 (-106) / IND +12.5 (-114) | Total 44.5 (Over -104 / Under -116) | HOU ML -690 / IND ML +499. Branch A Baseline (Sauce Gardner Questionable/Active): IND 14.96 (p50 15.09) vs HOU 30.30 (p50 30.67); Fair Line HOU -15.34 (p50 +15.16); Fair Total 45.26 (p50 45.39). Quarter Scoring Means (IND / HOU): 1Q 2.98 / 7.32 (10.30 total), 2Q 4.53 / 9.03, 1H 23.85 total, 3Q 3.74 / 5.64, 4Q 3.77 / 8.27, OT Prob 3.48 percent. Branch B Contingency (Sauce Gardner Ruled OUT at 5:45 PM CT): IND 15.06 (p50 15.16) vs HOU 31.25 (p50 31.55), Fair Total 46.31 (p50 45.16), HOU Win 88.97 percent (IND 11.03 percent), HOU -12.5 Cover 59.82 percent, Over 44.5 53.77 percent."
     },
     "schemeMatchup": {
-      "coverageShell": "Washington leans on balanced two-high disguise while New York dials up five-man pressure looks on third down.",
-      "blitzRateVsPressureToSack": "Both pass rushes challenge interior pocket timing without leaving wide pregame edge gaps.",
-      "personnelTendencies": "Active skill groups center on Jayden Daniels, Terry McLaurin, Zach Ertz, and Deebo Samuel for Washington against J.J. McCarthy, Malik Nabers, Tyrone Tracy Jr., and Theo Johnson for New York.",
-      "coachingEdge": "Thursday night short-week preparation keeps both game plans grounded in high-percentage quick concepts.",
-      "notes": "Thursday opener graded complete and passed at posted pregame numbers under strict discipline."
+      "coverageShell": "Houston calls man coverage on 35.5 percent of snaps with a 25.1 percent blitz rate, generating a 9.2 percent sack rate (16.7 percent QB hit and sack rate) across 360 dropbacks.",
+      "blitzRateVsPressureToSack": "Indianapolis has allowed a 17.8 percent QB hit and sack rate (7.1 percent dropback sack rate) into Houston pressure, while Houston protects at a 4.8 percent dropback sack rate (12.3 percent hit and sack rate) against an Indianapolis defense (6.6 percent sack rate, 14.9 percent hit and sack rate) missing Charvarius Ward (Out) with Sauce Gardner Questionable (Calf) for 5:45 PM CT inactives.",
+      "personnelTendencies": "Active skill groups center on Daniel Jones, Jonathan Taylor, Tyler Warren, Laquon Treadwell, Ashton Dulin, and Anthony Gould for Indianapolis against C.J. Stroud, David Montgomery, Nico Collins, Xavier Hutchinson, Tank Dell, and Dalton Schultz for Houston (Danielle Hunter and Brevin Jordan Out).",
+      "coachingEdge": "With Charvarius Ward ruled out and Sauce Gardner Questionable at the 5:45 PM CT inactive check, Houston passing efficiency carries Branch B upside to 31.25 points (46.31 total) if Gardner sits.",
+      "notes": "Stage-5 Conjunction Gate maintains PASS across all 6 main lines while publishing verified Play-To American odds ceilings across 24 featured markets (77 total markets evaluated)."
     },
     "sideTotalCall": {
-      "sideSelection": "New York Giants -2.5",
-      "sideConfidence": "52/100",
-      "sideExpectedClv": 0.008,
+      "sideSelection": "Houston Texans -12.5",
+      "sideConfidence": "62/100",
+      "sideExpectedClv": 0.103,
       "sideDecision": "PASS",
-      "totalSelection": "UNDER 41.5",
+      "totalSelection": "OVER 44.5",
       "totalConfidence": "53/100",
-      "totalExpectedClv": 0.011,
+      "totalExpectedClv": 0.0263,
       "totalDecision": "PASS",
-      "rationale": "Market pricing matches our projection within edge discipline bounds - official pass."
+      "rationale": "All 6 Stage-5 Main Lines PASS: Spread HOU -12.5 (-106) devig 49.13 percent vs 59.43 percent post-sim (+10.30 percent edge, 62/100 PASS below 65/100 Stage-5 gate); IND +12.5 (-114) devig 50.87 percent vs 40.57 percent (-10.30 percent, 51/100 PASS); Total Over 44.5 (-104) devig 48.70 percent vs 51.33 percent (+2.63 percent, 53/100 PASS); Under 44.5 (-116) devig 51.30 percent vs 48.67 percent (-2.63 percent, 51/100 PASS); HOU ML (-690) devig 83.95 percent vs 86.08 percent (+2.13 percent, 53/100 PASS); IND ML (+499) devig 16.05 percent vs 13.92 percent (-2.13 percent, 51/100 PASS). Branch B Sauce Gardner OUT shifts HOU to 31.25 (total 46.31, HOU win 88.97 percent, HOU -12.5 cover 59.82 percent, Over 44.5 53.77 percent)."
     },
     "topProps": [
       {
-        "playerId": "jayden-daniels",
-        "playerName": "Jayden Daniels",
+        "playerId": "c-j-stroud-pass-tds",
+        "playerName": "C.J. Stroud",
+        "propType": "Passing Touchdowns",
+        "market": "pass_tds",
+        "line": 1.5,
+        "side": "OVER",
+        "confidence": "70/100",
+        "expectedClv": 0.2043,
+        "decision": "PASS",
+        "nEffTargetNotes": "QB Passing: Over 1.5 Pass TDs projects 70.43 percent (mean 3.12) | Play-To: -222 (verify live two-way juice before betting).",
+        "pOver": 0.7043,
+        "pUnder": 0.2957
+      },
+      {
+        "playerId": "c-j-stroud-pass-yds",
+        "playerName": "C.J. Stroud",
         "propType": "Passing Yards",
         "market": "pass_yds",
-        "line": 224.5,
+        "line": 253.5,
         "side": "OVER",
-        "confidence": "54/100",
-        "expectedClv": 0.008,
+        "confidence": "69/100",
+        "expectedClv": 0.1871,
         "decision": "PASS",
-        "nEffTargetNotes": "Jayden Daniels projects close to the market number across balanced early-down runs and scramble lanes.",
-        "pOver": 0.52,
-        "pUnder": 0.48
+        "nEffTargetNotes": "QB Passing: Over 253.5 Pass Yds projects 68.71 percent (mean 320.65) | Play-To: -205 (verify live two-way juice).",
+        "pOver": 0.6871,
+        "pUnder": 0.3129
       },
       {
-        "playerId": "terry-mclaurin",
-        "playerName": "Terry McLaurin",
+        "playerId": "c-j-stroud-completions",
+        "playerName": "C.J. Stroud",
+        "propType": "Pass Completions",
+        "market": "completions",
+        "line": 21.5,
+        "side": "OVER",
+        "confidence": "68/100",
+        "expectedClv": 0.1786,
+        "decision": "PASS",
+        "nEffTargetNotes": "QB Passing: Over 21.5 Pass Completions projects 67.86 percent (mean 26.17) | Play-To: -197.",
+        "pOver": 0.6786,
+        "pUnder": 0.3214
+      },
+      {
+        "playerId": "c-j-stroud-longest-comp",
+        "playerName": "C.J. Stroud",
+        "propType": "Longest Passing Completion",
+        "market": "longest_comp",
+        "line": 39.5,
+        "side": "UNDER",
+        "confidence": "66/100",
+        "expectedClv": 0.1579,
+        "decision": "PASS",
+        "nEffTargetNotes": "QB Passing: Under 39.5 Longest Completion projects 65.79 percent (mean 33.67) | Play-To: -180.",
+        "pOver": 0.3421,
+        "pUnder": 0.6579
+      },
+      {
+        "playerId": "daniel-jones-completions",
+        "playerName": "Daniel Jones",
+        "propType": "Pass Completions",
+        "market": "completions",
+        "line": 18.5,
+        "side": "OVER",
+        "confidence": "62/100",
+        "expectedClv": 0.1168,
+        "decision": "PASS",
+        "nEffTargetNotes": "QB Passing: Over 18.5 Pass Completions projects 61.68 percent (mean 21.73) | Play-To: -151.",
+        "pOver": 0.6168,
+        "pUnder": 0.3832
+      },
+      {
+        "playerId": "daniel-jones-pass-tds",
+        "playerName": "Daniel Jones",
+        "propType": "Passing Touchdowns",
+        "market": "pass_tds",
+        "line": 0.5,
+        "side": "OVER",
+        "confidence": "59/100",
+        "expectedClv": 0.0923,
+        "decision": "PASS",
+        "nEffTargetNotes": "QB Passing: Over 0.5 Pass TDs projects 59.23 percent (mean 1.07) | Play-To: -137.",
+        "pOver": 0.5923,
+        "pUnder": 0.4077
+      },
+      {
+        "playerId": "dalton-schultz-rec-yds",
+        "playerName": "Dalton Schultz",
         "propType": "Receiving Yards",
         "market": "rec_yds",
-        "line": 62.5,
+        "line": 29.5,
         "side": "OVER",
-        "confidence": "53/100",
-        "expectedClv": 0.006,
+        "confidence": "70/100",
+        "expectedClv": 0.197,
         "decision": "PASS",
-        "nEffTargetNotes": "Terry McLaurin perimeter route volume tracks closely to posted yardage.",
-        "pOver": 0.515,
-        "pUnder": 0.485
+        "nEffTargetNotes": "Skill Full Game: Over 29.5 Rec Yds projects 69.70 percent (mean 46.54) | Play-To: -214.",
+        "pOver": 0.697,
+        "pUnder": 0.303
       },
       {
-        "playerId": "malik-nabers",
-        "playerName": "Malik Nabers",
+        "playerId": "dalton-schultz-1h-rec-yds",
+        "playerName": "Dalton Schultz",
+        "propType": "1H Receiving Yards",
+        "market": "1h_rec_yds",
+        "line": 14.5,
+        "side": "OVER",
+        "confidence": "69/100",
+        "expectedClv": 0.188,
+        "decision": "PASS",
+        "nEffTargetNotes": "1H Derivative: Over 14.5 1H Rec Yds projects 68.80 percent (mean 25.03) | Play-To: -206.",
+        "pOver": 0.688,
+        "pUnder": 0.312
+      },
+      {
+        "playerId": "xavier-hutchinson-1q-rec-yds",
+        "playerName": "Xavier Hutchinson",
+        "propType": "1Q Receiving Yards",
+        "market": "1q_rec_yds",
+        "line": 4.5,
+        "side": "OVER",
+        "confidence": "69/100",
+        "expectedClv": 0.1946,
+        "decision": "PASS",
+        "nEffTargetNotes": "1Q Derivative: Over 4.5 1Q Rec Yds projects 69.46 percent (mean 12.43) | Play-To: -212.",
+        "pOver": 0.6946,
+        "pUnder": 0.3054
+      },
+      {
+        "playerId": "xavier-hutchinson-rec-yds",
+        "playerName": "Xavier Hutchinson",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 36.5,
+        "side": "OVER",
+        "confidence": "66/100",
+        "expectedClv": 0.1616,
+        "decision": "PASS",
+        "nEffTargetNotes": "Skill Full Game: Over 36.5 Rec Yds projects 66.16 percent (mean 51.96) | Play-To: -183.",
+        "pOver": 0.6616,
+        "pUnder": 0.3384
+      },
+      {
+        "playerId": "tyler-warren-receptions",
+        "playerName": "Tyler Warren",
         "propType": "Receptions",
         "market": "receptions",
-        "line": 5.5,
+        "line": 4.5,
         "side": "OVER",
-        "confidence": "53/100",
-        "expectedClv": 0.005,
+        "confidence": "69/100",
+        "expectedClv": 0.1918,
         "decision": "PASS",
-        "nEffTargetNotes": "Malik Nabers draws bracket safety attention against quick-game targets.",
-        "pOver": 0.51,
-        "pUnder": 0.49
+        "nEffTargetNotes": "Skill Full Game: Over 4.5 Receptions projects 69.18 percent (mean 8.00) | Play-To: -209.",
+        "pOver": 0.6918,
+        "pUnder": 0.3082
       },
       {
-        "playerId": "tyrone-tracy-jr",
-        "playerName": "Tyrone Tracy Jr.",
+        "playerId": "tyler-warren-1q-rec-yds",
+        "playerName": "Tyler Warren",
+        "propType": "1Q Receiving Yards",
+        "market": "1q_rec_yds",
+        "line": 3.5,
+        "side": "OVER",
+        "confidence": "68/100",
+        "expectedClv": 0.184,
+        "decision": "PASS",
+        "nEffTargetNotes": "1Q Derivative: Over 3.5 1Q Rec Yds projects 68.40 percent (mean 10.61) | Play-To: -202.",
+        "pOver": 0.684,
+        "pUnder": 0.316
+      },
+      {
+        "playerId": "tyler-warren-1h-rec-yds",
+        "playerName": "Tyler Warren",
+        "propType": "1H Receiving Yards",
+        "market": "1h_rec_yds",
+        "line": 15.5,
+        "side": "OVER",
+        "confidence": "66/100",
+        "expectedClv": 0.1647,
+        "decision": "PASS",
+        "nEffTargetNotes": "1H Derivative: Over 15.5 1H Rec Yds projects 66.47 percent (mean 26.82) | Play-To: -185.",
+        "pOver": 0.6647,
+        "pUnder": 0.3353
+      },
+      {
+        "playerId": "ind-hou-1q-total",
+        "playerName": "IND @ HOU 1st Quarter Total",
+        "propType": "1st Quarter Total",
+        "market": "1q_total",
+        "line": 7.5,
+        "side": "OVER",
+        "confidence": "62/100",
+        "expectedClv": 0.1239,
+        "decision": "PASS",
+        "nEffTargetNotes": "Game Derivative: 1Q Total Over 7.5 projects 62.39 percent (10.30 projected mean) | Play-To: -156.",
+        "pOver": 0.6239,
+        "pUnder": 0.3761
+      },
+      {
+        "playerId": "david-montgomery-anytime-td",
+        "playerName": "David Montgomery",
+        "propType": "Anytime Touchdown Scorer",
+        "market": "anytime_td",
+        "line": 0.5,
+        "side": "OVER",
+        "confidence": "66/100",
+        "expectedClv": 0.1605,
+        "decision": "PASS",
+        "nEffTargetNotes": "Anytime TD Top Threat: David Montgomery projects 66.05 percent (25.0 percent 1Q TD, 51.0 percent 1H TD) | Play-To: -182.",
+        "pOver": 0.6605,
+        "pUnder": 0.3395
+      },
+      {
+        "playerId": "david-montgomery-rush-yds",
+        "playerName": "David Montgomery",
         "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 58.5,
-        "side": "UNDER",
-        "confidence": "52/100",
-        "expectedClv": 0.004,
+        "line": 56.5,
+        "side": "OVER",
+        "confidence": "61/100",
+        "expectedClv": 0.1101,
         "decision": "PASS",
-        "nEffTargetNotes": "Tyrone Tracy Jr. splits red-zone and passing-down snaps against Washington light boxes.",
-        "pOver": 0.49,
-        "pUnder": 0.51
+        "nEffTargetNotes": "RB Rushing: Over 56.5 Rush Yds projects 61.01 percent (mean 74.50, 22.58 carries) | Play-To: -147.",
+        "pOver": 0.6101,
+        "pUnder": 0.3899
+      },
+      {
+        "playerId": "david-montgomery-longest-rush",
+        "playerName": "David Montgomery",
+        "propType": "Longest Rush",
+        "market": "longest_rush",
+        "line": 13.5,
+        "side": "UNDER",
+        "confidence": "73/100",
+        "expectedClv": 0.2322,
+        "decision": "PASS",
+        "nEffTargetNotes": "Longest Play: Under 13.5 Longest Rush projects 73.22 percent (mean 6.79) | Play-To: -254.",
+        "pOver": 0.2678,
+        "pUnder": 0.7322
+      },
+      {
+        "playerId": "tank-dell-longest-rec",
+        "playerName": "Tank Dell",
+        "propType": "Longest Reception",
+        "market": "longest_rec",
+        "line": 20.5,
+        "side": "OVER",
+        "confidence": "74/100",
+        "expectedClv": 0.2355,
+        "decision": "PASS",
+        "nEffTargetNotes": "Longest Play: Over 20.5 Longest Reception projects 73.55 percent (mean 29.25) | Play-To: -258.",
+        "pOver": 0.7355,
+        "pUnder": 0.2645
+      },
+      {
+        "playerId": "cj-allen-solo-tackles",
+        "playerName": "CJ Allen",
+        "propType": "Solo Tackles",
+        "market": "solo_tackles",
+        "line": 4.5,
+        "side": "UNDER",
+        "confidence": "72/100",
+        "expectedClv": 0.2198,
+        "decision": "PASS",
+        "nEffTargetNotes": "IDP Tackles: Under 4.5 Solo Tackles projects 71.98 percent (mean 2.51) | Play-To: -239.",
+        "pOver": 0.2802,
+        "pUnder": 0.7198
+      },
+      {
+        "playerId": "cj-allen-tackles-assists",
+        "playerName": "CJ Allen",
+        "propType": "Tackles + Assists",
+        "market": "tackles_assists",
+        "line": 10.5,
+        "side": "UNDER",
+        "confidence": "68/100",
+        "expectedClv": 0.1757,
+        "decision": "PASS",
+        "nEffTargetNotes": "IDP Tackles: Under 10.5 Tackles + Assists projects 67.57 percent (mean 7.38) | Play-To: -195.",
+        "pOver": 0.3243,
+        "pUnder": 0.6757
+      },
+      {
+        "playerId": "cam-bynum-solo-tackles",
+        "playerName": "Cam Bynum",
+        "propType": "Solo Tackles",
+        "market": "solo_tackles",
+        "line": 1.5,
+        "side": "OVER",
+        "confidence": "66/100",
+        "expectedClv": 0.1592,
+        "decision": "PASS",
+        "nEffTargetNotes": "IDP Secondary: Over 1.5 Solo Tackles projects 65.92 percent (mean 3.04) | Play-To: -181.",
+        "pOver": 0.6592,
+        "pUnder": 0.3408
+      },
+      {
+        "playerId": "kaimi-fairbairn-pats",
+        "playerName": "Ka'imi Fairbairn",
+        "propType": "Extra Points Made",
+        "market": "pats_made",
+        "line": 2.5,
+        "side": "OVER",
+        "confidence": "63/100",
+        "expectedClv": 0.1251,
+        "decision": "PASS",
+        "nEffTargetNotes": "Kicking: Over 2.5 PATs projects 62.51 percent (mean 3.40) | Play-To: -156.",
+        "pOver": 0.6251,
+        "pUnder": 0.3749
+      },
+      {
+        "playerId": "will-anderson-jr-solo-tackles",
+        "playerName": "Will Anderson Jr.",
+        "propType": "Solo Tackles",
+        "market": "solo_tackles",
+        "line": 1.5,
+        "side": "OVER",
+        "confidence": "62/100",
+        "expectedClv": 0.119,
+        "decision": "PASS",
+        "nEffTargetNotes": "IDP Front: Over 1.5 Solo Tackles projects 61.90 percent (mean 2.54) | Play-To: -153.",
+        "pOver": 0.619,
+        "pUnder": 0.381
+      },
+      {
+        "playerId": "will-anderson-jr-sacks",
+        "playerName": "Will Anderson Jr.",
+        "propType": "Sacks",
+        "market": "sacks",
+        "line": 0.75,
+        "side": "OVER",
+        "confidence": "57/100",
+        "expectedClv": 0.0727,
+        "decision": "PASS",
+        "nEffTargetNotes": "IDP Sacks: Over 0.75 Sacks projects 57.27 percent (mean 1.27 with Danielle Hunter Out) | Play-To: -126.",
+        "pOver": 0.5727,
+        "pUnder": 0.4273
       }
     ],
     "correlatedSgpTicket": {
-      "title": "WSH @ NYG Same-Game Parlay",
+      "title": "IND @ HOU Same-Game Parlay",
       "legs": [
         {
-          "description": "No approved correlated combination at posted Thursday prices.",
+          "description": "No auto-published multi-leg SGP ticket until two-sided sportsbook pricing clears Stage-5 limits.",
           "pickType": "PASS",
-          "selection": "WSH @ NYG PASS",
+          "selection": "IND @ HOU PASS",
           "confidence": "52/100",
           "expectedClv": 0.0,
           "decision": "PASS"
@@ -416,58 +696,80 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "fairOdds": "n/a",
       "marketOdds": "n/a",
       "edgeScore": 0.0,
-      "correlationRationale": "PASS - Market efficient on the Thursday kickoff; no correlated ticket released."
+      "correlationRationale": "PASS - Single-sided Thursday prop board; verify two-way sportsbook pricing before combining correlated HOU passing legs."
     },
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "Jayden Daniels",
+          "player": "C.J. Stroud",
           "position": "QB",
           "salary": 15600,
-          "leverageNote": "Jayden Daniels anchors rushing-floor + play-action upside in divisional tempo."
+          "leverageNote": "Optimal Showdown Cash/GPP Captain anchor ($47,600 of $50,000 cap, 0 excluded decoys): 39.72 Cash mean / 58.78 GPP p75 ceiling DK points (lineup totals 99.80 mean / 147.70 p75 ceiling)."
         },
         {
-          "player": "Malik Nabers",
-          "position": "WR",
-          "salary": 14400,
-          "leverageNote": "High-volume alpha perimeter share against man coverage rotations."
+          "player": "David Montgomery",
+          "position": "RB",
+          "salary": 8800,
+          "leverageNote": "Lead goal-line role (66.05 percent anytime TD probability, 13.52 Cash mean / 20.01 p75 ceiling DK points) pairs cleanly with positive Houston game script."
         }
       ],
       "cashCore": [
         {
-          "player": "Jayden Daniels",
+          "player": "C.J. Stroud",
           "position": "QB",
-          "salary": 6700,
-          "projection": 19.8,
-          "floorNote": "Dual-threat rushing floor stabilizes median output."
+          "salary": 15600,
+          "projection": 39.72,
+          "floorNote": "Showdown Optimal Cash ($47,600 total / $50,000 cap, 99.80 projected lineup mean, 147.70 GPP p75 ceiling, 0 excluded decoys)."
         },
         {
-          "player": "Terry McLaurin",
-          "position": "WR",
-          "salary": 6400,
-          "projection": 14.9,
-          "floorNote": "Downfield boundary target share leads Washington passing volume."
-        },
-        {
-          "player": "Tyrone Tracy Jr.",
+          "player": "David Montgomery",
           "position": "RB",
-          "salary": 5900,
-          "projection": 14.2,
-          "floorNote": "Early-down rushing volume and checkdown usage in neutral scripts."
+          "salary": 8800,
+          "projection": 13.52,
+          "floorNote": "Lead early-down and goal-line share in positive Houston script (20.01 p75 ceiling)."
+        },
+        {
+          "player": "Nico Collins",
+          "position": "WR",
+          "salary": 7800,
+          "projection": 13.34,
+          "floorNote": "Primary alpha perimeter target against an injured Colts secondary (19.74 p75 ceiling)."
+        },
+        {
+          "player": "Tyler Warren",
+          "position": "TE",
+          "salary": 5600,
+          "projection": 13.18,
+          "floorNote": "Indianapolis PPR outlet anchor at 8.00 projected receptions (19.51 p75 ceiling)."
+        },
+        {
+          "player": "Xavier Hutchinson",
+          "position": "WR",
+          "salary": 5000,
+          "projection": 10.09,
+          "floorNote": "Strong mid-tier WR salary saver paired with C.J. Stroud (14.93 p75 ceiling)."
+        },
+        {
+          "player": "Ka'imi Fairbairn",
+          "position": "PK",
+          "salary": 4800,
+          "projection": 9.95,
+          "floorNote": "Domestic dome kicking floor in a 30.30-point projected Houston offense (14.73 p75 ceiling)."
         }
       ],
       "gppStacks": [
         {
           "primaryStack": {
-            "qb": "Jayden Daniels",
+            "qb": "C.J. Stroud",
             "passCatchers": [
-              "Terry McLaurin",
-              "Zach Ertz"
+              "Nico Collins",
+              "Xavier Hutchinson",
+              "David Montgomery"
             ]
           },
-          "bringBack": "Malik Nabers",
-          "valueFiller": "Theo Johnson",
-          "correlationTheme": "Division passing correlation through Washington boundary + seam targets paired with Giants alpha WR."
+          "bringBack": "Tyler Warren",
+          "valueFiller": "Ka'imi Fairbairn",
+          "correlationTheme": "Optimal DK Showdown Roster ($47,600 / $50,000 cap, 0 excluded decoys): 99.80 Cash mean (1.94 Sharpe) and 147.70 GPP p75 ceiling (2.38 Omega) -- C.J. Stroud + David Montgomery + Nico Collins + Tyler Warren + Xavier Hutchinson + Ka'imi Fairbairn."
         }
       ]
     },
