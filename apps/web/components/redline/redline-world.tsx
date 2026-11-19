@@ -318,7 +318,7 @@ export function RedlineWorld({
       if (frame) window.cancelAnimationFrame(frame);
       loopRef.current = null;
     };
-  }, []);
+  }, [staticMode]);
 
   const goProgress = useCallback((value: number) => {
     progressRef.current = clamp01(value);

@@ -3,8 +3,7 @@
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
-// @ts-ignore
-globalThis.React = React;
+Object.assign(globalThis, { React });
 import { render } from "@testing-library/react";
 
 vi.mock("@/components/ui/nav", () => ({
