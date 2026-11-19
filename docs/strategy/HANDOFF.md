@@ -3,6 +3,22 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-19 (Hermes autonomous cycle #7 — epistemic-gate class E root-caused and fixed: `076de997b` clobbered the declared Bazel monorepo config)
+
+- **What changed** (branch `fix/epistemic-gate-bazel-config-2026-11-18`, off `origin/main` `c67b673cd`):
+  - `WORKSPACE.bazel` restored from a 2-line stub to the declared workspace (`aspect_rules_js` 1.34.0, `aspect_rules_ts` 2.1.0, `node_version = "20.11.0"`, `rules_python` 0.27.0, `python_version = "3.13"`) per `docs/engine/research/2026-11-06/BAZEL_MONOREPO_BUILD_OPTIMIZATION_ARCHITECTURE.md`. The `09e019ce2` `http_archive` sha256s were **empty-string placeholders** (the SHA of the empty string), so they were *not* reinstated — the archives are unhashed rather than re-fabricated.
+  - `.bazelrc` — added the six required flags (`build --disk_cache=~/.cache/bazel-disk`, `build --repository_cache=~/.cache/bazel-repo`, `build:remote-cache --remote_cache=…`, `build:remote-exec --remote_executor=…`, `build:ci --config=remote-cache`, `coverage --combined_report=lcov`); kept the newer AVX2/OpenMP `build:linux`/`build:windows` copt lines that `076de997b` added.
+  - `BUILD.bazel` — re-added `exports_files([…])` and `filegroup(name = "monorepo_governance_configs", …)` alongside the native-kernel `cc_library`/`py_library` targets from `076de997b`.
+- **Root cause**: `09e019ce2` ("…Bazel monorepo…") added the full WORKSPACE + root BUILD **and** `tests/python/test_bazel_monorepo_build_optimization.py`. `076de997b` ("wire 19-skill … Bazel/DX build") then overwrote the root BUILD with kernel libs and left WORKSPACE a stub — silently reddening that test (epistemic-gate **class E**).
+- **What was proven** (real execution; local Python 3.14 stdlib harness — both Bazel test functions are stdlib-only, no pytest needed):
+  - Before: `FAIL test_bazel_workspace_and_rc_configurations` (bare assert) + `FAIL test_bazel_fine_grained_package_targets_and_hygiene: Missing target/token monorepo_governance_configs in BUILD.bazel`.
+  - After: **PASS on both**; every sub `BUILD.bazel` target and the architecture-doc tokens already present; `grep -E 'pcsk_|phx_|phc_|2Gs3|xai-|\betc\.'` over the three touched files → clean.
+- **What was not proven / still red**: classes **B** (roster/injury freshness), **C** (stale value pins / artifact drift) and **D** (constructor drift) remain. **No local Python+pytest+numpy env exists on this box** (the venvs were absent), so the full `pytest` suite could not be run locally this cycle — the E verification is a stdlib harness around the exact test callables, not a `pytest` run. Also flagged: the main checkout `C:/Users/Garrett/Sports` is on the stale `feat/hermes-research-wiring-2026-11-11` (36k dirty generated-`data/` entries), **not `main`**; local `main` is 7 behind `origin/main` (ancestor, fast-forwardable).
+- **What the next role must do**:
+  - Merge the PR and read the `epistemic-gate` job's failed count on the merge commit — it should drop by the 2 class-E tests.
+  - Continue with **class D** (`NFLMultiHorizonTrendsAndPreGameVisionEngine()` no-arg call drift) then **B/C** (triage doc `docs/ops/epistemic-gate-triage-2026-11-17.md`).
+  - Disk: `C:` is at **99% (~8.9 GB free)**. `uv cache clean` reclaimed ~200 MB (one locked `arxiv-mcp-server.exe` blocked the rest). A full attribution pass is still outstanding — recursive `du` on this FS is prohibitively slow; the 468 GB bulk is the repo + worktrees (many `Sports-*` dirs and 7 registered worktrees, several with their own `node_modules`), not caches.
+
 ## 2026-11-18 (Hermes autonomous cycle #6 — epistemic-gate tranche 2 finished and rebased onto `main`; the 758-skills wrapper method was the tranche's own gap)
 
 - **What changed** (branch `fix/epistemic-gate-tranche2-2026-11-17`, rebased onto `origin/main` `1203f18ae`):
