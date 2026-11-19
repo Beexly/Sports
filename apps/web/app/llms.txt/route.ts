@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import {
+  PUBLIC_RECORD_FLAT_1U_MINUS110_UNITS,
   PUBLIC_RECORD_LINE,
   PUBLIC_RECORD_NORMALIZED_BANNER,
   PUBLIC_RECORD_POLICY,
@@ -27,11 +28,11 @@ export async function GET() {
 - **Superseded snapshot:** ${SUPERSEDED_RECORD_NOTE}
 
 ## Verify our record yourself
-- [Official Verified NFL Record](${siteUrl}/record): Recomputed win-loss-push record, stake-normalized +25.82u flat 1u view, CLV trail, and settlement ledger.
+- [Official Verified NFL Record](${siteUrl}/record): Recomputed win-loss-push record, stake-normalized ${PUBLIC_RECORD_FLAT_1U_MINUS110_UNITS} flat 1u view, CLV trail, and settlement ledger.
 - [Sealed NFL Player Props & 360-Degree Watchlist](${siteUrl}/props): Watchlist triggers, pass discipline notes, and sealed member props.
 - [NFL Packages & Whop Instant Unlock](${siteUrl}/packages): Week 11 TNF IND @ HOU $9 impulse door, Week 12 Thanksgiving 5-Game $14 pack, Sunday Full Slate, and $39/mo Pro / $79/mo Elite with the 30-Day Positive-CLV Pledge.
 - [Free Parlay X-Ray Scanner](${siteUrl}/parlay-mri): Paste multi-leg tickets to diagnose correlation and compounding vigorish.
-- [DraftKings & FanDuel NFL DFS Hub](${siteUrl}/dfs): Cash-game cores, tournament stacks, and injury value plays.
+- [DraftKings & FanDuel NFL DFS Hub](${siteUrl}/fantasy/dfs): Cash-game cores, tournament stacks, and injury value plays.
 - [Sports Betting Calculators & Tools](${siteUrl}/tools): CLV calculator, EV calculator, no-vig calculator, odds converter, parlay calculator, and line-movement tracker.
 - [Creator & Sponsor Partnerships](${siteUrl}/partners): Affiliate revenue sharing and non-gambling sponsor inquiries.
 - [Extended Football Guide](${siteUrl}/llms-full.txt): Complete overview of our 5-step football grading workflow.

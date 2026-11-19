@@ -122,8 +122,9 @@ test("displayToken preserves authored all-caps but does not guess initialisms", 
    ENTITLEMENTS PARITY
    ══════════════════════════════════════════════════════════════════════════ */
 
-const SPORTS_REPO_TYPES =
-  "/var/minis/workspace/gse-ios/sports-meta/packages/types/src/index.ts";
+const path = require("node:path");
+const REPO_ROOT = path.resolve(__dirname, "..", "..", "..");
+const SPORTS_REPO_TYPES = path.join(REPO_ROOT, "packages", "types", "src", "index.ts");
 
 test("the entitlement table is transcribed, not invented", () => {
   // Reads the server's own source if the repo checkout is present, and asserts
@@ -197,7 +198,7 @@ test("no module in the app may unlock data from an entitlement flag", () => {
   // A crude but effective source guard: the tiers file may not import a
   // component or a screen, so nothing can read `canSee*` to render data.
   const src = fs.readFileSync(
-    "/var/minis/workspace/gse-ios/app/src/lib/entitlements.ts",
+    path.join(REPO_ROOT, "apps", "mobile", "src", "lib", "entitlements.ts"),
     "utf8",
   );
   assert.ok(!/from "@\/components/.test(src), "entitlements.ts must not import components");

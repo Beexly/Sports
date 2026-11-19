@@ -139,9 +139,14 @@ class SlateWindowWorkflow:
             )
         except Exception as exc:
             ran_comp: list[str] = []
+            comp_errors: list[str] = []
             for label, comp_fn in reversed(compensations):
-                await comp_fn()
-                ran_comp.append(label)
+                try:
+                    await comp_fn()
+                    ran_comp.append(label)
+                except Exception as comp_exc:
+                    comp_errors.append(f"{label}: {comp_exc}")
+            err_msg = str(exc) if not comp_errors else f"{exc}; comp_errors={comp_errors}"
             return SlateLockResult(
                 ok=False,
                 lock_version=lock_version,
@@ -151,5 +156,5 @@ class SlateWindowWorkflow:
                 neon_packet_id=neon_packet_id,
                 content_draft_count=0,
                 compensated_steps=tuple(ran_comp),
-                error=str(exc),
+                error=err_msg,
             )

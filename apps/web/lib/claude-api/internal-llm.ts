@@ -102,7 +102,18 @@ export async function callInternalLlm(request: InternalLlmRequest): Promise<Inte
   const config = internalLlmConfig(request.env);
   if (!config) throw new InternalLlmError("Internal LLM tier is not configured", 0);
 
-  const model = request.model ?? config.model;
+  let model = request.model ?? config.model;
+  if (config.baseUrl.toLowerCase().includes("nousresearch")) {
+    const validated = resolveNousPromoModel(model, request.env);
+    if (!validated) {
+      throw new InternalLlmError(
+        `Model '${model}' blocked by Nous free-promo allowlist policy.`,
+        403,
+      );
+    }
+    model = validated;
+  }
+
   const doFetch = request.fetchImpl ?? fetch;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), request.timeoutMs ?? 30000);
@@ -111,6 +122,7 @@ export async function callInternalLlm(request: InternalLlmRequest): Promise<Inte
   try {
     const res = await doFetch(`${config.baseUrl}/chat/completions`, {
       method: "POST",
+      signal: controller.signal,
       headers: {
         "Content-Type": "application/json",
         ...(config.apiKey ? { Authorization: `Bearer ${config.apiKey}` } : {}),

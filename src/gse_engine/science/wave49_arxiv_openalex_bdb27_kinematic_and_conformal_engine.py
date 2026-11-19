@@ -28,6 +28,7 @@ from typing import Any
 
 import numpy as np
 import pandas as pd  # type: ignore[import-untyped]
+from sklearn.linear_model import QuantileRegressor  # type: ignore[import-untyped]
 
 from gse_engine.multisport.wave40_universal_sports_metrics_encyclopedia_and_handicap_engine import (  # noqa: E501
     LIVE_STAKE_FRACTION,
@@ -119,19 +120,31 @@ def evaluate_bdb27_combine_to_nfl_lodco_benchmark(
 
     comb_sub = comb.copy()
     comb_sub["pkey"] = comb_sub["player_name"].map(_normalize_player_key)
+    comb_sub["combine_year"] = (
+        pd.to_numeric(comb_sub["season"], errors="coerce").fillna(-1).astype(int)
+    )
     comb_sub = comb_sub.sort_values("season").drop_duplicates(subset=["pkey"], keep="last")
 
     joined = enr_sub.merge(
-        comb_sub[["pkey", "wt", "forty", "vertical", "broad_jump", "cone", "shuttle", "draft_ovr"]],
+        comb_sub[
+            [
+                "pkey",
+                "combine_year",
+                "wt",
+                "forty",
+                "vertical",
+                "broad_jump",
+                "cone",
+                "shuttle",
+                "draft_ovr",
+            ]
+        ],
         on="pkey",
         how="inner",
     )
 
     feat_cols = ["wt", "forty", "vertical", "broad_jump", "cone", "shuttle", "draft_ovr"]
-    for c in feat_cols:
-        joined[c] = pd.to_numeric(joined[c], errors="coerce")
-        joined[c] = joined[c].fillna(joined[c].median())
-    joined["log_pick"] = np.log1p(joined["draft_ovr"].clip(lower=1.0, upper=300.0))
+    joined[feat_cols] = joined[feat_cols].apply(pd.to_numeric, errors="coerce")
     joined["snap_share"] = (
         pd.to_numeric(joined["off_snap_pct"], errors="coerce").fillna(0.0)
         + pd.to_numeric(joined["def_snap_pct"], errors="coerce").fillna(0.0)
@@ -144,22 +157,42 @@ def evaluate_bdb27_combine_to_nfl_lodco_benchmark(
     full_cols = ["cone", "shuttle", "broad_jump", "vertical", "wt", "forty", "log_pick"]
     preds_kin = np.zeros(len(joined), dtype=float)
     preds_stop = np.zeros(len(joined), dtype=float)
-    seasons_sorted = sorted(joined["season"].unique().tolist())
+    seasons_sorted = sorted(int(s) for s in joined["season"].unique().tolist())
 
-    for hold_season in seasons_sorted:
-        te_mask = (joined["season"] == hold_season).to_numpy()
+    unique_combine_years = sorted(int(y) for y in joined["combine_year"].unique().tolist())
+    if len(unique_combine_years) >= 3:
+        fold_series = joined["combine_year"]
+        cv_groups_sorted = unique_combine_years
+    else:
+        fold_series = joined["pkey"].map(
+            lambda k: int(hashlib.sha256(str(k).encode("utf-8")).hexdigest()[:8], 16) % 5
+        )
+        cv_groups_sorted = sorted(int(g) for g in fold_series.unique().tolist())
+
+    for hold_group in cv_groups_sorted:
+        te_mask = (fold_series == hold_group).to_numpy()
         tr_mask = ~te_mask
+        if not np.any(tr_mask) or not np.any(te_mask):
+            continue
+        tr_df = joined.loc[tr_mask, feat_cols].copy()
+        te_df = joined.loc[te_mask, feat_cols].copy()
+        fold_med = tr_df.median().fillna(0.0)
+        tr_df = tr_df.fillna(fold_med)
+        te_df = te_df.fillna(fold_med)
+        tr_df["log_pick"] = np.log1p(tr_df["draft_ovr"].clip(lower=1.0, upper=300.0))
+        te_df["log_pick"] = np.log1p(te_df["draft_ovr"].clip(lower=1.0, upper=300.0))
+
         y_tr = joined.loc[tr_mask, "target_val"].to_numpy(dtype=float)
         preds_kin[te_mask] = _ridge_fit_predict(
-            joined.loc[tr_mask, full_cols].to_numpy(dtype=float),
+            tr_df[full_cols].to_numpy(dtype=float),
             y_tr,
-            joined.loc[te_mask, full_cols].to_numpy(dtype=float),
+            te_df[full_cols].to_numpy(dtype=float),
             alpha=18.0,
         )
         preds_stop[te_mask] = _ridge_fit_predict(
-            joined.loc[tr_mask, ["forty"]].to_numpy(dtype=float),
+            tr_df[["forty"]].to_numpy(dtype=float),
             y_tr,
-            joined.loc[te_mask, ["forty"]].to_numpy(dtype=float),
+            te_df[["forty"]].to_numpy(dtype=float),
             alpha=18.0,
         )
 
@@ -169,18 +202,28 @@ def evaluate_bdb27_combine_to_nfl_lodco_benchmark(
     kin_r = float(np.corrcoef(y_all, preds_kin)[0, 1]) if len(y_all) > 2 else 0.0
     stop_r = float(np.corrcoef(y_all, preds_stop)[0, 1]) if len(y_all) > 2 else 0.0
 
-    # Also compute cone + shuttle empirical correlations cleanly for reporting
-    cone_r_ppr = float(
-        np.corrcoef(
-            joined["cone"].to_numpy(dtype=float),
-            joined["fantasy_points_ppr"].fillna(0.0).to_numpy(dtype=float),
-        )[0, 1]
+    # Also compute cone + shuttle empirical correlations on observed non-null entries
+    cone_valid = joined[joined["cone"].notna()].copy()
+    shuttle_valid = joined[joined["shuttle"].notna()].copy()
+    cone_r_ppr = (
+        float(
+            np.corrcoef(
+                cone_valid["cone"].to_numpy(dtype=float),
+                cone_valid["fantasy_points_ppr"].fillna(0.0).to_numpy(dtype=float),
+            )[0, 1]
+        )
+        if len(cone_valid) >= 3
+        else 0.0
     )
-    shuttle_r_ppr = float(
-        np.corrcoef(
-            joined["shuttle"].to_numpy(dtype=float),
-            joined["fantasy_points_ppr"].fillna(0.0).to_numpy(dtype=float),
-        )[0, 1]
+    shuttle_r_ppr = (
+        float(
+            np.corrcoef(
+                shuttle_valid["shuttle"].to_numpy(dtype=float),
+                shuttle_valid["fantasy_points_ppr"].fillna(0.0).to_numpy(dtype=float),
+            )[0, 1]
+        )
+        if len(shuttle_valid) >= 3
+        else 0.0
     )
 
     dl_row = bench_csv[bench_csv["combine_position"] == "DL"].iloc[0]
@@ -192,7 +235,8 @@ def evaluate_bdb27_combine_to_nfl_lodco_benchmark(
         "atlas_prospect_count": int(len(atlas_csv)),
         "bdb27_dl_channel_effect_r": round(float(dl_row["channel_nfl_effect_r_or_rho"]), 4),
         "bdb27_day3_alpha_steal_count": int(day3_row["prospect_count"]),
-        "lodco_seasons": [int(s) for s in seasons_sorted],
+        "lodco_seasons": seasons_sorted,
+        "lodco_draft_years": cv_groups_sorted,
         "joined_qualified_player_seasons": int(len(joined)),
         "kinematic_ridge_rmse": round(kin_rmse, 4),
         "stopwatch_only_rmse": round(stop_rmse, 4),
@@ -233,7 +277,6 @@ def evaluate_arxiv2610_quantile_conformal_motion_envelope(
     def _design(df: pd.DataFrame) -> np.ndarray:
         return np.column_stack(
             [
-                np.ones(len(df), dtype=float),
                 df["avg_cushion"].to_numpy(dtype=float),
                 df["avg_intended_air_yards"].to_numpy(dtype=float),
                 np.log1p(df["targets"].to_numpy(dtype=float)),
@@ -242,16 +285,13 @@ def evaluate_arxiv2610_quantile_conformal_motion_envelope(
 
     x_fit = _design(fit_df)
     y_fit = fit_df["avg_separation"].to_numpy(dtype=float)
-    beta = np.linalg.lstsq(x_fit, y_fit, rcond=None)[0]
-    res_fit = y_fit - x_fit @ beta
-    q_lo_off = float(np.quantile(res_fit, 0.075))
-    q_hi_off = float(np.quantile(res_fit, 0.925))
+    q_lo_model = QuantileRegressor(quantile=0.075, alpha=0.0, solver="highs").fit(x_fit, y_fit)
+    q_hi_model = QuantileRegressor(quantile=0.925, alpha=0.0, solver="highs").fit(x_fit, y_fit)
 
     x_cal = _design(cal_df)
     y_cal = cal_df["avg_separation"].to_numpy(dtype=float)
-    pred_cal = x_cal @ beta
-    lo_cal = pred_cal + q_lo_off
-    hi_cal = pred_cal + q_hi_off
+    lo_cal = q_lo_model.predict(x_cal)
+    hi_cal = q_hi_model.predict(x_cal)
     scores = np.maximum(lo_cal - y_cal, y_cal - hi_cal)
 
     n_cal = len(scores)
@@ -260,13 +300,14 @@ def evaluate_arxiv2610_quantile_conformal_motion_envelope(
 
     x_te = _design(test_2026)
     y_te = test_2026["avg_separation"].to_numpy(dtype=float)
-    pred_te = x_te @ beta
-    lo_te = pred_te + q_lo_off - q_conf
-    hi_te = pred_te + q_hi_off + q_conf
+    lo_te = q_lo_model.predict(x_te) - q_conf
+    hi_te = q_hi_model.predict(x_te) + q_conf
 
     covered = (y_te >= lo_te) & (y_te <= hi_te)
     emp_cov = float(np.mean(covered))
-    mean_width = float(np.mean(hi_te - lo_te))
+    widths_te = hi_te - lo_te
+    mean_width = float(np.mean(widths_te))
+    width_std = float(np.std(widths_te))
 
     return {
         "paper_id": "2610.36183",
@@ -277,6 +318,7 @@ def evaluate_arxiv2610_quantile_conformal_motion_envelope(
         "conformal_margin_yards": round(q_conf, 4),
         "oos_2026_empirical_coverage": round(emp_cov, 4),
         "mean_interval_width_yards": round(mean_width, 4),
+        "interval_width_std_yards": round(width_std, 4),
         "coverage_cleared": bool(emp_cov >= 0.85),
     }
 
@@ -444,31 +486,33 @@ def evaluate_wave49_arxiv_openalex_bdb27_suite(
         fb_out: dict[str, Any] = {
             "wave": 49,
             "clean_checkout_fallback": True,
+            "verified_from_local_artifacts": False,
+            "status": "unverified_clean_checkout",
             "clinical_ruo_w49_sports_weight": float(CLINICAL_RUO_W49_SPORTS_WEIGHT),
             "real_money_stake_cleared": bool(REAL_MONEY_STAKE_CLEARED),
             "bdb27_lodco_benchmark": {
-                "kinematic_ridge_rmse": 54.3026,
-                "stopwatch_only_rmse": 65.0941,
-                "kinematic_beats_stopwatch": True,
+                "kinematic_ridge_rmse": None,
+                "stopwatch_only_rmse": None,
+                "kinematic_beats_stopwatch": False,
             },
             "arxiv2610_cqr_motion_envelope": {
-                "oos_2026_empirical_coverage": 0.8939,
-                "coverage_cleared": True,
+                "oos_2026_empirical_coverage": None,
+                "coverage_cleared": False,
             },
             "arxiv2609_sinkhorn_trench": {
-                "max_marginal_l1_error": 1e-12,
-                "doubly_stochastic_exact": True,
-                "entropy_reduction_positive": True,
+                "max_marginal_l1_error": None,
+                "doubly_stochastic_exact": False,
+                "entropy_reduction_positive": False,
             },
             "arxiv2607_rlvr_brier_rewards": {
-                "brier_strict_proper_gap": 0.06718,
-                "strict_properness_verified": True,
+                "brier_strict_proper_gap": None,
+                "strict_properness_verified": False,
             },
             "openalex_biomech_ruo": {
-                "all_5_anchors_present": True,
-                "ruo_quarantine_enforced": True,
+                "all_5_anchors_present": False,
+                "ruo_quarantine_enforced": False,
             },
-            "all_science_gates_passed": True,
+            "all_science_gates_passed": False,
         }
         _SUITE49_SCI_CACHE[key] = fb_out
         return fb_out
@@ -481,6 +525,9 @@ def evaluate_wave49_arxiv_openalex_bdb27_suite(
 
     out = {
         "wave": 49,
+        "clean_checkout_fallback": False,
+        "verified_from_local_artifacts": True,
+        "status": "verified_from_local_artifacts",
         "clinical_ruo_w49_sports_weight": float(CLINICAL_RUO_W49_SPORTS_WEIGHT),
         "real_money_stake_cleared": bool(REAL_MONEY_STAKE_CLEARED),
         "bdb27_lodco_benchmark": bdb,

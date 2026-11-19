@@ -1,4 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  PUBLIC_SURFACE_TRUTH_READ_TIMEOUT_MS,
+  getCachedTruthSnapshot,
+  setCachedTruthSnapshot,
+  shouldUseTruthCache,
+  type TruthCacheBucket,
+} from "@/lib/ops/public-surface-truth-cache";
 // isContestsPublic is still reported below. The contests SURFACE is gone, but
 // this endpoint is the operator truth surface: saying "contests is dark" is
 // exactly the fact an operator needs, and a silently-missing key would read as
@@ -81,54 +88,6 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 120;
 
-/** Bounded server-side snapshot cache TTL to prevent DB stampedes on L10 polls. */
-export const PUBLIC_SURFACE_TRUTH_CACHE_TTL_MS = 45_000;
-/** Hard per-read timeout bound so one slow DB/RPC query never stalls the surface past 10s. */
-export const PUBLIC_SURFACE_TRUTH_READ_TIMEOUT_MS = 3_500;
-
-type TruthCacheBucket = "public" | "operator";
-type TruthCacheEntry = {
-  readonly payload: Record<string, unknown>;
-  readonly expiresAt: number;
-};
-
-const truthResponseCache = new Map<TruthCacheBucket, TruthCacheEntry>();
-let testCacheOverride: boolean | null = null;
-
-/** Test-only helper: clear cached truth snapshots and restore default test cache behavior. */
-export function __resetPublicSurfaceTruthCacheForTests(): void {
-  truthResponseCache.clear();
-  testCacheOverride = null;
-}
-
-/** Test-only helper: explicitly enable or disable the 45s cache inside Vitest. */
-export function __setPublicSurfaceTruthCacheEnabledForTests(enabled: boolean | null): void {
-  testCacheOverride = enabled;
-  if (!enabled) {
-    truthResponseCache.clear();
-  }
-}
-
-function shouldUseCache(request: Request): { enabled: boolean; bypassRead: boolean } {
-  let fresh = false;
-  try {
-    const parsed = new URL(request.url);
-    const param = parsed.searchParams.get("fresh");
-    fresh = param === "1" || param === "true";
-  } catch {
-    fresh = false;
-  }
-
-  const headerOptIn = request.headers.get("x-ops-truth-cache") === "1";
-  const isTestEnv = process.env.NODE_ENV === "test";
-  const enabled =
-    testCacheOverride !== null
-      ? testCacheOverride
-      : headerOptIn || !isTestEnv;
-
-  return { enabled, bypassRead: fresh };
-}
-
 /** A read-only posture field must never take the whole truth surface down: any
  *  throw (including a synchronous one from a partial client) reads as null. */
 async function safeRead<T>(fn: () => Promise<T>): Promise<T | null> {
@@ -144,11 +103,15 @@ async function withReadTimeout<T>(
   fn: () => Promise<T>,
   fallback: T,
   timeoutMs: number = PUBLIC_SURFACE_TRUTH_READ_TIMEOUT_MS,
+  onTimeout?: () => void,
 ): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {
     const timeoutPromise = new Promise<T>((resolve) => {
-      timer = setTimeout(() => resolve(fallback), timeoutMs);
+      timer = setTimeout(() => {
+        onTimeout?.();
+        resolve(fallback);
+      }, timeoutMs);
     });
     return await Promise.race([
       Promise.resolve().then(fn).catch(() => fallback),
@@ -287,13 +250,13 @@ export async function GET(request: Request) {
     }
   }
 
-  const cachePolicy = shouldUseCache(request);
+  const cachePolicy = shouldUseTruthCache(request, detailed);
   const cacheBucket: TruthCacheBucket = detailed ? "operator" : "public";
   const nowMs = Date.now();
   if (cachePolicy.enabled && !cachePolicy.bypassRead) {
-    const hit = truthResponseCache.get(cacheBucket);
-    if (hit && hit.expiresAt > nowMs) {
-      return NextResponse.json(hit.payload, { headers: { "Cache-Control": "no-store" } });
+    const cachedPayload = getCachedTruthSnapshot(cacheBucket, nowMs);
+    if (cachedPayload) {
+      return NextResponse.json(cachedPayload, { headers: { "Cache-Control": "no-store" } });
     }
   }
 
@@ -312,27 +275,33 @@ export async function GET(request: Request) {
   // Fire-and-forget traffic heartbeat: never awaited, never fails this response.
   void maybeRunTrafficHeartbeat().catch(() => undefined);
 
+  let anyReadTimedOut = false;
+  const boundedRead = <T>(fn: () => Promise<T>, fallback: T): Promise<T> =>
+    withReadTimeout(fn, fallback, PUBLIC_SURFACE_TRUTH_READ_TIMEOUT_MS, () => {
+      anyReadTimedOut = true;
+    });
+
   // Wave 1: run ALL independent DB and ops probes concurrently with a 3,500ms
   // per-read timeout budget so production never stalls into a serial >10s waterfall.
   const wave1 = await Promise.allSettled([
-    withReadTimeout(() => assessSchedulerLiveness(), null),
-    withReadTimeout(() => resolveBestFreeSpineSnapshot(), null),
-    withReadTimeout(() => isMarketBoardOddsStale(), true),
+    boundedRead(() => assessSchedulerLiveness(), null),
+    boundedRead(() => resolveBestFreeSpineSnapshot(), null),
+    boundedRead(() => isMarketBoardOddsStale(), true),
     stubMode
       ? Promise.resolve(null)
-      : withReadTimeout(
+      : boundedRead(
           () => loadSettlementHealth(db, { graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS }),
           null,
         ),
     detailed && !stubMode
-      ? withReadTimeout(
+      ? boundedRead(
           () => loadSettlementBreakdown(db, { graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS }),
           null,
         )
       : Promise.resolve(null),
     stubMode
       ? Promise.resolve(null)
-      : withReadTimeout(
+      : boundedRead(
           () =>
             loadCanonicalSamplePosture(db, {
               commencedTotal: 0,
@@ -343,7 +312,7 @@ export async function GET(request: Request) {
         ),
     stubMode
       ? Promise.resolve(null)
-      : withReadTimeout(
+      : boundedRead(
           () =>
             db.ingestionRun.findFirst({
               where: { status: "SUCCESS", oddsInserted: { gt: 0 } },
@@ -354,7 +323,7 @@ export async function GET(request: Request) {
         ),
     stubMode
       ? Promise.resolve(null)
-      : withReadTimeout(
+      : boundedRead(
           () =>
             db.ingestionRun.findFirst({
               where: {
@@ -369,7 +338,7 @@ export async function GET(request: Request) {
         ),
     stubMode
       ? Promise.resolve(null)
-      : withReadTimeout(
+      : boundedRead(
           () =>
             safeRead(() =>
               loadOddsCreditTruth(db as unknown as OddsCreditLedgerDb, new Date()),
@@ -377,11 +346,11 @@ export async function GET(request: Request) {
           null,
         ),
     detailed
-      ? withReadTimeout(() => loadStripeWebhookHostsPosture(), null)
+      ? boundedRead(() => loadStripeWebhookHostsPosture(), null)
       : Promise.resolve(null),
     stubMode
       ? Promise.resolve(null)
-      : withReadTimeout(
+      : boundedRead(
           () =>
             loadPublicClvPolicy(db, {
               canExposePerformanceStats: false,
@@ -391,7 +360,7 @@ export async function GET(request: Request) {
         ),
     stubMode
       ? Promise.resolve(null)
-      : withReadTimeout(
+      : boundedRead(
           () =>
             db.pick.count({
               where: staleUnstartedPublishedPendingWhere(new Date()),
@@ -400,20 +369,20 @@ export async function GET(request: Request) {
         ),
     stubMode
       ? Promise.resolve(null)
-      : withReadTimeout(() => loadMarketCoverage(db as never), null),
+      : boundedRead(() => loadMarketCoverage(db as never), null),
     stubMode
       ? Promise.resolve(null)
-      : withReadTimeout(() => loadConfidenceTail(db as never), null),
+      : boundedRead(() => loadConfidenceTail(db as never), null),
     stubMode
       ? Promise.resolve(null)
-      : withReadTimeout(() => loadRankingBasisCensus(db as never), null),
-    withReadTimeout(() => readOddsLineArchiveFreshnessSafely(), staleArchiveFallback),
+      : boundedRead(() => loadRankingBasisCensus(db as never), null),
+    boundedRead(() => readOddsLineArchiveFreshnessSafely(), staleArchiveFallback),
     !detailed || stubMode
       ? Promise.resolve(null)
-      : withReadTimeout(() => surveyLineIntegrity(db as never), null),
-    withReadTimeout(() => loadProvenPathSurface(), null),
-    withReadTimeout(() => loadRankingPauseApply(), null),
-    withReadTimeout(() => loadMapBakeoff(), null),
+      : boundedRead(() => surveyLineIntegrity(db as never), null),
+    boundedRead(() => loadProvenPathSurface(), null),
+    boundedRead(() => loadRankingPauseApply(), null),
+    boundedRead(() => loadMapBakeoff(), null),
   ]);
 
   const schedulerLiveness = settledOr(wave1[0], null);
@@ -436,6 +405,7 @@ export async function GET(request: Request) {
   const provenSurface = settledOr(wave1[17], null);
   const durablePause = settledOr(wave1[18], null);
   const mapBakeoffRaw = settledOr(wave1[19], null);
+  void oddsStaleForSurface;
 
   let settlement: {
     health: string;
@@ -471,13 +441,17 @@ export async function GET(request: Request) {
       }
     : null;
 
-  const boardSurface = boardSurfacePosture(process.env, { oddsFresh: !oddsStaleForSurface });
+  const runAgeMinutes = run?.completedAt
+    ? Math.round((Date.now() - run.completedAt.getTime()) / 60000)
+    : null;
+  const runWithinRefreshSla = runAgeMinutes !== null && runAgeMinutes <= 240;
+  const boardSurface = boardSurfacePosture(process.env, { oddsFresh: runWithinRefreshSla });
 
   // Wave 2: only the two probes that depend on Wave 1 outputs run here.
   const wave2 = await Promise.allSettled([
     stubMode
       ? Promise.resolve(null)
-      : withReadTimeout(
+      : boundedRead(
           () =>
             loadCalibrationOpsSurface({
               canonicalSettled: sample?.canonicalSettled ?? 0,
@@ -488,7 +462,7 @@ export async function GET(request: Request) {
           null,
         ),
     boardSurface.surface === "signal"
-      ? withReadTimeout(() => isSignalBoardSlateStale(), true)
+      ? boundedRead(() => isSignalBoardSlateStale(), true)
       : Promise.resolve(false),
   ]);
 
@@ -920,13 +894,22 @@ export async function GET(request: Request) {
       podcastEpisodes: listEpisodes().length,
       newsletterIssues: listIssues().length,
     },
-    creditStack,
+    creditStack: detailed
+      ? creditStack
+      : {
+          freeLaneConfigured: creditStack.freeLaneConfigured,
+          internalLlmConfigured: creditStack.internalLlmConfigured,
+          claudeProvider: creditStack.claudeProvider,
+          bedrockConfigured: creditStack.bedrockConfigured,
+          vertexConfigured: creditStack.vertexConfigured,
+          azureFoundryConfigured: creditStack.azureFoundryConfigured,
+          anyCreditLaneReady: creditStack.anyCreditLaneReady,
+          jynx: creditStack.jynx,
+        },
     billingMoney,
     ...(detailed ? { stripeWebhookHosts } : {}),
     autonomy,
-    boardSurface: boardSurfacePosture(process.env, {
-      oddsFresh: oddsInserting?.withinRefreshSla === true,
-    }),
+    boardSurface,
     productBoards: {
       surfaces: productBoards.surfaces,
       liveProductionIds: productBoards.liveProductionIds,
@@ -1071,11 +1054,8 @@ export async function GET(request: Request) {
       : {}),
   };
 
-  if (cachePolicy.enabled) {
-    truthResponseCache.set(cacheBucket, {
-      payload,
-      expiresAt: Date.now() + PUBLIC_SURFACE_TRUTH_CACHE_TTL_MS,
-    });
+  if (cachePolicy.enabled && !anyReadTimedOut) {
+    setCachedTruthSnapshot(cacheBucket, payload);
   }
 
   return NextResponse.json(payload, { headers: { "Cache-Control": "no-store" } });

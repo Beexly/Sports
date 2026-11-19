@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonNoStore } from "@/lib/api/no-store";
 import { auth } from "@/lib/auth";
+import { resolveEitherViewer } from "@/lib/mobile/bearer-auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
@@ -90,13 +91,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   }
 
   const session = await auth();
+  const viewer = await resolveEitherViewer(req, session?.user?.id).catch(() => null);
 
   // Anonymous viewers get the canonical FREE entitlements — the SAME single
   // source of truth (getEntitlements) that signed-in users resolve through.
   // A hand-rolled fallback here is exactly how the two FREE definitions drifted
   // apart (anon limited vs signed-in over-granted); never re-inline it.
-  const entitlements = session?.user?.id
-    ? await getUserEntitlements(session.user.id, session.user.email)
+  const entitlements = viewer?.userId
+    ? await getUserEntitlements(viewer.userId, session?.user?.email)
     : getEntitlements("FREE");
 
   const { searchParams } = new URL(req.url);
@@ -681,7 +683,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         factorBreakdown: (entitlements.canSeeFactorBreakdown ? enrichedFactorBreakdown : null) as unknown as FactorBreakdown,
         ...(continuityDeltas ? { continuityDeltas } : {}),
         ...(injuryEvidence ? { injuryEvidence } : {}),
-        reasoningTrace,
+        reasoningTrace: entitlements.canSeeFactorBreakdown ? reasoningTrace : null,
       // Always visible — trust transparency
       dataQualityScore,
       tier: pick.tier as "FREE" | "PREMIUM",

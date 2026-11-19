@@ -4,7 +4,10 @@ import { getStripe, StripeConfigError, stripe } from "@/lib/stripe";
 import { db, DurableWriteStoreUnavailableError, requireDurableWriteStore } from "@sports/db";
 import { tierFromPriceRef } from "@/lib/billing/price-ids";
 import { track } from "@/lib/analytics/events";
-import { recordPurchaseLedgerEntry } from "@/lib/packages/purchase-ledger";
+import {
+  recordPurchaseLedgerEntry,
+  revokePurchaseLedgerEntries,
+} from "@/lib/packages/purchase-ledger";
 import { sendPostCheckoutUnlockReceipt } from "@/lib/packages/post-checkout-receipt";
 
 // IMPORTANT: This route must receive the raw body for Stripe signature verification.
@@ -147,9 +150,9 @@ function isStripeEventIdConflict(err: unknown): boolean {
 
 async function handleStripeEvent(event: Stripe.Event): Promise<void> {
   switch (event.type) {
-    case "checkout.session.completed": {
-      // Fires when a user completes checkout. The subscription record may not
-      // have the subscriptionId yet — retrieve and sync it now.
+    case "checkout.session.completed":
+    case "checkout.session.async_payment_succeeded": {
+      // Fires when a user completes checkout (or async ACH/SEPA settles).
       const session = event.data.object as Stripe.Checkout.Session;
       let completedTier: string | null = null;
       if (session.subscription) {
@@ -165,6 +168,12 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
         completedTier = tierFromPriceRef(priceId, lookupKey);
         await syncSubscription(subscription);
       } else {
+        if (session.payment_status && session.payment_status !== "paid") {
+          console.info(
+            `[stripe-webhook] One-time checkout ${session.id} status=${session.payment_status}; awaiting paid settlement before grant.`,
+          );
+          break;
+        }
         // One-time pack purchase — record to durable purchase ledger so customer
         // access survives tab close, browser refreshes, and page navigation.
         const rawSlug = session.metadata?.packageSlug || session.metadata?.package || "";
@@ -183,12 +192,19 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
           currency: session.currency || "usd",
           metadata: session.metadata as Record<string, unknown> | undefined,
         });
-        void sendPostCheckoutUnlockReceipt({
-          email: customerEmail,
-          packageSlug,
-          sessionId: session.id,
-          amountCents: session.amount_total ?? 0,
-        });
+        try {
+          await sendPostCheckoutUnlockReceipt({
+            email: customerEmail,
+            packageSlug,
+            sessionId: session.id,
+            amountCents: session.amount_total ?? 0,
+          });
+        } catch (receiptErr) {
+          console.warn(
+            "[stripe-webhook] Receipt dispatch failed (non-fatal):",
+            receiptErr instanceof Error ? receiptErr.message : String(receiptErr),
+          );
+        }
       }
       // Conversion signal — a checkout session completed and entitlement was
       // synced (or attempted). Inert no-op until a provider is wired.
@@ -514,13 +530,31 @@ async function handleChargeRefunded(charge: Stripe.Charge): Promise<void> {
     return;
   }
 
-  // STRUCTURAL: no invoice on the charge (one-off payment). Retries cannot
-  // cure this — log loudly, ack 200, never guess.
+  // STRUCTURAL: no invoice on the charge (one-off payment). Log loudly, revoke
+  // any one-time pack ledger entry when email/slug is present on the charge,
+  // and never invent a subscription lookup.
   if (!invoiceId) {
     console.warn(
       `[stripe] charge.refunded ${charge.id} [ENFORCE]: no invoice on charge ` +
         `(one-off payment?) — no resolvable subscription, revoking nothing (never guess).`,
     );
+    const receiptEmail =
+      charge.receipt_email || charge.billing_details?.email || null;
+    const refundedSlug =
+      typeof charge.metadata?.packageSlug === "string"
+        ? charge.metadata.packageSlug
+        : null;
+    if (receiptEmail || refundedSlug) {
+      await revokePurchaseLedgerEntries({
+        sessionId:
+          typeof charge.payment_intent === "string"
+            ? charge.payment_intent
+            : charge.id,
+        customerEmail: receiptEmail,
+        packageSlug: refundedSlug,
+        reason: "stripe_charge_refunded",
+      });
+    }
     return;
   }
 

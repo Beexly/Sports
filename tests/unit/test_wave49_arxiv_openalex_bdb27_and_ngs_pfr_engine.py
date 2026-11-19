@@ -140,6 +140,7 @@ def test_wave49_science_kernels_bdb27_cqr_sinkhorn_rlvr_and_ruo() -> None:
     cqr = sci["arxiv2610_cqr_motion_envelope"]
     assert cqr["coverage_cleared"] is True
     assert float(cqr["oos_2026_empirical_coverage"]) >= 0.85
+    assert float(cqr["interval_width_std_yards"]) > 0.05
 
     sink = sci["arxiv2609_sinkhorn_trench"]
     assert sink["doubly_stochastic_exact"] is True
@@ -153,6 +154,11 @@ def test_wave49_science_kernels_bdb27_cqr_sinkhorn_rlvr_and_ruo() -> None:
     oa = sci["openalex_biomech_ruo"]
     assert oa["all_5_anchors_present"] is True
     assert oa["ruo_quarantine_enforced"] is True
+
+    sci_fb = evaluate_wave49_arxiv_openalex_bdb27_suite(REPO_ROOT / "__missing_w49_checkout__")
+    assert sci_fb["clean_checkout_fallback"] is True
+    assert sci_fb["verified_from_local_artifacts"] is False
+    assert sci_fb["all_science_gates_passed"] is False
 
 
 def test_wave49_causal_tracking_aliases_martingale_ast_and_wiring(tmp_path: Path) -> None:
@@ -191,7 +197,7 @@ def test_wave49_causal_tracking_aliases_martingale_ast_and_wiring(tmp_path: Path
     assert mart["beats_null_95pct"] is True
     assert float(mart["margin_empirical_p_value"]) <= 0.05
     assert mart["total_beats_null_99pct"] is True
-    assert float(mart["total_empirical_p_value"]) <= 0.015
+    assert float(mart["total_empirical_p_value"]) <= 0.01
     assert float(mart["shortcut_max_output_perturbation"]) == 0.0
     assert mart["shortcut_invariance_verified"] is True
 

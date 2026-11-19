@@ -199,7 +199,7 @@ test("the header is well-formed and includes every required oauth_ field", () =>
     assert.ok(header.includes(field), `missing ${field}`);
   }
   assert.ok(header.includes('oauth_version="1.0"'));
-  assert.ok(header.includes('oauth_signature_method="HMAC-SHA256"'));
+  assert.ok(header.includes('oauth_signature_method="HMAC-SHA1"'));
 });
 
 test("the same inputs produce the same signature — the signer is deterministic", () => {

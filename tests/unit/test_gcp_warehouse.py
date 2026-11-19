@@ -12,6 +12,7 @@ from gse_engine.cloud.gcp_warehouse import (
     GSE_CALIBRATION_REGION,
     BytesBilledLimitExceeded,
     GcpWarehouseAdapter,
+    build_bqml_evaluate_sql,
     validate_partitioned_calibration_sql,
 )
 
@@ -106,3 +107,32 @@ def test_gse_calibration_partition_sql_guard() -> None:
         "SELECT week, norm_crps, ece, clv_cents FROM gse_calibration.w1_w11_oos "
         "WHERE season = 2026 AND week <= 11"
     )
+
+
+def test_gse_calibration_sql_rejects_injection_tokens_and_avoids_select_star() -> None:
+    """Confirm semicolon/comment/UNION/DROP rejection and explicit BQML evaluate columns."""
+    for bad_sql in (
+        "SELECT week FROM gse_calibration.w1_w11_oos WHERE season = 2026; DROP TABLE x",
+        "SELECT week FROM gse_calibration.w1_w11_oos WHERE season = 2026 -- trailing",
+        "SELECT week FROM gse_calibration.w1_w11_oos WHERE season = 2026 /* block */",
+        "SELECT week FROM gse_calibration.w1_w11_oos WHERE season = 2026 UNION SELECT 1",
+    ):
+        with pytest.raises(ValueError):
+            validate_partitioned_calibration_sql(bad_sql)
+
+    with pytest.raises(ValueError, match="Unsafe SQL"):
+        build_bqml_evaluate_sql(
+            "w11_calib_lr",
+            "w1_w11_oos",
+            ["week", "clv_cents"],
+            "season = 2026; DROP TABLE x",
+        )
+
+    eval_sql = build_bqml_evaluate_sql(
+        "w11_calib_lr",
+        "w1_w11_oos",
+        ["week", "clv_cents"],
+        "season = 2026 AND week <= 11",
+    )
+    assert "SELECT *" not in eval_sql
+    assert "SELECT precision, recall, accuracy, f1_score, log_loss, roc_auc" in eval_sql

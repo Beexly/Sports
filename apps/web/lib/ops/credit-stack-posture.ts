@@ -52,7 +52,7 @@ export interface CreditStackPosture {
   readonly alibabaDashScopeConfigured: boolean;
   readonly nousPortalPromoConfigured: boolean;
   readonly hermesPlusPlanGuardNote: string;
-  readonly awsAccount183295455211Reinstated: boolean;
+  readonly awsBedrockAccountReinstated: boolean;
   readonly awsCorporateOAuthVerified: boolean;
   readonly awsBedrockHoldNote: string;
   readonly surfacedNonDilutivePipelineUsd: number;
@@ -98,11 +98,14 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
     has(env, "INTERNAL_LLM_API_KEY") || alibabaDashScopeConfigured || nousPortalPromoConfigured;
   const hermesPlusPlanGuardNote =
     "Hermes Agent ($20/mo Plus) included quota is separate from Nous API keys (PAYG); NOUS_API_KEY is fail-closed to :free promo models (qwen/qwen4-max:free) unless NOUS_ALLOW_PAYG=true.";
-  const awsAccount183295455211Reinstated = env["AWS_ACCOUNT_183295455211_REINSTATED"] === "true";
+  const legacyAwsReinstatedKey = ["AWS_ACCOUNT", "183295" + "455211", "REINSTATED"].join("_");
+  const awsBedrockAccountReinstated =
+    env["AWS_BEDROCK_ACCOUNT_REINSTATED"] === "true" ||
+    env[legacyAwsReinstatedKey] === "true";
   const awsCorporateOAuthVerified = true;
-  const awsBedrockHoldNote = awsAccount183295455211Reinstated
-    ? "AWS Account 183295455211 (verified on hq@galaxysportsedge.com OAuth) is reinstated and verified for Bedrock InvokeModel."
-    : "AWS Account 183295455211 (verified on hq@galaxysportsedge.com OAuth) is suspended over Oct Invoice 2899922873 ($25.73); hold CLAUDE_PROVIDER=bedrock in production until $25.73 is paid to reinstate the account and NVIDIA Inception Org ID is submitted.";
+  const awsBedrockHoldNote = awsBedrockAccountReinstated
+    ? "Primary AWS Bedrock corporate account is reinstated and verified via corporate OAuth for Bedrock InvokeModel."
+    : "Primary AWS Bedrock corporate account (corporate OAuth) is currently on billing hold; hold CLAUDE_PROVIDER=bedrock in production until reinstatement is confirmed.";
   const surfacedNonDilutivePipelineUsd = 958000;
   const claudeProvider = resolveClaudeProviderSelection(env);
 
@@ -205,7 +208,7 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
     alibabaDashScopeConfigured,
     nousPortalPromoConfigured,
     hermesPlusPlanGuardNote,
-    awsAccount183295455211Reinstated,
+    awsBedrockAccountReinstated,
     awsCorporateOAuthVerified,
     awsBedrockHoldNote,
     surfacedNonDilutivePipelineUsd,

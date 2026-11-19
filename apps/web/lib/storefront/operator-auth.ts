@@ -8,6 +8,8 @@
  * trivially short keys so a placeholder like "changeme" cannot become one.
  */
 
+import { createHash, timingSafeEqual } from "node:crypto";
+
 export const MIN_OPERATOR_KEY_LENGTH = 16;
 
 export type OperatorAuthResult = "ok" | "unconfigured" | "unauthorized";
@@ -26,6 +28,8 @@ export function authorizeOperator(
   const expected = resolveOperatorKey(env);
   if (!expected) return "unconfigured";
   if (!provided) return "unauthorized";
-  if (provided.trim() !== expected) return "unauthorized";
+  const a = createHash("sha256").update(provided.trim(), "utf8").digest();
+  const b = createHash("sha256").update(expected, "utf8").digest();
+  if (!timingSafeEqual(a, b)) return "unauthorized";
   return "ok";
 }

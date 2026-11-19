@@ -21,13 +21,31 @@ _PARTITION_PREDICATE_RE = re.compile(
     re.IGNORECASE | re.DOTALL,
 )
 _SAFE_IDENT_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+_UNSAFE_SQL_FRAGMENT_RE = re.compile(
+    r"(?:;|--|\*/|/\*|\bUNION\b|\bDROP\b|\bDELETE\b|\bINSERT\b|\bUPDATE\b|\bALTER\b)",
+    re.IGNORECASE,
+)
+
+
+def _validate_partition_where_clause(where_clause: str) -> str:
+    clean = where_clause.strip()
+    if not clean:
+        raise ValueError("where_partition_clause must be non-empty.")
+    if _UNSAFE_SQL_FRAGMENT_RE.search(clean):
+        raise ValueError(
+            "Unsafe SQL token detected in where_partition_clause "
+            "(semicolons, comments, and DML/DDL keywords are forbidden)."
+        )
+    return clean
 
 
 def validate_partitioned_calibration_sql(sql: str) -> None:
-    """Reject unpartitioned or `SELECT *` queries against BigQuery `gse_calibration`."""
+    """Reject unpartitioned, stacked, or `SELECT *` queries against BigQuery `gse_calibration`."""
     stripped = sql.strip()
     if not stripped:
         raise ValueError("Calibration SQL must be non-empty.")
+    if _UNSAFE_SQL_FRAGMENT_RE.search(stripped.rstrip(";")):
+        raise ValueError("Unsafe SQL comment, stacked statement, or keyword rejected.")
     if _SELECT_STAR_RE.search(stripped):
         raise ValueError(
             "Unbounded `SELECT *` is disallowed against gse_calibration; "
@@ -210,7 +228,7 @@ def build_bqml_logistic_model_sql(
     tbl = _validate_identifier(source_table, "source_table")
     lbl = _validate_identifier(label_column, "label_column")
     cols_sql = _normalize_explicit_columns(select_columns)
-    where_sql = where_partition_clause.strip()
+    where_sql = _validate_partition_where_clause(where_partition_clause)
     inner_select = f"SELECT {cols_sql} FROM `{ds}.{tbl}` WHERE {where_sql}"
     validate_partitioned_calibration_sql(inner_select)
     return (
@@ -234,10 +252,13 @@ def build_bqml_evaluate_sql(
     mdl = _validate_identifier(model_name, "model_name")
     tbl = _validate_identifier(eval_table, "eval_table")
     cols_sql = _normalize_explicit_columns(select_columns)
-    where_sql = where_partition_clause.strip()
+    where_sql = _validate_partition_where_clause(where_partition_clause)
     inner_select = f"SELECT {cols_sql} FROM `{ds}.{tbl}` WHERE {where_sql}"
     validate_partitioned_calibration_sql(inner_select)
-    return f"SELECT * FROM ML.EVALUATE(MODEL `{ds}.{mdl}`, ({inner_select}));"
+    return (
+        "SELECT precision, recall, accuracy, f1_score, log_loss, roc_auc "
+        f"FROM ML.EVALUATE(MODEL `{ds}.{mdl}`, ({inner_select}));"
+    )
 
 
 def build_bqml_predict_sql(
@@ -253,7 +274,7 @@ def build_bqml_predict_sql(
     mdl = _validate_identifier(model_name, "model_name")
     tbl = _validate_identifier(input_table, "input_table")
     cols_sql = _normalize_explicit_columns(select_columns)
-    where_sql = where_partition_clause.strip()
+    where_sql = _validate_partition_where_clause(where_partition_clause)
     inner_select = f"SELECT {cols_sql} FROM `{ds}.{tbl}` WHERE {where_sql}"
     validate_partitioned_calibration_sql(inner_select)
     return (

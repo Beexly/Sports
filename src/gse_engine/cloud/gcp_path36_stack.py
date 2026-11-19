@@ -12,7 +12,7 @@ from typing import Any
 
 PATH36_VERIFIED_STATUS: dict[str, Any] = {
     "record_date": "2026-11-19",
-    "account_email": "baxley.garrett@gmail.com",
+    "account_email": "founder-google-skills-account-redacted",
     "points": 1977,
     "overall_complete": False,
     "blocked_on_lab_credits": True,

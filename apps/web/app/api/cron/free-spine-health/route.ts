@@ -11,6 +11,7 @@
  */
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
+import { canMintSignalPicksNow } from "@/lib/cron/noon-window-guard";
 import { ALL_SPORTS, freeCoverageMatrix, redundancyGaps } from "@/lib/data-sources/source-router";
 import { fetchScoresMultiSource, scoreSourceChain } from "@/lib/data-sources/multi-source-scores";
 import { buildWorldClassReadiness } from "@/lib/platform/world-class-readiness";
@@ -146,12 +147,11 @@ export async function GET(request: Request): Promise<NextResponse> {
     });
   }
 
-    // Autonomous board fill when quote keys exist (no founder click; same process).
+  // Autonomous board fill when quote keys exist AND noon mint gate allows.
   let boardFill: Awaited<ReturnType<typeof runBoardFillPipeline>> | null = null;
   try {
     const hasOdds = Boolean(resolveOddsApiKey()) || Boolean(resolveRundownApiKey());
-    if (hasOdds || true /* always attempt signal path */) {
-      // Always attempt signal slate; odds path no-ops honestly when keys absent.
+    if (hasOdds && canMintSignalPicksNow(request).allowed) {
       boardFill = await runBoardFillPipeline({ logPrefix: "[cron:free-spine:board-fill]" });
     }
   } catch (bfErr) {

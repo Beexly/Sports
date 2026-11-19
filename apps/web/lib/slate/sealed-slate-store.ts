@@ -39,7 +39,7 @@ function toCandidateItems(board: SealedBoard): CandidateSlateItem[] {
   return allRows.map((row, idx) => ({
     id: `${row.matchup}:${row.category}:${idx}`,
     matchup: row.matchup,
-    market: undefined,
+    market: row.category,
     selection: row.selection,
     decision: row.decision,
     publishAllowed: row.publishAllowed,

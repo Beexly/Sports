@@ -116,6 +116,8 @@ def american_to_fair_prob_pair(over_american: int, under_american: int) -> tuple
     """Compute de-vigged fair market probabilities from two-sided American odds."""
 
     def _imp(am: int) -> float:
+        if am == 0:
+            raise ValueError("American odds cannot be 0")
         return (100.0 / (am + 100.0)) if am > 0 else (-am / (-am + 100.0))
 
     p_o = _imp(over_american)
@@ -126,6 +128,8 @@ def american_to_fair_prob_pair(over_american: int, under_american: int) -> tuple
 
 def american_to_decimal(am: int) -> float:
     """Convert American odds integer to decimal payout multiplier."""
+    if am == 0:
+        raise ValueError("American odds cannot be 0")
     return (1.0 + float(am) / 100.0) if am > 0 else (1.0 + 100.0 / float(abs(am)))
 
 
@@ -136,6 +140,22 @@ def _clip(x: float, lo: float, hi: float) -> float:
 def _norm_team(raw: object) -> str:
     txt = str(raw or "").strip().upper()
     return _TEAM_ALIASES.get(txt, txt)
+
+
+_SUFFIX_RE = re.compile(r"\b(?:jr|sr|ii|iii|iv|v)\b", re.IGNORECASE)
+
+
+def _norm_player_key(raw: object) -> str:
+    """Normalize player display names across punctuation and generational suffixes."""
+    ascii_s = (
+        unicodedata.normalize("NFKD", str(raw or ""))
+        .encode("ascii", "ignore")
+        .decode("ascii")
+        .lower()
+    )
+    cleaned = re.sub(r"[^a-z0-9\s]", "", ascii_s)
+    cleaned = _SUFFIX_RE.sub("", cleaned)
+    return " ".join(cleaned.split())
 
 
 def _sanitize_display_name(raw_name: str) -> str:
@@ -390,16 +410,24 @@ def _build_team_hydrated_roster_and_qb(
     pw25: pd.DataFrame = vaults["pw25"]
     inj26: pd.DataFrame = vaults["inj26"]
 
-    excl_lower: set[str] = set()
-    for rec in stage0_bundle.get("excluded_players") or ():
-        if isinstance(rec, Mapping) and _norm_team(rec.get("team", "")) == team_code:
-            excl_lower.add(str(rec.get("name", "")).strip().lower())
-    excl_union_lower: set[str] = {
-        str(nm).strip().lower()
-        for nm in (stage0_bundle.get("excluded_players_union") or ())
-        if isinstance(nm, str) and nm.strip()
-    }
-    excl_lower.update(excl_union_lower)
+    excl_keys: set[str] = set()
+    raw_excl_recs = [
+        rec
+        for rec in (stage0_bundle.get("excluded_players") or ())
+        if isinstance(rec, Mapping)
+    ]
+    if raw_excl_recs:
+        for rec in raw_excl_recs:
+            if _norm_team(rec.get("team", "")) == team_code:
+                ek = _norm_player_key(rec.get("name", ""))
+                if ek:
+                    excl_keys.add(ek)
+    else:
+        for nm in stage0_bundle.get("excluded_players_union") or ():
+            if isinstance(nm, str) and nm.strip():
+                ek = _norm_player_key(nm)
+                if ek:
+                    excl_keys.add(ek)
 
     injury_rows_scanned = 0
     if not inj26.empty:
@@ -408,7 +436,9 @@ def _build_team_hydrated_roster_and_qb(
         for _, ir in sub_inj.iterrows():
             st = str(ir.get("report_status") or "").strip().upper()
             if st in {"OUT", "DOUBTFUL", "IR", "D", "O"}:
-                excl_lower.add(str(ir.get("full_name") or "").strip().lower())
+                ek = _norm_player_key(ir.get("full_name") or "")
+                if ek:
+                    excl_keys.add(ek)
 
     if as_of_week >= 11:
         espn_slate = vaults.get("w11_espn_slate") or {}
@@ -431,36 +461,39 @@ def _build_team_hydrated_roster_and_qb(
                 st = str(ent.get("status") or "").strip().upper()
                 if st in {"OUT", "DOUBTFUL", "INJURED RESERVE", "SUSPENSION"}:
                     ath = ent.get("athlete") or {}
-                    nm = str(ath.get("displayName") or "").strip().lower()
-                    if nm:
-                        excl_lower.add(nm)
+                    ek = _norm_player_key(ath.get("displayName") or "")
+                    if ek:
+                        excl_keys.add(ek)
 
     # Apply exact-week Stage-0 trades when inspecting W9 or W10
-    traded_in: set[str] = set()
-    traded_out: set[str] = set()
+    traded_in_keys: set[str] = set()
+    traded_out_keys: set[str] = set()
     for tr in stage0_bundle.get("traded_players") or ():
-        nm_l = str(tr.get("name", "")).strip().lower()
-        if not nm_l:
+        nm_k = _norm_player_key(tr.get("name", ""))
+        if not nm_k:
             continue
         if _norm_team(tr.get("from", "")) == team_code:
-            traded_out.add(nm_l)
+            traded_out_keys.add(nm_k)
         if _norm_team(tr.get("to", "")) == team_code:
-            traded_in.add(nm_l)
+            traded_in_keys.add(nm_k)
 
     hist26 = pw26[(pw26["team_u"] == team_code) & (pw26["week"] < cutoff_wk)]
-    if traded_in:
+    if traded_in_keys:
         extra26 = pw26[
             (pw26["week"] < cutoff_wk)
-            & (pw26["player_display_name"].astype(str).str.strip().str.lower().isin(traded_in))
+            & (pw26["player_display_name"].map(_norm_player_key).isin(traded_in_keys))
         ]
         if not extra26.empty:
-            hist26 = pd.concat([hist26, extra26], ignore_index=True)
+            hist26 = pd.concat([hist26, extra26], ignore_index=True).drop_duplicates(
+                subset=["player_id", "week"]
+            )
 
     # Aggregate strictly by per-player active games played (player_gp)
     skill_stats: dict[str, dict[str, Any]] = {}
     for pid_raw, grp in hist26[hist26["position"].isin(["RB", "WR", "TE"])].groupby("player_id"):
         nm = str(grp["player_display_name"].iloc[-1]).strip()
-        if nm.lower() in traded_out:
+        nm_k = _norm_player_key(nm)
+        if nm_k in traded_out_keys:
             continue
         pos = str(grp["position"].iloc[-1]).strip().upper()
         if pos not in {"RB", "WR", "TE"}:
@@ -473,7 +506,7 @@ def _build_team_hydrated_roster_and_qb(
         skill_stats[str(pid_raw)] = {
             "player_id": str(pid_raw),
             "name": _sanitize_display_name(nm),
-            "raw_lower": nm.lower(),
+            "raw_key": nm_k,
             "position": pos,
             "tgt_pg": tgt_pg,
             "car_pg": car_pg,
@@ -489,7 +522,8 @@ def _build_team_hydrated_roster_and_qb(
         for pid_raw, grp in hist25_skill.groupby("player_id"):
             pid_s = str(pid_raw)
             nm = str(grp["player_display_name"].iloc[-1]).strip()
-            if nm.lower() in traded_out:
+            nm_k = _norm_player_key(nm)
+            if nm_k in traded_out_keys:
                 continue
             pos = str(grp["position"].iloc[-1]).strip().upper()
             if pos not in {"RB", "WR", "TE"}:
@@ -501,7 +535,7 @@ def _build_team_hydrated_roster_and_qb(
                 skill_stats[pid_s] = {
                     "player_id": pid_s,
                     "name": _sanitize_display_name(nm),
-                    "raw_lower": nm.lower(),
+                    "raw_key": nm_k,
                     "position": pos,
                     "tgt_pg": t25,
                     "car_pg": c25,
@@ -533,13 +567,13 @@ def _build_team_hydrated_roster_and_qb(
         ("WR", 3, 4.5, 0.2),
         ("TE", 1, 3.8, 0.0),
     ):
-        cur_p = [p for p in chosen if p["position"] == req_pos and p["raw_lower"] not in excl_lower]
+        cur_p = [p for p in chosen if p["position"] == req_pos and p["raw_key"] not in excl_keys]
         while len(cur_p) < req_cnt:
             idx_add = len([p for p in chosen if p["position"] == req_pos]) + 1
             stub = {
                 "player_id": f"{team_code}_{req_pos}{idx_add}_HYD",
                 "name": f"{team_code} Depth {req_pos}{idx_add}",
-                "raw_lower": f"__depth_{team_code}_{req_pos}_{idx_add}",
+                "raw_key": f"__depth_{team_code}_{req_pos}_{idx_add}",
                 "position": req_pos,
                 "tgt_pg": def_t,
                 "car_pg": def_c,
@@ -562,11 +596,11 @@ def _build_team_hydrated_roster_and_qb(
     # Sort active before inactive within each position so active healthy starters get rank 1
     chosen_sorted = sorted(
         chosen,
-        key=lambda p: (p["position"], p["raw_lower"] in excl_lower, -float(p["opp_pg"])),
+        key=lambda p: (p["position"], p["raw_key"] in excl_keys, -float(p["opp_pg"])),
     )
     for p in chosen_sorted:
         pos_lit = cast(Literal["RB", "WR", "TE"], p["position"])
-        is_act = p["raw_lower"] not in excl_lower
+        is_act = p["raw_key"] not in excl_keys
         if is_act:
             rank_ctr[pos_lit] += 1
             d_rank = rank_ctr[pos_lit]
@@ -621,7 +655,7 @@ def _build_team_hydrated_roster_and_qb(
         (
             float(p["rec_yds_pg"])
             for p in chosen_sorted
-            if p["position"] == "WR" and p["raw_lower"] not in excl_lower
+            if p["position"] == "WR" and p["raw_key"] not in excl_keys
         ),
         68.0,
     )
@@ -629,7 +663,7 @@ def _build_team_hydrated_roster_and_qb(
         (
             float(p["rush_yds_pg"])
             for p in chosen_sorted
-            if p["position"] == "RB" and p["raw_lower"] not in excl_lower
+            if p["position"] == "RB" and p["raw_key"] not in excl_keys
         ),
         64.0,
     )
@@ -698,16 +732,16 @@ def hydrate_causal_matchup_context_from_vaults(
         s_row = {}
         schedule_source = "synthetic_default"
 
-    roof_str = str(s_row.get("roof") or "").lower()
-    indoor_eff = (
-        bool(is_indoor)
-        if is_indoor is not None
-        else (
-            (roof_str in {"dome", "closed"})
-            if roof_str
-            else (hm in _INDOOR_VENUES)
-        )
-    )
+    roof_str = str(s_row.get("roof") or "").strip().lower()
+    neutral_site = bool(s_row.get("neutral_site"))
+    if is_indoor is not None:
+        indoor_eff = bool(is_indoor)
+    elif not neutral_site and hm in _INDOOR_VENUES:
+        indoor_eff = True
+    elif roof_str:
+        indoor_eff = roof_str in {"dome", "closed", "retractable"}
+    else:
+        indoor_eff = hm in _INDOOR_VENUES
     temp_f = float(s_row["temp"]) if pd.notna(s_row.get("temp")) else (70.0 if indoor_eff else 55.0)
     wind_mph = float(s_row["wind"]) if pd.notna(s_row.get("wind")) else (0.0 if indoor_eff else 6.0)
     away_rest = float(s_row["away_rest"]) if pd.notna(s_row.get("away_rest")) else 7.0
@@ -915,11 +949,12 @@ def default_matchup_context(
     home_team: str,
     *,
     as_of_week: int = 10,
-    is_indoor: bool = False,
+    is_indoor: bool | None = None,
 ) -> dict[str, Any]:
     """Build deterministic baseline signals, rosters, and market lines for a matchup."""
-    aw = away_team.strip().upper()
-    hm = home_team.strip().upper()
+    aw = _norm_team(away_team)
+    hm = _norm_team(home_team)
+    indoor_eff = bool(is_indoor) if is_indoor is not None else (hm in _INDOOR_VENUES)
 
     if aw == "IND" and hm == "HOU":
         signals: tuple[PregameReasoningSignal, ...] = (
@@ -1064,7 +1099,7 @@ def default_matchup_context(
                 kind="stage2_equation",
                 team_side="game",
                 channel="pace_sec_shift",
-                raw_delta=-0.55 if not is_indoor else -0.80,
+                raw_delta=-0.55 if not indoor_eff else -0.80,
                 sigma_scale=0.45,
                 reliability=0.89,
                 evidence_span="L3 PROE+ and neutral play-clock cadence",
@@ -1123,7 +1158,7 @@ def default_matchup_context(
         "away_team": aw,
         "home_team": hm,
         "as_of_week": int(as_of_week),
-        "is_indoor": bool(is_indoor or (aw == "IND" and hm == "HOU")),
+        "is_indoor": bool(indoor_eff or (aw == "IND" and hm == "HOU")),
         "signals": signals,
         "away_roster": away_roster,
         "home_roster": home_roster,
@@ -1920,9 +1955,9 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
 
     player_props: list[dict[str, Any]] = []
     for mkt_name, pl, arr, line in prop_specs:
-        p_over = float(np.mean(arr > line))
-        side = "OVER" if p_over >= 0.50 else "UNDER"
-        best_p = p_over if side == "OVER" else 1.0 - p_over
+        p_over, p_under = _two_sided_win_probs(arr, line)
+        side = "OVER" if p_over >= p_under else "UNDER"
+        best_p = p_over if side == "OVER" else p_under
         gated = _gate_binary_surface(
             market_id=f"prop_{mkt_name}",
             selection=f"{pl['name']} {side} {line}",
@@ -1934,6 +1969,7 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
         gated["player_id"] = str(pl["player_id"])
         gated["market"] = mkt_name
         gated["mean_proj"] = round(float(np.mean(arr)), 3)
+        gated["median_proj"] = round(float(np.median(arr)), 3)
         gated["p10_proj"] = round(float(np.quantile(arr, 0.10)), 3)
         gated["p90_proj"] = round(float(np.quantile(arr, 0.90)), 3)
         player_props.append(gated)
@@ -2016,7 +2052,7 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
                 team=str(pl["team"]),
                 position=str(pl["position"]),  # type: ignore[arg-type]
                 salary=sal,
-                kickoff_utc="2026-11-19T01:15:00Z",
+                kickoff_utc="2026-11-20T01:15:00Z",
                 projected_points=round(mu, 3),
                 p20_value_mult=round(p20 / max(1.0, sal / 1000.0), 3),
                 median_snaps=46.0,
@@ -2051,35 +2087,51 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
     dst_aw_dk = np.clip(
         5.0 + 0.8 * sim["home"]["sacks_taken"] + 2.0 * sim["home"]["ints"] - 0.18 * hm_f, 0.0, 22.0
     )
-    extra_pool = [
-        ("HOU_DST", f"{sim['home']['team']} DST", sim["home"]["team"], "DST", 3000, dst_hm_dk),
-        ("IND_DST", f"{sim['away']['team']} DST", sim["away"]["team"], "DST", 2600, dst_aw_dk),
-        (
-            "FLEX_RB_VAL",
-            f"{sim['home']['team']} Backup RB",
-            sim["home"]["team"],
-            "RB",
-            3400,
-            np.clip(5.8 + rng_sim_noise(sim["home"]["rush_yds"]), 0.5, 22.0),
-        ),
-        (
-            "FLEX_WR_VAL",
-            f"{sim['away']['team']} Speed WR3",
-            sim["away"]["team"],
-            "WR",
-            3300,
-            np.clip(6.2 + rng_sim_noise(sim["away"]["pass_yds"]), 0.5, 24.0),
-        ),
-        (
-            "FLEX_TE_VAL",
-            f"{sim['home']['team']} Backup TE",
-            sim["home"]["team"],
-            "TE",
-            3100,
-            np.clip(4.8 + rng_sim_noise(sim["home"]["pass_yds"]) * 0.7, 0.5, 18.0),
-        ),
+    rb_cnt = sum(1 for item in pool_items if item.position == "RB")
+    wr_cnt = sum(1 for item in pool_items if item.position == "WR")
+    te_cnt = sum(1 for item in pool_items if item.position == "TE")
+    skill_cnt = rb_cnt + wr_cnt + te_cnt
+    extra_pool: list[tuple[str, str, str, str, int, np.ndarray, bool]] = [
+        (f"{hm_team}_DST", f"{hm_team} DST", hm_team, "DST", 3000, dst_hm_dk, False),
+        (f"{aw_team}_DST", f"{aw_team} DST", aw_team, "DST", 2600, dst_aw_dk, False),
     ]
-    for pid, pname, pteam, ppos, psal, parr in extra_pool:
+    if rb_cnt < 3 or skill_cnt < 7:
+        extra_pool.append(
+            (
+                "FLEX_RB_VAL",
+                f"{hm_team} Backup RB",
+                hm_team,
+                "RB",
+                3400,
+                np.clip(5.8 + rng_sim_noise(sim["home"]["rush_yds"]), 0.5, 22.0),
+                True,
+            )
+        )
+    if wr_cnt < 4 or skill_cnt < 7:
+        extra_pool.append(
+            (
+                "FLEX_WR_VAL",
+                f"{aw_team} Speed WR3",
+                aw_team,
+                "WR",
+                3300,
+                np.clip(6.2 + rng_sim_noise(sim["away"]["pass_yds"]), 0.5, 24.0),
+                True,
+            )
+        )
+    if te_cnt < 2 or skill_cnt < 7:
+        extra_pool.append(
+            (
+                "FLEX_TE_VAL",
+                f"{hm_team} Backup TE",
+                hm_team,
+                "TE",
+                3100,
+                np.clip(4.8 + rng_sim_noise(sim["home"]["pass_yds"]) * 0.7, 0.5, 18.0),
+                True,
+            )
+        )
+    for pid, pname, pteam, ppos, psal, parr, is_synthetic_stub in extra_pool:
         mu = float(np.mean(parr))
         p20 = float(np.quantile(parr, 0.20))
         pool_items.append(
@@ -2089,7 +2141,7 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
                 team=pteam,
                 position=ppos,  # type: ignore[arg-type]
                 salary=psal,
-                kickoff_utc="2026-11-19T01:15:00Z",
+                kickoff_utc="2026-11-20T01:15:00Z",
                 projected_points=round(mu, 3),
                 p20_value_mult=round(p20 / max(1.0, psal / 1000.0), 3),
                 median_snaps=28.0,
@@ -2102,20 +2154,21 @@ def derive_all_plays_props_sgps_and_dfs_from_simulation(
         teams_m.append(pteam)
         sal_m.append(psal)
         means_m.append(mu)
-        dfs_projections.append(
-            {
-                "player_id": pid,
-                "name": pname,
-                "team": pteam,
-                "position": ppos,
-                "salary": psal,
-                "dk_mean": round(mu, 3),
-                "dk_p20": round(p20, 3),
-                "dk_p85": round(float(np.quantile(parr, 0.85)), 3),
-                "dk_p95": round(float(np.quantile(parr, 0.95)), 3),
-                "projection_source_sha256": proj_sha,
-            }
-        )
+        if not is_synthetic_stub:
+            dfs_projections.append(
+                {
+                    "player_id": pid,
+                    "name": pname,
+                    "team": pteam,
+                    "position": ppos,
+                    "salary": psal,
+                    "dk_mean": round(mu, 3),
+                    "dk_p20": round(p20, 3),
+                    "dk_p85": round(float(np.quantile(parr, 0.85)), 3),
+                    "dk_p95": round(float(np.quantile(parr, 0.95)), 3),
+                    "projection_source_sha256": proj_sha,
+                }
+            )
 
     scen_mat = np.column_stack(scen_cols)
     scen_list = scen_mat.tolist()
@@ -2338,7 +2391,9 @@ def evaluate_unified_reasoning_simulation_projection_spine_suite(
             env_override=env_override,
         )
     else:
-        ctx = default_matchup_context(aw, hm, as_of_week=wk, is_indoor=is_indoor)
+        ctx = default_matchup_context(
+            aw, hm, as_of_week=wk, is_indoor=is_indoor if is_indoor else None
+        )
     signals = custom_signals if custom_signals is not None else ctx["signals"]
     stage1 = watch_and_audit_pregame_signals(signals)
     stage2 = synthesize_reasoned_game_environment(

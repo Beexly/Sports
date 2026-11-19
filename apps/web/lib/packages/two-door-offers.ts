@@ -307,8 +307,8 @@ export const FOUNDING_SEAT_COPY = `Founding pricing - first ${FOUNDING_SEAT_LIMI
 export const WHOP_GENERIC_CHECKOUT_ENV = "WHOP_CHECKOUT_LINK";
 
 /**
- * Resolve a Whop checkout URL from the environment. Only https URLs are
- * accepted; anything else resolves to null so checkout fails closed.
+ * Resolve a Whop checkout URL from the environment. Only https URLs on the
+ * exact per-offer env key are accepted; never falls back across SKUs/tiers.
  */
 export function resolveWhopCheckoutUrl(
   envKey: string,
@@ -316,8 +316,6 @@ export function resolveWhopCheckoutUrl(
 ): string | null {
   const raw = (env[envKey] ?? "").trim();
   if (raw && /^https:\/\//i.test(raw)) return raw;
-  const generic = (env[WHOP_GENERIC_CHECKOUT_ENV] ?? "").trim();
-  if (generic && /^https:\/\//i.test(generic)) return generic;
   return null;
 }
 

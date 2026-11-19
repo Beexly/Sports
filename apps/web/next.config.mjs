@@ -175,6 +175,8 @@ const nextConfig = {
       // exactly one file, so exactly one file is traced — 85,924 bytes.
       "/api/cron/board-fill": ["../../data/gse-dataset/bridge-premises.jsonl"],
       "/api/cron/generate-signal-slate": ["../../data/gse-dataset/bridge-premises.jsonl"],
+      "/api/cron/refresh-odds": ["../../data/gse-dataset/bridge-premises.jsonl"],
+      "/api/cron/free-spine-health": ["../../data/gse-dataset/bridge-premises.jsonl"],
     },
   },
   webpack: (config, { dev, isServer, nextRuntime }) => {
@@ -239,6 +241,7 @@ const nextConfig = {
       { source: "/login", destination: "/auth/signin", permanent: false },
       { source: "/checkout", destination: "/pricing", permanent: false },
       { source: "/subscribe", destination: "/pricing", permanent: false },
+      { source: "/nfl", destination: "/slate/nfl", permanent: false },
       { source: "/dfs", destination: "/fantasy/dfs", permanent: true },
       // C-329: the ten legacy player-lab aliases live here so they are REAL HTTP
       // redirects. They already had `redirect()` stubs in app/players/<view>/page.tsx,
@@ -311,14 +314,16 @@ const nextConfig = {
     const cspValue = isDev
       ? [...baseCsp].join("; ")
       : [...baseCsp, "upgrade-insecure-requests"].join("; ");
+    const embedCspValue = isDev
+      ? [...baseCsp.map((d) => (d.startsWith("frame-ancestors ") ? "frame-ancestors *" : d))].join("; ")
+      : [...baseCsp.map((d) => (d.startsWith("frame-ancestors ") ? "frame-ancestors *" : d)), "upgrade-insecure-requests"].join("; ");
     return [
       // Free embed widgets (DEC-017) — iframe distribution. Framing is allowed
-      // here via CSP frame-ancestors; the X-Frame-Options entry below is scoped
-      // to exclude /embed so the two never land on the same response.
+      // here via CSP frame-ancestors while keeping full script/object/base protections.
       {
         source: "/embed/:path*",
         headers: [
-          { key: "Content-Security-Policy", value: "frame-ancestors *" },
+          { key: "Content-Security-Policy", value: embedCspValue },
           { key: "X-Content-Type-Options", value: "nosniff" },
           {
             key: "Strict-Transport-Security",

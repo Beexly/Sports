@@ -24,11 +24,6 @@ export function verifyWhopWebhookSignature(
     const computedHmac = createHmac("sha256", secret).update(rawBody).digest("hex");
     const cleanHeader = signatureHeader.trim().toLowerCase();
 
-    // Direct hex match
-    if (cleanHeader === computedHmac.toLowerCase()) {
-      return true;
-    }
-
     // Header may have t=... v1=... format (similar to Stripe/Svix)
     if (cleanHeader.includes("v1=") || cleanHeader.includes("s=")) {
       const parts = cleanHeader.split(",");
@@ -56,13 +51,23 @@ export function verifyWhopWebhookSignature(
   return false;
 }
 
+export interface WhopMembershipVerification {
+  valid: boolean;
+  tier: string;
+  productId?: string | null;
+  planId?: string | null;
+  packageSlug?: string | null;
+  amountCents?: number;
+  isFreeTier?: boolean;
+}
+
 /**
  * Verifies a Whop user access token / membership key against Whop API
  * or deterministic test tokens.
  */
 export async function verifyWhopMembership(
   accessToken: string,
-): Promise<{ valid: boolean; tier: string }> {
+): Promise<WhopMembershipVerification> {
   if (!accessToken || accessToken.trim().length === 0) {
     return { valid: false, tier: "none" };
   }
@@ -100,9 +105,47 @@ export async function verifyWhopMembership(
     const data = await res.json().catch(() => ({}));
     const status = data?.status || data?.membership?.status;
     const isValid = status === "active" || status === "valid" || status === "trialing";
-    const tier = data?.plan?.name || data?.tier || "standard";
+    if (!isValid) {
+      return { valid: false, tier: "none" };
+    }
 
-    return { valid: Boolean(isValid), tier: String(tier) };
+    const tier = String(data?.plan?.name || data?.tier || "standard");
+    const productId =
+      typeof data?.product_id === "string"
+        ? data.product_id
+        : typeof data?.product?.id === "string"
+          ? data.product.id
+          : null;
+    const planId =
+      typeof data?.plan_id === "string"
+        ? data.plan_id
+        : typeof data?.plan?.id === "string"
+          ? data.plan.id
+          : null;
+    const packageSlug =
+      typeof data?.metadata?.gse_pack_slug === "string"
+        ? data.metadata.gse_pack_slug
+        : typeof data?.metadata?.packageSlug === "string"
+          ? data.metadata.packageSlug
+          : null;
+    const rawPrice = Number(data?.plan?.initial_price ?? data?.plan?.renewal_price ?? data?.amount ?? NaN);
+    const amountCents = Number.isFinite(rawPrice) ? rawPrice : undefined;
+    const lowerTier = tier.toLowerCase();
+    const isFreeTier =
+      packageSlug === "free-proof-room" ||
+      packageSlug === "open-field-pass" ||
+      lowerTier.includes("free") ||
+      (amountCents !== undefined && amountCents <= 0);
+
+    return {
+      valid: true,
+      tier,
+      productId,
+      planId,
+      packageSlug,
+      amountCents,
+      isFreeTier,
+    };
   } catch {
     return { valid: false, tier: "none" };
   }

@@ -36,6 +36,7 @@ export const DURABLE_WRITE_CAPABILITIES = [
   "stripe-webhook-entitlement",
   "stripe-portal",
   "stripe-reconcile",
+  "whop-webhook-entitlement",
 ] as const;
 
 export type DurableWriteCapability = (typeof DURABLE_WRITE_CAPABILITIES)[number];

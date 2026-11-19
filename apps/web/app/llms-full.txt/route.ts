@@ -10,7 +10,7 @@ import {
  * `/llms-full.txt` -- Extended Football Matchup, Props, Parlays & DFS Reference
  */
 export async function GET() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://galaxysportsedge.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.galaxysportsedge.com";
 
   const body = `# Galaxy Sports Edge (GSE) -- Complete NFL Matchup, Props, Parlays & DFS Reference (${siteUrl})
 
@@ -44,7 +44,7 @@ Superseded snapshot: ${SUPERSEDED_RECORD_NOTE}
 - Football Packages & Storefront: ${siteUrl}/packages
 - Verified Settled Ledger: ${siteUrl}/record
 - NFL Player Props Desk: ${siteUrl}/props
-- DraftKings & FanDuel DFS Hub: ${siteUrl}/dfs
+- DraftKings & FanDuel DFS Hub: ${siteUrl}/fantasy/dfs
 - Calibration & Settled Record: ${siteUrl}/calibration
 - Creators & Partner Program: ${siteUrl}/partners
 - Media & Sponsorship Kit: ${siteUrl}/media-kit

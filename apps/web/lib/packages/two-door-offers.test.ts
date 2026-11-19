@@ -120,7 +120,7 @@ describe("Whop checkout-link resolution (env-driven, fail-closed)", () => {
     );
   });
 
-  it("falls back to the generic link, per-offer key wins", () => {
+  it("isolates per-offer keys and never falls back to a generic cross-tier link", () => {
     const env = {
       WHOP_CHECKOUT_LINK: "https://whop.com/checkout/generic",
       WHOP_CHECKOUT_PRIMETIME_STANDARD: "https://whop.com/checkout/specific",
@@ -128,9 +128,7 @@ describe("Whop checkout-link resolution (env-driven, fail-closed)", () => {
     expect(resolveWhopCheckoutUrl("WHOP_CHECKOUT_PRIMETIME_STANDARD", env)).toBe(
       "https://whop.com/checkout/specific",
     );
-    expect(resolveWhopCheckoutUrl("WHOP_CHECKOUT_SUNDAY_STANDARD", env)).toBe(
-      "https://whop.com/checkout/generic",
-    );
+    expect(resolveWhopCheckoutUrl("WHOP_CHECKOUT_SUNDAY_STANDARD", env)).toBeNull();
   });
 
   it("returns null for absent, placeholder, or non-https values (never a fake URL)", () => {

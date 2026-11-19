@@ -93,7 +93,7 @@ export class Cache {
     // (timezone change, manual clock edit). Clamp to 0 rather than reporting
     // a negative age, and let the budget decide staleness.
     const ageMs = Math.max(0, Date.now() - parsed.storedAt);
-    return { entry: parsed, ageMs, stale: ageMs > budgetMs };
+    return { entry: parsed, ageMs, stale: budgetMs <= 0 || ageMs >= budgetMs };
   }
 
   async write<T>(

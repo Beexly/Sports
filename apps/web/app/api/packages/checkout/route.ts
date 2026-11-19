@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { isStubMode } from "@sports/db";
+import { paidCheckoutOpen } from "@/lib/billing/paid-checkout";
 import {
   getPackageBySlug,
   buildStripePackageCheckoutPayload,
@@ -83,27 +85,16 @@ export async function GET(req: Request) {
     );
   }
 
-  const packageSlug = searchParams.get("packageSlug") || searchParams.get("package") || searchParams.get("slug") || "";
-  const creditBack = searchParams.get("creditBack") === "true" || searchParams.get("creditBack") === "1";
-  const returnToStorefront = searchParams.get("returnToStorefront") === "true" || searchParams.get("returnToStorefront") === "1";
-  const email = searchParams.get("email") || undefined;
-
-  const form = new URLSearchParams();
-  form.set("packageSlug", packageSlug);
-  form.set("creditBack", String(creditBack));
-  form.set("returnToStorefront", String(returnToStorefront));
-  if (email) form.set("email", email);
-
-  const safeOrigin = resolveSafeOrigin(req);
-  const postReq = new Request(req.url, {
-    method: "POST",
-    headers: {
-      "content-type": "application/x-www-form-urlencoded",
-      origin: safeOrigin,
+  return NextResponse.json(
+    { error: "Method Not Allowed. Use POST /api/packages/checkout." },
+    {
+      status: 405,
+      headers: {
+        ...CORS_HEADERS,
+        Allow: "POST, OPTIONS",
+      },
     },
-    body: form.toString(),
-  });
-  return POST(postReq);
+  );
 }
 
 export async function POST(req: Request) {
@@ -150,8 +141,16 @@ export async function POST(req: Request) {
 
     const origin = resolveSafeOrigin(req);
 
+    if (!paidCheckoutOpen()) {
+      return NextResponse.json(
+        { checkoutEnabled: false, error: "Paid checkout is temporarily paused." },
+        { status: 503, headers: CORS_HEADERS },
+      );
+    }
+
     // ── New two-door offers: Stage-5 gate + Whop only. Never Stripe, never a
-    //    mock success. Legacy slugs below keep the existing Stripe path. ──
+    //    mock success. Legacy slugs below keep the existing Stripe path in dev/test
+    //    while enforcing Stage-5 gating whenever production or a live DB is active. ──
     if (packageSlug === SEASON_MEMBERSHIP_SLUG) {
       return handleMembershipCheckout({ plan, isFormSubmit, origin });
     }
@@ -167,6 +166,24 @@ export async function POST(req: Request) {
       );
     }
 
+    const isProd = process.env.NODE_ENV === "production";
+    if (isProd || !isStubMode()) {
+      const gate = await getStage5GateStatus();
+      if (!gate.checkoutEnabled) {
+        if (isFormSubmit) {
+          return NextResponse.redirect(`${origin}/packages?checkout=closed#${pkg.slug}`, 303);
+        }
+        return NextResponse.json(
+          {
+            checkoutEnabled: false,
+            officialPlayCount: gate.officialPlayCount,
+            reason: gate.reason,
+          },
+          { status: 503, headers: CORS_HEADERS },
+        );
+      }
+    }
+
     const payload = buildStripePackageCheckoutPayload(
       pkg,
       Boolean(creditBack),
@@ -176,7 +193,6 @@ export async function POST(req: Request) {
     );
 
     const stripeKey = process.env.STRIPE_SECRET_KEY;
-    const isProd = process.env.NODE_ENV === "production";
 
     if (!stripeKey || stripeKey.startsWith("sk_test_dummy")) {
       if (isProd) {
@@ -208,9 +224,6 @@ export async function POST(req: Request) {
         apiVersion: "2024-06-20",
       });
 
-      // Always pass inline `price_data` from `buildStripePackageCheckoutPayload`
-      // so Stripe Checkout displays active pack details without mutating live
-      // Stripe Product or Account objects on every request.
       const stripeSessionCreateParams: Stripe.Checkout.SessionCreateParams = {
         mode: "payment",
         line_items: payload.line_items.map((li) => ({
@@ -223,26 +236,31 @@ export async function POST(req: Request) {
         ...(payload.customer_email ? { customer_email: payload.customer_email } : {}),
       };
 
-      const session = await stripe.checkout.sessions.create(stripeSessionCreateParams);
-      const targetUrl =
-        session.url ||
-        (returnToStorefront
-          ? `${origin}/packages?unlocked=1&package=${pkg.slug}&session_id=${session.id}#${pkg.slug}`
-          : `${origin}/packages/${pkg.slug}?session_id=${session.id}`);
+      const idempotencyBucket = Math.floor(Date.now() / 60_000);
+      const idempotencyKey = `gse_pkg_${pkg.slug}_${creditBack ? "cb" : "std"}_${(email || "anon").toLowerCase().slice(0, 32)}_${idempotencyBucket}`;
+      const session = await stripe.checkout.sessions.create(stripeSessionCreateParams, {
+        idempotencyKey,
+      });
+      if (!session.url) {
+        return NextResponse.json(
+          { error: "Checkout session did not return a redirect URL." },
+          { status: 502, headers: CORS_HEADERS },
+        );
+      }
 
       if (isFormSubmit) {
-        return NextResponse.redirect(targetUrl, 303);
+        return NextResponse.redirect(session.url, 303);
       }
       return NextResponse.json(
         {
           sessionId: session.id,
-          url: targetUrl,
+          url: session.url,
           stripeProductId: pkg.stripeProductId,
           stripePriceId: pkg.stripePriceId,
         },
         { headers: CORS_HEADERS },
       );
-    } catch (stripeErr) {
+    } catch {
       if (!isProd && (stripeKey.includes("test") || stripeKey.includes("dummy") || !process.env.CI)) {
         const fallbackSessionId = `cs_test_mock_${pkg.slug}_${Date.now()}`;
         const fallbackUrl = returnToStorefront
@@ -257,14 +275,21 @@ export async function POST(req: Request) {
           stripeProductId: pkg.stripeProductId,
           stripePriceId: pkg.stripePriceId,
           fallback: true,
-          error: stripeErr instanceof Error ? stripeErr.message : "Stripe checkout failed",
         });
       }
-      throw stripeErr;
+      return NextResponse.json(
+        { error: "Unable to create checkout session right now." },
+        { status: 502, headers: CORS_HEADERS },
+      );
     }
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to create checkout session" },
+      {
+        error:
+          error instanceof Error && error.message.includes("credit-back")
+            ? error.message
+            : "Invalid checkout request.",
+      },
       { status: 400 },
     );
   }

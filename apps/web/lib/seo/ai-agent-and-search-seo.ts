@@ -139,19 +139,19 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
           {
             "@type": "ListItem",
             position: 2,
-            name: "NFL Week 10 Picks & Packages",
+            name: "NFL Week 11 Picks & Packages",
             item: `${siteUrl}/packages`,
           },
           {
             "@type": "ListItem",
             position: 3,
-            name: "NFL Week 10 Player Props (77 Categories)",
+            name: "NFL Week 11 Player Props (77+ Categories)",
             item: `${siteUrl}/props`,
           },
           {
             "@type": "ListItem",
             position: 4,
-            name: "DraftKings NFL Week 10 DFS Lineup Optimizer",
+            name: "DraftKings NFL Week 11 DFS Lineup Optimizer",
             item: `${siteUrl}/fantasy/dfs`,
           },
           {
@@ -165,21 +165,21 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
       {
         "@type": "HowTo",
         "@id": `${siteUrl}/#howto-nfl-dfs-and-props`,
-        name: "How Galaxy Sports Edge Evaluates NFL Week 10 Player Props and DraftKings DFS Lineups",
+        name: "How Galaxy Sports Edge Evaluates NFL Week 11 Player Props and DraftKings DFS Lineups",
         description:
-          "Step-by-step film, trench, injury-workload, and two-sided de-vigging workflow for NFL Week 10 player props and DraftKings $50,000 salary-cap lineups.",
+          "Step-by-step film, trench, injury-workload, and two-sided de-vigging workflow for NFL Week 11 player props and DraftKings $50,000 salary-cap lineups.",
         step: [
           {
             "@type": "HowToStep",
             position: 1,
-            name: "Verify Active 32-Team Rosters, QB1 Starters & Friday Injury Designations",
-            text: "Confirm every active NFL starter and DNP/Out injury designation across all 15 official Week 10 games (30 active teams; PIT and TEN on bye).",
+            name: "Verify Active 32-Team Rosters, QB1 Starters & Injury Designations",
+            text: "Confirm every active NFL starter and DNP/Out injury designation across all 13 official Week 11 games starting with TNF IND at HOU.",
           },
           {
             "@type": "HowToStep",
             position: 2,
             name: "Quantify Vacated Carries & Targets per Active Game Played",
-            text: "Project redistributed rushing and receiving workloads when primary starters are sidelined (such as Ollie Gordon II and Greg Dulcich in DET at MIA or Rhamondre Stevenson in GB at NE).",
+            text: "Project redistributed rushing and receiving workloads when primary starters are sidelined across Week 11 depth charts.",
           },
           {
             "@type": "HowToStep",

@@ -45,6 +45,18 @@ export async function POST(_req: NextRequest): Promise<NextResponse> {
     );
   }
 
+  if (!subscription.stripeCustomerId.startsWith("cus_")) {
+    return jsonNoStore(
+      {
+        error: subscription.stripeCustomerId.startsWith("whop:")
+          ? "Manage your Whop membership directly inside Whop."
+          : "Manage your App Store subscription in iOS Settings -> Subscriptions.",
+        code: "external_provider_managed",
+      },
+      { status: 400 },
+    );
+  }
+
   // Same fail-closed guard as checkout: the portal's `return_url` is where Stripe
   // sends a customer after they cancel or update a subscription. A localhost
   // fallback in production strands them on connection-refused with no error
@@ -55,7 +67,7 @@ export async function POST(_req: NextRequest): Promise<NextResponse> {
   } catch (err) {
     if (err instanceof MissingProductionEnvError) {
       console.error(`Billing portal config error: ${err.message}`);
-      return NextResponse.json(
+      return jsonNoStore(
         {
           error: "Billing portal is not configured (NEXT_PUBLIC_APP_URL is missing or blank)",
           code: "app_url_not_configured",

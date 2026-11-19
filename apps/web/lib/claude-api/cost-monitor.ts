@@ -142,6 +142,23 @@ export const DEFAULT_CLAUDE_TOKEN_PRICING: ClaudeTokenPricing = {
   outputUsdPerMillionTokens: 15,
 };
 
+export const CLAUDE_OPUS_TOKEN_PRICING: ClaudeTokenPricing = {
+  inputUsdPerMillionTokens: 15,
+  outputUsdPerMillionTokens: 75,
+};
+
+export const CLAUDE_HAIKU_TOKEN_PRICING: ClaudeTokenPricing = {
+  inputUsdPerMillionTokens: 0.8,
+  outputUsdPerMillionTokens: 4,
+};
+
+export function pricingForClaudeModel(modelName?: string | null): ClaudeTokenPricing {
+  const m = (modelName ?? "").trim().toLowerCase();
+  if (m.includes("opus")) return CLAUDE_OPUS_TOKEN_PRICING;
+  if (m.includes("haiku")) return CLAUDE_HAIKU_TOKEN_PRICING;
+  return DEFAULT_CLAUDE_TOKEN_PRICING;
+}
+
 export function evaluateClaudeBudgetUsage(
   surface: ClaudeApiSurface,
   spentUsd: number,
@@ -166,8 +183,12 @@ export function evaluateClaudeBudgetUsage(
 export function estimateClaudeCostUsd(
   inputTokens: number,
   outputTokens: number,
-  pricing: ClaudeTokenPricing = DEFAULT_CLAUDE_TOKEN_PRICING
+  pricingOrModel: ClaudeTokenPricing | string = DEFAULT_CLAUDE_TOKEN_PRICING
 ): number {
+  const pricing =
+    typeof pricingOrModel === "string"
+      ? pricingForClaudeModel(pricingOrModel)
+      : pricingOrModel;
   const inputCost = (inputTokens / 1_000_000) * pricing.inputUsdPerMillionTokens;
   const outputCost = (outputTokens / 1_000_000) * pricing.outputUsdPerMillionTokens;
   return Number((inputCost + outputCost).toFixed(6));

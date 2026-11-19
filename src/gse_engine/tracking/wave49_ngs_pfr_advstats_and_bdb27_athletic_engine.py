@@ -198,16 +198,24 @@ def _weekly_wavg(
     df: pd.DataFrame,
     team_col: str,
     val_col: str,
-    weight_col: str,
+    weight_col: str | None,
     sign: float = 1.0,
 ) -> dict[tuple[int, int, str], float]:
-    sub = df[[ "season", "week", team_col, val_col, weight_col ]].copy()
+    cols = ["season", "week", team_col, val_col]
+    if weight_col is not None:
+        cols.append(weight_col)
+    sub = df[cols].copy()
     sub["t"] = sub[team_col].map(_norm_team)
     sub["v"] = pd.to_numeric(sub[val_col], errors="coerce") * sign
-    sub["w"] = pd.to_numeric(sub[weight_col], errors="coerce").fillna(1.0).clip(lower=1.0)
+    if weight_col is None:
+        sub["w"] = 1.0
+    else:
+        sub["w"] = pd.to_numeric(sub[weight_col], errors="coerce").fillna(0.0)
+        sub = sub[sub["w"] > 0.0]
     sub = sub.dropna(subset=["v", "season", "week"])
     sub["vw"] = sub["v"] * sub["w"]
     grp = sub.groupby(["season", "week", "t"], as_index=False)[["vw", "w"]].sum()
+    grp = grp[grp["w"] > 0.0]
     grp["val"] = grp["vw"] / grp["w"]
     return {
         (int(r.season), int(r.week), str(r.t)): float(r.val)
@@ -355,7 +363,7 @@ def _load_w49_raw_vaults(root: Path) -> dict[str, Any]:
             aru, "team", "rushing_yards_before_contact_avg", "carries", 1.0
         ),
         "pfr_rec_drop_pct": _weekly_wavg(
-            ar, "team", "receiving_drop_pct", "receiving_broken_tackles", 1.0
+            ar, "team", "receiving_drop_pct", None, 1.0
         ),
     }
 
@@ -601,24 +609,38 @@ def evaluate_w49_martingale_and_shortcut_audit(
     st = np.asarray(sigs_t, dtype=np.float64)
     rt = np.asarray(res_t, dtype=np.float64)
 
-    margin_r = float(np.corrcoef(sm, rm)[0, 1]) if len(sm) >= 3 else 0.0
-    total_r = float(np.corrcoef(st, rt)[0, 1]) if len(st) >= 3 else 0.0
+    def _safe_corr(a: np.ndarray, b: np.ndarray) -> float:
+        if len(a) < 3 or len(a) != len(b):
+            return 0.0
+        if float(np.std(a)) <= 1e-12 or float(np.std(b)) <= 1e-12:
+            return 0.0
+        val = float(np.corrcoef(a, b)[0, 1])
+        return val if bool(np.isfinite(val)) else 0.0
+
+    margin_r = _safe_corr(sm, rm)
+    total_r = _safe_corr(st, rt)
 
     rng = np.random.default_rng(20261119)
     n_draws = 500
-    m_ge = 0
-    for _ in range(n_draws):
-        flips = rng.choice((-1.0, 1.0), size=len(sm))
-        if float(np.corrcoef(sm * flips, rm)[0, 1]) >= margin_r:
-            m_ge += 1
-    t_ge = 0
-    for _ in range(n_draws):
-        flips = rng.choice((-1.0, 1.0), size=len(st))
-        if float(np.corrcoef(st * flips, rt)[0, 1]) >= total_r:
-            t_ge += 1
+    if len(sm) >= 3:
+        m_ge = 0
+        for _ in range(n_draws):
+            flips = rng.choice((-1.0, 1.0), size=len(sm))
+            if _safe_corr(sm * flips, rm) >= margin_r:
+                m_ge += 1
+        m_pval = float(m_ge + 1) / float(n_draws + 1)
+    else:
+        m_pval = 1.0
 
-    m_pval = float(m_ge + 1) / float(n_draws + 1)
-    t_pval = float(t_ge + 1) / float(n_draws + 1)
+    if len(st) >= 3:
+        t_ge = 0
+        for _ in range(n_draws):
+            flips = rng.choice((-1.0, 1.0), size=len(st))
+            if _safe_corr(st * flips, rt) >= total_r:
+                t_ge += 1
+        t_pval = float(t_ge + 1) / float(n_draws + 1)
+    else:
+        t_pval = 1.0
 
     base_s = evaluate_wave49_ngs_pfr_and_bdb27_suite(
         away_team="KC",
@@ -654,7 +676,7 @@ def evaluate_w49_martingale_and_shortcut_audit(
         "total_empirical_p_value": round(t_pval, 5),
         "null_placebo_draws": n_draws,
         "beats_null_95pct": bool(m_pval <= 0.05),
-        "total_beats_null_99pct": bool(t_pval <= 0.015),
+        "total_beats_null_99pct": bool(t_pval <= 0.01),
         "shortcut_max_output_perturbation": round(perturb, 12),
         "shortcut_invariance_verified": bool(perturb == 0.0),
     }
@@ -822,9 +844,9 @@ def evaluate_wave49_ngs_pfr_and_bdb27_suite(
         agil_d=float(hm_p.get("bdb27_agility_norm", 0.0))
         - float(aw_p.get("bdb27_agility_norm", 0.0)),
         tot_sig=float(tot_shift["w49_tot_signal"]),
-        kin_rmse=float(bdb_b["kinematic_ridge_rmse"]),
-        stop_rmse=float(bdb_b["stopwatch_only_rmse"]),
-        brier_gap=float(rlvr_b["brier_strict_proper_gap"]),
+        kin_rmse=float(bdb_b.get("kinematic_ridge_rmse") or 0.0),
+        stop_rmse=float(bdb_b.get("stopwatch_only_rmse") or 0.0),
+        brier_gap=float(rlvr_b.get("brier_strict_proper_gap") or 0.0),
     )
 
     out: dict[str, Any] = {

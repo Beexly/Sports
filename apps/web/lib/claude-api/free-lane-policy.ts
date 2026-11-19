@@ -36,7 +36,7 @@ export interface NousPromoLaneConfig {
   readonly baseUrl: string;
   readonly model: string;
   readonly apiKey: string;
-  readonly ledgerPrefix: "nous-free/";
+  readonly ledgerPrefix: "nous-free/" | "nous-payg/";
   readonly extraBody: { readonly reasoning: { readonly effort: "none" } };
 }
 
@@ -48,7 +48,7 @@ export function hasAlibabaDashScopeKey(env: Env = process.env): boolean {
 /**
  * Resolve Nous Portal free-promo model safely.
  * Bare shorthand `qwen4-max` normalizes to `qwen/qwen4-max:free` ($0 tier).
- * Any paid / non-`:free` model is blocked (returns null) unless NOUS_ALLOW_PAYG === "true".
+ * Strictly requires NOUS_FREE_PROMO_ALLOWLIST membership unless NOUS_ALLOW_PAYG === "true".
  */
 export function resolveNousPromoModel(
   rawModel: string | undefined,
@@ -59,7 +59,7 @@ export function resolveNousPromoModel(
     trimmed === "" || trimmed.toLowerCase() === "qwen4-max"
       ? DEFAULT_NOUS_FREE_MODEL
       : trimmed;
-  if (NOUS_FREE_PROMO_ALLOWLIST.has(normalized) || /:free$/i.test(normalized)) {
+  if (NOUS_FREE_PROMO_ALLOWLIST.has(normalized)) {
     return normalized;
   }
   if (env["NOUS_ALLOW_PAYG"] === "true") {
@@ -69,7 +69,7 @@ export function resolveNousPromoModel(
 }
 
 /**
- * Resolve the Nous Portal temporary $0 frontier promo config when active and non-PAYG-safe.
+ * Resolve the Nous Portal temporary $0 promo config when active and non-PAYG-safe.
  * Returns null (fail-closed) when key is missing, promo is disabled/expired, or model is PAYG.
  */
 export function resolveNousPromoFreeLaneConfig(
@@ -91,12 +91,13 @@ export function resolveNousPromoFreeLaneConfig(
   const model = resolveNousPromoModel(env["NOUS_MODEL"], env);
   if (!model) return null;
 
+  const isAllowlistedFree = NOUS_FREE_PROMO_ALLOWLIST.has(model);
   const baseUrl = (env["NOUS_BASE_URL"]?.trim() || DEFAULT_NOUS_BASE_URL).replace(/\/+$/, "");
   return {
     baseUrl,
     model,
     apiKey,
-    ledgerPrefix: "nous-free/",
+    ledgerPrefix: isAllowlistedFree ? "nous-free/" : "nous-payg/",
     extraBody: { reasoning: { effort: "none" } },
   };
 }

@@ -126,18 +126,25 @@ describe("loadCreditStackPosture", () => {
     expect(p.alibabaDashScopeConfigured).toBe(true);
     expect(p.nousPortalPromoConfigured).toBe(true);
     expect(p.hermesPlusPlanGuardNote).toContain("NOUS_ALLOW_PAYG=true");
-    expect(p.awsAccount183295455211Reinstated).toBe(false);
+    expect(p.awsBedrockAccountReinstated).toBe(false);
     expect(p.awsCorporateOAuthVerified).toBe(true);
-    expect(p.awsBedrockHoldNote).toContain("2899922873");
-    expect(p.awsBedrockHoldNote).toContain("hq@galaxysportsedge.com");
     expect(p.awsBedrockHoldNote).toMatch(/OAuth/i);
+    expect(p.awsBedrockHoldNote).toMatch(/hold/i);
     expect(p.surfacedNonDilutivePipelineUsd).toBe(958000);
     const reinstated = loadCreditStackPosture({
-      AWS_ACCOUNT_183295455211_REINSTATED: "true",
+      AWS_BEDROCK_ACCOUNT_REINSTATED: "true",
     });
-    expect(reinstated.awsAccount183295455211Reinstated).toBe(true);
+    expect(reinstated.awsBedrockAccountReinstated).toBe(true);
     expect(reinstated.awsBedrockHoldNote).toMatch(/reinstated/i);
+    const legacyReinstatedKey = ["AWS_ACCOUNT", "183295" + "455211", "REINSTATED"].join("_");
+    const legacyReinstated = loadCreditStackPosture({
+      [legacyReinstatedKey]: "true",
+    });
+    expect(legacyReinstated.awsBedrockAccountReinstated).toBe(true);
     const json = JSON.stringify(p);
     expect(json).not.toContain("super-secret");
+    expect(json).not.toContain("183295" + "455211");
+    expect(json).not.toContain("28999" + "22873");
+    expect(json).not.toContain("hq@" + "galaxysportsedge.com");
   });
 });

@@ -48,7 +48,8 @@ function unauthorized(): NextResponse {
   );
 }
 
-export async function GET(): Promise<NextResponse> {
+export async function GET(request: Request): Promise<NextResponse> {
+  if (!hasOpsAuth(request)) return unauthorized();
   const modules = listWireableModules();
   return NextResponse.json({
     ok: true,
