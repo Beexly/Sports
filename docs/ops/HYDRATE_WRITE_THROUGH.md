@@ -9,7 +9,7 @@
 ## Code
 - `packages/stats-api/src/hydration/write-through.ts`
 - `hydratePlayerGameStatsToMemory(store, rows)`
-- Cron (the live path, no Odds API key required): `apps/web/app/api/cron/hydrate-cold-plane/route.ts`, scheduled `30 9 * * *`
+- Cron (the live path, no Odds API key required): `apps/web/app/api/cron/hydrate-cold-plane/route.ts` (offloaded from Vercel cron to GitHub Actions daily cold-plane hydration; see `docs/ops/CRON_MATRIX.generated.md`)
 - Worker (NOT deployed): `workers/data-refresh/src/hydrate-cold-plane.ts`. Its
   `hydrateColdPlaneFromDb()` export is imported by nothing, and the cron above
   re-implements the identical row mapping inline. See `workers/README.md`.

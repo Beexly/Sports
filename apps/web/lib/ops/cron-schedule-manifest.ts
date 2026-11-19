@@ -2,19 +2,20 @@
  * Cron schedule manifest + expected-gap parser (pure).
  *
  * Why this exists (2026-08-10 incident):
- * `vercel.json` declares 20 crons at 15m–24h cadence, but the platform is the
- * ONLY scheduler right now (external-cron.yml has no runner minutes). When the
- * platform silently stops firing — plan cron caps, disabled crons, billing —
- * every downstream surface reports a *symptom* (ingestion stale, calibration
- * frozen, settlement overdue) and nothing names the *cause*. Operators then
- * burn an hour proving the difference between "quiet board" and "dead cron".
+ * `vercel.json` originally declared crons at 15m-24h cadence, and has now been
+ * consolidated to 16 critical crons (offloading idle/backfill jobs to GitHub
+ * Actions, Cloudflare Workers, and Upstash QStash). When the platform silently
+ * stops firing -- plan cron caps, disabled crons, billing -- every downstream
+ * surface reports a *symptom* (ingestion stale, calibration frozen, settlement
+ * overdue) and nothing names the *cause*. Operators then burn an hour proving
+ * the difference between "quiet board" and "dead cron".
  *
  * This module converts a declared cron expression into the longest legitimate
  * gap between firings, so `scheduler-liveness.ts` can say "free-spine-health
  * expected every 120m, last ran 800m ago" instead of guessing.
  *
  * Parser scope: the standard 5-field expression (minute hour dom month dow)
- * with `*`, step (star-slash-N), ranges (`a-b`, `a-b/N`) and comma lists —
+ * with `*`, step (star-slash-N), ranges (`a-b`, `a-b/N`) and comma lists --
  * every form used in vercel.json. Anything outside that returns null
  * (unknown, never a guess).
  */
@@ -80,7 +81,7 @@ function expandField(field: string, min: number, max: number): ReadonlySet<numbe
  * Longest gap (minutes) between consecutive firings of a 5-field cron.
  *
  * Enumerates the 1440 minutes of a generic day, which handles lists, steps and
- * ranges uniformly — including wrap-around from the last firing of one day to
+ * ranges uniformly -- including wrap-around from the last firing of one day to
  * the first of the next. Returns null when the expression restricts
  * day-of-month / month / day-of-week (not daily-periodic, so a single "expected
  * gap" would be a lie) or uses unmodelled syntax.
@@ -118,7 +119,7 @@ export function expectedMaxGapMinutes(expression: string): number | null {
   const last = firings[firings.length - 1];
   if (first === undefined || last === undefined) return null;
 
-  // Wrap-around gap: last firing of the day → first firing of the next.
+  // Wrap-around gap: last firing of the day -> first firing of the next.
   let maxGap = MINUTES_PER_DAY - last + first;
   for (let i = 1; i < firings.length; i += 1) {
     const prev = firings[i - 1];
@@ -135,9 +136,9 @@ export function cronEntry(path: string, schedule: string): CronManifestEntry {
 }
 
 /**
- * Crons declared in `vercel.json`, in declaration order.
+ * Crons declared in `vercel.json`, in declaration order (consolidated 40 -> 16).
  *
- * MUST stay in sync with vercel.json — `cron-schedule-manifest.test.ts` reads
+ * MUST stay in sync with vercel.json -- `cron-schedule-manifest.test.ts` reads
  * the real file and fails when they drift, so a new cron cannot be added to the
  * platform without becoming visible to liveness assessment.
  */
@@ -147,85 +148,19 @@ export const CRON_MANIFEST: readonly CronManifestEntry[] = [
   cronEntry("/api/cron/settle-picks", "20 * * * *"),
   cronEntry("/api/cron/deliver-settlement-alerts", "15 */3 * * *"),
   cronEntry("/api/cron/generate-signal-slate", "5,20,35,50 * * * *"),
-  cronEntry("/api/cron/generate-drafts", "0 11 * * *"),
   cronEntry("/api/cron/reconcile-entitlements", "45 * * * *"),
-  cronEntry("/api/cron/ingest-player-stats", "0 9 * * *"),
-  cronEntry("/api/cron/hydrate-cold-plane", "30 9 * * *"),
-  cronEntry("/api/cron/drain-ai-telemetry-recovery", "30 * * * *"),
   cronEntry("/api/cron/prune-rate-limits", "30 6 * * *"),
   cronEntry("/api/cron/repair-checkout-attempts", "50 * * * *"),
-  cronEntry("/api/cron/run-formal-receipt", "45 9 * * *"),
-  cronEntry("/api/cron/jarvis-snapshot", "15 * * * *"),
   cronEntry("/api/cron/free-spine-health", "0 */2 * * *"),
   cronEntry("/api/cron/health-alert", "*/15 * * * *"),
   cronEntry("/api/cron/autonomy-cycle", "7,22,37,52 * * * *"),
   cronEntry("/api/cron/calibration-metrics", "40 */6 * * *"),
-  cronEntry("/api/cron/backfill-independent-trueprob", "10 */4 * * *"),
   cronEntry("/api/cron/refresh-player-stats", "0,30 * * * *"),
-  cronEntry("/api/cron/backfill-team-efficiency", "15 7 * * *"),
   // Read-only 24h rollup (settlement, CLV coverage, calibration, canonical
-  // sample, scheduler liveness). Bearer CRON_SECRET like every cron; it was
-  // built 2026-08 but never scheduled, so nothing ever read it.
+  // sample, scheduler liveness). Bearer CRON_SECRET like every cron.
   cronEntry("/api/ops/daily-truth", "5 12 * * *"),
-  // Spec item 4's writer. Without a schedule the `signals` table stays at 0
-  // rows, which is the state this cron exists to end. Hourly at :23, off the
-  // :02/:17/:32/:47 board ticks so it never competes with the public board.
-  cronEntry("/api/cron/signal-ledger-write", "23 * * * *"),
-  // Game-keyed weather writer (motif/ledger-shadow-2026-10-01, Tier 1 #3).
-  // 3x daily: persists weather snapshot keyed to game for the WEATHER_TRAVEL
-  // shadow gate. CRON_SECRET-gated, idempotent.
-  cronEntry("/api/cron/game-weather-capture", "10 6,12,18 * * *"),
-  // Prediction-market snapshot persistence (motif/ledger-shadow-2026-10-01,
-  // Tier 2 #3). 3x daily: Kalshi/Polymarket fetch -> persist loop, rights
-  // gates enforced, read-only shadow observation.
-  cronEntry("/api/cron/prediction-market-snapshot", "20 6,12,18 * * *"),
-  // Weekly NGS ingestion into signals (motif/ledger-shadow-2026-10-01).
-  // Wednesdays 11:30 UTC: internal-only, weight 0 until validated.
-  cronEntry("/api/cron/ngs-ingest", "30 11 * * 3"),
-  // CV watch-loop game-window scheduler (motif/watch-loop-2026-10-01). Every
-  // 10 min: ESPN scoreboard poll -> watch.games upsert -> Space warm-ping ->
-  // scheduler_runs heartbeat. Bearer-only cron auth, like every mutating cron.
-  cronEntry("/api/cron/watch-scheduler", "*/10 * * * *"),
-  // CV watch-loop Space warm ping (motif/watch-loop-2026-10-01). Every 10 min
-  // (2026-11-13: was */3, which beat Neon's 300s autosuspend and kept the
-  // compute awake 24/7): warm-pings the HF Space /health while a window is
-  // active or arming, so it never cold-starts mid-drive. Writes only the
-  // scheduler_runs heartbeat, and skips it in the 02:30–06:30 CT quiet window
-  // when no game is live (lib/cron/neon-quiet-window.ts).
-  cronEntry("/api/cron/watch-warm", "*/10 * * * *"),
-  // Props slate shadow runner (motif/audit-fix-props-2026-10-01). Hourly at
-  // :25: runs the GSE 4-Beat props pipeline in shadow mode. Env-gated
-  // (default OFF), never persists, never publishes.
-  cronEntry("/api/cron/props-slate-shadow", "25 * * * *"),
-  // Engine DFS slate provider registration (motif/audit-fix-props-2026-10-01).
-  // Hourly at :55: builds the engine slate and registers it as the DFS
-  // provider when the founder's DFS_PROVIDER flag is set; read-only.
-  cronEntry("/api/cron/engine-dfs-slate", "55 * * * *"),
-  // Path-disagreement arbitration (Opus tier). Reads published picks written in
-  // the last 6h, pairs the reasoning path against the legacy book path per
-  // fixture + market, and appends every ruling to the decision ledger. At :41 so
-  // a paid Opus pass never competes with the :02/:17/:32/:47 board ticks or the
-  // :05/:20/:35/:50 signal-slate ticks for the cron's time budget. Writes no
-  // Pick: it rules on which of two recorded claims stands, nothing more.
+  // Path-disagreement arbitration (Opus tier) at :41, off board/slate ticks.
   cronEntry("/api/cron/arbiter-adjudication", "41 * * * *"),
-  // C-416: refresh reporter wire into stored Signal rows (~100 public RSS/Atom feeds).
-  cronEntry("/api/cron/refresh-wire", "*/10 * * * *"),
-  // Polymarket Gamma free quote plane.
-  cronEntry("/api/cron/gamma", "0,30 * * * *"),
-  // Signal ledger census and shadow compose (Tier 1 #1).
-  cronEntry("/api/cron/signal-ledger-census", "43 * * * *"),
-  // Chunked nflverse player data backfill (Tuesday mornings).
-  cronEntry("/api/cron/backfill-player-data", "0 4 * * 2"),
-  // nflverse historical games ingestion (Tuesday early morning).
-  cronEntry("/api/cron/backfill-historical-games", "0 3 * * 2"),
-  // Continuous calibration backtest harness (Sunday 12:00 UTC).
-  cronEntry("/api/cron/backtest-calibration", "0 12 * * 0"),
-  // Feature recipe backtest harness (Sunday 13:00 UTC).
-  cronEntry("/api/cron/feature-recipe-backtest", "0 13 * * 0"),
-  // Microstructure report (S-048): CLV-vs-close microstructure summary over the
-  // recent settled window, persisted to the report store for operator reads.
-  // Daily 12:35 UTC, off the settlement (:20) and board (:32/:47) ticks.
-  cronEntry("/api/cron/microstructure-report", "35 12 * * *"),
   // Site-wide autonomous workflow & multi-council fabric (outside 08:30-12:30 UTC Neon quiet window).
   cronEntry("/api/cron/site-wide-workflows", "12 0,3,6,13,16,19,22 * * *"),
 ];
