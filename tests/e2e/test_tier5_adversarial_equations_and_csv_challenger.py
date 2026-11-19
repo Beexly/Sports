@@ -23,6 +23,7 @@ import json
 import math
 import sys
 import unittest
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -1728,8 +1729,14 @@ class TestTier5AdversarialEquationsAndCsvChallenger(unittest.TestCase):
         orig_pd = getattr(stage0_mod, "pd", None)
         try:
             stage0_mod.pd = None
-            al_jax_bal = stage0_mod.load_stage0_game_roster_allowlist("JAX", "BAL", 9)
-            al_buf_min = stage0_mod.load_stage0_game_roster_allowlist("BUF", "MIN", 9)
+            # Settled Week-9 fixture slate: pin the gate clock to the week-9
+            # config's as_of so calendar drift cannot fail the freshness gate.
+            al_jax_bal = stage0_mod.load_stage0_game_roster_allowlist(
+                "JAX", "BAL", 9, today=date(2026, 11, 7)
+            )
+            al_buf_min = stage0_mod.load_stage0_game_roster_allowlist(
+                "BUF", "MIN", 9, today=date(2026, 11, 7)
+            )
 
             self.assertEqual(al_jax_bal["matchup"], "JAX@BAL")
             self.assertEqual(

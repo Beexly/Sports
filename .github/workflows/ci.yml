@@ -602,11 +602,18 @@ jobs:
   leapwork-checkout-unlock-e2e:
     name: Leapwork Checkout & Unlock Storefront E2E
     needs: osv-polyglot-and-pre-sim-gate
-    if: ${{ secrets.LEAPWORK_API_KEY != '' }}
+    # The `secrets` context is not available in `if` at ANY level (GitHub
+    # Actions rejects the whole workflow file at validation time -> 0 jobs
+    # run). Gate the job on `vars`, lift the secret into job-level `env`
+    # (where secrets ARE legal), and test `env` in the step `if`.
+    if: ${{ vars.LEAPWORK_CONTROLLER_URL != '' }}
     runs-on: ubuntu-latest
+    env:
+      LEAPWORK_API_KEY: ${{ secrets.LEAPWORK_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - name: Trigger Leapwork Checkout & Unlock Runlist
+        if: ${{ env.LEAPWORK_API_KEY != '' }}
         uses: leapwork/Github-action@v2
         with:
           leapworkControllerURL: ${{ vars.LEAPWORK_CONTROLLER_URL }}

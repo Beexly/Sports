@@ -179,8 +179,14 @@ def test_vector1_web_coach_writeups_and_redline_world_clean_week9() -> None:
 # ============================================================================
 
 
-def test_vector2_content_pack_4_lineups_and_json_packets_match_real_dk_csv() -> None:
-    """Parse all 4 lineups from Content Pack and check against Main Slate DK CSV."""
+def test_vector2_content_pack_4_lineups_and_json_packets_match_real_dk_csv(
+    stage0_frozen_clock,
+) -> None:
+    """Parse all 4 lineups from Content Pack and check against Main Slate DK CSV.
+
+    Settled Week-9 fixture: the Stage-0 gate clock is pinned to the fixture
+    config's date (stage0_frozen_clock) so calendar drift cannot fail it.
+    """
     csv_path = REPO_ROOT / "data" / "dfs" / "dk_salaries_week9_main_slate_2026_11_08.csv"
     dk_by_name: dict[str, dict[str, object]] = {}
     main_slate_games: set[str] = set()

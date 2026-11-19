@@ -64,6 +64,39 @@ DEFAULT_REPORT_MD_PATH = (
     / "FULL-STACK-ORCHESTRATION-POST-SIM-PROJECTIONS-AND-200PT-DFS-2026-11-07.md"
 )
 
+# Single-source official ledger: recomputed from Neon by scripts/verify-ledger.ts.
+# Nothing downstream may hand-type record numbers (C12 ledger-single-source
+# doctrine); a stale snapshot cannot survive a ledger refresh.
+VERIFIED_LEDGER_ARTIFACT_PATH = (
+    REPO_ROOT / "apps" / "web" / "lib" / "ledger" / "verified-ledger.json"
+)
+
+
+def _load_official_ledger_of_record() -> Dict[str, Any]:
+    """Derive the official record from the single-source verified ledger artifact.
+
+    Mirrors apps/web/lib/ledger/public-record.ts: counts + signed units only.
+    Calibration law: no win-rate percentage is published until the gate opens
+    (200 CLV-backed settled official plays), so the gate state travels with the
+    record instead of a win_pct.
+    """
+    artifact = json.loads(VERIFIED_LEDGER_ARTIFACT_PATH.read_text(encoding="utf-8"))
+    official = artifact["official"]
+    wlp = official["wlp"]
+    total = float(official["units"]["total"])
+    gate = official["gate"]
+    return {
+        "season_record": f"{wlp['wins']}-{wlp['losses']}-{wlp['pushes']}",
+        "net_units": f"{'+' if total >= 0 else ''}{total:.2f}u",
+        "win_rate_published": bool(gate["unlocked"]),
+        "calibration_progress": f"{gate['clvBackedSettled']}/{gate['target']}",
+        "ledger_as_of": str(artifact["generatedAt"])[:10],
+        "dual_panel_verification": {
+            "panel_a_historical_walk_forward_games": 15947,
+            "panel_b_5stage_verified_slice": "16-5 (76.19%, Wilson 95% CI [54.9%, 89.4%])",
+        },
+    }
+
 # Forbidden internal math/pipeline jargon, banned AI/tout vocabulary, and retired ledger strings on customer-facing surfaces
 FORBIDDEN_PUBLIC_COPY_JARGON: tuple[str, ...] = (
     "Romano CQR",
@@ -722,15 +755,7 @@ def execute_backend_post_sim_projection_and_200pt_dfs_pipeline(
         "requested_tier": normalized_tier,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "execution_latency_ms": elapsed_ms,
-        "official_ledger_of_record": {
-            "season_record": "47-19-1",
-            "net_units": "+24.92u",
-            "win_pct": 0.7121,
-            "dual_panel_verification": {
-                "panel_a_historical_walk_forward_games": 15947,
-                "panel_b_5stage_verified_slice": "16-5 (76.19%, Wilson 95% CI [54.9%, 89.4%])",
-            },
-        },
+        "official_ledger_of_record": _load_official_ledger_of_record(),
         "database_persistence_spec": db_spec,
         "proprietary_gse_metrics": {
             "total_metrics_cataloged": int(proprietary_metrics["total_proprietary_metrics_cataloged"]),
@@ -988,8 +1013,8 @@ def project_client_safe_payload(backend_bundle: Dict[str, Any], tier: str = "FRE
             "Week 9 Film & Matchup Environment Brief: Trench pass-protection grades, neutral-script pace, "
             "and red-zone personnel tendencies."
         ),
-        "official_season_record": str(ledger.get("season_record", "47-19-1")),
-        "official_net_units": str(ledger.get("net_units", "+24.92u")),
+        "official_season_record": str(ledger["season_record"]),
+        "official_net_units": str(ledger["net_units"]),
         "dual_panel_summary": (
             "Verified across 15,947 historical walk-forward games and 16-5 active 5-stage call-sheet slice."
         ),

@@ -24,6 +24,11 @@ from scripts.dfs.build_week9_dual_slate_dfs_packets import (  # noqa: E402
     load_showdown_slate,
 )
 
+# Week 9 is a settled, fixture-dated slate: evaluate the Stage-0 freshness gate
+# at the fixture config's date, not the wall clock (calendar-rot fix). The live
+# fail-closed invariant stays covered by test_stage0_zero_hallucination_gate.py.
+pytestmark = pytest.mark.usefixtures("stage0_frozen_clock")
+
 HEADER = ["Position", "Name + ID", "Name", "ID", "Roster Position", "Salary",
           "Game Info", "TeamAbbrev", "AvgPointsPerGame", "Status"]
 
