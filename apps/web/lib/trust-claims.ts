@@ -635,9 +635,76 @@ const LOCK_SURNAME_PARENTHETICAL_AND_SLUG =
 const LOCK_SURNAME_DIGEST_SHAPES =
   /\bLock\s+\(Weeks?\s+\d+(?:\s*[-,]\s*\d+)*\s*:|\bLock\s+[+-]\d+\.\d+\s+EPA\b|\bLock\s+chart\b|\bLock's\b/g;
 
-/** Dated @handle social-digest lines (verbatim third-party data in memory docs). */
+// Mirror scripts/guardrails/trust-gate.mjs LOCK_STAT_TABLE_SAFE_CONTEXT: the
+// QUOTED-LEADERBOARD forms the x-intel sweeps paste verbatim into AGENTS.md
+// ("Lock +0.61/+0.67/…", "Lock (22 dropbacks…)", "Lock 8/11, 194 yds",
+// "Lock vs LV"). Applied ONLY when the caller scoped the scan to a root memory
+// doc (`lockDigestExempt`), because the reason trust-gate scopes its copy to
+// SCAN_FILES holds here too: tree-wide, `\bLock\s+\d+\.\d+` is a free pass for
+// "We locked in on that bet at Lock 2.77." on a marketing surface.
+const LOCK_STAT_TABLE_SAFE_CONTEXT =
+  /\bLock\s+[+-]?\d+\.\d+|\bLock\s+\d+\s+vs\b|\bLock\s+vs\b|\bLock\s*\(|\bLock\s+\d+\s*\/\s*\d+|\/\s?Lock\s?\/|\bLock\s+\d+\s+dropbacks\b|\bLock\s+\d+%|\bhawkblogger-lock-darnold-[a-z0-9-]+\.csv\b|\bLock\s+with\s+\d+\s+of\s+the\s+\d+\s+highest\s+Seahawks\b|\bLock\s+EPA\/play\s+\d+\.\d+/gi;
+
+// DIGEST PROSE SHAPES for the QB surname, added 2026-11-18 (lock-step with
+// scripts/guardrails/trust-gate.mjs). The Nov 18 09:08 CT sweep's AGENTS.md
+// digest restates its own Lock items in running prose, in shapes the table
+// forms above do not cover: a section clause ("Lock same-defense EPA
+// comparisons"), a back-reference to the GSE Lock LABEL ("the two Lock items
+// above"), and a possessive ("with Lock's New England game removed" — also
+// covered by LOCK_SURNAME_DIGEST_SHAPES). All carry a capital L. The
+// betting-slang claim forms are lowercase ("a lock", "my lock of the day",
+// "bills/lock/chiefs") and still hit. Case-SENSITIVE on purpose (no /i):
+// under /i, "that lock's a sure thing" would be blanked, and this guard's whole
+// job is to keep that claim failing. Applied only when the caller scoped the
+// scan to a root memory doc (lockDigestExempt).
+const LOCK_DIGEST_PROSE_SHAPES =
+  /\bLock\s+same[- ]defense\b|\bLock\s+items?\b|\bLock\s+chart\b/g;
+
+// A PROTECTED X PROFILE'S PADLOCK ICON, transcribed verbatim into AGENTS.md:
+// 'Profile: "Follow @FTNFantasy" with a lock, 1,276 posts, 1 Following, 2,540
+// Followers'. "with a lock" followed by a post/follower count is the UI glyph
+// for a protected account, not a pick claim. Anchored to that count so betting
+// prose — "priced with a lock, 2 units" — still hits.
+const LOCK_PADLOCK_PROFILE_SHAPE =
+  /\bwith a lock,?\s*\d[\d,]*\s+(?:posts?|followers?)\b/gi;
+
+/**
+ * Blank double-quoted spans on a line that is a verbatim transcription of a
+ * third party's copy. Root memory docs record rival/analyst profiles and post
+ * text "as printed", and that copy carries wording this platform would never
+ * ship — a pundit's bio ("AI-assisted content & analysis") or a pundit calling
+ * a player "a lock". It is the third party's copy quoted, not a claim GSE
+ * makes, and AGENTS.md's own headings say so on the same line.
+ *
+ * Deliberately narrow: the line must carry an explicit transcription marker
+ * AND at least one double-quoted span. Everything OUTSIDE the quotes on that
+ * line is still scanned, so an unattributed claim sitting next to a quoted bio
+ * still hits. Callers pass this only for root memory docs.
+ */
+export function blankAttributedQuotedSpans(line: string): string {
+  if (!/\b(?:as printed|quoted verbatim|verbatim transcription)\b/i.test(line)) {
+    return line;
+  }
+  if (!line.includes('"')) return line;
+  return line.replace(/"[^"]*"/g, " ");
+}
+
+/**
+ * Dated @handle social-digest lines (verbatim third-party data in memory docs).
+ *
+ * Mirror scripts/guardrails/trust-gate.mjs. A line carrying a numeric post ID
+ * (a 15+ digit snowflake) is a provenance record of one specific third-party
+ * post — the shape the x-intel sweeps write ("(ID 2122165077180825679)") — and
+ * never appears in marketing copy. Otherwise the original form: a dated @handle
+ * line, accepting the ISO date or the sweeps' spelled-out "Nov 15" form.
+ */
 export function isVerbatimSocialDigestLine(line: string): boolean {
-  return /@\w+/.test(line) && /\d{4}-\d{2}-\d{2}/.test(line);
+  if (/\b\d{15,}\b/.test(line)) return true;
+  if (!/@\w+/.test(line)) return false;
+  return (
+    /\d{4}-\d{2}-\d{2}/.test(line) ||
+    /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}\b/i.test(line)
+  );
 }
 
 /**
@@ -706,10 +773,16 @@ export function scanForBannedPhrases(
       }
       let subject = normalizeForScan(line);
       if (claim.id === "banned.lock") {
+        if (lockDigestExempt) subject = blankAttributedQuotedSpans(subject);
         subject = subject.replace(LOCK_PROPER_NOUN_SAFE_CONTEXT, " ");
         subject = subject.replace(LOCK_SURNAME_TABLE_DATA, " ");
         subject = subject.replace(LOCK_SURNAME_PARENTHETICAL_AND_SLUG, " ");
         subject = subject.replace(LOCK_SURNAME_DIGEST_SHAPES, " ");
+        if (lockDigestExempt) {
+          subject = subject.replace(LOCK_DIGEST_PROSE_SHAPES, " ");
+          subject = subject.replace(LOCK_PADLOCK_PROFILE_SHAPE, " ");
+          subject = subject.replace(LOCK_STAT_TABLE_SAFE_CONTEXT, " ");
+        }
       }
       if (pattern.test(subject)) {
         hits.push({
@@ -728,7 +801,10 @@ export function scanForBannedPhrases(
     const pattern = buildPositioningRegex([rawPhrase]);
     lines.forEach((line, idx) => {
       if (positioningDigestExempt && isAttributedThirdPartyDigestLine(line)) return;
-      if (pattern.test(normalizeForScan(line))) {
+      const scanLine = positioningDigestExempt
+        ? blankAttributedQuotedSpans(normalizeForScan(line))
+        : normalizeForScan(line);
+      if (pattern.test(scanLine)) {
         hits.push({
           phrase: rawPhrase,
           claimId: `banned.positioning-vocab.${slugForPositioningPhrase(rawPhrase)}`,

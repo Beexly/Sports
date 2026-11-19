@@ -41,6 +41,13 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+# Host-installation prerequisite. The F11 Mongo Atlas adapter reads the organization
+# credentials from the shared antigravity secret store; that path does not exist on a
+# portable CI runner, so the wiring test's first assertion is a guaranteed failure
+# there. It is a real invariant *of that host*, so we gate the test on the secret being
+# present instead of deleting or weakening it.
+_MONGODB_ATLAS_SECRET = Path("/shared/user/.gemini/secrets/mongodb_atlas.env")
+
 # Ensure `import pytest` succeeds when running under system `python3 -m unittest`
 try:
     import pytest  # type: ignore  # noqa: F401
@@ -488,6 +495,10 @@ class TestM6Symbolic21419EquationsExecution(unittest.TestCase):
             else:
                 fn()
 
+    @unittest.skipUnless(
+        _MONGODB_ATLAS_SECRET.is_file(),
+        "requires the shared antigravity Mongo Atlas secret store at /shared/user/.gemini/secrets (absent on a portable CI runner)",
+    )
     def test_06_mongodb_atlas_persistent_credentials_adapter_wiring(self) -> None:
         """F11: Verify load_env_local_secrets() and MongoDBDossierArchiveAdapter.
 

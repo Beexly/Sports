@@ -1928,7 +1928,10 @@ class SpatialContinuumDarcyBesselAndCriEngine:
 
 def run_physics_biophysics_and_oncology_21_repo_integration() -> dict[str, Any]:
     """Execute Pass-1 and Pass-2 verification across all 21 unique repositories (22 URLs)."""
-    usage = shutil.disk_usage(r"C:\\")
+    # Two-Host Rule: probe free space on the current filesystem root, never a hardcoded
+    # Windows drive. ``Path.home().anchor`` is ``C:\\`` on the dev box and ``/`` on a
+    # portable Linux runner; the literal ``r"C:\\"`` raised FileNotFoundError off-Windows.
+    usage = shutil.disk_usage(Path(Path.home().anchor or "/"))
     c_free_gb = round(usage.free / (1024**3), 2)
 
     # 1. Genesis-Embodied-AI/genesis-world

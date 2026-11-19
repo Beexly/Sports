@@ -9,6 +9,7 @@ Verifies all 33 new repositories + edge cases across:
 from __future__ import annotations
 
 import hashlib
+import shutil
 
 import numpy as np
 import pytest
@@ -29,6 +30,15 @@ from intelligence.ecosystem.twelve_repo_frontier_integration_engine import (
     RuffNativeStaticAndSecurityAuditor,
     SkillVaultAndDeepModuleAnalyzer,
 )
+
+# Host-installation prerequisites (mirrors tests/test_twelve_repo_frontier_integration.py).
+# The 45-repo end-to-end receipt enumerates the *locally installed* skills tree
+# (``SKILLS_DIR`` = ~/.agents/skills) and runs the native ruff linter. A portable CI
+# runner has neither the skills tree nor a guarantee of ruff, so the counts collapse
+# and the tooling assertions fail. These are real invariants *of that host*; we gate
+# on the prerequisites being present rather than delete or weaken them.
+_SKILLS_INSTALL_PRESENT = (SKILLS_DIR / "worktrunk-writing-user-outputs" / "SKILL.md").exists()
+_RUFF_PRESENT = shutil.which("ruff") is not None
 
 
 def test_cluster1_worktrunk_tuios_chromiumoxide_clowder_and_rea() -> None:
@@ -470,6 +480,10 @@ def test_cluster6_toolregistry_treg_deerflow_calibre_statsmodels_and_imageai() -
     assert nms_res["box_classification"] == "LIGHT_BOX_6_OR_FEWER"
 
 
+@pytest.mark.skipif(
+    not (_SKILLS_INSTALL_PRESENT and _RUFF_PRESENT),
+    reason="requires the local installed-skills tree (~/.agents/skills) and the native ruff linter; absent on a portable CI runner",
+)
 def test_end_to_end_forty_five_repo_receipt_ruff_and_deep_modules() -> None:
     receipt = run_forty_five_repo_two_pass_integration()
     assert receipt["two_pass_status"] == "PASS_ALL_45_REPOS_VERIFIED"

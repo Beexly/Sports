@@ -102,6 +102,15 @@ const ACCEPTED = [
     reason: "Only the copy bundled inside next/node_modules is affected; it is remediated by the same next@16 major upgrade. The top-level postcss is already patched.",
     maxSeverity: "high",
   },
+  // ── picomatch ReDoS waivers REMOVED 2026-11-18 ───────────────────────────
+  // Five entries (picomatch, @rollup/plugin-commonjs, @rollup/pluginutils, fdir,
+  // @sentry/nextjs) waived GHSA-fc5q-39xc-vjpf / CVE-2026-112366 from 2026-11-17.
+  // GitHub WITHDREW that advisory on 2026-11-18T15:38Z ("Withdrawn Advisory:
+  // picomatch vulnerable to ReDoS through single-branch repeated extglobs"), so
+  // `npm audit` no longer reports it and this gate correctly called all five
+  // waivers stale. Deleted rather than left as dead weight. If the advisory is
+  // re-published, re-add the entries from this block's git history rather than
+  // re-deriving them.
 ];
 
 const args = new Set(process.argv.slice(2));
