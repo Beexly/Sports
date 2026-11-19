@@ -22,19 +22,25 @@ from gse_engine.cloud import (
 
 
 def test_path36_verified_status_never_overclaims_completion() -> None:
-    assert PATH36_VERIFIED_STATUS["points"] == 1977
+    assert PATH36_VERIFIED_STATUS["points"] == 2075
     assert PATH36_VERIFIED_STATUS["overall_complete"] is False
-    assert PATH36_VERIFIED_STATUS["blocked_on_lab_credits"] is True
-    assert PATH36_VERIFIED_STATUS["total_credits_remaining"] == 0
+    assert PATH36_VERIFIED_STATUS["pro_trial_active"] is True
+    assert PATH36_VERIFIED_STATUS["pro_trial_scheduled_cancel_date"] == "2026-11-23"
+    assert PATH36_VERIFIED_STATUS["blocked_on_lab_credits"] is False
+    assert PATH36_VERIFIED_STATUS["total_credits_remaining"] == "UNLIMITED_PRO_TRIAL"
     assert PATH36_VERIFIED_STATUS["course_1_pct"] == 100
     assert PATH36_VERIFIED_STATUS["course_2_pct"] == 100
     assert PATH36_VERIFIED_STATUS["course_3_pct"] == 96
-    assert PATH36_VERIFIED_STATUS["course_4_pct"] == 87
+    assert PATH36_VERIFIED_STATUS["course_4_pct"] == 90
     assert PATH36_VERIFIED_STATUS["course_4_can_reach_100"] is False
     assert PATH36_VERIFIED_STATUS["dataprep_lab_640821_status"] == "DEPRECATED_UNAVAILABLE"
-    assert PATH36_VERIFIED_STATUS["skill_badges_pct"] == 0
+    assert PATH36_VERIFIED_STATUS["badge_1_load_balancing_earned"] is True
+    assert PATH36_VERIFIED_STATUS["badge_2_app_dev_labs_completed"] == 5
+    assert PATH36_VERIFIED_STATUS["skill_badges_earned"] == 1
+    assert PATH36_VERIFIED_STATUS["skill_badges_pct"] == 25
     assert PATH36_VERIFIED_STATUS["claim_credential_enabled"] is False
     assert PATH36_VERIFIED_STATUS["queued_paths_420_419_4525_started"] is False
+    assert PATH36_VERIFIED_STATUS["queued_path_order"] == ("4525", "420", "419")
 
     assert PATH36_DEFERRAL_LOCKS["gke_cluster_build"] == "DEFER_USE_CLOUD_RUN"
     assert PATH36_DEFERRAL_LOCKS["cloud_sql_mysql"] == "DEFER_NEON_POSTGRES_IS_SOT"

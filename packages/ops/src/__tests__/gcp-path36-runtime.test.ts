@@ -6,7 +6,11 @@ import {
   OPS_AGENT_MIN_VERSION,
   PATH36_CEL_GUARDRAIL_EXPRESSION,
   buildCloudArmorDenyIpExpression,
+  buildCloudMonitoringSloBundle,
+  buildCloudRunGen2HttpDeploySpec,
   buildCloudRunGen2PubSubDeploySpec,
+  buildGcloudHttpFunctionDeployCommand,
+  buildGcloudPubSubFunctionCliPlan,
   buildGcsJsonApiBucketCreateRequest,
   buildGcsJsonApiMediaUploadRequest,
   createCloudRunPubSubFunctionHandler,
@@ -178,6 +182,93 @@ describe("GCP Path 36 runtime & security contracts", () => {
     });
     expect(uploadReq.url).toBe(
       "https://storage.googleapis.com/upload/storage/v1/b/gse-media-lake/o?uploadType=media&name=week11%2Fbanner.png"
+    );
+  });
+
+  it("builds scale-to-zero HTTP Cloud Run Functions Gen2 specs (GSP081) and GSP080 CLI plans", () => {
+    expect(() =>
+      buildCloudRunGen2HttpDeploySpec({
+        serviceName: "gse-public-webhook",
+        entryPoint: "helloHttp",
+        allowUnauthenticated: true,
+      })
+    ).toThrow(/publicJustification/);
+
+    const privSpec = buildCloudRunGen2HttpDeploySpec({
+      serviceName: "gse-internal-odds",
+      entryPoint: "helloHttp",
+      maxInstances: 10,
+    });
+    expect(privSpec.minInstances).toBe(0);
+    expect(privSpec.maxInstances).toBe(4);
+    expect(privSpec.allowUnauthenticated).toBe(false);
+    const privCmd = buildGcloudHttpFunctionDeployCommand(privSpec);
+    expect(privCmd.command).toContain("--no-allow-unauthenticated");
+    expect(privCmd.command).toContain("--max-instances=4");
+
+    const pubSpec = buildCloudRunGen2HttpDeploySpec({
+      serviceName: "gse-whop-webhook",
+      entryPoint: "helloHttp",
+      allowUnauthenticated: true,
+      publicJustification: "Signature-verified webhook endpoint",
+    });
+    expect(buildGcloudHttpFunctionDeployCommand(pubSpec).command).toContain("--allow-unauthenticated");
+
+    const pubSubSpec = buildCloudRunGen2PubSubDeploySpec({
+      serviceName: "gse-odds-intake-fn",
+      entryPoint: "helloPubSub",
+      triggerTopic: "gse-odds-ticks",
+    });
+    const cliPlan = buildGcloudPubSubFunctionCliPlan(pubSubSpec);
+    expect(cliPlan.deployCommand).toContain("--gen2");
+    expect(cliPlan.fallbackDeployCommandWithoutGen2Flag).not.toContain("--gen2");
+    expect(cliPlan.publishTestCommand).toContain("gse-odds-ticks");
+    expect(cliPlan.logsReadCommand).toContain("gse-odds-intake-fn");
+  });
+
+  it("validates Cloud Monitoring SLO bundles with golden signals and Logs Explorer filters (GSP089)", () => {
+    expect(() =>
+      buildCloudMonitoringSloBundle({
+        serviceName: "gse-odds-intake-fn",
+        uptimeUrl: "http://insecure.example.com/health",
+        alertPolicy: {
+          policyName: "Latency Alert",
+          metric: GCP_PATH36_MONITORING_METRICS.cpuLoad1m,
+          emailChannels: ["ops@galaxysportsedge.com"],
+          autoCloseSeconds: 600,
+          teardownAfterTest: true,
+        },
+      })
+    ).toThrow(/https:\/\//);
+
+    expect(() =>
+      buildCloudMonitoringSloBundle({
+        serviceName: "gse-odds-intake-fn",
+        alertPolicy: {
+          policyName: "Orphaned Alert",
+          metric: GCP_PATH36_MONITORING_METRICS.interfaceTraffic,
+          emailChannels: ["ops@galaxysportsedge.com"],
+          autoCloseSeconds: 600,
+        },
+      })
+    ).toThrow(/Invalid Cloud Monitoring alert policy/);
+
+    const bundle = buildCloudMonitoringSloBundle({
+      serviceName: "gse-odds-intake-fn",
+      alertPolicy: {
+        policyName: "GSE Latency SLO",
+        metric: GCP_PATH36_MONITORING_METRICS.cpuLoad1m,
+        emailChannels: ["ops@galaxysportsedge.com"],
+        autoCloseSeconds: 1800,
+        productionOwned: true,
+        owner: "Platform Ops Lead",
+        teardownTrigger: "Auto-resolve after 15m healthy",
+      },
+    });
+    expect(bundle.uptimeCheck.url).toBe("https://www.galaxysportsedge.com/api/health");
+    expect(bundle.goldenSignalCharts).toHaveLength(3);
+    expect(bundle.logsExplorerFilter).toBe(
+      'resource.type="cloud_run_revision" AND resource.labels.service_name="gse-odds-intake-fn"'
     );
   });
 });

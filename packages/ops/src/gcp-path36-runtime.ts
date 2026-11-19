@@ -337,3 +337,174 @@ export function buildGcsJsonApiMediaUploadRequest(args: {
     },
   };
 }
+
+export interface CloudRunGen2HttpDeploySpec {
+  readonly serviceName: string;
+  readonly runtime: "nodejs22";
+  readonly region: string;
+  readonly entryPoint: string;
+  readonly minInstances: 0;
+  readonly maxInstances: number;
+  readonly allowUnauthenticated: boolean;
+  readonly publicJustification?: string;
+}
+
+export interface GcloudFunctionDeployCommand {
+  readonly argv: readonly string[];
+  readonly command: string;
+}
+
+export function buildCloudRunGen2HttpDeploySpec(args: {
+  readonly serviceName: string;
+  readonly entryPoint: string;
+  readonly region?: string;
+  readonly maxInstances?: number;
+  readonly allowUnauthenticated?: boolean;
+  readonly publicJustification?: string;
+}): CloudRunGen2HttpDeploySpec {
+  const serviceName = args.serviceName.trim();
+  const entryPoint = args.entryPoint.trim();
+  if (!serviceName || !entryPoint) {
+    throw new Error("buildCloudRunGen2HttpDeploySpec: serviceName and entryPoint are required");
+  }
+  const allowUnauthenticated = args.allowUnauthenticated === true;
+  const publicJustification = args.publicJustification?.trim();
+  if (allowUnauthenticated && !publicJustification) {
+    throw new Error(
+      "buildCloudRunGen2HttpDeploySpec: allowUnauthenticated=true requires explicit publicJustification"
+    );
+  }
+  const region = (args.region ?? "us-west1").trim();
+  const maxInstances = Math.max(1, Math.min(4, Math.floor(args.maxInstances ?? 2)));
+  return {
+    serviceName,
+    runtime: "nodejs22",
+    region,
+    entryPoint,
+    minInstances: 0,
+    maxInstances,
+    allowUnauthenticated,
+    ...(publicJustification ? { publicJustification } : {}),
+  };
+}
+
+export function buildGcloudHttpFunctionDeployCommand(
+  spec: CloudRunGen2HttpDeploySpec
+): GcloudFunctionDeployCommand {
+  const argv: readonly string[] = [
+    "gcloud",
+    "functions",
+    "deploy",
+    spec.serviceName,
+    "--gen2",
+    `--runtime=${spec.runtime}`,
+    `--region=${spec.region}`,
+    "--source=.",
+    `--entry-point=${spec.entryPoint}`,
+    "--trigger-http",
+    `--min-instances=${spec.minInstances}`,
+    `--max-instances=${spec.maxInstances}`,
+    spec.allowUnauthenticated ? "--allow-unauthenticated" : "--no-allow-unauthenticated",
+  ];
+  return { argv, command: argv.join(" ") };
+}
+
+export interface GcloudPubSubFunctionCliPlan {
+  readonly deployCommand: string;
+  readonly fallbackDeployCommandWithoutGen2Flag: string;
+  readonly publishTestCommand: string;
+  readonly logsReadCommand: string;
+}
+
+export function buildGcloudPubSubFunctionCliPlan(
+  spec: CloudRunGen2PubSubDeploySpec,
+  options?: {
+    readonly sampleMessage?: string;
+    readonly logLimit?: number;
+  }
+): GcloudPubSubFunctionCliPlan {
+  const sampleMessage = (options?.sampleMessage ?? "GSE Pub/Sub Event").trim() || "GSE Pub/Sub Event";
+  const logLimit = Math.max(1, Math.min(200, Math.floor(options?.logLimit ?? 50)));
+  const tailFlags = [
+    `--runtime=${spec.runtime}`,
+    `--region=${spec.region}`,
+    "--source=.",
+    `--entry-point=${spec.entryPoint}`,
+    `--trigger-topic=${spec.triggerTopic}`,
+    `--min-instances=${spec.minInstances}`,
+    `--max-instances=${spec.maxInstances}`,
+  ];
+  const deployCommand = ["gcloud", "functions", "deploy", spec.serviceName, "--gen2", ...tailFlags].join(" ");
+  const fallbackDeployCommandWithoutGen2Flag = [
+    "gcloud",
+    "functions",
+    "deploy",
+    spec.serviceName,
+    ...tailFlags,
+  ].join(" ");
+  const publishTestCommand = `gcloud pubsub topics publish ${spec.triggerTopic} --message=${JSON.stringify(sampleMessage)}`;
+  const logsReadCommand = `gcloud functions logs read ${spec.serviceName} --region=${spec.region} --limit=${logLimit}`;
+  return {
+    deployCommand,
+    fallbackDeployCommandWithoutGen2Flag,
+    publishTestCommand,
+    logsReadCommand,
+  };
+}
+
+export interface CloudMonitoringChartSpec {
+  readonly title: string;
+  readonly metric: string;
+}
+
+export interface CloudMonitoringSloBundle {
+  readonly serviceName: string;
+  readonly uptimeCheck: {
+    readonly url: string;
+    readonly periodSeconds: number;
+  };
+  readonly alertPolicy: MonitoringAlertPolicySpec;
+  readonly goldenSignalCharts: readonly CloudMonitoringChartSpec[];
+  readonly logsExplorerFilter: string;
+}
+
+export function buildCloudMonitoringSloBundle(args: {
+  readonly serviceName: string;
+  readonly uptimeUrl?: string;
+  readonly uptimePeriodSeconds?: number;
+  readonly resourceType?: "cloud_run_revision" | "gce_instance";
+  readonly alertPolicy: MonitoringAlertPolicySpec;
+}): CloudMonitoringSloBundle {
+  const serviceName = args.serviceName.trim();
+  if (!serviceName) {
+    throw new Error("buildCloudMonitoringSloBundle: serviceName is required");
+  }
+  const uptimeUrl = (args.uptimeUrl ?? "https://www.galaxysportsedge.com/api/health").trim();
+  if (!uptimeUrl.startsWith("https://")) {
+    throw new Error("buildCloudMonitoringSloBundle: uptimeUrl must use https://");
+  }
+  const alertValidation = validateMonitoringAlertPolicy(args.alertPolicy);
+  if (!alertValidation.valid) {
+    throw new Error(`Invalid Cloud Monitoring alert policy: ${alertValidation.errors.join("; ")}`);
+  }
+  const uptimePeriodSeconds = Math.max(60, Math.floor(args.uptimePeriodSeconds ?? 60));
+  const resourceType = args.resourceType ?? "cloud_run_revision";
+  const logsExplorerFilter =
+    resourceType === "gce_instance"
+      ? `resource.type="gce_instance" AND resource.labels.instance_id="${serviceName}"`
+      : `resource.type="cloud_run_revision" AND resource.labels.service_name="${serviceName}"`;
+  return {
+    serviceName,
+    uptimeCheck: {
+      url: uptimeUrl,
+      periodSeconds: uptimePeriodSeconds,
+    },
+    alertPolicy: args.alertPolicy,
+    goldenSignalCharts: [
+      { title: "CPU Load", metric: GCP_PATH36_MONITORING_METRICS.cpuLoad1m },
+      { title: "Received Packets", metric: GCP_PATH36_MONITORING_METRICS.receivedPacketsCount },
+      { title: "Interface Traffic", metric: GCP_PATH36_MONITORING_METRICS.interfaceTraffic },
+    ],
+    logsExplorerFilter,
+  };
+}

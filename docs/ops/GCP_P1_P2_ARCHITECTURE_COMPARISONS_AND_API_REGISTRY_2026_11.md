@@ -2,7 +2,7 @@
 
 **Date:** 2026-11-19
 **Status:** Evaluation Decision Pack (Zero Unapproved Migrations / Zero Paid Cloud Spend)
-**Compliance Note:** Aligned with Motif's final Path 36 Write-Up (`docs/ops/GCP_PATH36_FOUNDATIONS_IMPLEMENTATION_RECORD_2026_11_19.md`): **Path 36 is NOT 100%** (`1,977` pts: Course 1 `100%`, Course 2 `100%`, Course 3 `96%` [`GSP215` `95/100`], Course 4 `87%` [`GSP192` `80/100`, `GSP207` `50/100`, deprecated/unavailable Dataprep `640821` preventing Course 4 from ever reaching `100%`]; `0 TOTAL CREDITS` blocking 4 skill badges & Paths `420/419/4525` at `0%`). Plus Google AI Ultra `$100/mo` = `$1,200/yr` GCP credit, Career Launchpad `$5K` GCSB recovery, Qwiklabs `640821` waiver. Keeps zero excluded lab IDs in this baseline document.
+**Compliance Note:** Aligned with Motif's 2026-11-19 ~02:20 CT Path 36 session update (`docs/ops/GCP_PATH36_FOUNDATIONS_IMPLEMENTATION_RECORD_2026_11_19.md`): **Pro trial is ACTIVE** (30d free, first charge Dec 19, scheduled cancel Mon Nov 23, `2,075` pts: Course 1 `100%`, Course 2 `100%`, Course 3 `96%` [`GSP215` `95/100`], Course 4 `~90%` [deprecated/unavailable Dataprep `640821` preventing Course 4 from reaching `100%`]; **Badge 1 Load Balancing EARNED**, **Badge 2 App Dev `5/10`**; queued path order **`4525 -> 420 -> 419`**). Plus Google AI Ultra `$100/mo` = `$1,200/yr` GCP credit, Career Launchpad `$5K` GCSB recovery, Qwiklabs `640821` waiver. Keeps zero excluded lab IDs in this baseline document.
 
 ---
 

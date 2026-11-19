@@ -2,7 +2,7 @@
 
 **Date:** 2026-11-19
 **Status:** Active P0 Governance Baseline (Zero-Waste + Fail-Closed)
-**Compliance Anchor:** Incorporates Motif's final Path 36 Write-Up (`docs/ops/GCP_PATH36_FOUNDATIONS_IMPLEMENTATION_RECORD_2026_11_19.md`): **Path 36 is NOT 100%** (`1,977` pts: C1-C2 `100%`, C3 `96%`, C4 `87%` capped by deprecated/unavailable Dataprep `640821`; `0 TOTAL CREDITS` blocking 4 skill badges & Paths `420/419/4525` at `0%`; `GSP089` Monitoring; `X-Goog-IAP-JWT-Assertion` ES256 guard in `apps/web/lib/auth/iap-jwt-guard.ts`). Contains zero primitive broad roles.
+**Compliance Anchor:** Incorporates Motif's 2026-11-19 ~02:20 CT Path 36 session update (`docs/ops/GCP_PATH36_FOUNDATIONS_IMPLEMENTATION_RECORD_2026_11_19.md`): **Pro trial is ACTIVE** (30d free, first charge Dec 19, cancel set Mon Nov 23, `2,075` pts: C1-C2 `100%`, C3 `96%`, C4 `~90%` still capped by deprecated/unavailable Dataprep `640821`; **Badge 1 Load Balancing EARNED**, **Badge 2 App Dev `5/10`**, queued paths **`4525 -> 420 -> 419`**; `GSP089` Monitoring SLO bundle + `GSP080`/`GSP081` runtime builders in `packages/ops/src/gcp-path36-runtime.ts`; `X-Goog-IAP-JWT-Assertion` ES256 guard in `apps/web/lib/auth/iap-jwt-guard.ts`). Contains zero primitive broad roles.
 
 ---
 
