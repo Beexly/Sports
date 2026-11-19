@@ -476,3 +476,21 @@ threat study; F2 repo set with corrected stars and licenses
 verified; the W5/W7/W8/W9 pressure stack. Running feed total:
 12,239 records. All 2026-11-18 runs are now ingested (IG AM,
 analytics AM, IG PM, X AM, X PM).
+
+## Delta 2026-11-19 IG For You AM (landed 2026-11-19)
+
+Source: ~/workspace/ig-for-you-sweep/reports/2026-11-19-AM.md.
+Sweep: 57 feed positions (12 ads excluded, 45 organic, all 45
+coded, 0 NOCODE); 44 NEW after dedupe (1 duplicate skipped:
+@samanthashlleyyy Df5xpgLoJO_, already seen 2026-11-18 PM).
+Delta file delta-2026-11-19-ig-am.jsonl: 44 records (20 dossier +
+24 inventoried-only), all shortcode-keyed, 0 slug-keyed, 0
+collisions against base feeds and all prior deltas, 36,680 bytes.
+Strongest find: dots.ocr (rednote-hilab/dots.ocr, MIT, 1.7B
+open-source document parser with LaTeX formula extraction,
+primary source verified, TEST) for the book-scanning, MarkItDown,
+and Firecrawl v2 lanes. Also: Muse Try On launch announcement
+(@alexandr, Meta, LEARN-ONLY, maps to the style_tryon lane) and
+jiangshan-map interactive China atlas (DeanChensj/jiangshan-map,
+GPL-3.0, design-pattern reference). Running corpus total: 12,283
+records.
