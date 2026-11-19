@@ -1,0 +1,119 @@
+{
+  "report_type": "WEEK11_TNF_DESIGNATION_MERGE",
+  "generated_at_utc": "2026-11-19T22:42:11.931776+00:00",
+  "week": 11,
+  "matchup": "IND @ HOU",
+  "espn_event_id": "401873066",
+  "sources": {
+    "nflverse": "data/nflverse/injuries_2026.csv (week 11)",
+    "espn": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873066"
+  },
+  "rows_changed": 0,
+  "name_aliases_applied": [
+    "Jake Hummel=Jacob Hummel"
+  ],
+  "decisions": [
+    {
+      "team": "HOU",
+      "player": "Danielle Hunter",
+      "position_nflverse": "DE",
+      "position_espn": "DE",
+      "nflverse_report_status": "Out",
+      "espn_game_designation": "Out",
+      "applied": "Out",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    },
+    {
+      "team": "HOU",
+      "player": "Wyatt Teller",
+      "position_nflverse": "G",
+      "position_espn": "G",
+      "nflverse_report_status": "Questionable",
+      "espn_game_designation": "Questionable",
+      "applied": "Questionable",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    },
+    {
+      "team": "HOU",
+      "player": "Brevin Jordan",
+      "position_nflverse": "TE",
+      "position_espn": "TE",
+      "nflverse_report_status": "Out",
+      "espn_game_designation": "Out",
+      "applied": "Out",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    },
+    {
+      "team": "HOU",
+      "player": "Jacob Hummel",
+      "position_nflverse": "LB",
+      "position_espn": "LB",
+      "nflverse_report_status": "Questionable",
+      "espn_game_designation": "Questionable",
+      "applied": "Questionable",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    },
+    {
+      "team": "HOU",
+      "player": "Jaylin Smith",
+      "position_nflverse": "CB",
+      "position_espn": "CB",
+      "nflverse_report_status": "Questionable",
+      "espn_game_designation": "Questionable",
+      "applied": "Questionable",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    },
+    {
+      "team": "IND",
+      "player": "Charvarius Ward",
+      "position_nflverse": "CB",
+      "position_espn": "CB",
+      "nflverse_report_status": "Out",
+      "espn_game_designation": "Out",
+      "applied": "Out",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    },
+    {
+      "team": "IND",
+      "player": "Jerry Tillery",
+      "position_nflverse": "DT",
+      "position_espn": "DT",
+      "nflverse_report_status": "Out",
+      "espn_game_designation": "Out",
+      "applied": "Out",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    },
+    {
+      "team": "IND",
+      "player": "Sauce Gardner",
+      "position_nflverse": "CB",
+      "position_espn": "CB",
+      "nflverse_report_status": "Questionable",
+      "espn_game_designation": "Questionable",
+      "applied": "Questionable",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    },
+    {
+      "team": "IND",
+      "player": "Will Mallory",
+      "position_nflverse": "TE",
+      "position_espn": "TE",
+      "nflverse_report_status": "Out",
+      "espn_game_designation": "Out",
+      "applied": "Out",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    },
+    {
+      "team": "IND",
+      "player": "Jalen Travis",
+      "position_nflverse": "T",
+      "position_espn": "OT",
+      "nflverse_report_status": "Out",
+      "espn_game_designation": "Out",
+      "applied": "Out",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    }
+  ],
+  "espn_designations_without_nflverse_row": [],
+  "note": "IR is treated as Out for severity comparison but is not written as a report_status designation; the overlay consumes Out/Doubtful/Questionable only."
+}

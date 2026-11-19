@@ -3,6 +3,16 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-19 — Weekly cadence v2.5 Thu 16:30 CT TNF injury overlay (Week 11, IND @ HOU)
+
+**Changed:** Advanced `data/nflverse/injuries_2026.csv` from the Wednesday W11 snapshot (3,194 rows, 26 week-11 HOU/IND rows, empty `report_status`) to the live nflverse release (3,421 rows, 253 week-11 rows, 24 teams); prior kept as `injuries_2026.csv.bak-pre-v25-20261119`. New generalized merge script `scripts/ops/merge_tnf_designations.py` (worst-of ESPN/nflverse, `--week/--teams/--matchup/--alias` CLI, supersedes the hardcoded week-10 script). Artifacts: `docs/predictions/research/2026-11-19/cadence_v25_injury_overlay_tnf_w11.json`, `tnf_w11_designation_merge.json`, `CADENCE-V25-TNF-W11.md`; checklist `brain/agent-bus/CHECKLIST-2026-11-19.jsonl`.
+
+**Proven (executed):** ESPN event `401873066` (IND @ HOU, 2026-11-20T01:15Z) summary merged worst-of: 0 rows changed — nflverse already carried Thursday designations (9 Out, 6 Questionable) and ESPN agrees on all 10 matched players (Jake=Jacob Hummel alias applied explicitly). Sinkhorn under sealed C: IND roles CB1/LT/TE1/WR1 mass moved 0.4243, effective mass 0.9939; HOU EDGE1/LT/TE1/WR1/CB1/RB1 mass moved 0.5468, effective 0.9880; total 0.9711. Independent pure-Python cross-check converged (IND 131 iters row residual 1.0e-10; HOU 87 iters 8.0e-12). Seal unchanged 6/6: merkle `23245bcb...`, coach-mind digest `354b4c13...` and sealed-center sha256 `7b764dbc...` byte-identical to W10, tau 0.42, EPA table `9b8c701c...`, QB_QUESTIONABLE 0.0947. `pytest scripts/ops/tests/test_gse_injury_overlay_v2.py scripts/ops/tests/test_run_cadence_v25_injury_overlay.py` → 24 passed.
+
+**Not proven / flags:** `data/gse-dataset/current/injuries_2026.csv` mirror is still the Oct-29 snapshot (flagged, untouched — v2.5 reads the nflverse path only). Second designated players per position family (Sauce Gardner CB, Jalen Travis T, Jacob Hummel LB) and unmapped positions (Tillery DT, Rhodes LS) move no mass — sealed one-slot-per-group mapping, same as the simulator. No odds, tickets, or public surfaces produced.
+
+**Next role:** v3.0 Friday overlay and v4.0 game-day lock consume this merged file; do not re-download over it without re-running the worst-of merge. Keep the sealed center at `2026-W44`. The Stage-0 roster config is still week 9 (per 2026-11-18 entry) — refresh before anything publishable.
+
 ## 2026-11-18 — Weekly cadence v2.0 Wed 17:00 CT mid-week injury advance (Week 11)
 
 **Changed:** Added the Wednesday cadence window and ran it for Week 11. New runner `scripts/ops/run_cadence_v20_wednesday_injury_advance.py` advances the Tuesday v1.0 lock into `docs/predictions/research/2026-11-18/cadence_v20_wednesday_injury_advance_w11.json` (v2.0, phase `INJURY_WEATHER_OVERLAY`, 13-game ESPN card, per-team Sinkhorn reallocation under the sealed cost matrix). `CADENCE_WINDOWS` in `run_weekly_cadence_tick.py` now carries `(INJURY_WEATHER_OVERLAY, WED_MIDWEEK) -> Wed 17:00, v2.0`.
