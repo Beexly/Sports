@@ -35,6 +35,9 @@ CADENCE_WINDOWS = {
     ("T_MINUS_48H_EARLY_SIM", "MNF"): {"day": "Sat", "ct_time": "04:00", "version": "v3.0"},
 
     ("MON_TUE_FINE_TUNE_SEAL", "SUN_EARLY"): {"day": "Tue", "ct_time": "04:00", "version": "v1.0"},
+    # Wednesday mid-week injury advance: the v1.0 Tuesday lock moves to v2.0 under the
+    # sealed Sinkhorn cost matrix. coachMindsetHash and tau stay byte-identical.
+    ("INJURY_WEATHER_OVERLAY", "WED_MIDWEEK"): {"day": "Wed", "ct_time": "17:00", "version": "v2.0"},
     ("INJURY_WEATHER_OVERLAY", "TNF"): {"day": "Thu", "ct_time": "16:30", "version": "v2.5"},
     ("INJURY_WEATHER_OVERLAY", "SUN_EARLY"): {"day": "Fri", "ct_time": "16:30", "version": "v3.0"},
     ("T_MINUS_90M_FINAL_LOCK", "SUN_EARLY"): {"day": "Sun", "ct_time": "10:30", "version": "v4.0"},

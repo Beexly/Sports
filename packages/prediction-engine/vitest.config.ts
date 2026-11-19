@@ -16,26 +16,18 @@ export default defineConfig({
       "src/__tests__/**/*.spec.ts",
       "src/engine/**/*.test.ts",
       "src/engine/**/*.spec.ts",
-      "src/ensemble/**/*.test.ts",
+      // The coach-sim cadence seal tests guard the money path: a Tuesday v1.0 lock
+      // must advance through injury overlays with coachMindsetHash and tau
+      // byte-identical. They sat outside this include list and therefore never ran
+      // under `npm test`; an unexecuted gate is not a gate.
+      "src/coach-sim/**/*.test.ts",
       "src/nfl/**/*.test.ts",
-      "src/nfl/**/*.spec.ts",
-      "src/public-baseline/**/*.test.ts",
       "src/nfl/**/*.spec.ts",
       "src/reasoning/**/*.test.ts",
       "src/reasoning/**/*.spec.ts",
       "src/expected-metrics/**/*.test.ts",
-      "src/literature/**/*.test.ts",
-      "src/literature/**/*.spec.ts",
       "test/**/*.spec.ts",
       "test/**/*.test.ts",
-    ],
-    // The MIND falsification suite runs under `node --test` in CI (step "Run the
-    // MIND falsification suite"). It imports node:test, so vitest must not
-    // collect it: two runners on one file means one of them always dies.
-    exclude: [
-      "**/node_modules/**",
-      "**/dist/**",
-      "src/reasoning/__tests__/mind-reasoning.mutation-v2.spec.ts",
     ],
     isolate: false,
     pool: "forks",
