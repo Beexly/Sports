@@ -1,0 +1,34 @@
+{
+  "schema": "gse_gsi.ecosystem_consistency_receipt.v1",
+  "overall_passed": true,
+  "checks_passed": 5,
+  "checks_total": 5,
+  "checks": [
+    {
+      "name": "ledger_single_source_parity",
+      "passed": true,
+      "detail": "All 4 ledger/discovery surfaces derive cleanly without stale 62-23-1 banner"
+    },
+    {
+      "name": "no_legacy_entity_placeholders",
+      "passed": true,
+      "detail": "Zero Golden Ratio / Golden State placeholders across apps/web, packages, src, docs/ops"
+    },
+    {
+      "name": "public_copy_boundary",
+      "passed": true,
+      "detail": "5/5 core public pages free of internal simulation/math jargon"
+    },
+    {
+      "name": "hard_safety_gates_fail_closed",
+      "passed": true,
+      "detail": "platform-config PUBLIC_PICKS_ENABLED=false and autonomous-fabric safety env locked"
+    },
+    {
+      "name": "workflows_valid_and_no_stub_bounds",
+      "passed": true,
+      "detail": "All 15 workflow YAMLs valid; gsi-frontier-bounds executes real checks"
+    }
+  ],
+  "receipt_sha256": "e14719399916cc6f2a7cdba2864d14a038f201fa155e2c126549d23ec2fac446"
+}

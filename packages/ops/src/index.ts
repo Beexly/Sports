@@ -64,3 +64,15 @@ export {
   type CloudMonitoringChartSpec,
   type CloudMonitoringSloBundle,
 } from "./gcp-path36-runtime.js";
+
+export {
+  ENTITY_GOVERNANCE_RECORD,
+  AUTONOMOUS_WORKFLOW_REGISTRY,
+  validateAutonomousWorkflowRegistry,
+  summarizeAutonomyCoverage,
+  type AutonomousDomain,
+  type CostLane,
+  type EntityGovernanceRecord,
+  type AutonomousWorkflowSpec,
+  type WorkflowRegistryValidationResult,
+} from "./autonomous-workflow-registry.js";
