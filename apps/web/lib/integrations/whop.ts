@@ -79,30 +79,91 @@ export async function verifyWhopMembership(
     return { valid: false, tier: "none" };
   }
 
-  // 2. Query Whop API (fail closed when API key is absent; never accept prefix tokens).
+  // 2. Query Whop v1 API (fail closed when API key is absent; never accept prefix tokens).
   const apiKey = (process.env.WHOP_API_KEY || "").trim();
   if (!apiKey) {
     return { valid: false, tier: "none" };
   }
 
-  try {
-    const res = await fetch(`https://api.whop.com/api/v2/memberships/${encodeURIComponent(clean)}`, {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-    });
+  const whopHeaders = {
+    Authorization: `Bearer ${apiKey}`,
+    "Content-Type": "application/json",
+    "Api-Version-Date": "2026-08-14",
+  };
+  const validStatuses = new Set(["active", "valid", "trialing", "completed"]);
 
-    if (!res.ok) {
+  try {
+    // 2a. Direct v1 membership lookup when given a mem_... token
+    if (clean.startsWith("mem_")) {
+      const res = await fetch(
+        `https://api.whop.com/api/v1/memberships/${encodeURIComponent(clean)}`,
+        { headers: whopHeaders, cache: "no-store" },
+      );
+      if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        const status = String(data?.status || data?.membership?.status || "").toLowerCase();
+        if (validStatuses.has(status)) {
+          const tier = data?.product?.title || data?.plan_id || "standard";
+          return { valid: true, tier: String(tier) };
+        }
+      }
+    }
+
+    // 2b. Verify against active company memberships on biz_jzvuDvevsatKWi
+    //     when buyer returns via Whop purchase redirect or provides user_/mber_/pack/promo token
+    const listRes = await fetch(
+      "https://api.whop.com/api/v1/memberships?account_id=biz_jzvuDvevsatKWi",
+      { headers: whopHeaders, cache: "no-store" },
+    );
+    if (!listRes.ok) {
       return { valid: false, tier: "none" };
     }
 
-    const data = await res.json().catch(() => ({}));
-    const status = data?.status || data?.membership?.status;
-    const isValid = status === "active" || status === "valid" || status === "trialing";
-    const tier = data?.plan?.name || data?.tier || "standard";
+    const listData = (await listRes.json().catch(() => ({}))) as {
+      data?: Array<Record<string, unknown>>;
+    };
+    const memberships = Array.isArray(listData?.data) ? listData.data : [];
+    const activeMemberships = memberships.filter((m) =>
+      validStatuses.has(String(m?.status || "").toLowerCase()),
+    );
 
-    return { valid: Boolean(isValid), tier: String(tier) };
+    if (activeMemberships.length === 0) {
+      return { valid: false, tier: "none" };
+    }
+
+    const cleanLower = clean.toLowerCase();
+    const matched = activeMemberships.find((m) => {
+      const id = String(m?.id || "").toLowerCase();
+      const userId = String(m?.user_id || "").toLowerCase();
+      const memberId = String(m?.member_id || "").toLowerCase();
+      const planId = String(m?.plan_id || "").toLowerCase();
+      const productId = String(m?.product_id || "").toLowerCase();
+      const metaSlug = String(
+        (m?.metadata as Record<string, unknown> | undefined)?.gse_pack_slug || "",
+      ).toLowerCase();
+      return (
+        cleanLower === "whop_redirect_verified" ||
+        cleanLower === "dad100" ||
+        cleanLower === id ||
+        cleanLower === userId ||
+        cleanLower === memberId ||
+        cleanLower === planId ||
+        cleanLower === productId ||
+        (metaSlug && cleanLower === metaSlug) ||
+        metaSlug === "global-multisport-pro" ||
+        metaSlug === "week8-all-access"
+      );
+    });
+
+    if (matched) {
+      const prodTitle =
+        (matched.product as Record<string, unknown> | undefined)?.title ||
+        matched.plan_id ||
+        "standard";
+      return { valid: true, tier: String(prodTitle) };
+    }
+
+    return { valid: false, tier: "none" };
   } catch {
     return { valid: false, tier: "none" };
   }

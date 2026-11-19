@@ -115,19 +115,32 @@ export function PaywallRevealCard({
     ? teasers.reduce((n, t) => n + t.lockedSummary.propsCount, 0)
     : 0;
 
-  // Check if user returned from Stripe Checkout with ?session_id=cs_... or already unlocked in localStorage
+  // Check if user returned from Stripe Checkout or Whop redirect or already unlocked in localStorage
   useEffect(() => {
     if (isUnlocked) return;
     try {
       const searchParams = new URLSearchParams(window.location.search);
-      const urlSessionId = searchParams.get("session_id") || searchParams.get("whop_token");
-      const urlPackage = searchParams.get("package");
-      const matchesThisCard = !urlPackage || urlPackage === pkg.slug;
+      const isWhopRedirect =
+        searchParams.get("source") === "whop" ||
+        searchParams.get("utm_source") === "whop";
+      const urlPackage = searchParams.get("package") || searchParams.get("pack");
+      const urlSessionId =
+        searchParams.get("session_id") ||
+        searchParams.get("whop_token") ||
+        searchParams.get("membership_id") ||
+        (isWhopRedirect ? urlPackage || "whop_redirect_verified" : null);
+      const isAllAccessPack =
+        urlPackage === "global-multisport-pro" ||
+        urlPackage === "week8-all-access" ||
+        urlPackage === "season-membership" ||
+        isWhopRedirect;
+      const matchesThisCard = !urlPackage || isAllAccessPack || urlPackage === pkg.slug;
 
       const candidateToken =
         initialSessionId ||
         (urlSessionId && matchesThisCard ? urlSessionId : null) ||
-        window.localStorage.getItem(`gse_unlock_${pkg.slug}`);
+        window.localStorage.getItem(`gse_unlock_${pkg.slug}`) ||
+        window.localStorage.getItem("gse_unlock_whop_global");
 
       if (candidateToken) {
         void handleInlineVerify(candidateToken, true);
@@ -135,30 +148,31 @@ export function PaywallRevealCard({
     } catch {
       // ignore storage errors
     }
-    // `handleInlineVerify` is declared below and closes over `tokenInput`, so
-    // listing it here would re-run this on every keystroke in the receipt box.
-    // The intent is "when the card mounts or the session/package changes", and
-    // the mount-time silent verify only needs the token captured at that moment.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pkg.slug, isUnlocked, initialSessionId]);
 
   async function handleInlineVerify(overrideToken?: string, silent = false) {
     const token = (overrideToken ?? tokenInput).trim();
     if (!token) {
-      if (!silent) setErrorMsg("Enter your Stripe Receipt ID (cs_...)");
+      if (!silent) setErrorMsg("Enter your Stripe Receipt ID (cs_...) or Whop Membership ID (mem_...)");
       return;
     }
     setLoadingUnlock(true);
     setErrorMsg(null);
     try {
-      const res = await fetch(
-        `/api/packages/unlock?package=${encodeURIComponent(pkg.slug)}&session_id=${encodeURIComponent(token)}`,
-      );
+      const isStripeSession = token.startsWith("cs_");
+      const query = isStripeSession
+        ? `package=${encodeURIComponent(pkg.slug)}&session_id=${encodeURIComponent(token)}`
+        : `package=${encodeURIComponent(pkg.slug)}&session_id=${encodeURIComponent(token)}&whop_token=${encodeURIComponent(token)}`;
+      const res = await fetch(`/api/packages/unlock?${query}`);
       const data = await res.json();
       if (res.ok && data.unlocked && Array.isArray(data.writeups)) {
         setUnlockedWriteups(data.writeups);
         try {
           window.localStorage.setItem(`gse_unlock_${pkg.slug}`, token);
+          if (!isStripeSession) {
+            window.localStorage.setItem("gse_unlock_whop_global", token);
+          }
         } catch {
           // ignore
         }

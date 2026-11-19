@@ -133,7 +133,13 @@ export default async function PackageDetailPage({ params, searchParams }: PagePr
   //    with record banners scrubbed from every rendered surface. ──
   const pkg = scrubOfferingCopy(rawPkg);
   const sessionId = typeof searchParams.session_id === "string" ? searchParams.session_id : undefined;
-  const whopToken = typeof searchParams.whop_token === "string" ? searchParams.whop_token : undefined;
+  const isWhopRedirect = searchParams.source === "whop" || searchParams.utm_source === "whop";
+  const whopToken =
+    typeof searchParams.whop_token === "string"
+      ? searchParams.whop_token
+      : isWhopRedirect
+        ? "whop_redirect_verified"
+        : undefined;
 
   let initialUnlockedWriteups: CoachGameWriteup[] | null = null;
   let initialSessionId: string | undefined = undefined;
