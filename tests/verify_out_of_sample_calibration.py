@@ -26,6 +26,11 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from evaluation.frozen.score_walkforward_calibration_v1 import (  # noqa: E402
+    equal_mass_ece,
+    expected_calibration_error,
+    paired_brier_empirical_bernstein_lcb,
+)
 from research.hypotheses.multi_game_glycogen_and_pinn_sandbox import (  # noqa: E402
     compute_alam_football_crosswind_drag,
     compute_eager_split_pass_epa_shrinkage_and_poisson_td,
@@ -76,6 +81,17 @@ def run_historical_backtest_eval(
     brier_delta = base_brier - adv_brier
     crps_delta = base_crps - adv_crps
 
+    if len(historical_actuals) >= 2:
+        base_ece = expected_calibration_error(historical_actuals, baseline_probs, n_bins=10)
+        adv_ece = expected_calibration_error(historical_actuals, advanced_physics_probs, n_bins=10)
+        base_em_ece = equal_mass_ece(historical_actuals, baseline_probs)
+        adv_em_ece = equal_mass_ece(historical_actuals, advanced_physics_probs)
+        eb_lcb = paired_brier_empirical_bernstein_lcb(
+            historical_actuals, baseline_probs, advanced_physics_probs
+        )["lcb"]
+    else:
+        base_ece = adv_ece = base_em_ece = adv_em_ece = eb_lcb = 0.0
+
     is_approved_for_production = (
         (log_loss_delta > 0.0) and (brier_delta > 0.0) and (crps_delta > 0.0)
     )
@@ -90,6 +106,12 @@ def run_historical_backtest_eval(
         "baseline_crps": round(base_crps, 5),
         "advanced_crps": round(adv_crps, 5),
         "crps_delta": round(crps_delta, 5),
+        "baseline_ece": round(base_ece, 5),
+        "advanced_ece": round(adv_ece, 5),
+        "ece_delta": round(base_ece - adv_ece, 5),
+        "baseline_equal_mass_ece": round(base_em_ece, 5),
+        "advanced_equal_mass_ece": round(adv_em_ece, 5),
+        "paired_brier_eb_lcb": eb_lcb,
         "PROMOTION_GATE_STATUS": "APPROVED" if is_approved_for_production else "REJECTED",
     }
 
@@ -346,6 +368,14 @@ def run_real_nflverse_walk_forward_backtests() -> dict[str, dict[str, Any]]:
 
     results["research_gated_zero_weight_invariant"] = verify_zero_live_weight_invariant()
 
+    from intelligence.coaching.causal_positional_vulnerability_engine import (
+        evaluate_causal_15p_walkforward_oos,
+    )
+
+    results["stream_15p_causal_pos_vuln_walkforward"] = evaluate_causal_15p_walkforward_oos(
+        eval_weeks=tuple(range(4, 11))
+    )
+
     return results
 
 
@@ -402,6 +432,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         if not rg_res.get("all_zero_weight") or int(rg_res.get("quarantined_module_count", 0)) < 4:
             print(
                 "EPISTEMIC GATE FAILURE: research_gated zero-weight invariant failed",
+                file=sys.stderr,
+            )
+            return 1
+        s15p = suite.get("stream_15p_causal_pos_vuln_walkforward") or {}
+        if not s15p.get("beats_raw_dvp_and_baseline"):
+            print(
+                "EPISTEMIC GATE FAILURE: Stream 15P failed walk-forward OOS dominance check",
                 file=sys.stderr,
             )
             return 1
