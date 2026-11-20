@@ -1,12 +1,6 @@
 ---
 name: claude-delegate
-description: >-
-  Delegate a coding task to a separate Claude Code CLI process or another Claude session as an
-  implementer, then review its diff and land it yourself. Use only when the user explicitly asks to
-  delegate implementation to Claude Code, another Claude session, or the `claude` CLI — for example,
-  "have another Claude implement this", "delegate this to Claude Code", or "run this queue through a
-  separate Claude session." Do not trigger merely because the current orchestrator is Claude, and do
-  not use when the user asks the current Claude to implement directly without delegation.
+description: Delegate one bounded coding task to a separate Claude Code CLI session, then review and land the diff yourself.
 license: MIT
 compatibility: Requires the `claude` CLI (Claude Code) installed and authenticated, Node 18+, and git. The orchestrating agent must be able to run shell commands and read files. Claude's shell sandbox requires macOS, Linux, or WSL2; native Windows launch is pending verification.
 metadata:
@@ -45,6 +39,7 @@ explicitly asks for delegation to another Claude Code process or session.
 4. On Linux/WSL2, Claude's sandbox dependencies are installed. The normal relay profile is
    configured to fail when the sandbox is unavailable instead of silently running shell commands
    unsandboxed. Existing merged settings can still affect the effective boundary.
+5. Pass explicit `--brief` and `--cd` flags (`--lane` requires the optional `delegate-setup` companion skill, which is not installed in this repo).
 
 ## The loop
 

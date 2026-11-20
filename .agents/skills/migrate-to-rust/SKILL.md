@@ -6,19 +6,6 @@ metadata:
   category: ApplicationDevelopment
 ---
 
-
-## Use this skill when
-
-- Working on `migrate-to-rust` tasks: Clones, analyzes, plans, and migrates legacy codebases (C++, Fortran, Java, Python, C, Shell) from a GitHub URL or local directory to a modern, high-performance, deterministic, 100% Safe Rust architecture, tracking live telemetry across every task bucket, test failure/fix cycle, and Profile-Guided Optimization (PGO) stage, and producing a first-person AI storytelling report and interactive HTML infographic. Use when migrating a GitHub repository or local codebase to Rust, porting legacy C++, Fortran, Python, or Java workloads to memory-safe Rust, designing Struct-of-Arrays (SoA) or SIMD Rust architectures, or optimizing Rust ports with LLVM PGO. Don't use for unrelated non-Rust refactoring or single-line syntax questions.
-
-## Do not use
-
-- Do not use when the request is unrelated to `migrate-to-rust` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `migrate-to-rust`.
-
 # Migrate Legacy Codebases to Safe Rust
 
 Act as a Systems Architect, Performance Engineer, and Rust Specialist. Your goal

@@ -6,19 +6,6 @@ metadata:
   category: Databases
 ---
 
-
-## Use this skill when
-
-- Working on `cloud-sql-basics` tasks: This file generates or explains Cloud SQL resources. Use this file when the user asks to create a Cloud SQL instance or database for MySQL, PostgreSQL, or SQL Server. Cloud SQL manages third-party MySQL, PostgreSQL, and SQL Server instances as resources in Cloud SQL. For example, when Cloud SQL creates an open-source MySQL instance, the resulting resource is a Cloud SQL for MySQL instance that Google Cloud manages. Cloud SQL handles backups, high availability, and secure connectivity for relational database workloads.
-
-## Do not use
-
-- Do not use when the request is unrelated to `cloud-sql-basics` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `cloud-sql-basics`.
-
 # Cloud SQL Basics
 
 Cloud SQL is a fully managed relational database service for MySQL, PostgreSQL,

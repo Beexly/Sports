@@ -6,19 +6,6 @@ metadata:
   category: GoogleAnalytics
 ---
 
-
-## Use this skill when
-
-- Working on `google-analytics-data-api-basics` tasks: Manages Google Analytics reporting data, enables the Analytics Data API via the Cloud CLI, and creates reports using the Google Analytics Data API (v1beta). Use when you need to interact with Google Analytics properties, run customized analytics reports, query metrics (like activeUsers, screenPageViews) and dimensions (like city, date), check metrics and dimensions compatibility, or verify API enablement. Don't use for Google Analytics Admin API operations (e.g., creating properties, managing users) or for front-end tracking installation.
-
-## Do not use
-
-- Do not use when the request is unrelated to `google-analytics-data-api-basics` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `google-analytics-data-api-basics`.
-
 # Getting Started with Google Analytics Data API
 
 The Google Analytics Data API v1beta provides programmatic access to Google

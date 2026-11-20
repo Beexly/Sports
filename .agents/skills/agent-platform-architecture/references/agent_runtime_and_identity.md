@@ -279,7 +279,7 @@ curl -N -X POST "https://${REGION}-aiplatform.googleapis.com/v1/${RE_NAME}:strea
 ```bash
 export PROJECT_ID="gov-hub-proj" PROJECT_NUMBER="111111111111" REGION="us-central1"
 export ORG_ID="999999999999" ENGINE_ID="5555555555555555555" AUTH_PROVIDER_ID="downstream-api-oauth"
-AGENT_PRINCIPAL="principal://agents.global.org-${ORG_ID}.system.id.goog/workspace/resources/aiplatform/projects/${PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}"
+AGENT_PRINCIPAL="principal://agents.global.org-${ORG_ID}.system.id.goog/resources/aiplatform/projects/${PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}"
 
 curl -s -X POST "https://agentidentity.googleapis.com/v1/projects/${PROJECT_ID}/locations/${REGION}/authProviders?authProviderId=${AUTH_PROVIDER_ID}" \
   -H "Authorization: Bearer $(gcloud auth print-access-token)" -H "Content-Type: application/json" \
@@ -288,11 +288,11 @@ curl -s -X POST "https://agentidentity.googleapis.com/v1/projects/${PROJECT_ID}/
 
 3.  **SPIFFE X.509 URI vs. IAM Principal Translation Format**:
     -   **X.509 Certificate SAN (SPIFFE URI)**:
-        `spiffe://agents.global.org-${ORG_ID}.system.id.goog/workspace/resources/aiplatform/projects/${PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}`
+        `spiffe://agents.global.org-${ORG_ID}.system.id.goog/resources/aiplatform/projects/${PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}`
     -   **Google Cloud IAM and UAP Policy V2 Principal Format**:
-        `principal://agents.global.org-${ORG_ID}.system.id.goog/workspace/resources/aiplatform/projects/${PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}`
+        `principal://agents.global.org-${ORG_ID}.system.id.goog/resources/aiplatform/projects/${PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}`
         (always use the full
-        `system.id.goog/workspace/resources/aiplatform/projects/${PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}`
+        `system.id.goog/resources/aiplatform/projects/${PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}`
         path with numeric `PROJECT_NUMBER`, never a shortened
         `vertex/reasoning-engine/<name>` slug).
 

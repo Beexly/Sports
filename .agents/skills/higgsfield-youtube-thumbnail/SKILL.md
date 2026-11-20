@@ -7,7 +7,6 @@ metadata:
   argument-hint: '[video-topic-or-title] [--image <face-or-logo>] [--ratio 16:9|9:16|4:5]'
 ---
 
-
 # Higgsfield YouTube Thumbnail
 
 Create a clean thumbnail concept, generate each variant through the `higgsfield` CLI, inspect it, and make only requested surgical edits.
@@ -179,16 +178,3 @@ Return the passing `result_url` values with short semantic labels such as `shock
 
 - `references/thumbnail-frameworks.md` — 16 concept frameworks, information-gap rule, truthfulness law.
 - `references/text-overlay-bake.md` — five deterministic text-overlay styles and 4K canvas-bake recipe.
-
-## Use this skill when
-
-- Executing `higgsfield-youtube-thumbnail` workflows, asset generation, or domain verification within the GSE/GSI pipeline.
-
-## Instructions
-
-1. Follow the domain rules and step-by-step procedures defined in this `higgsfield-youtube-thumbnail` skill specification.
-
-## Do not use this skill when
-
-- Performing unrelated tasks outside the scope of `higgsfield-youtube-thumbnail`.
-

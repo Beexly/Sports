@@ -6,19 +6,6 @@ metadata:
   category: CloudInfrastructureAndServices
 ---
 
-
-## Use this skill when
-
-- Working on `gcloud` tasks: Provides safety-critical validation, guardrails, and data reduction for gcloud CLI operations across Google Cloud Platform (GCP) services and infrastructure. Use when planning, generating, constructing, proposing, describing, or executing any gcloud CLI commands - including when answering questions about gcloud syntax, or formatting flags. Don't use when writing Google Cloud client library code or raw REST/gRPC API requests.
-
-## Do not use
-
-- Do not use when the request is unrelated to `gcloud` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `gcloud`.
-
 # gcloud CLI Skill for AI Agents
 
 > [!CAUTION]

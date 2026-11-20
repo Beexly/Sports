@@ -150,7 +150,7 @@ RESOURCE_ID=$(basename "${REGISTRY_RESOURCE}")
 gcloud iap web add-iam-policy-binding \
   --project="${AGW_PROJECT_ID}" --region="${REGION}" \
   --resource-type=agent-registry --mcp-server="${RESOURCE_ID}" \
-  --member="principal://agents.global.org-${ORG_ID}.system.id.goog/workspace/resources/aiplatform/projects/${AE_PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}" \
+  --member="principal://agents.global.org-${ORG_ID}.system.id.goog/resources/aiplatform/projects/${AE_PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}" \
   --role="roles/iap.egressor" \
   --condition="^:^expression=(api.getAttribute('iap.googleapis.com/mcp.method', '') in ['initialize', 'tools/list'] && api.getAttribute('iap.googleapis.com/mcp.toolName', '') == '') || (api.getAttribute('iap.googleapis.com/mcp.method', '') == 'tools/call' && api.getAttribute('iap.googleapis.com/mcp.toolName', '') == 'get_weather'):title=AllowDiscoveryAndTool" \
   --quiet
@@ -187,7 +187,7 @@ gcloud iap web add-iam-policy-binding \
 ### 3.1 Empty `toolName` and Null-Dereference Guards
 
 During MCP `initialize` and `tools/list` handshakes, no specific tool name is
-present (`""`), and during non-tool calls (`prompts/list`, `workspace/resources/read`),
+present (`""`), and during non-tool calls (`prompts/list`, `resources/read`),
 `destination.agent_registry.mcp_server.tool` is null. Always check `method ==
 'tools'` first and permit empty tool names (`tool.name == ''` in UAP Policy V2
 or `api.getAttribute('iap.googleapis.com/mcp.toolName', '') == ''` in IAP V1).

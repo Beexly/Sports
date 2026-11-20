@@ -7,19 +7,6 @@ metadata:
   category: AiAndMachineLearning
 ---
 
-
-## Use this skill when
-
-- Working on `gemini-api` tasks: Use when the user asks about using Gemini in an enterprise environment or explicitly mentions Vertex AI, Google Cloud, or Agent Platform. Guides the usage of the Gemini API on Agent Platform with the Google Gen AI SDK. Covers SDK usage (Python, JS/TS, Go, Java, C#), capabilities like multimodal inputs, tools, media generation, caching, batch prediction, and Live API.
-
-## Do not use
-
-- Do not use when the request is unrelated to `gemini-api` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `gemini-api`.
-
 > [!IMPORTANT]
 > Agent Platform (full name Gemini Enterprise Agent Platform) was previously named "Vertex AI" and many web resources use the legacy branding.
 
@@ -95,7 +82,7 @@ export GOOGLE_GENAI_USE_ENTERPRISE=true
 ```
 
 - By default, use `location="global"` to access the global endpoint, which provides automatic routing to regions with available capacity.
-- If a user explicitly asks to use a specific region (e.g., `us-central1`, `europe-west4`), specify that region in the `GOOGLE_CLOUD_LOCATION` parameter instead. Reference the [supported regions documentation](https://docs.cloud.google.com/gemini-enterprise-agent-platform/workspace/resources/locations.md.txt) if needed.
+- If a user explicitly asks to use a specific region (e.g., `us-central1`, `europe-west4`), specify that region in the `GOOGLE_CLOUD_LOCATION` parameter instead. Reference the [supported regions documentation](https://docs.cloud.google.com/gemini-enterprise-agent-platform/resources/locations.md.txt) if needed.
 
 ### Agent Platform in Express Mode
 Set these variables when using [Express Mode](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/start/api-keys.md.txt) with an API key:

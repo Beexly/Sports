@@ -1,12 +1,11 @@
 ---
 name: higgsfield-generate
-description: 'Generate images/videos/3D assets/audio via Higgsfield AI. Defaults: GPT Image 2 for image/design/text, Seedance 2.0 for video, Nano Banana 2/Lite/Pro for character/reference images, Marketing Studio for ads, Seed Audio 1.0 for audio. Use when: "generate an image", "make a video", "animate this photo", "image-to-video", "edit/stylize/remix this image", "reframe this video", "edit this video from a sketch", "create a 3D model/GLB", "create a sound effect", "make music", "text-to-audio", "create an ad", "make a UGC video", "unboxing", "presenter video", "import product from URL", or "analyze video virality". Supports generic generation, workflows, Marketing Studio, and Virality Predictor. Chain with higgsfield-soul-id for face/identity consistency. NOT for: Soul training, brand systems/brandbooks (use higgsfield-brandkit), photoshoots, cards, YouTube thumbnails (use higgsfield-youtube-thumbnail), explainers (use higgsfield-video-explainer), playable games/assets (use higgsfield-game-ge...'
+description: 'Generate images/videos/3D assets/audio via Higgsfield AI. Defaults: GPT Image 2 for image/design/text, Seedance 2.0 for video, Nano Banana 2/Lite/Pro for character/reference images, Marketing Studio for ads, Seed Audio 1.0 for audio. Use when: "generate an image", "make a video", "animate this photo", "image-to-video", "edit/stylize/remix this image", "reframe this video", "edit this video from a sketch", "create a 3D model/GLB", "create a sound effect", "make music", "text-to-audio", "create an ad", "make a UGC video", "unboxing", "presenter video", "import product from URL", or "analyze video virality". Supports generic generation, workflows, Marketing Studio, and Virality Predictor. Chain with higgsfield-soul-id for face/identity consistency. NOT for: Soul training, brand systems/brandbooks (use higgsfield-brandkit), photoshoots, cards, YouTube thumbnails (use higgsfield-youtube-thumbnail), explainers (use higgsfield-video-explainer), explainers (use higgsfield-video-explainer), or full websites/games (use higgsfield-websites).'
 allowed-tools: Bash
 metadata:
   version: 0.12.0
   argument-hint: '[prompt-or-analysis-request] [--model <name>] [--image|--video <path-or-id>]'
 ---
-
 
 # Higgsfield Generate
 
@@ -21,7 +20,6 @@ Before any other command:
    curl -fsSL https://raw.githubusercontent.com/higgsfield-ai/cli/main/install.sh | sh
    ```
 2. If `higgsfield account status` fails with `Session expired` / `Not authenticated`, ask the user to run `higgsfield auth login` (interactive) and wait for confirmation.
-
 
 ## UX Rules
 
@@ -93,7 +91,7 @@ If the user says "analyze this video", "score this ad", "evaluate the hook", or 
    - Rate a finished video's hook, virality potential, attention, retention, or distraction risk → Virality Predictor (`brain_activity`). This is a video analysis model that returns a text score/report, not a generated media asset.
 
    **3D:**
-   - A 3D asset within a playable game or game-wide asset system → use `higgsfield-game-generation`.
+   - A 3D asset within a playable game or game-wide asset system → use `higgsfield-websites --type game` (game art & web integration).
    - Create an actual 3D mesh/model/GLB from one or more object/product reference images → Multi-Image to 3D (`multi_image_to_3d`). Pass 1–4 images with repeated `--image`; use `--should_texture true` when the asset needs texture. If the user only asks for a 3D-rendered picture, use an image model instead.
 
    **Audio:**
@@ -307,16 +305,3 @@ Load on demand:
 - `references/marketing-brand-kits.md` — brand kits (fetch from URL, list, get)
 - `references/marketing-dtc-ads.md` — DTC Ads Engine (`dtc-ads generate`)
 - `references/marketing-modes.md` — every Marketing Studio mode
-
-## Use this skill when
-
-- Executing `higgsfield-generate` workflows, asset generation, or domain verification within the GSE/GSI pipeline.
-
-## Do not use this skill when
-
-- Performing unrelated tasks outside the scope of `higgsfield-generate`.
-
-## Instructions
-
-1. Follow the domain rules and step-by-step procedures defined in this `higgsfield-generate` skill specification.
-

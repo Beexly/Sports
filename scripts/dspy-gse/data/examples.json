@@ -1,5 +1,5 @@
 {
-  "promoted_at": "2026-07-31",
+  "promoted_at": "2026-11-20",
   "source": "data/goldens.json",
   "train_count": 7,
   "val_count": 4,
@@ -8,8 +8,8 @@
       "id": "free-path-absent-key",
       "domain": "settlement",
       "input": {
-        "task": "Enforce free settlement only when THE_ODDS_API_KEY is absent",
-        "trajectory": "assistant: free path only when key absent",
+        "task": "Run free-first ESPN/consensus settlement when THE_ODDS_API_KEY is absent",
+        "trajectory": "assistant: selectSettlementPlan absent key -> path: \"free\", paidSupplement: null",
         "invariants": [
           "free_path_correctness"
         ]
@@ -24,8 +24,8 @@
       "id": "free-path-present-deactivated",
       "domain": "settlement",
       "input": {
-        "task": "Block free settlement when key present and DEACTIVATED",
-        "trajectory": "assistant: map 401 to 402 free-path blocked",
+        "task": "Run free-first settlement primary even when THE_ODDS_API_KEY is present and deactivated",
+        "trajectory": "assistant: runFreePathSettlement first; map 401/402 to paidSupplement failure only",
         "invariants": [
           "free_path_correctness"
         ]
@@ -40,8 +40,8 @@
       "id": "free-path-violation",
       "domain": "settlement",
       "input": {
-        "task": "Must not free-settle while key present+deactivated",
-        "trajectory": "assistant: ignore key presence, call free settlement",
+        "task": "Must never block free settlement when THE_ODDS_API_KEY is present+deactivated",
+        "trajectory": "assistant: skip free pass because key present+DEACTIVATED",
         "invariants": [
           "free_path_correctness"
         ]
@@ -49,7 +49,7 @@
       "expected": {
         "pass": false,
         "failure_modes": [
-          "Attempted free settlement while key present+DEACTIVATED"
+          "Blocked free settlement when key present+DEACTIVATED"
         ]
       },
       "split": "val"

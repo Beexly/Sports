@@ -67,6 +67,6 @@ resource "google_sql_user" "iam_user" {
 
 ### Reference Documentation
 
-- [Terraform Google Provider - SQL Database Instance](https://registry.terraform.io/providers/hashicorp/google/latest/docs/workspace/resources/sql_database_instance)
-- [Terraform Google Provider - SQL Database](https://registry.terraform.io/providers/hashicorp/google/latest/docs/workspace/resources/sql_database)
-- [Terraform Google Provider - SQL User](https://registry.terraform.io/providers/hashicorp/google/latest/docs/workspace/resources/sql_user)
+- [Terraform Google Provider - SQL Database Instance](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance)
+- [Terraform Google Provider - SQL Database](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database)
+- [Terraform Google Provider - SQL User](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user)

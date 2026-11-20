@@ -1,6 +1,6 @@
 ---
 name: polymarket-hold
-description: Polymarket is a compliance hold, not unfinished product work. Use when asked to finish/enable Polymarket markets.
+description: Polymarket is a compliance hold, not unfinished product work. Refuse ticket creation or market enablement without counsel clearance.
 effort: medium
 allowed-tools: Read, Grep, Glob, Bash(npm run *), Bash(node scripts/*)
 ---
@@ -8,16 +8,9 @@ allowed-tools: Read, Grep, Glob, Bash(npm run *), Bash(node scripts/*)
 # Polymarket compliance hold
 
 ## Law
-Polymarket / prediction-market integrations are on **compliance hold**.
-They are **not** incomplete features. Agents must **refuse** to open tickets,
-build markets, or re-enable crons without counsel registry grant.
+Polymarket and prediction-market integrations are on **compliance hold** — they are **not** incomplete product features. Never open build tickets, enable market ingestion, or schedule `/api/cron/gamma` without a counsel-approved `source-rights-registry` entry.
 
-## Correct behavior
-- Label as compliance hold in plans and PRs
-- Point to `docs/ops/ORBIT_UNLOCK.md` non-actions
-- Keep `cleared: false` for unregistered prediction sources in source-router
-
-## Incorrect behavior
-- "Finish Polymarket integration"
-- Enabling gamma cron without grant
-- Treating hold as tech debt
+## Required Behavior & Verification
+- Document prediction-market status strictly as `compliance hold` (`docs/ops/ORBIT_UNLOCK.md`).
+- Keep `polymarket-gamma` and unregistered prediction sources at `cleared: false` in `apps/web/lib/data-sources/source-router.ts`.
+- Done when `npm run agent:eval` (`router-cleared-flags` & `polymarket-hold`) exits `0`.

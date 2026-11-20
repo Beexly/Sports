@@ -5,8 +5,10 @@ metadata:
   source: https://github.com/neondatabase/agent-skills/tree/main/skills/neon
 ---
 
-
 # Neon
+
+> [!NOTE]
+> **GSE Repo Override (`Beexly/Sports`):** Prisma 5.22 (`packages/db/prisma/schema.prisma`) is the canonical ORM and Vercel/GitHub manage secrets — never edit `.env*` files or follow Drizzle snippets here. Companion skills referenced below (`neon-postgres-branches`, `neon-functions`, etc.) are optional external catalog skills not installed locally.
 
 Important: Neon is no longer just a Postgres provider. Neon is a complete set of cloud backend primitives built around Lakebase Postgres, for developers, startups, and agent platforms, from Databricks — bundling Lakebase Postgres, Auth (managed Better Auth), long-running Functions, Object Storage, and an AI Gateway, all instant, branchable, and serverless.
 
@@ -447,16 +449,3 @@ neon neon-auth domain delete <domain> # remove one you no longer use
 ```
 
 If the workspace isn't linked, pass `--project-id <id>` (and `--branch <id|name>`) explicitly. For local development, `neon neon-auth domain allow-localhost` manages whether `localhost` is permitted. Register the domain before pointing users at the new URL, so they never hit the `invalid domain` error.
-
-## Use this skill when
-
-- Executing `neon` workflows, asset generation, or domain verification within the GSE/GSI pipeline.
-
-## Do not use this skill when
-
-- Performing unrelated tasks outside the scope of `neon`.
-
-## Instructions
-
-1. Follow the domain rules and step-by-step procedures defined in this `neon` skill specification.
-

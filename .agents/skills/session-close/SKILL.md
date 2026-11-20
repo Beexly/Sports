@@ -1,89 +1,31 @@
 ---
 name: session-close
-description: Close out a session properly - full verification, STATE.md update, ledger reconciliation, and handoff. Use at the end of any working session, before opening a PR, or when the session is dying and you need to land an honest partial.
-allowed-tools: Bash(npm run *), Bash(git *), Read, Edit, Grep, Glob
+description: Manual end-of-session verification, docs/ops/STATE.md update, ledger reconciliation, and commit handoff checklist.
+disable-model-invocation: true
+allowed-tools: Bash(npm run *), Bash(npx *), Bash(git *), Read, Edit, Grep, Glob
 ---
-
-
-## Use this skill when
-
-- Working on `session-close` tasks: Close out a session properly - full verification, STATE.md update, ledger reconciliation, and handoff. Use at the end of any working session, before opening a PR, or when the session is dying and you need to land an honest partial.
-
-## Do not use
-
-- Do not use when the request is unrelated to `session-close` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `session-close`.
 
 # Session close
 
-Manual-only on purpose: you decide when a session ends, not the model.
+Manual-only checklist executed when closing out a session or preparing a PR/commit handoff.
 
-The cheap per-turn checks (typecheck, ledger, agent:eval) already ran on every
-turn via the Stop hook. This skill runs the expensive ones once, then does the
-bookkeeping that the hook cannot do for you.
-
-## 1. Full verification — actually run these, read the real exit codes
-
-```
-npm run guardrails     # ~22 guards
-npm run build          # production build must succeed
+## 1. Run Full Verification Directly (No Truncating Pipes)
+Run the project gates required by your changes and inspect exact exit codes without piping through `head` or `tail`:
+```powershell
+npm run guardrails
+npm run build --workspace=@sports/web
+npm run check:ledger
 ```
 
-Never pipe either through `head`/`tail`. That has hidden a real failure before.
+## 2. Independent Diff Review & Status Check
+- Spawn an independent `auditor` or `code-reviewer` subagent (or review the complete `git diff` / `git status --short` yourself) to confirm scope discipline and ensure no temporary artifacts or pytest side-effect noise remain staged.
 
-## 2. Cold review before the PR
+## 3. Reconcile Ledger & `docs/ops/STATE.md`
+- Update any owned rows in `docs/ops/AGENT_LEDGER.md` (`DONE` requires a verified 7+ hex SHA from `git rev-parse --verify <sha>` and push confirmation; unpushed commits stay `UNPUSHED`; owner-only tasks stay `OWNER_GATE`).
+- Keep `docs/ops/STATE.md` concise (~60 lines: ground truth, owner queue <= 3, quarantined/in-flight items).
 
-Spawn the `cold-reviewer` subagent on the diff range. Give it the exact range and
-say what the change was supposed to do — it cannot see this conversation and will
-not infer intent. Read its Scope Check section carefully: files touched that the
-task does not explain are the finding a tidy summary will never surface.
+## 4. Structured Commit / Handoff Block
+Include explicit observed verification results, pushed branch + SHA, and a `NOT RUN / NOT VERIFIED` line for anything skipped. Never claim unverified passes or modify frozen `.claude/settings.json`, `.claude/hooks/`, or `.githooks/`.
 
-Then read `git diff` yourself. Start with the diff, not with any summary of it.
-
-## 3. Reconcile the ledger
-
-Every row you own: update it now, not in a batch. `DONE` requires a resolvable
-7+ hex SHA or `#PR` in Evidence — verify with `git rev-parse --verify <sha>`
-before writing it. Cannot push? The status is `UNPUSHED` with branch + SHA,
-never `DONE`. Never self-mark a founder-owned row DONE (C-60).
-
-Then `npm run check:ledger`.
-
-## 4. Update STATE.md
-
-Hard cap ~60 lines. The founder reads one page. Four sections: current ground
-truth, the founder queue (max 3), what is quarantined awaiting verification,
-what is in flight. Anything sourced from an agent handoff stays quarantined until
-checked against the ledger and the truth surface.
-
-A session that ends without updating STATE.md has not finished.
-
-## 5. Handoff block
-
-Append to the final commit message or PR body:
-
-```
-## SESSION HANDOFF — sonnet/<branch> — <date>
-BRANCH+PUSHED: sonnet/<slug> @ <sha>  (PRs: #<n> ...)
-LEDGER ROWS: <id> CLAIMED→DONE (evidence <sha>) | <id> BLOCKED (<exact error>)
-VERIFY: typecheck 0 errors [RUN] · lint exit 0 [RUN] · vitest <file> green [RUN]
-        check:ledger [RUN] · agent:eval [RUN] · guardrails [RUN/NOT RUN] · build [RUN/NOT RUN]
-VERDICTS (edge work): <bind> → SURVIVOR/KILLED/STARVED/PARKED (e=<value>)
-CI MINUTES: <pushes this session, [skip ci] commits noted>
-NOT RUN / NOT VERIFIED: <explicit list — never omit this line>
-OWNER ASKS: <operator-only steps, founder-YES items, corpus files needed>
-NEXT ACTION for successor: <one concrete step, with file paths>
-```
-
-The `NOT RUN / NOT VERIFIED` line is never omitted. An honest partial beats a
-polished fiction, and the founder must be able to read any commit in two minutes
-and keep-or-drop with confidence.
-
-## If the session is dying
-
-Commit what verifies, push the branch, update the ledger, write
-`.claude/.stop-override` with the reason. The ledger holds state. Being cut off
-is survivable; a fabricated completion is not.
+## Completion Criteria
+Done when required guards/build pass, `docs/ops/STATE.md` and `docs/ops/AGENT_LEDGER.md` match git state, and working tree is clean on target remote branch.

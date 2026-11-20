@@ -7,19 +7,6 @@ metadata:
   publisher: google
 ---
 
-
-## Use this skill when
-
-- Working on `bigquery-ai-ml` tasks: Leverages BigQuery's built-in machine learning and GenAI capabilities for advanced data analytics. Use when you need to write SQL queries that perform time-series forecasting, predict values, detect outliers or anomalies, find key drivers, perform semantic search or vector search, classify text, calculate similarity, summarize content, translate language, evaluate models, filter by semantic conditions, measure the causal effect of an intervention, compute correlations between columns, generate descriptive statistics and table distribution profiles, detect change points or structural breaks, extract trend or seasonality components, or leverage generative AI capabilities in BigQuery. Do not use for general BigQuery dataset, table, or job management requests.
-
-## Do not use
-
-- Do not use when the request is unrelated to `bigquery-ai-ml` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `bigquery-ai-ml`.
-
 # BigQuery AI & ML
 
 BigQuery integrates with Vertex AI to provide powerful machine learning and
@@ -65,5 +52,5 @@ Function                      | Reference                                       
 
 ## Related Skills
 
--   [BigQuery Basics Skill](../bigquery-basics): SKILL.md file for core BigQuery
+-   `bigquery-basics` (optional external Google Cloud catalog skill; not installed locally)
     concepts, resource management, CLI, and client libraries.

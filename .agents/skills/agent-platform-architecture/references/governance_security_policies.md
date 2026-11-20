@@ -197,14 +197,14 @@ Target: `//cloudresourcemanager.googleapis.com/projects/${PROJECT_NUMBER}`
     {
       "description": "Allow specific Reasoning Engine to invoke mutating tool on registered MCP server",
       "effect": "ALLOW",
-      "principals": ["principal://agents.global.org-${ORG_ID}.system.id.goog/workspace/resources/aiplatform/projects/${PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}"],
+      "principals": ["principal://agents.global.org-${ORG_ID}.system.id.goog/resources/aiplatform/projects/${PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}"],
       "operation": {"permissions": ["iap.googleapis.com/resources.egressViaIAP"]},
       "conditions": {"iap.googleapis.com": {"title": "allow_mcp_mutating_tool", "expression": "(destination.is_registered == true) && (destination.agent_registry.resource_type == 'MCP_SERVER') && (destination.agent_registry.mcp_server.name == 'projects/${TOOLS_PROJECT_ID}/locations/${REGION}/mcpServers/${MCP_SERVER_NAME}') && (destination.agent_registry.mcp_server.method == 'tools') && (destination.agent_registry.mcp_server.tool.name == '' || destination.agent_registry.mcp_server.tool.name == '${TOOL_NAME}')"}}
     },
     {
       "description": "Allow specific Reasoning Engine constrained read/create access to external REST API",
       "effect": "ALLOW",
-      "principals": ["principal://agents.global.org-${ORG_ID}.system.id.goog/workspace/resources/aiplatform/projects/${PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}"],
+      "principals": ["principal://agents.global.org-${ORG_ID}.system.id.goog/resources/aiplatform/projects/${PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}"],
       "operation": {"permissions": ["iap.googleapis.com/resources.egressViaIAP"]},
       "conditions": {"iap.googleapis.com": {"title": "allow_external_rest_api", "expression": "(destination.is_registered == false) && (destination.unregistered.host == 'api.example.com') && ((destination.unregistered.path == '/v1/records') || (destination.unregistered.path == '/v1/records.json') || (destination.unregistered.path.startsWith('/v1/records?')) || (destination.unregistered.path.startsWith('/v1/records.json?'))) && (destination.unregistered.method in ['GET', 'POST'])"}}
     }
@@ -231,7 +231,7 @@ Target: `//cloudresourcemanager.googleapis.com/projects/${PROJECT_NUMBER}`
     (`api.getAttribute('iap.googleapis.com/mcp.toolName', '') == '' ||
     api.getAttribute('iap.googleapis.com/mcp.toolName', '') == '{tool}'`).
 2.  **CEL Null Dereference on Non-Tool MCP Methods**: Calling `prompts/list` or
-    `workspace/resources/read` returns HTTP 500 because `tool` struct is null. Prepend
+    `resources/read` returns HTTP 500 because `tool` struct is null. Prepend
     `(destination.agent_registry.mcp_server.method == 'tools')` before
     dereferencing `tool.*`.
 3.  **Unqualified Tool Name or Org Google API Wildcard**: Confused deputy risk

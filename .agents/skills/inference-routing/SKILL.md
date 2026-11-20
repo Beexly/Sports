@@ -1,37 +1,26 @@
 ---
 name: inference-routing
-description: MODEL_PRIMARY/MODEL_CHEAP routing and free-lane cost control. Use when changing Claude surfaces or model tiers.
+description: MODEL_PRIMARY, MODEL_CHEAP, and MODEL_OPUS routing and free-lane cost controls across Claude and OpenRouter surfaces.
+effort: medium
 allowed-tools: Read, Grep, Glob, Bash(npm run *), Bash(node scripts/*)
 ---
 
-
-## Use this skill when
-
-- Working on `inference-routing` tasks: MODEL_PRIMARY/MODEL_CHEAP routing and free-lane cost control. Use when changing Claude surfaces or model tiers.
-
-## Do not use
-
-- Do not use when the request is unrelated to `inference-routing` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `inference-routing`.
-
 # Inference routing (GSE)
 
-## In-repo
-- `apps/web/lib/claude-api/model-router.ts` — `resolveModelCatalog`, SURFACE_TIER
-- `provider-dispatch.ts` · `free-lane.ts` · cost-monitor / usage-store
+## In-repo Modules
+- `apps/web/lib/claude-api/model-router.ts` — `resolveModelCatalog`, `SURFACE_TIER`
+- `apps/web/lib/claude-api/provider-dispatch.ts` — provider dispatch & OpenRouter fallback
+- `apps/web/lib/claude-api/free-lane.ts` — free-lane capacity router
+- `apps/web/lib/claude-api/cost-monitor.ts` & `usage-store.ts` — spend tracking
+- `apps/web/lib/claude-api/messages.ts` — long/static system prompt cache opt-in
 
-## Laws
-1. Prefer Flash / haiku (`MODEL_CHEAP`) for high-volume non-critical surfaces.
-2. Sonnet-tier via `MODEL_PRIMARY` for quality surfaces.
-3. Prompt cache system prompts where long+static (`messages.ts` cache opt-in).
-4. Do **not** self-host GPU / DeepSpeed clusters (HARD NON-GOAL).
-5. Do not adopt full Vercel AI SDK stack without a written decision (see vercel-ai-sdk-decision.md).
+## Routing Laws
+1. Route high-volume / routine extraction & formatting surfaces to **`MODEL_CHEAP`** (`claude-haiku-4-5-20251001` or free OpenRouter tiers).
+2. Route synthesis & reasoning surfaces via **`MODEL_PRIMARY`** (`claude-sonnet-4-6`) and reserve **`MODEL_OPUS`** (`claude-opus-4-8`) for frontier escalation only.
+3. Opt long static system prompts into prompt caching (`messages.ts`).
+4. Never self-host GPU or DeepSpeed clusters (**hard non-goal**).
+5. Keep direct SDK discipline unless an ADR revises `.claude/skills/inference-routing/vercel-ai-sdk-decision.md`.
 
-## Env
-- `MODEL_PRIMARY` / `CLAUDE_MODEL_PRIMARY`
-- `MODEL_CHEAP` / `CLAUDE_MODEL_CHEAP`
-
-Unset = default MODELS catalog in model-router.
+## Env Overrides & Verification
+- `MODEL_PRIMARY` / `CLAUDE_MODEL_PRIMARY`, `MODEL_CHEAP` / `CLAUDE_MODEL_CHEAP`, `MODEL_OPUS` / `CLAUDE_MODEL_OPUS` (unset defaults to `MODELS` catalog in `model-router.ts`).
+- Done when `npm run guard:claude-api` and `npm run agent:eval` exit `0`.

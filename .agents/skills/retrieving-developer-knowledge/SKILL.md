@@ -6,19 +6,6 @@ metadata:
   category: CloudInfrastructureAndServices
 ---
 
-
-## Use this skill when
-
-- Working on `retrieving-developer-knowledge` tasks: Searches, retrieves, and synthesizes official Google developer documentation across Google Cloud, AI/Gemini, Android, Chrome, Web, Flutter, Go, Firebase, and other Google developer platforms. Integrates with the Developer Knowledge MCP server (search_documents, get_documents, answer_query) or the Developer Knowledge REST API fallback. Use when searching for gcloud CLI commands, API syntax, IAM permissions, official documentation, architectural comparisons, or product choice overviews. Don't use for local filesystem lookups or non-Google documentation.
-
-## Do not use
-
-- Do not use when the request is unrelated to `retrieving-developer-knowledge` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `retrieving-developer-knowledge`.
-
 # Google Developer Knowledge
 
 The Developer Knowledge skill provides access to official Google developer documentation across Google Cloud, AI/ML (ai.google.dev, ADK, TensorFlow), Android, Chrome, Web, Flutter, Go, Firebase, and other Google developer platforms via the Developer Knowledge MCP server or REST API fallback.

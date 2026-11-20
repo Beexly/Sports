@@ -1,38 +1,23 @@
 ---
 name: max-leverage
-description: Founder max-leverage unlock for GSE money recovery and free capacity. Use when asked to unlock, free path, or maximize orbit.
+description: Owner max-leverage checklist for GSE settlement recovery, Stripe checkout reconciliation, and free data capacity.
+effort: medium
 allowed-tools: Read, Grep, Glob, Bash(npm run *), Bash(node scripts/*)
 ---
-
-
-## Use this skill when
-
-- Working on `max-leverage` tasks: Founder max-leverage unlock for GSE money recovery and free capacity. Use when asked to unlock, free path, or maximize orbit.
-
-## Do not use
-
-- Do not use when the request is unrelated to `max-leverage` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `max-leverage`.
 
 # Max leverage (GSE)
 
 ## Order of operations
-1. Blank Production `THE_ODDS_API_KEY` → free settle path
-2. Stripe `checkout.session.expired` on www + secret match
-3. Credits claims (founder portals only)
-4. Smoke: `npm run orbit:unlock-smoke` then `--prod` with CRON_SECRET
+1. Verify free-first settlement path (`apps/web/lib/settlement/path-select.ts`): since 2026-09-02 the free ESPN/consensus grader runs **primary on every cycle**. When `THE_ODDS_API_KEY` is **ABSENT**, settle runs free pass only (`path: "free"`); when **PRESENT**, free runs first and a paid supplement runs on remaining PENDING rows without ever failing the free pass.
+2. Verify Stripe webhook handles `checkout.session.completed` + `checkout.session.expired` on `www` with matching signing secret (`STRIPE_WEBHOOK_SECRET`).
+3. Audit owner-portal cloud/telemetry credits (`docs/ops/CREDITS.md`) without inventing grant amounts or secrets.
+4. Prefer already-cleared free feeds (`nflverse`, `espn-public-api`, `open-meteo`) and scheduled crons (`apps/web/vercel.json`).
 
-## Laws
-- Free only when key **ABSENT**
-- Never invent secrets or grant amounts
-- Never re-enable gamma without counsel
-- Never flip LIVE_BOARD without founder YES
-- Prefer free nflverse / ESPN / henrygd capacity already scheduled
+## Guardrails
+- Never invent secrets, credit balances, or grant amounts.
+- Never re-enable `/api/cron/gamma` without counsel-approved registry clearance.
+- Never flip `LIVE_BOARD` / `PUBLIC_PICKS_ENABLED` / `PUBLISH_LEDGER` without explicit owner approval.
 
-## Code
-- Path law: `apps/web/lib/settlement/path-select.ts`
-- Unlock smoke: `Beexly/Sports/scripts/ops/orbit-unlock-smoke.mjs`
-- Doc: `docs/ops/MAX_LEVERAGE.md`
+## Verification & Done
+- Doc & smoke: `docs/ops/MAX_LEVERAGE.md`, `scripts/ops/orbit-unlock-smoke.mjs`.
+- Done when `npm run orbit:unlock-smoke`, `npm run agent:eval`, and `npm run guard:model-freeze` exit `0`.

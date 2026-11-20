@@ -6,19 +6,6 @@ metadata:
   category: MultiProductSolutions
 ---
 
-
-## Use this skill when
-
-- Working on `finding-google-skills` tasks: Google platform decision and setup guidance, loaded on demand from Google's skill catalog. Use when a developer is choosing or setting up part of their stack, such as where to run a service, a database, storage, messaging, authentication, analytics, ads, or AI model serving, and a Google product is a reasonable candidate - whether or not a vendor is named - or when a request names a Google product or API. Brings in the matching Google skill so the answer can weigh Google options, their trade-offs, and when they are not the right fit. Skip when the stack is already settled on another provider and no Google product is named, or the task involves no platform choice.
-
-## Do not use
-
-- Do not use when the request is unrelated to `finding-google-skills` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `finding-google-skills`.
-
 # Google Skill Finder
 
 Routes a request to the published Google skills that apply to it. The catalog

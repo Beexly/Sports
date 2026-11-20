@@ -1,22 +1,10 @@
 ---
 name: agent-platform-eval-flywheel
-description: Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when generating synthetic user scenarios, evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.
+description: Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when generating synthetic user scenarios, evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. Fine-tuning and production deployment runbooks belong to separate external Agent Platform catalog skills (not installed locally).
 metadata:
   version: 1.0.4
   category: AiAndMachineLearning
 ---
-
-## Use this skill when
-
-- Working on `agent-platform-eval-flywheel` tasks: Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when generating synthetic user scenarios, evaluating an agent or model, building an eval dataset, picking or writing evaluation metrics, analyzing failures, comparing results before and after a fix, or when guidance is needed on Agent Platform eval methodology — including dataset schema, LLM-as-judge scoring, and common failure causes. For fine-tuning, use agent-platform-tuning. For general production deployment, use agent-platform-deploy.
-
-## Do not use
-
-- Do not use when the request is unrelated to `agent-platform-eval-flywheel` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `agent-platform-eval-flywheel`.
 
 # Agent Platform Eval Flywheel Skill
 
@@ -487,4 +475,4 @@ Save `response.model_dump_json()` and render with `scripts/render_html_report.py
 
 ### 5. Optimize & Iterate
 
-Apply a fix targeting the failing metric. Re-run Stage 3. Compare with
+Apply a fix targeting the failing metric, re-run Stage 3, and compare held-out scores against the prior baseline.

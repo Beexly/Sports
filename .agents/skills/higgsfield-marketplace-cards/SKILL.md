@@ -7,7 +7,6 @@ metadata:
   argument-hint: '[--scope main|product-images|aplus|full-set] [prompt]'
 ---
 
-
 # Marketplace Cards
 
 Create marketplace-ready product visuals with `higgsfield marketplace-cards create`.
@@ -78,16 +77,3 @@ Marketplace cards ready:
 ```
 
 Avoid JSON, job IDs, internal model names, or enhanced prompt text unless the user explicitly asks.
-
-## Use this skill when
-
-- Executing `higgsfield-marketplace-cards` workflows, asset generation, or domain verification within the GSE/GSI pipeline.
-
-## Do not use this skill when
-
-- Performing unrelated tasks outside the scope of `higgsfield-marketplace-cards`.
-
-## Instructions
-
-1. Follow the domain rules and step-by-step procedures defined in this `higgsfield-marketplace-cards` skill specification.
-

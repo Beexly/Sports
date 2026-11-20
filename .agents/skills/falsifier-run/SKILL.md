@@ -1,73 +1,27 @@
 ---
 name: falsifier-run
-description: Run a bind through the falsifier and record the verdict. Use when running falsifyBind, evaluating whether an edge survives, recording SURVIVOR/KILLED/STARVED/PARKED, or executing a falsifier sweep over shipped binds.
-allowed-tools: Read, Grep, Glob, Bash(npx vitest run *), Bash(git show *), Bash(git checkout origin/hermes/w2-audit-settlement -- *)
+description: Run a bind through falsifyBind and record verbatim SURVIVOR, KILLED, STARVED, or PARKED verdicts.
+allowed-tools: Read, Grep, Glob, Bash(npx vitest run *), Bash(git show *)
 ---
-
-
-## Use this skill when
-
-- Working on `falsifier-run` tasks: Run a bind through the falsifier and record the verdict. Use when running falsifyBind, evaluating whether an edge survives, recording SURVIVOR/KILLED/STARVED/PARKED, or executing a falsifier sweep over shipped binds.
-
-## Do not use
-
-- Do not use when the request is unrelated to `falsifier-run` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `falsifier-run`.
 
 # Falsifier run
 
-This procedure was previously §10 of the always-on operating prompt, where it
-loaded on every session whether or not any falsifier work happened. It now loads
-only when the task is actually this.
+## Before Running: Verify the Instrument
+Confirm `packages/prediction-engine/src/edge-lab/falsify.ts` and `packages/prediction-engine/src/edge-lab/__tests__/falsify.test.ts` pass locally:
+```powershell
+npx vitest run --minWorkers=1 --maxWorkers=2 packages/prediction-engine/src/edge-lab/__tests__/falsify.test.ts
+```
+Green before use. Stop if the harness test fails.
 
-## Before anything: the instrument must be acceptable
+## Executing `falsifyBind`
+- Supply real backtest rows: `{ knownAtWeek, outcomeWeek, season, outcome, modelProb }`.
+- Never pass `confidence / 100` as `modelProb` (C-28: confidence is market-structural, not independent model probability), and never pass `last_price` as `q`. Compute independent `p` first, then `e = p - q`.
+- Record the verdict verbatim with exact e-values (`SURVIVOR`, `KILLED`, `STARVED`, `PARKED`). Never soften a `KILLED` verdict.
 
-The falsifier was broken in four distinct ways for its entire life (C-65, supM,
-C-70, C-74). Every verdict it produced before those fixes is void. So:
+## After the Run & Boundaries
+- Commit the verdict log under `handoff/` and cite its verified SHA in `docs/ops/AGENT_LEDGER.md`.
+- Have an independent reviewer subagent (`auditor` / `code-reviewer`) audit headline metrics before citing them in `docs/ops/STATE.md`.
+- Never arm a live track, flip public gates, or claim an edge beyond recorded falsifier statistics.
 
-1. Confirm the acceptance harness is green — planted edge + pure noise +
-   inverted, at n ∈ {100, 1k, 5k}. If the harness does not exist yet, building it
-   is the task, not this.
-2. If `packages/prediction-engine/src/edge-lab/falsify.ts` is not on this branch,
-   acquire it and its test from the research branch:
-   ```
-   git checkout origin/hermes/w2-audit-settlement -- \
-     packages/prediction-engine/src/edge-lab/falsify.ts \
-     packages/prediction-engine/src/edge-lab/__tests__/falsify.test.ts
-   npx vitest run packages/prediction-engine/src/edge-lab/__tests__/falsify.test.ts
-   ```
-   Green before use. Not green means stop.
-
-## The run
-
-Build real backtest rows: `{knownAtWeek, outcomeWeek, season, outcome, modelProb}`.
-
-Never use `confidence/100` as `modelProb` — it is market-structural, not an
-independent model probability (C-28). Never use `last_price` as `q`. Independent
-`p` first, then `e = p − q`.
-
-Run `falsifyBind`. Record the verdict verbatim, with e-values:
-
-- `SURVIVOR` — passed all four kill tests
-- `KILLED` — failed one. Never soften a KILLED. A clean KILLED is a win: it is
-  publishable to the kill ledger, on-brand, and the question finally has an answer.
-- `STARVED` — n below minN, e-value preserved
-- `PARKED` — starved bind held for later
-
-## After the run
-
-Commit the verdict log durably under `handoff/` on this branch, then cite that
-SHA from the AGENT_LEDGER row. A verdict that exists only in a session transcript
-does not exist.
-
-Then hand the headline numbers to the `stat-adversary` subagent before any of
-them enter STATE.md or the battle plan. Builder never verifies own work.
-
-## What this skill will not do
-
-Arm anything. Arming a live track is founder-YES only. Publish anything (C-32,
-until an e-process crosses 20). Claim an edge — the scoreboard counts survivors,
-and surviving one falsifier pass is not the same as having an edge.
+## Completion Criteria
+Done when `falsify.test.ts` passes, verbatim verdict log is written with exact sample sizes/e-values, and independent verification is logged.

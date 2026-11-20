@@ -7,7 +7,6 @@ metadata:
   argument-hint: '[name] [photo paths...]'
 ---
 
-
 # Higgsfield Soul Character
 
 Train a face-faithful identity model. Reusable across all Soul-powered generations.
@@ -73,16 +72,3 @@ higgsfield soul-id get <id>               # one by id
 
 - `references/photo-guide.md` — what photos work best
 - `references/troubleshooting.md` — common training failures
-
-## Use this skill when
-
-- Executing `higgsfield-soul-id` workflows, asset generation, or domain verification within the GSE/GSI pipeline.
-
-## Do not use this skill when
-
-- Performing unrelated tasks outside the scope of `higgsfield-soul-id`.
-
-## Instructions
-
-1. Follow the domain rules and step-by-step procedures defined in this `higgsfield-soul-id` skill specification.
-

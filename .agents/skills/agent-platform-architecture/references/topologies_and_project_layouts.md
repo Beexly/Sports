@@ -181,7 +181,7 @@ curl -s -X POST "https://networksecurity.googleapis.com/v1/projects/${AGW_PROJEC
   -H "Authorization: Bearer $(gcloud auth print-access-token)" -H "Content-Type: application/json" \
   -d "{\"policy\":{\"version\":3,\"etag\":\"${ETAG}\",\"bindings\":[{\"role\":\"roles/compute.networkUser\",\"members\":[\"serviceAccount:service-${AE_PROJECT_NUMBER}@gcp-sa-aiplatform-re.iam.gserviceaccount.com\"]}]}}"
 export AGENT_PRINCIPAL_SET="principalSet://agents.global.org-${ORG_ID}.system.id.goog/attribute.platformContainer/aiplatform/projects/${AE_PROJECT_NUMBER}"
-export AGENT_PRINCIPAL="principal://agents.global.org-${ORG_ID}.system.id.goog/workspace/resources/aiplatform/projects/${AE_PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${RE_ID}"
+export AGENT_PRINCIPAL="principal://agents.global.org-${ORG_ID}.system.id.goog/resources/aiplatform/projects/${AE_PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${RE_ID}"
 gcloud projects add-iam-policy-binding "${AGW_PROJECT_ID}" --member="${AGENT_PRINCIPAL_SET}" --role="roles/agentregistry.viewer"
 gcloud run services add-iam-policy-binding "${MCP_SERVICE}" --project="${MCP_PROJECT_ID}" --region="${REGION}" \
   --member="${AGENT_PRINCIPAL}" --role="roles/run.invoker"
@@ -320,7 +320,7 @@ ingress rules covering these principal categories:
     addressGroup (`roles/compute.networkUser`), staging buckets, and Tool Spoke
     services.
 6.  **Category 6 —
-    `principal://agents.global.org-${ORG_ID}.system.id.goog/workspace/resources/aiplatform/projects/${AGENT_PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}`**
+    `principal://agents.global.org-${ORG_ID}.system.id.goog/resources/aiplatform/projects/${AGENT_PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}`**
     (or `principalSet://...` plus the impersonated data-plane SA
     `serviceAccount:${DATA_PLANE_SA_EMAIL}`): Target `aiplatform`,
     `agentregistry`, `iap`, `agentidentity`, `agentidentitycredentials`,
@@ -361,7 +361,7 @@ ingress rules covering these principal categories:
     resources: ["projects/${AGENT_PROJECT_NUMBER}", "projects/${GOV_PROJECT_NUMBER}"]
 - ingressFrom:
     identities:
-      - "principal://agents.global.org-${ORG_ID}.system.id.goog/workspace/resources/aiplatform/projects/${AGENT_PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}"
+      - "principal://agents.global.org-${ORG_ID}.system.id.goog/resources/aiplatform/projects/${AGENT_PROJECT_NUMBER}/locations/${REGION}/reasoningEngines/${ENGINE_ID}"
   ingressTo:
     operations:
       - {serviceName: iamcredentials.googleapis.com, methodSelectors: [{method: "*"}]}

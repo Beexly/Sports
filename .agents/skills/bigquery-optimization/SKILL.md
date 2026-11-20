@@ -1,23 +1,10 @@
 ---
 name: bigquery-optimization
-description: Provides workflows to optimize BigQuery environments (capacity planning, editions), storage assets (partitioning, clustering, storage lifecycles, billing models), and SQL queries. Use when optimizing cost, modeling Edition migrations, rightsizing reservations, evaluating logical vs. physical storage, designing table partitioning/clustering, generating table DDL, migrating unpartitioned tables, managing partition expiration, optimizing individual SQL queries, or evaluating acceleration structures (search indexes, materialized views, BI Engine). Do not use for raw usage reporting (use bigquery-observability), query execution plan analysis, error troubleshooting, or diagnosing why a specific job was slow (use bigquery-troubleshooting).
+description: Provides workflows to optimize BigQuery environments (capacity planning, editions), storage assets (partitioning, clustering, storage lifecycles, billing models), and SQL queries. Use when optimizing cost, modeling Edition migrations, rightsizing reservations, evaluating logical vs. physical storage, designing table partitioning/clustering, generating table DDL, migrating unpartitioned tables, managing partition expiration, optimizing individual SQL queries, or evaluating acceleration structures (search indexes, materialized views, BI Engine). Do not use for raw usage reporting, query execution plan triage, or troubleshooting (separate external BigQuery catalog skills).
 metadata:
   version: 1.1.1
   category: BigDataAndAnalytics
 ---
-
-
-## Use this skill when
-
-- Working on `bigquery-optimization` tasks: Provides workflows to optimize BigQuery environments (capacity planning, editions), storage assets (partitioning, clustering, storage lifecycles, billing models), and SQL queries. Use when optimizing cost, modeling Edition migrations, rightsizing reservations, evaluating logical vs. physical storage, designing table partitioning/clustering, generating table DDL, migrating unpartitioned tables, managing partition expiration, optimizing individual SQL queries, or evaluating acceleration structures (search indexes, materialized views, BI Engine). Do not use for raw usage reporting (use bigquery-observability), query execution plan analysis, error troubleshooting, or diagnosing why a specific job was slow (use bigquery-troubleshooting).
-
-## Do not use
-
-- Do not use when the request is unrelated to `bigquery-optimization` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `bigquery-optimization`.
 
 # BigQuery Optimization Workflow
 
@@ -89,7 +76,7 @@ workflow:
 
 -   **Telemetry & Observability Baseline:** For direct raw usage telemetry,
     `INFORMATION_SCHEMA` queries, and baseline metric calculations, consult
-    [bigquery-observability](../bigquery-observability)
+    `bigquery-observability` (optional external catalog skill)
     (`bigquery_observability`). If the `bigquery-observability` companion skill
     is not available in the active environment, all optimization guidelines, DDL
     templates, and decision models across this skill and its reference guides

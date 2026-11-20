@@ -6,18 +6,6 @@ metadata:
   category: AiAndMachineLearning
 ---
 
-## Use this skill when
-
-- Working on `agent-platform-inference` tasks: Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, DeepSeek, Qwen, etc.). Use when asked to perform inference, ask a model a question, run a test prompt, execute chat completions, or generate code for calling Gemini or OpenMaaS models, authenticate with GenAI SDK, OpenAI SDK, or legacy Agent Platform SDK, configure base URLs and global/regional endpoints, or troubleshoot 429 Resource Exhausted (DSQ), 400 User Validation, or 404 Not Found errors. Don't use for deploying models to endpoints or for running model evaluations.
-
-## Do not use
-
-- Do not use when the request is unrelated to `agent-platform-inference` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `agent-platform-inference`.
-
 # Agent Platform GenAI Inference Skill
 
 This skill provides instructions for authenticating and connecting to Google
@@ -28,7 +16,7 @@ Cloud Agent Platform to use Generative AI models. It covers:
     — section 3.
 *   **Custom endpoints** (any model on a numeric `projects/.../endpoints/<id>`
     resource — tuned Gemini models, OSS LLMs self-deployed from Model Garden
-    via the `agent-platform-deploy` skill, and legacy custom models) —
+    via external Agent Platform deployment catalog skills, and legacy custom models) —
     section 4.
 
 ## Attribution
@@ -408,9 +396,6 @@ complete code.
 
 > [!TIP] **Alternative: Environment Variables** You can set environment
 > variables in your shell instead of updating the code.
->
-> **Alternative: Environment Variables** You can set environment variables in
-> your shell instead of updating the code.
 
 ```bash
 export OPENAI_BASE_URL="https://aiplatform.googleapis.com/v1/projects/YOUR_PROJECT_ID/locations/global/endpoints/openapi"
@@ -487,4 +472,4 @@ the complete code.
 > Completions payload structure): 1. Consult the
 > [Use Open Models on Agent Platform](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/use-open-models)
 > list. 2. Click the link for your specific model (e.g., "DeepSeek-V3") to visit
-> its **Model Garden** page. 3. Look for the **"Sample Code"** or **"Use this
+> its **Model Garden** page, then inspect **"Sample Code"** to verify the endpoint request/response payload.

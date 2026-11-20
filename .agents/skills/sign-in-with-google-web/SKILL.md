@@ -6,19 +6,6 @@ metadata:
   version: 1.0.0
 ---
 
-
-## Use this skill when
-
-- Working on `sign-in-with-google-web` tasks: Implement, configure, and secure Sign In With Google (SiwG) using Google Identity Services (GIS / `https://accounts.google.com/gsi/client`) across web architectures. Use when creating Google sign-in buttons, implementing Google One Tap with FedCM, integrating GIS in React/Next.js/Angular/HTML, verifying ID tokens on backend runtimes (Python/Node.js/Go/Java), enforcing Google Workspace domain restrictions (`hd`), securing client-side ID tokens via WebCrypto nonces or encrypted IndexedDB, embedding in cross-origin iframes via the Intermediate Iframe API (`https://accounts.google.com/gsi/intermediate`), configuring Content Security Policy (CSP), COOP, and Permissions Policy (`identity-credentials-get`) headers, or handling sign-out and revocation. Don't use for legacy Google Sign-In (`gapi.auth2`), Google Cloud IAM service accounts, or Android/iOS native Credential Manager.
-
-## Do not use
-
-- Do not use when the request is unrelated to `sign-in-with-google-web` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `sign-in-with-google-web`.
-
 # Sign In With Google (SiwG) Integration & Security Architecture
 
 This skill provides normative architectural guidelines, secure implementation

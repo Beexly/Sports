@@ -6,19 +6,6 @@ metadata:
   category: Serverless
 ---
 
-
-## Use this skill when
-
-- Working on `cloud-run-basics` tasks: Manages Cloud Run services, jobs, and worker pools. Use when you need to deploy applications responding to HTTP requests (services), run event-triggered or scheduled tasks (jobs), or handle always-on pull-based background processing (worker pools).
-
-## Do not use
-
-- Do not use when the request is unrelated to `cloud-run-basics` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `cloud-run-basics`.
-
 # Cloud Run Basics
 
 Cloud Run is a fully managed application platform for running your code,

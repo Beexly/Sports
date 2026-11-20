@@ -1,40 +1,26 @@
 ---
 name: dspy-gepa
-description: Offline GEPA/DSPy skill compile for GSE. Use when optimizing agent skills or prompt metrics without live product changes.
+description: Offline GEPA/DSPy skill compile and metric verification for GSE without live product mutations.
+effort: medium
 allowed-tools: Read, Grep, Glob, Bash(node scripts/dspy-gse/*), Bash(npm run dspy:gse*)
 ---
 
-
-## Use this skill when
-
-- Working on `dspy-gepa` tasks: Offline GEPA/DSPy skill compile for GSE. Use when optimizing agent skills or prompt metrics without live product changes.
-
-## Do not use
-
-- Do not use when the request is unrelated to `dspy-gepa` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `dspy-gepa`.
-
 # DSPy / GEPA (GSE offline)
 
-## Laws (Session 2 extract)
-1. Metric must return **`Prediction(score, feedback)`** — feedback drives reflection.
-2. **Reflection LM temperature = 1.0** (diversity). Do not lower it "to be safe."
-3. **Task LM temperature = 0** (deterministic eval).
-4. Default budget: **`auto="light"`**. MIPROv2 only after light plateaus.
-5. Promote fixtures → **Examples** with explicit train/val (`promote.mjs`).
-6. Named metric: **`gse_metric`** in `Beexly/Sports/scripts/dspy-gse/gse_metric.mjs`.
-7. Never touch settlement/Stripe/outbox code from a GEPA run.
+## Laws (Session 2 Extract)
+1. Metric **`gse_metric`** (`scripts/dspy-gse/gse_metric.mjs`) returns `Prediction(score, feedback)` — diagnostic feedback drives reflection.
+2. **Reflection LM temperature = 1.0** (diversity; never lower).
+3. **Task LM temperature = 0** (deterministic evaluation).
+4. Default budget: **`auto="light"`** (`scripts/dspy-gse/gepa_config.json`; MIPROv2 only after `light` plateaus).
+5. Promote `scripts/dspy-gse/data/goldens.json` -> `data/examples.json` via `scripts/dspy-gse/promote.mjs` only when intentionally updating examples.
+6. Never mutate settlement, Stripe, or outbox product code during a GEPA compile.
 
-## Commands
-```bash
-node Beexly/Sports/scripts/dspy-gse/promote.mjs   # goldens → data/examples.json
-node Beexly/Sports/scripts/dspy-gse/run.mjs       # gse_metric dry-run + config assert
-npm run dspy:gse
+## Commands & Hygiene
+```powershell
+node scripts/dspy-gse/run.mjs --check   # read-only verification across .claude + .agents skills
+npm run dspy:gse                         # promotes goldens -> examples.json and evaluates
 ```
+- Note: `scripts/dspy-gse/gse_metric.mjs` is Node ESM; for live Python `dspy` (`dspy==3.3.0`) reflection runs, wrap `node scripts/dspy-gse/run.mjs --check` or keep reflection prompts aligned with `gepa_config.json`.
 
-## Live GEPA (operator + keys)
-Install Python `dspy`, wire `gse_metric` as metric_fn, set reflection temp 1.0 / task temp 0 / auto=light.
-Config contract: `Beexly/Sports/scripts/dspy-gse/gepa_config.json`.
+## Completion Criteria
+Done when `node scripts/dspy-gse/run.mjs --check` exits `0` with `config_ok: true` and `failed: 0`.

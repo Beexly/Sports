@@ -1,41 +1,21 @@
 ---
 name: coding-agent
-description: Minimal-diff coding on GSE money path. Use when editing webhooks, settlement, outbox, or clearance. Prefer reuse over rewrite.
+description: Minimal-diff coding on the GSE money path. Use when editing webhooks, settlement, outbox, clearance, or calibration wiring.
+effort: medium
 allowed-tools: Read, Grep, Glob, Bash(npm run typecheck*), Bash(npm run lint*), Bash(npm run test*), Bash(npm run guardrails*), Bash(npm run guard:*), Bash(npm run agent:eval*)
 ---
 
-
-## Use this skill when
-
-- Working on `coding-agent` tasks: Minimal-diff coding on GSE money path. Use when editing webhooks, settlement, outbox, or clearance. Prefer reuse over rewrite.
-
-## Do not use
-
-- Do not use when the request is unrelated to `coding-agent` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `coding-agent`.
-
 # Coding agent (GSE)
 
-## Laws
-1. Prefer minimal diffs; do not rebuild settlement/Stripe/outbox that already work.
-2. Before editing webhooks, read the existing handler; reuse idempotency (`stripeEventId`).
-3. Adding `checkout.session.expired` must mirror completed-event idempotency.
-4. Polymarket = compliance hold — refuse feature work.
-5. Clearance honesty: unregistered sources must be `cleared: false`.
-6. Free-path gate: free only if `THE_ODDS_API_KEY` is **absent**.
-7. Calibration/Kelly changes stay behind R&D gates unless founder enables.
+## Rules
+1. Prefer minimal diffs in existing modules; delegate deep domain rules to the specialized skills (`stripe-webhook`, `checkout-attempt`, `settlement-free-path`, `clearance-registry`, `calibration-pipeline`, `polymarket-hold`).
+2. Webhook edits reuse `webhookEvent.stripeEventId` idempotency and outbox `claimVersion` + lease semantics (`apps/web/app/api/webhooks/stripe/route.ts`).
+3. Settlement follows the 2026-09-02 **free-first primary** law (`apps/web/lib/settlement/path-select.ts`): free ESPN/consensus grading runs first on every cycle whether `THE_ODDS_API_KEY` is absent or present (key presence only adds a PENDING-scoped paid supplement).
+4. Polymarket and unregistered prediction-market sources stay `cleared: false` under compliance hold.
+5. Calibration/Kelly sizing remains behind `CALIBRATION_ADJUSTMENTS_ENABLED` and `MODEL_VERSION` freeze gates.
 
-## Touchpoints
+## Touchpoints & Completion Criteria
 - Webhook: `apps/web/app/api/webhooks/stripe/route.ts`
 - Settle cron: `apps/web/app/api/cron/settle-picks/route.ts`
 - Router: `apps/web/lib/data-sources/source-router.ts`
-- Outbox: existing lease + `claimVersion` only
-- Eval after change: `npm run agent:eval`
-
-## Do not
-- Invent new locking
-- Soften free-path law
-- Wire CIR into live scoring without `CALIBRATION_ADJUSTMENTS_ENABLED`
+- Done when `npm run agent:eval`, `npm run guardrails`, and affected route Vitest suites exit `0`.

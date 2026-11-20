@@ -7,7 +7,6 @@ metadata:
   argument-hint: '[brand brief or existing assets] [requested deliverables]'
 ---
 
-
 # Higgsfield Brandkit
 
 Build a coherent identity and its requested applications. Treat supplied brand facts and official assets as fixed constraints.
@@ -201,16 +200,3 @@ For other outputs return:
 - [Mockups](references/mockups.md), [social graphics](references/social-templates.md), [posters/banners](references/posters-banners.md), [packaging](references/packaging.md), [signage](references/signage.md), and [merchandise](references/merchandise.md) — applications.
 - [Presentation decks](references/presentation-deck.md) and [Brandbooks](references/brandbook.md) — editable documents.
 - [QA and iteration](references/qa-and-iteration.md) — preflight, repair, approval, and delivery manifest.
-
-## Use this skill when
-
-- Executing `higgsfield-brandkit` workflows, asset generation, or domain verification within the GSE/GSI pipeline.
-
-## Do not use this skill when
-
-- Performing unrelated tasks outside the scope of `higgsfield-brandkit`.
-
-## Instructions
-
-1. Follow the domain rules and step-by-step procedures defined in this `higgsfield-brandkit` skill specification.
-

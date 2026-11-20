@@ -1,6 +1,6 @@
 ---
 name: deploy-readiness
-description: Pre-ship guards, smoke, and env readiness without inventing secrets.
+description: Pre-ship guards, smoke tests, and env readiness checks without inventing secrets.
 effort: medium
 allowed-tools: Read, Grep, Glob, Bash(npm run *), Bash(node scripts/*)
 ---
@@ -8,24 +8,22 @@ allowed-tools: Read, Grep, Glob, Bash(npm run *), Bash(node scripts/*)
 # Deploy readiness
 
 ## Purpose
-Ship only when guards + smokes pass. Production secrets are founder-set.
+Ship to production only after guardrails, contracts, pricing smoke, and cron verification pass with zero fabricated secrets.
 
-## Commands
-```bash
+## Verification Sequence
+```powershell
 npm run guardrails
 npm run evals:contracts
-npm run agent:eval          # thin agent harness
-node scripts/e2e/pricing-smoke.mjs   # optional HOST=
+npm run agent:eval
+node scripts/e2e/pricing-smoke.mjs
 npm run free:doctor
-# Production cron smoke (needs real CRON_SECRET — operator)
-bash scripts/ops/gamma-cron-smoke.sh   # 401 then 200 pattern for dual secret
 ```
+Operator cron check (requires real `CRON_SECRET`, bash/WSL): `bash scripts/ops/gamma-cron-smoke.sh` (verifies 401 unauthenticated then 200 authenticated).
 
-## Related
-- `docs/ops/OPERATOR.md` — free-path key blank, Stripe Dashboard, settle curl
-- `docs/ops/SMOKE.md`, `docs/ops/CREDENTIALS_CHECKLIST.md`
+## Related Docs & Guardrails
+- `docs/ops/OPERATOR.md`, `docs/ops/SMOKE.md`, `docs/ops/CREDENTIALS_CHECKLIST.md`
+- Never invent `DATABASE_URL`, `CRON_SECRET`, `STRIPE_*`, or `THE_ODDS_API_KEY`.
+- Never flip `LIVE_BOARD` / `PUBLISH_LEDGER` without explicit owner approval, and never claim production green without direct HTTP probe evidence.
 
-## Do-not-dos
-- Do not invent DATABASE_URL / CRON_SECRET / STRIPE_* / THE_ODDS_API_KEY
-- Do not flip LIVE_BOARD / PUBLISH_LEDGER without founder YES
-- Do not claim prod green without smoke evidence
+## Completion Criteria
+Done when `npm run guardrails`, `npm run evals:contracts`, `npm run agent:eval`, `npm run free:doctor`, and `@sports/web` production build + ESLint exit `0`.

@@ -1,13 +1,6 @@
 ---
 name: grok-delegate
-description: >-
-  Delegate a coding task to the Grok Build CLI as a background implementer, then review its diff and
-  land it yourself. Use this whenever the user wants to hand implementation work to Grok — phrasings
-  like "have Grok do X", "delegate this to Grok", "run it through Grok", "use Grok Build to
-  implement/fix/refactor", or "have grok CLI do this" — or to run a queue of coding tasks through
-  Grok while staying the reviewer. Prefer it when the user will review the diff and commit it
-  themselves. DO NOT USE for tasks small enough to do inline, or when the user wants the code written
-  directly without delegating.
+description: Delegate one bounded coding task to the Grok Build CLI as an implementer, then review and land the diff yourself.
 license: MIT
 compatibility: Requires the `grok` CLI (Grok Build) installed and authenticated (`grok login`, or `XAI_API_KEY`; beta access needs an eligible xAI subscription), Node 18+, and git. The orchestrating agent must be able to run shell commands and read files. Shell examples assume bash/zsh (macOS/Linux, or Git Bash/WSL on Windows).
 metadata:
@@ -44,7 +37,8 @@ orchestrators as designed-for, not yet proven.)
 2. **Confirm which `grok` is on PATH.** `command -v grok` shows the active binary and `grok version`
    its version — the relay records the version it ran into `result.json`, so a stale binary is visible
    after the fact.
-3. You are in (or will point `--cd` at) the target git repository.
+3. You are in (or will point `--cd` at) the target git repository. Use `--brief` / `--cd` directly (`--lane` requires an optional `delegate-setup` companion skill not installed here).
+   On Windows PowerShell, locate `relay.mjs` relative to the skill directory directly instead of POSIX `find ~`.
 
 ## The loop
 

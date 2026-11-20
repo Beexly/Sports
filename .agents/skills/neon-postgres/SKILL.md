@@ -6,7 +6,6 @@ metadata:
   source: https://github.com/neondatabase/agent-skills/tree/main/skills/neon-postgres
 ---
 
-
 **FIRST**: Use the parent `neon` skill for a Neon overview, getting started with Neon, Neon development best practices, and more.
 
 If the `neon` skill is not installed, fetch it from https://neon.com/docs/ai/skills/neon/SKILL.md or install it with:
@@ -16,6 +15,12 @@ npx skills add neondatabase/agent-skills --skill neon
 ```
 
 # Lakebase Postgres
+
+> [!NOTE]
+> **GSE Repo Override (`Beexly/Sports`):** Use Prisma 5.22 (`packages/db/prisma/schema.prisma`, `url` + `directUrl`) — **not** Drizzle — and never edit `.env*` files directly in agent sessions.
+
+> [!NOTE]
+> **GSE Repo Override (`Beexly/Sports`):** Use Prisma 5.22 (`packages/db/prisma/schema.prisma`, `url` + `directUrl`) — **not** Drizzle — and never edit `.env*` files directly in agent sessions.
 
 Lakebase Postgres is the database at the core of Neon. It runs on the lakebase architecture — OLTP built directly on cloud object storage — which decouples storage from compute to offer autoscaling, branching, instant restore, and scale-to-zero. It's fully compatible with Postgres and works with any language, framework, or ORM that supports Postgres.
 
@@ -166,16 +171,3 @@ Neon gives you two connection strings for the same database: a **pooled** one (h
 - **Direct (`DATABASE_URL_UNPOOLED`)** — schema migrations (Prisma Migrate, Drizzle Kit, Alembic, and others), `pg_dump` / `pg_restore`, logical replication, `LISTEN`/`NOTIFY`, and anything relying on `SET` or other session state.
 
 Running migrations, dumps, or replication over the pooled connection can fail, and never in a way that names pooling: `prepared statement "s0" already exists` from Prisma Migrate, a `SET search_path` that doesn't persist past its own transaction so the next query reports `relation "mytable" does not exist`, or a write intermittently hitting a read-only transaction (`SQLSTATE 25006`) that a pooled backend inherited from an earlier client. Migration tools generally take both strings at once — Prisma's `directUrl` alongside `url` — so point that at the direct one rather than swapping `DATABASE_URL` and losing pooling for the application. See https://neon.com/docs/connect/connection-pooling.md.
-
-## Use this skill when
-
-- Configuring, querying, branching, or migrating Neon Lakebase Postgres databases in the GSE/GSI stack.
-
-## Do not use this skill when
-
-- Performing unrelated tasks outside the scope of `neon-postgres`.
-
-## Instructions
-
-1. Follow the domain rules and step-by-step procedures defined in this `neon-postgres` skill specification.
-

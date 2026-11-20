@@ -7,19 +7,6 @@ metadata:
   category: AiAndMachineLearning
 ---
 
-
-## Use this skill when
-
-- Working on `agent-platform-architecture` tasks: Designs, engineers, and validates enterprise Gemini platform architectures. Use when designing multi-project hierarchies (Host, Central Governance Hub, Runtime Spoke, Tool/MCP Spoke), configuring Agent Gateway, authoring Agent Connectivity Templates (ALL_TRAFFIC vs PRIVATE_RANGES_ONLY), deploying Secure Web Proxy (SWP) with Policy-Based Routing (PBR) or Cross-Cloud mTLS Egress Hubs, configuring Private CA TrustConfig with Internal ALB + Serverless NEG, implementing Unified Access Policies (UAP Policy V2 CEL) and Semantic Governance (SGP), configuring 3P IdP Token Exchange (EntraID/Ping/Okta via ext_proc + STS) or Agent Identity Auth Manager (SPIFFE), enforcing Model Armor Floor Settings and Fail-Closed guardrails, deploying Cross-Project Registry sync, binding ADK agents on Agent Runtime, or executing Day-2 lifecycle operations. Don't use for read-only live log triage or incident diagnosis, or generic Google Cloud Identity and Access Management (IAM) debugging.
-
-## Do not use
-
-- Do not use when the request is unrelated to `agent-platform-architecture` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `agent-platform-architecture`.
-
 # Gemini platform Architecture and Engineering Guide
 
 This skill is the reference system for designing, engineering, and validating enterprise-grade **Gemini platform** architectures across multi-project hierarchies, hybrid/cross-cloud networks, zero-trust identity boundaries, and inline safety/policy enforcement planes.
@@ -32,9 +19,9 @@ MUST read and follow the instructions in
 
 > [!IMPORTANT] **Architectural Scope and Reference Discipline**: Use `SKILL.md` to
 > select the target topology, egress mode, ingress pattern, and governance
-> plane, then consult the authoritative `workspace/references/*.md` manual for exact CLI
+> plane, then consult the authoritative `references/*.md` manual for exact CLI
 > commands, REST/YAML schemas, Common Expression Language (CEL) expressions, and
-> Python Agent Development Kit (ADK) runtime code (`workspace/references/*.md` is the
+> Python Agent Development Kit (ADK) runtime code (`references/*.md` is the
 > single source of truth for all implementation syntax). When remote Model
 > Context Protocol (MCP) tools (such as the Google Developer Knowledge MCP
 > server or Google-managed MCP endpoints) are available, prefer remote MCP tool

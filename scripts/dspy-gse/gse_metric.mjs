@@ -18,10 +18,23 @@ export function gse_metric(example, prediction) {
   const domain = example?.domain ?? "settlement";
   const fails = [];
 
-  // Free-path law
+  // Free-first primary settlement law (since 2026-09-02, path-select.ts)
   if (domain === "settlement") {
-    if (!(skill.includes("absent") && (skill.includes("free") || skill.includes("the_odds_api_key")))) {
-      fails.push("skill missing free-path ABSENT gate for THE_ODDS_API_KEY");
+    const hasFreeFirst =
+      skill.includes("free") &&
+      (skill.includes("primary") || skill.includes("first") || skill.includes("every cycle"));
+    const hasKeyStates =
+      skill.includes("absent") &&
+      (skill.includes("supplement") || skill.includes("deactivated"));
+    const hasObsoleteRule =
+      skill.includes("free only if") ||
+      skill.includes("free only when") ||
+      skill.includes("only when key absent");
+    if (!hasFreeFirst || !hasKeyStates) {
+      fails.push("skill missing 2026-09-02 free-first primary settlement + supplement law");
+    }
+    if (hasObsoleteRule) {
+      fails.push("skill encodes obsolete pre-2026-09-02 absent-only free-path restriction");
     }
     if (!(skill.includes("idempoten") || skill.includes("stripe"))) {
       fails.push("skill missing stripe/idempotency guidance");
@@ -39,6 +52,9 @@ export function gse_metric(example, prediction) {
     }
     if (!(skill.includes("minimal") || skill.includes("rewrite") || skill.includes("idempoten"))) {
       fails.push("coding skill missing minimal-diff / no-rewrite guidance");
+    }
+    if (skill.includes("free only if") || skill.includes("free only when")) {
+      fails.push("coding skill encodes obsolete pre-2026-09-02 free-path restriction");
     }
   }
 
@@ -76,8 +92,8 @@ export function gse_metric(example, prediction) {
       if (needle.includes("polymarket") && !skill.includes("polymarket")) {
         fails.push("skill does not encode Polymarket prohibition referenced by failure mode");
       }
-      if (needle.includes("free settlement") && !(skill.includes("absent") || skill.includes("deactivated"))) {
-        fails.push("skill does not encode free-path prohibition for deactivated-key case");
+      if (needle.includes("free settlement") && !(skill.includes("free") && (skill.includes("primary") || skill.includes("first")) && (skill.includes("supplement") || skill.includes("deactivated")))) {
+        fails.push("skill does not encode 2026-09-02 free-first primary law for deactivated-key case");
       }
     }
   }

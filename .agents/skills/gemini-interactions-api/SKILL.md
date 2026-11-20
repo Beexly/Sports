@@ -6,18 +6,6 @@ metadata:
   category: AiAndMachineLearning
 ---
 
-## Use this skill when
-
-- Working on `gemini-interactions-api` tasks: Guides the usage of Gemini Interactions API on Gemini Enterprise Agent Platform. Use when the user wants to use the stateful, server-managed Interactions API for multi-turn conversations, background execution, streaming, structured output, and function calling on the Agent Platform.
-
-## Do not use
-
-- Do not use when the request is unrelated to `gemini-interactions-api` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `gemini-interactions-api`.
-
 # Gemini Interactions API Skill
 
 This skill provides instructions for authenticating, connecting to, and utilizing the stateful, server-managed **Gemini Interactions API** on Gemini Enterprise Agent Platform.

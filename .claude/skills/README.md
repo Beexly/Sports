@@ -1,34 +1,31 @@
 # Agent skills (process capital)
 
-Short, agent-loadable runbooks for high-leverage GSE surfaces. Each skill is a `SKILL.md`
-(purpose · commands · failure modes · do-not-dos). Prefer skills over re-deriving doctrine.
+Short, agent-loadable runbooks for high-leverage GSE surfaces. Each skill is a `SKILL.md` with clear triggers, verified repo paths, commands, failure modes, and completion criteria. `.claude/skills/` and `.agents/skills/` stay synchronized via `node scripts/guardrails/verify-skills-integrity.mjs`.
 
-`.claude/skills/` is the canonical home, loaded directly by Claude Code. Other agents read
-`AGENTS.md` + `CLAUDE.md`, which point here.
+| Skill | Path | Scope |
+|---|---|---|
+| autonomy-kernel | [`autonomy-kernel/SKILL.md`](./autonomy-kernel/SKILL.md) | Pure `planAutonomyCycle()` + safe-cron executor (`27` action kinds) |
+| calibration-pipeline | [`calibration-pipeline/SKILL.md`](./calibration-pipeline/SKILL.md) | Settled picks -> time hold-out -> CIR -> selected-slice ECE -> fractional Kelly |
+| checkout-attempt | [`checkout-attempt/SKILL.md`](./checkout-attempt/SKILL.md) | Durable `CheckoutAttempt` + Stripe `Idempotency-Key` + repair cron |
+| claude-delegate | [`claude-delegate/SKILL.md`](./claude-delegate/SKILL.md) | Manual-only Claude Code CLI task delegation (`disable-model-invocation: true`) |
+| clearance | [`clearance/SKILL.md`](./clearance/SKILL.md) | Thin alias pointing to canonical `clearance-registry` |
+| clearance-registry | [`clearance-registry/SKILL.md`](./clearance-registry/SKILL.md) | Fail-closed `source-router.ts` rights registry |
+| coding-agent | [`coding-agent/SKILL.md`](./coding-agent/SKILL.md) | Minimal-diff money-path routing (free-first settlement, idempotency, compliance hold) |
+| deploy-readiness | [`deploy-readiness/SKILL.md`](./deploy-readiness/SKILL.md) | Guardrails, contracts, pricing smoke, and production readiness |
+| dspy-gepa | [`dspy-gepa/SKILL.md`](./dspy-gepa/SKILL.md) | Offline GEPA/DSPy skill verification (`scripts/dspy-gse/`) |
+| grok-delegate | [`grok-delegate/SKILL.md`](./grok-delegate/SKILL.md) | Manual-only Grok Build CLI task delegation (`disable-model-invocation: true`) |
+| gse-connected-game-workflow | [`gse-connected-game-workflow/SKILL.md`](./gse-connected-game-workflow/SKILL.md) | Cryptographic 6-stage connected NFL workflow (`Stage 0 -> Stage 5`) |
+| inference-routing | [`inference-routing/SKILL.md`](./inference-routing/SKILL.md) | `MODEL_PRIMARY` / `MODEL_CHEAP` / `MODEL_OPUS` routing & free-lane controls |
+| max-leverage | [`max-leverage/SKILL.md`](./max-leverage/SKILL.md) | Owner max-leverage unlock checklist (free-first settle, Stripe, credits) |
+| model-promotion-gate | [`model-promotion-gate/SKILL.md`](./model-promotion-gate/SKILL.md) | 3-leg paired Brier EB-LCB + CLV non-inferiority gate |
+| neon | [`neon/SKILL.md`](./neon/SKILL.md) | Neon workflow pointer with GSE Prisma/secrets overrides |
+| neon-postgres | [`neon-postgres/SKILL.md`](./neon-postgres/SKILL.md) | Pooled vs direct Postgres guidance with Prisma 5.22 override |
+| polymarket-hold | [`polymarket-hold/SKILL.md`](./polymarket-hold/SKILL.md) | Compliance hold on Polymarket / prediction-market crons |
+| settlement-free-path | [`settlement-free-path/SKILL.md`](./settlement-free-path/SKILL.md) | Authoritative free-first `settle-picks` + paid supplement law |
+| stripe-webhook | [`stripe-webhook/SKILL.md`](./stripe-webhook/SKILL.md) | Fail-closed Stripe webhook idempotency & status codes |
 
-| Skill | Path | Description |
-|-------|------|--------------|
-| autonomy-kernel | [`autonomy-kernel/SKILL.md`](./autonomy-kernel/SKILL.md) | Operate the autonomous plan→act→verify cycle without ever flipping a public gate or inventing data. |
-| calibration-pipeline | [`calibration-pipeline/SKILL.md`](./calibration-pipeline/SKILL.md) | Settled picks → time hold-out → CIR → selected-slice ECE → fractional/portfolio Kelly. R&D only until CALIBRATION_ADJUSTMENTS_ENABLED. |
-| checkout-attempt | [`checkout-attempt/SKILL.md`](./checkout-attempt/SKILL.md) | Durable CheckoutAttempt + Stripe Idempotency-Key; repair cron exists. |
-| clearance | [`clearance/SKILL.md`](./clearance/SKILL.md) | source-router cleared flags must match source-rights-registry (fail-closed). |
-| clearance-registry | [`clearance-registry/SKILL.md`](./clearance-registry/SKILL.md) | source-router cleared flags must match source-rights-registry (fail-closed). |
-| coding-agent | [`coding-agent/SKILL.md`](./coding-agent/SKILL.md) | Minimal-diff coding on GSE money path. Use when editing webhooks, settlement, outbox, or clearance. Prefer reuse over rewrite. |
-| deploy-readiness | [`deploy-readiness/SKILL.md`](./deploy-readiness/SKILL.md) | Pre-ship guards, smoke, and env readiness without inventing secrets. |
-| dspy-gepa | [`dspy-gepa/SKILL.md`](./dspy-gepa/SKILL.md) | Offline GEPA/DSPy skill compile for GSE. Use when optimizing agent skills or prompt metrics without live product changes. |
-| inference-routing | [`inference-routing/SKILL.md`](./inference-routing/SKILL.md) | MODEL_PRIMARY/MODEL_CHEAP routing and free-lane cost control. Use when changing Claude surfaces or model tiers. |
-| max-leverage | [`max-leverage/SKILL.md`](./max-leverage/SKILL.md) | Founder max-leverage unlock for GSE money recovery and free capacity. Use when asked to unlock, free path, or maximize orbit. |
-| model-promotion-gate | [`model-promotion-gate/SKILL.md`](./model-promotion-gate/SKILL.md) | Decide whether a challenger model may replace the champion — without re-labeling history or promoting noise. |
-| polymarket-hold | [`polymarket-hold/SKILL.md`](./polymarket-hold/SKILL.md) | Polymarket is a compliance hold, not unfinished product work. Use when asked to finish/enable Polymarket markets. |
-| settlement-free-path | [`settlement-free-path/SKILL.md`](./settlement-free-path/SKILL.md) | Free-first settle-picks — the ESPN/consensus grader runs every cycle; THE_ODDS_API_KEY only adds a paid supplement. |
-| stripe-webhook | [`stripe-webhook/SKILL.md`](./stripe-webhook/SKILL.md) | Stripe webhook handler — retries, idempotency, checkout.session.expired, status codes. |
+Repo-only operational loop & design skills live in `.agents/skills/` (`claims-check`, `continuous-corpus-ingestion-and-wiring-loop`, `continuous-post-game-learning-and-pathwise-calibration-loop`, `dk-200pt-dfs-contest-simulation-loop`, `falsifier-run`, `full-board-360-game-dossier-and-firewall-loop`, `gse`, `overnight-autonomous-projection-loop`, `pickpilot-design`, `session-close`).
 
-## Law
-- Do not invent secrets. Operator steps live in `docs/ops/OPERATOR.md`.
-- Do not rewrite outbox lease, webhook retries, or CheckoutAttempt flow.
-- Do not re-enable Polymarket/gamma without counsel-approved registry entry.
-
-See also: `docs/ops/ORBIT_UNLOCK.md`, `docs/ops/CREDITS.md`.
-
-Format: [agentskills](https://github.com/agentskills/agentskills) YAML frontmatter (`name`, `description`) + markdown body.
-Offline prompt optimize: `scripts/dspy-gse/` (GEPA-ready; dry-run without dspy).
+## Integrity & Evaluation
+- Run `node scripts/guardrails/verify-skills-integrity.mjs` to enforce frontmatter, broken-path checks, and `.claude`/`.agents` parity.
+- Run `node scripts/dspy-gse/run.mjs --check` (or `npm run dspy:gse` to regenerate `examples.json` from `goldens.json`) and `npm run agent:eval`.

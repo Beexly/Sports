@@ -1,13 +1,11 @@
 ---
 name: higgsfield-product-photoshoot
-description: 'Generate brand-quality product images through Higgsfield product-photoshoot prompt enhancement on GPT Image 2 / gpt_image_2. Entry point for professional brand/product visuals. Use when: "product photo", "studio shot", "lifestyle image", "Pinterest pin", "hero/banner", "carousel", "ad creative", "Meta ads", "virtual try-on", "model wearing", "person holding product", "closeup with hands", "levitating/floating/splash product", "CGI/surreal product", "restyle", "seasonal/aesthetic variation", or any product, brand, or paid-social creative. Modes: product_shot, lifestyle_scene, closeup_product_with_person, moodboard_pin, hero_banner, social_carousel, ad_creative_pack, virtual_model_tryout, conceptual_product, restyle. Backend assembles the final prompt; never freehand it. NOT for: no-product text-to-image (use higgsfield-generate), branded avatar video (use higgsfield-generate Marketing Studio), marketplace listing cards (use higgsfield-marketplace-cards), Soul Character training
-  (use ...'
+description: 'Generate brand-quality product images through Higgsfield product-photoshoot prompt enhancement on GPT Image 2 / gpt_image_2. Entry point for professional brand/product visuals. Use when: "product photo", "studio shot", "lifestyle image", "Pinterest pin", "hero/banner", "carousel", "ad creative", "Meta ads", "virtual try-on", "model wearing", "person holding product", "closeup with hands", "levitating/floating/splash product", "CGI/surreal product", "restyle", "seasonal/aesthetic variation", or any product, brand, or paid-social creative. Modes: product_shot, lifestyle_scene, closeup_product_with_person, moodboard_pin, hero_banner, social_carousel, ad_creative_pack, virtual_model_tryout, conceptual_product, restyle. Backend assembles the final prompt; never freehand it. NOT for: no-product text-to-image (use higgsfield-generate), branded avatar video (use higgsfield-generate Marketing Studio), marketplace listing cards (use higgsfield-marketplace-cards), or Soul Character training (use higgsfield-soul-id).'
 allowed-tools: Bash
 metadata:
   version: 0.12.0
   argument-hint: '[--mode <mode>] [--count N] [prompt]'
 ---
-
 
 # Product Photoshoot
 
@@ -200,16 +198,3 @@ Print the image URLs as a short bulleted list. No JSON, no IDs, no internal mode
 - Calling `higgsfield generate create gpt_image_2 --prompt ...` directly instead of `higgsfield product-photoshoot create` — bypasses the prompt enhancer and produces noticeably worse output.
 - Pasting the assembled prompt back to the user — they want the URLs.
 - Using a `--mode` value not in the table above.
-
-## Use this skill when
-
-- Executing `higgsfield-product-photoshoot` workflows, asset generation, or domain verification within the GSE/GSI pipeline.
-
-## Do not use this skill when
-
-- Performing unrelated tasks outside the scope of `higgsfield-product-photoshoot`.
-
-## Instructions
-
-1. Follow the domain rules and step-by-step procedures defined in this `higgsfield-product-photoshoot` skill specification.
-

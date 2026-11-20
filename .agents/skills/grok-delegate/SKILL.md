@@ -1,25 +1,14 @@
 ---
 name: grok-delegate
-description: Delegate a coding task to the Grok Build CLI as a background implementer, then review its diff and land it yourself. Use this whenever the user wants to hand implementation work to Grok — phrasings like "have Grok do X", "delegate this to Grok", "run it through Grok", "use Grok Build to implement/fix/refactor", or "have grok CLI do this" — or to run a queue of coding tasks through Grok while staying the reviewer. Prefer it when the user will review the diff and commit it themselves. DO NOT USE for tasks small enough to do inline, or when the user wants the code written directly without delegating.
+description: Delegate one bounded coding task to the Grok Build CLI as an implementer, then review and land the diff yourself.
 license: MIT
 compatibility: Requires the `grok` CLI (Grok Build) installed and authenticated (`grok login`, or `XAI_API_KEY`; beta access needs an eligible xAI subscription), Node 18+, and git. The orchestrating agent must be able to run shell commands and read files. Shell examples assume bash/zsh (macOS/Linux, or Git Bash/WSL on Windows).
-allowed-tools: Read, Grep, Glob, Edit, Bash(node *), Bash(git status*), Bash(git diff*), Bash(git log*)
 metadata:
   version: 0.5.0
+effort: medium
+disable-model-invocation: true
+allowed-tools: Read, Grep, Glob, Edit, Bash(node *), Bash(git status*), Bash(git diff*), Bash(git log*)
 ---
-
-
-## Use this skill when
-
-- Working on `grok-delegate` tasks: Delegate a coding task to the Grok Build CLI as a background implementer, then review its diff and land it yourself. Use this whenever the user wants to hand implementation work to Grok — phrasings like "have Grok do X", "delegate this to Grok", "run it through Grok", "use Grok Build to implement/fix/refactor", or "have grok CLI do this" — or to run a queue of coding tasks through Grok while staying the reviewer. Prefer it when the user will review the diff and commit it themselves. DO NOT USE for tasks small enough to do inline, or when the user wants the code written directly without delegating.
-
-## Do not use
-
-- Do not use when the request is unrelated to `grok-delegate` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `grok-delegate`.
 
 # Grok Delegate
 
@@ -48,7 +37,8 @@ orchestrators as designed-for, not yet proven.)
 2. **Confirm which `grok` is on PATH.** `command -v grok` shows the active binary and `grok version`
    its version — the relay records the version it ran into `result.json`, so a stale binary is visible
    after the fact.
-3. You are in (or will point `--cd` at) the target git repository.
+3. You are in (or will point `--cd` at) the target git repository. Use `--brief` / `--cd` directly (`--lane` requires an optional `delegate-setup` companion skill not installed here).
+   On Windows PowerShell, locate `relay.mjs` relative to the skill directory directly instead of POSIX `find ~`.
 
 ## The loop
 
@@ -174,7 +164,7 @@ is in [references/review-and-land.md](references/review-and-land.md).
 - Never pass `--full-access`, and never pass `--always-approve` on its own (without
   `--sandbox workspace`) in this repo — `.claude/settings.json` sets
   `disableBypassPermissionsMode` and AGENTS.md law 2 freezes `.claude/**` and
-  `Beexly/Sports/scripts/guardrails/**`. The relay's default `workspace-write` mode
+  `scripts/guardrails/**`. The relay's default `workspace-write` mode
   (`--always-approve --sandbox workspace`) is the documented dispatch and stays allowed
   because the OS sandbox remains on; the autonomy-model table above says when it applies.
 - The child session must keep the default permission mode so the PreToolUse guard and

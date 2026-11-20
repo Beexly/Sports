@@ -1,80 +1,39 @@
 ---
 name: model-promotion-gate
-description: Decide whether a challenger model may replace the champion — without re-labeling history or promoting noise.
+description: Three-leg evaluation contract deciding challenger eligibility without re-labeling history or promoting noise.
 effort: medium
-allowed-tools: Read, Grep, Glob, Bash(npm run *), Bash(node scripts/*)
+allowed-tools: Read, Grep, Glob, Bash(npm run *), Bash(npx tsx *), Bash(npx vitest*), Bash(node scripts/*)
 ---
 
 # Model promotion gate
 
 ## Purpose
-Decides whether challenger **K** may replace champion **C** for a market family.
-The gate **outputs eligibility only** — it never flips `MODEL_VERSION` itself.
-The switch stays founder-applied.
+Evaluates whether challenger **K** is eligible to replace champion **C** for a market family (`docs/frontier/MODEL_PROMOTION_GATE_CONTRACT.md`). Outputs **eligibility only** — flipping `MODEL_VERSION` remains a human owner decision.
 
-Frozen contract: `docs/frontier/MODEL_PROMOTION_GATE_CONTRACT.md`. Read it before
-touching any promotion code; the numbered invariants there are load-bearing.
+## Anti-DEC-062 Required Tests
+1. **Identity fixed point:** `K === C => d_i = 0 => NOT_ELIGIBLE`.
+2. **Oracle promotes Leg 1:** outcome oracle clears Leg 1 (proves harness can promote genuine skill).
 
-## Why this gate is paranoid
-A previous promoter shipped with `computeClvMean()` returning `0.5` for every
-input — it could never promote anything, and its tests asserted that tautology,
-so it passed. The contract's anti-DEC-062 invariants exist to make that failure
-class impossible to reintroduce:
-
-1. **Identity fixed point** — K ≡ C ⇒ every dᵢ = 0 ⇒ `NOT_ELIGIBLE`.
-2. **Oracle promotes Leg 1** — K = outcome oracle ⇒ Leg 1 passes. Proves the
-   harness *can* clear the bar, killing "can never promote" outright.
-
-Both are REQUIRED tests. A promotion change that does not run them is not done.
-
-## The three legs
-Promotion requires **Leg 1 AND Leg 2**; Leg 3 is procedural and always applies.
-
-| Leg | What it establishes |
+## The Three Legs
+| Leg | Requirement |
 |---|---|
-| 1 — paired calibration superiority | Brier differential on the **same events**, empirical-Bernstein LCB > δ_prac |
-| 2 — CLV non-inferiority | Market-anchored: the edge is not an artifact of stale lines |
-| 3 — procedural integrity | Pre-registered params, leak-free walk-forward, fixed event universe |
+| **1 — Paired calibration superiority** | Paired Brier differential on identical events, Empirical-Bernstein LCB `> delta_prac` |
+| **2 — CLV non-inferiority** | Market-anchored closing-line value non-inferiority (rules out stale-line mirage) |
+| **3 — Procedural integrity** | Pre-registered params, leak-free walk-forward split, fixed event universe |
 
-Paired on identical events is the point: unpaired comparison lets a favorable
-schedule masquerade as skill.
-
-## Commands
-```bash
-npm run guard:model-freeze     # MODEL_VERSION must have IMPLEMENTED calibration evidence
-npm run calibration:offline    # calibration pipeline (scripts/calibration-offline/run.mjs)
-npm test --workspace=packages/prediction-engine
-npx tsx scripts/ops/verify-shadow-pipeline.ts    # read-only shadow status
-npx tsx scripts/ops/compare-shadow-vs-live.ts    # posts win/lose/insufficient-sample
+## Commands & Touchpoints
+```powershell
+npm run guard:model-freeze
+npm run calibration:offline
+npx vitest run --minWorkers=1 --maxWorkers=2 --root packages/prediction-engine src/promotion/__tests__
+npx tsx scripts/ops/verify-shadow-pipeline.ts
+npx tsx scripts/ops/compare-shadow-vs-live.ts
 ```
+- `packages/prediction-engine/src/promotion/` (`evaluate.ts`, `empirical-bernstein.ts`, `clv-non-inferiority.ts`, `integrity.ts`)
+- `apps/web/lib/decision-genome/candidate-ledger.ts`
+- Related skills: `calibration-pipeline`, `autonomy-kernel` (kernel never promotes)
 
-## Why `guard:model-freeze` blocks you
-Bumping `MODEL_VERSION` without an `IMPLEMENTED` calibration artifact
-**retroactively re-labels every historical confidence number** — yesterday's
-picks silently claim to come from today's model. Resolve it honestly:
-
-1. a `CalibrationProposal` row with `status: IMPLEMENTED`, or
-2. `docs/calibration-proposals/<slug>.md` with `modelVersion` + `status: IMPLEMENTED`, or
-3. `docs/calibration-proposals/FROZEN.md` with `frozen: <version>` — **only** if no
-   scoring weights changed.
-
-Never satisfy it by editing the guard.
-
-## Related
-- `packages/prediction-engine/src/` — `brier-ogd-ensemble.ts`,
-  `earned-weight-ensemble.ts`, `calibration-drift.ts`, `elo-backtest.ts`, `clv.ts`
-- `apps/web/lib/decision-genome/` — candidate generation (`candidate-ledger.ts`)
-- `.claude/skills/calibration-pipeline/SKILL.md`
-- `.claude/skills/autonomy-kernel/SKILL.md` — the kernel never promotes
-
-## Do-not-dos
-- Do **not** flip `MODEL_VERSION` from code, CI, or cron. Eligibility ≠ promotion.
-- Do **not** promote on Leg 1 alone. Calibration without CLV can be a stale-line artifact.
-- Do **not** compare on non-identical event sets, or re-tune δ_prac after seeing results.
-- Do **not** weaken, skip, or `.skip()` the identity-fixed-point or oracle tests.
-- Do **not** report a verdict below the minimum sample — `insufficient-sample` is a
-  real, publishable answer, and `compare-shadow-vs-live` posts it either way.
-  Posting only favorable verdicts is the cherry-picking the proof machinery exists
-  to prevent.
-- Do **not** treat shadow-engine output as a live pick. It is `status: "shadow"`,
-  `priced: false`.
+## Guardrails & Completion Criteria
+- Resolve `guard:model-freeze` only via a `CalibrationProposal` row (`IMPLEMENTED`), `docs/calibration-proposals/<slug>.md` (`status: IMPLEMENTED`), or unchanged weights in `FROZEN.md` — never weaken the guard.
+- Report honest `insufficient-sample` verdicts when `n < nMin`; never skip identity/oracle tests or treat shadow output (`priced: false`) as live picks.
+- Done when `npm run guard:model-freeze`, `npm run calibration:offline`, and `src/promotion/__tests__` exit `0`.

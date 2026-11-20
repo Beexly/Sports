@@ -1,61 +1,30 @@
 ---
 name: calibration-pipeline
-description: Settled picks → time hold-out → CIR → selected-slice ECE → fractional/portfolio Kelly. R&D only until CALIBRATION_ADJUSTMENTS_ENABLED.
-allowed-tools: Read, Grep, Glob, Bash(npm run *), Bash(node scripts/*)
+description: Settled picks -> time hold-out -> CIR -> selected-slice ECE -> fractional/portfolio Kelly. R&D only until CALIBRATION_ADJUSTMENTS_ENABLED.
+effort: medium
+allowed-tools: Read, Grep, Glob, Bash(npm run *), Bash(node scripts/*), Bash(npx vitest*)
 ---
-
-
-## Use this skill when
-
-- Working on `calibration-pipeline` tasks: Settled picks → time hold-out → CIR → selected-slice ECE → fractional/portfolio Kelly. R&D only until CALIBRATION_ADJUSTMENTS_ENABLED.
-
-## Do not use
-
-- Do not use when the request is unrelated to `calibration-pipeline` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `calibration-pipeline`.
 
 # Calibration pipeline (GSE)
 
 ## Purpose
-Turn settled non-seed picks into honest probabilities and survival-sized stakes.
-**Not live** until `CALIBRATION_ADJUSTMENTS_ENABLED` + human MODEL_VERSION gate.
+Turn settled non-seed picks into calibrated probabilities and survival-sized stakes. Strictly R&D until `CALIBRATION_ADJUSTMENTS_ENABLED` is enabled alongside `MODEL_VERSION` promotion approval.
 
-## Path
-1. `npm run export:settled-picks` (needs real DATABASE_URL)
-2. Time hold-out only — `timeHoldoutSplit` (never random shuffle)
-3. Fit `centeredIsotonicCalibration` on train; score on test
-4. Report `selectedSliceEce` (calibration paradox on +EV slice)
-5. Size with fractional/portfolio Kelly + `clvDeflator` (zeros until ~50 CLV samples)
+## Sequence & Code Paths
+1. Export: `npm run export:settled-picks` (`scripts/export-settled-picks-for-calibration.mjs`, requires `DATABASE_URL`).
+2. Chronological hold-out split: `timeHoldoutSplit` (`packages/prediction-engine/src/probability-calibration.ts`) — preserve timestamp order, never random-shuffle across time.
+3. Fit `centeredIsotonicCalibration` (CIR) on train fold; score strictly on out-of-sample test fold (`calibration-map.ts`, `probability-calibration.ts`).
+4. Report signed `selectedSliceEce` (paradox gap on +EV selected slice vs full population).
+5. Size stakes with `sizeAfterCalibration` (`packages/prediction-engine/src/calibration-kelly-bridge.ts`) and `portfolioKellyStakes` (`packages/prediction-engine/src/edge-lab/kelly.ts`) × `clvDeflator` (zeros out until >= 50 settled CLV samples).
 
-## Code
-| Piece | Path |
-|-------|------|
-| Export | `Beexly/Sports/scripts/export-settled-picks-for-calibration.mjs` |
-| CIR / hold-out / paradox | `packages/prediction-engine/src/probability-calibration.ts` |
-| Portfolio Kelly | `packages/prediction-engine/src/edge-lab/kelly.ts` |
-| Offline dry-run | `npm run calibration:offline` |
-| Doc | `docs/ops/CALIBRATION_PIPELINE.md` |
+## Guardrails
+- Prefer CIR over step-function PAVA when ranking or Kelly sizing; full Kelly is forbidden — always use fractional Kelly (κ ≈ 0.25–0.30) × `clvDeflator`.
+- Never report Kelly stake sizing as CLV, never wire live sizing without `CALIBRATION_ADJUSTMENTS_ENABLED`, and exclude Polymarket (compliance hold).
+- Reference documentation: `docs/ops/CALIBRATION_PIPELINE.md`.
 
-## Laws
-- Prefer CIR when ranks/stakes matter; PAVA OK for bin ECE only
-- Full Kelly forbidden
-- Do not report sizing as CLV
-- Do not wire into live scoring without the gate
-- Polymarket is not a calibration target (compliance hold)
-
-## Commands
-```bash
-npm run export:settled-picks
+## Verification & Done
+```powershell
 npm run calibration:offline
 npm run agent:eval
 ```
-
-## CIR → Kelly bridge
-- `sizeAfterCalibration` in `calibration-kelly-bridge.ts`
-- Fit CIR on train → calibrate size rows → portfolio/fractional Kelly × CLV deflator
-- Export: package barrel `@sports/prediction-engine`
-- Portfolio: `portfolioKellyStakes` (also exported from barrel — Session 2)
-
+Done when `npm run calibration:offline` (`failed: []`) and `npm run agent:eval` exit `0` with time-ordered OOS validation.

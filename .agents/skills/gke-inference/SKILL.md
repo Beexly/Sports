@@ -6,22 +6,9 @@ metadata:
   category: Containers
 ---
 
-
-## Use this skill when
-
-- Working on `gke-inference` tasks: Deploys and optimizes AI/ML inference workloads on GKE, using GPUs, TPUs, and model servers. Use when deploying GKE inference servers, configuring GKE GPU resources for inference, or deploying LLMs on GKE. Don't use for migrating existing AI workloads to GKE (use google-cloud-solution-guided-gke-ai-migration), GKE RAG with Cloud SQL/AlloyDB (use google-cloud-solution-rag-enterprise-search-gke-sqldb), or batch/HPC (use gke-batch-hpc).
-
-## Do not use
-
-- Do not use when the request is unrelated to `gke-inference` or when a more specific domain skill applies.
-
-## Instructions
-
-Follow the workflow, rules, and verification steps detailed below for `gke-inference`.
-
 # GKE AI/ML Inference
 
-> **Routing Note:** For migrating existing AI workloads to GKE, open `google-cloud-solution-guided-gke-ai-migration/SKILL.md`. For GKE RAG with Cloud SQL or AlloyDB (`pgvector`), open `google-cloud-solution-rag-enterprise-search-gke-sqldb/SKILL.md`.
+> **Routing Note:** For migrating existing AI workloads to GKE, open `the external `google-cloud-solution-guided-gke-ai-migration` catalog skill (via `finding-google-skills`)`. For GKE RAG with Cloud SQL or AlloyDB (`pgvector`), open `the external `google-cloud-solution-rag-enterprise-search-gke-sqldb` catalog skill (via `finding-google-skills`)`.
 
 This reference covers deploying AI/ML inference workloads on GKE using Google's
 Inference Quickstart (GIQ) and best practices for LLM serving.
