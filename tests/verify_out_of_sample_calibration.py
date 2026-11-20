@@ -371,8 +371,26 @@ def run_real_nflverse_walk_forward_backtests() -> dict[str, dict[str, Any]]:
     from intelligence.coaching.causal_positional_vulnerability_engine import (
         evaluate_causal_15p_walkforward_oos,
     )
+    from intelligence.coaching.ftn_role_zone_pressure_hazard_engine import (
+        evaluate_causal_15q_walkforward_oos,
+    )
+    from intelligence.coaching.kicker_air_density_weather_hazard_engine import (
+        evaluate_causal_15r_walkforward_oos,
+    )
+    from intelligence.coaching.ngs_causal_separation_cpoe_ryoe_engine import (
+        evaluate_causal_15s_walkforward_oos,
+    )
 
     results["stream_15p_causal_pos_vuln_walkforward"] = evaluate_causal_15p_walkforward_oos(
+        eval_weeks=tuple(range(4, 11))
+    )
+    results["stream_15q_ftn_pressure_walkforward"] = evaluate_causal_15q_walkforward_oos(
+        eval_weeks=tuple(range(4, 11))
+    )
+    results["stream_15r_kicker_physics_walkforward"] = evaluate_causal_15r_walkforward_oos(
+        eval_weeks=tuple(range(4, 11))
+    )
+    results["stream_15s_ngs_walkforward"] = evaluate_causal_15s_walkforward_oos(
         eval_weeks=tuple(range(4, 11))
     )
 
@@ -439,6 +457,30 @@ def main(argv: Sequence[str] | None = None) -> int:
         if not s15p.get("beats_raw_dvp_and_baseline"):
             print(
                 "EPISTEMIC GATE FAILURE: Stream 15P failed walk-forward OOS dominance check",
+                file=sys.stderr,
+            )
+            return 1
+        s15q = suite.get("stream_15q_ftn_pressure_walkforward") or {}
+        if not s15q.get("pressure_hazard_beats_baseline"):
+            print(
+                "EPISTEMIC GATE FAILURE: Stream 15Q pressure hazard failed OOS gate",
+                file=sys.stderr,
+            )
+            return 1
+        s15r = suite.get("stream_15r_kicker_physics_walkforward") or {}
+        if not s15r.get("beats_distance_baseline"):
+            print(
+                "EPISTEMIC GATE FAILURE: Stream 15R kicker physics failed OOS gate",
+                file=sys.stderr,
+            )
+            return 1
+        s15s_fams = (suite.get("stream_15s_ngs_walkforward") or {}).get("families") or {}
+        if not (
+            (s15s_fams.get("pass_cpoe") or {}).get("beats_baseline")
+            and (s15s_fams.get("rush_ryoe") or {}).get("beats_baseline")
+        ):
+            print(
+                "EPISTEMIC GATE FAILURE: Stream 15S pass_cpoe/rush_ryoe failed OOS gate",
                 file=sys.stderr,
             )
             return 1

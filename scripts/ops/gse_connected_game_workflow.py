@@ -1849,6 +1849,7 @@ def run_stage1a_all_38_coaching_and_scheme_layers(
         causal_positional_vulnerability_engine,
         ftn_role_zone_pressure_hazard_engine,
         kicker_air_density_weather_hazard_engine,
+        ngs_causal_separation_cpoe_ryoe_engine,
         ingame,
         ol_provider,
         pgwe_luck_audit,
@@ -2225,6 +2226,11 @@ def run_stage1a_all_38_coaching_and_scheme_layers(
             {"wind_mph": env_cfg.get("wind_mph", 6.5), "is_indoor": env_cfg.get("is_indoor", False)},
         ),
         "stream_15r_kicker_air_density": kicker_air_density_weather_hazard_engine.evaluate_causal_15r_kicker_matchup(
+            away,
+            home,
+            {"wind_mph": env_cfg.get("wind_mph", 6.5), "is_indoor": env_cfg.get("is_indoor", False)},
+        ),
+        "stream_15s_ngs_causal_skill": ngs_causal_separation_cpoe_ryoe_engine.evaluate_causal_15s_ngs_matchup(
             away,
             home,
             {"wind_mph": env_cfg.get("wind_mph", 6.5), "is_indoor": env_cfg.get("is_indoor", False)},

@@ -1578,6 +1578,36 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     conditioners["stream_15r_net_kicker_diff"] = float(
         stream_15r_bundle["stream_15r_net_kicker_diff"]
     )
+    from intelligence.coaching.ngs_causal_separation_cpoe_ryoe_engine import (
+        evaluate_causal_15s_ngs_matchup,
+    )
+
+    stream_15s_bundle = evaluate_causal_15s_ngs_matchup(
+        away_team=away_u,
+        home_team=home_u,
+        context=ctx,
+    )
+    conditioners["stream_15s_away_ngs_pass_cpoe_edge"] = float(
+        stream_15s_bundle["stream_15s_away_ngs_pass_cpoe_edge"]
+    )
+    conditioners["stream_15s_home_ngs_pass_cpoe_edge"] = float(
+        stream_15s_bundle["stream_15s_home_ngs_pass_cpoe_edge"]
+    )
+    conditioners["stream_15s_away_ngs_rec_sep_yacoe_edge"] = float(
+        stream_15s_bundle["stream_15s_away_ngs_rec_sep_yacoe_edge"]
+    )
+    conditioners["stream_15s_home_ngs_rec_sep_yacoe_edge"] = float(
+        stream_15s_bundle["stream_15s_home_ngs_rec_sep_yacoe_edge"]
+    )
+    conditioners["stream_15s_away_ngs_rush_ryoe_edge"] = float(
+        stream_15s_bundle["stream_15s_away_ngs_rush_ryoe_edge"]
+    )
+    conditioners["stream_15s_home_ngs_rush_ryoe_edge"] = float(
+        stream_15s_bundle["stream_15s_home_ngs_rush_ryoe_edge"]
+    )
+    conditioners["stream_15s_net_ngs_skill_diff"] = float(
+        stream_15s_bundle["stream_15s_net_ngs_skill_diff"]
+    )
     conditioners["julia_carleman_5level_audit_ready"] = bool(julia_carleman_path.is_file())
 
     result = {
@@ -1606,6 +1636,7 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         "stream_15p_causal_pos_vuln": stream_15p_bundle,
         "stream_15q_ftn_pressure_hazard": stream_15q_bundle,
         "stream_15r_kicker_air_density": stream_15r_bundle,
+        "stream_15s_ngs_causal_skill": stream_15s_bundle,
         "wave32_unified_sports_situational_fusion": wave32_fusion,
         "wave34_holistic_biometrics": wave32_fusion["wave34_holistic_biometrics"],
         "wave35_gsi_and_micro_matchups": wave32_fusion["wave35_gsi_and_micro_matchups"],
@@ -1991,6 +2022,10 @@ def simulate_matchup_pbp(
         # motion_pa and eb_continuity failed OOS MSE gate and stay at 0.0 weight.
         + 0.40 * float(traj_cond.get("stream_15q_away_pressure_survival_edge", 0.0))
         + 0.25 * float(traj_cond.get("stream_15r_away_kicker_edge", 0.0))
+        # Honesty invariant: pass_cpoe and rush_ryoe beat baseline OOS;
+        # rec_sep_yacoe stays at 0.0 logit weight (logged in conditioners only).
+        + 0.35 * float(traj_cond.get("stream_15s_away_ngs_pass_cpoe_edge", 0.0))
+        + 0.30 * float(traj_cond.get("stream_15s_away_ngs_rush_ryoe_edge", 0.0))
     )
     hm_15lm_epa = _soft_cap_030(
         0.45 * float(traj_cond.get("stream_15l_home_scheme_epa_delta", 0.0))
@@ -2009,6 +2044,8 @@ def simulate_matchup_pbp(
         + 0.45 * float(traj_cond.get("stream_15p_home_pos_vuln_epa", 0.0))
         + 0.40 * float(traj_cond.get("stream_15q_home_pressure_survival_edge", 0.0))
         + 0.25 * float(traj_cond.get("stream_15r_home_kicker_edge", 0.0))
+        + 0.35 * float(traj_cond.get("stream_15s_home_ngs_pass_cpoe_edge", 0.0))
+        + 0.30 * float(traj_cond.get("stream_15s_home_ngs_rush_ryoe_edge", 0.0))
     )
     third_down_resid_lut = np.array(
         [
