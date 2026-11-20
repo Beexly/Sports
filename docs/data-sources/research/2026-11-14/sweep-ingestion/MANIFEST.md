@@ -559,3 +559,20 @@ Delta file delta-2026-11-20-ig-am.jsonl: 48 records (20 dossier
 Qwen3-ASR 0.6B), banks vs AI-agent liability terms shift
 (verified via TechCrunch; Family Shield relevance). Running
 corpus total: 12,705 records.
+
+## Delta 2026-11-20 X analytics AM (landed 2026-11-20)
+
+Source: ~/workspace/goals/gse-advanced-metrics-benchmark-sweep/
+hidden_files/staging-2026-11-20-09/section-20.md (the 2026-11-20
+AGENTS.md inventory section; the run covered a 48-hour window,
+2026-11-19 09:08 to 2026-11-20 09:08 CT, Sports commit 07d1d44,
+watermark 2123070718476750961 to 2123793594863734876).
+Delta file delta-2026-11-20-x-analytics-am.jsonl: 160 records
+(18 dossier + 142 inventoried; 14 ID-keyed + 146 slug-keyed),
+18 duplicates skipped, 0 collisions, 138,543 bytes. Material
+items: Ihartitz Mismatch Manifesto (TruMedia), sfdata tables
+(10+ yard rush, points off turnovers, batted passes, defensive
+EPA by quarter), SumerSports Stroud pressure EPA card,
+benbbaldwin 2nd-and-10 run rates. Running corpus total: 12,865
+records. The 2026-11-19 analytics delta (same catch-up run,
+section-19.md) is being converted and lands separately.
