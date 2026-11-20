@@ -527,3 +527,21 @@ Nov 20 countdown and Nov 30 per trackers), Anthropic IPO debut
 X AM, IG PM. The 2026-11-19 X analytics AM run is incomplete
 (Lane B browser result not received; staging holds Lane A and
 Lane C raw files only, nothing published) and remains pending.
+
+## Delta 2026-11-19 X For You PM (landed 2026-11-19)
+
+Source: ~/workspace/x-for-you-sweep/reports/2026-11-19-PM.md.
+Sweep: 77 unique NEW with verified IDs (70 watchlist + 9 feed,
+2 overlap removed); 20 dossiers covering 39 posts; 38
+inventoried-only with IDs; 72 feed rows inventoried without
+status IDs (named loss in the report gap audit).
+Delta file delta-2026-11-19-x-pm.jsonl: 148 records (39 dossier
++ 109 inventoried; 77 ID-keyed + 71 slug-keyed), 1 duplicate
+skipped, 0 collisions, 164,605 bytes. Strongest items:
+@sfdata9ers defensive EPA/play by quarter table, QB EPA pre/post
+INT extremes, @SumerSports live NFL charting free-first-game,
+@StatsHubCom MCP server (soccer-only). Running corpus total:
+12,657 records. All 2026-11-19 runs are now ingested except the
+X analytics AM run, which is incomplete (Lane B browser result
+not received; Lane A and Lane C staging saved, nothing
+published) and remains pending.
