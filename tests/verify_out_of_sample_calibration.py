@@ -389,6 +389,9 @@ def run_real_nflverse_walk_forward_backtests() -> dict[str, dict[str, Any]]:
     from intelligence.coaching.causal_turnover_and_early_down_regression_engine import (
         evaluate_causal_15v_walkforward_oos,
     )
+    from intelligence.coaching.causal_rest_travel_and_market_hfa_engine import (
+        evaluate_causal_15w_walkforward_oos,
+    )
 
     results["stream_15p_causal_pos_vuln_walkforward"] = evaluate_causal_15p_walkforward_oos(
         eval_weeks=tuple(range(4, 11))
@@ -410,6 +413,9 @@ def run_real_nflverse_walk_forward_backtests() -> dict[str, dict[str, Any]]:
     )
     results["stream_15v_early_down_walkforward"] = evaluate_causal_15v_walkforward_oos(
         eval_weeks=tuple(range(4, 11))
+    )
+    results["stream_15w_rest_hfa_walkforward"] = evaluate_causal_15w_walkforward_oos(
+        eval_seasons=tuple(range(2021, 2027))
     )
 
     return results
@@ -520,6 +526,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         if not s15v.get("all_promoted_components_beat_baseline"):
             print(
                 "EPISTEMIC GATE FAILURE: Stream 15V early-down clean EPA failed OOS gate",
+                file=sys.stderr,
+            )
+            return 1
+        s15w = suite.get("stream_15w_rest_hfa_walkforward") or {}
+        if not s15w.get("all_promoted_components_beat_baseline"):
+            print(
+                "EPISTEMIC GATE FAILURE: Stream 15W dynamic HFA/rest/cold failed OOS gate",
                 file=sys.stderr,
             )
             return 1

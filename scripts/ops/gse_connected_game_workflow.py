@@ -1853,6 +1853,7 @@ def run_stage1a_all_38_coaching_and_scheme_layers(
         causal_redzone_and_fourth_down_engine,
         causal_pace_and_penalty_discipline_engine,
         causal_turnover_and_early_down_regression_engine,
+        causal_rest_travel_and_market_hfa_engine,
         ingame,
         ol_provider,
         pgwe_luck_audit,
@@ -2252,6 +2253,11 @@ def run_stage1a_all_38_coaching_and_scheme_layers(
             away,
             home,
             {"wind_mph": env_cfg.get("wind_mph", 6.5), "is_indoor": env_cfg.get("is_indoor", False)},
+        ),
+        "stream_15w_rest_hfa_and_market_audit": causal_rest_travel_and_market_hfa_engine.evaluate_causal_15w_hfa_rest_matchup(
+            away,
+            home,
+            {"is_neutral_site": bool(env_cfg.get("is_neutral_site", False))},
         ),
         "pbp_reproductions_2026_summary": pbp_repro.get("reproductions")
         or {
