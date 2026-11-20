@@ -51,9 +51,11 @@ export interface CreditStackPosture {
   readonly mongodbAtlasConfigured: boolean;
   readonly gcpMlConfigured: boolean;
   readonly elevenlabsConfigured: boolean;
+  readonly elevenlabsGrantApproved: boolean;
   readonly fishAudioConfigured: boolean;
   readonly deepgramConfigured: boolean;
   readonly scalewayConfigured: boolean;
+  readonly latitudeConfigured: boolean;
   readonly telegramBotConfigured: boolean;
   readonly stealthSkeletonProviderReady: boolean;
   readonly xaiCreditsRemainingUsd: number;
@@ -148,9 +150,12 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
     has(env, "GOOGLE_APPLICATION_CREDENTIALS") ||
     has(env, "GOOGLE_APPLICATION_CREDENTIALS_JSON");
   const elevenlabsConfigured = has(env, "ELEVENLABS_API_KEY");
+  const elevenlabsGrantApproved =
+    String(env["ELEVENLABS_GRANT_APPROVED"] ?? "false").trim().toLowerCase() === "true";
   const fishAudioConfigured = has(env, "FISH_AUDIO_API_KEY");
   const deepgramConfigured = has(env, "DEEPGRAM_API_KEY");
   const scalewayConfigured = has(env, "SCALEWAY_API_KEY") || has(env, "SCALEWAY_SECRET_KEY");
+  const latitudeConfigured = has(env, "LATITUDE_API_KEY");
   const telegramBotConfigured = has(env, "TELEGRAM_BOT_TOKEN") || has(env, "GSN_TELEGRAM_BOT_TOKEN");
   const stealthSkeletonProviderReady = true;
   const xaiCreditsRemainingUsd = 37.98;
@@ -225,9 +230,11 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
     mongodbAtlasConfigured,
     gcpMlConfigured,
     elevenlabsConfigured,
+    elevenlabsGrantApproved,
     fishAudioConfigured,
     deepgramConfigured,
     scalewayConfigured,
+    latitudeConfigured,
     telegramBotConfigured,
     stealthSkeletonProviderReady,
     xaiCreditsRemainingUsd,

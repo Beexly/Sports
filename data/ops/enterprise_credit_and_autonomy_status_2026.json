@@ -1,8 +1,8 @@
 {
   "schema": "gse_enterprise_autonomy_flywheel_v1",
-  "generated_at_utc": "2026-11-20T20:52:16.193354+00:00",
+  "generated_at_utc": "2026-11-20T21:58:32.874516+00:00",
   "stage1_credit_lanes": {
-    "total_platforms_audited": 20,
+    "total_platforms_audited": 21,
     "lanes_configured": {
       "aws_hold_my_coffee_and_bedrock": true,
       "alibaba_cloud_dashscope": false,
@@ -17,17 +17,42 @@
       "posthog_50k_grant": false,
       "sentry_5k_grant": false,
       "elevenlabs_tts": false,
-      "fish_audio_tts": false,
+      "fish_audio_tts": true,
       "deepgram_200_stt": false,
+      "latitude_prompt_eval": true,
       "pinecone_300_vectors": false,
       "cloudflare_workers_ai_r2": false,
       "neon_postgres_pg17": false,
       "whop_storefront": true,
       "telegram_gsn_bot": true
     },
-    "nous_qwen4_max_hours_remaining": 66.13,
+    "nous_qwen4_max_hours_remaining": 65.02,
     "nous_cliff_failover_ready": true,
-    "aws_spend_traps_blocked": true
+    "fish_audio_free_s21_window_active": true,
+    "aws_spend_traps_blocked": true,
+    "motif_nov20_closeout": {
+      "source_commit": "7bb51ef",
+      "agent_bus_commit": "4225e1f",
+      "aws_account_id": "034220092205",
+      "aws_explore_complete": "6/6",
+      "aws_credits_usd": 199.94,
+      "aws_credits_expiry": "2027-05-10",
+      "aws_monthly_budget_usd": 20.0,
+      "fish_audio_key_label": "gse-nova-s21",
+      "fish_audio_free_model": "s2.1-pro-free",
+      "fish_audio_free_expiry": "2026-11-30",
+      "google_startups_billing_account": "0189D2-25EC7A-569654",
+      "google_startups_status": "SUBMITTED_2026_11_20",
+      "google_skills_pro_cancel_date": "2026-12-14",
+      "elevenlabs_grant_status": "SUBMITTED_ROLLING_REVIEW",
+      "elevenlabs_footer_badge_env_flag": "NEXT_PUBLIC_ELEVENLABS_GRANT_BADGE_ENABLED",
+      "latitude_free_credits_remaining": 19997,
+      "latitude_resets_on": "2026-12-01",
+      "corpus_total_records": 13146,
+      "nov20_sweep_delta": 489,
+      "x_affiliate_dm_waves_cancelled": true,
+      "mozilla_incubator_already_submitted": true
+    }
   },
   "stage2_multisport_calibration": {
     "nfl_eligible_families": [
@@ -404,7 +429,12 @@
       "can_read_all_group_messages": false
     },
     "daily_teaser_preview": "\ud83c\udf10 *GSE DAILY MULTI-SPORT ENVIRONMENT INTEL & PROOF ROOM*\n\n\u2022 *NFL* [CALIBRATED SNIPER LIVE] \u00b7 Index 68/100\n  _TNF & Week 11 trench matchups lean toward disciplined clock control and red-zone rushing volume._\n\u2022 *NBA* [PAPER LEARNING / ENVIRONMENT INTEL ONLY (NO RANDOM PICKS)]\n  _Tracking B2B rest differentials and westward travel fatigue spots while paper-learning head builds OOS sample._\n\u2022 *NHL* [PAPER LEARNING / ENVIRONMENT INTEL ONLY (NO RANDOM PICKS)]\n  _Monitoring 5v5 expected goals share and confirmed starter GSAx regressions across tonight's slate._\n\n\ud83d\udee1 *Calibration Law:* Uncalibrated extra sports NEVER ship speculative tickets. Picks fire only after out-of-sample walk-forward proof.\n\ud83d\udd13 *Join Free Proof Room & Memberships:* https://galaxy-sports-edge.whop.site",
-    "audio_tts_priority": [
+    "audio_tts_priority_pre_nov30": [
+      "fish_audio:s2.1-pro-free",
+      "elevenlabs",
+      "transcript_only"
+    ],
+    "audio_tts_priority_post_grant": [
       "elevenlabs",
       "fish_audio",
       "transcript_only"

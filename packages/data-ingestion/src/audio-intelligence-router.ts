@@ -3,10 +3,17 @@
  *
  * Enforces AGENTS.md customer-facing plain-English copy & paywall protection BEFORE
  * spending a single character of TTS credits:
- *   - TTS Synthesis Priority:
- *       1) ElevenLabs (`ELEVENLABS_API_KEY`, `eleven_turbo_v2_5`)
- *       2) Fish Audio (`FISH_AUDIO_API_KEY`)
- *       3) Fail-closed transcript-only fallback (`audioBytes: null`)
+ *   - TTS Synthesis Dynamic Priority:
+ *       * While Fish Audio S2.1 Pro free window is active (`now < 2026-12-01T00:00:00Z`)
+ *         AND ElevenLabs Startup Grant is pending (`ELEVENLABS_GRANT_APPROVED !== "true"`):
+ *           1) Fish Audio (`FISH_AUDIO_API_KEY`, model `s2.1-pro-free`, 200 free credits)
+ *           2) ElevenLabs (`ELEVENLABS_API_KEY`, `eleven_turbo_v2_5`)
+ *           3) Fail-closed transcript-only fallback (`audioBytes: null`)
+ *       * Once ElevenLabs Startup Grant approves (`ELEVENLABS_GRANT_APPROVED === "true"`)
+ *         or after Nov 30, 2026:
+ *           1) ElevenLabs (`ELEVENLABS_API_KEY`)
+ *           2) Fish Audio (`FISH_AUDIO_API_KEY`)
+ *           3) Fail-closed transcript-only fallback (`audioBytes: null`)
  *   - Speech-to-Text (`THE LEARNING LOOP` coach/QB presser ingestion):
  *       1) Deepgram Nova-2 (`DEEPGRAM_API_KEY`, $200 startup grant)
  *       2) Google Cloud Speech-to-Text (`recognizeAudioWithCloudSpeech`)
@@ -16,6 +23,9 @@ import { recognizeAudioWithCloudSpeech } from "./gcp-ml-clients.js";
 
 export type AudioTtsProvider = "elevenlabs" | "fish_audio" | "transcript_only";
 export type AudioSttProvider = "deepgram" | "gcp_speech";
+
+export const FISH_AUDIO_FREE_PROMO_CUTOFF_MS = Date.parse("2026-12-01T00:00:00Z");
+export const FISH_AUDIO_DEFAULT_FREE_MODEL = "s2.1-pro-free";
 
 const BANNED_JARGON_PATTERNS: ReadonlyArray<{ readonly label: string; readonly regex: RegExp }> = [
   { label: "10,000 worlds", regex: /\b10,?000\s*worlds?\b/i },
@@ -98,12 +108,15 @@ export interface SynthesizeAudioOptions {
   readonly elevenlabsVoiceId?: string;
   readonly elevenlabsModelId?: string;
   readonly fishReferenceId?: string;
+  readonly fishModel?: string;
+  readonly nowMs?: number;
   readonly env?: Record<string, string | undefined>;
   readonly fetchImpl?: typeof fetch;
 }
 
 export interface SynthesizeAudioResult {
   readonly provider: AudioTtsProvider;
+  readonly modelUsed: string | null;
   readonly audioBytes: Uint8Array | null;
   readonly contentType: string | null;
   readonly sanitizedScript: string;
@@ -119,11 +132,17 @@ export async function synthesizeGuardrailCleanAudio(
   });
   const env = options.env ?? process.env;
   const fetchImpl = options.fetchImpl ?? fetch;
+  const nowMs = options.nowMs ?? Date.now();
   const attemptedProviders: AudioTtsProvider[] = [];
   const errors: string[] = [];
 
   const elevenKey = (env["ELEVENLABS_API_KEY"] ?? "").trim();
-  if (elevenKey) {
+  const fishKey = (env["FISH_AUDIO_API_KEY"] ?? "").trim();
+  const elevenGrantApproved = String(env["ELEVENLABS_GRANT_APPROVED"] ?? "false").trim().toLowerCase() === "true";
+  const preferFishFreeWindow = nowMs < FISH_AUDIO_FREE_PROMO_CUTOFF_MS && !elevenGrantApproved;
+
+  const tryElevenLabs = async (): Promise<SynthesizeAudioResult | null> => {
+    if (!elevenKey) return null;
     attemptedProviders.push("elevenlabs");
     const voiceId = (options.elevenlabsVoiceId ?? env["ELEVENLABS_VOICE_ID"] ?? "21m00Tcm4TlvDq8ikWAM").trim();
     const modelId = (options.elevenlabsModelId ?? env["ELEVENLABS_MODEL_ID"] ?? "eleven_turbo_v2_5").trim();
@@ -146,67 +165,87 @@ export async function synthesizeGuardrailCleanAudio(
       );
       if (!res.ok) {
         errors.push(`elevenlabs HTTP ${res.status}`);
-      } else {
-        const buf = new Uint8Array(await res.arrayBuffer());
-        if (buf.byteLength > 0) {
-          return {
-            provider: "elevenlabs",
-            audioBytes: buf,
-            contentType: res.headers.get("content-type") ?? "audio/mpeg",
-            sanitizedScript: checked.sanitizedScript,
-            attemptedProviders,
-            fallbackReason: null,
-          };
-        }
-        errors.push("elevenlabs returned empty audio payload");
+        return null;
       }
+      const buf = new Uint8Array(await res.arrayBuffer());
+      if (buf.byteLength > 0) {
+        return {
+          provider: "elevenlabs",
+          modelUsed: modelId,
+          audioBytes: buf,
+          contentType: res.headers.get("content-type") ?? "audio/mpeg",
+          sanitizedScript: checked.sanitizedScript,
+          attemptedProviders,
+          fallbackReason: errors.length > 0 ? errors.join("; ") : null,
+        };
+      }
+      errors.push("elevenlabs returned empty audio payload");
+      return null;
     } catch (err) {
       errors.push(`elevenlabs error: ${err instanceof Error ? err.message : String(err)}`);
+      return null;
     }
-  }
+  };
 
-  const fishKey = (env["FISH_AUDIO_API_KEY"] ?? "").trim();
-  if (fishKey) {
+  const tryFishAudio = async (): Promise<SynthesizeAudioResult | null> => {
+    if (!fishKey) return null;
     attemptedProviders.push("fish_audio");
     const referenceId = (options.fishReferenceId ?? env["FISH_AUDIO_REFERENCE_ID"] ?? "").trim();
+    const fishModel = (
+      options.fishModel ??
+      env["FISH_AUDIO_MODEL"] ??
+      (nowMs < FISH_AUDIO_FREE_PROMO_CUTOFF_MS ? FISH_AUDIO_DEFAULT_FREE_MODEL : "s1")
+    ).trim();
     try {
       const res = await fetchImpl("https://api.fish.audio/v1/tts", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${fishKey}`,
           "Content-Type": "application/json",
+          model: fishModel,
         },
         body: JSON.stringify({
           text: checked.sanitizedScript,
           format: "mp3",
+          model: fishModel,
           ...(referenceId ? { reference_id: referenceId } : {}),
         }),
         signal: AbortSignal.timeout(30_000),
       });
       if (!res.ok) {
         errors.push(`fish_audio HTTP ${res.status}`);
-      } else {
-        const buf = new Uint8Array(await res.arrayBuffer());
-        if (buf.byteLength > 0) {
-          return {
-            provider: "fish_audio",
-            audioBytes: buf,
-            contentType: res.headers.get("content-type") ?? "audio/mpeg",
-            sanitizedScript: checked.sanitizedScript,
-            attemptedProviders,
-            fallbackReason: errors.length > 0 ? errors.join("; ") : null,
-          };
-        }
-        errors.push("fish_audio returned empty audio payload");
+        return null;
       }
+      const buf = new Uint8Array(await res.arrayBuffer());
+      if (buf.byteLength > 0) {
+        return {
+          provider: "fish_audio",
+          modelUsed: fishModel,
+          audioBytes: buf,
+          contentType: res.headers.get("content-type") ?? "audio/mpeg",
+          sanitizedScript: checked.sanitizedScript,
+          attemptedProviders,
+          fallbackReason: errors.length > 0 ? errors.join("; ") : null,
+        };
+      }
+      errors.push("fish_audio returned empty audio payload");
+      return null;
     } catch (err) {
       errors.push(`fish_audio error: ${err instanceof Error ? err.message : String(err)}`);
+      return null;
     }
+  };
+
+  const order = preferFishFreeWindow ? [tryFishAudio, tryElevenLabs] : [tryElevenLabs, tryFishAudio];
+  for (const runner of order) {
+    const out = await runner();
+    if (out) return out;
   }
 
   attemptedProviders.push("transcript_only");
   return {
     provider: "transcript_only",
+    modelUsed: null,
     audioBytes: null,
     contentType: null,
     sanitizedScript: checked.sanitizedScript,
@@ -214,7 +253,7 @@ export async function synthesizeGuardrailCleanAudio(
     fallbackReason:
       errors.length > 0
         ? errors.join("; ")
-        : "Neither ELEVENLABS_API_KEY nor FISH_AUDIO_API_KEY is configured — delivered transcript-only.",
+        : "Neither FISH_AUDIO_API_KEY nor ELEVENLABS_API_KEY is configured — delivered transcript-only.",
   };
 }
 

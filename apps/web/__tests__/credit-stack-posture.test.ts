@@ -133,9 +133,11 @@ describe("loadCreditStackPosture", () => {
       MONGODB_URI: "mongodb+srv://cluster.mongodb.net/galaxy_sports_edge",
       GCP_ML_ACCESS_TOKEN: "gcp-tok",
       ELEVENLABS_API_KEY: "el-key",
+      ELEVENLABS_GRANT_APPROVED: "true",
       FISH_AUDIO_API_KEY: "fish-key",
       DEEPGRAM_API_KEY: "dg-key",
       SCALEWAY_API_KEY: "scw-key",
+      LATITUDE_API_KEY: "lat-key",
       TELEGRAM_BOT_TOKEN: "tg-tok",
     });
     expect(p.freeLaneConfigured).toBe(true);
@@ -143,9 +145,11 @@ describe("loadCreditStackPosture", () => {
     expect(p.mongodbAtlasConfigured).toBe(true);
     expect(p.gcpMlConfigured).toBe(true);
     expect(p.elevenlabsConfigured).toBe(true);
+    expect(p.elevenlabsGrantApproved).toBe(true);
     expect(p.fishAudioConfigured).toBe(true);
     expect(p.deepgramConfigured).toBe(true);
     expect(p.scalewayConfigured).toBe(true);
+    expect(p.latitudeConfigured).toBe(true);
     expect(p.telegramBotConfigured).toBe(true);
 
     const stubMongo = loadCreditStackPosture({ MONGODB_URI: "stub" });

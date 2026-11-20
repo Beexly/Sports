@@ -34,6 +34,9 @@ const DISCLOSURE_LINKS = [
 ] as const;
 
 export function Footer() {
+  const showElevenLabsGrantBadge =
+    process.env.NEXT_PUBLIC_ELEVENLABS_GRANT_BADGE_ENABLED === "true";
+
   return (
     <footer className="footer">
       <div className="container">
@@ -106,6 +109,17 @@ export function Footer() {
           <span>
             © {new Date().getFullYear()} {BRAND_NAME} · {GSN_NAME}
           </span>
+          {showElevenLabsGrantBadge && (
+            <a
+              href="https://elevenlabs.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2 transition-colors hover:text-plasma"
+            >
+              Voice by ElevenLabs
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+          )}
           <span className="ml-auto font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
             {CLOSING_LINE}
           </span>

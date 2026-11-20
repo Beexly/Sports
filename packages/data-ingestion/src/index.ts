@@ -527,6 +527,8 @@ export {
   type GcpNlAnalysisResult,
 } from "./gcp-ml-clients.js";
 export {
+  FISH_AUDIO_FREE_PROMO_CUTOFF_MS,
+  FISH_AUDIO_DEFAULT_FREE_MODEL,
   AudioGuardrailError,
   assertGuardrailCleanAudioScript,
   synthesizeGuardrailCleanAudio,

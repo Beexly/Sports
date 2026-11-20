@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   AudioGuardrailError,
+  FISH_AUDIO_DEFAULT_FREE_MODEL,
   assertGuardrailCleanAudioScript,
   synthesizeGuardrailCleanAudio,
   transcribeCoachPresserAudio,
@@ -12,7 +13,7 @@ describe("audio-intelligence-router guardrails and routing", () => {
     await expect(
       synthesizeGuardrailCleanAudio({
         script: "Our 10,000 worlds Sinkhorn simulation shows huge conviction tonight.",
-        env: { ELEVENLABS_API_KEY: "el-test" },
+        env: { ELEVENLABS_API_KEY: "el-test", FISH_AUDIO_API_KEY: "fish-test" },
         fetchImpl,
       }),
     ).rejects.toThrow(AudioGuardrailError);
@@ -37,14 +38,38 @@ describe("audio-intelligence-router guardrails and routing", () => {
     expect(unlocked.ok).toBe(true);
   });
 
-  it("uses ElevenLabs primary and fails over to Fish Audio then transcript_only", async () => {
+  it("prioritizes Fish Audio s2.1-pro-free through Nov 30 while ElevenLabs grant is pending", async () => {
     const cleanScript =
       "Tonight's AFC South matchup sets up for controlled tempo, heavy red-zone rushing volume, and sustained pocket pressure off the edge.";
 
+    const preNov30Ms = Date.parse("2026-11-20T21:00:00Z");
+    const fishFetch = vi.fn(async () => new Response(new Uint8Array([9, 8, 7, 6]), { status: 200 }));
+    const rFree = await synthesizeGuardrailCleanAudio({
+      script: cleanScript,
+      nowMs: preNov30Ms,
+      env: { ELEVENLABS_API_KEY: "el-key", FISH_AUDIO_API_KEY: "fish-key" },
+      fetchImpl: fishFetch,
+    });
+    expect(rFree.provider).toBe("fish_audio");
+    expect(rFree.modelUsed).toBe(FISH_AUDIO_DEFAULT_FREE_MODEL);
+    expect(rFree.attemptedProviders).toEqual(["fish_audio"]);
+    expect(rFree.audioBytes?.byteLength).toBe(4);
+  });
+
+  it("switches to ElevenLabs primary once grant is approved or post-Nov-30, with Fish Audio & transcript_only failover", async () => {
+    const cleanScript =
+      "Tonight's AFC South matchup sets up for controlled tempo, heavy red-zone rushing volume, and sustained pocket pressure off the edge.";
+
+    const postNov30Ms = Date.parse("2026-12-02T15:00:00Z");
     const elevenFetch = vi.fn(async () => new Response(new Uint8Array([1, 2, 3, 4]), { status: 200 }));
     const r1 = await synthesizeGuardrailCleanAudio({
       script: cleanScript,
-      env: { ELEVENLABS_API_KEY: "el-key", FISH_AUDIO_API_KEY: "fish-key" },
+      nowMs: Date.parse("2026-11-20T21:00:00Z"),
+      env: {
+        ELEVENLABS_API_KEY: "el-key",
+        ELEVENLABS_GRANT_APPROVED: "true",
+        FISH_AUDIO_API_KEY: "fish-key",
+      },
       fetchImpl: elevenFetch,
     });
     expect(r1.provider).toBe("elevenlabs");
@@ -57,6 +82,7 @@ describe("audio-intelligence-router guardrails and routing", () => {
       .mockResolvedValueOnce(new Response(new Uint8Array([5, 6, 7]), { status: 200 }));
     const r2 = await synthesizeGuardrailCleanAudio({
       script: cleanScript,
+      nowMs: postNov30Ms,
       env: { ELEVENLABS_API_KEY: "el-key", FISH_AUDIO_API_KEY: "fish-key" },
       fetchImpl: failoverFetch,
     });
@@ -71,6 +97,7 @@ describe("audio-intelligence-router guardrails and routing", () => {
       fetchImpl: vi.fn(),
     });
     expect(r3.provider).toBe("transcript_only");
+    expect(r3.modelUsed).toBeNull();
     expect(r3.audioBytes).toBeNull();
     expect(r3.sanitizedScript).toBe(cleanScript);
   });

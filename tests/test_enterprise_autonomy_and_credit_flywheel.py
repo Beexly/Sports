@@ -36,13 +36,18 @@ def test_enterprise_credit_lanes_and_aws_spend_trap_blocking(monkeypatch) -> Non
 
     summary = get_cloud_credit_lanes_summary()
     assert summary["alibaba_cloud_model_studio"]["primary_key_configured"] is True
+    assert summary["aws_hold_my_coffee_and_bedrock"]["account_id"] == "034220092205"
+    assert summary["aws_hold_my_coffee_and_bedrock"]["explore_activities_completed"] == "6/6"
     assert summary["aws_hold_my_coffee_and_bedrock"]["free_and_explore_pool_usd"] == 199.94
     assert summary["aws_hold_my_coffee_and_bedrock"]["zero_spend_budget_include_credit"] is False
     assert "NAT_Gateway" in summary["aws_hold_my_coffee_and_bedrock"]["banned_spend_traps"]
     assert summary["mongodb_atlas_bitemporal_store"]["ttl_days"] == 30
     assert summary["mongodb_atlas_bitemporal_store"]["configured"] is True
     assert summary["audio_and_voice_intelligence"]["deepgram_grant_usd"] == 200.0
+    assert summary["audio_and_voice_intelligence"]["fish_audio_free_model"] == "s2.1-pro-free"
+    assert summary["latitude_prompt_eval_pool"]["free_credits_remaining"] == 19997
     assert summary["google_cloud_full_stack"]["gear_monthly_credit_usd"] == 100.0
+    assert summary["google_cloud_full_stack"]["skills_pro_cancel_date"] == "2026-12-14"
 
     probe = probe_all_enterprise_credit_lanes(
         env={
@@ -56,11 +61,16 @@ def test_enterprise_credit_lanes_and_aws_spend_trap_blocking(monkeypatch) -> Non
         },
         now_utc=datetime(2026, 11, 20, 20, 0, 0, tzinfo=timezone.utc),
     )
-    assert probe["total_platforms_audited"] >= 18
+    assert probe["total_platforms_audited"] >= 21
     assert probe["aws_spend_traps_blocked"] is True
     assert probe["nous_cliff_failover_ready"] is True
+    assert probe["fish_audio_free_s21_window_active"] is True
+    assert probe["motif_nov20_closeout"]["x_affiliate_dm_waves_cancelled"] is True
+    assert probe["motif_nov20_closeout"]["corpus_total_records"] == 13146
     assert probe["lanes_configured"]["alibaba_cloud_dashscope"] is True
     assert probe["lanes_configured"]["deepinfra_10b_pool"] is True
+    assert probe["lanes_configured"]["fish_audio_tts"] is True
+    assert probe["lanes_configured"]["latitude_prompt_eval"] is True
     assert probe["lanes_configured"]["telegram_gsn_bot"] is True
 
 

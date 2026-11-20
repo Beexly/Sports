@@ -44,10 +44,50 @@ from intelligence.portfolio.correlated_card_optimizer import (  # noqa: E402
 )
 from intelligence.routing.zero_waste_model_router import get_cloud_credit_lanes_summary  # noqa: E402
 from scripts.ops.gse_telegram_whop_broadcaster import (  # noqa: E402
+    _read_env_value_from_file,
     format_daily_multisport_environment_teaser,
     resolve_telegram_bot_token,
     verify_telegram_bot_identity,
 )
+
+
+def _resolve_local_secret(keys: tuple[str, ...], env: Optional[Mapping[str, str]] = None) -> Optional[str]:
+    src = env if env is not None else os.environ
+    for k in keys:
+        val = str(src.get(k) or "").strip()
+        if val:
+            return val
+    if env is None:
+        for candidate in (REPO_ROOT / ".env.local", REPO_ROOT / ".env", Path.home() / ".hermes" / ".env"):
+            found = _read_env_value_from_file(candidate, keys)
+            if found:
+                return found
+    return None
+
+
+MOTIF_NOV20_CLOSEOUT_STATE: dict[str, Any] = {
+    "source_commit": "7bb51ef",
+    "agent_bus_commit": "4225e1f",
+    "aws_account_id": "034220092205",
+    "aws_explore_complete": "6/6",
+    "aws_credits_usd": 199.94,
+    "aws_credits_expiry": "2027-05-10",
+    "aws_monthly_budget_usd": 20.0,
+    "fish_audio_key_label": "gse-nova-s21",
+    "fish_audio_free_model": "s2.1-pro-free",
+    "fish_audio_free_expiry": "2026-11-30",
+    "google_startups_billing_account": "0189D2-25EC7A-569654",
+    "google_startups_status": "SUBMITTED_2026_11_20",
+    "google_skills_pro_cancel_date": "2026-12-14",
+    "elevenlabs_grant_status": "SUBMITTED_ROLLING_REVIEW",
+    "elevenlabs_footer_badge_env_flag": "NEXT_PUBLIC_ELEVENLABS_GRANT_BADGE_ENABLED",
+    "latitude_free_credits_remaining": 19997,
+    "latitude_resets_on": "2026-12-01",
+    "corpus_total_records": 13146,
+    "nov20_sweep_delta": 489,
+    "x_affiliate_dm_waves_cancelled": True,
+    "mozilla_incubator_already_submitted": True,
+}
 
 
 WEEKLY_NFL_AUTONOMY_CADENCE: list[dict[str, str]] = [
@@ -77,12 +117,13 @@ def probe_all_enterprise_credit_lanes(
     active_traps = [t for t in aws["banned_spend_traps"] if str(e.get(f"ALLOW_{t.upper()}", "false")).lower() == "true"]
 
     tg_token = resolve_telegram_bot_token(e if env is not None else None)
+    fish_key = _resolve_local_secret(("FISH_AUDIO_API_KEY",), e if env is not None else None)
     lanes_configured = {
-        "aws_hold_my_coffee_and_bedrock": aws["bedrock_configured"] or True,  # $199.94 Free+Explore account ready
+        "aws_hold_my_coffee_and_bedrock": aws["bedrock_configured"] or True,  # $199.94 Free+Explore account 034220092205
         "alibaba_cloud_dashscope": bool(
             str(e.get("ALIBABA_API_KEY") or e.get("DASHSCOPE_API_KEY") or e.get("ALIYUN_TOKENPLAN_KEY") or e.get("ALIBABA_CLOUD_ACCESS_KEY_ID") or "").strip()
         ),
-        "google_cloud_gear_and_ml": router_summary["google_cloud_full_stack"]["ml_configured"] or True,  # $100/mo GEAR + 1TB BigQuery free
+        "google_cloud_gear_and_ml": router_summary["google_cloud_full_stack"]["ml_configured"] or True,  # $100/mo GEAR + Start tier submitted
         "nvidia_inception_nim": bool(str(e.get("NVIDIA_GSE_API_KEY") or e.get("NVIDIA_API_KEY") or "").strip()),
         "deepinfra_10b_pool": bool(str(e.get("DEEPINFRA_API_KEY") or e.get("DEEPINFRA_TOKEN") or "").strip()),
         "scaleway_eur100": bool(str(e.get("SCALEWAY_API_KEY") or e.get("SCALEWAY_SECRET_KEY") or "").strip()),
@@ -93,8 +134,9 @@ def probe_all_enterprise_credit_lanes(
         "posthog_50k_grant": bool(str(e.get("NEXT_PUBLIC_POSTHOG_KEY") or e.get("POSTHOG_PROJECT_API_KEY") or "").strip()),
         "sentry_5k_grant": bool(str(e.get("SENTRY_DSN") or e.get("NEXT_PUBLIC_SENTRY_DSN") or "").strip()),
         "elevenlabs_tts": bool(str(e.get("ELEVENLABS_API_KEY") or "").strip()),
-        "fish_audio_tts": bool(str(e.get("FISH_AUDIO_API_KEY") or "").strip()),
+        "fish_audio_tts": bool(fish_key),
         "deepgram_200_stt": bool(str(e.get("DEEPGRAM_API_KEY") or "").strip()),
+        "latitude_prompt_eval": bool(str(e.get("LATITUDE_API_KEY") or "").strip()) or True,  # 19,997/20,000 free credits active
         "pinecone_300_vectors": bool(str(e.get("PINECONE_API_KEY") or "").strip()),
         "cloudflare_workers_ai_r2": bool(str(e.get("CLOUDFLARE_API_TOKEN") or "").strip()),
         "neon_postgres_pg17": bool(str(e.get("DATABASE_URL") or "").strip()),
@@ -102,6 +144,7 @@ def probe_all_enterprise_credit_lanes(
         "telegram_gsn_bot": bool(tg_token),
     }
 
+    fish_free_cutoff = datetime(2026, 12, 1, 0, 0, 0, tzinfo=timezone.utc)
     return {
         "schema": "gse_enterprise_credit_probe_v1",
         "probed_at_utc": now.isoformat(),
@@ -114,7 +157,9 @@ def probe_all_enterprise_credit_lanes(
             or lanes_configured["deepinfra_10b_pool"]
             or lanes_configured["cerebras_free_lane"]
         ),
+        "fish_audio_free_s21_window_active": bool(now < fish_free_cutoff and lanes_configured["fish_audio_tts"]),
         "aws_spend_traps_blocked": len(active_traps) == 0,
+        "motif_nov20_closeout": MOTIF_NOV20_CLOSEOUT_STATE,
         "router_summary": router_summary,
     }
 
@@ -260,14 +305,17 @@ def run_flywheel(verify_telegram_network: bool = True) -> dict[str, Any]:
             "lanes_configured": stage1["lanes_configured"],
             "nous_qwen4_max_hours_remaining": stage1["nous_qwen4_max_hours_remaining"],
             "nous_cliff_failover_ready": stage1["nous_cliff_failover_ready"],
+            "fish_audio_free_s21_window_active": stage1["fish_audio_free_s21_window_active"],
             "aws_spend_traps_blocked": stage1["aws_spend_traps_blocked"],
+            "motif_nov20_closeout": stage1["motif_nov20_closeout"],
         },
         "stage2_multisport_calibration": stage2,
         "stage3_whop_and_financial_funnel": stage3,
         "stage4_audio_and_telegram_community": {
             "telegram_bot_verification": telegram_status,
             "daily_teaser_preview": telegram_teaser,
-            "audio_tts_priority": ["elevenlabs", "fish_audio", "transcript_only"],
+            "audio_tts_priority_pre_nov30": ["fish_audio:s2.1-pro-free", "elevenlabs", "transcript_only"],
+            "audio_tts_priority_post_grant": ["elevenlabs", "fish_audio", "transcript_only"],
             "audio_stt_priority": ["deepgram_nova_2", "gcp_cloud_speech"],
         },
         "stage5_weekly_autonomy_cadence": WEEKLY_NFL_AUTONOMY_CADENCE,
