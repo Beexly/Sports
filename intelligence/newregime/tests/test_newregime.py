@@ -23,7 +23,10 @@ from newregime import (maml_new_regime_check, nggp_new_regime_check,
                        drift_acceptance_check, knn_impute,
                        all_research_lanes, EstimandTaxonomy,
                        ResearchGradeNotEvaluated, STATUS_UNTESTED,
-                       is_layoff_return, blanket_candidate, archetype_flag)
+                       is_layoff_return, blanket_candidate, archetype_flag,
+                       MamlConfig)
+from newregime.maml import meta_train
+from newregime.dgp import sample_meta_tasks
 
 PACKAGE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -64,6 +67,39 @@ def test_maml_beats_baseline_on_held_out_regimes():
     res = maml_new_regime_check()
     assert res["n_test_tasks"] > 0
     assert res["brier_maml"] < res["brier_baseline"]
+
+
+def test_maml_config_defaults_and_meta_train_variants():
+    """Verify MamlConfig defaults, explicit config object, dict config,
+    and backward-compatible keyword arguments."""
+    cfg = MamlConfig()
+    assert cfg.meta_iters == 400
+    assert cfg.outer_lr == 0.05
+    assert cfg.inner_steps == 3
+    assert cfg.inner_lr == 1.0
+
+    tasks = sample_meta_tasks(n_tasks=4, d=2, n_support=2, n_query=4)["tasks"]
+
+    # 1. Default config
+    w1, b1 = meta_train(tasks, d=2, config=MamlConfig(meta_iters=5, seed=42))
+    assert w1.shape == (2,)
+    assert isinstance(b1, float)
+
+    # 2. Dict config
+    w2, b2 = meta_train(tasks, d=2, config={"meta_iters": 5, "seed": 42})
+    assert w2.shape == (2,)
+    assert (w1 == w2).all()
+    assert b1 == b2
+
+    # 3. Legacy kwargs
+    w3, b3 = meta_train(tasks, d=2, meta_iters=5, seed=42)
+    assert (w1 == w3).all()
+    assert b1 == b3
+
+    # 4. Positional meta_iters legacy argument
+    w4, b4 = meta_train(tasks, 2, 5, seed=42)
+    assert (w1 == w4).all()
+    assert b1 == b4
 
 
 # ---------------------------------------------------------------------------
