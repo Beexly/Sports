@@ -588,3 +588,20 @@ Delta file delta-2026-11-20-x-am.jsonl: 121 records (28 dossier
 + 93 inventoried; 54 ID-keyed + 67 slug-keyed), 13 duplicates
 skipped, 0 collisions, 129,664 bytes. Running corpus total:
 12,986 records.
+
+## Delta 2026-11-19 X analytics AM (landed 2026-11-20)
+
+Source: ~/workspace/goals/gse-advanced-metrics-benchmark-sweep/
+hidden_files/staging-2026-11-20-09/section-19.md (the 2026-11-19
+AGENTS.md inventory section). The original 2026-11-19 AM run was
+incomplete (Lane B never arrived); the 2026-11-20 catch-up run
+completed the 48-hour window and published both days (Sports
+commit 07d1d44), which unblocked this delta.
+Delta file delta-2026-11-19-x-analytics-am.jsonl: 160 records
+(63 dossier + 97 inventoried; 115 ID-keyed + 45 slug-keyed),
+31 duplicates skipped, 0 collisions, 164,764 bytes. Material
+items: RyanPaganetti Morgan Moses stance tell, benbbaldwin
+Adjusted EPA plus PFF Grade Blend (36-QB table), Patton and
+StatRankings Play Caller Tendencies, RoundtableSN 32-team
+defensive tables, tejfbanalytics Mahomes deep-throw CPOE by
+receiver. Running corpus total: 13,146 records.
