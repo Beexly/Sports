@@ -25,6 +25,10 @@
 
 """First-order MAML adapter for new-regime prediction (1912)."""
 
+from dataclasses import dataclass, replace
+import numbers
+from typing import Optional
+
 import numpy as np
 
 from .dgp import sigmoid, sample_meta_tasks, MODULE_SEED
@@ -99,15 +103,44 @@ def meta_train(tasks, d, meta_iters=400, outer_lr=0.05,
     return w, b
 
 
-def maml_new_regime_check(seed=MODULE_SEED, n_tasks=256, d=6,
-                          n_support=4, n_query=64,
-                          inner_steps=3, inner_lr=1.0):
+@dataclass(frozen=True)
+class MamlConfig:
+    """Configuration hyperparameters for MAML new-regime validation check (1912)."""
+    seed: int = MODULE_SEED
+    n_tasks: int = 256
+    d: int = 6
+    n_support: int = 4
+    n_query: int = 64
+    inner_steps: int = 3
+    inner_lr: float = 1.0
+
+
+def maml_new_regime_check(config: Optional[MamlConfig] = None, **kwargs):
     """Run the 1912 gate: MAML adapter vs pooled baseline on held-out regimes.
 
+    Parameters can be passed via a MamlConfig dataclass or as keyword arguments.
     Returns dict with brier_improvement (mean baseline Brier minus mean
     MAML-adapted Brier over held-out new-regime tasks), plus full provenance.
     Gate: brier_improvement >= 0.02.
     """
+    if isinstance(config, numbers.Integral):
+        kwargs['seed'] = int(config)
+        config = None
+
+    if config is None:
+        cfg = MamlConfig(**kwargs)
+    elif kwargs:
+        cfg = replace(config, **kwargs)
+    else:
+        cfg = config
+
+    seed = cfg.seed
+    n_tasks = cfg.n_tasks
+    d = cfg.d
+    n_support = cfg.n_support
+    n_query = cfg.n_query
+    inner_steps = cfg.inner_steps
+    inner_lr = cfg.inner_lr
     data = sample_meta_tasks(seed=seed, n_tasks=n_tasks, d=d,
                              n_support=n_support, n_query=n_query)
     tasks = data["tasks"]
