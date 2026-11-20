@@ -1,18 +1,5 @@
 {
   "artifact": "intelligence/coaching/data/tau_hat.csv",
-  "sha256": "2b06f7d6aca5997f8a96677adaf8902a1e2c4efb77270d3cbe19f614109e50c3",
-  "rows": 1523,
-  "producer": "coaching.coach_risk.TauFitter.fit",
-  "producer_entrypoint": "python -m coaching.refit_tau (DATA_DIR still points at the legacy path; this table was fit by calling TauFitter directly on the nflverse parquets named below)",
-  "fit_window": "2022-2026 inclusive, one point fit, not walk-forward",
-  "point_in_time": false,
-  "point_in_time_note": "point fit \u2014 not pre-kickoff. 2026 unit cells pool in-season weeks.",
-  "fallback_level_counts": {
-    "league": 933,
-    "league_region": 373,
-    "pooled": 162,
-    "unit": 55
-  },
   "columns": [
     "tau_hat",
     "n",
@@ -26,72 +13,131 @@
     "fallback_level",
     "fit_stamp"
   ],
-  "source_license": "nflverse/nflverse-data SPDX CC-BY-4.0. This table is a derivative and keeps that attribution. It is not a TimesFM output and carries no TimesFM non-commercial constraint.",
-  "sources": [
-    {
-      "season": 2022,
-      "filename": "play_by_play_2022.parquet",
-      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2022.parquet",
-      "sha256": "931121d8897779d7944e2a293e92ed8799c8e5cceef84096ac42339003fedc09",
-      "bytes": 20426548,
-      "upstream_updated_at": "2026-02-12T10:25:24Z",
-      "committed": false,
-      "note": "2022-2025 are local inputs to the fit and are NOT committed (80MB). Re-fetch from the URL; sha256 must match or the table is not this table."
-    },
-    {
-      "season": 2023,
-      "filename": "play_by_play_2023.parquet",
-      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2023.parquet",
-      "sha256": "bd3484731408def6b0ec93225bba2bd7b2c65769ca707a2b9444d891abdc6776",
-      "bytes": 20534088,
-      "upstream_updated_at": "2026-02-12T10:24:52Z",
-      "committed": false,
-      "note": "2022-2025 are local inputs to the fit and are NOT committed (80MB). Re-fetch from the URL; sha256 must match or the table is not this table."
-    },
-    {
-      "season": 2024,
-      "filename": "play_by_play_2024.parquet",
-      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2024.parquet",
-      "sha256": "3fd2896bc0b911b615142d2f1fabae54a4bbba5ab7b73b28187b118ef8af6a3b",
-      "bytes": 20597560,
-      "upstream_updated_at": "2026-08-13T12:26:27Z",
-      "committed": false,
-      "note": "2022-2025 are local inputs to the fit and are NOT committed (80MB). Re-fetch from the URL; sha256 must match or the table is not this table."
-    },
-    {
-      "season": 2025,
-      "filename": "play_by_play_2025.parquet",
-      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2025.parquet",
-      "sha256": "c6ecedd6d678cc37ed316b23ef84ee1ec6abb69c514bb11868a7ebd5a367df29",
-      "bytes": 20337029,
-      "upstream_updated_at": "2026-08-13T12:26:09Z",
-      "committed": false,
-      "note": "2022-2025 are local inputs to the fit and are NOT committed (80MB). Re-fetch from the URL; sha256 must match or the table is not this table."
-    },
-    {
-      "season": 2026,
-      "filename": "play_by_play_2026.parquet",
-      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2026.parquet",
-      "sha256": "ad20b9292686d0bbc899020062789f3b42b5c8542b9a3d9c1dc3ce317d2d248d",
-      "bytes": 3723133,
-      "upstream_updated_at": "2026-10-02T15:46:33Z",
-      "committed": true,
-      "note": "2022-2025 are local inputs to the fit and are NOT committed (80MB). Re-fetch from the URL; sha256 must match or the table is not this table."
-    }
+  "do_not": [
+    "Do not cite the previous point-fit served table as validated at +6.77pp. That number is the held-out fit recorded in held_out_measurement_2026-10-02.",
+    "Do not cite this table's +11.1585pp walk-forward number as the +6.77pp measurement. They are different measurements of different tables (held_out_measurement_2026-10-02 vs held_out_measurement_2026-10-30).",
+    "Do not describe fallback_level other than 'unit' as a per-team measurement.",
+    "Do not route any TimesFM output into this table.",
+    "Served season 2022 is absent by construction (the pinned inputs hold no strictly-prior window for it). Provider lookups for 2022 cells raise DataGapError by design; do not backfill 2022 from the retired point fit."
   ],
+  "fallback_level_counts": {
+    "league": 634,
+    "league_region": 426,
+    "pooled": 162,
+    "unit": 55
+  },
+  "fallback_level_counts_by_season": {
+    "2023": {
+      "league": 130,
+      "league_region": 135,
+      "pooled": 42,
+      "unit": 13
+    },
+    "2024": {
+      "league": 159,
+      "league_region": 106,
+      "pooled": 38,
+      "unit": 16
+    },
+    "2025": {
+      "league": 159,
+      "league_region": 106,
+      "pooled": 40,
+      "unit": 14
+    },
+    "2026": {
+      "league": 186,
+      "league_region": 79,
+      "pooled": 42,
+      "unit": 12
+    }
+  },
+  "fit_stamp": "walk-forward — served for {season}; fit on seasons 2022-{prior} only (strictly before {season}); unit cells measured on {prior} decisions; no in-season data",
+  "fit_window": "walk-forward, expanding: served season S is fit only on seasons strictly before S. Inputs 2022-2025; served seasons 2023-2026. Served season 2022 is absent: the pinned inputs contain no strictly-prior window for it.",
   "held_out_measurement_2026-10-02": {
-    "protocol": "TauFitter.fit(seasons=[2022, 2023]) then hamming_gate on 2024-2025 opponent-half fourth downs. Separate fit from the served table.",
-    "n": 3988,
     "acc_tau": 0.3593,
     "acc_wpmax": 0.2916,
     "delta_pp": 6.7703,
+    "gate": "delta_pp >= 3",
     "gate_pass": true,
-    "gate": "delta_pp >= 3"
+    "n": 3988,
+    "note": "Carried from the served manifest for provenance. Reproduced exactly on 2026-10-30 from the pinned parquets (n=3988, acc_tau 0.3593, acc_wpmax 0.2916, delta +6.7703pp) with the fitter constructed on 2022-2023 only; constructing it on all seasons inflates the number (delta +4.4634pp at acc_tau 0.3992 / acc_wpmax 0.3546 — a different, contaminated scorer) and does NOT reproduce the record.",
+    "protocol": "TauFitter.fit(seasons=[2022, 2023]) then hamming_gate on 2024-2025 opponent-half fourth downs. Separate fit from the served table."
   },
-  "do_not": [
-    "Do not cite the served table itself as validated at +6.77pp. That number is the held-out fit above.",
-    "Do not describe fallback_level other than 'unit' as a per-team measurement.",
-    "Do not route any TimesFM output into this table."
+  "point_in_time": true,
+  "point_in_time_note": "Pre-kickoff valid at season granularity. For served season S, the fitter (including its forward-model value tables) sees only seasons < S; unit cells are the most recent completed season's (S-1) fitted cells; fallback aggregates are computed inside the same prior-only fit. No in-season data in any cell — the point fit's 2026 pooling defect is absent by construction.",
+  "producer": "coaching.coach_risk.TauFitter.fit, driven walk-forward (one TauFitter per served season, constructed on prior seasons only)",
+  "producer_entrypoint": "TauFitter driven walk-forward: one TauFitter per served season, constructed on prior seasons only. Reference run + independent audit artifacts: ~/workspace/tau-hat-fix/ (2026-10-30). refit_tau.py as shipped performs single point fits only; do not use it to regenerate this table.",
+  "rows": 1277,
+  "sha256": "17656fdf6981c55dfbbfff99aae5f039e35c1e6172357cd6c9cb9f94dcd4594f",
+  "source_license": "nflverse/nflverse-data SPDX CC-BY-4.0. This table is a derivative and keeps that attribution. It is not a TimesFM output and carries no TimesFM non-commercial constraint.",
+  "sources": [
+    {
+      "bytes": 20426548,
+      "filename": "play_by_play_2022.parquet",
+      "note": "Re-fetched 2026-10-30 into ~/workspace/tau-hat-fix/data/; sha256 and byte count match parquet-pins.json exactly.",
+      "pin_verified": true,
+      "season": 2022,
+      "sha256": "931121d8897779d7944e2a293e92ed8799c8e5cceef84096ac42339003fedc09",
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2022.parquet"
+    },
+    {
+      "bytes": 20534088,
+      "filename": "play_by_play_2023.parquet",
+      "note": "Re-fetched 2026-10-30; sha256 and byte count match the pin exactly.",
+      "pin_verified": true,
+      "season": 2023,
+      "sha256": "bd3484731408def6b0ec93225bba2bd7b2c65769ca707a2b9444d891abdc6776",
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2023.parquet"
+    },
+    {
+      "bytes": 20597560,
+      "filename": "play_by_play_2024.parquet",
+      "note": "Re-fetched 2026-10-30; sha256 and byte count match the pin exactly.",
+      "pin_verified": true,
+      "season": 2024,
+      "sha256": "3fd2896bc0b911b615142d2f1fabae54a4bbba5ab7b73b28187b118ef8af6a3b",
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2024.parquet"
+    },
+    {
+      "bytes": 20337029,
+      "filename": "play_by_play_2025.parquet",
+      "note": "Re-fetched 2026-10-30; sha256 and byte count match the pin exactly.",
+      "pin_verified": true,
+      "season": 2025,
+      "sha256": "c6ecedd6d678cc37ed316b23ef84ee1ec6abb69c514bb11868a7ebd5a367df29",
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2025.parquet"
+    }
   ],
-  "fit_stamp": "point fit \u2014 not pre-kickoff. 2026 unit cells pool in-season weeks."
+  "sources_note": "play_by_play_2026.parquet is deliberately NOT an input: served-2026 cells are fit on 2022-2025 only. Using any 2026 decisions would recreate the point fit's look-ahead.",
+  "status": "Walk-forward table (point_in_time: true), swapped in by the 2026-10-30 tau swap (branch tau/walkforward-swap-2026-10-30); supersedes the retired point fit (sha256 2b06f7d6aca5997f8a96677adaf8902a1e2c4efb77270d3cbe19f614109e50c3). Candidate verified on its own walk-forward protocol (+11.1585pp, n=3,988, gate >=3pp) and by an independent protocol audit; see held_out_measurement_2026-10-30.",
+  "held_out_measurement_2026-10-30": {
+    "acc_tau": 0.4032,
+    "acc_wpmax": 0.2916,
+    "crosscheck_walkforward_script_style": {
+      "2024_delta_pp": 8.308,
+      "2025_delta_pp": 14.2006,
+      "note": "walkforward_tau.py's own serving (fit table has no eval-year rows, serve() falls back to league maps), expanding windows: 2024 delta +8.3080pp (n=1974), 2025 delta +14.2006pp (n=2014). Reported so the candidate's number does not rest on one serving mechanism."
+    },
+    "delta_pp": 11.1585,
+    "gate": "delta_pp >= 3",
+    "gate_pass": true,
+    "n": 3988,
+    "per_year": {
+      "2024": {
+        "acc_tau": 0.3713,
+        "acc_wpmax": 0.2842,
+        "delta_pp": 8.7133,
+        "n": 1974
+      },
+      "2025": {
+        "acc_tau": 0.4345,
+        "acc_wpmax": 0.2989,
+        "delta_pp": 13.5551,
+        "n": 2014
+      }
+    },
+    "protocol": "Same scorer and split as held_out_measurement_2026-10-02, walk-forward form: for each eval year Y in {2024, 2025}, TauFitter constructed on seasons < Y only (forward model included), serving the candidate table's season-Y rows (fallback maps recomputed from those rows exactly as TauFitter.fit computes them), hamming_gate on Y's opponent-half fourth downs. Protocol interpretation pinned by exact reproduction of the 2026-10-02 numbers before the candidate was judged (see RUN-REPORT).",
+    "independent_audit_2026-10-30": "Independent recompute (fresh script, repo coach_risk.py primitives only, candidate CSV as on disk): recorded 2026-10-02 measurement reproduced EXACTLY (n=3988, acc_tau 0.3593, acc_wpmax 0.2916, delta +6.7703pp) under prior-only construction; candidate per-year deltas reproduced exactly (2024 +8.7133pp n=1974; 2025 +13.5551pp n=2014; combined +11.1585pp, baseline acc_wpmax unchanged at 0.2916). Parquet sha256 pins re-verified 4/4; staged coach_risk.py byte-identical to repo original."
+  }
 }
