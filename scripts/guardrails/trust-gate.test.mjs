@@ -252,3 +252,24 @@ test("the 2026-11-18 sweep's Lock shapes and quoted third-party copy are data, n
   assert.equal(r.code, 1, r.out);
   assert.match(r.out, /banned\.lock/);
 });
+
+test("the 2026-11-20 sweep's parenthetical padlock annotation is a UI glyph, not a pick", () => {
+  const digestLine =
+    'Display name "Follow @FTNFantasy" (lock icon), @FTNData. Bio: "The most advanced NFL charted data, custom & data feeds, player projections, DFS data/tools, betting tools, & customized white-label tools."';
+  const ok = scan({ "AGENTS.md": digestLine + "\n" });
+  assert.equal(ok.code, 0, ok.out);
+  // Narrowness pins: claim shapes still fail, even with the annotation present.
+  for (const body of [
+    "This is a lock, play it at 2 units.\n",
+    "Display name (lock icon) and this one is a lock for Sunday.\n",
+  ]) {
+    const r = scan({ "AGENTS.md": body });
+    assert.equal(r.code, 1, `expected refusal for: ${body}\n${r.out}`);
+    assert.match(r.out, /banned\.lock/);
+  }
+  // Scope pin: the exemption is memory-doc-only; the same annotation in a
+  // non-memory file is still a hit.
+  const elsewhere = scan({ "packages/ops/src/some-copy.ts": "const s = '(lock icon)';\n" });
+  assert.equal(elsewhere.code, 1, elsewhere.out);
+  assert.match(elsewhere.out, /banned\.lock/);
+});

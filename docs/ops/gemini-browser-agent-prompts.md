@@ -6,7 +6,7 @@ This runbook eliminates manual dashboard clicks for external auth and storefront
 - **Fish Audio (`s2.1-pro-free`):** `FISH_AUDIO_API_KEY` and `FISH_AUDIO_TTS_MODEL` in `c:\Users\Garrett\Sports\.env.local` are now auto-detected by `scripts/ops/fish-audio-tts.mjs` and `scripts/ops/fleet-monitor.mjs`.
 - **Sentry Exporter Collector (`otelcol-contrib`):** Windows binary installed at `%USERPROFILE%\.local\bin\otelcol-contrib.exe`, `infra/otel/collector-config.yaml` configured with `10%` probabilistic sampling + `auto_create_projects: { enabled: true }` + `otlphttp/latitude` tee + `debug` exporter, and validated via `node scripts/ops/start-otel-collector.mjs --validate`.
 - **Note on Placeholder Sentry Env Vars:** `SENTRY_ORG_SLUG` and `SENTRY_AUTH_TOKEN` added to `c:\Users\Garrett\Sports\.env.local` are **placeholder** environment variables (`your-sentry-org-slug`, `your-sentry-auth-token`) for the browser agent or user to replace with actual Sentry credentials.
-- **All 10 Headless Model API Lanes & 7 Cloudflare Workers:** Configured, hardened, and passing `npm run ops:monitor` (`HTTP 200`).
+- **All 10 Headless Model API Lanes & 7 Cloudflare Workers:** Configured, hardened, and passing `node scripts/ops/fleet-monitor.mjs` (`HTTP 200`).
 
 ---
 
