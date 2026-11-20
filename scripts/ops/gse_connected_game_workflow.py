@@ -1855,6 +1855,7 @@ def run_stage1a_all_38_coaching_and_scheme_layers(
         causal_turnover_and_early_down_regression_engine,
         causal_rest_travel_and_market_hfa_engine,
         causal_air_yac_and_rush_success_engine,
+        causal_box_shell_and_charting_engine,
         ingame,
         ol_provider,
         pgwe_luck_audit,
@@ -2261,6 +2262,11 @@ def run_stage1a_all_38_coaching_and_scheme_layers(
             {"is_neutral_site": bool(env_cfg.get("is_neutral_site", False))},
         ),
         "stream_15x_air_yac_and_rush_success": causal_air_yac_and_rush_success_engine.evaluate_causal_15x_air_yac_rush_matchup(
+            away,
+            home,
+            {"wind_mph": env_cfg.get("wind_mph", 6.5), "is_indoor": env_cfg.get("is_indoor", False)},
+        ),
+        "stream_15y_box_shell_and_charting": causal_box_shell_and_charting_engine.evaluate_causal_15y_box_charting_matchup(
             away,
             home,
             {"wind_mph": env_cfg.get("wind_mph", 6.5), "is_indoor": env_cfg.get("is_indoor", False)},

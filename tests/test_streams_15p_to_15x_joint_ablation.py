@@ -1,6 +1,6 @@
 """
-Tests for Joint Multi-Stream Meta-Stacking, 9x9 Collinearity Audit, and Frozen
-Calibration Ablation across Streams 15P..15X (`2026` Weeks 4..10).
+Tests for Joint Multi-Stream Meta-Stacking, 10x10 Collinearity Audit, and Frozen
+Calibration Ablation across Streams 15P..15Y (`2026` Weeks 4..10).
 """
 
 from __future__ import annotations

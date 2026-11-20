@@ -1,11 +1,11 @@
 """
-Joint Multi-Stream Meta-Stacking, Collinearity Audit & Frozen Calibration Ablation (Streams 15P..15X)
+Joint Multi-Stream Meta-Stacking, Collinearity Audit & Frozen Calibration Ablation (Streams 15P..15Y)
 ====================================================================================================
 
-Evaluates all nine newly built causal NFL intelligence streams (`15P` through `15X`)
+Evaluates all ten newly built causal NFL intelligence streams (`15P` through `15Y`)
 jointly on cleared `data/nflverse/schedules_games_through_2026_w10.parquet`
 (`2026 Weeks 4..10`, `n = 102` REG games; strictly causal `as_of_week = game.week`):
-  - Computes the 9x9 pairwise correlation matrix across all promoted stream differentials
+  - Computes the 10x10 pairwise correlation matrix across all promoted stream differentials
     to expose any multi-stream collinearity (e.g. `15V` early-down EPA vs `15X` air/YAC pass).
   - Evaluates strict walk-forward (`week < eval_wk`, Weeks 5..10) Ridge-orthogonalized stacking
     and standardized equal-weight stacking against uninformative baseline (`p=0.50` / `0pt`) and
@@ -36,6 +36,9 @@ from evaluation.frozen.score_walkforward_calibration_v1 import (
 )
 from intelligence.coaching.causal_air_yac_and_rush_success_engine import (
     evaluate_causal_15x_air_yac_rush_matchup,
+)
+from intelligence.coaching.causal_box_shell_and_charting_engine import (
+    evaluate_causal_15y_box_charting_matchup,
 )
 from intelligence.coaching.causal_pace_and_penalty_discipline_engine import (
     evaluate_causal_15u_pace_matchup,
@@ -75,6 +78,7 @@ STREAM_NAMES: Tuple[str, ...] = (
     "15V_early_down",
     "15W_hfa_rest",
     "15X_air_rush",
+    "15Y_box_chart",
 )
 
 
@@ -152,6 +156,7 @@ def extract_causal_game_feature_matrix(
         b15v = evaluate_causal_15v_early_down_matchup(aw, hm, ctx, as_of_week=wk)
         b15w = evaluate_causal_15w_hfa_rest_matchup(aw, hm, ctx, as_of_season=2026, as_of_week=wk)
         b15x = evaluate_causal_15x_air_yac_rush_matchup(aw, hm, ctx, as_of_week=wk)
+        b15y = evaluate_causal_15y_box_charting_matchup(aw, hm, ctx, as_of_week=wk)
 
         hm_ml = float(g["home_moneyline"]) if pd.notna(g["home_moneyline"]) else -110.0
         aw_ml = float(g["away_moneyline"]) if pd.notna(g["away_moneyline"]) else -110.0
@@ -185,6 +190,7 @@ def extract_causal_game_feature_matrix(
                 "15V_early_down": -float(b15v["stream_15v_net_early_down_diff"]),
                 "15W_hfa_rest": -float(b15w["stream_15w_net_sched_resilience_diff"]),
                 "15X_air_rush": -float(b15x["stream_15x_net_air_rush_diff"]),
+                "15Y_box_chart": -float(b15y["stream_15y_net_box_charting_diff"]),
             }
         )
 

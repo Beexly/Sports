@@ -1759,6 +1759,42 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     conditioners["stream_15x_net_air_rush_diff"] = float(
         stream_15x_bundle["stream_15x_net_air_rush_diff"]
     )
+    from intelligence.coaching.causal_box_shell_and_charting_engine import (
+        evaluate_causal_15y_box_charting_matchup,
+    )
+
+    stream_15y_bundle = evaluate_causal_15y_box_charting_matchup(
+        away_team=away_u,
+        home_team=home_u,
+        context=ctx,
+    )
+    conditioners["stream_15y_away_rush_box_edge"] = float(
+        stream_15y_bundle["stream_15y_away_rush_box_edge"]
+    )
+    conditioners["stream_15y_home_rush_box_edge"] = float(
+        stream_15y_bundle["stream_15y_home_rush_box_edge"]
+    )
+    conditioners["stream_15y_away_catchable_edge"] = float(
+        stream_15y_bundle["stream_15y_away_catchable_edge"]
+    )
+    conditioners["stream_15y_home_catchable_edge"] = float(
+        stream_15y_bundle["stream_15y_home_catchable_edge"]
+    )
+    conditioners["stream_15y_away_def_blitz_rate"] = float(
+        stream_15y_bundle["stream_15y_away_def_blitz_rate"]
+    )
+    conditioners["stream_15y_home_def_blitz_rate"] = float(
+        stream_15y_bundle["stream_15y_home_def_blitz_rate"]
+    )
+    conditioners["stream_15y_away_iwt_null_edge"] = float(
+        stream_15y_bundle["stream_15y_away_iwt_null_edge"]
+    )
+    conditioners["stream_15y_home_iwt_null_edge"] = float(
+        stream_15y_bundle["stream_15y_home_iwt_null_edge"]
+    )
+    conditioners["stream_15y_net_box_charting_diff"] = float(
+        stream_15y_bundle["stream_15y_net_box_charting_diff"]
+    )
     conditioners["julia_carleman_5level_audit_ready"] = bool(julia_carleman_path.is_file())
 
     result = {
@@ -1793,6 +1829,7 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         "stream_15v_turnover_and_early_down": stream_15v_bundle,
         "stream_15w_rest_hfa_and_market_audit": stream_15w_bundle,
         "stream_15x_air_yac_and_rush_success": stream_15x_bundle,
+        "stream_15y_box_shell_and_charting": stream_15y_bundle,
         "wave32_unified_sports_situational_fusion": wave32_fusion,
         "wave34_holistic_biometrics": wave32_fusion["wave34_holistic_biometrics"],
         "wave35_gsi_and_micro_matchups": wave32_fusion["wave35_gsi_and_micro_matchups"],
