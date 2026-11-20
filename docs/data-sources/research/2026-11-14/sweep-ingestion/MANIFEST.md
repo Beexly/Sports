@@ -576,3 +576,15 @@ EPA by quarter), SumerSports Stroud pressure EPA card,
 benbbaldwin 2nd-and-10 run rates. Running corpus total: 12,865
 records. The 2026-11-19 analytics delta (same catch-up run,
 section-19.md) is being converted and lands separately.
+
+## Delta 2026-11-20 X For You AM (landed 2026-11-20)
+
+Source: ~/workspace/x-for-you-sweep/reports/2026-11-20-AM.md.
+Sweep: 60 unique NEW with verified IDs (51 watchlist + 9 feed);
+29 posts fully dissected in 11 dossiers; 100 feed rows
+inventoried, 73 without status IDs (browser limitation, named
+in the report gap audit).
+Delta file delta-2026-11-20-x-am.jsonl: 121 records (28 dossier
++ 93 inventoried; 54 ID-keyed + 67 slug-keyed), 13 duplicates
+skipped, 0 collisions, 129,664 bytes. Running corpus total:
+12,986 records.
