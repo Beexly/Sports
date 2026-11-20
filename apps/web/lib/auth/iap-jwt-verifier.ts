@@ -86,6 +86,11 @@ export async function verifyIapJwtAssertion(
     throw new IapVerificationError("Malformed IAP JWT structure.");
   }
   const [headerB64, payloadB64, sigB64] = parts;
+  // parts.length === 3 is checked above, but noUncheckedIndexedAccess still
+  // types destructured elements as string | undefined — fail closed explicitly.
+  if (!headerB64 || !payloadB64 || !sigB64) {
+    throw new IapVerificationError("Malformed IAP JWT structure.");
+  }
   const header = parseJsonSegment<{ alg?: string; kid?: string }>(headerB64, "header");
   const payload = parseJsonSegment<{
     iss?: string;

@@ -22,6 +22,20 @@ export interface ActiveSlateMeta {
   readonly matchupsSummary: string;
 }
 
+/**
+ * Week 11 Sunday main-window date label. Verified 2026 schedule: TNF Thu Nov 19
+ * (IND @ HOU) -> Sunday Nov 22 -> MNF Mon Nov 23 (CIN @ WSH). Matches the
+ * SUN_* cutoffs in isPackWindowOpen below.
+ */
+const SUNDAY_MAIN_DATE_LABEL = "Sun Nov 22";
+
+/**
+ * MNF matchup is DERIVED from the verified slate's games array — never a second
+ * hardcoded matchup literal that can drift from the schedule (the waves-1-4
+ * rewrite referenced a phantom WEEK11_VERIFIED_SLATE.mnfMatchup field).
+ */
+const MNF_GAME = WEEK11_VERIFIED_SLATE.games.find((g) => g.window === "MNF");
+
 export const ACTIVE_SLATE_META: ActiveSlateMeta = {
   season: WEEK11_VERIFIED_SLATE.season,
   week: WEEK11_VERIFIED_SLATE.week,
@@ -30,8 +44,8 @@ export const ACTIVE_SLATE_META: ActiveSlateMeta = {
   deskEyebrow: `REDZONE · WEEK ${WEEK11_VERIFIED_SLATE.week} NFL DESK`,
   tnfMatchup: WEEK11_VERIFIED_SLATE.tnfMatchup,
   tnfKickoffIso: "2026-11-20T01:15:00Z",
-  sundayMainDateLabel: WEEK11_VERIFIED_SLATE.sundayMainDateLabel,
-  mnfMatchup: WEEK11_VERIFIED_SLATE.mnfMatchup,
+  sundayMainDateLabel: SUNDAY_MAIN_DATE_LABEL,
+  mnfMatchup: MNF_GAME?.matchup ?? "TBD",
   slateWindowLabel: WEEK8_GAME_DAY_CATALOG_METADATA.slateWindowLabel,
   matchupsSummary: "IND @ HOU · TEN @ DAL · TB @ DET · PIT @ PHI · MIN @ SF · CIN @ WSH",
 };

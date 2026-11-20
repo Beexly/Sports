@@ -1,4 +1,3 @@
-/// <reference path="./vendor-ambient.d.ts" />
 import { PrismaClient } from "@prisma/client";
 import { Pool as NeonPool, neonConfig } from "@neondatabase/serverless";
 import { PrismaNeon } from "@prisma/adapter-neon";
@@ -259,6 +258,7 @@ function buildClient(): PrismaClient {
         neonConfig.webSocketConstructor = ws as unknown as typeof WebSocket;
       }
       const pool = new NeonPool({ connectionString: url });
+      // PrismaNeon is a class in @prisma/adapter-neon 5.22 (factory fn only in 6.x).
       const adapter = new PrismaNeon(pool);
       return new PrismaClient({
         adapter,

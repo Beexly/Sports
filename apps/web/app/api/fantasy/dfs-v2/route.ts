@@ -1,5 +1,17 @@
+/**
+ * Public-by-design DFS v2 portfolio compute (waves-1-4). Stateless, deterministic
+ * (seeded mulberry32), no user data, no DB reads/writes — callers supply their own
+ * player pool or get the same illustrative DFS_SLATE the free /fantasy/dfs page
+ * already renders. Abuse bounds: clientIp rate limit (lib/api/rate-limit.ts, the
+ * parlay-mri pattern) + a hard 600-player input cap. The rate limit is a
+ * recognized guard for scripts/guardrails/api-route-boundary.mjs — no baseline
+ * exception is used.
+ * NOTE: if this endpoint ever becomes the PAID member export API (the /fantasy/dfs
+ * copy hints at that), it must gain an entitlement guard instead of a baseline entry.
+ */
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { clientIp, consumeRateLimit } from "@/lib/api/rate-limit";
 import { optimizeDfsV2Portfolio } from "@/lib/fantasy/dfs-v2-client";
 
 const PlayerSchema = z.object({
@@ -23,10 +35,17 @@ const RequestSchema = z.object({
   outPlayers: z.array(z.string()).default([]),
   maxOverlap: z.number().int().min(0).max(8).optional(),
   seed: z.number().int().min(0).optional(),
-  players: z.array(PlayerSchema).optional(),
+  players: z.array(PlayerSchema).max(600).optional(),
 });
 
 export async function POST(request: Request) {
+  const rl = consumeRateLimit("fantasy-dfs-v2", clientIp(request), 20, 60_000);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429, headers: { "retry-after": String(rl.retryAfterSec) } },
+    );
+  }
   let raw: unknown;
   try {
     raw = await request.json();

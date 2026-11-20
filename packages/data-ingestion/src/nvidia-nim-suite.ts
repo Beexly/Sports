@@ -46,7 +46,7 @@ export class SlidingWindowRpmLimiter {
 
   reserveDelayMs(now: number = this.nowFn()): number {
     const windowStart = now - 60_000;
-    while (this.timestamps.length > 0 && this.timestamps[0] <= windowStart) {
+    while (this.timestamps.length > 0 && (this.timestamps[0] ?? Number.POSITIVE_INFINITY) <= windowStart) {
       this.timestamps.shift();
     }
     const effectiveRpmLimit = Math.min(this.maxRequestsPerMinute, NIM_SERVERLESS_RPM_LIMIT);
@@ -54,7 +54,7 @@ export class SlidingWindowRpmLimiter {
       this.timestamps.push(now);
       return 0;
     }
-    return Math.max(1, this.timestamps[0] + 60_000 - now);
+    return Math.max(1, (this.timestamps[0] ?? now) + 60_000 - now);
   }
 
   async waitTurn(): Promise<void> {

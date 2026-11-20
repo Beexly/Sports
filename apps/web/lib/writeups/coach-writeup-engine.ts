@@ -137,6 +137,9 @@ export function sanitizePlainFootballText(input: string): string {
     .replace(/\bSTAGE5_[A-Z0-9_]+:\s*/gi, "")
     .replace(/\b22,750,000\s*snap\s*evaluations?\b/gi, "every offensive and defensive snap")
     .replace(/\b10,000[-\s]*(sim|simulation|world|worlds|monte carlo)\b/gi, "film and trench study")
+    // "dropbacks" is banned on the card surface (packages-storefront-paywall
+    // contract) — swap in the plain-English synonym, preserving pluralization.
+    .replace(/\bdropback(s?)\b/gi, (_match, plural: string) => `passing snap${plural}`)
     .replace(
       /\b(simulations?|monte carlo|jev|sinkhorn[-\s]*knopp|sinkhorn|romano\s*cqr|optimal\s*transport|bitemporal\s*copula|empirical[-\s]*bayes|tau_hat|cholesky|copula|fr[eé]chet[-\s]*hoeffding|n_eff|autonomous\s*engine|machine\s*learning|deep[-\s]*math\s*dossiers?|doctoral\s*papers?|\bai\b)\b/gi,
       "matchup",

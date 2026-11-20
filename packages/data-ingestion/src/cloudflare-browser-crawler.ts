@@ -32,7 +32,7 @@ const DEFAULT_CLOUDFLARE_ACCOUNT_ID = "46f1c1d1c65d19f3f983713b3a8ab67c";
 
 function htmlToPlainMarkdown(html: string): { markdown: string; title?: string } {
   const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-  const title = titleMatch ? titleMatch[1].replace(/\s+/g, " ").trim() : undefined;
+  const title = titleMatch?.[1]?.replace(/\s+/g, " ").trim();
   const cleaned = html
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
     .replace(/<style[\s\S]*?<\/style>/gi, " ")

@@ -25,10 +25,10 @@ function findPageFiles(dir: string): string[] {
   return out;
 }
 
-/** A redirect-only stub calls next/navigation redirect() and renders no page body. */
+/** A redirect-only stub calls next/navigation redirect()/permanentRedirect() and renders no page body. */
 function isRedirectStub(file: string): boolean {
   const src = readFileSync(file, "utf8");
-  return /from\s+["']next\/navigation["']/.test(src) && /\bredirect\(/.test(src);
+  return /from\s+["']next\/navigation["']/.test(src) && /\bredirect\(|permanentRedirect\(/.test(src);
 }
 
 /**

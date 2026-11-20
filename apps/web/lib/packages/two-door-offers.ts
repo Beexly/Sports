@@ -30,6 +30,22 @@ export type SingleSlateKey =
   | "thanksgiving-slate"
   | "sunday-full-slate";
 
+/**
+ * Storefront pack window slots. Pinned by isPackWindowOpen's cutoff table in
+ * current-slate-meta.ts; the waves-1-4 rewrite dropped this export while
+ * current-slate-meta still imported it (phantom-import typecheck break).
+ */
+export type PackWindowSlot =
+  | "TNF"
+  | "SUN_EARLY"
+  | "SUN_MAIN"
+  | "SUN_LATE"
+  | "SNF"
+  | "MNF"
+  | "WEEKEND_PASS"
+  | "WEEKLY_PASS"
+  | "THANKSGIVING_SLATE";
+
 /** Store-credit and upgrade terms carried on legacy single-slate fields. */
 export interface CreditBackTerms {
   /** Net-unit threshold at which protection triggers (at or below). */
