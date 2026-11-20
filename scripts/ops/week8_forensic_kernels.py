@@ -860,6 +860,71 @@ def detect_injury_decoy_or_pitch_count_trap(
     }
 
 
+def compute_defense_tackle_pool_vector(
+    opp_rush_att: np.ndarray | Sequence[float],
+    opp_pass_comp: np.ndarray | Sequence[float],
+    opp_sacks: np.ndarray | Sequence[float] = 0.0,
+) -> np.ndarray:
+    """Conserve team defensive tackles + assists directly from opponent tackle-eligible plays."""
+    r_att = np.maximum(0.0, np.asarray(opp_rush_att, dtype=np.float64))
+    p_cmp = np.maximum(0.0, np.asarray(opp_pass_comp, dtype=np.float64))
+    sk = np.maximum(0.0, np.asarray(opp_sacks, dtype=np.float64))
+    return np.maximum(25.0, 1.42 * r_att + 1.12 * p_cmp + 1.15 * sk)
+
+
+def detect_role_surge_or_line_divergence_trap(
+    player_name: str,
+    market_line: float,
+    season_avg: float,
+    player_gp: int,
+    team_gp: int,
+    recent_l3_avg: float | None = None,
+) -> dict[str, Any]:
+    """Detect mid-season promotion / starter ramp-up where Layer-1 book line far exceeds stale season avg.
+
+    Prevents rotational-to-MLB-starter traps like CJ Allen (5.5/GP in W1-10 vs 10.5 DK line).
+    """
+    mkt = float(market_line)
+    avg_eff = max(0.5, float(season_avg or 0.0))
+    ratio = mkt / avg_eff
+    gp_gap = int(player_gp) < max(1, int(team_gp))
+    is_trap = bool(
+        (mkt > 0.0 and ratio >= 1.45)
+        or (gp_gap and mkt > 0.0 and ratio >= 1.30)
+        or (recent_l3_avg is not None and float(recent_l3_avg) >= 0.85 * mkt and ratio >= 1.25)
+    )
+    if is_trap:
+        return {
+            "player_name": player_name,
+            "market_line": mkt,
+            "season_avg": round(float(season_avg or 0.0), 3),
+            "player_gp": int(player_gp),
+            "team_gp": int(team_gp),
+            "recent_l3_avg": recent_l3_avg,
+            "line_to_season_ratio": round(ratio, 4),
+            "is_role_surge_trap": True,
+            "block_under_bets": True,
+            "decision": "PASS_ROLE_SURGE_DIVERGENCE",
+            "reason": (
+                f"ROLE_SURGE_DIVERGENCE_TRAP: {player_name} book line={mkt:.1f} is {ratio:.2f}x "
+                f"season_avg={float(season_avg or 0.0):.2f} (gp={player_gp}/{team_gp}); blocking UNDER."
+            ),
+        }
+    return {
+        "player_name": player_name,
+        "market_line": mkt,
+        "season_avg": round(float(season_avg or 0.0), 3),
+        "player_gp": int(player_gp),
+        "team_gp": int(team_gp),
+        "recent_l3_avg": recent_l3_avg,
+        "line_to_season_ratio": round(ratio, 4),
+        "is_role_surge_trap": False,
+        "block_under_bets": False,
+        "decision": "CLEAR_ROLE_CONSISTENT",
+        "reason": "NO_ROLE_SURGE_DIVERGENCE",
+    }
+
+
 def assert_pbp_conservation(
     player_rec_yds: Sequence[Sequence[float]],
     team_pass_yds: Sequence[float],

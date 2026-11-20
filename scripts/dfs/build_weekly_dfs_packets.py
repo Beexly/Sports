@@ -481,7 +481,10 @@ def optimize_showdown_portfolio(
         best_cpt = -1
         best_score = -1e18
         best_sal = 0
+        any_real_cpt = any((salaries[ci] > 1000 and scores[ci] >= 4.5) for ci in combo)
         for cpt_idx in combo:
+            if any_real_cpt and (salaries[cpt_idx] <= 1000 or scores[cpt_idx] < 4.5):
+                continue
             tot_sal = base_sal + cpt_prems[cpt_idx]
             if tot_sal <= salary_cap:
                 tot_score = base_score + 0.5 * scores[cpt_idx]
@@ -698,11 +701,17 @@ class WeeklyDFSPacketBuilder:
                 p25 = round(max(0.5, med - 0.674 * sigma_fpts), 2)
                 p90 = round(max(med + 1.5, med + 1.282 * sigma_fpts), 2)
             else:
-                # Heuristic fallback based on salary
-                val_mult = 2.6 if pos in ("QB", "RB") else 2.4
-                med = max(2.0, round((sal / 1000.0) * val_mult, 2))
-                p25 = round(med * 0.40, 2)
-                p90 = round(med * 2.10, 2)
+                # Heuristic fallback based on salary (block min-salary <= $1000 zero-snap bench punts)
+                if sal <= 1000:
+                    val_mult = 0.0
+                    med = 0.0
+                    p25 = 0.0
+                    p90 = 0.0
+                else:
+                    val_mult = 2.6 if pos in ("QB", "RB") else 2.4
+                    med = max(2.0, round((sal / 1000.0) * val_mult, 2))
+                    p25 = round(med * 0.40, 2)
+                    p90 = round(med * 2.10, 2)
 
             if med <= 0.5:
                 continue

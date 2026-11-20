@@ -192,6 +192,10 @@ from scripts.ops.enforce_stage0_roster_and_board_allowlist import (  # noqa: E40
     assert_zero_roster_contamination,
     load_stage0_game_roster_allowlist,
 )
+from intelligence.portfolio.correlated_card_optimizer import (  # noqa: E402
+    construct_uncorrelated_game_card,
+    evaluate_sgp_strict_gate,
+)
 from scripts.ops.gse_coach_mind_simulator import (  # noqa: E402
     build_jev_state_tensor,
     compute_qb_tier_adjusted_epa,
@@ -210,11 +214,220 @@ from scripts.ops.week8_forensic_kernels import (  # noqa: E402
     allocate_stochastic_conserved_box_score,
     assert_pbp_conservation as _baseline_assert_pbp_conservation,
     assert_prop_distribution_invariants,
+    compute_defense_tackle_pool_vector,
     detect_injury_decoy_or_pitch_count_trap,
+    detect_role_surge_or_line_divergence_trap,
     evaluate_empirical_prop_probability,
     evaluate_parlay_conjunction_gate,
     wilson_lower_bound,
 )
+
+
+def calibrate_qb_rush_distribution(
+    qb_pbp_rush_pg: float,
+    qb_pbp_car_pg: float,
+    qb_rush_board_line: float | None,
+    qb_car_board_line: float | None,
+    kneel_vec: np.ndarray,
+    ol_scramble_boost: float,
+    rng: np.random.Generator,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Calibrate per-world QB scramble carries and rushing yards preserving zero/negative kneeldowns."""
+    n_w = len(kneel_vec)
+    kn = np.asarray(kneel_vec, dtype=np.float64)
+    mean_kn = float(np.mean(kn))
+    pbp_r = float(qb_pbp_rush_pg or 0.0)
+    pbp_c = max(0.0, float(qb_pbp_car_pg or 0.0))
+
+    if qb_rush_board_line is not None and float(qb_rush_board_line) >= 1.5:
+        target_rush = float(np.clip((0.60 * float(qb_rush_board_line) + 0.40 * max(0.0, pbp_r)) * ol_scramble_boost, 1.5, 58.0))
+    elif qb_rush_board_line is not None:
+        # Low-line pocket QB (e.g. 0.5 rush yds line for Stafford/Rodgers): blend raw PBP with 0.5 line, no inflation
+        target_rush = float(np.clip((0.50 * max(0.0, float(qb_rush_board_line)) + 0.50 * max(0.0, pbp_r)) * ol_scramble_boost, 0.0, 10.0))
+    elif pbp_r > 2.5:
+        target_rush = float(np.clip((0.80 * pbp_r + 1.5) * ol_scramble_boost, 2.0, 48.0))
+    else:
+        target_rush = float(np.clip(max(0.0, pbp_r) * ol_scramble_boost, 0.0, 4.0))
+
+    if qb_car_board_line is not None:
+        target_car = float(np.clip((0.60 * float(qb_car_board_line) + 0.40 * pbp_c) * (ol_scramble_boost ** 0.5), 0.25, 11.0))
+    else:
+        target_car = float(np.clip(max(pbp_c, target_rush / 5.2), 0.25, 9.5))
+
+    if target_rush <= 3.5:
+        # Pocket statue profile: sparse positive scrambles, genuine -1/-2 kneeldown worlds
+        eff_scr_m = max(0.05, target_rush - 0.1)
+        scr_lam = float(np.clip(eff_scr_m / 4.2, 0.08, 0.55))
+        scr_draws = rng.poisson(scr_lam, size=n_w).astype(np.float64)
+        scr_yds = np.where(
+            scr_draws > 0,
+            np.maximum(1.0, rng.gamma(shape=np.maximum(0.4, scr_draws * 1.4), scale=3.0)),
+            0.0,
+        )
+        qb_r_draws = scr_yds - kn * 1.0
+        return scr_draws, qb_r_draws
+
+    scr_lam = max(0.25, target_car - mean_kn)
+    scr_draws = rng.poisson(scr_lam, size=n_w).astype(np.float64)
+    yds_per_scr = float(np.clip((target_rush + mean_kn * 1.0) / max(0.35, scr_lam), 2.5, 9.5))
+    qb_r_draws = (
+        rng.gamma(shape=np.maximum(0.35, scr_draws * 1.35), scale=yds_per_scr / 1.35)
+        * (scr_draws > 0).astype(np.float64)
+        - kn * 1.0
+    )
+    pos_mask = scr_draws > 0
+    if np.any(pos_mask):
+        cur_scr_m = float(np.mean(np.where(pos_mask, qb_r_draws + kn, 0.0)))
+        if cur_scr_m > 0.5:
+            scale_r = float(np.clip((target_rush + mean_kn) / cur_scr_m, 0.45, 1.85))
+            qb_r_draws = np.where(pos_mask, (qb_r_draws + kn) * scale_r - kn, qb_r_draws)
+    return scr_draws, qb_r_draws
+
+
+def enforce_joint_qb_pass_coherence(
+    pass_yds_vec: np.ndarray,
+    pass_att_vec: np.ndarray,
+    pass_comp_vec: np.ndarray,
+    qb_att_line: float | None = None,
+    qb_comp_line: float | None = None,
+    qb_pbp_comp_pct: float = 0.645,
+    qb_pbp_ypa: float = 7.15,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Enforce physically coherent (pass_yds, pass_att, pass_comp) trajectories per world."""
+    py = np.maximum(0.0, np.asarray(pass_yds_vec, dtype=np.float64))
+    pa = np.maximum(12.0, np.asarray(pass_att_vec, dtype=np.float64))
+    pc = np.maximum(4.0, np.asarray(pass_comp_vec, dtype=np.float64))
+
+    comp_pct_prior = float(np.clip(qb_pbp_comp_pct, 0.54, 0.72))
+    ypa_prior = float(np.clip(qb_pbp_ypa, 5.4, 9.2))
+    target_ypc = float(np.clip(ypa_prior / comp_pct_prior, 8.8, 13.8))
+    target_py_m = max(105.0, float(np.mean(py)))
+
+    derived_comp_m = target_py_m / target_ypc
+    if qb_comp_line is not None and float(qb_comp_line) > 5.0:
+        target_comp_m = 0.55 * float(qb_comp_line) + 0.45 * derived_comp_m
+    else:
+        target_comp_m = derived_comp_m
+    # Keep mean YPC inside [8.8, 13.8] (fixes 6.57 YPC Cousins distortion)
+    target_comp_m = float(np.clip(target_comp_m, target_py_m / 13.8, target_py_m / 8.8))
+
+    derived_att_m = target_comp_m / comp_pct_prior
+    if qb_att_line is not None and float(qb_att_line) > 10.0:
+        target_att_m = 0.55 * float(qb_att_line) + 0.45 * derived_att_m
+    else:
+        target_att_m = derived_att_m
+    # Keep mean completion percentage inside [0.54, 0.74] (fixes 85.2% Purdy & 51.5% Shough distortions)
+    target_att_m = float(np.clip(target_att_m, target_comp_m / 0.74, target_comp_m / 0.54))
+
+    pa_scaled = np.maximum(12.0, pa * (target_att_m / max(1.0, float(np.mean(pa)))))
+    pc_scaled = np.maximum(4.0, pc * (target_comp_m / max(1.0, float(np.mean(pc)))))
+    pc_coherent = np.clip(pc_scaled, pa_scaled * 0.42, pa_scaled * 0.78)
+    # Re-align mean YPC iteratively against actual clipped py mean
+    actual_py_m = float(np.mean(py))
+    for _ in range(4):
+        cur_pc_m = max(1.0, float(np.mean(pc_coherent)))
+        cur_ypc = actual_py_m / cur_pc_m
+        if cur_ypc < 8.85:
+            pc_coherent = np.clip(pc_coherent * (cur_ypc / 8.88), pa_scaled * 0.42, pa_scaled * 0.78)
+        elif cur_ypc > 13.75:
+            pc_coherent = np.clip(pc_coherent * (cur_ypc / 13.72), pa_scaled * 0.42, pa_scaled * 0.78)
+        else:
+            break
+    return py, pa_scaled, pc_coherent
+
+
+def veto_contradictory_same_qb_props(prop_evals: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Block contradictory same-QB passing volume bets (e.g. UNDER comp + OVER att or OVER TDs + UNDER yds)."""
+    out = [dict(x) for x in prop_evals]
+    by_qb: dict[tuple[str, str], list[int]] = {}
+    vol_keywords = ("passing attempts", "pass_attempts", "pass completions", "passing completions", "pass_completions", "passing yards", "pass_yds", "passing touchdowns", "pass_tds")
+    for idx, item in enumerate(out):
+        if not item.get("publishAllowed"):
+            continue
+        pos = str(item.get("position") or "").upper()
+        mkt_l = str(item.get("market") or "").lower()
+        if (pos == "QB" or any(vk in mkt_l for vk in ("passing", "pass completions", "pass_"))) and any(vk in mkt_l for vk in vol_keywords):
+            ath = str(item.get("athlete") or "").strip().lower()
+            tm = str(item.get("team") or "").strip().upper()
+            if ath:
+                by_qb.setdefault((tm, ath), []).append(idx)
+
+    for (_tm, _ath), idxs in by_qb.items():
+        if len(idxs) < 2:
+            continue
+        dirs = {str(out[i].get("model_lean") or out[i].get("lean") or "").upper() for i in idxs}
+        if "OVER" in dirs and "UNDER" in dirs:
+            best_idx = max(
+                idxs,
+                key=lambda i: (
+                    float(out[i].get("edge_vs_market") if out[i].get("edge_vs_market") is not None else out[i].get("edge_vs_minus_110_breakeven", 0.0)),
+                    float(out[i].get("win_prob_on_lean", 0.5)),
+                ),
+            )
+            for i in idxs:
+                if i != best_idx:
+                    out[i]["publishAllowed"] = False
+                    out[i]["decision"] = "PASS_CONTRADICTORY_SAME_QB_VOLUME"
+                    out[i]["recommended_kelly_units"] = 0.0
+                    out[i]["gate_reason"] = (
+                        f"PASS_CONTRADICTORY_SAME_QB_VOLUME: Conflicting direction vs top {out[best_idx]['athlete']} "
+                        f"prop ({out[best_idx]['market']} {out[best_idx].get('model_lean', out[best_idx].get('lean'))})."
+                    )
+    return out
+
+
+def allocate_conserved_receptions(
+    team_comp_vec: np.ndarray,
+    athletes: dict[str, Any],
+    rec_yds_alloc: dict[str, np.ndarray],
+    rng: np.random.Generator,
+) -> dict[str, np.ndarray]:
+    """Allocate conserved per-world receptions summing identically to team completions."""
+    tm_comp = np.maximum(0.0, np.asarray(team_comp_vec, dtype=np.float64))
+    n_w = len(tm_comp)
+    raw_weights: dict[str, np.ndarray] = {}
+    for name, info in athletes.items():
+        if name == "OTHER_TEAM_REC":
+            continue
+        pos = str(info.get("position") or "").upper()
+        if pos not in ("WR", "TE", "RB"):
+            continue
+        pbp_st = info.get("pbp_2026") or {}
+        core_l = info.get("core_lines") or {}
+        prior_ypr = 12.2 if pos == "WR" else (10.2 if pos == "TE" else 7.6)
+        min_ypr = 8.2 if pos == "WR" else (7.5 if pos == "TE" else 6.4)
+        raw_rec_n = float(pbp_st.get("receptions") or 0.0)
+        raw_rec_y = float(pbp_st.get("rec_yds") or 0.0)
+        ypr = float(np.clip((raw_rec_y + 4.0 * prior_ypr) / (raw_rec_n + 4.0), min_ypr, 16.5))
+        rec_yds_v = np.maximum(0.0, np.asarray(rec_yds_alloc.get(name, np.zeros(n_w)), dtype=np.float64))
+        base_rec = rec_yds_v / ypr
+        p_gp = max(1.0, float(pbp_st.get("player_gp") or 1.0))
+        pbp_rpg = raw_rec_n / p_gp if raw_rec_n > 0.0 else float(pbp_st.get("receptions_per_pg") or np.mean(base_rec))
+        dk_line = core_l.get("Total Receptions (incl. overtime)")
+        if dk_line is not None and float(dk_line) > 0.0:
+            anchor = 0.60 * float(dk_line) + 0.40 * pbp_rpg
+            cur_m = max(0.05, float(np.mean(base_rec)))
+            blend_m = 0.65 * anchor + 0.35 * cur_m
+            base_rec = base_rec * (blend_m / cur_m)
+        raw_weights[name] = np.maximum(1e-5, base_rec * rng.gamma(14.0, 1.0 / 14.0, size=n_w))
+
+    if not raw_weights:
+        return {}
+
+    if "OTHER_TEAM_REC" in athletes or "OTHER_TEAM_REC" in rec_yds_alloc:
+        other_yds = np.maximum(0.0, np.asarray(rec_yds_alloc.get("OTHER_TEAM_REC", np.zeros(n_w)), dtype=np.float64))
+        other_base = np.maximum(0.5, other_yds / 10.5)
+    else:
+        other_m = max(1.5, 0.14 * float(np.mean(tm_comp)))
+        other_base = np.full(n_w, other_m, dtype=np.float64)
+    raw_weights["OTHER_TEAM_REC"] = np.maximum(1e-5, other_base * rng.gamma(10.0, 1.0 / 10.0, size=n_w))
+
+    tot_w = np.zeros(n_w, dtype=np.float64)
+    for v in raw_weights.values():
+        tot_w += v
+    tot_w = np.maximum(tot_w, 1e-9)
+
+    return {k: tm_comp * (v / tot_w) for k, v in raw_weights.items()}
 
 
 def redistribute_vacated_team_volume(
@@ -4332,51 +4545,24 @@ def run_stage3_and_4_conserved_post_sim_projections(
                 and str(ex_row.get("position") or "").upper() in ("OT", "T", "G", "OG", "C", "OL")
             )
             ol_scramble_boost = float(np.clip(1.0 + 0.035 * max(0, ol_excl_cnt - 1), 1.0, 1.15))
-            if qb_rush_board_line is not None and qb_rush_board_line >= 1.5:
-                eff_qb_pbp_r = qb_pbp_rush_pg if qb_pbp_rush_pg > 1.0 else qb_rush_board_line
-                target_qb_rush_m = float(
-                    np.clip((0.62 * qb_rush_board_line + 0.38 * eff_qb_pbp_r) * ol_scramble_boost, 3.0, 58.0)
+            rng_qbr = np.random.default_rng(20410 + (0 if side_key == "away" else 1))
+            for v_qb_map in (vecs_a, vecs_b):
+                n_w_qb = len(v_qb_map[f"{side_key}_pass_yds"])
+                kneel_w = np.asarray(
+                    v_qb_map.get(f"{side_key}_kneeldowns", np.zeros(n_w_qb)),
+                    dtype=np.float64,
                 )
-            elif qb_pbp_rush_pg > 2.5:
-                target_qb_rush_m = float(np.clip((0.65 * qb_pbp_rush_pg + 3.5) * ol_scramble_boost, 3.0, 48.0))
-            else:
-                target_qb_rush_m = 0.0
-
-            if target_qb_rush_m > 0.0:
-                if qb_car_board_line is not None and qb_car_board_line >= 1.5:
-                    eff_qb_pbp_c = qb_pbp_car_pg if qb_pbp_car_pg > 0.5 else qb_car_board_line
-                    target_qb_car_m = float(
-                        np.clip((0.65 * qb_car_board_line + 0.35 * eff_qb_pbp_c) * (ol_scramble_boost ** 0.5), 1.5, 11.0)
-                    )
-                elif qb_pbp_car_pg > 0.8:
-                    target_qb_car_m = float(np.clip(qb_pbp_car_pg * (ol_scramble_boost ** 0.5), 1.5, 9.5))
-                else:
-                    target_qb_car_m = float(np.clip(target_qb_rush_m / 4.6, 1.5, 9.0))
-                rng_qbr = np.random.default_rng(20410 + (0 if side_key == "away" else 1))
-                for v_qb_map in (vecs_a, vecs_b):
-                    n_w_qb = len(v_qb_map[f"{side_key}_pass_yds"])
-                    kneel_w = np.asarray(
-                        v_qb_map.get(f"{side_key}_kneeldowns", np.zeros(n_w_qb)),
-                        dtype=np.float64,
-                    )
-                    mean_kn = float(np.mean(kneel_w))
-                    scr_lam = max(0.8, target_qb_car_m - mean_kn)
-                    scr_draws = rng_qbr.poisson(scr_lam, size=n_w_qb).astype(np.float64)
-                    yds_per_scr = max(2.2, (target_qb_rush_m + mean_kn * 1.1) / max(0.8, scr_lam))
-                    qb_r_draws = (
-                        rng_qbr.gamma(shape=np.maximum(0.25, scr_draws * 1.35), scale=yds_per_scr / 1.35)
-                        * (scr_draws > 0).astype(np.float64)
-                        - kneel_w * 1.0
-                    )
-                    cur_pos_m = float(np.mean(qb_r_draws))
-                    if cur_pos_m > 0.5:
-                        qb_r_draws = np.where(
-                            qb_r_draws > 0.0,
-                            qb_r_draws * (target_qb_rush_m / max(1.0, cur_pos_m)),
-                            qb_r_draws,
-                        )
-                    v_qb_map[f"{side_key}_qb_scrambles"] = scr_draws
-                    v_qb_map[f"{side_key}_qb_rush_yds"] = qb_r_draws
+                scr_draws, qb_r_draws = calibrate_qb_rush_distribution(
+                    qb_pbp_rush_pg=qb_pbp_rush_pg,
+                    qb_pbp_car_pg=qb_pbp_car_pg,
+                    qb_rush_board_line=qb_rush_board_line,
+                    qb_car_board_line=qb_car_board_line,
+                    kneel_vec=kneel_w,
+                    ol_scramble_boost=ol_scramble_boost,
+                    rng=rng_qbr,
+                )
+                v_qb_map[f"{side_key}_qb_scrambles"] = scr_draws
+                v_qb_map[f"{side_key}_qb_rush_yds"] = qb_r_draws
 
             sim_qb_rush_mean = float(
                 np.mean(
@@ -4435,6 +4621,14 @@ def run_stage3_and_4_conserved_post_sim_projections(
             )
             pass_td_share = float(np.clip((pbp_ptds + 1.05) / max(1.5, pbp_ptds + pbp_rtds + 1.70), 0.52, 0.68))
 
+            qb_comp_raw = qb_core_lines.get("Total Pass Completions (incl. overtime)")
+            qb_comp_board_line = float(qb_comp_raw) if qb_comp_raw is not None else None
+            qb_att_raw = qb_core_lines.get("Total Passing Attempts (incl. overtime)")
+            qb_att_board_line = float(qb_att_raw) if qb_att_raw is not None else None
+            qb_db_n = float(qb_starter_pbp.get("dropbacks") or 0.0)
+            qb_comp_pct_est = float(qb_starter_pbp.get("completions") or 0.0) / qb_db_n if qb_db_n >= 20.0 else 0.645
+            qb_ypa_est = float(qb_starter_pbp.get("pass_yds") or 0.0) / qb_db_n if qb_db_n >= 20.0 else 7.15
+
             for vec_map in (vecs_a, vecs_b):
                 py_key = f"{side_key}_pass_yds"
                 ry_key = f"{side_key}_rush_yds"
@@ -4444,12 +4638,19 @@ def run_stage3_and_4_conserved_post_sim_projections(
                 if abs(cur_py_m - target_pass_mean) / max(1.0, target_pass_mean) > 0.015:
                     py_scale = target_pass_mean / cur_py_m
                     vec_map[py_key] = np.asarray(vec_map[py_key], dtype=np.float64) * py_scale
-                    if pa_key in vec_map and pc_key in vec_map:
-                        vol_scale = float(np.clip(py_scale ** 0.5, 0.80, 1.22))
-                        att_arr = np.maximum(12.0, np.asarray(vec_map[pa_key], dtype=np.float64) * vol_scale)
-                        comp_arr = np.asarray(vec_map[pc_key], dtype=np.float64) * (vol_scale ** 0.85)
-                        vec_map[pa_key] = att_arr
-                        vec_map[pc_key] = np.minimum(att_arr * 0.92, np.maximum(0.0, comp_arr))
+                if pa_key in vec_map and pc_key in vec_map:
+                    py_c, pa_c, pc_c = enforce_joint_qb_pass_coherence(
+                        vec_map[py_key],
+                        vec_map[pa_key],
+                        vec_map[pc_key],
+                        qb_att_line=qb_att_board_line,
+                        qb_comp_line=qb_comp_board_line,
+                        qb_pbp_comp_pct=qb_comp_pct_est,
+                        qb_pbp_ypa=qb_ypa_est,
+                    )
+                    vec_map[py_key] = py_c
+                    vec_map[pa_key] = pa_c
+                    vec_map[pc_key] = pc_c
                 cur_ry_m = max(1.0, float(np.mean(vec_map[ry_key])))
                 if abs(cur_ry_m - target_rush_mean) / max(1.0, target_rush_mean) > 0.015:
                     ry_scale = target_rush_mean / cur_ry_m
@@ -4546,7 +4747,7 @@ def run_stage3_and_4_conserved_post_sim_projections(
             pos = info["position"]
             pbp_st = info["pbp_2026"]
             core_l = info.get("core_lines") or {}
-            sit_mult = float(info.get("situational_multiplier", 1.0))
+            sit_mult = float(np.clip(float(info.get("situational_multiplier", 1.0)), 0.75, 1.35))
             p_adj = player_adj_map.get(name) or {}
             rt_tgt_mult = float(p_adj.get("target_share_mult", 1.0))
             rt_car_mult = float(p_adj.get("carry_share_mult", 1.0))
@@ -4677,6 +4878,20 @@ def run_stage3_and_4_conserved_post_sim_projections(
                 base_tk = float(pbp_st["tackles_per_pg"])
                 if base_tk <= 0.0:
                     base_tk = 4.5
+                if not is_jax_bal_s34 and int(week) >= 10:
+                    opp_tm_tk = home if team == away else away
+                    opp_car_sum = sum(float((inf.get("pbp_2026") or {}).get("carries") or 0.0) for inf in athletes.values() if inf.get("team") == opp_tm_tk)
+                    opp_tgt_sum = sum(float((inf.get("pbp_2026") or {}).get("targets") or 0.0) for inf in athletes.values() if inf.get("team") == opp_tm_tk)
+                    opp_rush_rate = opp_car_sum / max(1.0, opp_car_sum + opp_tgt_sum * 1.35) if (opp_car_sum + opp_tgt_sum) > 5.0 else 0.44
+                    pos_tilt = (
+                        1.0 + 0.30 * (opp_rush_rate - 0.44)
+                        if pos in ("LB", "DE", "DT", "DL", "OLB")
+                        else 1.0 - 0.25 * (opp_rush_rate - 0.44)
+                    )
+                    dk_tk_line = core_l.get("Total Tackles Plus Assists (incl. overtime)")
+                    if dk_tk_line is not None and float(dk_tk_line) > 0.0:
+                        base_tk = 0.65 * float(dk_tk_line) + 0.35 * base_tk
+                    base_tk = base_tk * float(np.clip(pos_tilt, 0.85, 1.18))
                 tackle_weights[name] = max(1e-4, base_tk)
 
         # Include OTHER_DEF for the remaining starters/rotational defenders (~44.0 team tackles+assists/game)
@@ -4939,8 +5154,20 @@ def run_stage3_and_4_conserved_post_sim_projections(
     )
 
     # Stochastic conserved tackle allocations across defenders
-    jax_team_tk_vec = np.asarray(vecs_a["total_plays"], dtype=np.float64) * 0.52 * 0.94
-    bal_team_tk_vec = np.asarray(vecs_a["total_plays"], dtype=np.float64) * 0.48 * 0.94
+    if not is_jax_bal_s34 and int(week) >= 10:
+        jax_team_tk_vec = compute_defense_tackle_pool_vector(
+            opp_rush_att=np.asarray(vecs_a.get("home_rush_att", vecs_a["home_score"] * 1.15), dtype=np.float64),
+            opp_pass_comp=np.asarray(vecs_a.get("home_pass_comp", vecs_a["home_pass_att"] * 0.63), dtype=np.float64),
+            opp_sacks=np.asarray(vecs_a.get("home_sacks", np.full(n_sims, 2.0)), dtype=np.float64),
+        )
+        bal_team_tk_vec = compute_defense_tackle_pool_vector(
+            opp_rush_att=np.asarray(vecs_a.get("away_rush_att", vecs_a["away_score"] * 1.15), dtype=np.float64),
+            opp_pass_comp=np.asarray(vecs_a.get("away_pass_comp", vecs_a["away_pass_att"] * 0.63), dtype=np.float64),
+            opp_sacks=np.asarray(vecs_a.get("away_sacks", np.full(n_sims, 2.0)), dtype=np.float64),
+        )
+    else:
+        jax_team_tk_vec = np.asarray(vecs_a["total_plays"], dtype=np.float64) * 0.52 * 0.94
+        bal_team_tk_vec = np.asarray(vecs_a["total_plays"], dtype=np.float64) * 0.48 * 0.94
     jax_tk_alloc = allocate_stochastic_conserved_box_score(
         jax_team_tk_vec, jax_tk_sh_a, stat_family="tackles", n_worlds=n_sims, concentration=20.0, seed=46
     )
@@ -4986,6 +5213,23 @@ def run_stage3_and_4_conserved_post_sim_projections(
     player_projections: dict[str, dict[str, Any]] = {}
     local_emp_vectors: dict[tuple[str, str], np.ndarray] = {}
     rng_disp = np.random.default_rng(20261105)
+    away_conserved_rec_map: dict[str, np.ndarray] = {}
+    home_conserved_rec_map: dict[str, np.ndarray] = {}
+    if not is_jax_bal_s34 and int(week) >= 10:
+        away_comp_v = np.asarray(vecs_a.get("away_pass_comp", vecs_a["away_pass_att"] * 0.63), dtype=np.float64)
+        home_comp_v = np.asarray(vecs_a.get("home_pass_comp", vecs_a["home_pass_att"] * 0.63), dtype=np.float64)
+        away_conserved_rec_map = allocate_conserved_receptions(
+            away_comp_v,
+            {k: v for k, v in athletes.items() if v["team"] == away},
+            jax_rec_yds_alloc,
+            rng_disp,
+        )
+        home_conserved_rec_map = allocate_conserved_receptions(
+            home_comp_v,
+            {k: v for k, v in athletes.items() if v["team"] == home},
+            bal_rec_yds_alloc,
+            rng_disp,
+        )
     for name, info in sorted(athletes.items(), key=lambda x: (x[1]["team"], x[1]["position"], -x[1]["prop_count"])):
         tm = info["team"]
         pos = info["position"]
@@ -5108,19 +5352,23 @@ def run_stage3_and_4_conserved_post_sim_projections(
                 raw_rec_n = float(pbp_st.get("receptions") or 0.0)
                 raw_rec_y = float(pbp_st.get("rec_yds") or 0.0)
                 ypr = float(np.clip((raw_rec_y + 4.0 * prior_ypr) / (raw_rec_n + 4.0), min_ypr, 16.5))
-                comp_arr_opt = vecs_a.get("away_pass_comp" if tm == away else "home_pass_comp")
-                tm_comp_cap = (
-                    np.maximum(2.0, np.asarray(comp_arr_opt, dtype=np.float64) * 0.48)
-                    if comp_arr_opt is not None
-                    else np.full(n_sims, 18.0, dtype=np.float64)
-                )
-                base_rec_vec = rec_yds_vec / ypr
-                rec_m = float(np.mean(base_rec_vec))
-                rec_disp_scale = min(1.0, max(0.0, rec_m / 2.2))
-                receptions_vec = np.minimum(
-                    np.maximum(0.0, base_rec_vec + rec_disp_scale * (rng_disp.gamma(4.0, 0.425, size=n_sims) - 1.70)),
-                    tm_comp_cap,
-                )
+                conserved_rec = (away_conserved_rec_map if tm == away else home_conserved_rec_map).get(name)
+                if not is_jax_bal_s34 and int(week) >= 10 and conserved_rec is not None:
+                    receptions_vec = np.asarray(conserved_rec, dtype=np.float64)
+                else:
+                    comp_arr_opt = vecs_a.get("away_pass_comp" if tm == away else "home_pass_comp")
+                    tm_comp_cap = (
+                        np.maximum(2.0, np.asarray(comp_arr_opt, dtype=np.float64) * 0.48)
+                        if comp_arr_opt is not None
+                        else np.full(n_sims, 18.0, dtype=np.float64)
+                    )
+                    base_rec_vec = rec_yds_vec / ypr
+                    rec_m = float(np.mean(base_rec_vec))
+                    rec_disp_scale = min(1.0, max(0.0, rec_m / 2.2))
+                    receptions_vec = np.minimum(
+                        np.maximum(0.0, base_rec_vec + rec_disp_scale * (rng_disp.gamma(4.0, 0.425, size=n_sims) - 1.70)),
+                        tm_comp_cap,
+                    )
 
             ypc = (
                 float(pbp_st["rush_yds"]) / max(1.0, float(pbp_st["carries"]))
@@ -5197,6 +5445,10 @@ def run_stage3_and_4_conserved_post_sim_projections(
                 else 0.56
             )
             if not is_jax_bal_s34 and int(week) >= 10:
+                dk_solo_l = core_lines.get("Total Solo Tackles (incl. overtime)")
+                dk_comb_l = core_lines.get("Total Tackles Plus Assists (incl. overtime)")
+                if dk_solo_l is not None and dk_comb_l is not None and float(dk_comb_l) > 0.5:
+                    solo_ratio = float(np.clip(0.60 * (float(dk_solo_l) / float(dk_comb_l)) + 0.40 * solo_ratio, 0.30, 0.82))
                 solo_alpha = max(0.8, 10.0 * solo_ratio)
                 solo_beta = max(0.8, 10.0 * (1.0 - solo_ratio))
                 solo_frac = np.clip(rng_disp.beta(solo_alpha, solo_beta, size=n_sims), 0.08, 0.92)
@@ -6420,12 +6672,29 @@ def run_stage5_360_conjunction_gate(
                     "hit_vec": hit_vec,
                 })
 
+    prop_evaluations = veto_contradictory_same_qb_props(prop_evaluations)
+    # Stage-5 Correlated Card Portfolio Optimizer (max 1 per athlete, |rho|<=0.45, Baker-McHale Kelly, A+ exception)
+    wf_hv: dict[str, np.ndarray] = {}
+    sgp_hv_lookup = {
+        (str(leg.get("athlete") or ""), str(leg.get("market") or ""), str(leg.get("line") or "")): leg["hit_vec"]
+        for leg in eligible_sgp_legs
+        if leg.get("hit_vec") is not None
+    }
+    for _idx_pe, _pe in enumerate(prop_evaluations):
+        _k_pe = f"{_pe.get('athlete', '')}|{_pe.get('market', '')}|{_pe.get('line', '')}|{_idx_pe}"
+        _pe_hv = sgp_hv_lookup.get((str(_pe.get("athlete") or ""), str(_pe.get("market") or ""), str(_pe.get("line") or "")))
+        if _pe_hv is not None:
+            wf_hv[_k_pe] = _pe_hv
+    if not is_jax_bal:
+        _wf_card = construct_uncorrelated_game_card(prop_evaluations, wf_hv)
+        prop_evaluations = _wf_card["evaluated_candidates"]
     approved_prop_bets = sum(1 for pe in prop_evaluations if pe.get("publishAllowed") is True)
     approved_game_bets = sum(1 for gl in game_line_evaluations if gl.get("publishAllowed") is True)
     total_approved_bets = approved_prop_bets + approved_game_bets
 
     # SG-7 Stage 5 Circuit Breaker: When approved_prop_bets == 0 (publishAllowed == False),
     # top_15_ranked_prop_plays and correlated_sgp_constructions MUST be empty ([])
+    sgp_publish_enabled = bool(os.environ.get("GSE_SGP_PUBLISH_ENABLED", "").strip().lower() == "true")
     if approved_prop_bets == 0:
         ranked_prop_edges: list[dict[str, Any]] = []
         correlated_sgp_constructions: list[dict[str, Any]] = []
@@ -6439,145 +6708,58 @@ def run_stage5_360_conjunction_gate(
             key=lambda item: float(item["win_prob_on_lean"]),
             reverse=True,
         )[:15]
-        # Build empirical 10,000-world positively correlated SGP (max 1 per game per ticket_exposure_guard)
-        top_sgp_pool = sorted(eligible_sgp_legs, key=lambda x: float(x["edge"]), reverse=True)[:10]
-        # Optional non-conflicting approved game-line candidate (Spread or Total or ML, max 1)
-        gl_candidates: list[dict[str, Any]] = []
-        gl_vec_lookup = {
-            away_spread_label: (vecs_a["away_score"] - vecs_a["home_score"]) > posted_home_spread,
-            home_spread_label: (vecs_a["home_score"] - vecs_a["away_score"]) > -posted_home_spread,
-            f"OVER {posted_total:g}": vecs_a["total_pts_out"] > posted_total,
-            f"UNDER {posted_total:g}": vecs_a["total_pts_out"] < posted_total,
-        }
-        for gl in sorted(
-            [g for g in game_line_evaluations if g.get("publishAllowed") is True],
-            key=lambda g: float(g.get("net_edge", 0.0)),
-            reverse=True,
-        ):
-            sel_gl = str(gl.get("selection") or "")
-            gv = gl_vec_lookup.get(sel_gl)
-            if gv is not None:
-                gl_candidates.append({
-                    "athlete": f"TEAM_{sel_gl}",
-                    "team": away if away in sel_gl else (home if home in sel_gl else f"{away}/{home}"),
-                    "position": "TEAM",
-                    "market": str(gl.get("market") or "Game Line"),
-                    "market_type": str(gl.get("market") or "Game Line"),
-                    "line": posted_total if gl.get("market") == "Total" else posted_home_spread,
-                    "selection": sel_gl,
-                    "lean": "UNDER" if "UNDER" in sel_gl.upper() else ("OVER" if "OVER" in sel_gl.upper() else "SIDE"),
-                    "american_odds": int(gl.get("american_odds", -110)),
-                    "confidence_score": str(gl.get("confidence_score", "65/100")),
-                    "raw_sim_prob": float(np.mean(gv)),
-                    "cal_prob": float(gl.get("post_sim_prob", np.mean(gv))),
-                    "sim_prob": float(gl.get("post_sim_prob", np.mean(gv))),
-                    "mkt_prob_devig": float(gl.get("market_prob_devig", 0.5)),
-                    "edge": float(gl.get("net_edge", 0.0)),
-                    "publishAllowed": True,
-                    "decision": "PLAY",
-                    "game_id": f"{away}_{home}_w{week}",
-                    "hit_vec": gv,
-                })
-                break
-
-        sgp_pool = top_sgp_pool + gl_candidates
-        best_sgp: dict[str, Any] | None = None
-        best_sgp_score = -1.0
-        for r_len in (2, 3):
-            if len(sgp_pool) < r_len:
-                continue
-            for combo in itertools.combinations(sgp_pool, r_len):
-                athletes_in_combo = {leg["athlete"] for leg in combo}
-                if len(athletes_in_combo) < r_len:
+        # Hard SGP Quarantine by default unless sgp_publish_enabled + actual book SGP odds + zero recycled straight legs
+        if not sgp_publish_enabled:
+            correlated_sgp_constructions = []
+            circuit_breaker_status = "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED_SGP_QUARANTINED"
+        else:
+            straight_card_athletes = {
+                str(pe.get("athlete") or "").strip().lower()
+                for pe in prop_evaluations
+                if pe.get("publishAllowed") is True
+            }
+            sgp_pool = [
+                leg for leg in eligible_sgp_legs
+                if str(leg.get("athlete") or "").strip().lower() not in straight_card_athletes
+            ][:10]
+            best_sgp: dict[str, Any] | None = None
+            best_sgp_score = -1.0
+            for r_len in (2, 3):
+                if len(sgp_pool) < r_len:
                     continue
-                if sum(1 for leg in combo if leg["position"] == "TEAM") > 1:
-                    continue
-                joint_mask = np.ones(n_sims, dtype=bool)
-                for leg in combo:
-                    joint_mask &= np.asarray(leg["hit_vec"], dtype=bool)
-                raw_joint_p = float(np.mean(joint_mask))
-                raw_indep = math.prod(float(leg["raw_sim_prob"]) for leg in combo)
-                corr_lift = min(1.30, raw_joint_p / max(raw_indep, 1e-6))
-                if corr_lift < 1.03:
-                    continue
-                indep_sim = math.prod(float(leg["cal_prob"]) for leg in combo)
-                joint_p = min(
-                    min(float(leg["cal_prob"]) for leg in combo) * 0.98,
-                    indep_sim * corr_lift,
-                )
-                if joint_p < 0.14 or joint_p > 0.72:
-                    continue
-                indep_mkt = math.prod(float(leg["mkt_prob_devig"]) for leg in combo)
-                book_sgp_implied = min(0.92, indep_mkt * 1.18)
-                net_edge_sgp = joint_p - book_sgp_implied
-                if net_edge_sgp < 0.020:
-                    continue
-                combo_gate = evaluate_parlay_conjunction_gate(
-                    legs=combo,
-                    joint_sim_prob=joint_p,
-                    book_parlay_implied_prob=book_sgp_implied,
-                    joint_successes=joint_p * n_sims,
-                    n_worlds=n_sims,
-                )
-                if not combo_gate.get("publishAllowed"):
-                    continue
-                w_lb_sgp = float(combo_gate["wilson_lower_90"])
-                if w_lb_sgp <= book_sgp_implied:
-                    continue
-                score = net_edge_sgp * math.sqrt(joint_p) * (1.15 if r_len == 3 else 1.0)
-                if score > best_sgp_score:
-                    best_sgp_score = score
-                    fair_am = (
-                        int(round(-100.0 * joint_p / max(1.0 - joint_p, 1e-6)))
-                        if joint_p >= 0.50
-                        else int(round(100.0 * (1.0 - joint_p) / max(joint_p, 1e-6)))
+                for combo in itertools.combinations(sgp_pool, r_len):
+                    posted_sgp_odds = combo[0].get("posted_sgp_american_odds")
+                    combo_hv = {f"{l['athlete']}|{l['market']}": l["hit_vec"] for l in combo}
+                    gate_sgp = evaluate_sgp_strict_gate(
+                        legs=list(combo),
+                        hit_vectors=combo_hv,
+                        posted_sgp_american_odds=posted_sgp_odds,
+                        straight_card_athletes=straight_card_athletes,
+                        sgp_publish_enabled=sgp_publish_enabled,
+                        n_worlds=n_sims,
                     )
-                    book_am = (
-                        int(round(-100.0 * book_sgp_implied / max(1.0 - book_sgp_implied, 1e-6)))
-                        if book_sgp_implied >= 0.50
-                        else int(round(100.0 * (1.0 - book_sgp_implied) / max(book_sgp_implied, 1e-6)))
-                    )
-                    conf_sgp = min(78, max(60, int(round(56 + net_edge_sgp * 140))))
-                    best_sgp = {
-                        "id": f"sgp-{away.lower()}-{home.lower()}-w{week}",
-                        "kind": "SGP",
-                        "title": f"{away} @ {home} {r_len}-Leg Correlated SGP",
-                        "matchup": f"{away} @ {home}",
-                        "spread": posted_home_spread,
-                        "legs": [
-                            {
-                                "athlete": leg["athlete"],
-                                "team": leg["team"],
-                                "market": leg["market"],
-                                "selection": leg["selection"],
-                                "line": leg["line"],
-                                "american_odds": leg["american_odds"],
-                                "confidence_score": leg["confidence_score"],
-                                "expected_clv": round(float(leg["edge"]), 4),
-                                "decision": "PLAY",
-                                "publishAllowed": True,
-                            }
-                            for leg in combo
-                        ],
-                        "joint_sim_prob": round(joint_p, 4),
-                        "indep_sim_prob": round(indep_sim, 4),
-                        "correlation_lift": round(corr_lift, 4),
-                        "book_parlay_implied_prob": round(book_sgp_implied, 4),
-                        "wilson_lower_90": round(w_lb_sgp, 4),
-                        "net_edge": round(net_edge_sgp, 4),
-                        "fair_american_odds": f"{fair_am:+d}",
-                        "market_sgp_american_odds": f"{book_am:+d}",
-                        "confidence_score": f"{conf_sgp}/100",
-                        "sgp_pricing_basis": "Bovada two-sided single-leg de-vigged product with 18% sportsbook SGP overround adjustment",
-                        "decision": "PLAY",
-                        "publishAllowed": True,
-                        "correlation_rationale": (
-                            f"Positively correlated {r_len}-leg script across {', '.join(l['selection'] for l in combo)} "
-                            f"(correlation lift {corr_lift:.2f}x, joint hit {joint_p:.4f} vs market SGP implied {book_sgp_implied:.4f})."
-                        ),
-                    }
-        correlated_sgp_constructions = [best_sgp] if best_sgp is not None else []
-        circuit_breaker_status = "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED"
+                    if not gate_sgp.get("publishAllowed"):
+                        continue
+                    score = float(gate_sgp["net_edge"]) * math.sqrt(float(gate_sgp["joint_calibrated_prob"]))
+                    if score > best_sgp_score:
+                        best_sgp_score = score
+                        best_sgp = {
+                            "id": f"sgp-{away.lower()}-{home.lower()}-w{week}",
+                            "kind": "SGP",
+                            "title": f"{away} @ {home} {r_len}-Leg Correlated SGP",
+                            "matchup": f"{away} @ {home}",
+                            "spread": posted_home_spread,
+                            "legs": [{k: v for k, v in leg.items() if k != "hit_vec"} for leg in combo],
+                            "joint_sim_prob": gate_sgp["joint_calibrated_prob"],
+                            "book_parlay_implied_prob": gate_sgp["book_parlay_implied_prob"],
+                            "wilson_lower_90": gate_sgp["wilson_lower_90"],
+                            "net_edge": gate_sgp["net_edge"],
+                            "market_sgp_american_odds": str(posted_sgp_odds),
+                            "decision": "PLAY",
+                            "publishAllowed": True,
+                        }
+            correlated_sgp_constructions = [best_sgp] if best_sgp is not None else []
+            circuit_breaker_status = "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED"
 
     # SG-6: Real scipy.optimize.milp 0-1 integer linear programming Showdown DFS optimizer
     if is_jax_bal:

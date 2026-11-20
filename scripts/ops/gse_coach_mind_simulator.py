@@ -474,12 +474,38 @@ _TEAM_DEFAULT_QB1: dict[str, str] = {
 }
 
 
+_CACHED_MOBILITY_PBP_DF: object | None = None
+_CACHED_MOBILITY_PBP_LOADED: bool = False
+
+
+def _get_cached_mobility_pbp_df() -> object | None:
+    global _CACHED_MOBILITY_PBP_DF, _CACHED_MOBILITY_PBP_LOADED
+    if _CACHED_MOBILITY_PBP_LOADED:
+        return _CACHED_MOBILITY_PBP_DF
+    _CACHED_MOBILITY_PBP_LOADED = True
+    try:
+        import pandas as pd
+
+        repo_root = Path(__file__).resolve().parents[2]
+        for rel in (
+            Path("intelligence") / "coaching" / "data" / "play_by_play_2026.parquet",
+            Path("data") / "nflverse" / "pbp" / "play_by_play_2026.parquet",
+        ):
+            p = repo_root / rel
+            if p.is_file():
+                _CACHED_MOBILITY_PBP_DF = pd.read_parquet(p)
+                break
+    except Exception:
+        _CACHED_MOBILITY_PBP_DF = None
+    return _CACHED_MOBILITY_PBP_DF
+
+
 def resolve_qb_mobility_profile(
     qb_name: str = "", team: str = "", pbp_df: object | None = None
 ) -> dict[str, float]:
     """
     Condition scramble_p on each QB's empirical 2026 scramble + designed-rush profile.
-    Pocket statues (Rodgers, Stafford, Cousins, Goff, Flacco) receive ~0.012-0.018.
+    Pocket statues (Rodgers, Stafford, Cousins, Goff, Flacco) receive ~0.008-0.018.
     Dual-threat QBs (Lamar, Allen, Hurts, Kyler, Daniels, Herbert, Purdy, Wilson) receive ~0.060-0.165.
     """
     norm_name = str(qb_name or "").strip().lower()
@@ -488,6 +514,9 @@ def resolve_qb_mobility_profile(
     if not norm_name and norm_team in _TEAM_DEFAULT_QB1:
         norm_name = _TEAM_DEFAULT_QB1[norm_team]
 
+    if pbp_df is None:
+        pbp_df = _get_cached_mobility_pbp_df()
+
     if pbp_df is not None:
         try:
             cols = set(getattr(pbp_df, "columns", []))
@@ -495,23 +524,42 @@ def resolve_qb_mobility_profile(
                 sub = pbp_df
                 if norm_team:
                     sub = sub[(sub["posteam"] == norm_team) | (sub["defteam"] == norm_team)]
-                last_name = norm_name.split()[-1] if norm_name else ""
+                parts = [p for p in norm_name.replace(".", "").split() if p not in ("jr", "sr", "ii", "iii", "iv", "v")]
+                last_name = parts[-1] if parts else ""
+                first_init = parts[0][0] if parts and parts[0] else ""
                 if last_name:
                     p_mask = (
                         sub["passer_player_name"].str.lower().str.contains(last_name, na=False)
                         | sub["rusher_player_name"].str.lower().str.contains(last_name, na=False)
                     )
+                    if first_init:
+                        p_mask = p_mask & (
+                            sub["passer_player_name"].str.lower().str.startswith(first_init, na=False)
+                            | sub["rusher_player_name"].str.lower().str.startswith(first_init, na=False)
+                        )
                     qb_sub = sub[p_mask]
                     pass_plays = len(qb_sub[qb_sub.get("pass_attempt") == 1])
                     scrambles = len(qb_sub[qb_sub.get("qb_scramble") == 1])
+                    designed = 0
+                    if "rush_attempt" in cols and "qb_kneel" in cols and "passer_player_name" in cols:
+                        p_names = set(qb_sub.loc[qb_sub["pass_attempt"] == 1, "passer_player_name"].dropna().tolist())
+                        if p_names:
+                            designed_rows = qb_sub[
+                                qb_sub["rusher_player_name"].isin(p_names)
+                                & (qb_sub.get("qb_scramble") != 1)
+                                & (qb_sub.get("qb_kneel") != 1)
+                                & (qb_sub.get("rush_attempt") == 1)
+                            ]
+                            designed = len(designed_rows)
                     if pass_plays >= 12:
-                        emp_rate = float(scrambles) / float(pass_plays)
+                        emp_scr = float(scrambles) / float(pass_plays)
+                        emp_des = float(designed) / float(pass_plays)
+                        emp_rate = emp_scr + 0.65 * emp_des
                         return {
-                            "scramble_p": float(np.clip(emp_rate, 0.010, 0.220)),
-                            "designed_rush_p": float(np.clip(emp_rate * 0.45, 0.005, 0.100)),
+                            "scramble_p": float(np.clip(emp_rate, 0.006, 0.220)),
+                            "designed_rush_p": float(np.clip(emp_des, 0.002, 0.100)),
                         }
         except (KeyError, TypeError, ValueError, AttributeError):
-            # Fall back cleanly to empirical starter scramble map when minimal mock df omits columns.
             pass_fallback = True
             _ = pass_fallback
 
@@ -855,6 +903,72 @@ def compute_qb_tier_adjusted_epa(
     }
 
 
+def calibrate_jev_pass_prob(
+    raw_jev_pass_prob: float,
+    team_ed_pass_rate: float = 0.54,
+    down: int = 1,
+    ydstogo: int = 10,
+    score_diff: float = 0.0,
+    qtr: int = 1,
+) -> float:
+    """
+    Debias JEV prompt menu skew (4 pass choices vs 2 run choices centered near ~0.61)
+    and single-trajectory snowball drift, then apply progressive blowout clock-kill
+    and trailing-blowout Q4 stall adjustments.
+    """
+    centered_delta = float(np.clip(float(raw_jev_pass_prob) - 0.61, -0.05, 0.05))
+    down_adj = 0.0 if int(down) <= 1 else (0.06 if int(down) == 2 else (0.14 if int(ydstogo) >= 4 else 0.04))
+    base_rate = float(np.clip(float(team_ed_pass_rate), 0.36, 0.68)) + down_adj + centered_delta
+
+    sd = float(score_diff)
+    q = int(qtr)
+    if (q >= 4 and sd >= 14.0) or sd >= 21.0:
+        script_shift = -0.30
+    elif sd >= 14.0:
+        script_shift = -0.18
+    elif sd >= 7.0:
+        script_shift = -0.08
+    elif q >= 4 and sd <= -17.0:
+        script_shift = 0.02
+    elif sd <= -7.0:
+        script_shift = 0.09 + (0.05 if q >= 4 else 0.0)
+    else:
+        script_shift = 0.0
+
+    return float(np.clip(base_rate + script_shift, 0.14, 0.82))
+
+
+def compute_progressive_script_pass_shift(
+    score_diff: np.ndarray,
+    qtr: np.ndarray,
+    lead_shift: np.ndarray,
+    trail_shift: np.ndarray,
+    panic: np.ndarray,
+) -> np.ndarray:
+    """Progressive lead clock-kill (-0.08 / -0.18 / -0.30) and trailing Q4 blowout stall curve."""
+    sd = np.asarray(score_diff, dtype=np.float64)
+    qt = np.asarray(qtr, dtype=np.int32)
+    l_sh = np.asarray(lead_shift, dtype=np.float64)
+    t_sh = np.asarray(trail_shift, dtype=np.float64)
+    pan = np.asarray(panic, dtype=np.float64)
+
+    early_lead = (sd >= 3.0) & (sd < 7.0)
+    q4_heavy_lead = (sd >= 21.0) | ((qt >= 4) & (sd >= 14.0))
+    mod_lead = (~q4_heavy_lead) & (sd >= 14.0)
+    mild_lead = (~q4_heavy_lead) & (~mod_lead) & (sd >= 7.0)
+    q4_blowout_trail = (qt >= 4) & (sd <= -17.0)
+    std_trail = (~q4_blowout_trail) & (sd <= -7.0)
+
+    out = np.zeros_like(sd, dtype=np.float64)
+    out = np.where(early_lead, l_sh * 0.5, out)
+    out = np.where(mild_lead, l_sh, out)
+    out = np.where(mod_lead, np.minimum(l_sh * 1.8, -0.18), out)
+    out = np.where(q4_heavy_lead, np.minimum(l_sh * 2.5, -0.30), out)
+    out = np.where(std_trail, t_sh + np.where(qt == 4, pan, 0.0), out)
+    out = np.where(q4_blowout_trail, np.maximum(0.0, t_sh + pan - 0.10), out)
+    return out
+
+
 def build_jev_state_tensor(
     spine_game: dict | None,
     enforce_freshness: bool = False,
@@ -915,13 +1029,15 @@ def build_jev_state_tensor(
 
         jev = s.get("jev_decisions") or {}
         off_p = (jev.get("off_play_call") or {}).get("probabilities") or {}
-        pass_p = (
+        raw_pass_p = (
             float(off_p.get("quick_game_rpo", 0.0))
             + float(off_p.get("play_action_intermediate", 0.0))
             + float(off_p.get("deep_shot_pass", 0.0))
             + float(off_p.get("go_for_it_pass", 0.0))
             + 0.5 * float(off_p.get("screen_or_draw", 0.0))
         )
+        # Debias 4-pass-vs-2-run menu skew & single-trajectory snowball drift into a bounded residual around 0.54
+        pass_p = float(np.clip(0.54 + np.clip(raw_pass_p - 0.61, -0.05, 0.05), 0.45, 0.62))
         press_noul = float(jev.get("pressure_disruption_noul", 0.32))
         tgt_p = (jev.get("target_carrier") or {}).get("probabilities") or {}
         rb1_p = float(tgt_p.get("RB1", 0.50))
@@ -936,15 +1052,16 @@ def build_jev_state_tensor(
             + float(cal_out.get("breakaway_25_plus", 0.02))
         )
 
-        rec = (pass_p, press_noul, rb1_p, wr1_p, pos_gain_p)
+        rec = (pass_p, press_noul, rb1_p, wr1_p, pos_gain_p, raw_pass_p)
         buckets.setdefault((off, db, fz, ss), []).append(rec)
         team_buckets.setdefault(off, []).append(rec)
 
-    def _summarize(rows: list[tuple[float, float, float, float, float]]) -> dict:
+    def _summarize(rows: list[tuple[float, float, float, float, float, float]]) -> dict:
         arr = np.asarray(rows, dtype=np.float64)
         return {
             "count": len(rows),
             "pass_prob": round(float(np.mean(arr[:, 0])), 4),
+            "raw_pass_prob": round(float(np.mean(arr[:, 5])), 4),
             "pressure_disruption_noul": round(float(np.mean(arr[:, 1])), 4),
             "rb1_target_prob": round(float(np.mean(arr[:, 2])), 4),
             "wr1_target_prob": round(float(np.mean(arr[:, 3])), 4),
@@ -2528,6 +2645,8 @@ def simulate_matchup_pbp(
     home_pass_tds_tot = np.zeros(n_sims, dtype=np.float64)
     home_pass_att = np.zeros(n_sims, dtype=np.int32)
     away_pass_att = np.zeros(n_sims, dtype=np.int32)
+    home_rush_att = np.zeros(n_sims, dtype=np.int32)
+    away_rush_att = np.zeros(n_sims, dtype=np.int32)
     home_pass_comp = np.zeros(n_sims, dtype=np.int32)
     away_pass_comp = np.zeros(n_sims, dtype=np.int32)
     home_ints = np.zeros(n_sims, dtype=np.int32)
@@ -2638,7 +2757,7 @@ def simulate_matchup_pbp(
                 ],
                 dtype=np.float64,
             ),
-            0.04,
+            0.006,
             0.28,
         )
 
@@ -2755,18 +2874,16 @@ def simulate_matchup_pbp(
             yd_v, yl_v, ps_v = ydstogo[idx_13], yardline_100[idx_13], poss[idx_13]
             is_hm = ps_v == 1
             is_aw = ~is_hm
-            base_p = np.where(dn_v == 1, 0.48, np.where(dn_v == 2, 0.56, 0.74))
-            # Game-script pass rate elasticity (Vector 1): team-specific leading/trailing pass-rate shifts
-            script_pass_mod = np.where(
-                sd_v >= 7.0,
+            base_p = np.where(dn_v == 1, 0.45, np.where(dn_v == 2, 0.53, 0.72))
+            # Progressive blowout clock-kill & trailing Q4 stall curve (Vector 1)
+            script_pass_mod = compute_progressive_script_pass_shift(
+                sd_v,
+                qt_v,
                 lead_pass_shift_lut[ps_v],
-                np.where(
-                    sd_v <= -7.0,
-                    trail_pass_shift_lut[ps_v] + np.where(qt_v == 4, panic_lut[ps_v], 0.0),
-                    0.0,
-                ),
+                trail_pass_shift_lut[ps_v],
+                panic_lut[ps_v],
             )
-            p_pass = (base_p + pass_delta_lut[ps_v] + script_pass_mod).clip(0.15, 0.90)
+            p_pass = (base_p + pass_delta_lut[ps_v] + script_pass_mod).clip(0.14, 0.86)
             cur_sacks_v = np.where(is_hm, home_sacks[idx_13], away_sacks[idx_13])
             rz_comp_adj = np.where(yl_v <= 20, -0.020 + 0.35 * rz_td_delta_lut[ps_v], 0.0)
             aero_wind_comp_delta = aero_wind_comp_delta if "aero_wind_comp_delta" in locals() else 0.0
@@ -2792,7 +2909,8 @@ def simulate_matchup_pbp(
                 ss_idx = np.where(sd_v <= -7.0, 0, np.where(sd_v >= 7.0, 2, 1))
                 jev_p_pass = jev_pass_arr[ps_v, db_idx, fz_idx, ss_idx]
                 jev_p_press = jev_press_arr[ps_v, db_idx, fz_idx, ss_idx]
-                p_pass = (0.65 * p_pass + 0.35 * jev_p_pass).clip(0.15, 0.90)
+                jev_pass_resid = np.clip(jev_p_pass - 0.54, -0.05, 0.05)
+                p_pass = (p_pass + jev_pass_resid).clip(0.14, 0.86)
                 sack_prob_v = (0.70 * sack_prob_v + 0.30 * (jev_p_press * 0.18)).clip(0.030, 0.195)
 
             n_13 = len(idx_13)
@@ -2845,6 +2963,8 @@ def simulate_matchup_pbp(
 
             home_pass_att[idx_13[is_att_snap & is_hm]] += 1
             away_pass_att[idx_13[is_att_snap & is_aw]] += 1
+            home_rush_att[idx_13[(~is_pass) & is_hm]] += 1
+            away_rush_att[idx_13[(~is_pass) & is_aw]] += 1
             home_pass_comp[idx_13[is_comp_snap & is_hm]] += 1
             away_pass_comp[idx_13[is_comp_snap & is_aw]] += 1
             home_ints[idx_13[is_int_snap & is_hm]] += 1
@@ -3040,6 +3160,8 @@ def simulate_matchup_pbp(
         away_rush_yds_tot = away_rush_yds_tot[res_idx]
         home_pass_att = home_pass_att[res_idx]
         away_pass_att = away_pass_att[res_idx]
+        home_rush_att = home_rush_att[res_idx]
+        away_rush_att = away_rush_att[res_idx]
         home_pass_comp = home_pass_comp[res_idx]
         away_pass_comp = away_pass_comp[res_idx]
         home_ints = home_ints[res_idx]
@@ -3211,6 +3333,8 @@ def simulate_matchup_pbp(
             "away_rush_yds": away_rush_yds_tot,
             "home_pass_att": home_pass_att,
             "away_pass_att": away_pass_att,
+            "home_rush_att": home_rush_att,
+            "away_rush_att": away_rush_att,
             "home_pass_comp": home_pass_comp,
             "away_pass_comp": away_pass_comp,
             "home_ints": home_ints,

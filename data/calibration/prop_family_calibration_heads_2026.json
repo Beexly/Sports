@@ -1,0 +1,197 @@
+{
+  "schema": "gse_prop_family_walkforward_calibration_v1",
+  "strictly_causal": true,
+  "season": 2026,
+  "eval_weeks": [
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "quarantine_rule": "eligible_for_play=False if walkforward_brier >= market_baseline_brier or walkforward_accuracy < 0.535",
+  "families": {
+    "passing_yards": {
+      "w_sim": 0.25,
+      "temp": 1.15,
+      "max_prob_cap": 0.62,
+      "walkforward_brier": 0.25091,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.5275,
+      "n_oos": 182,
+      "eligible_for_play": false
+    },
+    "pass_attempts": {
+      "w_sim": 0.55,
+      "temp": 1.15,
+      "max_prob_cap": 0.74,
+      "walkforward_brier": 0.24464,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.5549,
+      "n_oos": 182,
+      "eligible_for_play": true
+    },
+    "pass_completions": {
+      "w_sim": 0.45,
+      "temp": 1.15,
+      "max_prob_cap": 0.66,
+      "walkforward_brier": 0.25013,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.511,
+      "n_oos": 182,
+      "eligible_for_play": false
+    },
+    "passing_tds": {
+      "w_sim": 0.55,
+      "temp": 1.15,
+      "max_prob_cap": 0.7,
+      "walkforward_brier": 0.23431,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.6209,
+      "n_oos": 182,
+      "eligible_for_play": true
+    },
+    "longest_comp": {
+      "w_sim": 0.15,
+      "temp": 0.55,
+      "max_prob_cap": 0.62,
+      "walkforward_brier": 0.24998,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.511,
+      "n_oos": 182,
+      "eligible_for_play": false
+    },
+    "1q_pass_yds": {
+      "w_sim": 0.55,
+      "temp": 1.15,
+      "max_prob_cap": 0.74,
+      "walkforward_brier": 0.24541,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.544,
+      "n_oos": 182,
+      "eligible_for_play": false
+    },
+    "rushing_yards": {
+      "w_sim": 0.55,
+      "temp": 1.15,
+      "max_prob_cap": 0.7,
+      "walkforward_brier": 0.24549,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.5533,
+      "n_oos": 300,
+      "eligible_for_play": true
+    },
+    "carries": {
+      "w_sim": 0.55,
+      "temp": 1.0,
+      "max_prob_cap": 0.62,
+      "walkforward_brier": 0.24447,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.57,
+      "n_oos": 300,
+      "eligible_for_play": true
+    },
+    "longest_rush": {
+      "w_sim": 0.55,
+      "temp": 1.0,
+      "max_prob_cap": 0.7,
+      "walkforward_brier": 0.24795,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.54,
+      "n_oos": 300,
+      "eligible_for_play": false
+    },
+    "1q_rush_yds": {
+      "w_sim": 0.15,
+      "temp": 0.55,
+      "max_prob_cap": 0.62,
+      "walkforward_brier": 0.25162,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.4967,
+      "n_oos": 300,
+      "eligible_for_play": false
+    },
+    "receiving_yards": {
+      "w_sim": 0.15,
+      "temp": 0.55,
+      "max_prob_cap": 0.62,
+      "walkforward_brier": 0.25151,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.4887,
+      "n_oos": 753,
+      "eligible_for_play": false
+    },
+    "receptions": {
+      "w_sim": 0.45,
+      "temp": 1.0,
+      "max_prob_cap": 0.66,
+      "walkforward_brier": 0.24819,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.5432,
+      "n_oos": 753,
+      "eligible_for_play": true
+    },
+    "longest_rec": {
+      "w_sim": 0.35,
+      "temp": 0.7,
+      "max_prob_cap": 0.62,
+      "walkforward_brier": 0.24983,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.5312,
+      "n_oos": 753,
+      "eligible_for_play": false
+    },
+    "1q_rec_yds": {
+      "w_sim": 0.15,
+      "temp": 0.55,
+      "max_prob_cap": 0.62,
+      "walkforward_brier": 0.25045,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.4768,
+      "n_oos": 753,
+      "eligible_for_play": false
+    },
+    "anytime_td": {
+      "w_sim": 0.15,
+      "temp": 0.55,
+      "max_prob_cap": 0.7,
+      "walkforward_brier": 0.21708,
+      "market_baseline_brier": 0.22319,
+      "walkforward_accuracy": 0.3302,
+      "n_oos": 966,
+      "eligible_for_play": false
+    },
+    "tackles_plus_assists": {
+      "w_sim": 0.55,
+      "temp": 1.15,
+      "max_prob_cap": 0.7,
+      "walkforward_brier": 0.24156,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.572,
+      "n_oos": 3811,
+      "eligible_for_play": true
+    },
+    "solo_tackles": {
+      "w_sim": 0.55,
+      "temp": 1.15,
+      "max_prob_cap": 0.74,
+      "walkforward_brier": 0.2386,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.5846,
+      "n_oos": 3811,
+      "eligible_for_play": true
+    },
+    "sacks": {
+      "w_sim": 0.15,
+      "temp": 0.55,
+      "max_prob_cap": 0.74,
+      "walkforward_brier": 0.11732,
+      "market_baseline_brier": 0.08844,
+      "walkforward_accuracy": 0.0994,
+      "n_oos": 3811,
+      "eligible_for_play": false
+    }
+  }
+}

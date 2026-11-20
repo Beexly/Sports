@@ -32,6 +32,7 @@ from scripts.ops.enforce_stage0_roster_and_board_allowlist import (  # noqa: E40
 )
 from scripts.ops.gse_coach_mind_simulator import (  # noqa: E402
     build_jev_state_tensor,
+    calibrate_jev_pass_prob,
     verify_jev_spine_freshness_and_qb1,
 )
 from scripts.ops.gse_connected_game_workflow import (  # noqa: E402
@@ -192,6 +193,7 @@ def _build_snap_questions(
     qb1_name = off_ctx["qb1"]
 
     if down == 4:
+        off_family_q = None
         off_call_q = jev_client.choice(
             f"Which 4th-down decision does {off_team} (QB {qb1_name}) execute on 4th & {ydstogo} at yardline {yardline_100}?",
             {
@@ -202,6 +204,13 @@ def _build_snap_questions(
             },
         )
     else:
+        off_family_q = jev_client.choice(
+            f"Does {off_team} (QB {qb1_name}) call a designed RUN or PASS family play on {down} & {ydstogo} at yardline {yardline_100}?",
+            {
+                "run_play": f"Designed run play (inside zone, outside zone, gap/power, or draw with {rb1_name})",
+                "pass_play": f"Designed pass play (quick game, RPO, play-action, screen, or vertical shot with {qb1_name})",
+            },
+        )
         off_call_q = jev_client.choice(
             f"Which offensive play concept does {off_team} (QB {qb1_name}) call on {down} & {ydstogo} at yardline {yardline_100}?",
             {
@@ -248,7 +257,7 @@ def _build_snap_questions(
         },
     )
 
-    return {
+    q_dict: dict[str, dict[str, Any]] = {
         "off_play_call": off_call_q,
         "def_shell_call": def_shell_q,
         "target_carrier": target_carrier_q,
@@ -260,6 +269,9 @@ def _build_snap_questions(
             f"The {off_team} play-caller holds schematic leverage over {def_team}'s shell on this snap"
         ),
     }
+    if off_family_q is not None:
+        q_dict["off_play_family"] = off_family_q
+    return q_dict
 
 
 def _resolve_snap(
@@ -269,6 +281,8 @@ def _resolve_snap(
     yardline_100: int,
     answers: dict[str, Any],
     off_ctx: dict[str, Any],
+    score_diff: float = 0.0,
+    qtr: int = 1,
 ) -> dict[str, Any]:
     off_probs: dict[str, float] = answers["off_play_call"]["probabilities"]
     def_probs: dict[str, float] = answers["def_shell_call"]["probabilities"]
@@ -316,8 +330,40 @@ def _resolve_snap(
                 "clock_runoff_sec": float(rng.uniform(10.0, 15.0)),
             }
 
-    off_keys = list(off_probs.keys())
-    off_w = np.array([max(0.0, float(off_probs[k])) for k in off_keys], dtype=np.float64)
+    if down < 4 and "inside_zone_run" in off_probs:
+        pass_keys = {"quick_game_rpo", "play_action_intermediate", "deep_shot_pass"}
+        run_keys = {"inside_zone_run", "outside_zone_run"}
+        fam_probs = ((answers.get("off_play_family") or {}).get("probabilities") or {})
+        raw_pass_p = float(
+            fam_probs.get(
+                "pass_play",
+                sum(float(off_probs.get(k, 0.0)) for k in pass_keys) + 0.65 * float(off_probs.get("screen_or_draw", 0.0)),
+            )
+        )
+        cal_pass_p = calibrate_jev_pass_prob(
+            raw_jev_pass_prob=raw_pass_p,
+            team_ed_pass_rate=float(off_ctx.get("early_down_pass_rate", 0.54)),
+            down=down,
+            ydstogo=ydstogo,
+            score_diff=score_diff,
+            qtr=qtr,
+        )
+        p_sum = max(1e-6, sum(max(0.0, float(off_probs.get(k, 0.0))) for k in pass_keys) + 0.65 * max(0.0, float(off_probs.get("screen_or_draw", 0.0))))
+        r_sum = max(1e-6, sum(max(0.0, float(off_probs.get(k, 0.0))) for k in run_keys) + 0.35 * max(0.0, float(off_probs.get("screen_or_draw", 0.0))))
+        reweighted = {}
+        for k in off_probs:
+            v = max(0.0, float(off_probs[k]))
+            if k in pass_keys:
+                reweighted[k] = (v / p_sum) * cal_pass_p
+            elif k in run_keys:
+                reweighted[k] = (v / r_sum) * (1.0 - cal_pass_p)
+            else:
+                reweighted[k] = (0.65 * v / p_sum) * cal_pass_p + (0.35 * v / r_sum) * (1.0 - cal_pass_p)
+        off_keys = list(reweighted.keys())
+        off_w = np.array([max(0.0, float(reweighted[k])) for k in off_keys], dtype=np.float64)
+    else:
+        off_keys = list(off_probs.keys())
+        off_w = np.array([max(0.0, float(off_probs[k])) for k in off_keys], dtype=np.float64)
     off_w /= off_w.sum() if off_w.sum() > 0 else 1.0
     chosen_off = str(rng.choice(off_keys, p=off_w))
 
@@ -728,17 +774,38 @@ def run_week11_live_jev_spine(
         total_output_tokens += int(usage.get("output_tokens", 0))
         total_cost_usd += float(usage.get("cost", 0.0) or 0.0)
 
-        trans = _resolve_snap(rng, down, ydstogo, yardline_100, answers, off_ctx)
+        trans = _resolve_snap(
+            rng,
+            down,
+            ydstogo,
+            yardline_100,
+            answers,
+            off_ctx,
+            score_diff=float(scores[off_team] - scores[def_team]),
+            qtr=qtr,
+        )
         tm_box = box[off_team]
         if trans["play_type"] in ("pass", "run"):
             tm_box["plays"] += 1
             off_p = answers["off_play_call"]["probabilities"]
-            pass_p_jev = float(
-                off_p.get("quick_game_rpo", 0.0)
-                + off_p.get("play_action_intermediate", 0.0)
-                + off_p.get("deep_shot_pass", 0.0)
-                + 0.65 * off_p.get("screen_or_draw", 0.0)
-                + off_p.get("go_for_it_pass", 0.0)
+            fam_p = ((answers.get("off_play_family") or {}).get("probabilities") or {})
+            raw_p_jev = float(
+                fam_p.get(
+                    "pass_play",
+                    off_p.get("quick_game_rpo", 0.0)
+                    + off_p.get("play_action_intermediate", 0.0)
+                    + off_p.get("deep_shot_pass", 0.0)
+                    + 0.65 * off_p.get("screen_or_draw", 0.0)
+                    + off_p.get("go_for_it_pass", 0.0),
+                )
+            )
+            pass_p_jev = calibrate_jev_pass_prob(
+                raw_jev_pass_prob=raw_p_jev,
+                team_ed_pass_rate=float(off_ctx["early_down_pass_rate"]),
+                down=down,
+                ydstogo=ydstogo,
+                score_diff=float(scores[off_team] - scores[def_team]),
+                qtr=qtr,
             )
             tm_box["jev_pass_prob_sum"] += pass_p_jev
             tm_box["jev_pressure_noul_sum"] += float(answers["pressure_disruption"]["noul"])
@@ -835,11 +902,13 @@ def run_week11_live_jev_spine(
     for tm, ctx_tm in ((away_u, aw_ctx), (home_u, hm_ctx)):
         b = box[tm]
         n_p = max(1, b["plays"])
-        jev_ed_pass = float(np.mean(b["jev_early_down_pass_probs"])) if b["jev_early_down_pass_probs"] else float(ctx_tm["early_down_pass_rate"])
+        base_ed_p = float(ctx_tm["early_down_pass_rate"])
+        jev_ed_pass = float(np.mean(b["jev_early_down_pass_probs"])) if b["jev_early_down_pass_probs"] else base_ed_p
+        jev_ed_clamped = float(np.clip(0.55 * base_ed_p + 0.45 * jev_ed_pass, base_ed_p - 0.04, base_ed_p + 0.04))
         jev_press_noul = b["jev_pressure_noul_sum"] / n_p
         jev_edge_noul = b["jev_coach_edge_noul_sum"] / n_p
         jev_posteriors[tm] = {
-            "early_down_pass_rate": round(0.55 * ctx_tm["early_down_pass_rate"] + 0.45 * jev_ed_pass, 4),
+            "early_down_pass_rate": round(jev_ed_clamped, 4),
             "jev_mean_pressure_disruption_noul": round(jev_press_noul, 4),
             "jev_mean_coaching_edge_noul": round(jev_edge_noul, 4),
             "jev_mean_pass_call_prob": round(b["jev_pass_prob_sum"] / n_p, 4),

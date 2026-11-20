@@ -833,10 +833,12 @@ def solve_showdown_20max_portfolio(
     lb_vars = np.zeros(2 * n, dtype=np.float64)
     base_ub = np.ones(2 * n, dtype=np.float64)
     for i, p in enumerate(enriched):
-        if p["is_out"]:
+        p_med = float(p.get("median_fpts", p.get("dk_p50", 0.0)))
+        p_sal = float(p.get("flex_salary", 0))
+        if p["is_out"] or (p_sal <= 1000 and p_med <= 0.5):
             base_ub[i] = 0.0
             base_ub[n + i] = 0.0
-        elif p["is_decoy_trap"]:
+        elif p["is_decoy_trap"] or p_sal <= 1000 or p_med < 4.5:
             base_ub[i] = 0.0
 
     exposure = np.zeros(n, dtype=np.float64)

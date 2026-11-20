@@ -169,6 +169,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.ops.preflight_live_roster_injury_gate import require_week  # noqa: E402
+from scripts.ops.verify_t75_qb1_and_actives_gate import verify_prelock_roster_and_qb1_truth  # noqa: E402
 
 
 class Stage0RosterContaminationError(RuntimeError):
@@ -687,6 +688,8 @@ def load_stage0_game_roster_allowlist(
     week: int = 9,
     board_rel_path: str = "data/engine/tnf_jax_bal_dk_full_board_2026_11_05.json",
     today: date | None = None,
+    hours_to_kickoff: float = 24.0,
+    official_inactives_confirmed: bool = False,
 ) -> dict[str, Any]:
     """
     Build the cryptographically hashed Stage-0 roster, injury, and empirical 2026 PBP
@@ -865,7 +868,9 @@ def load_stage0_game_roster_allowlist(
             is_return_ir = any(k.lower() == name.lower() for k in return_from_ir)
             inj_chk = injury_map.get((tm, name.lower())) or inj_stripped_map.get((tm, _strip_name_suffix(name.lower()))) or {}
             inj_st_low = str(inj_chk.get("report_status") or "").strip().lower()
-            if inj_st_low in {"out", "doubtful", "ir", "injured reserve"} and not is_return_ir:
+            is_hard_ir = inj_st_low in {"ir", "injured reserve", "pup", "suspended"}
+            is_confirmed_lock = bool(official_inactives_confirmed or float(hours_to_kickoff) <= 1.75)
+            if (is_hard_ir or (is_confirmed_lock and inj_st_low in {"out", "doubtful"})) and not is_return_ir:
                 raise Stage0RosterContaminationError(
                     f"STAGE0_FAIL: Injured ({inj_chk.get('report_status')}) player {name} appeared on live board allowlist!"
                 )
@@ -1258,6 +1263,13 @@ def load_stage0_game_roster_allowlist(
         "allowed_players": list(athletes.keys()),
         "roster": list(athletes.values()),
     }
+    t75_audit = verify_prelock_roster_and_qb1_truth(
+        stage0_allowlist=allowlist_payload,
+        board_props=board.get("props") or [],
+        hours_to_kickoff=hours_to_kickoff,
+        official_inactives_confirmed=official_inactives_confirmed,
+    )
+    allowlist_payload["t75_prelock_audit"] = t75_audit
     canonical = json.dumps(allowlist_payload, sort_keys=True)
     allowlist_payload["stage0_receipt_sha256"] = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
     return allowlist_payload

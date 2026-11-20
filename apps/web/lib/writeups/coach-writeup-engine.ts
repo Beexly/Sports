@@ -64,6 +64,10 @@ export interface PropCall {
   nEffTargetNotes: string;
   pOver?: number;
   pUnder?: number;
+  marketOverAmerican?: number | null;
+  marketUnderAmerican?: number | null;
+  marketFairProb?: number | null;
+  publishAllowed?: boolean;
 }
 
 export interface CorrelatedSgpTicket {
@@ -290,11 +294,16 @@ export function buildCoachGameWriteup(input: Partial<CoachGameWriteup> & {
       totalDecision: totalDec,
       rationale: input.sideTotalCall.rationale || "Market efficient — no forced bet",
     },
-    topProps: input.topProps.map((p) => ({
-      ...p,
-      confidence: formatConfidenceScore(p.confidence),
-      decision: p.decision === "PLAY" && p.expectedClv > 0 ? ("PLAY" as const) : ("PASS" as const),
-    })),
+    topProps: input.topProps.map((p) => {
+      const explicitNullPrice = p.marketOverAmerican === null || p.marketUnderAmerican === null;
+      const isPlay = !explicitNullPrice && p.decision === "PLAY" && p.expectedClv > 0;
+      return {
+        ...p,
+        confidence: formatConfidenceScore(p.confidence),
+        decision: isPlay ? ("PLAY" as const) : ("PASS" as const),
+        ...(explicitNullPrice ? { publishAllowed: false } : {}),
+      };
+    }),
     correlatedSgpTicket: {
       ...input.correlatedSgpTicket,
       legs: input.correlatedSgpTicket.legs.map((l) => ({
@@ -305,6 +314,28 @@ export function buildCoachGameWriteup(input: Partial<CoachGameWriteup> & {
     },
     dfsStacks: input.dfsStacks,
     quadEngineCitations: citations,
+  };
+}
+
+export function validateStrictTwoSidedWriteup(input: CoachGameWriteup): CoachGameWriteup {
+  return {
+    ...input,
+    topProps: (input.topProps ?? []).map((p) => {
+      const hasTwoSided =
+        typeof p.marketOverAmerican === "number" &&
+        Number.isFinite(p.marketOverAmerican) &&
+        p.marketOverAmerican !== 0 &&
+        typeof p.marketUnderAmerican === "number" &&
+        Number.isFinite(p.marketUnderAmerican) &&
+        p.marketUnderAmerican !== 0;
+      const validPlay = p.decision === "PLAY" && p.expectedClv > 0 && hasTwoSided;
+      return {
+        ...p,
+        confidence: formatConfidenceScore(p.confidence),
+        decision: validPlay ? ("PLAY" as const) : ("PASS" as const),
+        publishAllowed: validPlay,
+      };
+    }),
   };
 }
 
