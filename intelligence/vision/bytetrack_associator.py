@@ -157,35 +157,45 @@ class KalmanByteTracker:
         return dist <= sigma * std + coast_allowance
 
     # -- the two-stage match --------------------------------------------------
-    def associate(self, players: list[TrackedDetection],
-                  ball: TrackedDetection | None, t: float) -> FrameAssociation:
+    def _partition_detections(
+        self, players: list[TrackedDetection]
+    ) -> tuple[list[TrackedDetection], list[TrackedDetection], int]:
+        """Partition detections into high-conf, low-conf, and rejected count."""
         cfg = self.cfg
-        out = FrameAssociation(frame_t=t)
-
         hi = [d for d in players if d.confidence >= cfg.high_conf_threshold]
-        lo = [d for d in players
-              if cfg.low_conf_floor <= d.confidence < cfg.high_conf_threshold]
-        out.rejected_low_conf = sum(1 for d in players if d.confidence < cfg.low_conf_floor)
+        lo = [
+            d for d in players
+            if cfg.low_conf_floor <= d.confidence < cfg.high_conf_threshold
+        ]
+        rejected_low_conf = sum(1 for d in players if d.confidence < cfg.low_conf_floor)
+        return hi, lo, rejected_low_conf
 
-        # predict every existing player track forward (coast if no measurement)
+    def _predict_players(self, t: float) -> None:
+        """Predict every existing player track forward (coast if no measurement)."""
         for tid in list(self.players.tracks):
             self.players.tracks[tid].predict(t, self.players.cfg)
             self.recently_tracked[tid] = self.recently_tracked.get(tid, 0) + 1
 
-        matched_tracks: set[str] = set()
-        used_dets: set[int] = set()
+    def _match_stage1(
+        self, hi: list[TrackedDetection], t: float, out: FrameAssociation
+    ) -> tuple[set[str], set[int | tuple[str, int]]]:
+        """Stage 1: GLOBAL greedy assignment of high-confidence detections.
 
-        # ---- stage 1: GLOBAL greedy assignment (all pairs, sorted by dist).
-        # Per-track greedy iteration lets two tracks steal one detection back
-        # and forth across frames (observed as 23 tracks for 2 players — the
-        # classic churn). Global sort: each track and det used at most once.
-        pairs = []
+        All candidate pairs are distance-gated, adjusted for incumbent
+        ownership bonus and coast penalty, and sorted globally.
+        """
+        cfg = self.cfg
+        matched_tracks: set[str] = set()
+        used_dets: set[int | tuple[str, int]] = set()
+
+        pairs: list[tuple[float, str, int]] = []
         for tid, trk in self.players.tracks.items():
             for di, d in enumerate(hi):
                 if not self._gate_ok(self.players, tid, d.x_m, d.y_m, cfg.stage1_gate_sigma):
                     continue
                 dist = math.hypot(d.x_m - trk.x, d.y_m - trk.y)
                 pairs.append((dist, tid, di))
+
         # incumbent stickiness: ownership lives on the TRACK (last matched det
         # position), because detection objects are new every frame. A det
         # within owner_radius of the track's last matched position is "the
@@ -203,6 +213,7 @@ class KalmanByteTracker:
             # weakened, and its velocity is staler).
             cost += self.players.tracks[tid].coast_frames * cfg.coast_penalty_m
             pairs[k] = (max(0.0, cost), tid, di)
+
         pairs.sort(key=lambda p: p[0])
         for dist, tid, di in pairs:
             if tid in matched_tracks or di in used_dets:
@@ -216,23 +227,40 @@ class KalmanByteTracker:
             out.stage1_matches.append((tid, di))
             self.recently_tracked[tid] = 0
             self.track_hits[tid] = self.track_hits.get(tid, 0) + 1
+
         for tid in self.players.tracks:
             if tid not in matched_tracks and self.recently_tracked.get(tid, 999) <= cfg.recovery_max_coast:
                 out.coasting.append(tid)  # may still enter stage 2
 
-        # ---- stage 2 (ByteTrack recovery): unmatched RECENT tracks x low-conf
-        stage2_tracks = [tid for tid in out.coasting
-                         if self.recently_tracked.get(tid, 999) <= cfg.recovery_max_coast]
-        pairs2 = []
+        return matched_tracks, used_dets
+
+    def _match_stage2(
+        self,
+        lo: list[TrackedDetection],
+        t: float,
+        out: FrameAssociation,
+        matched_tracks: set[str],
+        used_dets: set[int | tuple[str, int]],
+    ) -> None:
+        """Stage 2 (ByteTrack recovery): unmatched recent tracks x low-conf."""
+        cfg = self.cfg
+        stage2_tracks = [
+            tid for tid in out.coasting
+            if self.recently_tracked.get(tid, 999) <= cfg.recovery_max_coast
+        ]
+        pairs2: list[tuple[float, str, int]] = []
         for tid in stage2_tracks:
             for di, d in enumerate(lo):
                 if ("lo", di) in used_dets:
                     continue
                 if not self._gate_ok(self.players, tid, d.x_m, d.y_m, cfg.stage2_gate_sigma):
                     continue
-                dist = math.hypot(d.x_m - self.players.tracks[tid].x,
-                                  d.y_m - self.players.tracks[tid].y)
+                dist = math.hypot(
+                    d.x_m - self.players.tracks[tid].x,
+                    d.y_m - self.players.tracks[tid].y,
+                )
                 pairs2.append((dist, tid, di))
+
         pairs2.sort(key=lambda p: p[0])
         for dist, tid, di in pairs2:
             if tid in matched_tracks or ("lo", di) in used_dets:
@@ -249,7 +277,14 @@ class KalmanByteTracker:
             if tid in out.coasting:
                 out.coasting.remove(tid)
 
-        # ---- birth: unmatched high-confidence detections start new tracks
+    def _birth_new_tracks(
+        self,
+        hi: list[TrackedDetection],
+        used_dets: set[int | tuple[str, int]],
+        t: float,
+        out: FrameAssociation,
+    ) -> None:
+        """Birth new tracks from unmatched high-confidence detections."""
         for di, d in enumerate(hi):
             if di not in used_dets:
                 tid = f"P-{self._next_id:03d}"
@@ -260,9 +295,9 @@ class KalmanByteTracker:
                 d.track_id = tid
                 out.new_tracks.append(tid)
 
-        # ---- retirement: tracks coasting beyond the limit are DELETED from
-        # the bank (zombie coasters otherwise pollute every future gate check
-        # and stage-2 pair pool — observed 30 tracks for 2 real players).
+    def _retire_stale_tracks(self, out: FrameAssociation) -> None:
+        """Retire tracks coasting beyond max_coast_frames."""
+        cfg = self.cfg
         for tid in list(self.players.tracks):
             trk = self.players.tracks[tid]
             if trk.coast_frames > cfg.max_coast_frames:
@@ -271,6 +306,18 @@ class KalmanByteTracker:
                 self.track_hits.pop(tid, None)
                 self.last_det_pos.pop(tid, None)
                 out.retired.append(tid)
+
+    def associate(self, players: list[TrackedDetection],
+                  ball: TrackedDetection | None, t: float) -> FrameAssociation:
+        out = FrameAssociation(frame_t=t)
+
+        hi, lo, out.rejected_low_conf = self._partition_detections(players)
+        self._predict_players(t)
+
+        matched_tracks, used_dets = self._match_stage1(hi, t, out)
+        self._match_stage2(lo, t, out, matched_tracks, used_dets)
+        self._birth_new_tracks(hi, used_dets, t, out)
+        self._retire_stale_tracks(out)
 
         # ---- ball: separate bank, simple nearest-gate (single object)
         if ball is not None:
