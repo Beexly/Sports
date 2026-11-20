@@ -8,6 +8,7 @@ import pytest
 from evaluation.frozen.score_walkforward_calibration_v1 import (
     adaptive_conformal_online_calibration,
     apply_calibration_transform,
+    baker_mchale_shrunk_kelly,
     brier_score,
     expected_calibration_error,
     paired_brier_empirical_bernstein_lcb,
@@ -87,3 +88,18 @@ def test_adaptive_conformal_online_calibration_strictly_sequential() -> None:
     assert cal_a[5] < cal_a[0]
     assert all(0.0 < v < 1.0 for v in cal_a)
     assert all(0.01 <= a <= 0.45 for a in alpha_a)
+
+
+def test_baker_mchale_shrunk_kelly_estimation_uncertainty() -> None:
+    # Negative/zero EV -> zero stake
+    assert baker_mchale_shrunk_kelly(0.50, 1.91, prob_std_error=0.03)["shrunk_stake"] == 0.0
+    assert baker_mchale_shrunk_kelly(0.55, 1.0, prob_std_error=0.03)["shrunk_stake"] == 0.0
+
+    # Higher estimation uncertainty strictly shrinks Kelly fraction
+    tight = baker_mchale_shrunk_kelly(0.58, 1.95, prob_std_error=0.01)
+    noisy = baker_mchale_shrunk_kelly(0.58, 1.95, prob_std_error=0.06)
+    very_small_n = baker_mchale_shrunk_kelly(0.58, 1.95, effective_sample_n=25.0)
+    large_n = baker_mchale_shrunk_kelly(0.58, 1.95, effective_sample_n=500.0)
+    assert 0.0 < noisy["shrunk_stake"] < tight["shrunk_stake"] <= 0.05
+    assert noisy["shrinkage_k"] < tight["shrinkage_k"] < 1.0
+    assert very_small_n["shrunk_stake"] < large_n["shrunk_stake"]

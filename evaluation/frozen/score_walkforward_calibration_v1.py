@@ -305,3 +305,52 @@ def score_predictions(
         "clv_mean": round(clv_mean, 6),
         "composite_objective": round(composite, 6),
     }
+
+
+def baker_mchale_shrunk_kelly(
+    win_prob: float,
+    decimal_odds: float,
+    *,
+    prob_std_error: float | None = None,
+    effective_sample_n: float | None = None,
+    base_fraction: float = 0.25,
+    max_stake: float = 0.05,
+) -> dict[str, float]:
+    """Baker & McHale (2013) Kelly shrinkage under probability estimation uncertainty.
+
+    For estimated win probability `q`, decimal odds `d > 1`, net odds `b = d - 1`, and
+    expected edge `mu = q * d - 1`:
+      f_kelly = max(0, mu / b)
+      k_bm    = mu^2 / (mu^2 + (d^2 * sigma_q^2))
+      f_out   = min(max_stake, base_fraction * k_bm * f_kelly)
+    Returns zero stake whenever `mu <= 0`, inputs are non-finite, or odds <= 1.
+    """
+    q = float(win_prob)
+    d = float(decimal_odds)
+    if not (math.isfinite(q) and math.isfinite(d) and 0.0 < q < 1.0 and d > 1.0):
+        return {"raw_kelly": 0.0, "shrinkage_k": 0.0, "shrunk_stake": 0.0, "sigma_p": 0.0}
+
+    mu = q * d - 1.0
+    if mu <= 0.0:
+        return {"raw_kelly": 0.0, "shrinkage_k": 0.0, "shrunk_stake": 0.0, "sigma_p": 0.0}
+
+    b = d - 1.0
+    raw_kelly = mu / b
+
+    if prob_std_error is not None and math.isfinite(float(prob_std_error)):
+        sigma_p = max(0.0, float(prob_std_error))
+    elif effective_sample_n is not None and math.isfinite(float(effective_sample_n)) and float(effective_sample_n) > 0.0:
+        sigma_p = math.sqrt(max(0.0, q * (1.0 - q)) / float(effective_sample_n))
+    else:
+        sigma_p = 0.0
+
+    var_mu = (d * sigma_p) ** 2
+    mu_sq = mu * mu
+    shrink_k = mu_sq / (mu_sq + var_mu) if (mu_sq + var_mu) > 0.0 else 0.0
+    stake = min(max(0.0, float(max_stake)), max(0.0, float(base_fraction)) * shrink_k * raw_kelly)
+    return {
+        "raw_kelly": round(raw_kelly, 6),
+        "shrinkage_k": round(shrink_k, 6),
+        "shrunk_stake": round(stake, 6),
+        "sigma_p": round(sigma_p, 6),
+    }

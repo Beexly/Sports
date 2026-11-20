@@ -18,7 +18,17 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from argon_drop.live_certs import load_verified_pbp, reallocate_injured
+try:
+    from argon_drop.live_certs import load_verified_pbp, reallocate_injured
+except ModuleNotFoundError:
+    from engine.kernels.control_and_calibration import load_verified_pbp_table as load_verified_pbp
+
+    def reallocate_injured(base_shares: List[float], injured_indices: List[int]) -> List[float]:
+        out = [0.0 if i in injured_indices else max(0.0, float(w)) for i, w in enumerate(base_shares)]
+        total = sum(out)
+        if total <= 1e-12:
+            raise ValueError("All roles scratched; cannot reallocate share mass")
+        return [x / total for x in out]
 
 
 ROLE_ORDER = ["WR1", "WR2", "WR3", "TE1", "RB1"]

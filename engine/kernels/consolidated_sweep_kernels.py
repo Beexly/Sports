@@ -33,7 +33,10 @@ from typing import Any, Dict, Mapping, Sequence
 
 import numpy as np
 
-from argon_drop.live_certs import load_verified_pbp
+try:
+    from argon_drop.live_certs import load_verified_pbp
+except ModuleNotFoundError:
+    from engine.kernels.control_and_calibration import load_verified_pbp_table as load_verified_pbp
 
 ROOT_DEFAULT = Path(__file__).resolve().parents[2]
 PBP_2026_REL = Path("intelligence/coaching/data/play_by_play_2026.parquet")
