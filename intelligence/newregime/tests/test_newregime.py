@@ -17,13 +17,17 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(
 import pytest
 
 import newregime
+import numpy as np
+
 from newregime import (maml_new_regime_check, nggp_new_regime_check,
+                       LaplaceGPConfig,
                        research_lanes_status, FeatureStore, BackfillRunner,
                        leak_injection_test, DriftEnsemble,
                        drift_acceptance_check, knn_impute,
                        all_research_lanes, EstimandTaxonomy,
                        ResearchGradeNotEvaluated, STATUS_UNTESTED,
                        is_layoff_return, blanket_candidate, archetype_flag)
+from newregime.nggp import _laplace_gp_predict
 
 PACKAGE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -46,6 +50,50 @@ def test_nggp_gate():
     res = nggp_new_regime_check()
     assert res["brier_improvement"] >= 0.01, res
     assert res["gate_cleared"] is True
+
+
+def test_laplace_gp_config_and_prediction_variants():
+    """Verify LaplaceGPConfig defaults, custom overrides, and compat."""
+    default_cfg = LaplaceGPConfig()
+    assert default_cfg.lengthscale == 0.7
+    assert default_cfg.var == 4.0
+    assert default_cfg.jitter == 1e-6
+    assert default_cfg.newton_iters == 25
+
+    custom_cfg = LaplaceGPConfig(
+        lengthscale=1.0, var=2.0, jitter=1e-5, newton_iters=15
+    )
+    assert custom_cfg.lengthscale == 1.0
+    assert custom_cfg.var == 2.0
+    assert custom_cfg.jitter == 1e-5
+    assert custom_cfg.newton_iters == 15
+
+    rng = np.random.RandomState(42)
+    X_s = rng.randn(6, 2)
+    y_s = (rng.rand(6) > 0.5).astype(float)
+    X_q = rng.randn(10, 2)
+
+    # 1) Call with default config
+    p1 = _laplace_gp_predict(X_s, y_s, X_q)
+    # 2) Call with explicit LaplaceGPConfig()
+    p2 = _laplace_gp_predict(X_s, y_s, X_q, config=default_cfg)
+    np.testing.assert_allclose(p1, p2, rtol=1e-10)
+
+    # 3) Call with custom config vs legacy kwargs
+    p_custom_cfg = _laplace_gp_predict(X_s, y_s, X_q, config=custom_cfg)
+    p_legacy_kwargs = _laplace_gp_predict(
+        X_s, y_s, X_q, lengthscale=1.0, var=2.0, jitter=1e-5, newton_iters=15
+    )
+    np.testing.assert_allclose(p_custom_cfg, p_legacy_kwargs, rtol=1e-10)
+
+    # 4) Overrides on top of config via kwargs
+    p_override = _laplace_gp_predict(
+        X_s, y_s, X_q, config=default_cfg, lengthscale=1.0
+    )
+    p_expected = _laplace_gp_predict(
+        X_s, y_s, X_q, config=LaplaceGPConfig(lengthscale=1.0)
+    )
+    np.testing.assert_allclose(p_override, p_expected, rtol=1e-10)
 
 
 def test_gate_results_are_honest_about_data_basis():
@@ -263,6 +311,7 @@ def test_provenance_headers_on_every_file():
 def test_public_api_surface():
     assert callable(newregime.maml_new_regime_check)
     assert callable(newregime.nggp_new_regime_check)
+    assert newregime.LaplaceGPConfig is not None
     assert callable(newregime.research_lanes_status)
     assert callable(newregime.leak_injection_test)
     assert callable(newregime.drift_acceptance_check)
