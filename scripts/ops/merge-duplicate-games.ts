@@ -300,18 +300,22 @@ async function repointChildTables(
       where: { gameId: aliasId },
       select: { id: true, modelVersion: true },
     });
+    const existingCanonRows = await client.shadowSignal.findMany({
+      where: { gameId: canonicalId },
+      select: { modelVersion: true },
+    });
+    const canonicalModelVersions = new Set(existingCanonRows.map((r) => r.modelVersion));
     const skipped: Array<{ id: string; reason: string }> = [];
     let moved = 0;
     for (const row of rows) {
-      const collision = await client.shadowSignal.findUnique({
-        where: { [SHADOW_SIGNAL_UNIQUE]: { gameId: canonicalId, modelVersion: row.modelVersion } } as never,
-        select: { id: true },
-      });
-      if (collision) {
+      if (canonicalModelVersions.has(row.modelVersion)) {
         skipped.push({ id: row.id, reason: `canonical already has a shadow_signals row for modelVersion=${row.modelVersion}` });
         continue;
       }
-      if (!dryRun) await client.shadowSignal.update({ where: { id: row.id }, data: { gameId: canonicalId } });
+      if (!dryRun) {
+        await client.shadowSignal.update({ where: { id: row.id }, data: { gameId: canonicalId } });
+        canonicalModelVersions.add(row.modelVersion);
+      }
       moved += 1;
     }
     outcomes.push({ table: "shadow_signals", moved, skipped });
