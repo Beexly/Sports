@@ -1,3 +1,10 @@
+-- SUPERSEDED 2026-11-20: the canonical, drift-checked migration now lives at
+--   packages/db/prisma/migrations/20261120000000_add_sealed_slate_packets/migration.sql
+-- and is applied by `prisma migrate deploy`. Do NOT hand-apply this blueprint:
+-- its "updatedAt" carries DEFAULT CURRENT_TIMESTAMP, which schema.prisma does not
+-- declare (@updatedAt is client-side), so applying it first would itself introduce
+-- drift. Kept only as the historical design record.
+--
 -- Migration blueprint for SealedSlatePacket (apply via Prisma migrate dev / operator Neon console).
 -- Stored in docs/ops/migrations/ because packages/db/prisma/migrations/** is operator-gated.
 

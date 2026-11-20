@@ -318,7 +318,9 @@ export function RedlineWorld({
       if (frame) window.cancelAnimationFrame(frame);
       loopRef.current = null;
     };
-  }, []);
+    // staticMode must be a dependency: toggling reduced-motion has to tear down
+    // the rAF loop (or re-enter the static branch) — with [] the toggle was inert.
+  }, [staticMode]);
 
   const goProgress = useCallback((value: number) => {
     progressRef.current = clamp01(value);
