@@ -1,6 +1,6 @@
 {
   "schema": "gse_enterprise_autonomy_flywheel_v1",
-  "generated_at_utc": "2026-11-20T21:58:32.874516+00:00",
+  "generated_at_utc": "2026-11-20T22:19:39.265571+00:00",
   "stage1_credit_lanes": {
     "total_platforms_audited": 21,
     "lanes_configured": {
@@ -26,7 +26,7 @@
       "whop_storefront": true,
       "telegram_gsn_bot": true
     },
-    "nous_qwen4_max_hours_remaining": 65.02,
+    "nous_qwen4_max_hours_remaining": 64.67,
     "nous_cliff_failover_ready": true,
     "fish_audio_free_s21_window_active": true,
     "aws_spend_traps_blocked": true,
@@ -59,7 +59,7 @@
       "pass_attempts",
       "passing_tds",
       "rushing_yards",
-      "carries",
+      "longest_rush",
       "receptions",
       "tackles_plus_assists",
       "solo_tackles"
@@ -69,7 +69,7 @@
       "pass_completions",
       "longest_comp",
       "1q_pass_yds",
-      "longest_rush",
+      "carries",
       "1q_rush_yds",
       "receiving_yards",
       "longest_rec",
@@ -103,9 +103,9 @@
         },
         "observed": {
           "n_oos": 182,
-          "walkforward_brier": 0.23431,
+          "walkforward_brier": 0.23299,
           "market_baseline_brier": 0.25,
-          "walkforward_accuracy": 0.6209,
+          "walkforward_accuracy": 0.6319,
           "strictly_causal": true,
           "spine_age_hours": 1.5
         },
@@ -420,13 +420,9 @@
   },
   "stage4_audio_and_telegram_community": {
     "telegram_bot_verification": {
-      "ok": true,
+      "ok": false,
       "configured": true,
-      "bot_id": 8426108345,
-      "username": "GalaxySportsEdge_bot",
-      "first_name": "GSN",
-      "can_join_groups": true,
-      "can_read_all_group_messages": false
+      "reason": "Offline probe or TELEGRAM_BOT_TOKEN absent"
     },
     "daily_teaser_preview": "\ud83c\udf10 *GSE DAILY MULTI-SPORT ENVIRONMENT INTEL & PROOF ROOM*\n\n\u2022 *NFL* [CALIBRATED SNIPER LIVE] \u00b7 Index 68/100\n  _TNF & Week 11 trench matchups lean toward disciplined clock control and red-zone rushing volume._\n\u2022 *NBA* [PAPER LEARNING / ENVIRONMENT INTEL ONLY (NO RANDOM PICKS)]\n  _Tracking B2B rest differentials and westward travel fatigue spots while paper-learning head builds OOS sample._\n\u2022 *NHL* [PAPER LEARNING / ENVIRONMENT INTEL ONLY (NO RANDOM PICKS)]\n  _Monitoring 5v5 expected goals share and confirmed starter GSAx regressions across tonight's slate._\n\n\ud83d\udee1 *Calibration Law:* Uncalibrated extra sports NEVER ship speculative tickets. Picks fire only after out-of-sample walk-forward proof.\n\ud83d\udd13 *Join Free Proof Room & Memberships:* https://galaxy-sports-edge.whop.site",
     "audio_tts_priority_pre_nov30": [

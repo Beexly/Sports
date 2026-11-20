@@ -1,0 +1,183 @@
+{
+  "schema": "gse_multisport_walkforward_heads_v1",
+  "generated_at_utc": "2026-11-20T22:18:36.456304+00:00",
+  "no_fake_data_law": true,
+  "sports": {
+    "NHL": {
+      "strictly_causal": false,
+      "n_oos": 0,
+      "walkforward_brier": 0.255,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.0,
+      "eligible_for_play": false,
+      "w_sim": 0.15,
+      "temp": 0.65,
+      "max_prob_cap": 0.62,
+      "readiness": {
+        "sport": "NHL",
+        "market_family": "moneypuck_xg_moneyline",
+        "readiness_tier": "TIER_B_ENVIRONMENT_INTEL_AND_PAPER_LEARNING",
+        "publish_official_picks_allowed": false,
+        "daily_environment_content_allowed": true,
+        "paper_learning_enabled": true,
+        "policy": {
+          "min_oos_samples": 150,
+          "min_walkforward_accuracy": 0.555,
+          "min_wilson_edge": 0.04,
+          "max_straight_plays_per_game": 2,
+          "max_straight_plays_per_slate": 3,
+          "max_per_athlete": 1,
+          "requires_starter_confirmation": true,
+          "sgp_publish_enabled": false,
+          "legal_spine_adapters": [
+            "nhl_web_api",
+            "moneypuck_xg_gsax"
+          ]
+        },
+        "observed": {
+          "n_oos": 0,
+          "walkforward_brier": 0.255,
+          "market_baseline_brier": 0.25,
+          "walkforward_accuracy": 0.0,
+          "strictly_causal": false,
+          "spine_age_hours": 1.0
+        },
+        "reasons": [
+          "Calibration head lacks strictly_causal walk-forward verification.",
+          "OOS sample 0 < required 150 for NHL.",
+          "Walk-forward Brier 0.25500 >= market baseline 0.25000.",
+          "OOS accuracy 0.0000 < NHL floor 0.555.",
+          "Market family explicitly quarantined by causal calibration head (`eligible_for_play=False`)."
+        ]
+      }
+    },
+    "NBA": {
+      "strictly_causal": false,
+      "n_oos": 0,
+      "walkforward_brier": 0.255,
+      "market_baseline_brier": 0.25,
+      "walkforward_accuracy": 0.0,
+      "eligible_for_play": false,
+      "w_sim": 0.15,
+      "temp": 0.65,
+      "max_prob_cap": 0.62,
+      "readiness": {
+        "sport": "NBA",
+        "market_family": "game_spread_and_fatigue",
+        "readiness_tier": "TIER_B_ENVIRONMENT_INTEL_AND_PAPER_LEARNING",
+        "publish_official_picks_allowed": false,
+        "daily_environment_content_allowed": true,
+        "paper_learning_enabled": true,
+        "policy": {
+          "min_oos_samples": 150,
+          "min_walkforward_accuracy": 0.555,
+          "min_wilson_edge": 0.04,
+          "max_straight_plays_per_game": 2,
+          "max_straight_plays_per_slate": 3,
+          "max_per_athlete": 1,
+          "requires_starter_confirmation": true,
+          "sgp_publish_enabled": false,
+          "legal_spine_adapters": [
+            "balldontlie_nba",
+            "fatigue_priors_nba",
+            "nba_rest_travel"
+          ]
+        },
+        "observed": {
+          "n_oos": 0,
+          "walkforward_brier": 0.255,
+          "market_baseline_brier": 0.25,
+          "walkforward_accuracy": 0.0,
+          "strictly_causal": false,
+          "spine_age_hours": 1.0
+        },
+        "reasons": [
+          "Calibration head lacks strictly_causal walk-forward verification.",
+          "OOS sample 0 < required 150 for NBA.",
+          "Walk-forward Brier 0.25500 >= market baseline 0.25000.",
+          "OOS accuracy 0.0000 < NBA floor 0.555.",
+          "Market family explicitly quarantined by causal calibration head (`eligible_for_play=False`)."
+        ]
+      }
+    }
+  },
+  "nba_fatigue_bayesian_priors": {
+    "rest_diff": {
+      "prior_mean": 0.35,
+      "prior_sd": 1.0
+    },
+    "westward_travel_hours": {
+      "prior_mean": -1.74,
+      "prior_sd": 1.5
+    },
+    "three_in_four": {
+      "prior_mean": -1.29,
+      "prior_sd": 1.5
+    }
+  },
+  "moneypuck_live_environment": {
+    "source": "moneypuck.com (attribution required)",
+    "season": 2026,
+    "status": "live",
+    "top_teams_xg_share": [
+      {
+        "team": "CAR",
+        "games": 22,
+        "xg_share": 0.61
+      },
+      {
+        "team": "NJD",
+        "games": 22,
+        "xg_share": 0.57
+      },
+      {
+        "team": "MIN",
+        "games": 24,
+        "xg_share": 0.56
+      },
+      {
+        "team": "VGK",
+        "games": 24,
+        "xg_share": 0.55
+      },
+      {
+        "team": "COL",
+        "games": 23,
+        "xg_share": 0.55
+      }
+    ],
+    "top_goalies_gsax": [
+      {
+        "name": "Jesper Wallstedt",
+        "team": "MIN",
+        "games": 21,
+        "gsax": 19.14
+      },
+      {
+        "name": "Jacob Fowler",
+        "team": "MTL",
+        "games": 14,
+        "gsax": 14.17
+      },
+      {
+        "name": "Linus Ullmark",
+        "team": "OTT",
+        "games": 11,
+        "gsax": 10.39
+      },
+      {
+        "name": "Ilya Sorokin",
+        "team": "NYI",
+        "games": 14,
+        "gsax": 10.28
+      },
+      {
+        "name": "Pyotr Kochetkov",
+        "team": "CAR",
+        "games": 14,
+        "gsax": 10.1
+      }
+    ],
+    "errors": []
+  }
+}

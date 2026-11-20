@@ -60,6 +60,7 @@ export async function synthesizeBriefAudio({ text, outPath, format = "mp3", mode
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
+      model: effectiveModel,
     },
     body: JSON.stringify({ text, model: effectiveModel, format }),
     signal: AbortSignal.timeout(45_000),
