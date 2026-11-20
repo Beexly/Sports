@@ -131,7 +131,7 @@ export interface InMemoryCapabilityLeaseRegistryConfig<TCapability> {
 let defaultIdCounter = 0;
 function defaultIdFactory(): string {
   defaultIdCounter += 1;
-  return `lease_${defaultIdCounter}_${Math.random().toString(36).slice(2, 10)}`;
+  return `lease_${defaultIdCounter}_${crypto.randomUUID()}`;
 }
 
 /**
