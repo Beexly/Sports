@@ -21,9 +21,20 @@
 
 """Few-shot GP classifier with calibrated uncertainty (1902)."""
 
+from dataclasses import dataclass
 import numpy as np
 
 from .dgp import sigmoid, sample_nggp_tasks, MODULE_SEED
+
+
+@dataclass(frozen=True)
+class LaplaceGPConfig:
+    """Hyperparameters and configuration for Laplace GP binary classifier."""
+
+    lengthscale: float = 0.7
+    var: float = 4.0
+    jitter: float = 1e-6
+    newton_iters: int = 25
 
 
 def _rbf(A, B, lengthscale, var):
@@ -32,14 +43,28 @@ def _rbf(A, B, lengthscale, var):
     return var * np.exp(-0.5 * d2 / lengthscale ** 2)
 
 
-def _laplace_gp_predict(X_s, y_s, X_q, lengthscale=0.7, var=4.0, jitter=1e-6,
-                        newton_iters=25):
+def _laplace_gp_predict(X_s, y_s, X_q, config: LaplaceGPConfig | None = None, **kwargs):
     """Binary GP classifier via Laplace approximation (Rasmussen & Williams
     Alg. 5.1). Returns predictive probabilities for X_q."""
+    if config is None:
+        cfg = LaplaceGPConfig(
+            lengthscale=kwargs.get("lengthscale", 0.7),
+            var=kwargs.get("var", 4.0),
+            jitter=kwargs.get("jitter", 1e-6),
+            newton_iters=kwargs.get("newton_iters", 25),
+        )
+    else:
+        cfg = LaplaceGPConfig(
+            lengthscale=kwargs.get("lengthscale", config.lengthscale),
+            var=kwargs.get("var", config.var),
+            jitter=kwargs.get("jitter", config.jitter),
+            newton_iters=kwargs.get("newton_iters", config.newton_iters),
+        )
+
     n = len(X_s)
-    K = _rbf(X_s, X_s, lengthscale, var) + jitter * np.eye(n)
+    K = _rbf(X_s, X_s, cfg.lengthscale, cfg.var) + cfg.jitter * np.eye(n)
     f = np.zeros(n)
-    for _ in range(newton_iters):
+    for _ in range(cfg.newton_iters):
         p = sigmoid(f)
         W = p * (1.0 - p) + 1e-9
         sqrtW = np.sqrt(W)
@@ -58,8 +83,8 @@ def _laplace_gp_predict(X_s, y_s, X_q, lengthscale=0.7, var=4.0, jitter=1e-6,
     sqrtW = np.sqrt(W)
     B = np.eye(n) + (sqrtW[:, None] * K) * sqrtW[None, :]
     L = np.linalg.cholesky(B)
-    Ks = _rbf(X_s, X_q, lengthscale, var)
-    Kss = _rbf(X_q, X_q, lengthscale, var)
+    Ks = _rbf(X_s, X_q, cfg.lengthscale, cfg.var)
+    Kss = _rbf(X_q, X_q, cfg.lengthscale, cfg.var)
     # predictive mean of latent f*
     f_mean = Ks.T @ (y_s - p)
     # predictive variance of latent f*
@@ -89,11 +114,12 @@ def nggp_new_regime_check(seed=MODULE_SEED + 7, n_tasks=64,
     all_y = np.concatenate([t["y_s"] for t in tasks])
     base_rate = float(all_y.mean())
 
+    config = LaplaceGPConfig()
     brier_base, brier_gp = [], []
     for t in tasks:
         p_base = np.full_like(t["y_q"], base_rate)
         brier_base.append(float(np.mean((p_base - t["y_q"]) ** 2)))
-        p_gp = _laplace_gp_predict(t["X_s"], t["y_s"], t["X_q"])
+        p_gp = _laplace_gp_predict(t["X_s"], t["y_s"], t["X_q"], config=config)
         brier_gp.append(float(np.mean((p_gp - t["y_q"]) ** 2)))
 
     brier_base = float(np.mean(brier_base))

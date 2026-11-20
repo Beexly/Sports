@@ -17,7 +17,10 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(
 import pytest
 
 import newregime
+import numpy as np
+
 from newregime import (maml_new_regime_check, nggp_new_regime_check,
+                       LaplaceGPConfig, _laplace_gp_predict,
                        research_lanes_status, FeatureStore, BackfillRunner,
                        leak_injection_test, DriftEnsemble,
                        drift_acceptance_check, knn_impute,
@@ -46,6 +49,41 @@ def test_nggp_gate():
     res = nggp_new_regime_check()
     assert res["brier_improvement"] >= 0.01, res
     assert res["gate_cleared"] is True
+
+
+def test_laplace_gp_predict_config_and_backward_compatibility():
+    """Test LaplaceGPConfig dataclass and _laplace_gp_predict parameter compatibility."""
+    # Default config values
+    cfg = LaplaceGPConfig()
+    assert cfg.lengthscale == 0.7
+    assert cfg.var == 4.0
+    assert cfg.jitter == 1e-6
+    assert cfg.newton_iters == 25
+
+    # Simple synthetic support and query data
+    rng = np.random.default_rng(42)
+    X_s = rng.normal(size=(8, 3))
+    y_s = (rng.uniform(size=8) > 0.5).astype(float)
+    X_q = rng.normal(size=(5, 3))
+
+    # Prediction using default config
+    preds_default = _laplace_gp_predict(X_s, y_s, X_q)
+    preds_cfg = _laplace_gp_predict(X_s, y_s, X_q, config=cfg)
+    np.testing.assert_allclose(preds_default, preds_cfg)
+
+    # Custom config
+    custom_cfg = LaplaceGPConfig(lengthscale=1.2, var=2.0, jitter=1e-5, newton_iters=10)
+    preds_custom = _laplace_gp_predict(X_s, y_s, X_q, config=custom_cfg)
+
+    # Backward compatibility with kwargs
+    preds_kwargs = _laplace_gp_predict(
+        X_s, y_s, X_q, lengthscale=1.2, var=2.0, jitter=1e-5, newton_iters=10
+    )
+    np.testing.assert_allclose(preds_custom, preds_kwargs)
+
+    # Kwargs override config if both provided
+    preds_override = _laplace_gp_predict(X_s, y_s, X_q, config=cfg, lengthscale=1.2, var=2.0, jitter=1e-5, newton_iters=10)
+    np.testing.assert_allclose(preds_override, preds_custom)
 
 
 def test_gate_results_are_honest_about_data_basis():
