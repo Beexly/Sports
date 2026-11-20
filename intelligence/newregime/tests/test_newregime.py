@@ -23,7 +23,9 @@ from newregime import (maml_new_regime_check, nggp_new_regime_check,
                        drift_acceptance_check, knn_impute,
                        all_research_lanes, EstimandTaxonomy,
                        ResearchGradeNotEvaluated, STATUS_UNTESTED,
-                       is_layoff_return, blanket_candidate, archetype_flag)
+                       is_layoff_return, blanket_candidate, archetype_flag,
+                       MamlConfig, meta_train)
+from newregime.dgp import sample_meta_tasks
 
 PACKAGE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -64,6 +66,34 @@ def test_maml_beats_baseline_on_held_out_regimes():
     res = maml_new_regime_check()
     assert res["n_test_tasks"] > 0
     assert res["brier_maml"] < res["brier_baseline"]
+
+
+def test_meta_train_maml_config():
+    """Verify MamlConfig dataclass creation and usage in meta_train."""
+    cfg = MamlConfig(meta_iters=5, outer_lr=0.01, inner_steps=2, inner_lr=0.5, seed=42)
+    assert cfg.meta_iters == 5
+    assert cfg.outer_lr == 0.01
+    assert cfg.inner_steps == 2
+    assert cfg.inner_lr == 0.5
+    assert cfg.seed == 42
+
+    data = sample_meta_tasks(seed=42, n_tasks=8, d=4, n_support=4, n_query=8)
+    tasks = data["tasks"]
+
+    # Calling with MamlConfig instance
+    w1, b1 = meta_train(tasks, 4, config=cfg)
+    assert len(w1) == 4
+    assert isinstance(b1, float)
+
+    # Calling with legacy kwargs (backward compatibility)
+    w2, b2 = meta_train(tasks, 4, meta_iters=5, outer_lr=0.01, inner_steps=2, inner_lr=0.5, seed=42)
+    assert len(w2) == 4
+    assert isinstance(b2, float)
+
+    # Verify identical output for config vs kwargs
+    import numpy as np
+    assert np.allclose(w1, w2)
+    assert np.isclose(b1, b2)
 
 
 # ---------------------------------------------------------------------------
