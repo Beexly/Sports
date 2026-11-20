@@ -1851,6 +1851,7 @@ def run_stage1a_all_38_coaching_and_scheme_layers(
         kicker_air_density_weather_hazard_engine,
         ngs_causal_separation_cpoe_ryoe_engine,
         causal_redzone_and_fourth_down_engine,
+        causal_pace_and_penalty_discipline_engine,
         ingame,
         ol_provider,
         pgwe_luck_audit,
@@ -2237,6 +2238,11 @@ def run_stage1a_all_38_coaching_and_scheme_layers(
             {"wind_mph": env_cfg.get("wind_mph", 6.5), "is_indoor": env_cfg.get("is_indoor", False)},
         ),
         "stream_15t_redzone_and_4th_down": causal_redzone_and_fourth_down_engine.evaluate_causal_15t_redzone_4th_matchup(
+            away,
+            home,
+            {"wind_mph": env_cfg.get("wind_mph", 6.5), "is_indoor": env_cfg.get("is_indoor", False)},
+        ),
+        "stream_15u_pace_and_penalty_discipline": causal_pace_and_penalty_discipline_engine.evaluate_causal_15u_pace_matchup(
             away,
             home,
             {"wind_mph": env_cfg.get("wind_mph", 6.5), "is_indoor": env_cfg.get("is_indoor", False)},
