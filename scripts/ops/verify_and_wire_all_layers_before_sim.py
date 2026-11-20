@@ -108,6 +108,7 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         ftn_and_snap_deep_intelligence_engine,
         pfr_learned_trench_scheme_contact_engine,
         causal_positional_vulnerability_engine,
+        ftn_role_zone_pressure_hazard_engine,
         whitefield_and_nflverse_metrics_engine,
     )
     from scripts.ops.gse_coach_mind_simulator import (
@@ -209,6 +210,13 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         "stream_15p_away_pos_vuln_epa",
         "stream_15p_home_pos_vuln_epa",
         "stream_15p_net_pos_vuln_delta",
+        "stream_15q_away_pressure_survival_edge",
+        "stream_15q_home_pressure_survival_edge",
+        "stream_15q_away_motion_pa_edge",
+        "stream_15q_home_motion_pa_edge",
+        "stream_15q_away_eb_continuity_edge",
+        "stream_15q_home_eb_continuity_edge",
+        "stream_15q_net_scheme_hazard_diff",
         "julia_carleman_5level_audit_ready",
     ]
     missing = [k for k in required_cond_keys if k not in cond or cond[k] is None]
@@ -239,6 +247,9 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         ("stream_15o_away_scheme_accuracy_edge", "stream_15o_home_scheme_accuracy_edge"),
         ("stream_15o_away_penalty_discipline_edge", "stream_15o_home_penalty_discipline_edge"),
         ("stream_15p_away_pos_vuln_epa", "stream_15p_home_pos_vuln_epa"),
+        ("stream_15q_away_pressure_survival_edge", "stream_15q_home_pressure_survival_edge"),
+        ("stream_15q_away_motion_pa_edge", "stream_15q_home_motion_pa_edge"),
+        ("stream_15q_away_eb_continuity_edge", "stream_15q_home_eb_continuity_edge"),
     ]
     for ka, kh in swap_pairs:
         if abs(float(cond[ka]) - float(cond_sw[kh])) > 1e-6 or abs(float(cond[kh]) - float(cond_sw[ka])) > 1e-6:
@@ -247,6 +258,8 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         raise RuntimeError("[PRE-SIM GATE FAIL] stream_15o_net_trench_contact_diff antisymmetry violated.")
     if abs(float(cond["stream_15p_net_pos_vuln_delta"]) + float(cond_sw["stream_15p_net_pos_vuln_delta"])) > 1e-6:
         raise RuntimeError("[PRE-SIM GATE FAIL] stream_15p_net_pos_vuln_delta antisymmetry violated.")
+    if abs(float(cond["stream_15q_net_scheme_hazard_diff"]) + float(cond_sw["stream_15q_net_scheme_hazard_diff"])) > 1e-6:
+        raise RuntimeError("[PRE-SIM GATE FAIL] stream_15q_net_scheme_hazard_diff antisymmetry violated.")
     if abs(float(cond["stream_15n_kickoff_yl_differential"]) + float(cond_sw["stream_15n_kickoff_yl_differential"])) > 1e-6:
         raise RuntimeError("LAYER6_KICKOFF_ANTISYMMETRY_BROKEN")
     if float(cond["stream_15m_home_questionable_sigma"]) <= float(cond["stream_15m_away_questionable_sigma"]):
@@ -272,6 +285,10 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         "causal_pos_vuln_15p_live": hasattr(
             causal_positional_vulnerability_engine,
             "evaluate_causal_15p_matchup",
+        ),
+        "ftn_pressure_hazard_15q_live": hasattr(
+            ftn_role_zone_pressure_hazard_engine,
+            "evaluate_causal_15q_matchup",
         ),
         "ftn_joined_rows": int(deep_15n.get("ftn_joined_rows", 0)),
         "snap_rows": int(deep_15n.get("snap_rows", 0)),

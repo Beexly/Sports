@@ -10,6 +10,7 @@ from . import (
     ftn_and_snap_deep_intelligence_engine,
     pfr_learned_trench_scheme_contact_engine,
     causal_positional_vulnerability_engine,
+    ftn_role_zone_pressure_hazard_engine,
 )
 from .provider import CoachingEngineProvider
 
@@ -20,4 +21,5 @@ __all__ = ["common", "load", "proe", "fingerprint", "tenures", "regime",
            "whitefield_and_nflverse_metrics_engine", "ftn_and_snap_deep_intelligence_engine",
            "pfr_learned_trench_scheme_contact_engine",
            "causal_positional_vulnerability_engine",
+           "ftn_role_zone_pressure_hazard_engine",
            "CoachingEngineProvider"]
