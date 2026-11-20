@@ -3,8 +3,9 @@
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
-// @ts-ignore
-globalThis.React = React;
+// jsdom bootstrap: keep React on the global scope for classic-runtime consumers.
+// Typed cast instead of @ts-ignore (ban-ts-comment) — behavior unchanged.
+(globalThis as Record<string, unknown>).React = React;
 import { render } from "@testing-library/react";
 
 vi.mock("@/components/ui/nav", () => ({
