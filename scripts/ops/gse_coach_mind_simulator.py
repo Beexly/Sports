@@ -1795,6 +1795,42 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     conditioners["stream_15y_net_box_charting_diff"] = float(
         stream_15y_bundle["stream_15y_net_box_charting_diff"]
     )
+    from intelligence.coaching.causal_ol_continuity_and_half_splits_engine import (
+        evaluate_causal_15z_ol_half_matchup,
+    )
+
+    stream_15z_bundle = evaluate_causal_15z_ol_half_matchup(
+        away_team=away_u,
+        home_team=home_u,
+        context=ctx,
+    )
+    conditioners["stream_15z_away_ol_continuity_edge"] = float(
+        stream_15z_bundle["stream_15z_away_ol_continuity_edge"]
+    )
+    conditioners["stream_15z_home_ol_continuity_edge"] = float(
+        stream_15z_bundle["stream_15z_home_ol_continuity_edge"]
+    )
+    conditioners["stream_15z_away_sack_protection_edge"] = float(
+        stream_15z_bundle["stream_15z_away_sack_protection_edge"]
+    )
+    conditioners["stream_15z_home_sack_protection_edge"] = float(
+        stream_15z_bundle["stream_15z_home_sack_protection_edge"]
+    )
+    conditioners["stream_15z_away_first_half_edge"] = float(
+        stream_15z_bundle["stream_15z_away_first_half_edge"]
+    )
+    conditioners["stream_15z_home_first_half_edge"] = float(
+        stream_15z_bundle["stream_15z_home_first_half_edge"]
+    )
+    conditioners["stream_15z_away_halftime_swing_null_edge"] = float(
+        stream_15z_bundle["stream_15z_away_halftime_swing_null_edge"]
+    )
+    conditioners["stream_15z_home_halftime_swing_null_edge"] = float(
+        stream_15z_bundle["stream_15z_home_halftime_swing_null_edge"]
+    )
+    conditioners["stream_15z_net_ol_half_diff"] = float(
+        stream_15z_bundle["stream_15z_net_ol_half_diff"]
+    )
     conditioners["julia_carleman_5level_audit_ready"] = bool(julia_carleman_path.is_file())
 
     result = {
@@ -1830,6 +1866,7 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         "stream_15w_rest_hfa_and_market_audit": stream_15w_bundle,
         "stream_15x_air_yac_and_rush_success": stream_15x_bundle,
         "stream_15y_box_shell_and_charting": stream_15y_bundle,
+        "stream_15z_ol_continuity_and_half_splits": stream_15z_bundle,
         "wave32_unified_sports_situational_fusion": wave32_fusion,
         "wave34_holistic_biometrics": wave32_fusion["wave34_holistic_biometrics"],
         "wave35_gsi_and_micro_matchups": wave32_fusion["wave35_gsi_and_micro_matchups"],

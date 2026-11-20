@@ -40,6 +40,9 @@ from intelligence.coaching.causal_air_yac_and_rush_success_engine import (
 from intelligence.coaching.causal_box_shell_and_charting_engine import (
     evaluate_causal_15y_box_charting_matchup,
 )
+from intelligence.coaching.causal_ol_continuity_and_half_splits_engine import (
+    evaluate_causal_15z_ol_half_matchup,
+)
 from intelligence.coaching.causal_pace_and_penalty_discipline_engine import (
     evaluate_causal_15u_pace_matchup,
 )
@@ -79,6 +82,7 @@ STREAM_NAMES: Tuple[str, ...] = (
     "15W_hfa_rest",
     "15X_air_rush",
     "15Y_box_chart",
+    "15Z_ol_half",
 )
 
 
@@ -157,6 +161,7 @@ def extract_causal_game_feature_matrix(
         b15w = evaluate_causal_15w_hfa_rest_matchup(aw, hm, ctx, as_of_season=2026, as_of_week=wk)
         b15x = evaluate_causal_15x_air_yac_rush_matchup(aw, hm, ctx, as_of_week=wk)
         b15y = evaluate_causal_15y_box_charting_matchup(aw, hm, ctx, as_of_week=wk)
+        b15z = evaluate_causal_15z_ol_half_matchup(aw, hm, ctx, as_of_week=wk)
 
         hm_ml = float(g["home_moneyline"]) if pd.notna(g["home_moneyline"]) else -110.0
         aw_ml = float(g["away_moneyline"]) if pd.notna(g["away_moneyline"]) else -110.0
@@ -191,6 +196,7 @@ def extract_causal_game_feature_matrix(
                 "15W_hfa_rest": -float(b15w["stream_15w_net_sched_resilience_diff"]),
                 "15X_air_rush": -float(b15x["stream_15x_net_air_rush_diff"]),
                 "15Y_box_chart": -float(b15y["stream_15y_net_box_charting_diff"]),
+                "15Z_ol_half": -float(b15z["stream_15z_net_ol_half_diff"]),
             }
         )
 

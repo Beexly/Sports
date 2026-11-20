@@ -24,7 +24,7 @@ Each stage cryptographically hashes its parent SHA-256 receipt so no stage can b
 
 ### Stage 1A — Coaching Modules & Python Intelligence Domains (`stage1a_receipt_sha256`)
 - Chains `parent_stage0_receipt_sha256`.
-- Runs `intelligence/coaching/*.py` (`compute_tendencies`, `dc_pressure`, `pressure_answer`, `proe`, `redzone`, `script_elasticity`, `tempo`, Stream 15N FTN/snap, Stream 15O PFR 39-table priors, and walk-forward OOS-gated causal Streams 15P–15Y: L-RAPM pos vuln, OL pressure survival, kicker air-density physics, NGS CPOE/RYOE, RZ compression/4th-down, neutral pace/play-volume, early-down clean EPA, dynamic HFA/rest/cold decay, Air/YAC pass + rush SR, and FTN box-count/blitz/catchable charting) plus `scripts/ops/run_python_25_intelligence_domains.py`.
+- Runs `intelligence/coaching/*.py` (`compute_tendencies`, `dc_pressure`, `pressure_answer`, `proe`, `redzone`, `script_elasticity`, `tempo`, Stream 15N FTN/snap, Stream 15O PFR 39-table priors, and walk-forward OOS-gated causal Streams 15P–15Z: L-RAPM pos vuln, OL pressure survival, kicker air-density physics, NGS CPOE/RYOE, RZ compression/4th-down, neutral pace/play-volume, early-down clean EPA, dynamic HFA/rest/cold decay, Air/YAC pass + rush SR, FTN box-count/blitz/catchable charting, and OL snap continuity/sack/1H-2H splits) plus `scripts/ops/run_python_25_intelligence_domains.py`.
 
 ### Stage 1B — TypeScript Prediction & MCP Equation Engines (`stage1b_receipt_sha256`)
 - Chains `parent_stage1a_receipt_sha256` and runs `npx tsx scripts/ops/run_ts_prediction_and_mcp_engines.ts`:

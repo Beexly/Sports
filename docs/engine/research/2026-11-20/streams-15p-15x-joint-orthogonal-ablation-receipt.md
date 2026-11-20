@@ -27,3 +27,7 @@
 
 - **Honest Ablation Note:** Second-half (`Weeks 8–10`, `n = 43`) ACI (`ladder_4_aci_online`) achieved the lowest ECE (`0.118345` vs `0.129492` raw) on Ridge probabilities, while `ladder_0_raw` held lowest Brier (`0.199449`) on that 43-game slice. Neither raw statistical model alone beats closing-line Brier (`0.199401`), underscoring Stage 5 Closing-Line Anchor respect.
 - **Baker-McHale Kelly Audit (`sigma_p = 0.045`, `max_stake = 0.05`):** Placed `33` micro-stakes (`0.0352` total staked, net `+0.0312` units), automatically damping low-sample estimation variance.
+
+## Addendum: 11-Stream Extension (`15P–15Z`, Cycle F13)
+- Extending the strict causal feature matrix with `15Y_box_chart` (`max |r| = 0.5521` vs prior streams) and `15Z_ol_half` (`max |r| = 0.6554`) lowered both standalone OOS zero-market model Brier (`equal_weight_z_stack`: `0.226975 -> 0.225365`, `ridge_orthogonal_stack`: `0.229185 -> 0.225715`, `log_loss`: `0.648013 -> 0.641596`) and the market-blended stack (`market_85_plus_ridge_15`: `0.201404 -> 0.201129`, `ECE`: `0.109770 -> 0.109297`, `Composite`: `0.404176 -> 0.403540`).
+- Second-half (`Weeks 8–10`, `n = 43`) frozen ladder `ladder_0_raw` reached `Brier = 0.190796` (`Log-Loss = 0.566253`, `Composite = 0.384286`); Baker-McHale Kelly vs close placed `33` micro-stakes (`0.0286` staked, `+0.0228` net units).

@@ -398,6 +398,9 @@ def run_real_nflverse_walk_forward_backtests() -> dict[str, dict[str, Any]]:
     from intelligence.coaching.causal_box_shell_and_charting_engine import (
         evaluate_causal_15y_walkforward_oos,
     )
+    from intelligence.coaching.causal_ol_continuity_and_half_splits_engine import (
+        evaluate_causal_15z_walkforward_oos,
+    )
 
     results["stream_15p_causal_pos_vuln_walkforward"] = evaluate_causal_15p_walkforward_oos(
         eval_weeks=tuple(range(4, 11))
@@ -427,6 +430,9 @@ def run_real_nflverse_walk_forward_backtests() -> dict[str, dict[str, Any]]:
         eval_weeks=tuple(range(4, 11))
     )
     results["stream_15y_box_charting_walkforward"] = evaluate_causal_15y_walkforward_oos(
+        eval_weeks=tuple(range(4, 11))
+    )
+    results["stream_15z_ol_half_walkforward"] = evaluate_causal_15z_walkforward_oos(
         eval_weeks=tuple(range(4, 11))
     )
 
@@ -559,6 +565,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         if not s15y.get("all_promoted_components_beat_baseline"):
             print(
                 "EPISTEMIC GATE FAILURE: Stream 15Y FTN box/blitz/catchable failed OOS gate",
+                file=sys.stderr,
+            )
+            return 1
+        s15z = suite.get("stream_15z_ol_half_walkforward") or {}
+        if not s15z.get("all_promoted_components_beat_baseline"):
+            print(
+                "EPISTEMIC GATE FAILURE: Stream 15Z OL continuity/sack/half-splits failed OOS gate",
                 file=sys.stderr,
             )
             return 1
