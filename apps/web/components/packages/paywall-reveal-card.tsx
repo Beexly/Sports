@@ -468,23 +468,30 @@ export function PaywallRevealCard({
 
                     {w.topProps.length > 0 && (
                       <div className="mt-6">
-                        <p className="rl-eyebrow">Best player props</p>
+                        <p className="rl-eyebrow">Best player props ({w.topProps.length} evaluated)</p>
                         <ul className="mt-2">
                           {w.topProps.map((p, idx) => {
                             const propIsPass = String(p.decision) === "PASS";
                             return (
                               <li
                                 key={`${p.playerId}-${p.propType}-${idx}`}
-                                className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-mineral py-3 text-[15px]"
+                                className="border-b border-mineral py-3 text-[15px]"
                               >
-                                <span className={propIsPass ? "text-ion-2" : "font-semibold text-ion-white"}>
-                                  {propIsPass
-                                    ? `${p.playerName} · PASS · NO BET (${p.propType})`
-                                                                        : `BET THIS: ${p.playerName} · ${p.side} ${p.line} ${p.propType}`}
-                                </span>
-                                <span className="rl-figure text-sm text-ion-1">
-                                  Confidence: {formatConfidenceStrict(p.confidence)}
-                                </span>
+                                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                                  <span className={propIsPass ? "text-ion-2" : "font-semibold text-ion-white"}>
+                                    {propIsPass
+                                      ? `${p.playerName} · PASS · NO BET (${p.propType})`
+                                      : `BET THIS: ${p.playerName} · ${p.side} ${p.line} ${p.propType}`}
+                                  </span>
+                                  <span className="rl-figure text-sm text-ion-1">
+                                    Confidence: {formatConfidenceStrict(p.confidence)}
+                                  </span>
+                                </div>
+                                {p.nEffTargetNotes && (
+                                  <p className="mt-1 text-xs leading-relaxed text-ion-2">
+                                    {sanitizePlainFootballText(p.nEffTargetNotes)}
+                                  </p>
+                                )}
                               </li>
                             );
                           })}
@@ -535,59 +542,93 @@ export function PaywallRevealCard({
             <div className="mt-12 border-t-2 border-plasma pt-10">
               <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
                 <span className="rl-eyebrow text-plasma">Unlocked DFS Optimal Lineups &amp; Portfolio</span>
-                <span className="rl-eyebrow">DraftKings Main &amp; Showdown Slate</span>
+                <span className="rl-eyebrow">DraftKings Showdown &amp; Main Slate</span>
               </div>
-              <h4 className="rl-display mt-3 text-3xl text-ion-white">2 Optimal Lineups &amp; Core Pool</h4>
-              <p className="mt-2 max-w-[65ch] text-sm text-ion-1">
-                Built from film study, offensive and defensive line protection splits, active injury replacements, and ownership leverage across the slate.
-              </p>
-
-              <div className="mt-8 grid gap-8 lg:grid-cols-2">
-                {/* Cash Flagship */}
-                <div className="rounded border border-mineral bg-eclipse p-6">
-                  <span className="rl-eyebrow text-plasma">{STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.cashFlagship.tag}</span>
-                  <div className="mt-1 font-display text-xl text-ion-white">
-                    {STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.cashFlagship.salary} · {STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.cashFlagship.projectedPts}
-                  </div>
-                  <ul className="mt-4 space-y-2 text-sm">
-                    {STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.cashFlagship.slots.map((slot) => (
-                      <li key={slot.pos} className="flex justify-between border-b border-mineral/50 pb-1.5">
-                        <span><strong>{slot.pos}</strong> {slot.player}</span>
-                        <span className="text-ion-1">{slot.detail}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* GPP Tournament */}
-                <div className="rounded border border-mineral bg-eclipse p-6">
-                  <span className="rl-eyebrow text-plasma">{STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.gppTournament.tag}</span>
-                  <div className="mt-1 font-display text-xl text-ion-white">
-                    {STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.gppTournament.salary} · {STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.gppTournament.projectedPts}
-                  </div>
-                  <ul className="mt-4 space-y-2 text-sm">
-                    {STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.gppTournament.slots.map((slot) => (
-                      <li key={slot.pos} className="flex justify-between border-b border-mineral/50 pb-1.5">
-                        <span><strong>{slot.pos}</strong> {slot.player}</span>
-                        <span className="text-ion-1">{slot.detail}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              {/* Primetime Showdown Captain Blueprints */}
-              <div className="mt-8 rounded border border-mineral bg-eclipse/70 p-6">
-                <span className="rl-eyebrow text-plasma">Primetime Showdown Captain Leverage</span>
-                <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.showdownCaptains.map((cpt) => (
-                    <div key={cpt.player} className="rounded border border-mineral/40 bg-obsidian p-4">
-                      <strong className="text-ion-white">{cpt.player}</strong>
-                      <p className="mt-1 text-xs text-ion-1">{cpt.detail}</p>
+              {unlockedWriteups?.[0]?.dfsStacks && unlockedWriteups[0].dfsStacks.cashCore.length > 0 ? (
+                <>
+                  <h4 className="rl-display mt-3 text-3xl text-ion-white">
+                    {unlockedWriteups[0].matchup} — Optimal Showdown Roster
+                  </h4>
+                  <p className="mt-2 max-w-[65ch] text-sm text-ion-1">
+                    Built from active starters, offensive and defensive line protection splits, verified inactives, and correlated captain leverage.
+                  </p>
+                  <div className="mt-8 grid gap-8 lg:grid-cols-2">
+                    <div className="rounded border border-mineral bg-eclipse p-6">
+                      <span className="rl-eyebrow text-plasma">Optimal 6-Man Showdown Core</span>
+                      <ul className="mt-4 space-y-2 text-sm">
+                        {unlockedWriteups[0].dfsStacks.cashCore.map((slot, sIdx) => (
+                          <li key={`${slot.player}-${sIdx}`} className="flex flex-col border-b border-mineral/50 pb-2">
+                            <div className="flex justify-between gap-2">
+                              <span>
+                                <strong>{sIdx === 0 ? "CPT" : slot.position}</strong> {slot.player}
+                              </span>
+                              <span className="rl-figure text-ion-white">
+                                ${slot.salary.toLocaleString()} · {slot.projection} pts
+                              </span>
+                            </div>
+                            <span className="mt-0.5 text-xs text-ion-2">
+                              {sanitizePlainFootballText(slot.floorNote)}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                  ))}
-                </div>
-              </div>
+                    <div className="rounded border border-mineral bg-eclipse p-6">
+                      <span className="rl-eyebrow text-plasma">Captain &amp; GPP Stack Leverage</span>
+                      <div className="mt-4 space-y-4">
+                        {unlockedWriteups[0].dfsStacks.captainPicks.map((cpt) => (
+                          <div key={cpt.player} className="rounded border border-mineral/40 bg-obsidian p-4">
+                            <div className="flex justify-between gap-2">
+                              <strong className="text-ion-white">{cpt.player} ({cpt.position} CPT)</strong>
+                              <span className="rl-figure text-xs text-plasma">${cpt.salary.toLocaleString()}</span>
+                            </div>
+                            <p className="mt-1 text-xs text-ion-1">{sanitizePlainFootballText(cpt.leverageNote)}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h4 className="rl-display mt-3 text-3xl text-ion-white">2 Optimal Lineups &amp; Core Pool</h4>
+                  <p className="mt-2 max-w-[65ch] text-sm text-ion-1">
+                    Built from film study, offensive and defensive line protection splits, active injury replacements, and ownership leverage across the slate.
+                  </p>
+
+                  <div className="mt-8 grid gap-8 lg:grid-cols-2">
+                    <div className="rounded border border-mineral bg-eclipse p-6">
+                      <span className="rl-eyebrow text-plasma">{STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.cashFlagship.tag}</span>
+                      <div className="mt-1 font-display text-xl text-ion-white">
+                        {STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.cashFlagship.salary} · {STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.cashFlagship.projectedPts}
+                      </div>
+                      <ul className="mt-4 space-y-2 text-sm">
+                        {STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.cashFlagship.slots.map((slot) => (
+                          <li key={slot.pos} className="flex justify-between border-b border-mineral/50 pb-1.5">
+                            <span><strong>{slot.pos}</strong> {slot.player}</span>
+                            <span className="text-ion-1">{slot.detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="rounded border border-mineral bg-eclipse p-6">
+                      <span className="rl-eyebrow text-plasma">{STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.gppTournament.tag}</span>
+                      <div className="mt-1 font-display text-xl text-ion-white">
+                        {STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.gppTournament.salary} · {STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.gppTournament.projectedPts}
+                      </div>
+                      <ul className="mt-4 space-y-2 text-sm">
+                        {STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.gppTournament.slots.map((slot) => (
+                          <li key={slot.pos} className="flex justify-between border-b border-mineral/50 pb-1.5">
+                            <span><strong>{slot.pos}</strong> {slot.player}</span>
+                            <span className="text-ion-1">{slot.detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>

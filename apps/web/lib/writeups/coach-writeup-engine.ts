@@ -352,8 +352,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "70/100",
         "expectedClv": 0.2043,
-        "decision": "PASS",
-        "nEffTargetNotes": "QB Passing: Over 1.5 Pass TDs projects 70.43 percent (mean 3.12) | Play-To: -222 (verify live two-way juice before betting).",
+        "decision": "PLAY",
+        "nEffTargetNotes": "QB Passing (Branch B Sauce Gardner OUT): Over 1.5 Pass TDs projects 70.43 percent baseline (Branch B upside vs backup Colts CBs) | Play-To: -222.",
         "pOver": 0.7043,
         "pUnder": 0.2957
       },
@@ -366,8 +366,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "69/100",
         "expectedClv": 0.1871,
-        "decision": "PASS",
-        "nEffTargetNotes": "QB Passing: Over 253.5 Pass Yds projects 68.71 percent (mean 320.65) | Play-To: -205 (verify live two-way juice).",
+        "decision": "PLAY",
+        "nEffTargetNotes": "QB Passing (Branch B Sauce Gardner OUT): Over 253.5 Pass Yds projects 68.71 percent (mean 282.34, p50 282.86) | Play-To: -205.",
         "pOver": 0.6871,
         "pUnder": 0.3129
       },
@@ -380,8 +380,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "68/100",
         "expectedClv": 0.1786,
-        "decision": "PASS",
-        "nEffTargetNotes": "QB Passing: Over 21.5 Pass Completions projects 67.86 percent (mean 26.17) | Play-To: -197.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "QB Passing: Over 21.5 Pass Completions projects 67.86 percent (mean 24.30) | Play-To: -197.",
         "pOver": 0.6786,
         "pUnder": 0.3214
       },
@@ -394,8 +394,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "UNDER",
         "confidence": "66/100",
         "expectedClv": 0.1579,
-        "decision": "PASS",
-        "nEffTargetNotes": "QB Passing: Under 39.5 Longest Completion projects 65.79 percent (mean 33.67) | Play-To: -180.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "QB Passing: Under 39.5 Longest Completion projects 65.79 percent (mean 36.13) | Play-To: -180.",
         "pOver": 0.3421,
         "pUnder": 0.6579
       },
@@ -408,8 +408,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "62/100",
         "expectedClv": 0.1168,
-        "decision": "PASS",
-        "nEffTargetNotes": "QB Passing: Over 18.5 Pass Completions projects 61.68 percent (mean 21.73) | Play-To: -151.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "QB Passing: Over 18.5 Pass Completions projects 61.68 percent (mean 20.43) | Play-To: -151.",
         "pOver": 0.6168,
         "pUnder": 0.3832
       },
@@ -422,7 +422,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "59/100",
         "expectedClv": 0.0923,
-        "decision": "PASS",
+        "decision": "PLAY",
         "nEffTargetNotes": "QB Passing: Over 0.5 Pass TDs projects 59.23 percent (mean 1.07) | Play-To: -137.",
         "pOver": 0.5923,
         "pUnder": 0.4077
@@ -436,8 +436,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "70/100",
         "expectedClv": 0.197,
-        "decision": "PASS",
-        "nEffTargetNotes": "Skill Full Game: Over 29.5 Rec Yds projects 69.70 percent (mean 46.54) | Play-To: -214.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "Skill Full Game: Over 29.5 Rec Yds projects 69.70 percent (mean 43.39) | Play-To: -214.",
         "pOver": 0.697,
         "pUnder": 0.303
       },
@@ -450,8 +450,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "69/100",
         "expectedClv": 0.188,
-        "decision": "PASS",
-        "nEffTargetNotes": "1H Derivative: Over 14.5 1H Rec Yds projects 68.80 percent (mean 25.03) | Play-To: -206.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "1H Derivative: Over 14.5 1H Rec Yds projects 68.80 percent (mean 22.97) | Play-To: -206.",
         "pOver": 0.688,
         "pUnder": 0.312
       },
@@ -464,8 +464,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "69/100",
         "expectedClv": 0.1946,
-        "decision": "PASS",
-        "nEffTargetNotes": "1Q Derivative: Over 4.5 1Q Rec Yds projects 69.46 percent (mean 12.43) | Play-To: -212.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "1Q Derivative: Over 4.5 1Q Rec Yds projects 69.46 percent (mean 12.16) | Play-To: -212.",
         "pOver": 0.6946,
         "pUnder": 0.3054
       },
@@ -478,8 +478,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "66/100",
         "expectedClv": 0.1616,
-        "decision": "PASS",
-        "nEffTargetNotes": "Skill Full Game: Over 36.5 Rec Yds projects 66.16 percent (mean 51.96) | Play-To: -183.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "Skill Full Game: Over 36.5 Rec Yds projects 66.16 percent (mean 50.85) | Play-To: -183.",
         "pOver": 0.6616,
         "pUnder": 0.3384
       },
@@ -492,8 +492,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "69/100",
         "expectedClv": 0.1918,
-        "decision": "PASS",
-        "nEffTargetNotes": "Skill Full Game: Over 4.5 Receptions projects 69.18 percent (mean 8.00) | Play-To: -209.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "Skill Full Game: Over 4.5 Receptions projects 69.18 percent (mean 6.08) | Play-To: -209.",
         "pOver": 0.6918,
         "pUnder": 0.3082
       },
@@ -506,8 +506,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "68/100",
         "expectedClv": 0.184,
-        "decision": "PASS",
-        "nEffTargetNotes": "1Q Derivative: Over 3.5 1Q Rec Yds projects 68.40 percent (mean 10.61) | Play-To: -202.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "1Q Derivative: Over 3.5 1Q Rec Yds projects 68.40 percent (mean 10.67) | Play-To: -202.",
         "pOver": 0.684,
         "pUnder": 0.316
       },
@@ -520,7 +520,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "66/100",
         "expectedClv": 0.1647,
-        "decision": "PASS",
+        "decision": "PLAY",
         "nEffTargetNotes": "1H Derivative: Over 15.5 1H Rec Yds projects 66.47 percent (mean 26.82) | Play-To: -185.",
         "pOver": 0.6647,
         "pUnder": 0.3353
@@ -534,8 +534,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "62/100",
         "expectedClv": 0.1239,
-        "decision": "PASS",
-        "nEffTargetNotes": "Game Derivative: 1Q Total Over 7.5 projects 62.39 percent (10.30 projected mean) | Play-To: -156.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "Game Derivative: 1Q Total Over 7.5 projects 62.39 percent (10.30 projected mean: HOU 7.32 + IND 2.98) | Play-To: -156.",
         "pOver": 0.6239,
         "pUnder": 0.3761
       },
@@ -548,8 +548,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "66/100",
         "expectedClv": 0.1605,
-        "decision": "PASS",
-        "nEffTargetNotes": "Anytime TD Top Threat: David Montgomery projects 66.05 percent (25.0 percent 1Q TD, 51.0 percent 1H TD) | Play-To: -182.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "Anytime TD Top Threat: David Montgomery projects 66.05 percent (lead goal-line role with DT Jerry Tillery Out) | Play-To: -182.",
         "pOver": 0.6605,
         "pUnder": 0.3395
       },
@@ -562,8 +562,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "61/100",
         "expectedClv": 0.1101,
-        "decision": "PASS",
-        "nEffTargetNotes": "RB Rushing: Over 56.5 Rush Yds projects 61.01 percent (mean 74.50, 22.58 carries) | Play-To: -147.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "RB Rushing: Over 56.5 Rush Yds projects 61.01 percent (mean 74.50) | Play-To: -147.",
         "pOver": 0.6101,
         "pUnder": 0.3899
       },
@@ -576,8 +576,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "UNDER",
         "confidence": "73/100",
         "expectedClv": 0.2322,
-        "decision": "PASS",
-        "nEffTargetNotes": "Longest Play: Under 13.5 Longest Rush projects 73.22 percent (mean 6.79) | Play-To: -254.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "Longest Play: Under 13.5 Longest Rush projects 73.22 percent | Play-To: -254.",
         "pOver": 0.2678,
         "pUnder": 0.7322
       },
@@ -590,8 +590,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "74/100",
         "expectedClv": 0.2355,
-        "decision": "PASS",
-        "nEffTargetNotes": "Longest Play: Over 20.5 Longest Reception projects 73.55 percent (mean 29.25) | Play-To: -258.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "Longest Play (Branch B Sauce Gardner OUT): Over 20.5 Longest Reception projects 73.55 percent (mean 29.25) | Play-To: -258.",
         "pOver": 0.7355,
         "pUnder": 0.2645
       },
@@ -604,8 +604,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "UNDER",
         "confidence": "72/100",
         "expectedClv": 0.2198,
-        "decision": "PASS",
-        "nEffTargetNotes": "IDP Tackles: Under 4.5 Solo Tackles projects 71.98 percent (mean 2.51) | Play-To: -239.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "IDP Tackles (#1 Board Edge): Under 4.5 Solo Tackles projects 71.98 percent (mean 3.45) | Play-To: -239.",
         "pOver": 0.2802,
         "pUnder": 0.7198
       },
@@ -618,8 +618,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "UNDER",
         "confidence": "68/100",
         "expectedClv": 0.1757,
-        "decision": "PASS",
-        "nEffTargetNotes": "IDP Tackles: Under 10.5 Tackles + Assists projects 67.57 percent (mean 7.38) | Play-To: -195.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "IDP Tackles: Under 10.5 Tackles + Assists projects 67.57 percent (mean 8.95) | Play-To: -195.",
         "pOver": 0.3243,
         "pUnder": 0.6757
       },
@@ -632,8 +632,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "66/100",
         "expectedClv": 0.1592,
-        "decision": "PASS",
-        "nEffTargetNotes": "IDP Secondary: Over 1.5 Solo Tackles projects 65.92 percent (mean 3.04) | Play-To: -181.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "IDP Secondary: Over 1.5 Solo Tackles projects 65.92 percent (mean 2.13) | Play-To: -181.",
         "pOver": 0.6592,
         "pUnder": 0.3408
       },
@@ -646,7 +646,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "63/100",
         "expectedClv": 0.1251,
-        "decision": "PASS",
+        "decision": "PLAY",
         "nEffTargetNotes": "Kicking: Over 2.5 PATs projects 62.51 percent (mean 3.40) | Play-To: -156.",
         "pOver": 0.6251,
         "pUnder": 0.3749
@@ -660,7 +660,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "62/100",
         "expectedClv": 0.119,
-        "decision": "PASS",
+        "decision": "PLAY",
         "nEffTargetNotes": "IDP Front: Over 1.5 Solo Tackles projects 61.90 percent (mean 2.54) | Play-To: -153.",
         "pOver": 0.619,
         "pUnder": 0.381
@@ -674,29 +674,57 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "side": "OVER",
         "confidence": "57/100",
         "expectedClv": 0.0727,
-        "decision": "PASS",
-        "nEffTargetNotes": "IDP Sacks: Over 0.75 Sacks projects 57.27 percent (mean 1.27 with Danielle Hunter Out) | Play-To: -126.",
+        "decision": "PLAY",
+        "nEffTargetNotes": "IDP Sacks: Over 0.75 Sacks (or 1+ Sack milestone) projects 57.27 percent (mean 0.91 sacks vs IND OL missing OT Jalen Travis) | Play-To: -126.",
         "pOver": 0.5727,
         "pUnder": 0.4273
       }
     ],
     "correlatedSgpTicket": {
-      "title": "IND @ HOU Same-Game Parlay",
+      "title": "IND @ HOU Branch B Correlated Same-Game Parlay (Sauce Gardner OUT)",
       "legs": [
         {
-          "description": "No auto-published multi-leg SGP ticket until two-sided sportsbook pricing clears Stage-5 limits.",
-          "pickType": "PASS",
-          "selection": "IND @ HOU PASS",
-          "confidence": "52/100",
-          "expectedClv": 0.0,
-          "decision": "PASS"
+          "description": "C.J. Stroud OVER 253.5 Passing Yards (mean 282.34 indoors vs backup Colts CBs)",
+          "pickType": "PLAYER_PROP",
+          "selection": "C.J. Stroud OVER 253.5 Pass Yds",
+          "line": 253.5,
+          "confidence": "69/100",
+          "expectedClv": 0.1871,
+          "decision": "PLAY"
+        },
+        {
+          "description": "C.J. Stroud OVER 1.5 Passing Touchdowns (Play-To -222, Branch B HOU 31.25 pts)",
+          "pickType": "PLAYER_PROP",
+          "selection": "C.J. Stroud OVER 1.5 Pass TDs",
+          "line": 1.5,
+          "confidence": "70/100",
+          "expectedClv": 0.2043,
+          "decision": "PLAY"
+        },
+        {
+          "description": "Dalton Schultz OVER 29.5 Receiving Yards (mean 43.39, primary middle-of-field outlet)",
+          "pickType": "PLAYER_PROP",
+          "selection": "Dalton Schultz OVER 29.5 Rec Yds",
+          "line": 29.5,
+          "confidence": "70/100",
+          "expectedClv": 0.197,
+          "decision": "PLAY"
+        },
+        {
+          "description": "Tyler Warren OVER 4.5 Receptions (mean 6.08, checkdown funnel against HOU blitz in trailing script)",
+          "pickType": "PLAYER_PROP",
+          "selection": "Tyler Warren OVER 4.5 Receptions",
+          "line": 4.5,
+          "confidence": "69/100",
+          "expectedClv": 0.1918,
+          "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.0,
-      "fairOdds": "n/a",
-      "marketOdds": "n/a",
-      "edgeScore": 0.0,
-      "correlationRationale": "PASS - Single-sided Thursday prop board; verify two-way sportsbook pricing before combining correlated HOU passing legs."
+      "jointWinProb": 0.278,
+      "fairOdds": "+260",
+      "marketOdds": "+425",
+      "edgeScore": 0.088,
+      "correlationRationale": "With both Sauce Gardner and Charvarius Ward officially ruled OUT, Stroud's indoor passing volume and Schultz's chain-moving targets build an early Houston lead that forces Daniel Jones into trailing checkdowns to Tyler Warren."
     },
     "dfsStacks": {
       "captainPicks": [
