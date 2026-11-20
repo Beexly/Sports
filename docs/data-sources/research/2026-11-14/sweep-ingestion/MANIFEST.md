@@ -545,3 +545,17 @@ INT extremes, @SumerSports live NFL charting free-first-game,
 X analytics AM run, which is incomplete (Lane B browser result
 not received; Lane A and Lane C staging saved, nothing
 published) and remains pending.
+
+## Delta 2026-11-20 IG For You AM (landed 2026-11-20)
+
+Source: ~/workspace/ig-for-you-sweep/reports/2026-11-20-AM.md.
+Sweep: 63 positions (50 organic + 13 ads excluded); 48 NEW
+organic (2 duplicates skipped at collection); 0 NOCODE.
+Delta file delta-2026-11-20-ig-am.jsonl: 48 records (20 dossier
++ 28 inventoried-only), all shortcode-keyed, 0 duplicates,
+0 collisions, 46,682 bytes. Strongest items: Marimba
+(charcot.ai) open-source typed-decision speech model (arXiv
+2611.18330, Apache-2.0; post misstates the backbone, paper uses
+Qwen3-ASR 0.6B), banks vs AI-agent liability terms shift
+(verified via TechCrunch; Family Shield relevance). Running
+corpus total: 12,705 records.
