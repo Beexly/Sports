@@ -1,5 +1,5 @@
 {
-  "note": "Routes allowed to have no recognized auth/key/signature guard. Frozen 2026-11-04 because middleware.ts does not cover /api/*. Shrink this list deliberately; never grow it to make a build pass. 2026-11-13: +/api/parlay-mri/xray (PUBLIC by launch doctrine, signed-cookie quota + clientIp rate limit) and +/api/parlay-mri/unlock (email capture, waitlist pattern, durable public-form limiter + HMAC cookie grant). Both documented in route headers.",
+  "note": "Routes allowed to have no recognized auth/key/signature guard. Frozen 2026-11-04 because middleware.ts does not cover /api/*. Shrink this list deliberately; never grow it to make a build pass. 2026-11-13: +/api/parlay-mri/xray (PUBLIC by launch doctrine, signed-cookie quota + clientIp rate limit) and +/api/parlay-mri/unlock (email capture, waitlist pattern, durable public-form limiter + HMAC cookie grant). Both documented in route headers. 2026-11-20: /api/fantasy/dfs-v2 (waves-1-4) gained a clientIp rate limit + 600-player input cap and now counts as guarded — no baseline entry needed; see its route header for the public-by-design rationale and the paid-export caveat.",
   "count": 66,
   "unguarded": [
     "/api/age-verify",

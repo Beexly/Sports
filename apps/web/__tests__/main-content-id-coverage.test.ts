@@ -86,8 +86,10 @@ describe("main-content id coverage (FE-09)", () => {
       if (usesSharedShell) continue;
 
       // Pure redirect/notFound stub: no JSX return, nothing to anchor a skip
-      // link to.
-      const isStub = !src.includes("return (") && (src.includes("redirect(") || src.includes("notFound("));
+      // link to. permanentRedirect (308) is the same shape as redirect (307).
+      const isStub =
+        !src.includes("return (") &&
+        (src.includes("redirect(") || src.includes("permanentRedirect(") || src.includes("notFound("));
       if (isStub) continue;
 
       orphans.push(relPath);

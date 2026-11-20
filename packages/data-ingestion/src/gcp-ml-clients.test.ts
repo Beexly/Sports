@@ -20,7 +20,7 @@ describe("gcp-ml-clients", () => {
       fetchImpl: fetchImpl as unknown as typeof fetch,
     });
     expect(out.sentimentScore).toBe(-0.4);
-    expect(out.entities[0].name).toBe("Indianapolis Colts");
+    expect(out.entities[0]?.name).toBe("Indianapolis Colts");
   });
 
   it("requires gs:// URI for Video Intelligence and parses Speech response", async () => {

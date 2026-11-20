@@ -11,9 +11,15 @@ import { NextResponse } from "next/server";
 import {
   IapVerificationError,
   verifyIapJwtAssertion,
-  type IapIdentity,
+  type VerifiedIapIdentity,
   type IapJwk,
 } from "./iap-jwt-verifier";
+
+/**
+ * Public alias for guard consumers. The verifier exports VerifiedIapIdentity;
+ * the waves-1-4 import referenced a phantom `IapIdentity` export.
+ */
+export type IapIdentity = VerifiedIapIdentity;
 
 export interface IapRouteGuardOptions {
   readonly env?: Record<string, string | undefined>;
