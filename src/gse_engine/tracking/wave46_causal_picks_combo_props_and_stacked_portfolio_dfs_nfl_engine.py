@@ -227,11 +227,12 @@ def _extract_team_week_bundle(
     fc["rt_str"] = fc["read_thrown"].fillna("0").astype(str)
     fc["is_pass_rt"] = (fc["rt_str"] != "0").astype(float)
     fc["is_1read"] = (fc["rt_str"] == "1").astype(float)
-    fc["is_rpo_scr"] = (fc["is_rpo"].fillna(False) | fc["is_screen_pass"].fillna(False)).astype(
-        float
-    )
+    fc["is_rpo_scr"] = (
+        fc["is_rpo"].astype("boolean").fillna(False)
+        | fc["is_screen_pass"].astype("boolean").fillna(False)
+    ).astype(float)
     fc["is_lbox"] = (fc["n_defense_box"].fillna(7) <= 6).astype(float)
-    fc["is_qbf_sack"] = fc["is_qb_fault_sack"].fillna(False).astype(float)
+    fc["is_qbf_sack"] = fc["is_qb_fault_sack"].astype("boolean").fillna(False).astype(float)
     if has_pbp:
         fc["is_ed_neut"] = (
             fc["down"].isin([1, 2]) & (fc["wp"] >= 0.12) & (fc["wp"] <= 0.88)

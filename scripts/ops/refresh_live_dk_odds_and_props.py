@@ -6,8 +6,12 @@ and saves the canonical snapshot to `data/engine/live_dk_odds_and_props_2026_10_
 """
 import concurrent.futures
 import json
+import time
+import urllib.error
 import urllib.request
 from pathlib import Path
+
+MAX_PAGES = 25
 
 REPO = Path(r"C:\Users\Garrett\Sports")
 OUT_JSON = REPO / "data" / "engine" / "live_dk_odds_and_props_2026_10_29.json"
@@ -15,9 +19,24 @@ OUT_JSON = REPO / "data" / "engine" / "live_dk_odds_and_props_2026_10_29.json"
 athlete_cache = {}
 
 
-def fetch_json(url: str, timeout: int = 12):
-    req = urllib.request.urlopen(url, timeout=timeout)
-    return json.loads(req.read().decode("utf-8"))
+def fetch_json(url: str, timeout: int = 12, max_retries: int = 3):
+    last_err: Exception | None = None
+    for attempt in range(max_retries):
+        try:
+            with urllib.request.urlopen(url, timeout=timeout) as req:
+                return json.loads(req.read().decode("utf-8"))
+        except urllib.error.HTTPError as err:
+            last_err = err
+            if err.code not in (429, 500, 502, 503, 504) or attempt >= max_retries - 1:
+                raise
+        except (urllib.error.URLError, TimeoutError) as err:
+            last_err = err
+            if attempt >= max_retries - 1:
+                raise
+        time.sleep(min(2.0 * (2**attempt), 8.0))
+    if last_err is not None:
+        raise last_err
+    raise RuntimeError(f"Unreachable retry loop for {url}")
 
 
 def get_athlete_info(ref_url: str) -> dict:
@@ -51,7 +70,8 @@ def fetch_event_props(ev_id: str) -> list[dict]:
             break
         items = data.get("items", [])
         raw_items.extend(items)
-        if page >= data.get("pageCount", 1) or not items:
+        page_limit = min(int(data.get("pageCount", 1) or 1), MAX_PAGES)
+        if page >= page_limit or not items:
             break
         page += 1
 

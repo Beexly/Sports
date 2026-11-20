@@ -625,9 +625,18 @@ export function loadVerifiedMindCorpus(customPath?: string): readonly VerifiedSi
  * filters it itself is one refactor away from loading the corpus and
  * not filtering it.
  */
+let cachedDefaultCitableCorpus: readonly VerifiedSituationalPrinciple[] | null = null;
+
 export function loadCitableMindCorpus(customPath?: string): readonly VerifiedSituationalPrinciple[] {
+  if (customPath === undefined && cachedDefaultCitableCorpus !== null) {
+    return cachedDefaultCitableCorpus;
+  }
   const records = loadMindCorpus(customPath);
-  return records.filter(isClassACitable).map(toVerifiedSituationalPrinciple);
+  const citable = records.filter(isClassACitable).map(toVerifiedSituationalPrinciple);
+  if (customPath === undefined) {
+    cachedDefaultCitableCorpus = citable;
+  }
+  return citable;
 }
 
 /**
@@ -701,6 +710,29 @@ export function mapGameContextToVector(ctx: GameContext): GameContextVector {
  * extracted literature claims (delta_{c,i} = sign * |beta_i| * deltaX) without
  * heuristic fallback constants or arbitrary multipliers.
  */
+interface CitablePositiveEntry {
+  readonly rec: MindRecord;
+  readonly vp: VerifiedSituationalPrinciple;
+}
+
+const citablePositiveCache = new WeakMap<readonly MindRecord[], readonly CitablePositiveEntry[]>();
+
+function getCitablePositiveEntries(records: readonly MindRecord[]): readonly CitablePositiveEntry[] {
+  const cached = citablePositiveCache.get(records);
+  if (cached) return cached;
+  const entries: CitablePositiveEntry[] = [];
+  for (const rec of records) {
+    // CLASS-A EXCLUSIVITY. A record that is not CITABLE_VERIFIED may not
+    // inject a numeric delta.
+    if (!isClassACitable(rec)) continue;
+    const vp = toVerifiedSituationalPrinciple(rec);
+    if (vp.parsed_float_magnitude <= 0) continue;
+    entries.push({ rec, vp });
+  }
+  citablePositiveCache.set(records, entries);
+  return entries;
+}
+
 export function matchApplicablePrinciples(
   ctx: GameContext,
   records: readonly MindRecord[],
@@ -708,18 +740,7 @@ export function matchApplicablePrinciples(
   const matches: MindPrincipleMatch[] = [];
   const vector = mapGameContextToVector(ctx);
 
-  for (const rec of records) {
-    // CLASS-A EXCLUSIVITY. A record that is not CITABLE_VERIFIED may not
-    // inject a numeric delta. Before the class system existed, every
-    // record in the corpus could mint a delta -- including the 3,509
-    // whose quotes were in no document at all, and the 1,704 whose
-    // numbers were nowhere near the quote. The delta is a claim about the
-    // world, made in the name of literature, so the literature has to be
-    // there.
-    if (!isClassACitable(rec)) continue;
-
-    const vp = toVerifiedSituationalPrinciple(rec);
-    if (vp.parsed_float_magnitude <= 0) continue;
+  for (const { rec, vp } of getCitablePositiveEntries(records)) {
 
     for (const field of vp.applicable_context_fields) {
       const observedValue = vector[field];

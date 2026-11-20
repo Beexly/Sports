@@ -106,6 +106,7 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         core_nfl_schemes_and_systems,
         footballxos_16_category_playbook_engine,
         ftn_and_snap_deep_intelligence_engine,
+        pfr_learned_trench_scheme_contact_engine,
         whitefield_and_nflverse_metrics_engine,
     )
     from scripts.ops.gse_coach_mind_simulator import (
@@ -195,6 +196,15 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         "stream_15n_home_redzone_epa_resid",
         "stream_15n_away_vs_opp_yac_tfl_epa",
         "stream_15n_home_vs_opp_yac_tfl_epa",
+        "stream_15o_away_trench_protection_edge",
+        "stream_15o_home_trench_protection_edge",
+        "stream_15o_away_contact_yac_edge",
+        "stream_15o_home_contact_yac_edge",
+        "stream_15o_away_scheme_accuracy_edge",
+        "stream_15o_home_scheme_accuracy_edge",
+        "stream_15o_away_penalty_discipline_edge",
+        "stream_15o_home_penalty_discipline_edge",
+        "stream_15o_net_trench_contact_diff",
         "julia_carleman_5level_audit_ready",
     ]
     missing = [k for k in required_cond_keys if k not in cond or cond[k] is None]
@@ -220,10 +230,16 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         ("stream_15n_away_third_down_epa_resid", "stream_15n_home_third_down_epa_resid"),
         ("stream_15n_away_redzone_epa_resid", "stream_15n_home_redzone_epa_resid"),
         ("stream_15n_away_vs_opp_yac_tfl_epa", "stream_15n_home_vs_opp_yac_tfl_epa"),
+        ("stream_15o_away_trench_protection_edge", "stream_15o_home_trench_protection_edge"),
+        ("stream_15o_away_contact_yac_edge", "stream_15o_home_contact_yac_edge"),
+        ("stream_15o_away_scheme_accuracy_edge", "stream_15o_home_scheme_accuracy_edge"),
+        ("stream_15o_away_penalty_discipline_edge", "stream_15o_home_penalty_discipline_edge"),
     ]
     for ka, kh in swap_pairs:
         if abs(float(cond[ka]) - float(cond_sw[kh])) > 1e-6 or abs(float(cond[kh]) - float(cond_sw[ka])) > 1e-6:
             raise RuntimeError(f"LAYER6_SWAP_SYMMETRY_BROKEN: {ka}/{kh} {cond[ka]} vs {cond_sw[kh]}")
+    if abs(float(cond["stream_15o_net_trench_contact_diff"]) + float(cond_sw["stream_15o_net_trench_contact_diff"])) > 1e-6:
+        raise RuntimeError("[PRE-SIM GATE FAIL] stream_15o_net_trench_contact_diff antisymmetry violated.")
     if abs(float(cond["stream_15n_kickoff_yl_differential"]) + float(cond_sw["stream_15n_kickoff_yl_differential"])) > 1e-6:
         raise RuntimeError("LAYER6_KICKOFF_ANTISYMMETRY_BROKEN")
     if float(cond["stream_15m_home_questionable_sigma"]) <= float(cond["stream_15m_away_questionable_sigma"]):
@@ -242,6 +258,10 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         "footballxos_hubs_verified": len(footballxos_16_category_playbook_engine.FOOTBALLXOS_16_HUB_CATALOG),
         "whitefield_module_live": hasattr(whitefield_and_nflverse_metrics_engine, "evaluate_whitefield_and_nflverse_matchup_profile"),
         "ftn_snap_deep_15n_live": hasattr(ftn_and_snap_deep_intelligence_engine, "evaluate_ftn_and_snap_deep_matchup"),
+        "pfr_learned_trench_contact_15o_live": hasattr(
+            pfr_learned_trench_scheme_contact_engine,
+            "evaluate_learned_trench_scheme_contact_matchup",
+        ),
         "ftn_joined_rows": int(deep_15n.get("ftn_joined_rows", 0)),
         "snap_rows": int(deep_15n.get("snap_rows", 0)),
         "swap_symmetry_verified": True,

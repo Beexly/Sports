@@ -696,9 +696,10 @@ export async function runFreePathSettlement(options?: {
       let held = 0;
       let stillPending = 0;
       const settledAt = new Date();
+      const pendingById = new Map(pendingRows.map((r) => [r.id, r]));
 
       for (const o of outcomes) {
-        const row = pendingRows.find((r) => r.id === o.pickId);
+        const row = pendingById.get(o.pickId);
         const ageHours = row
           ? (now.getTime() - row.game.commenceTime.getTime()) / (60 * 60 * 1000)
           : 0;
@@ -885,7 +886,7 @@ export async function runFreePathSettlement(options?: {
               )
               .slice(0, 8)
               .map((o) => {
-                const row = pendingRows.find((r) => r.id === o.pickId);
+                const row = pendingById.get(o.pickId);
                 const ageHours = row
                   ? (now.getTime() - row.game.commenceTime.getTime()) /
                     (60 * 60 * 1000)

@@ -1,4 +1,4 @@
-"""Honest Symbolic & LaTeX Mathematical Equation Executor (`honest_equation_executor.py`).
+r"""Honest Symbolic & LaTeX Mathematical Equation Executor (`honest_equation_executor.py`).
 
 Implements the ParserNG-inspired zero-fabrication recursive-descent mathematical & LaTeX
 expression parser and evaluator required by the 2026-11-10 Extraction Mandate:
@@ -419,7 +419,7 @@ def _extract_balanced_braces(s: str, start: int) -> Optional[Tuple[str, int]]:
 
 
 def _rewrite_latex_macros(expr: str) -> str:
-    """Iteratively expand `\frac{a}{b}`, `\sqrt{x}`, `\text{...}`, `\left`/`\right`, etc."""
+    r"""Iteratively expand `\frac{a}{b}`, `\sqrt{x}`, `\text{...}`, `\left`/`\right`, etc."""
     s = expr.strip()
     # Strip outer math delimiters
     for open_d, close_d in (("$$", "$$"), ("\\[", "\\]"), ("\\(", "\\)"), ("$", "$")):

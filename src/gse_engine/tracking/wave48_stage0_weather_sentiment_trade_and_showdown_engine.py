@@ -380,7 +380,7 @@ def _extract_pbp_ftn_ap_weekly(
     sc["rz"] = sc["yardline_100"] <= 20
     sc["mid_pass"] = (sc["play_type"] == "pass") & (sc["pass_location"] == "middle")
     sc["uc"] = sc["shotgun"].fillna(1) == 0
-    sc["mot"] = sc["is_motion"].fillna(False).astype(bool)
+    sc["mot"] = sc["is_motion"].astype("boolean").fillna(False).astype(bool)
     sc["four_man"] = (
         (sc["play_type"] == "pass")
         & (sc["n_pass_rushers"].fillna(4) <= 4)
@@ -429,7 +429,7 @@ def _extract_pbp_ftn_ap_weekly(
                 "def_obv_stop": -float(g_obv["epa"].mean()) if len(g_obv) else 0.13,
                 "def_rz_stop": -float(g_rz["success"].mean()) if len(g_rz) else -0.45,
                 "def_uncontested_rate": 1.0
-                - (float(ps["is_catchable_ball"].fillna(True).mean()) if len(ps) else 0.72),
+                - (float(ps["is_catchable_ball"].astype("boolean").fillna(True).mean()) if len(ps) else 0.72),
             }
         )
     return out

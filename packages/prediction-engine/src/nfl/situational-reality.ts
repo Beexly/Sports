@@ -177,11 +177,15 @@ export interface QbPressureWeek {
   pressureRate: number;
 }
 
+let cachedPressureTable: { rows: QbPressureWeek[] } | null = null;
+
 export function qbPressureWeeks(season: number, team: string): QbPressureWeek[] {
-  const table = JSON.parse(readFileSync(join(__dirname, "data", "pfr_qb_pressure.json"), "utf8")) as {
-    rows: QbPressureWeek[];
-  };
-  return table.rows.filter((row) => row.season === season && row.team === team);
+  if (!cachedPressureTable) {
+    cachedPressureTable = JSON.parse(
+      readFileSync(join(__dirname, "data", "pfr_qb_pressure.json"), "utf8"),
+    ) as { rows: QbPressureWeek[] };
+  }
+  return cachedPressureTable.rows.filter((row) => row.season === season && row.team === team);
 }
 
 export function qbPressureRate(season: number, team: string): { dropbacks: number; rate: number } | null {

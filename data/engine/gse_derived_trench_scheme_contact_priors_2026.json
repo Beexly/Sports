@@ -1,0 +1,719 @@
+{
+  "schema": "gse_derived_trench_scheme_contact_priors_2026_v1",
+  "generated_at_utc": "2026-11-20T09:07:56Z",
+  "license_and_provenance": {
+    "data_license": "GSE_DERIVED_COMPOSITE_ZSCORES_FROM_PFR_SNAPSHOT_2026_W10",
+    "rights_policy": "INGEST-AND-LEARN; zero raw PFR dumps and zero player identities stored",
+    "xls_files_scanned": 39,
+    "xls_unique_hashes": 39,
+    "bundle_csvs_scanned": 25,
+    "gapfill_csvs_scanned": 3,
+    "xls_roles": [
+      "other",
+      "player_adv_defense_pg",
+      "player_adv_defense_totals",
+      "player_adv_passing_pg",
+      "player_adv_passing_totals",
+      "player_adv_receiving_pg",
+      "player_adv_receiving_totals",
+      "player_adv_rushing_pg",
+      "player_adv_rushing_totals",
+      "player_penalties_totals",
+      "team_adv_pass_accuracy",
+      "team_adv_pass_air",
+      "team_adv_pass_playaction_rpo",
+      "team_adv_pass_pressure",
+      "team_conversions_pg",
+      "team_conversions_totals",
+      "team_defense_per_game",
+      "team_defense_totals",
+      "team_drives_pg",
+      "team_drives_totals",
+      "team_offense_per_game",
+      "team_offense_totals",
+      "team_passing_pg",
+      "team_passing_totals",
+      "team_rushing_pg",
+      "team_rushing_totals"
+    ]
+  },
+  "team_count": 32,
+  "bounds": {
+    "min_z": -3.0,
+    "max_z": 3.0
+  },
+  "teams": {
+    "ARI": {
+      "off_pocket_protection_z": -0.7418,
+      "off_qb_accuracy_discipline_z": 0.6894,
+      "off_scheme_pa_rpo_rate_z": -1.4799,
+      "off_run_trench_contact_z": -0.0793,
+      "def_pressure_havoc_z": 0.0042,
+      "def_coverage_tackling_z": 0.5246,
+      "penalty_discipline_z": -0.4008,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 1.4609,
+        "vs_rb_z": 0.3026,
+        "vs_wr_z": 0.573,
+        "vs_te_z": 1.1507
+      },
+      "standings_strength_z": {
+        "srs_z": -1.4976,
+        "osrs_z": -0.7582,
+        "dsrs_z": -1.5003,
+        "sos_z": 0.9603
+      }
+    },
+    "ATL": {
+      "off_pocket_protection_z": 1.8992,
+      "off_qb_accuracy_discipline_z": -1.4937,
+      "off_scheme_pa_rpo_rate_z": -1.2312,
+      "off_run_trench_contact_z": 1.202,
+      "def_pressure_havoc_z": -0.7133,
+      "def_coverage_tackling_z": -0.158,
+      "penalty_discipline_z": 0.0084,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 0.8435,
+        "vs_rb_z": 1.1498,
+        "vs_wr_z": 0.7188,
+        "vs_te_z": -0.472
+      },
+      "standings_strength_z": {
+        "srs_z": -0.4808,
+        "osrs_z": -0.5543,
+        "dsrs_z": -0.1195,
+        "sos_z": 1.7329
+      }
+    },
+    "BAL": {
+      "off_pocket_protection_z": -0.1704,
+      "off_qb_accuracy_discipline_z": 0.0461,
+      "off_scheme_pa_rpo_rate_z": -0.4343,
+      "off_run_trench_contact_z": 0.2635,
+      "def_pressure_havoc_z": -0.6413,
+      "def_coverage_tackling_z": -0.1198,
+      "penalty_discipline_z": -0.6039,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 0.2948,
+        "vs_rb_z": -0.4841,
+        "vs_wr_z": 0.0483,
+        "vs_te_z": 0.1105
+      },
+      "standings_strength_z": {
+        "srs_z": -0.9642,
+        "osrs_z": -0.8488,
+        "dsrs_z": -0.5178,
+        "sos_z": -0.4068
+      }
+    },
+    "BUF": {
+      "off_pocket_protection_z": 0.5829,
+      "off_qb_accuracy_discipline_z": 0.4558,
+      "off_scheme_pa_rpo_rate_z": 1.7946,
+      "off_run_trench_contact_z": 0.8977,
+      "def_pressure_havoc_z": 0.6999,
+      "def_coverage_tackling_z": 0.0903,
+      "penalty_discipline_z": -1.2516,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": -0.3226,
+        "vs_rb_z": 0.4236,
+        "vs_wr_z": 0.573,
+        "vs_te_z": -0.5968
+      },
+      "standings_strength_z": {
+        "srs_z": 1.5194,
+        "osrs_z": 2.0736,
+        "dsrs_z": -0.0133,
+        "sos_z": -0.3473
+      }
+    },
+    "CAR": {
+      "off_pocket_protection_z": -1.3642,
+      "off_qb_accuracy_discipline_z": -0.2159,
+      "off_scheme_pa_rpo_rate_z": 0.9187,
+      "off_run_trench_contact_z": 0.2002,
+      "def_pressure_havoc_z": -0.8718,
+      "def_coverage_tackling_z": 1.9383,
+      "penalty_discipline_z": -2.6162,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": -0.1854,
+        "vs_rb_z": 1.4221,
+        "vs_wr_z": -0.6805,
+        "vs_te_z": -0.1391
+      },
+      "standings_strength_z": {
+        "srs_z": -0.2641,
+        "osrs_z": 0.4198,
+        "dsrs_z": -0.9161,
+        "sos_z": 0.247
+      }
+    },
+    "CHI": {
+      "off_pocket_protection_z": 1.01,
+      "off_qb_accuracy_discipline_z": 0.6493,
+      "off_scheme_pa_rpo_rate_z": 2.1478,
+      "off_run_trench_contact_z": 0.0325,
+      "def_pressure_havoc_z": -0.8351,
+      "def_coverage_tackling_z": -1.4816,
+      "penalty_discipline_z": -0.4436,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 0.4319,
+        "vs_rb_z": -0.5144,
+        "vs_wr_z": -0.0683,
+        "vs_te_z": -0.5136
+      },
+      "standings_strength_z": {
+        "srs_z": 1.0694,
+        "osrs_z": 1.2807,
+        "dsrs_z": 0.1992,
+        "sos_z": 0.1282
+      }
+    },
+    "CIN": {
+      "off_pocket_protection_z": 0.1948,
+      "off_qb_accuracy_discipline_z": 2.6286,
+      "off_scheme_pa_rpo_rate_z": -2.0646,
+      "off_run_trench_contact_z": -0.3699,
+      "def_pressure_havoc_z": 0.6442,
+      "def_coverage_tackling_z": -0.8713,
+      "penalty_discipline_z": 0.2723,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 0.2262,
+        "vs_rb_z": -0.5749,
+        "vs_wr_z": -0.2432,
+        "vs_te_z": 0.485
+      },
+      "standings_strength_z": {
+        "srs_z": 1.5194,
+        "osrs_z": 2.0283,
+        "dsrs_z": 0.0664,
+        "sos_z": -0.1096
+      }
+    },
+    "CLE": {
+      "off_pocket_protection_z": -1.9769,
+      "off_qb_accuracy_discipline_z": -0.8652,
+      "off_scheme_pa_rpo_rate_z": -0.7187,
+      "off_run_trench_contact_z": -0.0734,
+      "def_pressure_havoc_z": 0.0187,
+      "def_coverage_tackling_z": -0.1733,
+      "penalty_discipline_z": -1.0614,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": -0.597,
+        "vs_rb_z": -0.2421,
+        "vs_wr_z": -0.2141,
+        "vs_te_z": 0.4434
+      },
+      "standings_strength_z": {
+        "srs_z": -0.6141,
+        "osrs_z": -0.9394,
+        "dsrs_z": 0.1195,
+        "sos_z": -0.2285
+      }
+    },
+    "DAL": {
+      "off_pocket_protection_z": 0.2358,
+      "off_qb_accuracy_discipline_z": -0.4741,
+      "off_scheme_pa_rpo_rate_z": -1.1926,
+      "off_run_trench_contact_z": -0.3096,
+      "def_pressure_havoc_z": 0.0211,
+      "def_coverage_tackling_z": -1.5643,
+      "penalty_discipline_z": 0.0187,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 1.2894,
+        "vs_rb_z": 2.1181,
+        "vs_wr_z": 1.0978,
+        "vs_te_z": -0.2223
+      },
+      "standings_strength_z": {
+        "srs_z": -0.2974,
+        "osrs_z": 1.0088,
+        "dsrs_z": -1.6596,
+        "sos_z": -1.2389
+      }
+    },
+    "DEN": {
+      "off_pocket_protection_z": 1.4627,
+      "off_qb_accuracy_discipline_z": 0.0749,
+      "off_scheme_pa_rpo_rate_z": 0.8967,
+      "off_run_trench_contact_z": -1.1843,
+      "def_pressure_havoc_z": 1.0729,
+      "def_coverage_tackling_z": -0.9322,
+      "penalty_discipline_z": 0.5749,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 0.1233,
+        "vs_rb_z": 0.3934,
+        "vs_wr_z": -1.0304,
+        "vs_te_z": 1.5668
+      },
+      "standings_strength_z": {
+        "srs_z": 0.5693,
+        "osrs_z": 0.0347,
+        "dsrs_z": 0.8896,
+        "sos_z": 1.3169
+      }
+    },
+    "DET": {
+      "off_pocket_protection_z": 0.8359,
+      "off_qb_accuracy_discipline_z": -0.1037,
+      "off_scheme_pa_rpo_rate_z": 0.6784,
+      "off_run_trench_contact_z": 0.5799,
+      "def_pressure_havoc_z": 0.1688,
+      "def_coverage_tackling_z": 2.874,
+      "penalty_discipline_z": -0.5567,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 1.4266,
+        "vs_rb_z": -1.2406,
+        "vs_wr_z": -0.0392,
+        "vs_te_z": 3.0
+      },
+      "standings_strength_z": {
+        "srs_z": 0.9527,
+        "osrs_z": 1.2127,
+        "dsrs_z": 0.1195,
+        "sos_z": -0.3473
+      }
+    },
+    "GB": {
+      "off_pocket_protection_z": -0.4567,
+      "off_qb_accuracy_discipline_z": -0.0341,
+      "off_scheme_pa_rpo_rate_z": -0.8268,
+      "off_run_trench_contact_z": -1.9846,
+      "def_pressure_havoc_z": 0.53,
+      "def_coverage_tackling_z": 0.4272,
+      "penalty_discipline_z": -0.5463,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": -1.0086,
+        "vs_rb_z": 0.9077,
+        "vs_wr_z": 0.4273,
+        "vs_te_z": -0.9713
+      },
+      "standings_strength_z": {
+        "srs_z": 0.4193,
+        "osrs_z": 0.2612,
+        "dsrs_z": 0.3585,
+        "sos_z": 1.2575
+      }
+    },
+    "HOU": {
+      "off_pocket_protection_z": 1.3483,
+      "off_qb_accuracy_discipline_z": 0.1383,
+      "off_scheme_pa_rpo_rate_z": -0.6641,
+      "off_run_trench_contact_z": -1.0647,
+      "def_pressure_havoc_z": 0.1202,
+      "def_coverage_tackling_z": 0.0342,
+      "penalty_discipline_z": -1.7211,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 0.5691,
+        "vs_rb_z": -0.1513,
+        "vs_wr_z": 1.3893,
+        "vs_te_z": -1.0129
+      },
+      "standings_strength_z": {
+        "srs_z": 0.186,
+        "osrs_z": 0.3292,
+        "dsrs_z": -0.0929,
+        "sos_z": -0.2285
+      }
+    },
+    "IND": {
+      "off_pocket_protection_z": -0.5035,
+      "off_qb_accuracy_discipline_z": -1.3156,
+      "off_scheme_pa_rpo_rate_z": 1.3341,
+      "off_run_trench_contact_z": -0.0316,
+      "def_pressure_havoc_z": 0.4637,
+      "def_coverage_tackling_z": -0.6345,
+      "penalty_discipline_z": 1.183,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 0.3976,
+        "vs_rb_z": 1.0288,
+        "vs_wr_z": 0.0191,
+        "vs_te_z": 0.2354
+      },
+      "standings_strength_z": {
+        "srs_z": -1.0308,
+        "osrs_z": -0.3504,
+        "dsrs_z": -1.2348,
+        "sos_z": 0.1282
+      }
+    },
+    "JAX": {
+      "off_pocket_protection_z": 1.2874,
+      "off_qb_accuracy_discipline_z": 2.0519,
+      "off_scheme_pa_rpo_rate_z": 0.4584,
+      "off_run_trench_contact_z": -0.0668,
+      "def_pressure_havoc_z": -0.2033,
+      "def_coverage_tackling_z": 0.2335,
+      "penalty_discipline_z": -0.2665,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": -1.1458,
+        "vs_rb_z": -1.2708,
+        "vs_wr_z": -0.1266,
+        "vs_te_z": -0.68
+      },
+      "standings_strength_z": {
+        "srs_z": 1.9695,
+        "osrs_z": 1.3486,
+        "dsrs_z": 1.5534,
+        "sos_z": -1.1794
+      }
+    },
+    "KC": {
+      "off_pocket_protection_z": -0.1628,
+      "off_qb_accuracy_discipline_z": 0.3334,
+      "off_scheme_pa_rpo_rate_z": 0.5309,
+      "off_run_trench_contact_z": 1.8803,
+      "def_pressure_havoc_z": -0.4868,
+      "def_coverage_tackling_z": 0.4526,
+      "penalty_discipline_z": 0.6488,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": -1.4202,
+        "vs_rb_z": -0.817,
+        "vs_wr_z": -1.7301,
+        "vs_te_z": 0.5682
+      },
+      "standings_strength_z": {
+        "srs_z": 1.0694,
+        "osrs_z": 0.6917,
+        "dsrs_z": 0.9161,
+        "sos_z": -1.4766
+      }
+    },
+    "LA": {
+      "off_pocket_protection_z": 1.549,
+      "off_qb_accuracy_discipline_z": 0.0568,
+      "off_scheme_pa_rpo_rate_z": -0.8148,
+      "off_run_trench_contact_z": 0.6416,
+      "def_pressure_havoc_z": -0.0231,
+      "def_coverage_tackling_z": 0.2948,
+      "penalty_discipline_z": 0.032,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": -0.7685,
+        "vs_rb_z": -1.5129,
+        "vs_wr_z": -0.9429,
+        "vs_te_z": -1.1377
+      },
+      "standings_strength_z": {
+        "srs_z": 0.5693,
+        "osrs_z": -0.0786,
+        "dsrs_z": 0.9692,
+        "sos_z": -1.5361
+      }
+    },
+    "LAC": {
+      "off_pocket_protection_z": -1.9898,
+      "off_qb_accuracy_discipline_z": -0.599,
+      "off_scheme_pa_rpo_rate_z": 0.6764,
+      "off_run_trench_contact_z": 0.369,
+      "def_pressure_havoc_z": -0.1317,
+      "def_coverage_tackling_z": -0.8103,
+      "penalty_discipline_z": -1.2333,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": -0.3226,
+        "vs_rb_z": 0.3934,
+        "vs_wr_z": 1.0686,
+        "vs_te_z": -0.8049
+      },
+      "standings_strength_z": {
+        "srs_z": -1.5976,
+        "osrs_z": -1.5511,
+        "dsrs_z": -0.7302,
+        "sos_z": 0.6631
+      }
+    },
+    "LV": {
+      "off_pocket_protection_z": -0.5779,
+      "off_qb_accuracy_discipline_z": 0.003,
+      "off_scheme_pa_rpo_rate_z": -0.5954,
+      "off_run_trench_contact_z": -2.4079,
+      "def_pressure_havoc_z": 0.7509,
+      "def_coverage_tackling_z": -1.5194,
+      "penalty_discipline_z": 2.1358,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 1.1865,
+        "vs_rb_z": 1.3616,
+        "vs_wr_z": 1.1561,
+        "vs_te_z": 0.6514
+      },
+      "standings_strength_z": {
+        "srs_z": -0.5308,
+        "osrs_z": 0.601,
+        "dsrs_z": -1.5534,
+        "sos_z": 0.4253
+      }
+    },
+    "MIA": {
+      "off_pocket_protection_z": -0.9464,
+      "off_qb_accuracy_discipline_z": -1.253,
+      "off_scheme_pa_rpo_rate_z": 0.1805,
+      "off_run_trench_contact_z": -0.0499,
+      "def_pressure_havoc_z": -0.0453,
+      "def_coverage_tackling_z": -1.305,
+      "penalty_discipline_z": 0.3254,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 0.089,
+        "vs_rb_z": 0.9683,
+        "vs_wr_z": -1.3511,
+        "vs_te_z": 0.7763
+      },
+      "standings_strength_z": {
+        "srs_z": -1.0142,
+        "osrs_z": -1.4152,
+        "dsrs_z": 0.0398,
+        "sos_z": 1.4952
+      }
+    },
+    "MIN": {
+      "off_pocket_protection_z": 0.0219,
+      "off_qb_accuracy_discipline_z": -1.0588,
+      "off_scheme_pa_rpo_rate_z": 1.6961,
+      "off_run_trench_contact_z": -0.5492,
+      "def_pressure_havoc_z": 3.0,
+      "def_coverage_tackling_z": 0.2355,
+      "penalty_discipline_z": 1.0881,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": -2.6892,
+        "vs_rb_z": -0.7867,
+        "vs_wr_z": -1.3219,
+        "vs_te_z": -1.3874
+      },
+      "standings_strength_z": {
+        "srs_z": 1.1861,
+        "osrs_z": -0.8035,
+        "dsrs_z": 2.828,
+        "sos_z": 0.9603
+      }
+    },
+    "NE": {
+      "off_pocket_protection_z": 0.2636,
+      "off_qb_accuracy_discipline_z": 1.1498,
+      "off_scheme_pa_rpo_rate_z": -1.1853,
+      "off_run_trench_contact_z": -0.6482,
+      "def_pressure_havoc_z": -0.4044,
+      "def_coverage_tackling_z": -1.2023,
+      "penalty_discipline_z": 0.0622,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 0.3976,
+        "vs_rb_z": 0.0908,
+        "vs_wr_z": 1.7683,
+        "vs_te_z": -1.0961
+      },
+      "standings_strength_z": {
+        "srs_z": 0.0859,
+        "osrs_z": 0.012,
+        "dsrs_z": 0.1195,
+        "sos_z": 1.6141
+      }
+    },
+    "NO": {
+      "off_pocket_protection_z": 0.1596,
+      "off_qb_accuracy_discipline_z": 0.3553,
+      "off_scheme_pa_rpo_rate_z": -0.3381,
+      "off_run_trench_contact_z": -0.4971,
+      "def_pressure_havoc_z": 0.5563,
+      "def_coverage_tackling_z": -1.2317,
+      "penalty_discipline_z": 1.8459,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 0.089,
+        "vs_rb_z": 1.9062,
+        "vs_wr_z": -0.5639,
+        "vs_te_z": 0.7763
+      },
+      "standings_strength_z": {
+        "srs_z": -0.6975,
+        "osrs_z": -0.0333,
+        "dsrs_z": -1.0754,
+        "sos_z": -0.2285
+      }
+    },
+    "NYG": {
+      "off_pocket_protection_z": -0.1996,
+      "off_qb_accuracy_discipline_z": -1.2192,
+      "off_scheme_pa_rpo_rate_z": -0.3653,
+      "off_run_trench_contact_z": -0.9343,
+      "def_pressure_havoc_z": -1.0488,
+      "def_coverage_tackling_z": 0.4572,
+      "penalty_discipline_z": -0.3485,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 0.8435,
+        "vs_rb_z": -0.6657,
+        "vs_wr_z": -0.0683,
+        "vs_te_z": -0.5968
+      },
+      "standings_strength_z": {
+        "srs_z": -0.5641,
+        "osrs_z": -0.7129,
+        "dsrs_z": -0.0398,
+        "sos_z": -2.3682
+      }
+    },
+    "NYJ": {
+      "off_pocket_protection_z": -0.3593,
+      "off_qb_accuracy_discipline_z": 1.0711,
+      "off_scheme_pa_rpo_rate_z": -0.0346,
+      "off_run_trench_contact_z": 0.1496,
+      "def_pressure_havoc_z": 0.3448,
+      "def_coverage_tackling_z": 0.9096,
+      "penalty_discipline_z": -0.5266,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 0.6034,
+        "vs_rb_z": 0.938,
+        "vs_wr_z": -0.6222,
+        "vs_te_z": 0.1937
+      },
+      "standings_strength_z": {
+        "srs_z": -0.8475,
+        "osrs_z": -0.9168,
+        "dsrs_z": -0.3054,
+        "sos_z": 0.6037
+      }
+    },
+    "PHI": {
+      "off_pocket_protection_z": -1.0751,
+      "off_qb_accuracy_discipline_z": -1.4491,
+      "off_scheme_pa_rpo_rate_z": -0.7048,
+      "off_run_trench_contact_z": -1.004,
+      "def_pressure_havoc_z": 0.011,
+      "def_coverage_tackling_z": 0.4145,
+      "penalty_discipline_z": 0.4239,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 0.672,
+        "vs_rb_z": -0.2421,
+        "vs_wr_z": 1.331,
+        "vs_te_z": -0.8881
+      },
+      "standings_strength_z": {
+        "srs_z": -1.4142,
+        "osrs_z": -1.755,
+        "dsrs_z": -0.1992,
+        "sos_z": -0.169
+      }
+    },
+    "PIT": {
+      "off_pocket_protection_z": -0.1908,
+      "off_qb_accuracy_discipline_z": -0.5396,
+      "off_scheme_pa_rpo_rate_z": -0.2992,
+      "off_run_trench_contact_z": 2.4174,
+      "def_pressure_havoc_z": 0.0842,
+      "def_coverage_tackling_z": 0.8219,
+      "penalty_discipline_z": 1.8829,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": -0.7685,
+        "vs_rb_z": -0.4236,
+        "vs_wr_z": -0.4182,
+        "vs_te_z": -0.1807
+      },
+      "standings_strength_z": {
+        "srs_z": 0.336,
+        "osrs_z": -0.3278,
+        "dsrs_z": 0.9161,
+        "sos_z": 0.1876
+      }
+    },
+    "SEA": {
+      "off_pocket_protection_z": -1.1272,
+      "off_qb_accuracy_discipline_z": 0.8692,
+      "off_scheme_pa_rpo_rate_z": -0.0714,
+      "off_run_trench_contact_z": -0.5066,
+      "def_pressure_havoc_z": 1.8625,
+      "def_coverage_tackling_z": 1.3299,
+      "penalty_discipline_z": 0.5641,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": -1.969,
+        "vs_rb_z": -0.7867,
+        "vs_wr_z": -2.3423,
+        "vs_te_z": -1.221
+      },
+      "standings_strength_z": {
+        "srs_z": 0.636,
+        "osrs_z": -0.509,
+        "dsrs_z": 1.6065,
+        "sos_z": -0.5256
+      }
+    },
+    "SF": {
+      "off_pocket_protection_z": 1.7904,
+      "off_qb_accuracy_discipline_z": 1.6333,
+      "off_scheme_pa_rpo_rate_z": -0.1576,
+      "off_run_trench_contact_z": 1.1444,
+      "def_pressure_havoc_z": -2.0939,
+      "def_coverage_tackling_z": 0.4075,
+      "penalty_discipline_z": 0.4331,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 0.1919,
+        "vs_rb_z": -1.2103,
+        "vs_wr_z": 0.369,
+        "vs_te_z": -0.5968
+      },
+      "standings_strength_z": {
+        "srs_z": 1.2694,
+        "osrs_z": 1.6431,
+        "dsrs_z": 0.0929,
+        "sos_z": -1.0011
+      }
+    },
+    "TB": {
+      "off_pocket_protection_z": -0.3681,
+      "off_qb_accuracy_discipline_z": -1.2812,
+      "off_scheme_pa_rpo_rate_z": 0.3135,
+      "off_run_trench_contact_z": 1.4827,
+      "def_pressure_havoc_z": -1.5377,
+      "def_coverage_tackling_z": 0.0543,
+      "penalty_discipline_z": -0.4102,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": -1.6603,
+        "vs_rb_z": -1.9365,
+        "vs_wr_z": -0.7097,
+        "vs_te_z": 0.4018
+      },
+      "standings_strength_z": {
+        "srs_z": 0.7694,
+        "osrs_z": 0.0347,
+        "dsrs_z": 1.1817,
+        "sos_z": 1.2575
+      }
+    },
+    "TEN": {
+      "off_pocket_protection_z": -0.0759,
+      "off_qb_accuracy_discipline_z": -0.0925,
+      "off_scheme_pa_rpo_rate_z": 0.2253,
+      "off_run_trench_contact_z": 0.4607,
+      "def_pressure_havoc_z": -0.9733,
+      "def_coverage_tackling_z": -0.3779,
+      "penalty_discipline_z": 0.5371,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 0.9464,
+        "vs_rb_z": -0.0605,
+        "vs_wr_z": 2.0015,
+        "vs_te_z": -0.0975
+      },
+      "standings_strength_z": {
+        "srs_z": -1.5142,
+        "osrs_z": -1.0754,
+        "dsrs_z": -1.1551,
+        "sos_z": -0.5851
+      }
+    },
+    "WAS": {
+      "off_pocket_protection_z": -0.3554,
+      "off_qb_accuracy_discipline_z": -0.2115,
+      "off_scheme_pa_rpo_rate_z": 1.3272,
+      "off_run_trench_contact_z": 0.0398,
+      "def_pressure_havoc_z": -0.8824,
+      "def_coverage_tackling_z": 0.8818,
+      "penalty_discipline_z": -0.05,
+      "def_pos_vulnerability_z": {
+        "vs_qb_z": 0.7749,
+        "vs_rb_z": -0.4841,
+        "vs_wr_z": -0.0683,
+        "vs_te_z": 2.2326
+      },
+      "standings_strength_z": {
+        "srs_z": -0.7975,
+        "osrs_z": -0.3504,
+        "dsrs_z": -0.863,
+        "sos_z": -1.0011
+      }
+    }
+  }
+}

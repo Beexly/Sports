@@ -164,6 +164,16 @@ export type ParsePaperResult =
   | { readonly skipped: false; readonly premise: PaperQuantitativePremise }
   | { readonly skipped: true; readonly reason: string };
 
+const parsedCorpusCache = new WeakMap<readonly CorpusRawItem[], readonly ParsePaperResult[]>();
+
+function getParsedPremises(items: readonly CorpusRawItem[]): readonly ParsePaperResult[] {
+  const cached = parsedCorpusCache.get(items);
+  if (cached) return cached;
+  const parsed = items.map(parsePaperPremise);
+  parsedCorpusCache.set(items, parsed);
+  return parsed;
+}
+
 /**
  * Parses an individual raw corpus item into an executable mathematical model.
  * Performs deep content disambiguation, parameter extraction (N, effect size),
@@ -1104,9 +1114,11 @@ export function evaluateFullCorpus(
 
   // First pass: Parse every paper, execute its mathematical equation, accumulate domain weights
   const evaluatedPremises: { premise: PaperQuantitativePremise; output: number }[] = [];
+  const parsedResults = getParsedPremises(items);
 
-  for (const item of items) {
-    const parseResult = parsePaperPremise(item);
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i]!;
+    const parseResult = parsedResults[i]!;
     if (parseResult.skipped) {
       itemsSkippedCount++;
       const prev = domainBreakdown.unstructured_theory;

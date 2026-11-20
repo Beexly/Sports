@@ -25,12 +25,43 @@ import {
   type MindEvaluationResult,
 } from "@sports/prediction-engine";
 import type { SignalFamily as TraceFamily } from "@sports/types";
-import type { SignalObservation, SituationalContext } from "./reasoning";
-import type { IntelligenceReasoning } from "./reasoning";
+import type {
+  SignalFamily as WebSignalFamily,
+  SignalObservation,
+  SituationalContext,
+  IntelligenceReasoning,
+} from "./reasoning";
 
-/** The apps/web SignalFamily union mirrored onto the engine's family type. */
-function toTraceFamily(f: SignalObservation["family"]): TraceFamily {
-  return f as unknown as TraceFamily;
+const CANONICAL_TRACE_FAMILIES: ReadonlySet<string> = new Set<TraceFamily>([
+  "MARKET",
+  "EFFICIENCY",
+  "TRENCHES",
+  "LUCK",
+  "SITUATIONAL",
+  "NARRATIVE",
+  "MICROCLIMATE",
+  "MARKET_MICROSTRUCTURE",
+]);
+
+const WEB_TO_TRACE_FAMILY: Readonly<Record<WebSignalFamily, TraceFamily>> = {
+  MARKET: "MARKET",
+  PLAY_CHARTING: "EFFICIENCY",
+  FANTASY_DFS: "EFFICIENCY",
+  SCHEME_TENDENCY: "TRENCHES",
+  INJURY_AVAILABILITY: "SITUATIONAL",
+  SCHEDULE_DENSITY: "SITUATIONAL",
+  WEATHER_TRAVEL: "MICROCLIMATE",
+  NARRATIVE_SOCIAL: "NARRATIVE",
+  SOURCE_TRUST: "MARKET_MICROSTRUCTURE",
+  CALIBRATION_HISTORY: "LUCK",
+};
+
+/** Exhaustively map apps/web SignalFamily (or canonical TraceFamily) onto TraceFamily. */
+function toTraceFamily(f: SignalObservation["family"] | TraceFamily): TraceFamily {
+  if (CANONICAL_TRACE_FAMILIES.has(f)) {
+    return f as TraceFamily;
+  }
+  return WEB_TO_TRACE_FAMILY[f as WebSignalFamily];
 }
 
 function toObservationProbability(

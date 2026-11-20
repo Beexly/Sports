@@ -119,7 +119,7 @@ function axiomCore(payload: RawPredictionPayload): string[] {
 async function tryZ3(payload: RawPredictionPayload): Promise<"sat" | "unsat" | "skip"> {
   try {
     const z3ModuleName = "z3-solver";
-    const mod = (await import(/* @vite-ignore */ z3ModuleName)) as {
+    const mod = (await import(/* webpackIgnore: true */ /* @vite-ignore */ z3ModuleName)) as {
       init?: () => Promise<{
         Context: new (name: string) => {
           Solver: new () => { add: (...xs: unknown[]) => void; check: () => Promise<string> };

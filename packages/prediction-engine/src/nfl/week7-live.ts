@@ -5,8 +5,15 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
+const loadCache = new Map<string, unknown>();
+
 function load<T>(name: string): T {
-  return JSON.parse(readFileSync(join(__dirname, "data", "public-boards", name), "utf8")) as T;
+  if (loadCache.has(name)) {
+    return loadCache.get(name) as T;
+  }
+  const parsed = JSON.parse(readFileSync(join(__dirname, "data", "public-boards", name), "utf8")) as T;
+  loadCache.set(name, parsed);
+  return parsed;
 }
 
 export interface SlateGame {
