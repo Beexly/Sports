@@ -102,8 +102,10 @@ def evaluate_slice_walkforward(
             temp_scale=float(cfg.get("temp_scale", 1.0)),
             conformal_shrinkage=float(cfg.get("conformal_shrinkage", 0.0)),
             venn_abers_weight=float(cfg.get("venn_abers_weight", 0.0)),
+            aci_gamma=float(cfg.get("aci_gamma", 0.0)),
             train_p=tr_p,
             train_y=tr_y,
+            test_y=te_y,
         )
         metrics = score_predictions(te_y, preds, clv_values=te_clv, config=cfg)
         eb_vs_raw = paired_brier_empirical_bernstein_lcb(te_y, raw_preds, preds)
@@ -156,7 +158,9 @@ if __name__ == "__main__":
     for sl in out["slices"]:
         raw = sl["configs"]["ladder_0_raw"]
         va = sl["configs"]["ladder_3_venn_abers_shrink"]
+        aci = sl["configs"].get("ladder_4_aci_online") or {}
         print(
             f"{sl['slice']} (test_n={sl['test_n']}): raw[brier={raw['brier']}, ece={raw['ece']}] "
-            f"-> venn_abers[brier={va['brier']}, ece={va['ece']}, eb_lcb={va['eb_vs_raw_lcb']}]"
+            f"-> venn_abers[brier={va['brier']}, ece={va['ece']}, eb_lcb={va['eb_vs_raw_lcb']}] "
+            f"-> aci[brier={aci.get('brier')}, ece={aci.get('ece')}]"
         )

@@ -6,6 +6,7 @@ import math
 import pytest
 
 from evaluation.frozen.score_walkforward_calibration_v1 import (
+    adaptive_conformal_online_calibration,
     apply_calibration_transform,
     brier_score,
     expected_calibration_error,
@@ -71,3 +72,18 @@ def test_frozen_ablation_configs_and_walkforward_runner_execute_cleanly() -> Non
     s = score_predictions([0, 1, 1, 0], [0.1, 0.9, 0.8, 0.2], [0.01, 0.02, 0.01, -0.01])
     assert s["brier"] < 0.05 and s["clv_mean"] > 0.0
     assert brier_score([0, 1], [0.1, 0.9]) == pytest.approx(0.01, abs=1e-6)
+
+
+def test_adaptive_conformal_online_calibration_strictly_sequential() -> None:
+    p_stream = [0.75, 0.75, 0.75, 0.75, 0.75, 0.75]
+    y_a = [0, 0, 0, 0, 0, 0]
+    y_b = [0, 0, 0, 1, 1, 1]
+    cal_a, alpha_a = adaptive_conformal_online_calibration(p_stream, y_a, gamma=0.08)
+    cal_b, alpha_b = adaptive_conformal_online_calibration(p_stream, y_b, gamma=0.08)
+    # Strict causal prefix equality: steps 0..3 only depend on y[0..2], identical between y_a and y_b
+    assert cal_a[:4] == cal_b[:4]
+    assert alpha_a[:4] == alpha_b[:4]
+    # Later steps diverge and cal_a adapts downward toward realized 0 base rate
+    assert cal_a[5] < cal_a[0]
+    assert all(0.0 < v < 1.0 for v in cal_a)
+    assert all(0.01 <= a <= 0.45 for a in alpha_a)

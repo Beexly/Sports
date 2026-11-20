@@ -195,16 +195,62 @@ def venn_abers_interval_width(
     return midpoints, mean_width
 
 
+def adaptive_conformal_online_calibration(
+    y_prob: Sequence[float],
+    y_true: Sequence[int | float],
+    *,
+    gamma: float = 0.05,
+    alpha_target: float = 0.12,
+    base_shrink: float = 0.02,
+    shift_lr: float = 0.04,
+) -> tuple[list[float], list[float]]:
+    """Gibbs-Candes Adaptive Conformal Inference (ACI) strictly sequential online calibration.
+
+    At step t, predicts using ONLY parameters adapted from steps < t (zero lookahead):
+      - Tracks signed calibration drift `eta_t` on log-odds via SGD on `(y_{t-1} - p_{t-1})`.
+      - Tracks local ACI threshold `alpha_t` via `alpha_{t+1} = clip(alpha_t + gamma * (alpha_target - err_t))`
+        where `err_t = 1` when realized surprise `-log_p` / residual exceeds adaptive margin,
+        increasing shrinkage toward `0.5` automatically under empirical distribution shift.
+    """
+    yt, yp = validate_binary_predictions(y_true, y_prob)
+    calibrated: list[float] = []
+    alpha_trace: list[float] = []
+    alpha_t = float(alpha_target)
+    eta_t = 0.0
+
+    for p_raw, y_obs in zip(yp, yt):
+        p_c = min(1.0 - 1e-6, max(1e-6, float(p_raw)))
+        logit = math.log(p_c / (1.0 - p_c)) + eta_t
+        p_shifted = 1.0 / (1.0 + math.exp(-max(-10.0, min(10.0, logit))))
+        # Widen shrinkage monotonically when alpha_t drops below alpha_target (recent over-errors)
+        shift_gap = max(0.0, float(alpha_target) - alpha_t)
+        dyn_shrink = min(0.25, max(0.0, float(base_shrink) + 0.50 * shift_gap))
+        p_hat = (1.0 - dyn_shrink) * p_shifted + dyn_shrink * 0.5
+        p_hat = min(1.0 - 1e-7, max(1e-7, p_hat))
+        calibrated.append(p_hat)
+        alpha_trace.append(round(alpha_t, 6))
+
+        # Strictly post-prediction update after y_obs realizes
+        resid = float(y_obs) - p_hat
+        eta_t = max(-0.45, min(0.45, eta_t + float(shift_lr) * resid))
+        err_ind = 1.0 if abs(resid) > (0.50 + 0.50 * alpha_t) else 0.0
+        alpha_t = min(0.45, max(0.01, alpha_t + float(gamma) * (float(alpha_target) - err_ind)))
+
+    return calibrated, alpha_trace
+
+
 def apply_calibration_transform(
     y_prob: Sequence[float],
     *,
     temp_scale: float = 1.0,
     conformal_shrinkage: float = 0.0,
     venn_abers_weight: float = 0.0,
+    aci_gamma: float = 0.0,
     train_p: Sequence[float] | None = None,
     train_y: Sequence[int | float] | None = None,
+    test_y: Sequence[int | float] | None = None,
 ) -> tuple[list[float], float]:
-    """Apply logit temperature scaling, conformal shrinkage, and optional OOS Venn-ABERS blend."""
+    """Apply logit temperature scaling, conformal shrinkage, optional OOS Venn-ABERS blend, and optional causal online ACI."""
     out: list[float] = []
     shrink = min(0.5, max(0.0, float(conformal_shrinkage)))
     va_w = min(1.0, max(0.0, float(venn_abers_weight)))
@@ -225,6 +271,8 @@ def apply_calibration_transform(
                 min(1.0 - 1e-7, max(1e-7, (1.0 - va_w) * p + va_w * vm))
                 for p, vm in zip(out, va_mid)
             ]
+    if float(aci_gamma) > 0.0 and test_y is not None and len(test_y) == len(out) and len(out) >= 2:
+        out, _ = adaptive_conformal_online_calibration(out, test_y, gamma=float(aci_gamma))
     return out, va_width
 
 

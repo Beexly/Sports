@@ -109,6 +109,7 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         pfr_learned_trench_scheme_contact_engine,
         causal_positional_vulnerability_engine,
         ftn_role_zone_pressure_hazard_engine,
+        kicker_air_density_weather_hazard_engine,
         whitefield_and_nflverse_metrics_engine,
     )
     from scripts.ops.gse_coach_mind_simulator import (
@@ -217,6 +218,9 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         "stream_15q_away_eb_continuity_edge",
         "stream_15q_home_eb_continuity_edge",
         "stream_15q_net_scheme_hazard_diff",
+        "stream_15r_away_kicker_edge",
+        "stream_15r_home_kicker_edge",
+        "stream_15r_net_kicker_diff",
         "julia_carleman_5level_audit_ready",
     ]
     missing = [k for k in required_cond_keys if k not in cond or cond[k] is None]
@@ -250,6 +254,7 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         ("stream_15q_away_pressure_survival_edge", "stream_15q_home_pressure_survival_edge"),
         ("stream_15q_away_motion_pa_edge", "stream_15q_home_motion_pa_edge"),
         ("stream_15q_away_eb_continuity_edge", "stream_15q_home_eb_continuity_edge"),
+        ("stream_15r_away_kicker_edge", "stream_15r_home_kicker_edge"),
     ]
     for ka, kh in swap_pairs:
         if abs(float(cond[ka]) - float(cond_sw[kh])) > 1e-6 or abs(float(cond[kh]) - float(cond_sw[ka])) > 1e-6:
@@ -260,6 +265,8 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         raise RuntimeError("[PRE-SIM GATE FAIL] stream_15p_net_pos_vuln_delta antisymmetry violated.")
     if abs(float(cond["stream_15q_net_scheme_hazard_diff"]) + float(cond_sw["stream_15q_net_scheme_hazard_diff"])) > 1e-6:
         raise RuntimeError("[PRE-SIM GATE FAIL] stream_15q_net_scheme_hazard_diff antisymmetry violated.")
+    if abs(float(cond["stream_15r_net_kicker_diff"]) + float(cond_sw["stream_15r_net_kicker_diff"])) > 1e-6:
+        raise RuntimeError("[PRE-SIM GATE FAIL] stream_15r_net_kicker_diff antisymmetry violated.")
     if abs(float(cond["stream_15n_kickoff_yl_differential"]) + float(cond_sw["stream_15n_kickoff_yl_differential"])) > 1e-6:
         raise RuntimeError("LAYER6_KICKOFF_ANTISYMMETRY_BROKEN")
     if float(cond["stream_15m_home_questionable_sigma"]) <= float(cond["stream_15m_away_questionable_sigma"]):
@@ -289,6 +296,10 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         "ftn_pressure_hazard_15q_live": hasattr(
             ftn_role_zone_pressure_hazard_engine,
             "evaluate_causal_15q_matchup",
+        ),
+        "kicker_air_density_15r_live": hasattr(
+            kicker_air_density_weather_hazard_engine,
+            "evaluate_causal_15r_kicker_matchup",
         ),
         "ftn_joined_rows": int(deep_15n.get("ftn_joined_rows", 0)),
         "snap_rows": int(deep_15n.get("snap_rows", 0)),
