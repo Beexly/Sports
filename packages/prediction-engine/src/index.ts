@@ -5258,6 +5258,7 @@ export {
   downsideThrottle,
   conformalKellyStake as invariantConformalKellyStake,
   slowConformalKellyStake,
+  bakerMcHaleShrunkKelly,
   SLOW_CONFORMAL_WINDOW_GAMES,
   SLOW_CONFORMAL_COVERAGE,
 } from "./calibration/conformal-copula-kelly.js";
@@ -5267,6 +5268,8 @@ export type {
   ConformalKellySizing,
   ConformalKellySizingResult,
   SlowConformalKellySizing,
+  BakerMcHaleShrunkKellyInput,
+  BakerMcHaleShrunkKellyResult,
 } from "./calibration/conformal-copula-kelly.js";
 
 // Automated Parlay Market Maker (APMM arXiv:2607.18299)

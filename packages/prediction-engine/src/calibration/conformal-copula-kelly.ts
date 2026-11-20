@@ -592,6 +592,75 @@ export function slowConformalKellyStake(input: SlowConformalKellySizing): Confor
   return conformalKellyStake({ ...rest, sigmaConf });
 }
 
+export interface BakerMcHaleShrunkKellyInput {
+  readonly winProb: number;
+  readonly decimalOdds: number;
+  readonly probStdError?: number;
+  readonly effectiveSampleN?: number;
+  readonly baseFraction?: number;
+  readonly stakeCeiling?: number;
+}
+
+export interface BakerMcHaleShrunkKellyResult {
+  readonly rawKelly: number;
+  readonly shrinkageK: number;
+  readonly shrunkStake: number;
+  readonly sigmaP: number;
+}
+
+/**
+ * Baker & McHale (2013) Kelly shrinkage under probability estimation uncertainty.
+ *
+ * For estimated win probability q, decimal odds d > 1, net odds b = d - 1,
+ * and expected edge mu = q * d - 1:
+ *   f_kelly = max(0, mu / b)
+ *   k_bm    = mu^2 / (mu^2 + (d * sigma_p)^2)
+ *   f_out   = min(stakeCeiling, baseFraction * k_bm * f_kelly)
+ */
+export function bakerMcHaleShrunkKelly(
+  input: BakerMcHaleShrunkKellyInput,
+): BakerMcHaleShrunkKellyResult {
+  const { winProb, decimalOdds, probStdError, effectiveSampleN } = input;
+  const baseFraction = input.baseFraction ?? 0.25;
+  const stakeCeiling = input.stakeCeiling ?? 0.05;
+
+  if (
+    !Number.isFinite(winProb) ||
+    !Number.isFinite(decimalOdds) ||
+    winProb <= 0 ||
+    winProb >= 1 ||
+    decimalOdds <= 1
+  ) {
+    return { rawKelly: 0, shrinkageK: 0, shrunkStake: 0, sigmaP: 0 };
+  }
+
+  const mu = winProb * decimalOdds - 1;
+  if (mu <= 0) {
+    return { rawKelly: 0, shrinkageK: 0, shrunkStake: 0, sigmaP: 0 };
+  }
+
+  const rawKelly = mu / (decimalOdds - 1);
+  let sigmaP = 0;
+  if (probStdError !== undefined && Number.isFinite(probStdError)) {
+    sigmaP = Math.max(0, probStdError);
+  } else if (
+    effectiveSampleN !== undefined &&
+    Number.isFinite(effectiveSampleN) &&
+    effectiveSampleN > 0
+  ) {
+    sigmaP = Math.sqrt(Math.max(0, winProb * (1 - winProb)) / effectiveSampleN);
+  }
+
+  const varMu = decimalOdds * sigmaP * (decimalOdds * sigmaP);
+  const muSq = mu * mu;
+  const shrinkageK = muSq + varMu > 0 ? muSq / (muSq + varMu) : 0;
+  const shrunkStake = Math.min(
+    Math.max(0, stakeCeiling),
+    Math.max(0, baseFraction) * shrinkageK * rawKelly,
+  );
+  return { rawKelly, shrinkageK, shrunkStake, sigmaP };
+}
+
 /* ------------------------------------------------------------------ *
  * shared validation
  * ------------------------------------------------------------------ */
