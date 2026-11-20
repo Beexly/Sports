@@ -1857,6 +1857,7 @@ def run_stage1a_all_38_coaching_and_scheme_layers(
         causal_air_yac_and_rush_success_engine,
         causal_box_shell_and_charting_engine,
         causal_ol_continuity_and_half_splits_engine,
+        causal_third_down_cpoe_st_engine,
         ingame,
         ol_provider,
         pgwe_luck_audit,
@@ -2273,6 +2274,11 @@ def run_stage1a_all_38_coaching_and_scheme_layers(
             {"wind_mph": env_cfg.get("wind_mph", 6.5), "is_indoor": env_cfg.get("is_indoor", False)},
         ),
         "stream_15z_ol_continuity_and_half_splits": causal_ol_continuity_and_half_splits_engine.evaluate_causal_15z_ol_half_matchup(
+            away,
+            home,
+            {"wind_mph": env_cfg.get("wind_mph", 6.5), "is_indoor": env_cfg.get("is_indoor", False)},
+        ),
+        "stream_16a_third_down_cpoe_and_st": causal_third_down_cpoe_st_engine.evaluate_causal_16a_3d_cpoe_st_matchup(
             away,
             home,
             {"wind_mph": env_cfg.get("wind_mph", 6.5), "is_indoor": env_cfg.get("is_indoor", False)},

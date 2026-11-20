@@ -1831,6 +1831,42 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     conditioners["stream_15z_net_ol_half_diff"] = float(
         stream_15z_bundle["stream_15z_net_ol_half_diff"]
     )
+    from intelligence.coaching.causal_third_down_cpoe_st_engine import (
+        evaluate_causal_16a_3d_cpoe_st_matchup,
+    )
+
+    stream_16a_bundle = evaluate_causal_16a_3d_cpoe_st_matchup(
+        away_team=away_u,
+        home_team=home_u,
+        context=ctx,
+    )
+    conditioners["stream_16a_away_def_3d_edge"] = float(
+        stream_16a_bundle["stream_16a_away_def_3d_edge"]
+    )
+    conditioners["stream_16a_home_def_3d_edge"] = float(
+        stream_16a_bundle["stream_16a_home_def_3d_edge"]
+    )
+    conditioners["stream_16a_away_cpoe_edge"] = float(
+        stream_16a_bundle["stream_16a_away_cpoe_edge"]
+    )
+    conditioners["stream_16a_home_cpoe_edge"] = float(
+        stream_16a_bundle["stream_16a_home_cpoe_edge"]
+    )
+    conditioners["stream_16a_away_st_epa_edge"] = float(
+        stream_16a_bundle["stream_16a_away_st_epa_edge"]
+    )
+    conditioners["stream_16a_home_st_epa_edge"] = float(
+        stream_16a_bundle["stream_16a_home_st_epa_edge"]
+    )
+    conditioners["stream_16a_away_deep_shot_null_edge"] = float(
+        stream_16a_bundle["stream_16a_away_deep_shot_null_edge"]
+    )
+    conditioners["stream_16a_home_deep_shot_null_edge"] = float(
+        stream_16a_bundle["stream_16a_home_deep_shot_null_edge"]
+    )
+    conditioners["stream_16a_net_3d_cpoe_st_diff"] = float(
+        stream_16a_bundle["stream_16a_net_3d_cpoe_st_diff"]
+    )
     conditioners["julia_carleman_5level_audit_ready"] = bool(julia_carleman_path.is_file())
 
     result = {
@@ -1867,6 +1903,7 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         "stream_15x_air_yac_and_rush_success": stream_15x_bundle,
         "stream_15y_box_shell_and_charting": stream_15y_bundle,
         "stream_15z_ol_continuity_and_half_splits": stream_15z_bundle,
+        "stream_16a_third_down_cpoe_and_st": stream_16a_bundle,
         "wave32_unified_sports_situational_fusion": wave32_fusion,
         "wave34_holistic_biometrics": wave32_fusion["wave34_holistic_biometrics"],
         "wave35_gsi_and_micro_matchups": wave32_fusion["wave35_gsi_and_micro_matchups"],

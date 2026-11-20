@@ -19,8 +19,8 @@ metadata:
 ## Execution Workflow
 1. **Phase A — Continuous Overnight Engineering (`Before 07:30 AM CST`):** Mine/verify corpus and external research signals, wire into `intelligence/` and `packages/prediction-engine/`, run walk-forward calibration & ablation benchmarks, and commit verified progress live with trainer-ready feeds under `brain/feeds/<YYYY-MM-DD>/`.
 2. **Phase B — Gated Fresh Pull (`>= 07:30 AM CST`):** Run `python scripts/ops/run_0730_cst_fresh_pull_and_email_dispatch.py` after `07:30 AM CST` to pull active `nflverse` rosters/injuries, weather, and DraftKings board data under Odds API credit caps.
-3. **Phase C — From-Scratch Pre-Sim & Connected Pipeline:** Re-run full Stage 0–5 situational-first workflow, conserved projections, and Two-Wave DFS portfolio without cached shortcuts.
-4. **Phase D — Guardrails & Delivery:** Verify `node scripts/guardrails/trust-gate.mjs`, `node apps/mobile/scripts/lint-rules.js`, `python scripts/wiring/run_charge_regression_suite.py`, `python scripts/wiring/verify_armed_workflows.py --check-armed`, and write dated morning deliverable under `docs/engine/research/<YYYY-MM-DD>/`.
+3. **Phase C — Walk-Forward OOS & Pre-Sim Gates:** Verify `python tests/verify_out_of_sample_calibration.py --enforce-gate`, `python scripts/calibration/run_frozen_ablation_ladder.py` (`evaluation/frozen/score_walkforward_calibration_v1.py`), and `python scripts/ops/verify_and_wire_all_layers_before_sim.py` (`sims=0`).
+4. **Phase D — Guardrails & Delivery:** Verify `node scripts/guardrails/trust-gate.mjs`, `node apps/mobile/scripts/lint-rules.js`, `python scripts/wiring/verify_armed_workflows.py --check-armed`, and write dated morning deliverable under `docs/engine/research/<YYYY-MM-DD>/`.
 
 ## Completion Criteria
 Done when all pre-sim, calibration, guardrail, mobile-lint, and web build checks pass exit `0` after the final edit with timestamp discipline verified.

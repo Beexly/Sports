@@ -20,6 +20,7 @@ from . import (
     causal_air_yac_and_rush_success_engine,
     causal_box_shell_and_charting_engine,
     causal_ol_continuity_and_half_splits_engine,
+    causal_third_down_cpoe_st_engine,
 )
 from .provider import CoachingEngineProvider
 
@@ -40,4 +41,5 @@ __all__ = ["common", "load", "proe", "fingerprint", "tenures", "regime",
            "causal_air_yac_and_rush_success_engine",
            "causal_box_shell_and_charting_engine",
            "causal_ol_continuity_and_half_splits_engine",
+           "causal_third_down_cpoe_st_engine",
            "CoachingEngineProvider"]

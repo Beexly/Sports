@@ -31,3 +31,7 @@
 ## Addendum: 11-Stream Extension (`15P–15Z`, Cycle F13)
 - Extending the strict causal feature matrix with `15Y_box_chart` (`max |r| = 0.5521` vs prior streams) and `15Z_ol_half` (`max |r| = 0.6554`) lowered both standalone OOS zero-market model Brier (`equal_weight_z_stack`: `0.226975 -> 0.225365`, `ridge_orthogonal_stack`: `0.229185 -> 0.225715`, `log_loss`: `0.648013 -> 0.641596`) and the market-blended stack (`market_85_plus_ridge_15`: `0.201404 -> 0.201129`, `ECE`: `0.109770 -> 0.109297`, `Composite`: `0.404176 -> 0.403540`).
 - Second-half (`Weeks 8–10`, `n = 43`) frozen ladder `ladder_0_raw` reached `Brier = 0.190796` (`Log-Loss = 0.566253`, `Composite = 0.384286`); Baker-McHale Kelly vs close placed `33` micro-stakes (`0.0286` staked, `+0.0228` net units).
+
+## Addendum: 12-Stream Extension (`15P–16A`, Cycle F14)
+- Extending the strict causal feature matrix to all `12` causal streams (`15P..16A`, adding `16A_3d_cpoe_st` with `max |r| = 0.6127` vs `15P_pos_vuln` and `0.5445` vs `15W_hfa_rest`) further reduced standalone `equal_weight_z_stack` ECE (`0.146905 -> 0.124040`) and Composite Objective (`0.459620 -> 0.448222`), with `ridge_orthogonal_stack` at `Brier = 0.225972` (`Log-Loss = 0.642293`) and `market_85_plus_ridge_15` at `Brier = 0.201176` (`Composite = 0.403686`).
+- Baker-McHale Kelly (`sigma_p = 0.045`, `max_stake = 0.05`) vs closing lines placed `36` micro-stakes (`0.0278` total staked, `+0.0220` net units).

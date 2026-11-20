@@ -20,7 +20,7 @@ metadata:
 1. **License & Provenance Quarantine (`INGEST-AND-LEARN`):** Record commercial/restrictive sources in `docs/<bucket>/research/<YYYY-MM-DD>/*.json` (`COMMERCIAL_USE_BLOCKED: true`, `LEARN_AND_REASON_ONLY: true`). Default untested sources to `UNTESTED - QUEUED FOR EVALUATION` (never `DEAD` without test evidence).
 2. **Mathematical Synthesis (`WIRE-FIRST` & `MIND-FIRST`):** Implement clean vectorized Python modules under `intelligence/` using relative `Path(__file__)` roots — zero hardcoded host paths (`check_charge_9` Two-Host Rule). Emit trainer-ready learnings to `brain/feeds/<YYYY-MM-DD>/` (never write `brain/mind.jsonl` directly).
 3. **Engine & DFS Wiring:** Wire into `scripts/ops/gse_coach_mind_simulator.py`, `scripts/ops/gse_connected_game_workflow.py`, `scripts/ops/verify_and_wire_all_layers_before_sim.py`, and `intelligence/dfs/` (`dk_200pt_situational_dfs_and_projection_engine.py`, `institutional_dfs_v2_portfolio.py`).
-4. **Verification Gate:** Run unit tests (`python -m pytest tests/...`), `python scripts/ops/verify_and_wire_all_layers_before_sim.py`, and `python scripts/wiring/run_charge_regression_suite.py` + `python scripts/wiring/verify_armed_workflows.py --check-armed`.
+4. **Verification Gate:** Run unit tests (`python -m pytest tests/...`), `python scripts/ops/verify_and_wire_all_layers_before_sim.py`, `python tests/verify_out_of_sample_calibration.py --enforce-gate`, `python scripts/calibration/run_frozen_ablation_ladder.py` (never modifying immutable `evaluation/frozen/score_walkforward_calibration_v1.py`), and `python scripts/wiring/verify_armed_workflows.py --check-armed`.
 
 ## Brief & Completion Criteria
 - Write dated summary + JSON receipt under `docs/<bucket>/research/<YYYY-MM-DD>/`.

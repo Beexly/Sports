@@ -118,6 +118,7 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         causal_air_yac_and_rush_success_engine,
         causal_box_shell_and_charting_engine,
         causal_ol_continuity_and_half_splits_engine,
+        causal_third_down_cpoe_st_engine,
         whitefield_and_nflverse_metrics_engine,
     )
     from scripts.ops.gse_coach_mind_simulator import (
@@ -291,6 +292,15 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         "stream_15z_away_halftime_swing_null_edge",
         "stream_15z_home_halftime_swing_null_edge",
         "stream_15z_net_ol_half_diff",
+        "stream_16a_away_def_3d_edge",
+        "stream_16a_home_def_3d_edge",
+        "stream_16a_away_cpoe_edge",
+        "stream_16a_home_cpoe_edge",
+        "stream_16a_away_st_epa_edge",
+        "stream_16a_home_st_epa_edge",
+        "stream_16a_away_deep_shot_null_edge",
+        "stream_16a_home_deep_shot_null_edge",
+        "stream_16a_net_3d_cpoe_st_diff",
         "julia_carleman_5level_audit_ready",
     ]
     missing = [k for k in required_cond_keys if k not in cond or cond[k] is None]
@@ -351,6 +361,10 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         ("stream_15z_away_sack_protection_edge", "stream_15z_home_sack_protection_edge"),
         ("stream_15z_away_first_half_edge", "stream_15z_home_first_half_edge"),
         ("stream_15z_away_halftime_swing_null_edge", "stream_15z_home_halftime_swing_null_edge"),
+        ("stream_16a_away_def_3d_edge", "stream_16a_home_def_3d_edge"),
+        ("stream_16a_away_cpoe_edge", "stream_16a_home_cpoe_edge"),
+        ("stream_16a_away_st_epa_edge", "stream_16a_home_st_epa_edge"),
+        ("stream_16a_away_deep_shot_null_edge", "stream_16a_home_deep_shot_null_edge"),
     ]
     for ka, kh in swap_pairs:
         if abs(float(cond[ka]) - float(cond_sw[kh])) > 1e-6 or abs(float(cond[kh]) - float(cond_sw[ka])) > 1e-6:
@@ -385,6 +399,10 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         raise RuntimeError("[PRE-SIM GATE FAIL] stream_15z_net_ol_half_diff antisymmetry violated.")
     if float(cond["stream_15z_away_halftime_swing_null_edge"]) != 0.0 or float(cond["stream_15z_home_halftime_swing_null_edge"]) != 0.0:
         raise RuntimeError("[PRE-SIM GATE FAIL] Stream 15Z halftime-swing null hold must remain strictly 0.0.")
+    if abs(float(cond["stream_16a_net_3d_cpoe_st_diff"]) + float(cond_sw["stream_16a_net_3d_cpoe_st_diff"])) > 1e-6:
+        raise RuntimeError("[PRE-SIM GATE FAIL] stream_16a_net_3d_cpoe_st_diff antisymmetry violated.")
+    if float(cond["stream_16a_away_deep_shot_null_edge"]) != 0.0 or float(cond["stream_16a_home_deep_shot_null_edge"]) != 0.0:
+        raise RuntimeError("[PRE-SIM GATE FAIL] Stream 16A deep-shot null hold must remain strictly 0.0.")
     if abs(float(cond["stream_15n_kickoff_yl_differential"]) + float(cond_sw["stream_15n_kickoff_yl_differential"])) > 1e-6:
         raise RuntimeError("LAYER6_KICKOFF_ANTISYMMETRY_BROKEN")
     if float(cond["stream_15m_home_questionable_sigma"]) <= float(cond["stream_15m_away_questionable_sigma"]):
@@ -450,6 +468,10 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         "ol_continuity_half_15z_live": hasattr(
             causal_ol_continuity_and_half_splits_engine,
             "evaluate_causal_15z_ol_half_matchup",
+        ),
+        "third_down_cpoe_st_16a_live": hasattr(
+            causal_third_down_cpoe_st_engine,
+            "evaluate_causal_16a_3d_cpoe_st_matchup",
         ),
         "ftn_joined_rows": int(deep_15n.get("ftn_joined_rows", 0)),
         "snap_rows": int(deep_15n.get("snap_rows", 0)),
