@@ -12,6 +12,8 @@ export type PodcastEpisode = {
   summary: string;
   segments: Array<{ title: string; body: string }>;
   takeaways: string[];
+  audioUrl?: string;
+  audioProvider?: "elevenlabs" | "fish_audio" | "transcript_only";
 };
 
 export const PODCAST_SHOW = {

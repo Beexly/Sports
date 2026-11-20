@@ -15,8 +15,16 @@ describe("creditPoolForModel", () => {
     expect(creditPoolForModel("azure-foundry/claude-sonnet-4-6")).toBe("azure_foundry");
   });
 
-  it("attributes Cerebras free-lane ids to content_free", () => {
+  it("attributes Cerebras and zero-cost failover ids to content_free", () => {
     expect(creditPoolForModel("gpt-oss-120b")).toBe("content_free");
+    expect(creditPoolForModel("free-deepinfra/meta-llama/Llama-3.3-70B-Instruct")).toBe("content_free");
+    expect(creditPoolForModel("free-nous/qwen/qwen4-max:free")).toBe("content_free");
+    expect(creditPoolForModel("free-aliyun/qwen4-max")).toBe("content_free");
+  });
+
+  it("attributes Alibaba DashScope ids to alibaba_credits", () => {
+    expect(creditPoolForModel("alibaba-qwen/qwen-plus")).toBe("alibaba_credits");
+    expect(creditPoolForModel("qwen-max")).toBe("alibaba_credits");
   });
 
   it("attributes plain claude-* to anthropic_direct", () => {

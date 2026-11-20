@@ -11,9 +11,12 @@ Operational broadcast utility for Galaxy Sports Edge:
 import argparse
 import json
 import os
+import re
 import sys
 import urllib.request
 import urllib.error
+from pathlib import Path
+from typing import Any, Mapping, Optional
 
 # Ensure UTF-8 output on Windows consoles
 if hasattr(sys.stdout, "reconfigure"):
@@ -27,6 +30,103 @@ DEFAULT_SLATE_FILE = os.path.join(
     "packages",
     "live-slate-writeups.json",
 )
+REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _read_env_value_from_file(env_path: Path, keys: tuple[str, ...]) -> Optional[str]:
+    if not env_path.exists():
+        return None
+    try:
+        for line in env_path.read_text(encoding="utf-8", errors="ignore").splitlines():
+            stripped = line.strip()
+            if not stripped or stripped.startswith("#") or "=" not in stripped:
+                continue
+            k, v = stripped.split("=", 1)
+            if k.strip() in keys:
+                val = v.strip().strip('"').strip("'")
+                if val:
+                    return val
+    except OSError:
+        return None
+    return None
+
+
+def resolve_telegram_bot_token(env: Optional[Mapping[str, str]] = None) -> Optional[str]:
+    """Resolve TELEGRAM_BOT_TOKEN from env, git-ignored .env.local, or ~/.hermes/.env (never hardcoded)."""
+    src = env if env is not None else os.environ
+    for key in ("TELEGRAM_BOT_TOKEN", "GSN_TELEGRAM_BOT_TOKEN"):
+        val = str(src.get(key) or "").strip()
+        if val:
+            return val
+    if env is None:
+        for candidate in (REPO_ROOT / ".env.local", REPO_ROOT / ".env", Path.home() / ".hermes" / ".env"):
+            found = _read_env_value_from_file(candidate, ("TELEGRAM_BOT_TOKEN", "GSN_TELEGRAM_BOT_TOKEN"))
+            if found:
+                return found
+    return None
+
+
+def verify_telegram_bot_identity(bot_token: str, timeout_sec: float = 10.0) -> dict[str, Any]:
+    """Verify bot readiness via Telegram getMe without ever logging or returning the raw secret."""
+    token = (bot_token or "").strip()
+    if not token:
+        return {"ok": False, "configured": False, "reason": "TELEGRAM_BOT_TOKEN not configured"}
+    url = f"https://api.telegram.org/bot{token}/getMe"
+    req = urllib.request.Request(url, headers={"Accept": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout_sec) as resp:
+            payload = json.loads(resp.read().decode("utf-8"))
+        if not payload.get("ok"):
+            return {"ok": False, "configured": True, "reason": "Telegram getMe returned ok=false"}
+        res = payload.get("result") or {}
+        return {
+            "ok": True,
+            "configured": True,
+            "bot_id": res.get("id"),
+            "username": res.get("username"),
+            "first_name": res.get("first_name"),
+            "can_join_groups": bool(res.get("can_join_groups", False)),
+            "can_read_all_group_messages": bool(res.get("can_read_all_group_messages", False)),
+        }
+    except Exception as exc:
+        # Never leak token if exception string includes the URL
+        msg = re.sub(r"bot[0-9]+:[A-Za-z0-9_-]+", "bot[REDACTED]", str(exc))
+        return {"ok": False, "configured": True, "reason": msg}
+
+
+def format_daily_multisport_environment_teaser(
+    sport_briefs: list[dict[str, Any]],
+    whop_storefront_url: str = "https://galaxy-sports-edge.whop.site",
+) -> str:
+    """Format daily multi-sport matchup environment intel with strict XX/100 + zero-leaked-pick discipline."""
+    lines: list[str] = [
+        "🌐 *GSE DAILY MULTI-SPORT ENVIRONMENT INTEL & PROOF ROOM*",
+        "",
+    ]
+    for item in sport_briefs:
+        sport = str(item.get("sport") or "SPORT").upper()
+        tier = str(item.get("readiness_tier") or "TIER_B_ENVIRONMENT_INTEL_AND_PAPER_LEARNING")
+        summary = str(item.get("environment_summary") or "").replace("%", " pts-of-100")
+        conf = item.get("confidence_score")
+        conf_str = f" · Index {int(round(float(conf)))}/100" if conf is not None else ""
+        gate_note = (
+            "CALIBRATED SNIPER LIVE"
+            if tier == "TIER_A_CALIBRATED_SNIPER"
+            else "PAPER LEARNING / ENVIRONMENT INTEL ONLY (NO RANDOM PICKS)"
+        )
+        lines.append(f"• *{sport}* [{gate_note}]{conf_str}")
+        if summary:
+            lines.append(f"  _{summary}_")
+
+    lines.extend([
+        "",
+        "🛡 *Calibration Law:* Uncalibrated extra sports NEVER ship speculative tickets. Picks fire only after out-of-sample walk-forward proof.",
+        f"🔓 *Join Free Proof Room & Memberships:* {whop_storefront_url}",
+    ])
+    out = "\n".join(lines)
+    if "%" in out:
+        out = out.replace("%", " out of 100")
+    return out
 
 def format_telegram_teaser(writeup: dict, package_slug: str, base_url: str) -> str:
     pace = writeup.get("paceOfPlay", {})

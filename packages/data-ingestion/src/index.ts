@@ -526,3 +526,16 @@ export {
   recognizeAudioWithCloudSpeech,
   type GcpNlAnalysisResult,
 } from "./gcp-ml-clients.js";
+export {
+  AudioGuardrailError,
+  assertGuardrailCleanAudioScript,
+  synthesizeGuardrailCleanAudio,
+  transcribeCoachPresserAudio,
+  type AudioTtsProvider,
+  type AudioSttProvider,
+  type AudioGuardrailResult,
+  type SynthesizeAudioOptions,
+  type SynthesizeAudioResult,
+  type TranscribePresserOptions,
+  type TranscribePresserResult,
+} from "./audio-intelligence-router.js";

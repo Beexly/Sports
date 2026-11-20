@@ -114,9 +114,67 @@ def get_cloud_credit_lanes_summary() -> Dict[str, Any]:
         "alibaba_cloud_model_studio": {
             "provider": "ALIBABA_CLOUD_DASHSCOPE_MODEL_STUDIO",
             "base_url": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
-            "primary_key_configured": bool(os.environ.get("ALIBABA_CLOUD_ACCESS_KEY_ID", "").strip()),
-            "secondary_key_configured": bool(os.environ.get("ALIBABA_CLOUD_SECONDARY_KEY_ID", "").strip()),
-            "models": ["qwen-max", "qwen-2.5-coder-32b-instruct", "qwq-32b"],
+            "primary_key_configured": bool(
+                os.environ.get("ALIBABA_API_KEY", "").strip()
+                or os.environ.get("DASHSCOPE_API_KEY", "").strip()
+                or os.environ.get("ALIBABA_CLOUD_ACCESS_KEY_ID", "").strip()
+            ),
+            "secondary_key_configured": bool(
+                os.environ.get("ALIBABA_CLOUD_SECONDARY_KEY_ID", "").strip()
+                or os.environ.get("ALIYUN_TOKENPLAN_KEY", "").strip()
+            ),
+            "models": ["qwen-plus", "qwen-max", "qwen-2.5-coder-32b-instruct", "qwq-32b"],
+        },
+        "aws_hold_my_coffee_and_bedrock": {
+            "provider": "AWS_HOLD_MY_COFFEE_AND_ACTIVATE_BEDROCK",
+            "region": os.environ.get("AWS_BEDROCK_REGION", os.environ.get("AWS_REGION", "us-east-2")),
+            "free_and_explore_pool_usd": 199.94,
+            "zero_spend_budget_include_credit": False,
+            "zero_dollar_stack": ["EventBridge", "Lambda", "DynamoDB", "S3_Vectors", "Bedrock_InvokeModel"],
+            "banned_spend_traps": ["NAT_Gateway", "Application_Load_Balancer", "EKS", "OpenSearch_Serverless"],
+            "bedrock_configured": bool(
+                os.environ.get("AWS_ACCESS_KEY_ID", "").strip()
+                and os.environ.get("AWS_SECRET_ACCESS_KEY", "").strip()
+                and os.environ.get("BEDROCK_MODEL_MAP", "").strip()
+            ),
+        },
+        "google_cloud_full_stack": {
+            "provider": "GOOGLE_CLOUD_GEAR_AND_ML_SUITE",
+            "gear_monthly_credit_usd": 100.0,
+            "bigquery_free_scan_tb_monthly": 1.0,
+            "vertex_case_id": os.environ.get("GOOGLE_STARTUPS_CASE_ID", "00318218"),
+            "services": ["Vertex_AI", "BigQuery", "Cloud_Run_Functions", "Cloud_NL_API", "Cloud_Video_API", "Cloud_Speech_STT"],
+            "ml_configured": bool(
+                os.environ.get("GCP_ML_ACCESS_TOKEN", "").strip()
+                or os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "").strip()
+                or os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_JSON", "").strip()
+            ),
+        },
+        "mongodb_atlas_bitemporal_store": {
+            "provider": "MONGODB_ATLAS",
+            "db_name": os.environ.get("MONGODB_DB", "galaxy_sports_edge"),
+            "ttl_days": 30,
+            "collections": ["bitemporal_feed_snapshots", "hermes_run_checkpoints"],
+            "configured": bool(
+                os.environ.get("MONGODB_URI", "").strip().lower().startswith(("mongodb://", "mongodb+srv://"))
+            ),
+        },
+        "audio_and_voice_intelligence": {
+            "tts_priority": ["elevenlabs", "fish_audio", "transcript_only"],
+            "stt_priority": ["deepgram_nova_2", "gcp_cloud_speech"],
+            "deepgram_grant_usd": 200.0,
+            "elevenlabs_configured": bool(os.environ.get("ELEVENLABS_API_KEY", "").strip()),
+            "fish_audio_configured": bool(os.environ.get("FISH_AUDIO_API_KEY", "").strip()),
+            "deepgram_configured": bool(os.environ.get("DEEPGRAM_API_KEY", "").strip()),
+        },
+        "telegram_and_whop_community_spine": {
+            "whop_account_id": "biz_jzvuDvevsatKWi",
+            "telegram_bot_handle": os.environ.get("GSN_TELEGRAM_BOT_HANDLE", "@GalaxySportsEdge_bot"),
+            "telegram_configured": bool(
+                os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+                or os.environ.get("GSN_TELEGRAM_BOT_TOKEN", "").strip()
+            ),
+            "whop_configured": bool(os.environ.get("WHOP_API_KEY", "").strip()),
         },
         "deepinfra_coach_brain": {
             "provider": "DEEPINFRA_OPENAI_COMPATIBLE_INFERENCE",

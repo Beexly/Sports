@@ -14,6 +14,7 @@ import type { ClaudeMessagesRequest, ClaudeMessagesResult } from "./messages";
 import { callCerebrasMessages, CerebrasMessagesError } from "./providers/cerebras";
 import { callOpenAiCompatMessages, OpenAiCompatError } from "./openai-compat";
 import { pickModelForSurface, type ClaudeSurface } from "./model-router";
+import { capturePostHogAiGeneration } from "@/lib/observability/posthog-grant-governor";
 import {
   withResponseCache,
   type ResponseCacheStore,
@@ -120,6 +121,16 @@ export function resolvePriorityZeroFreeLanes(
       model: "nvidia/nemotron-3.5-lightning-30b-a3b",
       apiKey: nimKey,
       ledgerPrefix: "free-nim/",
+    });
+  }
+
+  const deepinfraKey = (env["DEEPINFRA_API_KEY"] ?? env["DEEPINFRA_TOKEN"])?.trim();
+  if (deepinfraKey) {
+    lanes.push({
+      baseUrl: (env["DEEPINFRA_BASE_URL"] ?? "https://api.deepinfra.com/v1/openai").trim().replace(/\/+$/, ""),
+      model: (env["DEEPINFRA_MODEL"] ?? "meta-llama/Llama-3.3-70B-Instruct").trim(),
+      apiKey: deepinfraKey,
+      ledgerPrefix: "free-deepinfra/",
     });
   }
 
@@ -246,6 +257,30 @@ export async function generateContentMessages(
     return callClaude(request, env);
   };
 
+  const dispatchAndRecord = async (): Promise<ClaudeMessagesResult> => {
+    const result = await call();
+    const posthogKey = (env["POSTHOG_PROJECT_API_KEY"] ?? env["NEXT_PUBLIC_POSTHOG_KEY"])?.trim();
+    if (posthogKey) {
+      void capturePostHogAiGeneration(
+        {
+          traceId: `free-lane-${Date.now()}`,
+          spanName: `free_lane_${request.surface ?? "content"}`,
+          model: result.modelName,
+          provider: result.modelName.includes("/") ? result.modelName.split("/")[0] : "free-lane",
+          inputTokens: result.inputTokens,
+          outputTokens: result.outputTokens,
+          latencySeconds: Math.max(0, result.durationMs / 1000),
+          pathname: `/api/internal/free-lane/${request.surface ?? "content"}`,
+        },
+        {
+          apiKey: posthogKey,
+          host: env["NEXT_PUBLIC_POSTHOG_HOST"],
+        },
+      ).catch(() => {});
+    }
+    return result;
+  };
+
   if (
     env["LLM_RESPONSE_CACHE_ENABLED"] === "true" &&
     request.cacheStore !== undefined &&
@@ -262,7 +297,7 @@ export async function generateContentMessages(
         temperature: request.temperature,
         surface: request.surface,
       },
-      call,
+      call: dispatchAndRecord,
     });
     return {
       ...outcome.result,
@@ -270,7 +305,7 @@ export async function generateContentMessages(
     };
   }
 
-  return call();
+  return dispatchAndRecord();
 }
 
 export type { ClaudeSurface };

@@ -1,0 +1,449 @@
+{
+  "schema": "gse_enterprise_autonomy_flywheel_v1",
+  "generated_at_utc": "2026-11-20T20:52:16.193354+00:00",
+  "stage1_credit_lanes": {
+    "total_platforms_audited": 20,
+    "lanes_configured": {
+      "aws_hold_my_coffee_and_bedrock": true,
+      "alibaba_cloud_dashscope": false,
+      "google_cloud_gear_and_ml": true,
+      "nvidia_inception_nim": true,
+      "deepinfra_10b_pool": false,
+      "scaleway_eur100": false,
+      "cerebras_free_lane": false,
+      "groq_internal_llm": false,
+      "runpod_flashboot_gpu": false,
+      "mongodb_atlas_30d_ttl": false,
+      "posthog_50k_grant": false,
+      "sentry_5k_grant": false,
+      "elevenlabs_tts": false,
+      "fish_audio_tts": false,
+      "deepgram_200_stt": false,
+      "pinecone_300_vectors": false,
+      "cloudflare_workers_ai_r2": false,
+      "neon_postgres_pg17": false,
+      "whop_storefront": true,
+      "telegram_gsn_bot": true
+    },
+    "nous_qwen4_max_hours_remaining": 66.13,
+    "nous_cliff_failover_ready": true,
+    "aws_spend_traps_blocked": true
+  },
+  "stage2_multisport_calibration": {
+    "nfl_eligible_families": [
+      "pass_attempts",
+      "passing_tds",
+      "rushing_yards",
+      "carries",
+      "receptions",
+      "tackles_plus_assists",
+      "solo_tackles"
+    ],
+    "nfl_quarantined_families": [
+      "passing_yards",
+      "pass_completions",
+      "longest_comp",
+      "1q_pass_yds",
+      "longest_rush",
+      "1q_rush_yds",
+      "receiving_yards",
+      "longest_rec",
+      "1q_rec_yds",
+      "anytime_td",
+      "sacks"
+    ],
+    "sports_readiness": [
+      {
+        "sport": "NFL",
+        "market_family": "passing_tds",
+        "readiness_tier": "TIER_A_CALIBRATED_SNIPER",
+        "publish_official_picks_allowed": true,
+        "daily_environment_content_allowed": true,
+        "paper_learning_enabled": true,
+        "policy": {
+          "min_oos_samples": 120,
+          "min_walkforward_accuracy": 0.535,
+          "min_wilson_edge": 0.025,
+          "max_straight_plays_per_game": 6,
+          "max_straight_plays_per_slate": 18,
+          "max_per_athlete": 1,
+          "requires_starter_confirmation": true,
+          "sgp_publish_enabled": false,
+          "legal_spine_adapters": [
+            "nflverse",
+            "ftn_charting",
+            "espn_injuries",
+            "nws_weather"
+          ]
+        },
+        "observed": {
+          "n_oos": 182,
+          "walkforward_brier": 0.23431,
+          "market_baseline_brier": 0.25,
+          "walkforward_accuracy": 0.6209,
+          "strictly_causal": true,
+          "spine_age_hours": 1.5
+        },
+        "reasons": [
+          "Cleared causal walk-forward Brier, OOS accuracy, sample floor, and healthy spine gate."
+        ]
+      },
+      {
+        "sport": "NBA",
+        "market_family": "game_spread_and_fatigue",
+        "readiness_tier": "TIER_B_ENVIRONMENT_INTEL_AND_PAPER_LEARNING",
+        "publish_official_picks_allowed": false,
+        "daily_environment_content_allowed": true,
+        "paper_learning_enabled": true,
+        "policy": {
+          "min_oos_samples": 150,
+          "min_walkforward_accuracy": 0.555,
+          "min_wilson_edge": 0.04,
+          "max_straight_plays_per_game": 2,
+          "max_straight_plays_per_slate": 3,
+          "max_per_athlete": 1,
+          "requires_starter_confirmation": true,
+          "sgp_publish_enabled": false,
+          "legal_spine_adapters": [
+            "balldontlie_nba",
+            "fatigue_priors_nba",
+            "nba_rest_travel"
+          ]
+        },
+        "observed": {
+          "n_oos": 0,
+          "walkforward_brier": 0.255,
+          "market_baseline_brier": 0.25,
+          "walkforward_accuracy": 0.0,
+          "strictly_causal": false,
+          "spine_age_hours": 1.0
+        },
+        "reasons": [
+          "Calibration head lacks strictly_causal walk-forward verification.",
+          "OOS sample 0 < required 150 for NBA.",
+          "Walk-forward Brier 0.25500 >= market baseline 0.25000.",
+          "OOS accuracy 0.0000 < NBA floor 0.555.",
+          "Market family explicitly quarantined by causal calibration head (`eligible_for_play=False`)."
+        ]
+      },
+      {
+        "sport": "NHL",
+        "market_family": "moneypuck_xg_moneyline",
+        "readiness_tier": "TIER_B_ENVIRONMENT_INTEL_AND_PAPER_LEARNING",
+        "publish_official_picks_allowed": false,
+        "daily_environment_content_allowed": true,
+        "paper_learning_enabled": true,
+        "policy": {
+          "min_oos_samples": 150,
+          "min_walkforward_accuracy": 0.555,
+          "min_wilson_edge": 0.04,
+          "max_straight_plays_per_game": 2,
+          "max_straight_plays_per_slate": 3,
+          "max_per_athlete": 1,
+          "requires_starter_confirmation": true,
+          "sgp_publish_enabled": false,
+          "legal_spine_adapters": [
+            "nhl_web_api",
+            "moneypuck_xg_gsax"
+          ]
+        },
+        "observed": {
+          "n_oos": 0,
+          "walkforward_brier": 0.252,
+          "market_baseline_brier": 0.25,
+          "walkforward_accuracy": 0.0,
+          "strictly_causal": false,
+          "spine_age_hours": 1.0
+        },
+        "reasons": [
+          "Calibration head lacks strictly_causal walk-forward verification.",
+          "OOS sample 0 < required 150 for NHL.",
+          "Walk-forward Brier 0.25200 >= market baseline 0.25000.",
+          "OOS accuracy 0.0000 < NHL floor 0.555.",
+          "Market family explicitly quarantined by causal calibration head (`eligible_for_play=False`)."
+        ]
+      },
+      {
+        "sport": "MLB",
+        "market_family": "platoon_runline_strikeouts",
+        "readiness_tier": "TIER_B_ENVIRONMENT_INTEL_AND_PAPER_LEARNING",
+        "publish_official_picks_allowed": false,
+        "daily_environment_content_allowed": true,
+        "paper_learning_enabled": true,
+        "policy": {
+          "min_oos_samples": 150,
+          "min_walkforward_accuracy": 0.555,
+          "min_wilson_edge": 0.04,
+          "max_straight_plays_per_game": 2,
+          "max_straight_plays_per_slate": 3,
+          "max_per_athlete": 1,
+          "requires_starter_confirmation": true,
+          "sgp_publish_enabled": false,
+          "legal_spine_adapters": [
+            "mlb_statsapi",
+            "mlb_platoon_splits",
+            "mlb_strikeout_shrinkage",
+            "park_weather"
+          ]
+        },
+        "observed": {
+          "n_oos": 0,
+          "walkforward_brier": 0.254,
+          "market_baseline_brier": 0.25,
+          "walkforward_accuracy": 0.0,
+          "strictly_causal": false,
+          "spine_age_hours": 1.0
+        },
+        "reasons": [
+          "Calibration head lacks strictly_causal walk-forward verification.",
+          "OOS sample 0 < required 150 for MLB.",
+          "Walk-forward Brier 0.25400 >= market baseline 0.25000.",
+          "OOS accuracy 0.0000 < MLB floor 0.555.",
+          "Market family explicitly quarantined by causal calibration head (`eligible_for_play=False`).",
+          "Starter / lineup / injury confirmation pending for MLB."
+        ]
+      },
+      {
+        "sport": "NCAAB",
+        "market_family": "tempo_efficiency_totals",
+        "readiness_tier": "TIER_B_ENVIRONMENT_INTEL_AND_PAPER_LEARNING",
+        "publish_official_picks_allowed": false,
+        "daily_environment_content_allowed": true,
+        "paper_learning_enabled": true,
+        "policy": {
+          "min_oos_samples": 150,
+          "min_walkforward_accuracy": 0.56,
+          "min_wilson_edge": 0.045,
+          "max_straight_plays_per_game": 2,
+          "max_straight_plays_per_slate": 3,
+          "max_per_athlete": 1,
+          "requires_starter_confirmation": true,
+          "sgp_publish_enabled": false,
+          "legal_spine_adapters": [
+            "henrygd_ncaa_api",
+            "efficiency_tempo_ratings"
+          ]
+        },
+        "observed": {
+          "n_oos": 0,
+          "walkforward_brier": 0.258,
+          "market_baseline_brier": 0.25,
+          "walkforward_accuracy": 0.0,
+          "strictly_causal": false,
+          "spine_age_hours": 1.0
+        },
+        "reasons": [
+          "Calibration head lacks strictly_causal walk-forward verification.",
+          "OOS sample 0 < required 150 for NCAAB.",
+          "Walk-forward Brier 0.25800 >= market baseline 0.25000.",
+          "OOS accuracy 0.0000 < NCAAB floor 0.560.",
+          "Market family explicitly quarantined by causal calibration head (`eligible_for_play=False`)."
+        ]
+      }
+    ],
+    "extra_sport_quarantine_verified": true,
+    "portfolio_card_selected_count": 2,
+    "sgp_quarantine_decision": "PASS_SGP_QUARANTINED_BY_DEFAULT"
+  },
+  "stage3_whop_and_financial_funnel": {
+    "schema": "gse_multisport_whop_community_plan_v1",
+    "date": "2026-11-20",
+    "whop_account_id": "biz_jzvuDvevsatKWi",
+    "storefront_url": "https://galaxy-sports-edge.whop.site",
+    "recurring_membership_count": 3,
+    "one_time_pack_count": 9,
+    "recurring_plans_summary": [
+      {
+        "key": "pro_founding_monthly",
+        "priceUsd": 39,
+        "variantId": "plan_38ybjdK4BU88I"
+      },
+      {
+        "key": "elite_standard_monthly",
+        "priceUsd": 79,
+        "variantId": "plan_RfS7KJHdLIbA3"
+      },
+      {
+        "key": "global_multisport_vip",
+        "priceUsd": 149,
+        "variantId": "plan_lyi84loo2aMJ0"
+      }
+    ],
+    "affiliate_flywheel": {
+      "global_pct": 30,
+      "member_pct": 40
+    },
+    "tier_a_calibrated_sports": [
+      "NFL"
+    ],
+    "tier_b_environment_and_paper_sports": [
+      "MLB",
+      "NBA",
+      "NCAAB",
+      "NHL"
+    ],
+    "daily_cadence": [
+      {
+        "slot_ct": "08:30 CT",
+        "surface": "Telegram @GalaxySportsEdge_bot + Whop Free Proof Room + Podcast RSS",
+        "output": "Daily 3-Minute Multi-Sport Matchup Environment Audio Briefing (ElevenLabs -> Fish Audio)",
+        "guardrail": "Plain-English tempo/fatigue/GSAx/platoon intel ONLY; zero math jargon; zero uncalibrated picks"
+      },
+      {
+        "slot_ct": "12:15 CT",
+        "surface": "Private Overnight Learning Loop",
+        "output": "Shadow Paper Predictions & Brier Audits for TIER_B sports (MLB, NBA, NCAAB, NHL)",
+        "guardrail": "Logs predictions strictly for causal walk-forward validation; publishAllowed=False"
+      },
+      {
+        "slot_ct": "T-75m Pre-Lock",
+        "surface": "Whop Paid Tiers + Member Web/iOS Portal",
+        "output": "Official Calibrated Sniper Card for TIER_A sports (NFL) after injury/starter gate",
+        "guardrail": "Two-sided de-vigged odds + Baker-McHale Kelly cap + SGP quarantine default"
+      },
+      {
+        "slot_ct": "Post-Game + 02:00 CT",
+        "surface": "Public Proof Room + Telegram Recap + Calibration Head",
+        "output": "Honest Settled Receipt (CLV + Pass Discipline wins) + Nightly Residual Learning Feed",
+        "guardrail": "Never retroactively alter committed hashes or conceal losses"
+      }
+    ],
+    "financial_cohort_projections": {
+      "conservative": {
+        "month_3": {
+          "recurring_members": 35,
+          "blended_arpu_usd": 55.0,
+          "mrr_usd": 1925.0,
+          "pack_addon_usd": 650.0,
+          "total_monthly_rev_usd": 2575.0
+        },
+        "month_6": {
+          "recurring_members": 110,
+          "blended_arpu_usd": 60.0,
+          "mrr_usd": 6600.0,
+          "pack_addon_usd": 1400.0,
+          "total_monthly_rev_usd": 8000.0
+        },
+        "month_12": {
+          "recurring_members": 260,
+          "blended_arpu_usd": 65.0,
+          "mrr_usd": 16900.0,
+          "pack_addon_usd": 2400.0,
+          "total_monthly_rev_usd": 19300.0,
+          "arr_run_rate_usd": 231600.0
+        }
+      },
+      "base": {
+        "month_3": {
+          "recurring_members": 65,
+          "blended_arpu_usd": 63.46,
+          "mrr_usd": 4125.0,
+          "pack_addon_usd": 1250.0,
+          "total_monthly_rev_usd": 5375.0
+        },
+        "month_6": {
+          "recurring_members": 220,
+          "blended_arpu_usd": 67.45,
+          "mrr_usd": 14840.0,
+          "pack_addon_usd": 2800.0,
+          "total_monthly_rev_usd": 17640.0
+        },
+        "month_12": {
+          "recurring_members": 540,
+          "blended_arpu_usd": 72.0,
+          "mrr_usd": 38880.0,
+          "pack_addon_usd": 4900.0,
+          "total_monthly_rev_usd": 43780.0,
+          "arr_run_rate_usd": 525360.0
+        },
+        "year_2": {
+          "recurring_members": 1350,
+          "blended_arpu_usd": 75.0,
+          "mrr_usd": 101250.0,
+          "pack_addon_usd": 8500.0,
+          "total_monthly_rev_usd": 109750.0,
+          "arr_run_rate_usd": 1317000.0
+        },
+        "year_3": {
+          "recurring_members": 2900,
+          "blended_arpu_usd": 78.0,
+          "mrr_usd": 226200.0,
+          "pack_addon_usd": 14000.0,
+          "total_monthly_rev_usd": 240200.0,
+          "arr_run_rate_usd": 2882400.0
+        }
+      },
+      "optimistic": {
+        "month_12": {
+          "recurring_members": 950,
+          "blended_arpu_usd": 79.0,
+          "mrr_usd": 75050.0,
+          "pack_addon_usd": 9200.0,
+          "total_monthly_rev_usd": 84250.0,
+          "arr_run_rate_usd": 1011000.0
+        },
+        "year_3": {
+          "recurring_members": 5500,
+          "blended_arpu_usd": 86.0,
+          "mrr_usd": 473000.0,
+          "pack_addon_usd": 28000.0,
+          "total_monthly_rev_usd": 501000.0,
+          "arr_run_rate_usd": 6012000.0
+        }
+      }
+    }
+  },
+  "stage4_audio_and_telegram_community": {
+    "telegram_bot_verification": {
+      "ok": true,
+      "configured": true,
+      "bot_id": 8426108345,
+      "username": "GalaxySportsEdge_bot",
+      "first_name": "GSN",
+      "can_join_groups": true,
+      "can_read_all_group_messages": false
+    },
+    "daily_teaser_preview": "\ud83c\udf10 *GSE DAILY MULTI-SPORT ENVIRONMENT INTEL & PROOF ROOM*\n\n\u2022 *NFL* [CALIBRATED SNIPER LIVE] \u00b7 Index 68/100\n  _TNF & Week 11 trench matchups lean toward disciplined clock control and red-zone rushing volume._\n\u2022 *NBA* [PAPER LEARNING / ENVIRONMENT INTEL ONLY (NO RANDOM PICKS)]\n  _Tracking B2B rest differentials and westward travel fatigue spots while paper-learning head builds OOS sample._\n\u2022 *NHL* [PAPER LEARNING / ENVIRONMENT INTEL ONLY (NO RANDOM PICKS)]\n  _Monitoring 5v5 expected goals share and confirmed starter GSAx regressions across tonight's slate._\n\n\ud83d\udee1 *Calibration Law:* Uncalibrated extra sports NEVER ship speculative tickets. Picks fire only after out-of-sample walk-forward proof.\n\ud83d\udd13 *Join Free Proof Room & Memberships:* https://galaxy-sports-edge.whop.site",
+    "audio_tts_priority": [
+      "elevenlabs",
+      "fish_audio",
+      "transcript_only"
+    ],
+    "audio_stt_priority": [
+      "deepgram_nova_2",
+      "gcp_cloud_speech"
+    ]
+  },
+  "stage5_weekly_autonomy_cadence": [
+    {
+      "phase": "Tue 04:00 CT",
+      "job": "v1.0 Seal & Opening Week Spine Ingest",
+      "owner": "CF Worker + Nova S3 + Neon"
+    },
+    {
+      "phase": "Wed 17:00 CT",
+      "job": "v2.0 TNF 360 Full Markets + Showdown MILP",
+      "owner": "JEV + Vector Sim + Two-Sided Odds Merge"
+    },
+    {
+      "phase": "Thu T-75m",
+      "job": "TNF Official QB1 & Inactives Re-Sim + Card Lock",
+      "owner": "T-75m Gate + RunPod FlashBoot / Local NumPy"
+    },
+    {
+      "phase": "Fri 16:30 CT",
+      "job": "v3.0 Sunday/MNF 360 + Audio Briefing + Whop Push",
+      "owner": "ElevenLabs/Fish Audio + Telegram + Whop"
+    },
+    {
+      "phase": "Sun T-75m",
+      "job": "Sunday Main Slate Lineup & Weather Gate Lock",
+      "owner": "T-75m Gate + Strict Portfolio Optimizer"
+    },
+    {
+      "phase": "Mon 02:00 CT",
+      "job": "Post-Game Residual Autopsy + Walk-Forward Update",
+      "owner": "Causal Calibrator + MongoDB/BigQuery + Mind Feed"
+    }
+  ]
+}

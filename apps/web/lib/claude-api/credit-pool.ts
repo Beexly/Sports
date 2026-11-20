@@ -77,7 +77,19 @@ export function creditPoolForModel(modelName: string): CreditPool {
     return "alibaba_credits";
   }
   if (/^gpt-oss/i.test(id) || /cerebras/i.test(id)) return "content_free";
-  if (id.startsWith("free-secondary/") || id.startsWith("free-groq/") || id.startsWith("free-nim/") || id.startsWith("free-compat/")) return "content_free";
+  if (
+    id.startsWith("free-secondary/") ||
+    id.startsWith("free-groq/") ||
+    id.startsWith("free-nim/") ||
+    id.startsWith("free-compat/") ||
+    id.startsWith("free-deepinfra/") ||
+    id.startsWith("free-nous/") ||
+    id.startsWith("free-aliyun/") ||
+    id.startsWith("free-cf-ai/") ||
+    id.startsWith("free-nanogpt-sub/")
+  ) {
+    return "content_free";
+  }
   return "anthropic_direct";
 }
 

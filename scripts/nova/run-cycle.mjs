@@ -931,7 +931,75 @@ export async function runNovaCycle(args, dependencies = {}) {
   await writeOnceJson(resolve(args.runtimeDir, "briefs", `${runId}.json`), brief);
   await unlink(activeRunPath);
 
+  const mongoMirror = await maybeMirrorRunReceiptToMongo(runReceipt);
+  if (mongoMirror.enabled && !mongoMirror.ok && mongoMirror.reason) {
+    console.warn(`[nova-cycle] Mongo checkpoint mirror skipped: ${mongoMirror.reason}`);
+  }
+
   return { runReceipt, brief, events: newEvents, alerts, salvage: salvageSummary };
+}
+
+/**
+ * Optional, fail-open MongoDB Atlas bitemporal checkpoint mirror (`hermes_run_checkpoints`).
+ * Clean no-op whenever MONGODB_URI is absent/sentinel or the optional `mongodb` driver isn't installed.
+ */
+export async function maybeMirrorRunReceiptToMongo(
+  runReceipt,
+  env = process.env,
+) {
+  const uri = String(env.MONGODB_URI ?? "").trim();
+  const low = uri.toLowerCase();
+  if (
+    !uri ||
+    low === "stub" ||
+    low === "none" ||
+    low.startsWith("changeme") ||
+    low.includes("dummy:dummy") ||
+    low.includes("placeholder:placeholder") ||
+    low.includes("user:pass@localhost") ||
+    !/^mongodb(\+srv)?:\/\//i.test(uri)
+  ) {
+    return { ok: false, enabled: false, reason: "MONGODB_URI absent or sentinel — local checkpoints only." };
+  }
+  let client = null;
+  try {
+    const modName = String("mongodb");
+    const mod = await import(modName);
+    const MongoClient = mod?.MongoClient;
+    if (!MongoClient) {
+      return { ok: false, enabled: true, reason: "mongodb MongoClient export missing" };
+    }
+    client = new MongoClient(uri);
+    await client.connect();
+    const db = client.db(env.MONGODB_DB || "galaxy_sports_edge");
+    await db.collection("hermes_run_checkpoints").updateOne(
+      { runId: runReceipt.runId },
+      {
+        $set: {
+          runId: runReceipt.runId,
+          status: runReceipt.status,
+          completedAt: runReceipt.completedAt,
+          requestsUsed: runReceipt.requestsUsed,
+          bytesUsed: runReceipt.bytesUsed,
+          newEventIdsCount: Array.isArray(runReceipt.newEventIds) ? runReceipt.newEventIds.length : 0,
+          updatedAt: new Date(),
+        },
+        $setOnInsert: { createdAt: new Date() },
+      },
+      { upsert: true },
+    );
+    return { ok: true, enabled: true, reason: "mirrored to hermes_run_checkpoints" };
+  } catch (err) {
+    return {
+      ok: false,
+      enabled: true,
+      reason: err instanceof Error ? err.message : String(err),
+    };
+  } finally {
+    if (client && typeof client.close === "function") {
+      await client.close().catch(() => {});
+    }
+  }
 }
 
 async function main() {

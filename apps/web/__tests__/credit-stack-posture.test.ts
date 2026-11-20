@@ -116,11 +116,39 @@ describe("loadCreditStackPosture", () => {
     const p = loadCreditStackPosture({
       AZURE_FOUNDRY_API_KEY: "super-secret-az",
       CEREBRAS_API_KEY: "super-secret-cb",
+      TELEGRAM_BOT_TOKEN: "super-secret-tg",
+      ELEVENLABS_API_KEY: "super-secret-el",
       CONTENT_FREE_LANE_ENABLED: "true",
       AZURE_FOUNDRY_RESOURCE: "r",
       AZURE_FOUNDRY_MODEL_MAP: "{}",
     });
     const json = JSON.stringify(p);
     expect(json).not.toContain("super-secret");
+  });
+
+  it("tracks Alibaba DashScope, MongoDB Atlas, GCP ML, Audio TTS/STT, Scaleway, and Telegram posture booleans", () => {
+    const p = loadCreditStackPosture({
+      CONTENT_FREE_LANE_ENABLED: "true",
+      DASHSCOPE_API_KEY: "dash-key",
+      MONGODB_URI: "mongodb+srv://cluster.mongodb.net/galaxy_sports_edge",
+      GCP_ML_ACCESS_TOKEN: "gcp-tok",
+      ELEVENLABS_API_KEY: "el-key",
+      FISH_AUDIO_API_KEY: "fish-key",
+      DEEPGRAM_API_KEY: "dg-key",
+      SCALEWAY_API_KEY: "scw-key",
+      TELEGRAM_BOT_TOKEN: "tg-tok",
+    });
+    expect(p.freeLaneConfigured).toBe(true);
+    expect(p.alibabaCloudConfigured).toBe(true);
+    expect(p.mongodbAtlasConfigured).toBe(true);
+    expect(p.gcpMlConfigured).toBe(true);
+    expect(p.elevenlabsConfigured).toBe(true);
+    expect(p.fishAudioConfigured).toBe(true);
+    expect(p.deepgramConfigured).toBe(true);
+    expect(p.scalewayConfigured).toBe(true);
+    expect(p.telegramBotConfigured).toBe(true);
+
+    const stubMongo = loadCreditStackPosture({ MONGODB_URI: "stub" });
+    expect(stubMongo.mongodbAtlasConfigured).toBe(false);
   });
 });

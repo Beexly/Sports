@@ -48,6 +48,13 @@ export interface CreditStackPosture {
   readonly runpodConfigured: boolean;
   readonly nvidiaInceptionConfigured: boolean;
   readonly deepinfraConfigured: boolean;
+  readonly mongodbAtlasConfigured: boolean;
+  readonly gcpMlConfigured: boolean;
+  readonly elevenlabsConfigured: boolean;
+  readonly fishAudioConfigured: boolean;
+  readonly deepgramConfigured: boolean;
+  readonly scalewayConfigured: boolean;
+  readonly telegramBotConfigured: boolean;
   readonly stealthSkeletonProviderReady: boolean;
   readonly xaiCreditsRemainingUsd: number;
   readonly verifiedGrantStackUsd: number;
@@ -74,12 +81,32 @@ export function resolveClaudeProviderSelection(env: Env = process.env): ClaudePr
   return parseProviderMode(env);
 }
 
+function isValidMongoUri(raw: string | undefined): boolean {
+  const uri = (raw ?? "").trim();
+  if (!uri) return false;
+  const low = uri.toLowerCase();
+  if (
+    low === "stub" ||
+    low === "none" ||
+    low.startsWith("changeme") ||
+    low.includes("dummy:dummy") ||
+    low.includes("placeholder:placeholder") ||
+    low.includes("user:pass@localhost")
+  ) {
+    return false;
+  }
+  return /^mongodb(\+srv)?:\/\//i.test(uri);
+}
+
 export function loadCreditStackPosture(env: Env = process.env): CreditStackPosture {
   const freeLaneConfigured =
     env["CONTENT_FREE_LANE_ENABLED"] === "true" &&
     (has(env, "CEREBRAS_API_KEY") ||
+      has(env, "ALIBABA_API_KEY") ||
+      has(env, "DASHSCOPE_API_KEY") ||
       (has(env, "FREE_LANE_SECONDARY_BASE_URL") && has(env, "FREE_LANE_SECONDARY_MODEL")));
-  const internalLlmConfigured = has(env, "INTERNAL_LLM_API_KEY");
+  const internalLlmConfigured =
+    has(env, "INTERNAL_LLM_API_KEY") || has(env, "ALIBABA_API_KEY") || has(env, "DASHSCOPE_API_KEY");
   const claudeProvider = resolveClaudeProviderSelection(env);
 
   const bedrockConfigured =
@@ -101,16 +128,30 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
     (has(env, "AZURE_FOUNDRY_RESOURCE") || has(env, "AZURE_FOUNDRY_BASE_URL"));
 
   const pineconeConfigured = has(env, "PINECONE_API_KEY") || has(env, "PINECONE_API_KEY_FALLBACK");
-  const posthogConfigured = has(env, "POSTHOG_PERSONAL_API_KEY") || has(env, "NEXT_PUBLIC_POSTHOG_KEY");
+  const posthogConfigured = has(env, "POSTHOG_PERSONAL_API_KEY") || has(env, "NEXT_PUBLIC_POSTHOG_KEY") || has(env, "POSTHOG_PROJECT_API_KEY");
   const inboxZeroConfigured = has(env, "EMAIL_ENCRYPT_SECRET") || has(env, "INBOX_ZERO_SECRET");
   const julesApiKeyConfigured = has(env, "JULES_API_KEY");
   const xaiConfigured = has(env, "XAI_API_KEY");
   const alibabaCloudConfigured =
-    has(env, "ALIBABA_CLOUD_ACCESS_KEY_ID") || has(env, "ALIBABA_CLOUD_SECONDARY_KEY_ID");
+    has(env, "ALIBABA_CLOUD_ACCESS_KEY_ID") ||
+    has(env, "ALIBABA_CLOUD_SECONDARY_KEY_ID") ||
+    has(env, "ALIBABA_API_KEY") ||
+    has(env, "DASHSCOPE_API_KEY") ||
+    has(env, "ALIYUN_TOKENPLAN_KEY");
   const runpodConfigured = has(env, "RUNPOD_API_KEY");
   const nvidiaInceptionConfigured =
-    has(env, "NVIDIA_CLOUD_ACCOUNT_ID") || has(env, "NVIDIA_API_KEY");
+    has(env, "NVIDIA_CLOUD_ACCOUNT_ID") || has(env, "NVIDIA_API_KEY") || has(env, "NVIDIA_GSE_API_KEY");
   const deepinfraConfigured = has(env, "DEEPINFRA_API_KEY") || has(env, "DEEPINFRA_TOKEN");
+  const mongodbAtlasConfigured = isValidMongoUri(env["MONGODB_URI"]);
+  const gcpMlConfigured =
+    has(env, "GCP_ML_ACCESS_TOKEN") ||
+    has(env, "GOOGLE_APPLICATION_CREDENTIALS") ||
+    has(env, "GOOGLE_APPLICATION_CREDENTIALS_JSON");
+  const elevenlabsConfigured = has(env, "ELEVENLABS_API_KEY");
+  const fishAudioConfigured = has(env, "FISH_AUDIO_API_KEY");
+  const deepgramConfigured = has(env, "DEEPGRAM_API_KEY");
+  const scalewayConfigured = has(env, "SCALEWAY_API_KEY") || has(env, "SCALEWAY_SECRET_KEY");
+  const telegramBotConfigured = has(env, "TELEGRAM_BOT_TOKEN") || has(env, "GSN_TELEGRAM_BOT_TOKEN");
   const stealthSkeletonProviderReady = true;
   const xaiCreditsRemainingUsd = 37.98;
   const verifiedGrantStackUsd = 55656.31;
@@ -181,6 +222,13 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
     runpodConfigured,
     nvidiaInceptionConfigured,
     deepinfraConfigured,
+    mongodbAtlasConfigured,
+    gcpMlConfigured,
+    elevenlabsConfigured,
+    fishAudioConfigured,
+    deepgramConfigured,
+    scalewayConfigured,
+    telegramBotConfigured,
     stealthSkeletonProviderReady,
     xaiCreditsRemainingUsd,
     verifiedGrantStackUsd,
