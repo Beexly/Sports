@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beexly Browser Agent Mission Deck — 2026-11-19</title>
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --card: #131722;
+      --border: #252b3b;
+      --text: #e6ebf5;
+      --muted: #93a0b8;
+      --accent: #3b82f6;
+      --urgent: #ef4444;
+      --cash: #10b981;
+      --warn: #f59e0b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 18px;
+      margin-bottom: 24px;
+    }
+    h1 { margin: 0 0 8px; font-size: 1.75rem; }
+    .sub { color: var(--muted); font-size: 0.95rem; }
+    .links-bar {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px;
+    }
+    .pill {
+      background: #1a2030; border: 1px solid var(--border); color: var(--text);
+      padding: 6px 12px; border-radius: 999px; text-decoration: none; font-size: 0.85rem;
+    }
+    .pill:hover { border-color: var(--accent); }
+    .mission {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .mission.urgent { border-left: 4px solid var(--urgent); }
+    .mission.cash { border-left: 4px solid var(--cash); }
+    .mission.ops { border-left: 4px solid var(--accent); }
+    .mission-head {
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+      margin-bottom: 12px;
+    }
+    .badge {
+      display: inline-block; font-size: 0.75rem; font-weight: 700;
+      padding: 3px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .badge.urgent { background: rgba(239,68,68,.18); color: #fca5a5; }
+    .badge.cash { background: rgba(16,185,129,.18); color: #6ee7b7; }
+    .badge.ops { background: rgba(59,130,246,.18); color: #93c5fd; }
+    .mission h2 { margin: 6px 0 4px; font-size: 1.2rem; }
+    .meta { color: var(--muted); font-size: 0.88rem; }
+    .controls { display: flex; gap: 10px; align-items: center; }
+    button.copy-btn {
+      background: var(--accent); color: #fff; border: none; border-radius: 8px;
+      padding: 9px 14px; font-weight: 600; cursor: pointer; font-size: 0.88rem;
+      white-space: nowrap;
+    }
+    button.copy-btn:hover { filter: brightness(1.1); }
+    button.copy-btn.copied { background: var(--cash); }
+    label.done-toggle {
+      display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--muted); cursor: pointer;
+    }
+    pre {
+      background: #090b10;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.84rem;
+      color: #d7e0f0;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Beexly Browser Agent Mission Deck (2026-11-19)</h1>
+    <div class="sub">
+      Paste any mission below into your logged-in Chrome browser agent. Every prompt is self-contained, zero-placeholder, and pauses only at 2FA, CAPTCHAs, EIN/tax inputs, or final legal/send confirmation.
+    </div>
+    <div class="links-bar">
+      <a class="pill" target="_blank" href="https://docs.google.com/spreadsheets/d/19BVGmpCjyJsZKLq5Nx5hPeTlZijyihFLllDIkj1oFos/edit">📊 Live SSOT Command Sheet</a>
+      <a class="pill" target="_blank" href="https://drive.google.com/drive/folders/1LfNqD4C9HYDAAz_-3zns5tj6edeVewdq">📁 Ready-to-Submit Grants Folder</a>
+      <a class="pill" target="_blank" href="https://drive.google.com/drive/folders/1iMb_DLcCk0FbMnYL0AHfxIfRf-nN_YQ0">📦 Digital Products ZIPs Folder</a>
+      <a class="pill" target="_blank" href="https://drive.google.com/drive/folders/1ens_pHHMUvAmSVBDSEZ0RFDiVp8oplAw">🏛️ NCISD RFP 121.26 Folder</a>
+      <a class="pill" target="_blank" href="https://drive.google.com/drive/folders/1FhUpvgyV-4AANWpU5xuUaHz58y_o-xlN">🧀 Charcuterie Chick Closeout Folder</a>
+    </div>
+  </header>
+
+  <!-- MISSION 1 -->
+  <section class="mission urgent" id="m1">
+    <div class="mission-head">
+      <div>
+        <span class="badge urgent">Mission 1 — URGENT (Closes Tomorrow Nov 20)</span>
+        <h2>Mozilla $500K + Mozilla Fellowship $125K + Shophand $5K + Awesome $1K + Business Freedom $1K</h2>
+        <div class="meta">First checks Gmail/confirmation so we never double-submit Mozilla, then fills &amp; pauses at final Submit.</div>
+      </div>
+      <div class="controls">
+        <label class="done-toggle"><input type="checkbox" data-mission="m1" /> Done</label>
+        <button class="copy-btn" onclick="copyPrompt('p1', this)">Copy Mission 1</button>
+      </div>
+    </div>
+<pre id="p1">BROWSER AGENT MISSION 1 — URGENT GRANTS (NOV 20 – DEC 1)
+Entity: GALAXY SPORTS NETWORK LLC (TX SOS #0806617184, Formed 2026) | Division: Galaxy Science Institute (GSI)
+Founder: Garrett Baxley | Address: 2047 Riverlawn Dr, Kingwood, TX 77339 | Phone: 281-660-7638 | Email: hq@galaxysportsedge.com (Gmail login: baxley.garrett@gmail.com)
+RULES: Never bypass CAPTCHAs or 2FA (pause and ask Garrett). Never click final Submit without pausing for Garrett's 1-click confirmation on the review screen.
+
+STEP 1 — VERIFY IF MOZILLA WAS ALREADY SUBMITTED:
+1. Open Gmail (baxley.garrett@gmail.com AND hq@galaxysportsedge.com if accessible) and search for: "mozilla" OR "tfaforms" OR "Human-Scale AI".
+2. If a submission receipt/confirmation email exists for the Mozilla Human-Scale AI Incubator (Nov 2026), log the confirmation ID/date and SKIP Step 2.
+3. If NO receipt is found, proceed immediately to Step 2.
+
+STEP 2 — MOZILLA HUMAN-SCALE AI INCUBATOR ($300,000 Year 1 -> $500,000, DUE NOV 20 11:59 PM PT):
+1. Navigate to: https://mozillafoundation.tfaforms.net/f/humanscaleai
+2. Gate selections:
+   - Applicant Type: For-profit or other organization
+   - Name/Contact/Location: Garrett Baxley · hq@galaxysportsedge.com · 281-660-7638 · 2047 Riverlawn Dr, Kingwood, TX 77339 (United States)
+   - Human-Scale AI Principles: Check ALL THREE (Small, Intentional, Tailored)
+   - Project Stage: Deployed with early users (less than 100 users)
+   - Early Signals: Check Users, Open/Community, Downstream adoption
+   - Core functionality depends on frontier AI model API?: No
+   - Largest parameter count: My project does not use AI models directly
+   - Charitable purpose / meaningful public benefit?: Yes
+   - Work in the open: Check ALL FOUR (Open sourcing code/assets, Publishing educational materials, Publishing research papers, Openly sharing datasets)
+3. Open Google Doc "GSE &amp; GSI Complete Founder Execution Pack" (https://docs.google.com/document/d/1AQqwZV5hWi3dnr4dN_MCgWpTJ0IzhZdfDOMYgAg_OF4/edit) Section 1 ("Complete Copy-Paste Answers for All 15 Mozilla Questions") and paste Questions 1 through 15 verbatim into the form.
+4. PAUSE on the final Review/Submit screen and ask Garrett to click Submit.
+
+STEP 3 — SHOPHAND $5,000 SMALL BUSINESS BOOST GRANT (DUE NOV 30, 2026):
+1. Navigate to: https://www.shophand.com/small-business-boost-grant
+2. Follow Shophand on Instagram, X/Twitter, LinkedIn, and Facebook (linked on that page).
+3. Open Google Doc "GSE Ready-to-Submit Grants &amp; Credit Follow-Ups" (https://docs.google.com/document/d/1yhoMxtHtMPc7J0aqb4zlMd25D3F1kwb3uhWzWKEyyb4/edit) Section 4.1 and paste the verified GALAXY SPORTS NETWORK LLC answers (Founded: 2026, 1 Employee, $0 pre-revenue).
+4. PAUSE before final Submit for Garrett's review.
+
+STEP 4 — MOZILLA FELLOWSHIPS NOMINATION ($125K, DUE NOV 30) &amp; BUSINESS FREEDOM GRANT ($1K, DUE DEC 31):
+1. Open https://mozillafoundation.tfaforms.net/f/fellowshipnominations and fill Garrett Baxley / GSI clinical open-hardware phase-transition fellowship pitch from the same Execution Pack doc; PAUSE before Submit.
+2. Open Awesome Foundation (https://www.awesomefoundation.org/en/submissions/new) — note window opens Dec 1–10; save/confirm Section 5.3 copy from Doc 1yhoMxtHtMPc7J0aqb4zlMd25D3F1kwb3uhWzWKEyyb4 is ready.</pre>
+  </section>
+
+  <!-- MISSION 2 -->
+  <section class="mission cash" id="m2">
+    <div class="mission-head">
+      <div>
+        <span class="badge cash">Mission 2 — FAST CASH ($1,200–$4,500+ &amp; $150 Refund)</span>
+        <h2>Midpage Refund + Tricia Closeout + 7 H1 Prospect Previews + 6 Credit Follow-Ups</h2>
+        <div class="meta">Updates your staged Gmail drafts with clean numbers, fixed phone, and live Vercel preview links. Pauses at Send.</div>
+      </div>
+      <div class="controls">
+        <label class="done-toggle"><input type="checkbox" data-mission="m2" /> Done</label>
+        <button class="copy-btn" onclick="copyPrompt('p2', this)">Copy Mission 2</button>
+      </div>
+    </div>
+<pre id="p2">BROWSER AGENT MISSION 2 — IMMEDIATE CASH &amp; GMAIL DRAFTS
+Open Gmail logged in as baxley.garrett@gmail.com.
+RULE: Never click Send on any email automatically. Clean/stage every draft, attach/link deliverables, and present the final list to Garrett for 1-click Send approval.
+
+1. MIDPAGE REFUND (+$100–$200 refund &amp; stops $100/mo):
+   - Open staged draft: https://mail.google.com/mail/?authuser=baxley.garrett@gmail.com#all?compose=thread-f:1881882876806997536%2Bmsg-a:r3764106842697058429
+   - Verify recipient is support@midpage.ai and billing cancellation + refund request are clear. Leave ready to Send.
+
+2. CHARCUTERIE CHICK CLOSEOUT ($1,200 balance of $1,500 Option C after $300 Zelle WFCT22WPYM6X):
+   - Open staged draft to Tricia: https://mail.google.com/mail/?authuser=baxley.garrett@gmail.com#all?compose=thread-f:1881666391723242356%2Bmsg-a:r6096657563125105375
+   - Verify phone in signature is 281-660-7639 (NOT 832-458-8180, which is Tricia's).
+   - Add link to her Drive Closeout Folder (https://drive.google.com/drive/folders/1FhUpvgyV-4AANWpU5xuUaHz58y_o-xlN) containing charcuterie-chick-business-kit.zip.
+   - Ensure settlement line clearly states: "$1,500 Option C total less $300 Zelle received Nov 16 (WFCT22WPYM6X) = $1,200 launch balance due via Zelle (baxley.garrett@gmail.com / 281-660-7639) or Stripe. Also, please reply with a 3-line reference quote if you're happy with the build!" (If Garrett prefers $300 balance for $600 Option B, highlight that option clearly for him before sending.)
+
+3. 7 H1 PROSPECT DRAFTS ($199–$1,450 each) — ATTACH LIVE PREVIEW LINKS:
+   - Search Gmail Drafts for each of these 7 prospects and insert their newly built live preview URL (on branch/Vercel):
+     * JD Precision Plumbing ($199) -> https://autonomous-revenue-engine-eight.vercel.app/previews/jd-precision.html
+     * Jcar Diecast ($199) -> https://autonomous-revenue-engine-eight.vercel.app/previews/jcar-diecast.html
+     * BFF Bikes ($299) -> https://autonomous-revenue-engine-eight.vercel.app/previews/bff-bikes.html
+     * Durango's Boutique ($249) -> https://autonomous-revenue-engine-eight.vercel.app/previews/durangos-boutique.html
+     * Nacho Padres ($950 / $299 pilot) -> https://autonomous-revenue-engine-eight.vercel.app/previews/nacho-padres.html
+     * Corporate Catering Concierge ($1,450 + $599/mo) -> https://autonomous-revenue-engine-eight.vercel.app/previews/ccc-houston.html
+     * Alpha Paving Industries ($950) -> https://autonomous-revenue-engine-eight.vercel.app/previews/alpha-paving.html
+   - Note: Confirm the PR on Beexly/autonomous-revenue-engine is merged/deployed to Vercel first so all 7 URLs return HTTP 200.
+
+4. 6 STAGED CLOUD-CREDIT REPLY DRAFTS:
+   - Open and verify ready-to-send status on all 6 drafts listed in Doc 1yhoMxtHtMPc7J0aqb4zlMd25D3F1kwb3uhWzWKEyyb4 Section 2 &amp; 5:
+     * Deepgram (naomi.carrigan@deepgram.com)
+     * Databricks / Neon (startup-program@databricks.com)
+     * RunPod (help@runpod.io)
+     * Scaleway (startup-program@scaleway.com)
+     * Together AI (support.together.ai)
+     * Anthropic AI for Science (aiforscience@anthropic.com — Dec 7 batch)
+
+5. PAUSE and show Garrett a clean checklist of every ready draft to click Send.</pre>
+  </section>
+
+  <!-- MISSION 3 -->
+  <section class="mission cash" id="m3">
+    <div class="mission-head">
+      <div>
+        <span class="badge cash">Mission 3 — CHECKOUT RAILS &amp; DIGITAL STOREFRONTS</span>
+        <h2>Stripe Payment Links + Whop Sync + 10 Etsy Printable Suites + 4 Gumroad ZIPs</h2>
+        <div class="meta">Turns every built product and SKU into a live buyable checkout link. Never touches galaxysportsedge.com DNS.</div>
+      </div>
+      <div class="controls">
+        <label class="done-toggle"><input type="checkbox" data-mission="m3" /> Done</label>
+        <button class="copy-btn" onclick="copyPrompt('p3', this)">Copy Mission 3</button>
+      </div>
+    </div>
+<pre id="p3">BROWSER AGENT MISSION 3 — LIVE CHECKOUTS, ETSY &amp; GUMROAD
+1. STRIPE DASHBOARD (Account: acct_1TPE9kQ2wPZMxx60 — GALAXY SPORTS NETWORK LLC):
+   - Open https://dashboard.stripe.com/payment-links
+   - Verify existing link https://buy.stripe.com/8x23cxb6FanJail8JT14405 — check exact dollar amount and note it for Tricia's invoice.
+   - Verify the 3 GSE Founding Price IDs ($4.99/mo price_1TrOEIQ2wPZMxx60sgo6r9K5, $14.99/mo, $24.99/mo) have active Payment Links.
+   - Remind Garrett he can run WolfPrimeV7/scripts/unlock_stripe_links.ps1 locally to mint SKU-01..SKU-08 in 10 seconds, OR create Payment Links for:
+     * SKU-01 ($9.99) | SKU-02 ($29) | SKU-03 ($249) | SKU-04 ($950) | SKU-06 ($59.99/mo)
+
+2. WHOP (biz_jzvuDvevsatKWi — CRITICAL GUARD: NEVER MODIFY galaxysportsedge.com OR www.galaxysportsedge.com DNS):
+   - Open https://whop.com/dashboard/biz_jzvuDvevsatKWi
+   - Verify payout bank account is connected.
+   - Confirm/retrieve the 6 checkout links (WHOP_CHECKOUT_PRIMETIME_STANDARD, THANKSGIVING_STANDARD, SUNDAY_STANDARD, MEMBERSHIP_FOUNDING, MEMBERSHIP_STANDARD, MEMBERSHIP_REST_OF_SEASON) and sync app_PrbVglxvAeazeA with https://www.galaxysportsedge.com/products.json.
+   - PAUSE before publishing galaxy-sports-edge.whop.site for Garrett's confirmation.
+
+3. ETSY SHOP MANAGER (10 FINISHED Q4 PRINTABLE SUITES):
+   - Open Etsy Shop Manager -> Listings -> Drafts.
+   - Inspect the 10 queued digital printable suites; verify pricing/files are attached, then PAUSE for Garrett's 1-tap Publish confirmation.
+
+4. GUMROAD (https://signalorigin.gumroad.com):
+   - Download the 4 ready ZIPs from Drive folder https://drive.google.com/drive/folders/1iMb_DLcCk0FbMnYL0AHfxIfRf-nN_YQ0 :
+     1) Meta-Tracking-Audit-Workbook-v1.zip ($19 — ensure URL slug matches /l/meta-tracking-audit-workbook)
+     2) sku-02-tx-contractor-pack.zip ($29 — TX RCLA + 53.284 Lien Waivers + Rule 3.291 Tax Calc)
+     3) catering-shopify-kit-v1.zip ($199 — White-Label Shopify OS 2.0 Catering Theme &amp; Bookings Kit)
+     4) CRC_SALES_PACK.zip ($299-$499 B2B Data Integrity Kit)
+   - Fill titles, prices, descriptions, and upload ZIPs. PAUSE before clicking Publish on each listing.</pre>
+  </section>
+
+  <!-- MISSION 4 -->
+  <section class="mission ops" id="m4">
+    <div class="mission-head">
+      <div>
+        <span class="badge ops">Mission 4 — STOP CASH BLEED (Saves +$250–$400/mo)</span>
+        <h2>Neon Idle Branches + Clouds-bruh Hosting + Render Hook + Paid AI Topups + Skills Trial</h2>
+        <div class="meta">Audits every recurring drain and pauses before deleting/cancelling anything.</div>
+      </div>
+      <div class="controls">
+        <label class="done-toggle"><input type="checkbox" data-mission="m4" /> Done</label>
+        <button class="copy-btn" onclick="copyPrompt('p4', this)">Copy Mission 4</button>
+      </div>
+    </div>
+<pre id="p4">BROWSER AGENT MISSION 4 — STOP MONTHLY CASH BLEED
+RULE: Do NOT delete databases/branches or cancel accounts silently. Inventory exact idle items and monthly cost, then PAUSE for Garrett's 1-click confirmation.
+
+1. NEON POSTGRES (Org: org-floral-star-55015944 / summer-brook-99380762):
+   - Open Neon Console -> Branches. List all non-main/dev branches older than 7 days (October invoice showed ~$105/mo burned on forgotten dev branches). Present exact delete list to Garrett.
+
+2. CLOUDS-BRUH HOSTING (~$75/mo parked):
+   - Open Medusa Cloud / Railway / Render / Vercel project for Clouds-bruh (Lumera). Check active billing; stage pause/suspend until first Starter Kit sale.
+
+3. RENDER DEPLOY HOOK:
+   - Open Render Dashboard -> Sports service -> Settings. Check why "deploy failed for Sports" emails are firing (production is on Vercel); stage disabling the failing Render deploy webhook.
+
+4. PAID AI AUTO-TOPUPS:
+   - Check Billing / Auto-Recharge settings on xAI Grok, Nous Research, OpenRouter ($7.19 balance), Replit, and Firecrawl. Turn OFF auto-recharge so background fleet runs stay $0 on NVIDIA NIM + Alibaba QwenCloud.
+
+5. GOOGLE SKILLS PRO TRIAL &amp; LATITUDE:
+   - Confirm Google Skills Pro trial cancel job is active for Nov 23, 2026 (blocks $29 charge on Dec 19).
+   - Open Latitude and claim gse-claude-content before Nov 26, 2026.</pre>
+  </section>
+
+  <!-- MISSION 5 -->
+  <section class="mission ops" id="m5">
+    <div class="mission-head">
+      <div>
+        <span class="badge ops">Mission 5 — FREE CLOUD &amp; AI CREDITS ($45K–$100K+ Value)</span>
+        <h2>Strict AWS Sequence (Explore → Kiro → Activate) + Nirvana + Cloudflare + 11Labs + MS + Metaculus</h2>
+        <div class="meta">Follows the exact dependency order so you never forfeit AWS Kiro or Explore $100 credits.</div>
+      </div>
+      <div class="controls">
+        <label class="done-toggle"><input type="checkbox" data-mission="m5" /> Done</label>
+        <button class="copy-btn" onclick="copyPrompt('p5', this)">Copy Mission 5</button>
+      </div>
+    </div>
+<pre id="p5">BROWSER AGENT MISSION 5 — CLOUD &amp; AI STARTUP CREDITS (STRICT ORDER)
+Company: GALAXY SPORTS NETWORK LLC | Email: hq@galaxysportsedge.com | Site: https://www.galaxysportsedge.com | NVIDIA Inception Org ID: 1086418431979798
+
+1. AWS STRICT 3-STEP SEQUENCE (DO NOT SKIP ORDER — Account 183295455211, us-east-2):
+   - STEP A (WHILE ON FREE PLAN): Open AWS Console Home -> Explore AWS widget. Complete 5 free/low-cost activities ($20 each = $100 extra credits): AWS Budgets cost budget, Bedrock playground prompt, Lambda app, DynamoDB table, EC2/RDS (terminate EC2/RDS immediately after credit posts). Do NOT join an Organization or activate advanced features yet!
+   - STEP B (UPGRADE TO PAID ONLY, NOT ADVANCED FEATURES): In AWS Billing/Settings, verify/update account email to hq@galaxysportsedge.com (required by NVIDIA Inception rule), settle any $25.73 balance if prompted (PAUSE for Garrett), upgrade Free -> Paid (set $20/mo spend limit), and apply for AWS KIRO STARTUP CREDITS FIRST (closes Dec 31, 2026 — active Activate credits disqualify Kiro, but Kiro allows Activate after!).
+   - STEP C (AFTER KIRO): Log into NVIDIA Inception Portal (https://www.nvidia.com/en-us/startups/) -> request AWS Activate Portfolio Partner Org ID -> apply at https://aws.amazon.com/startups/credits ($5K-$25K).
+
+2. FAST ROLLING CREDITS (Copy-Paste Answers in Drive Doc 1yhoMxtHtMPc7J0aqb4zlMd25D3F1kwb3uhWzWKEyyb4 §3-4):
+   - Nirvana Labs Founders Tier ($1,000, 100% covered): https://nirvanalabs.io/startup-credits
+   - Cloudflare for Startups Tier 3 ($10,000): https://www.cloudflare.com/startups/
+   - ElevenLabs Startup Grant (~$5,500): https://elevenlabs.io/grants-application
+   - Microsoft Founders Hub ($5,000 Azure): https://www.microsoft.com/en-us/startups
+
+3. FREE TOOLS &amp; METACULUS BOT UNLOCK:
+   - Metaculus (username GalaxySportsEdge, hq@galaxysportsedge.com): finish password/API token setup -> copy METACULUS_TOKEN for WolfPrimeV7/work/metaculus-bot/.
+   - Fish Audio S2.1 Pro Free API (expires Nov 30): grab free API key at https://fish.audio/app/developers/get-started/
+   - CodeRabbit OSS: sign in with GitHub (Beexly) at https://www.coderabbit.ai/oss and enable on Beexly/Sports.
+   - PAUSE at all 2FA, card-on-file, and final Submit buttons.</pre>
+  </section>
+
+  <!-- MISSION 6 -->
+  <section class="mission ops" id="m6">
+    <div class="mission-head">
+      <div>
+        <span class="badge ops">Mission 6 — FEDERAL GRANTS, GSI CURE &amp; NCISD RFP ($305K–$28M)</span>
+        <h2>TX SOS $0 Cure + TX AP-201 + SAM.gov + NSF/DOE/ARPA-H/MTEC/DARPA + NCISD RFP 121.26</h2>
+        <div class="meta">All PDFs &amp; worksheets pre-built in Drive. Pauses at EIN, 3 director names, and legal attestations.</div>
+      </div>
+      <div class="controls">
+        <label class="done-toggle"><input type="checkbox" data-mission="m6" /> Done</label>
+        <button class="copy-btn" onclick="copyPrompt('p6', this)">Copy Mission 6</button>
+      </div>
+    </div>
+<pre id="p6">BROWSER AGENT MISSION 6 — GOV, NONPROFIT &amp; FEDERAL R&amp;D GRANTS
+Canonical Applicant: GALAXY SPORTS NETWORK LLC (TX SOS #0806617184, Formed 2026, 2047 Riverlawn Dr, Kingwood, TX 77339, PI: Garrett Baxley, hq@galaxysportsedge.com, 281-660-7638).
+RULE: Pause on [YOUR FEDERAL EIN], 3 director names, notarization/signatures, and final legal Submit buttons.
+
+1. GALAXY SCIENCE INSTITUTE TX SOS $0 CURE (EXPIRES DEC 10, 2026):
+   - Open Texas SOSDirect for Tracking #15043440630001.
+   - Paste verbatim Article 3 (Board-managed, min 3 directors), Article 4 (No Members), and 501(c)(3) Scientific Purpose + Dissolution clause from Doc 1AQqwZV5hWi3dnr4dN_MCgWpTJ0IzhZdfDOMYgAg_OF4 Section 4.
+   - PAUSE for Garrett to confirm the 3 director names &amp; submit ($0 fee).
+
+2. FREE TEXAS SALES &amp; USE TAX PERMIT (FORM AP-201, $0):
+   - Open https://comptroller.texas.gov/taxes/permit/ and pre-fill GALAXY SPORTS NETWORK LLC details; PAUSE at SSN/EIN &amp; Submit.
+
+3. SAM.GOV + NSF SBIR ($305K) + DOE SBIR ($919.5K, DUE DEC 16) + ARPA-H + MTEC + DARPA ERIS (DUE DEC 31):
+   - SAM.gov: start/resume entity registration for GALAXY SPORTS NETWORK LLC (PAUSE at EIN &amp; bank/notarized letter).
+   - NSF SBIR (https://seedfund.nsf.gov/): paste GSI UPTE Phase I Project Pitch from Drive Doc 1l9EYyhsQ0FXKCQSf7uwcG19d29P3v3lFkA7GEBA72rc; PAUSE before Submit.
+   - DOE ConnectWerx FY26 Fall SBIR (https://sbir-sttr.connectwerx.org/portfolio-items/fy26-fall-opportunity/, closes Dec 16 1:00 PM CT): pre-fill Topic 19, Topic 15, Topic 16 pitches from Doc 1AQqwZV5hWi3dnr4dN_MCgWpTJ0IzhZdfDOMYgAg_OF4 Section 2.
+   - ARPA-H (https://solutions.arpa-h.gov) &amp; DoD MTEC (https://mtec-sc.org/solicitations/multitopic-26): upload formatted PDFs from Drive folder https://drive.google.com/drive/folders/1LfNqD4C9HYDAAz_-3zns5tj6edeVewdq
+   - DARPA ERIS (closes Dec 31 12:00 PM ET): stage 5-min pitch upload.
+
+4. NEW CANEY ISD RFP 121.26 (Q&amp;A DEC 2, CLOSES DEC 9 2:00 PM CT):
+   - Open https://newcaneyisd.ionwave.net/PublicDetail.aspx?bidID=99&amp;SourceType=1 and register/login.
+   - Open TEC Form 1295 portal (https://www.ethics.state.tx.us/filinginfo/1295/): Box 2 = "New Caney ISD", Box 3 = "RFP# 121.26".
+   - Follow pre-filled answers in Drive Folder https://drive.google.com/drive/folders/1ens_pHHMUvAmSVBDSEZ0RFDiVp8oplAw (NCISD_121.26_BID_WORKSHEET.md). PAUSE at signatures/notarization/final upload.</pre>
+  </section>
+</div>
+
+<script>
+  function copyPrompt(id, btn) {
+    const text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.innerText;
+      btn.innerText = "Copied!";
+      btn.classList.add("copied");
+      setTimeout(() => {
+        btn.innerText = orig;
+        btn.classList.remove("copied");
+      }, 1800);
+    });
+  }
+  document.querySelectorAll('input[data-mission]').forEach(cb => {
+    const key = 'beexly_mission_' + cb.dataset.mission;
+    cb.checked = localStorage.getItem(key) === '1';
+    cb.addEventListener('change', () => {
+      localStorage.setItem(key, cb.checked ? '1' : '0');
+    });
+  });
+</script>
+</body>
+</html>
