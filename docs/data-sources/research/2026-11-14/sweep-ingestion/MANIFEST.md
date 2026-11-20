@@ -510,3 +510,20 @@ on time to throw (Jaguars -0.17s), W4 Flores Paradox scheme,
 W13 Watt sack-pressure persistence, F2 interior defensive line
 production grading, F4 linebacker contact rate vs alignment.
 Running corpus total: 12,461 records.
+
+## Delta 2026-11-19 IG For You PM (landed 2026-11-19)
+
+Source: ~/workspace/ig-for-you-sweep/reports/2026-11-19-PM.md.
+Sweep: 60 feed positions (11 ads excluded, 49 organic); 48 NEW
+after dedupe (1 duplicate skipped at collection); 0 NOCODE.
+Delta file delta-2026-11-19-ig-pm.jsonl: 48 records (20 dossier +
+28 inventoried-only), all shortcode-keyed, 0 duplicates,
+0 collisions, 41,646 bytes. Strongest items: Higgsfield Black
+Friday pricing post (UNVERIFIED claim; deadline unsettled between
+Nov 20 countdown and Nov 30 per trackers), Anthropic IPO debut
+(verified via WSJ/AP/Reuters wires), JPMorgan vendor cyberattack
+(verified via bank statement and coverage). Running corpus total:
+12,509 records. All 2026-11-19 runs ingested so far: IG AM,
+X AM, IG PM. The 2026-11-19 X analytics AM run is incomplete
+(Lane B browser result not received; staging holds Lane A and
+Lane C raw files only, nothing published) and remains pending.
