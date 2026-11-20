@@ -181,6 +181,37 @@ describe("Banned-phrase scanner", () => {
     ).toBe(true);
   });
 
+  it("exempts the 2026-11-20 sweep's padlock annotation and Lock→JSN chart arrow (trust-gate parity)", () => {
+    // 2026-11-20 x-intel sweep shape: 'Display name "Follow @FTNFantasy"
+    // (lock icon), @FTNData.' — a UI glyph for a protected account.
+    const line = 'Display name "Follow @FTNFantasy" (lock icon), @FTNData. 1,276 posts.';
+    expect(scanForBannedPhrases(line).some((h) => h.claimId === "banned.lock")).toBe(true);
+    expect(
+      scanForBannedPhrases(line, { lockDigestExempt: true }).some((h) => h.claimId === "banned.lock"),
+    ).toBe(false);
+    // A residual claim on the same line still hits, even with the annotation.
+    expect(
+      scanForBannedPhrases("Display name (lock icon) and this one is a lock for Sunday.", {
+        lockDigestExempt: true,
+      }).some((h) => h.claimId === "banned.lock"),
+    ).toBe(true);
+    // The same sweep's chart-title arrow form: "@PFF Lock→JSN chart rows 2–5"
+    // — capital-L surname + uppercase player token, a shape slang never takes.
+    expect(
+      scanForBannedPhrases("@PFF Lock→JSN chart rows 2–5 identities.").some(
+        (h) => h.claimId === "banned.lock",
+      ),
+    ).toBe(false);
+    // Conservative temporal pin: lowercase "lock→close" line-locking prose is
+    // still flagged by this library scanner (trust-gate blanks it; this
+    // scanner's reviewNote says to phrase line close instead).
+    expect(
+      scanForBannedPhrases("lock→close is the moment the line freezes.").some(
+        (h) => h.claimId === "banned.lock",
+      ),
+    ).toBe(true);
+  });
+
   it("exempts the Week-9 lane-report surname shapes (leaderboard parenthetical, kebab slug)", () => {
     const isLock = (text: string, opts?: { lockDigestExempt?: boolean }) =>
       scanForBannedPhrases(text, opts).some((h) => h.claimId === "banned.lock");

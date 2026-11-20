@@ -633,7 +633,7 @@ const LOCK_SURNAME_PARENTHETICAL_AND_SLUG =
 // still fails (the lockDigestExempt gating test pins that), as do "my lock of
 // the day", "bills/lock/chiefs" and "the total is a Lock 2.5u".
 const LOCK_SURNAME_DIGEST_SHAPES =
-  /\bLock\s+\(Weeks?\s+\d+(?:\s*[-,]\s*\d+)*\s*:|\bLock\s+[+-]\d+\.\d+\s+EPA\b|\bLock\s+chart\b|\bLock's\b/g;
+  /\bLock\s+\(Weeks?\s+\d+(?:\s*[-,]\s*\d+)*\s*:|\bLock\s+[+-]\d+\.\d+\s+EPA\b|\bLock\s+chart\b|\bLock's\b|\bLock(?:→|->)[A-Z][A-Za-z.'-]*/g;
 
 // Mirror scripts/guardrails/trust-gate.mjs LOCK_STAT_TABLE_SAFE_CONTEXT: the
 // QUOTED-LEADERBOARD forms the x-intel sweeps paste verbatim into AGENTS.md
@@ -667,6 +667,15 @@ const LOCK_DIGEST_PROSE_SHAPES =
 // prose — "priced with a lock, 2 units" — still hits.
 const LOCK_PADLOCK_PROFILE_SHAPE =
   /\bwith a lock,?\s*\d[\d,]*\s+(?:posts?|followers?)\b/gi;
+
+// Mirror scripts/guardrails/trust-gate.mjs LOCK_PADLOCK_ICON_ANNOTATION: the
+// same protected-profile padlock transcribed as a parenthetical glyph
+// annotation — 'Display name "Follow @FTNFantasy" (lock icon), @FTNData.'
+// (2026-11-20 x-intel sweep). Memory-doc-scoped like the shape above; the
+// parenthetical + icon-noun anchor is a shape betting slang never takes, and
+// blank-then-recheck leaves any residual standalone "lock" on the line a hit.
+const LOCK_PADLOCK_ICON_ANNOTATION =
+  /\(\s*lock\s+(?:icon|glyph|symbol)\s*\)/gi;
 
 /**
  * Blank double-quoted spans on a line that is a verbatim transcription of a
@@ -781,6 +790,7 @@ export function scanForBannedPhrases(
         if (lockDigestExempt) {
           subject = subject.replace(LOCK_DIGEST_PROSE_SHAPES, " ");
           subject = subject.replace(LOCK_PADLOCK_PROFILE_SHAPE, " ");
+          subject = subject.replace(LOCK_PADLOCK_ICON_ANNOTATION, " ");
           subject = subject.replace(LOCK_STAT_TABLE_SAFE_CONTEXT, " ");
         }
       }

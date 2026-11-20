@@ -599,6 +599,16 @@ const LOCK_DIGEST_PROSE_SHAPES =
 const LOCK_PADLOCK_PROFILE_SHAPE =
   /\bwith a lock,?\s*\d[\d,]*\s+(?:posts?|followers?)\b/gi;
 
+// The same protected-profile padlock, transcribed as a PARENTHETICAL GLYPH
+// ANNOTATION: 'Display name "Follow @FTNFantasy" (lock icon), @FTNData.'
+// (2026-11-20 morning x-intel sweep, AGENTS.md). Same kind as the count-
+// anchored shape above — a UI-glyph description in quoted profile data, not
+// a pick claim — and same memory-doc scoping. The parenthetical + icon-noun
+// anchor is a shape betting slang never takes; blank-then-recheck still
+// applies, so a residual standalone "lock" on the same line still hits.
+const LOCK_PADLOCK_ICON_ANNOTATION =
+  /\(\s*lock\s+(?:icon|glyph|symbol)\s*\)/gi;
+
 // VERBATIM QUOTED THIRD-PARTY COPY. Root memory docs transcribe rivals' and
 // analysts' profiles and post text "as printed"; that copy carries wording this
 // platform would never ship — a pundit's bio ("AI-assisted content & analysis")
@@ -784,6 +794,7 @@ function scanText(text, relPath) {
             subject = subject
               .replace(LOCK_DIGEST_PROSE_SHAPES, " ")
               .replace(LOCK_PADLOCK_PROFILE_SHAPE, " ")
+              .replace(LOCK_PADLOCK_ICON_ANNOTATION, " ")
               .replace(LOCK_STAT_TABLE_SAFE_CONTEXT, " ");
           }
         } else if (
