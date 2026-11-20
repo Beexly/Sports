@@ -72,15 +72,91 @@ export function secondaryFreeLaneConfig(env: Env = process.env): {
   if (env["CONTENT_FREE_LANE_ENABLED"] !== "true") return null;
   const baseUrl = env["FREE_LANE_SECONDARY_BASE_URL"]?.trim();
   const model = env["FREE_LANE_SECONDARY_MODEL"]?.trim();
-  if (!baseUrl || !model) return null;
-  const apiKey = env["FREE_LANE_SECONDARY_API_KEY"]?.trim();
-  const ledgerPrefix = env["FREE_LANE_SECONDARY_LEDGER_PREFIX"]?.trim() || "free-secondary/";
-  return {
-    baseUrl,
-    model,
-    ...(apiKey ? { apiKey } : {}),
-    ledgerPrefix: ledgerPrefix.endsWith("/") ? ledgerPrefix : `${ledgerPrefix}/`,
-  };
+  if (baseUrl && model) {
+    const apiKey = env["FREE_LANE_SECONDARY_API_KEY"]?.trim();
+    const ledgerPrefix = env["FREE_LANE_SECONDARY_LEDGER_PREFIX"]?.trim() || "free-secondary/";
+    return {
+      baseUrl,
+      model,
+      ...(apiKey ? { apiKey } : {}),
+      ledgerPrefix: ledgerPrefix.endsWith("/") ? ledgerPrefix : `${ledgerPrefix}/`,
+    };
+  }
+  return null;
+}
+
+/**
+ * Priority 0-1 $0 failover candidates used ONLY when CONTENT_FREE_LANE_ENABLED=true
+ * and after explicit Cerebras / secondary Free-Lane slots have been attempted or omitted.
+ */
+export function resolvePriorityZeroFreeLanes(
+  env: Env = process.env,
+  nowMs: number = Date.now(),
+): ReadonlyArray<{
+  readonly baseUrl: string;
+  readonly model: string;
+  readonly apiKey: string;
+  readonly ledgerPrefix: string;
+}> {
+  if (env["CONTENT_FREE_LANE_ENABLED"] !== "true") return [];
+  const lanes: Array<{ baseUrl: string; model: string; apiKey: string; ledgerPrefix: string }> = [];
+
+  const nousKey = (env["NOUS_API_KEY"] ?? env["NOUS_PORTAL_API_KEY"])?.trim();
+  const nousPayg = String(env["NOUS_ALLOW_PAYG"] ?? "false").toLowerCase() === "true";
+  const nousCutoffMs = Date.parse("2026-11-23T15:00:00Z");
+  if (nousKey && !nousPayg && nowMs < nousCutoffMs) {
+    lanes.push({
+      baseUrl: (env["NOUS_BASE_URL"] ?? "https://inference-api.nousresearch.com/v1").trim(),
+      model: "qwen/qwen4-max:free",
+      apiKey: nousKey,
+      ledgerPrefix: "free-nous/",
+    });
+  }
+
+  const nimKey = (env["NVIDIA_GSE_API_KEY"] ?? env["NVIDIA_API_KEY"])?.trim();
+  if (nimKey) {
+    lanes.push({
+      baseUrl: "https://integrate.api.nvidia.com/v1",
+      model: "nvidia/nemotron-3.5-lightning-30b-a3b",
+      apiKey: nimKey,
+      ledgerPrefix: "free-nim/",
+    });
+  }
+
+  const aliyunKey = env["ALIYUN_TOKENPLAN_KEY"]?.trim();
+  if (aliyunKey) {
+    lanes.push({
+      baseUrl: "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+      model: "qwen4-max",
+      apiKey: aliyunKey,
+      ledgerPrefix: "free-aliyun/",
+    });
+  }
+
+  const cfToken = env["CLOUDFLARE_API_TOKEN"]?.trim();
+  const cfAccount = (env["CLOUDFLARE_ACCOUNT_ID"] ?? "46f1c1d1c65d19f3f983713b3a8ab67c").trim();
+  if (cfToken && cfAccount) {
+    lanes.push({
+      baseUrl: `https://api.cloudflare.com/client/v4/accounts/${cfAccount}/ai/v1`,
+      model: "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      apiKey: cfToken,
+      ledgerPrefix: "free-cf-ai/",
+    });
+  }
+
+  const nanoKey = env["NANOGPT_API_KEY"]?.trim();
+  const nanoDisabled = String(env["NANOGPT_DISABLED"] ?? "false").toLowerCase() === "true";
+  const nanoCutoffMs = Date.parse(env["NANOGPT_SUBSCRIPTION_CUTOFF"] ?? "2026-12-05T00:00:00Z");
+  if (nanoKey && !nanoDisabled && nowMs < nanoCutoffMs) {
+    lanes.push({
+      baseUrl: "https://nano-gpt.com/api/subscription/v1",
+      model: (env["NANOGPT_SUB_MODEL"] ?? "Qwen/Qwen3-235B-A22B-Instruct-2507").trim(),
+      apiKey: nanoKey,
+      ledgerPrefix: "free-nanogpt-sub/",
+    });
+  }
+
+  return lanes;
 }
 
 export function isSecondaryFreeLaneConfigured(env: Env = process.env): boolean {
@@ -142,6 +218,24 @@ export async function generateContentMessages(
             temperature: request.temperature,
             fetchImpl: request.fetchImpl,
             ledgerPrefix: secondary.ledgerPrefix,
+          });
+        } catch (error) {
+          if (!(error instanceof OpenAiCompatError)) throw error;
+        }
+      }
+
+      for (const lane of resolvePriorityZeroFreeLanes(env)) {
+        try {
+          return await callOpenAiCompatMessages({
+            baseUrl: lane.baseUrl,
+            apiKey: lane.apiKey,
+            model: lane.model,
+            system: request.system,
+            user: request.user,
+            maxTokens: request.maxTokens,
+            temperature: request.temperature,
+            fetchImpl: request.fetchImpl,
+            ledgerPrefix: lane.ledgerPrefix,
           });
         } catch (error) {
           if (!(error instanceof OpenAiCompatError)) throw error;

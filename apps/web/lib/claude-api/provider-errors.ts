@@ -122,3 +122,26 @@ export class VertexMessagesError extends Error {
     this.modelName = args.modelName;
   }
 }
+
+/* ── Vercel AI Gateway ────────────────────────────────────────────────── */
+
+export class VercelGatewayConfigError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "VercelGatewayConfigError";
+  }
+}
+
+export class VercelGatewayMessagesError extends Error {
+  readonly status: number;
+  readonly durationMs: number;
+  readonly modelName: string;
+
+  constructor(message: string, args: ProviderMessagesErrorArgs) {
+    super(message);
+    this.name = "VercelGatewayMessagesError";
+    this.status = args.status;
+    this.durationMs = args.durationMs;
+    this.modelName = args.modelName;
+  }
+}

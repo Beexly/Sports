@@ -107,6 +107,11 @@ export default function CalibrationProofRoomPage(): JSX.Element {
             <div className="mt-2 text-xs text-ion-2">{ledger.scope.clvSign}</div>
           </div>
         </section>
+        <p className="mt-3 max-w-3xl text-xs leading-relaxed text-ion-2">
+          Development disclosure: pipeline-wide counts above include early development picks
+          settled before final model wiring was completed. They remain on the public log for
+          auditability, separate from finished-release evaluation.
+        </p>
 
         {/* Confidence distribution */}
         <section className="mt-12 surface-card p-6 sm:p-8">

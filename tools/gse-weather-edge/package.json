@@ -1,0 +1,22 @@
+{
+  "name": "gse-weather-edge",
+  "version": "0.1.0",
+  "description": "Leak-safe, as-of NFL weather feature loader (Open-Meteo) for the Galaxy Sports Edge feature store. Standalone reference module — integrate behind a MODEL_VERSION gate.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist", "src"],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "tsc && node --test test.mjs"
+  },
+  "keywords": ["nfl", "weather", "open-meteo", "as-of", "feature-store", "galaxy-sports-edge"],
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "@types/node": "^20.14.0"
+  },
+  "engines": { "node": ">=18" }
+}

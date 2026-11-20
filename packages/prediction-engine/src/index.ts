@@ -5892,6 +5892,80 @@ export { verifyAndBrandCausalReceipt } from "./verification/neuro-symbolic-z3-ve
 export { evaluateEmissionGate, isEmission } from "./edge-lab/emission-gate.js";
 export * from "./engine/mega-sweep-2026-11-06-reasoning-engine.js";
 export * from "./engine/universal-nfl-metric-and-situational-engine.js";
+export {
+  evaluateLivePlaybookAndSplitFieldMatchup,
+  shrinkPlayerMetricByStability,
+  priceOverdispersedNegativeBinomialProp,
+  americanToImpliedProb,
+  computeBoundedLogitTdAndAeroDrag,
+  debiasExpertProjectionAndScoreStacks,
+  evaluateLiveCorpusPlaybookAnd4BookBundle,
+  EAGER_ERICKSON_STABILITY_R,
+} from "./nfl/live-corpus-playbook-and-4book-intelligence.js";
+export type {
+  OffensePlaybookFamily,
+  DefenseFrontFamily,
+  OffensiveSurface,
+  SplitFieldCoverageCheck,
+  PassProtectionAdjustment,
+  SplitFieldMatchupInput,
+  SplitFieldMatchupResult,
+  DynamicKickoff35Input,
+  DynamicKickoff35Result,
+  StabilityMetricKey,
+  StabilityShrinkInput,
+  StabilityShrinkResult,
+  NegBinPropPricingInput,
+  NegBinPropPricingResult,
+  BoundedTdAndAeroInput,
+  BoundedTdAndAeroResult,
+  ExpertDebiasAndStackInput,
+  ExpertDebiasAndStackResult,
+  LiveCorpusPlaybookAnd4BookInput,
+  LiveCorpusPlaybookAnd4BookResult,
+} from "./nfl/live-corpus-playbook-and-4book-intelligence.js";
+export { computeDynamicKickoff35HiddenYardageEp } from "./nfl/osf-special-teams-ep-wp-and-cv.js";
+export {
+  computeTrenchIsolationPbwrRbwr,
+  computeTrueRoutesRunAndAssBreakout,
+  computeRbCreationVsLineAndBellcowTrend,
+  computeQbProgressionAndSuccessSplit,
+  computeNonSneakSuccessRateGuard,
+  classifyPassRushCoverageRegime,
+  computeStrictForcedMissedTackleIndex,
+  evaluateBellcowTrajectorySlope,
+  evaluateSchemeConceptMatchupMatrix,
+  validateCrossChartingConsistency,
+  computeGarbageTimeAdjustedQbrProxy,
+  evaluateWhitefieldTrenchIsolationBundle,
+} from "./nfl/whitefield-and-trench-isolation-metrics.js";
+export type {
+  TrenchIsolationInput,
+  TrenchIsolationResult,
+  TrueRoutesAndAssInput,
+  TrueRoutesAndAssResult,
+  RbCreationAndBellcowInput,
+  RbCreationAndBellcowResult,
+  QbProgressionAndSuccessInput,
+  QbProgressionAndSuccessResult,
+  NonSneakSuccessGuardInput,
+  NonSneakSuccessGuardResult,
+  PassRushCoverageRegimeLabel,
+  PassRushCoverageRegimeInput,
+  PassRushCoverageRegimeResult,
+  StrictFmtInput,
+  StrictFmtResult,
+  BellcowWeeklyPoint,
+  BellcowTrajectorySlopeResult,
+  SchemeConceptMatchupInput,
+  SchemeConceptMatchupResult,
+  CrossChartingQcInput,
+  CrossChartingQcResult,
+  GarbageTimeQbrProxyInput,
+  GarbageTimeQbrProxyResult,
+  WhitefieldTrenchIsolationInput,
+  WhitefieldTrenchIsolationResult,
+} from "./nfl/whitefield-and-trench-isolation-metrics.js";
 export * from "./retrieval/pinecone-corpus-retriever.js";
 
 

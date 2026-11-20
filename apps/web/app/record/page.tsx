@@ -131,6 +131,12 @@ export default function RecordPage(): JSX.Element {
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-ion-2">
             {ledger.scope.pipelineLedger}
           </p>
+          <p className="mt-2 max-w-3xl text-xs leading-relaxed text-ion-2">
+            Development disclosure: the pipeline totals below include early picks settled while
+            the model and settlement wiring were still being built and calibrated. All rows stay
+            visible here permanently for audit transparency; this composite total is not a
+            finished-engine benchmark.
+          </p>
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               label="Settled W-L-P"

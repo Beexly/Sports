@@ -120,20 +120,15 @@ export function PaywallRevealCard({
     if (isUnlocked) return;
     try {
       const searchParams = new URLSearchParams(window.location.search);
-      const isWhopRedirect =
-        searchParams.get("source") === "whop" ||
-        searchParams.get("utm_source") === "whop";
       const urlPackage = searchParams.get("package") || searchParams.get("pack");
       const urlSessionId =
         searchParams.get("session_id") ||
         searchParams.get("whop_token") ||
-        searchParams.get("membership_id") ||
-        (isWhopRedirect ? urlPackage || "whop_redirect_verified" : null);
+        searchParams.get("membership_id");
       const isAllAccessPack =
         urlPackage === "global-multisport-pro" ||
         urlPackage === "week8-all-access" ||
-        urlPackage === "season-membership" ||
-        isWhopRedirect;
+        urlPackage === "season-membership";
       const matchesThisCard = !urlPackage || isAllAccessPack || urlPackage === pkg.slug;
 
       const candidateToken =

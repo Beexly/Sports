@@ -115,7 +115,7 @@ const VENDOR_MAINTAINED = new Set([
   "Datadog",
   "Exa",
   "Figma",
-  "Firecrawl",
+  "Crawl4AI",
   "GitHub",
   "Google",
   "Google LLC",
@@ -181,7 +181,8 @@ const TASK_PREFERENCES: Readonly<Record<CapabilityTaskClass, readonly string[]>>
     "Litreview",
     "Dossier",
     "Market Researcher",
-    "Firecrawl",
+    "Cloudflare Browser Rendering",
+    "Crawl4AI",
     "Autoresearch agent",
   ],
   NOVA_SECURITY: [

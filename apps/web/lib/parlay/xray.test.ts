@@ -353,4 +353,20 @@ describe("public copy fence", () => {
       expect(d).not.toContain("%");
     }
   });
+
+  it("includes additive studentT4TailDiagnostic with 4 degrees of freedom", () => {
+    const outcome = xrayTicket(
+      [
+        { label: "QB over 250.5 passing yards", americanOdds: -110, role: "OTHER" },
+        { label: "WR1 over 68.5 receiving yards", americanOdds: -110, role: "QB-WR" },
+      ],
+      170,
+    );
+    expect(outcome.ok).toBe(true);
+    if (!outcome.ok) return;
+    expect(outcome.result.studentT4TailDiagnostic).toBeDefined();
+    expect(outcome.result.studentT4TailDiagnostic?.degreesOfFreedom).toBe(4);
+    expect(typeof outcome.result.studentT4TailDiagnostic?.shinHoldPct).toBe("number");
+    expect(outcome.result.studentT4TailDiagnostic?.plainEnglishSummary).toBeTruthy();
+  });
 });

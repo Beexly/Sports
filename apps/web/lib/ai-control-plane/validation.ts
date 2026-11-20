@@ -51,6 +51,7 @@ const PROVIDER_ROUTE_IDS: ReadonlySet<ProviderRouteId> =
     "vertex",
     "cerebras",
     "local",
+    "vercel-gateway",
   ]);
 
 const COST_MODES: ReadonlySet<CostMode> = new Set<CostMode>([

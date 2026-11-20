@@ -327,3 +327,10 @@ export {
   type NeonPoolMonitorCounters,
   type ProbeOptions,
 } from "./neon-pool-monitor.js";
+
+export {
+  resolveNeonHttpConnectionString,
+  createNeonHttpSql,
+  queryNeonHttp,
+  type NeonHttpConfig,
+} from "./neon-http.js";

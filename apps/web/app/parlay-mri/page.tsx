@@ -11,6 +11,10 @@ import { ParlayGenome } from "@/components/parlay/parlay-genome";
 import { ParlayXRay } from "@/components/parlay/parlay-xray";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { TierGatePanel } from "@/components/pricing/tier-gate-panel";
+import {
+  buildRouteJsonLdGraph,
+  serializeJsonLdForScriptTag,
+} from "@/lib/governance/gse_seo_wcag22_and_posthog_516325_pack";
 
 export const metadata: Metadata = {
   title: "Parlay MRI: Free Same-Game Parlay X-Ray",
@@ -29,9 +33,14 @@ export default async function ParlayMriPage() {
   const viewer = await getViewerEntitlements();
   const showGenome = genomeSurfacePublic && viewer.canUseParlayMri;
   const plate = getPlate("no-bet-stillness");
+  const parlayMriJsonLd = serializeJsonLdForScriptTag(buildRouteJsonLdGraph("/parlay-mri"));
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: parlayMriJsonLd }}
+      />
       <Atmosphere />
       <Nav />
 

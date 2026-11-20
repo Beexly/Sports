@@ -22,6 +22,11 @@ import {
   jointThreeLegExceedance,
   type SgpPairing,
 } from "@sports/prediction-engine/src/nfl/sgp-copula.js";
+import {
+  evaluateParlayMri,
+  STUDENT_T_DEGREES_OF_FREEDOM,
+  type SgpLegInput,
+} from "@sports/prediction-engine/src/parlay/parlay_mri_and_store_credit.js";
 
 /**
  * A leg's role describes its relationship to the quarterback leg. The skill
@@ -260,6 +265,19 @@ export interface XrayResult {
   readonly pairs: readonly XrayPairReport[];
   readonly verdict: string;
   readonly verdictTone: XrayVerdictTone;
+  readonly studentT4TailDiagnostic?: {
+    readonly degreesOfFreedom: number;
+    readonly shinHoldPct: number;
+    readonly severityCode: string;
+    readonly plainEnglishSummary: string;
+  };
+}
+
+function mapRoleToArchetype(role: XrayRole, idx: number): SgpLegInput["archetype"] {
+  if (role === "QB-WR") return "WR1_REC_YDS_OVER";
+  if (role === "QB-TE") return "TE1_REC_YDS_OVER";
+  if (role === "QB-RB") return "RB1_RUSH_YDS_OVER";
+  return idx === 0 ? "QB_PASS_YDS_OVER" : "GAME_TOTAL_OVER";
 }
 
 export type XrayOutcome = { ok: true; result: XrayResult } | { ok: false; error: string };
@@ -351,6 +369,29 @@ export function computeXrayResult(
     verdictTone = "fair";
   }
 
+  let studentT4TailDiagnostic: XrayResult["studentT4TailDiagnostic"] | undefined;
+  try {
+    const legInputs: SgpLegInput[] = legs.map((l, idx) => ({
+      legId: `leg-${idx + 1}`,
+      label: l.label,
+      archetype: mapRoleToArchetype(l.role, idx),
+      teamSide: "HOME",
+      americanOdds: l.americanOdds ?? impliedProbToAmerican(l.prob) ?? -110,
+    }));
+    const diagnosis = evaluateParlayMri({
+      legs: legInputs,
+      quotedSgpAmericanOdds: bookQuote,
+    });
+    studentT4TailDiagnostic = {
+      degreesOfFreedom: STUDENT_T_DEGREES_OF_FREEDOM,
+      shinHoldPct: diagnosis.hiddenCorrelationHoldPct,
+      severityCode: diagnosis.gradeSeverity,
+      plainEnglishSummary: diagnosis.plainEnglishHeadline,
+    };
+  } catch {
+    studentT4TailDiagnostic = undefined;
+  }
+
   return {
     legCount: legs.length,
     legs: legs.map((l) => ({ label: l.label, prob: l.prob, chanceDisplay: chanceDisplay(l.prob) })),
@@ -370,6 +411,7 @@ export function computeXrayResult(
     pairs,
     verdict,
     verdictTone,
+    ...(studentT4TailDiagnostic ? { studentT4TailDiagnostic } : {}),
   };
 }
 

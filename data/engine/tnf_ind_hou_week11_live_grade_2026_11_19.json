@@ -2,16 +2,16 @@
   "schema": "gse_tnf_week11_live_grade_v1",
   "event_id": "401873066",
   "matchup": "IND @ HOU",
-  "graded_at_utc": "2026-11-20T01:32:43.675705+00:00",
+  "graded_at_utc": "2026-11-20T05:17:02.042157+00:00",
   "game_state": {
-    "status_name": "STATUS_IN_PROGRESS",
-    "state": "in",
-    "completed": false,
-    "period": 1,
-    "clock": "9:39",
-    "detail": "9:39 - 1st Quarter",
+    "status_name": "STATUS_FINAL",
+    "state": "post",
+    "completed": true,
+    "period": 0,
+    "clock": "0:00",
+    "detail": "Final",
     "ind_score": 3,
-    "hou_score": 0,
+    "hou_score": 26,
     "ind_quarters": {
       "1Q": 3,
       "2Q": 0,
@@ -20,9 +20,9 @@
       "OT": 0
     },
     "hou_quarters": {
-      "1Q": 0,
-      "2Q": 0,
-      "3Q": 0,
+      "1Q": 7,
+      "2Q": 10,
+      "3Q": 9,
       "4Q": 0,
       "OT": 0
     },
@@ -30,11 +30,11 @@
   },
   "summary_record": {
     "total_props": 24,
-    "wins_or_cashed_early": 0,
-    "losses": 0,
+    "wins_or_cashed_early": 8,
+    "losses": 16,
     "pushes": 0,
-    "pending": 24,
-    "record_str": "0-0-0"
+    "pending": 0,
+    "record_str": "8-16-0"
   },
   "props_24": [
     {
@@ -49,10 +49,10 @@
       "win_prob": 0.7043,
       "confidence": "70/100",
       "play_to": -222,
-      "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
-      "is_win_locked": false,
+      "actual": 3.0,
+      "window_finished": true,
+      "status": "WIN",
+      "is_win_locked": true,
       "is_loss": false
     },
     {
@@ -67,11 +67,11 @@
       "win_prob": 0.6871,
       "confidence": "69/100",
       "play_to": -205,
-      "actual": 14.0,
-      "window_finished": false,
-      "status": "PENDING",
+      "actual": 194.0,
+      "window_finished": true,
+      "status": "LOSS",
       "is_win_locked": false,
-      "is_loss": false
+      "is_loss": true
     },
     {
       "rank": 3,
@@ -85,11 +85,11 @@
       "win_prob": 0.6786,
       "confidence": "68/100",
       "play_to": -197,
-      "actual": 2.0,
-      "window_finished": false,
-      "status": "PENDING",
+      "actual": 21.0,
+      "window_finished": true,
+      "status": "LOSS",
       "is_win_locked": false,
-      "is_loss": false
+      "is_loss": true
     },
     {
       "rank": 4,
@@ -103,11 +103,11 @@
       "win_prob": 0.6579,
       "confidence": "66/100",
       "play_to": -180,
-      "actual": 11.0,
-      "window_finished": false,
-      "status": "PENDING",
+      "actual": 42.0,
+      "window_finished": true,
+      "status": "LOSS",
       "is_win_locked": false,
-      "is_loss": false
+      "is_loss": true
     },
     {
       "rank": 5,
@@ -121,11 +121,11 @@
       "win_prob": 0.6168,
       "confidence": "62/100",
       "play_to": -151,
-      "actual": 2.0,
-      "window_finished": false,
-      "status": "PENDING",
+      "actual": 12.0,
+      "window_finished": true,
+      "status": "LOSS",
       "is_win_locked": false,
-      "is_loss": false
+      "is_loss": true
     },
     {
       "rank": 6,
@@ -140,10 +140,10 @@
       "confidence": "59/100",
       "play_to": -137,
       "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
+      "window_finished": true,
+      "status": "LOSS",
       "is_win_locked": false,
-      "is_loss": false
+      "is_loss": true
     },
     {
       "rank": 7,
@@ -158,10 +158,10 @@
       "confidence": "70/100",
       "play_to": -214,
       "actual": 11.0,
-      "window_finished": false,
-      "status": "PENDING",
+      "window_finished": true,
+      "status": "LOSS",
       "is_win_locked": false,
-      "is_loss": false
+      "is_loss": true
     },
     {
       "rank": 8,
@@ -176,10 +176,10 @@
       "confidence": "69/100",
       "play_to": -206,
       "actual": 11.0,
-      "window_finished": false,
-      "status": "PENDING",
+      "window_finished": true,
+      "status": "LOSS",
       "is_win_locked": false,
-      "is_loss": false
+      "is_loss": true
     },
     {
       "rank": 9,
@@ -193,11 +193,11 @@
       "win_prob": 0.6946,
       "confidence": "69/100",
       "play_to": -212,
-      "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
+      "actual": 2.0,
+      "window_finished": true,
+      "status": "LOSS",
       "is_win_locked": false,
-      "is_loss": false
+      "is_loss": true
     },
     {
       "rank": 10,
@@ -211,11 +211,11 @@
       "win_prob": 0.6616,
       "confidence": "66/100",
       "play_to": -183,
-      "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
+      "actual": 13.0,
+      "window_finished": true,
+      "status": "LOSS",
       "is_win_locked": false,
-      "is_loss": false
+      "is_loss": true
     },
     {
       "rank": 11,
@@ -229,11 +229,11 @@
       "win_prob": 0.6918,
       "confidence": "69/100",
       "play_to": -209,
-      "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
+      "actual": 1.0,
+      "window_finished": true,
+      "status": "LOSS",
       "is_win_locked": false,
-      "is_loss": false
+      "is_loss": true
     },
     {
       "rank": 12,
@@ -248,10 +248,10 @@
       "confidence": "68/100",
       "play_to": -202,
       "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
+      "window_finished": true,
+      "status": "LOSS",
       "is_win_locked": false,
-      "is_loss": false
+      "is_loss": true
     },
     {
       "rank": 13,
@@ -265,10 +265,10 @@
       "win_prob": 0.6647,
       "confidence": "66/100",
       "play_to": -185,
-      "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
-      "is_win_locked": false,
+      "actual": 22.0,
+      "window_finished": true,
+      "status": "WIN",
+      "is_win_locked": true,
       "is_loss": false
     },
     {
@@ -283,10 +283,10 @@
       "win_prob": 0.6239,
       "confidence": "62/100",
       "play_to": -156,
-      "actual": 3.0,
-      "window_finished": false,
-      "status": "PENDING",
-      "is_win_locked": false,
+      "actual": 10.0,
+      "window_finished": true,
+      "status": "WIN",
+      "is_win_locked": true,
       "is_loss": false
     },
     {
@@ -302,10 +302,10 @@
       "confidence": "66/100",
       "play_to": -182,
       "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
+      "window_finished": true,
+      "status": "LOSS",
       "is_win_locked": false,
-      "is_loss": false
+      "is_loss": true
     },
     {
       "rank": 16,
@@ -319,10 +319,10 @@
       "win_prob": 0.6101,
       "confidence": "61/100",
       "play_to": -147,
-      "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
-      "is_win_locked": false,
+      "actual": 107.0,
+      "window_finished": true,
+      "status": "WIN",
+      "is_win_locked": true,
       "is_loss": false
     },
     {
@@ -337,11 +337,11 @@
       "win_prob": 0.7322,
       "confidence": "73/100",
       "play_to": -254,
-      "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
+      "actual": 15.0,
+      "window_finished": true,
+      "status": "LOSS",
       "is_win_locked": false,
-      "is_loss": false
+      "is_loss": true
     },
     {
       "rank": 18,
@@ -355,11 +355,11 @@
       "win_prob": 0.7355,
       "confidence": "74/100",
       "play_to": -258,
-      "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
+      "actual": 10.0,
+      "window_finished": true,
+      "status": "LOSS",
       "is_win_locked": false,
-      "is_loss": false
+      "is_loss": true
     },
     {
       "rank": 19,
@@ -373,11 +373,11 @@
       "win_prob": 0.7198,
       "confidence": "72/100",
       "play_to": -239,
-      "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
+      "actual": 7.0,
+      "window_finished": true,
+      "status": "LOSS",
       "is_win_locked": false,
-      "is_loss": false
+      "is_loss": true
     },
     {
       "rank": 20,
@@ -391,11 +391,11 @@
       "win_prob": 0.6757,
       "confidence": "68/100",
       "play_to": -195,
-      "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
+      "actual": 16.0,
+      "window_finished": true,
+      "status": "LOSS",
       "is_win_locked": false,
-      "is_loss": false
+      "is_loss": true
     },
     {
       "rank": 21,
@@ -409,10 +409,10 @@
       "win_prob": 0.6592,
       "confidence": "66/100",
       "play_to": -181,
-      "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
-      "is_win_locked": false,
+      "actual": 5.0,
+      "window_finished": true,
+      "status": "WIN",
+      "is_win_locked": true,
       "is_loss": false
     },
     {
@@ -427,10 +427,10 @@
       "win_prob": 0.6251,
       "confidence": "63/100",
       "play_to": -156,
-      "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
-      "is_win_locked": false,
+      "actual": 3.0,
+      "window_finished": true,
+      "status": "WIN",
+      "is_win_locked": true,
       "is_loss": false
     },
     {
@@ -445,10 +445,10 @@
       "win_prob": 0.619,
       "confidence": "62/100",
       "play_to": -153,
-      "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
-      "is_win_locked": false,
+      "actual": 2.0,
+      "window_finished": true,
+      "status": "WIN",
+      "is_win_locked": true,
       "is_loss": false
     },
     {
@@ -463,10 +463,10 @@
       "win_prob": 0.5727,
       "confidence": "57/100",
       "play_to": -126,
-      "actual": 0.0,
-      "window_finished": false,
-      "status": "PENDING",
-      "is_win_locked": false,
+      "actual": 1.0,
+      "window_finished": true,
+      "status": "WIN",
+      "is_win_locked": true,
       "is_loss": false
     }
   ],
@@ -477,7 +477,7 @@
       "odds": -106,
       "stage5_verdict": "PASS",
       "confidence": "62/100",
-      "counterfactual_status": "LIVE_BEHIND"
+      "counterfactual_status": "WIN"
     },
     {
       "market": "Spread",
@@ -485,7 +485,7 @@
       "odds": -114,
       "stage5_verdict": "PASS",
       "confidence": "51/100",
-      "counterfactual_status": "LIVE_AHEAD"
+      "counterfactual_status": "LOSS"
     },
     {
       "market": "Total",
@@ -493,7 +493,7 @@
       "odds": -104,
       "stage5_verdict": "PASS",
       "confidence": "53/100",
-      "counterfactual_status": "LIVE_BEHIND"
+      "counterfactual_status": "LOSS"
     },
     {
       "market": "Total",
@@ -501,7 +501,7 @@
       "odds": -116,
       "stage5_verdict": "PASS",
       "confidence": "51/100",
-      "counterfactual_status": "LIVE_AHEAD"
+      "counterfactual_status": "WIN"
     },
     {
       "market": "Moneyline",
@@ -509,7 +509,7 @@
       "odds": -690,
       "stage5_verdict": "PASS",
       "confidence": "53/100",
-      "counterfactual_status": "LIVE_BEHIND"
+      "counterfactual_status": "WIN"
     },
     {
       "market": "Moneyline",
@@ -517,79 +517,79 @@
       "odds": 499,
       "stage5_verdict": "PASS",
       "confidence": "51/100",
-      "counterfactual_status": "LIVE_AHEAD"
+      "counterfactual_status": "LOSS"
     }
   ],
   "dk_showdown": {
     "cash_optimal": {
       "projected_mean": 99.8,
-      "actual_points": 2.14,
+      "actual_points": 77.89,
       "slots": [
         {
           "slot": "CPT",
           "player": "C.J. Stroud",
           "salary": 14400,
-          "fantasy_points": 0.84
+          "fantasy_points": 32.19
         },
         {
           "slot": "FLEX",
           "player": "David Montgomery",
           "salary": 9400,
-          "fantasy_points": 1.3
+          "fantasy_points": 18.4
         },
         {
           "slot": "FLEX",
           "player": "Nico Collins",
           "salary": 10600,
-          "fantasy_points": 0.0
+          "fantasy_points": 14.8
         },
         {
           "slot": "FLEX",
           "player": "Tyler Warren",
           "salary": 6400,
-          "fantasy_points": 0.0
+          "fantasy_points": 3.2
         },
         {
           "slot": "FLEX",
           "player": "Xavier Hutchinson",
           "salary": 2400,
-          "fantasy_points": 0.0
+          "fantasy_points": 3.3
         },
         {
           "slot": "FLEX",
           "player": "Ka'imi Fairbairn",
           "salary": 4400,
-          "fantasy_points": 0.0
+          "fantasy_points": 6.0
         }
       ]
     },
     "gpp_pivot": {
       "projected_mean": 101.2,
-      "actual_points": 3.96,
+      "actual_points": 73.06,
       "slots": [
         {
           "slot": "CPT",
           "player": "Nico Collins",
           "salary": 15900,
-          "fantasy_points": 0.0
+          "fantasy_points": 22.2
         },
         {
           "slot": "FLEX",
           "player": "C.J. Stroud",
           "salary": 9600,
-          "fantasy_points": 0.56
+          "fantasy_points": 21.46
         },
         {
           "slot": "FLEX",
           "player": "David Montgomery",
           "salary": 9400,
-          "fantasy_points": 1.3
+          "fantasy_points": 18.4
         },
         {
           "slot": "FLEX",
           "player": "Tank Dell",
           "salary": 5200,
-          "fantasy_points": 0.0
+          "fantasy_points": 5.7
         },
         {
           "slot": "FLEX",
@@ -601,87 +601,87 @@
           "slot": "FLEX",
           "player": "Tyler Warren",
           "salary": 6400,
-          "fantasy_points": 0.0
+          "fantasy_points": 3.2
         }
       ]
     }
   },
   "personal_bankroll_52": {
     "total_bankroll_usd": 52.0,
-    "settled_stake_usd": 0.0,
-    "realized_bet_pnl_usd": 0.0,
+    "settled_stake_usd": 46.0,
+    "realized_bet_pnl_usd": -31.68,
     "straights": [
       {
         "ticket": "Bucket 1 Core #1",
         "stake_usd": 5.0,
         "selection": "CJ Allen UNDER 4.5 Solo Tackles",
-        "actual": 0.0,
-        "status": "PENDING",
-        "pnl_at_minus110_usd": 0.0
+        "actual": 7.0,
+        "status": "LOSS",
+        "pnl_at_minus110_usd": -5.0
       },
       {
         "ticket": "Bucket 1 Core #2",
         "stake_usd": 5.0,
         "selection": "C.J. Stroud OVER 1.5 Passing Touchdowns",
-        "actual": 0.0,
-        "status": "PENDING",
-        "pnl_at_minus110_usd": 0.0
+        "actual": 3.0,
+        "status": "WIN",
+        "pnl_at_minus110_usd": 4.55
       },
       {
         "ticket": "Bucket 1 Core #3",
         "stake_usd": 5.0,
         "selection": "Dalton Schultz OVER 29.5 Receiving Yards",
         "actual": 11.0,
-        "status": "PENDING",
-        "pnl_at_minus110_usd": 0.0
+        "status": "LOSS",
+        "pnl_at_minus110_usd": -5.0
       },
       {
         "ticket": "Bucket 1 Core #4",
         "stake_usd": 5.0,
         "selection": "Tyler Warren OVER 4.5 Receptions",
-        "actual": 0.0,
-        "status": "PENDING",
-        "pnl_at_minus110_usd": 0.0
+        "actual": 1.0,
+        "status": "LOSS",
+        "pnl_at_minus110_usd": -5.0
       },
       {
         "ticket": "Bucket 1 Core #5",
         "stake_usd": 5.0,
         "selection": "C.J. Stroud OVER 253.5 Passing Yards",
-        "actual": 14.0,
-        "status": "PENDING",
-        "pnl_at_minus110_usd": 0.0
+        "actual": 194.0,
+        "status": "LOSS",
+        "pnl_at_minus110_usd": -5.0
       },
       {
         "ticket": "Bucket 2 Fast #6",
         "stake_usd": 3.5,
         "selection": "Xavier Hutchinson OVER 4.5 1Q Receiving Yards",
-        "actual": 0.0,
-        "status": "PENDING",
-        "pnl_at_minus110_usd": 0.0
+        "actual": 2.0,
+        "status": "LOSS",
+        "pnl_at_minus110_usd": -3.5
       },
       {
         "ticket": "Bucket 2 Fast #7",
         "stake_usd": 3.5,
         "selection": "Tyler Warren OVER 3.5 1Q Receiving Yards",
         "actual": 0.0,
-        "status": "PENDING",
-        "pnl_at_minus110_usd": 0.0
+        "status": "LOSS",
+        "pnl_at_minus110_usd": -3.5
       },
       {
         "ticket": "Bucket 2 Fast #8",
         "stake_usd": 3.5,
         "selection": "David Montgomery OVER 0.5 Anytime Touchdown Scorer",
         "actual": 0.0,
-        "status": "PENDING",
-        "pnl_at_minus110_usd": 0.0
+        "status": "LOSS",
+        "pnl_at_minus110_usd": -3.5
       },
       {
         "ticket": "Bucket 2 Fast #9",
         "stake_usd": 2.5,
         "selection": "Will Anderson Jr. OVER 0.75 Sacks",
-        "actual": 0.0,
-        "status": "PENDING",
-        "pnl_at_minus110_usd": 0.0
+        "actual": 1.0,
+        "status": "WIN",
+        "pnl_at_minus110_usd": 2.27
       }
     ],
     "sgps": [
@@ -689,37 +689,37 @@
         "ticket": "Bucket 3 SGP 1",
         "stake_usd": 3.5,
         "benchmark_odds": "+425",
-        "legs_cashed": 0,
-        "legs_lost": 0,
+        "legs_cashed": 1,
+        "legs_lost": 3,
         "legs_total": 4,
-        "status": "PENDING",
-        "pnl_usd": 0.0
+        "status": "LOSS",
+        "pnl_usd": -3.5
       },
       {
         "ticket": "Bucket 3 SGP 2",
         "stake_usd": 2.5,
         "benchmark_odds": "+550",
-        "legs_cashed": 0,
-        "legs_lost": 0,
+        "legs_cashed": 2,
+        "legs_lost": 1,
         "legs_total": 3,
-        "status": "PENDING",
-        "pnl_usd": 0.0
+        "status": "LOSS",
+        "pnl_usd": -2.5
       },
       {
         "ticket": "Bucket 3 SGP 3",
         "stake_usd": 2.0,
         "benchmark_odds": "+650",
-        "legs_cashed": 0,
-        "legs_lost": 0,
+        "legs_cashed": 2,
+        "legs_lost": 2,
         "legs_total": 4,
-        "status": "PENDING",
-        "pnl_usd": 0.0
+        "status": "LOSS",
+        "pnl_usd": -2.0
       }
     ],
     "dfs_allocation_usd": 6.0,
     "dfs_live_scores": {
-      "cash_optimal_5usd": 2.14,
-      "gpp_pivot_1usd": 3.96
+      "cash_optimal_5usd": 77.89,
+      "gpp_pivot_1usd": 73.06
     }
   }
 }

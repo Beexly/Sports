@@ -167,12 +167,15 @@ describe("storefront stripdown: surfaces render", () => {
     );
   });
 
-  it("renders the legacy /dfs landing page", () => {
-    const { container } = render(React.createElement(DfsLegacyPage));
-
-    expect(container.textContent).toContain(
-      "DFS Optimizer, Cash Cores & Tournament Stacks"
-    );
-    expect(container.textContent).toContain("How We Build Winning DFS Rosters");
+  it("redirects legacy /dfs cleanly to /fantasy/dfs", () => {
+    let caught: unknown;
+    try {
+      DfsLegacyPage();
+    } catch (error) {
+      caught = error;
+    }
+    expect(caught).toBeDefined();
+    expect((caught as { message?: string }).message ?? "").toMatch(/NEXT_REDIRECT/);
+    expect((caught as { digest?: string }).digest ?? "").toContain("/fantasy/dfs");
   });
 });

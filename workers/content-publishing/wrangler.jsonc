@@ -1,0 +1,21 @@
+{
+  "$schema": "https://developers.cloudflare.com/workers/configuration-schema.json",
+  "name": "gse-content-publishing",
+  "account_id": "46f1c1d1c65d19f3f983713b3a8ab67c",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-11-19",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "limits": {
+    "cpu_ms": 5000
+  },
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "head_sampling_rate": 1 },
+    "traces": { "enabled": true, "head_sampling_rate": 0.1 }
+  },
+  "vars": {
+    "INTERNAL_CALIBRATION_ONLY": "true",
+    "CONTENT_WORKER_ENABLED": "false"
+  }
+}

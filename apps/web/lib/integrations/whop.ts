@@ -2,10 +2,51 @@
  * Whop Integration — Webhook Verification & Membership Validation
  *
  * Provides cryptographic signature verification for incoming Whop webhooks
- * and membership status verification for a-la-carte pick packages.
+ * and paid membership validation for pick packages.
  */
 
 import { createHmac, timingSafeEqual } from "node:crypto";
+
+/** Free-tier proof-room plan & slug must NEVER unlock paid storefronts. */
+const FREE_ONLY_PLAN_IDS = new Set(["plan_vrjx4trkvp9qs"]);
+const FREE_ONLY_SLUGS = new Set(["free-proof-room"]);
+
+function isFreeMembershipRecord(m: Record<string, unknown>): boolean {
+  const planObj = m?.plan as Record<string, unknown> | undefined;
+  const planId = String(m?.plan_id || planObj?.id || "").trim().toLowerCase();
+  if (planId && FREE_ONLY_PLAN_IDS.has(planId)) {
+    return true;
+  }
+  const metaSlug = String(
+    (m?.metadata as Record<string, unknown> | undefined)?.gse_pack_slug || "",
+  )
+    .trim()
+    .toLowerCase();
+  if (metaSlug && FREE_ONLY_SLUGS.has(metaSlug)) {
+    return true;
+  }
+  const initialPrice = planObj?.initial_price;
+  const renewalPrice = planObj?.renewal_price;
+  if (initialPrice === 0 && (renewalPrice === 0 || renewalPrice === undefined || renewalPrice === null)) {
+    return true;
+  }
+  return false;
+}
+
+function isConfiguredFounderCompCode(candidate: string): boolean {
+  const raw = (process.env.WHOP_FOUNDER_COMP_CODES || "").trim();
+  if (!raw) return false;
+  const cleanBuf = Buffer.from(candidate.trim().toLowerCase(), "utf8");
+  for (const part of raw.split(",")) {
+    const code = part.trim().toLowerCase();
+    if (!code) continue;
+    const codeBuf = Buffer.from(code, "utf8");
+    if (codeBuf.length === cleanBuf.length && timingSafeEqual(codeBuf, cleanBuf)) {
+      return true;
+    }
+  }
+  return false;
+}
 
 /**
  * Verifies the HMAC-SHA256 signature on an incoming Whop webhook payload.
@@ -79,6 +120,11 @@ export async function verifyWhopMembership(
     return { valid: false, tier: "none" };
   }
 
+  // Optional owner-provisioned comp codes configured strictly in env (never hardcoded).
+  if (isConfiguredFounderCompCode(clean)) {
+    return { valid: true, tier: "founder_comp" };
+  }
+
   // 2. Query Whop v1 API (fail closed when API key is absent; never accept prefix tokens).
   const apiKey = (process.env.WHOP_API_KEY || "").trim();
   if (!apiKey) {
@@ -100,17 +146,21 @@ export async function verifyWhopMembership(
         { headers: whopHeaders, cache: "no-store" },
       );
       if (res.ok) {
-        const data = await res.json().catch(() => ({}));
-        const status = String(data?.status || data?.membership?.status || "").toLowerCase();
-        if (validStatuses.has(status)) {
-          const tier = data?.product?.title || data?.plan_id || "standard";
+        const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+        const membership = (data?.membership as Record<string, unknown> | undefined) ?? data;
+        const status = String(membership?.status || "").toLowerCase();
+        if (validStatuses.has(status) && !isFreeMembershipRecord(membership)) {
+          const prod = membership?.product as Record<string, unknown> | undefined;
+          const tier = prod?.title || membership?.plan_id || "standard";
           return { valid: true, tier: String(tier) };
         }
       }
+      return { valid: false, tier: "none" };
     }
 
-    // 2b. Verify against active company memberships on biz_jzvuDvevsatKWi
-    //     when buyer returns via Whop purchase redirect or provides user_/mber_/pack/promo token
+    // 2b. Verify against active PAID company memberships on biz_jzvuDvevsatKWi
+    //     only by exact membership id, user_id, or member_id.
+    //     Never accept arbitrary redirects, plan/product/pack slugs, or free proof-room plans.
     const listRes = await fetch(
       "https://api.whop.com/api/v1/memberships?account_id=biz_jzvuDvevsatKWi",
       { headers: whopHeaders, cache: "no-store" },
@@ -123,35 +173,25 @@ export async function verifyWhopMembership(
       data?: Array<Record<string, unknown>>;
     };
     const memberships = Array.isArray(listData?.data) ? listData.data : [];
-    const activeMemberships = memberships.filter((m) =>
-      validStatuses.has(String(m?.status || "").toLowerCase()),
+    const activePaidMemberships = memberships.filter(
+      (m) =>
+        validStatuses.has(String(m?.status || "").toLowerCase()) &&
+        !isFreeMembershipRecord(m),
     );
 
-    if (activeMemberships.length === 0) {
+    if (activePaidMemberships.length === 0) {
       return { valid: false, tier: "none" };
     }
 
     const cleanLower = clean.toLowerCase();
-    const matched = activeMemberships.find((m) => {
+    const matched = activePaidMemberships.find((m) => {
       const id = String(m?.id || "").toLowerCase();
       const userId = String(m?.user_id || "").toLowerCase();
       const memberId = String(m?.member_id || "").toLowerCase();
-      const planId = String(m?.plan_id || "").toLowerCase();
-      const productId = String(m?.product_id || "").toLowerCase();
-      const metaSlug = String(
-        (m?.metadata as Record<string, unknown> | undefined)?.gse_pack_slug || "",
-      ).toLowerCase();
       return (
-        cleanLower === "whop_redirect_verified" ||
-        cleanLower === "dad100" ||
-        cleanLower === id ||
-        cleanLower === userId ||
-        cleanLower === memberId ||
-        cleanLower === planId ||
-        cleanLower === productId ||
-        (metaSlug && cleanLower === metaSlug) ||
-        metaSlug === "global-multisport-pro" ||
-        metaSlug === "week8-all-access"
+        (id.length > 0 && cleanLower === id) ||
+        (userId.length > 0 && cleanLower === userId) ||
+        (memberId.length > 0 && cleanLower === memberId)
       );
     });
 

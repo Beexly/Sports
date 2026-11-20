@@ -38,18 +38,33 @@ function buildChildEnv() {
 }
 
 const childEnv = buildChildEnv();
-const r = spawnSync(
-  "npx",
-  ["vitest", "run", "--config", "packages/ai-council/vitest.config.ts"],
-  { cwd: root, env: childEnv, stdio: "inherit", shell: process.platform === "win32" },
-);
-// Fallback without config
-if (r.status === 1 || r.error) {
-  const r2 = spawnSync(
-    "npx",
-    ["vitest", "run", "packages/ai-council"],
-    { cwd: path.join(root, "packages/ai-council"), env: childEnv, stdio: "inherit", shell: process.platform === "win32" },
-  );
+const vitestEntry = path.join(root, "node_modules", "vitest", "vitest.mjs");
+const useNodeDirect = existsSync(vitestEntry);
+
+const r = useNodeDirect
+  ? spawnSync(
+      process.execPath,
+      [vitestEntry, "run", "--config", "packages/ai-council/vitest.config.ts"],
+      { cwd: root, env: childEnv, stdio: "inherit" },
+    )
+  : spawnSync(
+      "npx",
+      ["vitest", "run", "--config", "packages/ai-council/vitest.config.ts"],
+      { cwd: root, env: childEnv, stdio: "inherit", shell: process.platform === "win32" },
+    );
+// Fallback without config only when config invocation errors or fails under npx
+if (r.error || (!useNodeDirect && r.status === 1)) {
+  const r2 = useNodeDirect
+    ? spawnSync(
+        process.execPath,
+        [vitestEntry, "run", "packages/ai-council"],
+        { cwd: root, env: childEnv, stdio: "inherit" },
+      )
+    : spawnSync(
+        "npx",
+        ["vitest", "run", "packages/ai-council"],
+        { cwd: path.join(root, "packages/ai-council"), env: childEnv, stdio: "inherit", shell: process.platform === "win32" },
+      );
   process.exit(r2.status ?? 1);
 }
 process.exit(r.status ?? 1);

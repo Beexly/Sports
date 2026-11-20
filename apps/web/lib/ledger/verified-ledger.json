@@ -1,8 +1,8 @@
 {
   "schemaVersion": "2026-11-13-v1",
-  "generatedAt": "2026-11-13T10:48:00.384Z",
+  "generatedAt": "2026-11-20T06:11:06.933Z",
   "source": {
-    "transport": "prisma (DATABASE_URL, read-only queries)",
+    "transport": "neon-readonly (project summer-brook-99380762, role hermes_ro)",
     "tables": [
       "picks",
       "games",
@@ -21,29 +21,29 @@
     "commitments": "contentHash is the Merkle leaf hash sha256('leaf:' + pickId + ':' + canonical payload). It must re-derive exactly, and frozenAt must precede kickoff."
   },
   "pipeline": {
-    "withSettlementEvents": 4222,
+    "withSettlementEvents": 4627,
     "wlp": {
-      "wins": 2212,
-      "losses": 1835,
-      "pushes": 31,
-      "settled": 4078
+      "wins": 2388,
+      "losses": 2029,
+      "pushes": 32,
+      "settled": 4449
     },
-    "voided": 43,
-    "pending": 101,
+    "voided": 55,
+    "pending": 123,
     "eventResultMismatches": 0,
     "units": {
-      "total": -295.23,
-      "coveredPicks": 3354,
+      "total": -324.28,
+      "coveredPicks": 3725,
       "missingPricePicks": 724
     },
     "clv": {
-      "graded": 2560,
-      "beatClose": 703,
-      "missedClose": 842,
-      "flat": 1015,
-      "meanPoints": -0.1952,
-      "meanProbability": -0.0922,
-      "storedValueMatches": 2559,
+      "graded": 2925,
+      "beatClose": 735,
+      "missedClose": 890,
+      "flat": 1300,
+      "meanPoints": -0.1818,
+      "meanProbability": -0.0893,
+      "storedValueMatches": 2924,
       "storedValueMismatches": 1,
       "mismatchSamples": [
         {
@@ -105,10 +105,10 @@
     }
   },
   "commitments": {
-    "receipts": 3401,
-    "hashVerified": 3386,
-    "preKickoffVerified": 2910,
-    "fullyVerified": 2895,
+    "receipts": 3781,
+    "hashVerified": 3766,
+    "preKickoffVerified": 3315,
+    "fullyVerified": 3300,
     "samples": [
       {
         "pickId": "cmrvhvm3v03t112ysyn11cvs0",
@@ -161,315 +161,315 @@
     ],
     "slateCommitments": [
       {
-        "slateKey": "BASKETBALL_NCAAB:2026-11-14",
-        "root": "3f83d5a5fb98cf2af4cac91c85a401f07f52b2bd1eeb0d57a4baa2fa3a389091",
-        "count": 17,
-        "committedAt": "2026-11-13 06:49:03.785"
+        "slateKey": "AMERICANFOOTBALL_NCAAF:2026-11-21",
+        "root": "cce487771cb8577491b179e73eb5d75cfeda6b3ccaa36096d0b5aff24fc50fa5",
+        "count": 56,
+        "committedAt": "2026-11-20 00:02:18.507"
       },
       {
-        "slateKey": "ICEHOCKEY_NHL:2026-11-14",
-        "root": "a81084e8032428daaecbbd264f3d4b2340006316ad6aba07febee547adcf5de3",
-        "count": 4,
-        "committedAt": "2026-11-13 00:00:17.207"
-      },
-      {
-        "slateKey": "AMERICANFOOTBALL_NCAAF:2026-11-14",
-        "root": "0cebd7ee08b3d3d758d31b44d97990d20ba1f15fdbc44e73d4ddc0c42984c07f",
-        "count": 60,
-        "committedAt": "2026-11-13 00:00:17.207"
-      },
-      {
-        "slateKey": "BASKETBALL_NBA:2026-11-14",
-        "root": "908e1bc7174d97b926b8cc017967a44333bd839523b99ae050df7a61fc63eb9a",
+        "slateKey": "BASKETBALL_NCAAB:2026-11-21",
+        "root": "3decce2327329a2219d6ee239e13ad84f846d24d38483e818393caf1dd0d3db1",
         "count": 2,
-        "committedAt": "2026-11-13 00:00:17.207"
+        "committedAt": "2026-11-20 00:02:18.507"
       },
       {
-        "slateKey": "BASKETBALL_NBA:2026-11-13",
-        "root": "f781236b5f1ddb7af8fc269976fe4c039a58eaea4d87ad14ccbe5ed40748acae",
-        "count": 2,
-        "committedAt": "2026-11-12 01:33:43.626"
+        "slateKey": "BASKETBALL_NBA:2026-11-21",
+        "root": "06da9f56d4e57a08585b1dbc9bc62a5745aa2bce02e8a52e2a39fcab9dbb1ecd",
+        "count": 6,
+        "committedAt": "2026-11-20 00:02:18.507"
+      },
+      {
+        "slateKey": "BASKETBALL_NBA:2026-11-20",
+        "root": "9ea289ad48bbef16c509c19a2b848c8a5c1ae03fd5d1da6632d32f11d9a1de2c",
+        "count": 3,
+        "committedAt": "2026-11-19 02:46:10.028"
+      },
+      {
+        "slateKey": "ICEHOCKEY_NHL:2026-11-20",
+        "root": "bf0ebdf4d2e527d084e5d3ed306014b4efb773fb27efbc527ffeea8760ce5f4b",
+        "count": 22,
+        "committedAt": "2026-11-19 00:02:29.868"
       }
     ]
   },
   "recentSettlements": {
     "windowHours": 48,
-    "count": 962,
+    "count": 89,
     "rows": [
       {
-        "pickId": "cmvp1uupn00jft3m2dhw11d0k",
-        "matchup": "Orlando City SC @ Chicago Fire FC",
-        "selection": "OVER 3.5",
-        "line": 3.5,
-        "result": "WIN",
-        "settledAt": "2026-11-13 08:14:54.183",
-        "clvVerdict": "BEAT_CLOSE",
-        "clvValue": 1,
-        "finalScore": "2-2"
-      },
-      {
-        "pickId": "cmvp1uulr00ixt3m246pem4bx",
-        "matchup": "FC Cincinnati @ Inter Miami CF",
-        "selection": "OVER 3.5",
-        "line": 3.5,
-        "result": "WIN",
-        "settledAt": "2026-11-13 08:14:54.183",
+        "pickId": "cmwmeffvf1c8nqyog24bwm0yf",
+        "matchup": "Dallas Stars @ Vegas Golden Knights",
+        "selection": "Vegas Golden Knights -1.5",
+        "line": -1.5,
+        "result": "LOSS",
+        "settledAt": "2026-11-20 05:52:11.503",
         "clvVerdict": "MATCHED_CLOSE",
         "clvValue": 0,
-        "finalScore": "2-2"
+        "finalScore": "4-3"
       },
       {
-        "pickId": "cmvp1uuoc00j9t3m2z1nq8hib",
-        "matchup": "Real Salt Lake @ Austin FC",
+        "pickId": "cmwmefh3b1cemqyogczlayl0n",
+        "matchup": "Dallas Stars @ Vegas Golden Knights",
+        "selection": "UNDER 5.5",
+        "line": 5.5,
+        "result": "LOSS",
+        "settledAt": "2026-11-20 05:52:11.503",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "4-3"
+      },
+      {
+        "pickId": "cmweou27u20o7113z7ltt7zeu",
+        "matchup": "Real Salt Lake @ Seattle Sounders FC",
         "selection": "OVER 2.5",
         "line": 2.5,
-        "result": "WIN",
-        "settledAt": "2026-11-13 08:14:54.183",
+        "result": "LOSS",
+        "settledAt": "2026-11-20 05:37:12.144",
         "clvVerdict": "MATCHED_CLOSE",
         "clvValue": 0,
-        "finalScore": "2-1"
+        "finalScore": "1-1"
       },
       {
-        "pickId": "cmvp1uutd00jxt3m2m4ti1hcf",
-        "matchup": "Philadelphia Union @ Nashville SC",
-        "selection": "UNDER 3.5",
-        "line": 3.5,
-        "result": "WIN",
-        "settledAt": "2026-11-13 08:14:54.183",
-        "clvVerdict": "BEAT_CLOSE",
-        "clvValue": 1,
-        "finalScore": "0-0"
-      },
-      {
-        "pickId": "cmvp1uuvz00k9t3m2brkbrndt",
-        "matchup": "Colorado Rapids @ San Jose Earthquakes",
-        "selection": "UNDER 3.5",
-        "line": 3.5,
+        "pickId": "cmwmb6c4y1set16915kt4b59p",
+        "matchup": "Vancouver Canucks @ Seattle Kraken",
+        "selection": "OVER 6.5",
+        "line": 6.5,
         "result": "LOSS",
-        "settledAt": "2026-11-13 08:14:54.183",
-        "clvVerdict": "BEAT_CLOSE",
-        "clvValue": 1,
-        "finalScore": "2-2"
+        "settledAt": "2026-11-20 05:37:11.677",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "1-5"
       },
       {
-        "pickId": "cmvftyf18017849lxh54lzcz3",
-        "matchup": "Colorado Avalanche @ New Jersey Devils",
-        "selection": "New Jersey Devils -1.5",
+        "pickId": "cmwmb6bmm1sb51691if14gx7w",
+        "matchup": "Vancouver Canucks @ Seattle Kraken",
+        "selection": "Seattle Kraken -1.5",
         "line": -1.5,
-        "result": "LOSS",
-        "settledAt": "2026-11-13 08:14:44.922",
-        "clvVerdict": null,
-        "clvValue": null,
-        "finalScore": "3-4"
-      },
-      {
-        "pickId": "cmvcstx1803cls3uwrs1c0x7j",
-        "matchup": "Dallas Stars @ Chicago Blackhawks",
-        "selection": "UNDER 6.5",
-        "line": 6.5,
         "result": "WIN",
-        "settledAt": "2026-11-13 08:14:44.922",
+        "settledAt": "2026-11-20 05:37:11.677",
         "clvVerdict": "MATCHED_CLOSE",
         "clvValue": 0,
-        "finalScore": "4-0"
+        "finalScore": "1-5"
       },
       {
-        "pickId": "cmvcstx8103e3s3uwxx796itf",
-        "matchup": "St. Louis Blues @ Nashville Predators",
-        "selection": "UNDER 6.5",
+        "pickId": "cmwmb6c3v1sen1691qqoh730d",
+        "matchup": "Anaheim Ducks @ Colorado Avalanche",
+        "selection": "OVER 6.5",
         "line": 6.5,
         "result": "LOSS",
-        "settledAt": "2026-11-13 08:14:44.922",
+        "settledAt": "2026-11-20 04:37:11.789",
         "clvVerdict": "MATCHED_CLOSE",
         "clvValue": 0,
-        "finalScore": "2-5"
+        "finalScore": "0-4"
       },
       {
-        "pickId": "cmvqy5jfw00jmly0v38epowte",
-        "matchup": "Philadelphia Flyers @ Washington Capitals",
-        "selection": "UNDER 6.5",
-        "line": 6.5,
-        "result": "LOSS",
-        "settledAt": "2026-11-13 08:14:44.922",
-        "clvVerdict": "BEAT_CLOSE",
-        "clvValue": 1,
-        "finalScore": "2-5"
-      },
-      {
-        "pickId": "cmwcdbyau1k7cnl9pu0jrp0ei",
-        "matchup": "Washington Capitals @ New Jersey Devils",
-        "selection": "OVER 5.5",
-        "line": 5.5,
-        "result": "WIN",
-        "settledAt": "2026-11-13 08:14:44.922",
-        "clvVerdict": "BEAT_CLOSE",
-        "clvValue": 1,
-        "finalScore": "2-5"
-      },
-      {
-        "pickId": "cmvpf9uht01nv9po0n50g7u3b",
-        "matchup": "Florida Panthers @ Winnipeg Jets",
-        "selection": "UNDER 6.5",
-        "line": 6.5,
-        "result": "WIN",
-        "settledAt": "2026-11-13 08:14:44.922",
-        "clvVerdict": "MATCHED_CLOSE",
-        "clvValue": 0,
-        "finalScore": "5-1"
-      },
-      {
-        "pickId": "cmwcdbyk11k8inl9pne4vtu1o",
-        "matchup": "New York Islanders @ Los Angeles Kings",
-        "selection": "OVER 5.5",
-        "line": 5.5,
-        "result": "WIN",
-        "settledAt": "2026-11-13 08:14:44.922",
-        "clvVerdict": "MATCHED_CLOSE",
-        "clvValue": 0,
-        "finalScore": "5-2"
-      },
-      {
-        "pickId": "cmwcdbyla1k8onl9pdxu0rsej",
-        "matchup": "New York Islanders @ Los Angeles Kings",
-        "selection": "Los Angeles Kings -1.5",
-        "line": -1.5,
-        "result": "LOSS",
-        "settledAt": "2026-11-13 08:14:44.922",
-        "clvVerdict": "MATCHED_CLOSE",
-        "clvValue": 0,
-        "finalScore": "5-2"
-      },
-      {
-        "pickId": "cmwcdby7d1k6unl9pqeay1gfd",
-        "matchup": "Colorado Avalanche @ Ottawa Senators",
-        "selection": "Colorado Avalanche -1.5",
-        "line": 1.5,
-        "result": "LOSS",
-        "settledAt": "2026-11-13 08:14:44.922",
-        "clvVerdict": "LOST_TO_CLOSE",
-        "clvValue": -3,
-        "finalScore": "3-4"
-      },
-      {
-        "pickId": "cmwcdbyiq1k8cnl9po4xlcpjz",
-        "matchup": "St. Louis Blues @ Utah Mammoth",
-        "selection": "UNDER 6.5",
-        "line": 6.5,
-        "result": "WIN",
-        "settledAt": "2026-11-13 08:14:44.922",
-        "clvVerdict": "BEAT_CLOSE",
-        "clvValue": 1,
-        "finalScore": "1-0"
-      },
-      {
-        "pickId": "cmwcdbyc01k7inl9p8w67opxb",
-        "matchup": "Tampa Bay Lightning @ Columbus Blue Jackets",
-        "selection": "Tampa Bay Lightning -1.5",
-        "line": 1.5,
-        "result": "WIN",
-        "settledAt": "2026-11-13 08:14:44.922",
-        "clvVerdict": "MATCHED_CLOSE",
-        "clvValue": 0,
-        "finalScore": "3-1"
-      },
-      {
-        "pickId": "cmvq4na9w01a538mzst16w3v5",
-        "matchup": "Portland Trail Blazers @ Los Angeles Lakers",
-        "selection": "Los Angeles Lakers -2.5",
+        "pickId": "cmwihz99k1v0vy24ch23gf8xo",
+        "matchup": "Rice Owls @ Temple Owls",
+        "selection": "Temple Owls -2.5",
         "line": -2.5,
         "result": "LOSS",
-        "settledAt": "2026-11-13 08:14:07.452",
-        "clvVerdict": "LOST_TO_CLOSE",
-        "clvValue": -1,
-        "finalScore": "136-129"
-      },
-      {
-        "pickId": "cmuosc5oe08bnmugj9o7tyygf",
-        "matchup": "Charlotte Hornets @ Brooklyn Nets",
-        "selection": "Brooklyn Nets -1.5",
-        "line": -1.5,
-        "result": "LOSS",
-        "settledAt": "2026-11-13 08:14:07.452",
-        "clvVerdict": null,
-        "clvValue": null,
-        "finalScore": "110-103"
-      },
-      {
-        "pickId": "cmvqbbbeq018joe8d3z28d0r9",
-        "matchup": "Brooklyn Nets @ Boston Celtics",
-        "selection": "Boston Celtics -12.5",
-        "line": -12.5,
-        "result": "LOSS",
-        "settledAt": "2026-11-13 08:14:07.452",
+        "settledAt": "2026-11-20 04:07:33.262",
         "clvVerdict": "MATCHED_CLOSE",
         "clvValue": 0,
-        "finalScore": "124-125"
+        "finalScore": "31-27"
       },
       {
-        "pickId": "cmuosc5t708cbmugjaqx6gtwv",
-        "matchup": "Dallas Mavericks @ Houston Rockets",
-        "selection": "Houston Rockets -8.5",
-        "line": -8.5,
+        "pickId": "cmwihz9c21v11y24cceccu2qr",
+        "matchup": "Rice Owls @ Temple Owls",
+        "selection": "OVER 51.5",
+        "line": 51.5,
         "result": "WIN",
-        "settledAt": "2026-11-13 08:14:07.452",
-        "clvVerdict": null,
-        "clvValue": null,
-        "finalScore": "110-128"
-      },
-      {
-        "pickId": "cmuosc5wt08ctmugjfyn4x9gh",
-        "matchup": "Cleveland Cavaliers @ Philadelphia 76ers",
-        "selection": "Philadelphia 76ers -4.5",
-        "line": -4.5,
-        "result": "WIN",
-        "settledAt": "2026-11-13 08:14:07.452",
-        "clvVerdict": null,
-        "clvValue": null,
-        "finalScore": "106-114"
-      },
-      {
-        "pickId": "cmuosc5y008czmugjvaczdlbe",
-        "matchup": "Denver Nuggets @ Oklahoma City Thunder",
-        "selection": "Oklahoma City Thunder -7.5",
-        "line": -7.5,
-        "result": "WIN",
-        "settledAt": "2026-11-13 08:14:07.452",
-        "clvVerdict": null,
-        "clvValue": null,
-        "finalScore": "84-96"
-      },
-      {
-        "pickId": "cmvp1txlh006ut3m22lrf2tl9",
-        "matchup": "Chicago Bulls @ Boston Celtics",
-        "selection": "Boston Celtics -14.5",
-        "line": -14.5,
-        "result": "WIN",
-        "settledAt": "2026-11-13 08:14:07.452",
-        "clvVerdict": "LOST_TO_CLOSE",
-        "clvValue": -1,
-        "finalScore": "99-134"
-      },
-      {
-        "pickId": "cmvp1txos0076t3m20ag8vu17",
-        "matchup": "Minnesota Timberwolves @ Cleveland Cavaliers",
-        "selection": "Cleveland Cavaliers -3.5",
-        "line": -3.5,
-        "result": "LOSS",
-        "settledAt": "2026-11-13 08:14:07.452",
+        "settledAt": "2026-11-20 04:07:33.262",
         "clvVerdict": "BEAT_CLOSE",
         "clvValue": 1,
-        "finalScore": "125-127"
+        "finalScore": "31-27"
       },
       {
-        "pickId": "cmuosc5lv08bbmugjrje0s79d",
-        "matchup": "Milwaukee Bucks @ Washington Wizards",
-        "selection": "Washington Wizards -6.5",
-        "line": -6.5,
+        "pickId": "cmwimsytw001jyd4k42x24m93",
+        "matchup": "Indianapolis Colts @ Houston Texans",
+        "selection": "UNDER 44.5",
+        "line": 44.5,
         "result": "WIN",
-        "settledAt": "2026-11-13 08:14:07.452",
-        "clvVerdict": null,
-        "clvValue": null,
-        "finalScore": "116-128"
+        "settledAt": "2026-11-20 04:07:24.647",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "3-26"
+      },
+      {
+        "pickId": "cmwimsys5001dyd4k8acp6uem",
+        "matchup": "Indianapolis Colts @ Houston Texans",
+        "selection": "Houston Texans -12.5",
+        "line": -12.5,
+        "result": "WIN",
+        "settledAt": "2026-11-20 04:07:24.647",
+        "clvVerdict": "BEAT_CLOSE",
+        "clvValue": 0.5,
+        "finalScore": "3-26"
+      },
+      {
+        "pickId": "cmwmb6bj61sa616919fbulvs6",
+        "matchup": "Minnesota Wild @ Calgary Flames",
+        "selection": "Minnesota Wild -1.5",
+        "line": 1.5,
+        "result": "WIN",
+        "settledAt": "2026-11-20 03:52:12.348",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "4-1"
+      },
+      {
+        "pickId": "cmwmb6c2m1seh16913whucq01",
+        "matchup": "Minnesota Wild @ Calgary Flames",
+        "selection": "UNDER 6.5",
+        "line": 6.5,
+        "result": "WIN",
+        "settledAt": "2026-11-20 03:52:12.348",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "4-1"
+      },
+      {
+        "pickId": "cmwmdsw8b23f814pfb8anv5n2",
+        "matchup": "Columbus Blue Jackets @ Chicago Blackhawks",
+        "selection": "Columbus Blue Jackets -1.5",
+        "line": 1.5,
+        "result": "WIN",
+        "settledAt": "2026-11-20 03:37:13.984",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "4-2"
+      },
+      {
+        "pickId": "cmwmdsw9w23fe14pfbfgv2zbi",
+        "matchup": "Columbus Blue Jackets @ Chicago Blackhawks",
+        "selection": "UNDER 6.5",
+        "line": 6.5,
+        "result": "WIN",
+        "settledAt": "2026-11-20 03:37:13.984",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "4-2"
+      },
+      {
+        "pickId": "cmwn577m50125frbvjchbh22a",
+        "matchup": "Portland Trail Blazers @ Milwaukee Bucks",
+        "selection": "Portland Trail Blazers -10.5",
+        "line": 10.5,
+        "result": "LOSS",
+        "settledAt": "2026-11-20 03:37:13.231",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "124-114"
+      },
+      {
+        "pickId": "cmwn577uj0139frbv36epqavm",
+        "matchup": "Portland Trail Blazers @ Milwaukee Bucks",
+        "selection": "OVER 228.5",
+        "line": 228.5,
+        "result": "WIN",
+        "settledAt": "2026-11-20 03:37:13.231",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "124-114"
+      },
+      {
+        "pickId": "cmwmy7asy24kbnzgbh3e5y9ni",
+        "matchup": "LA Clippers @ San Antonio Spurs",
+        "selection": "San Antonio Spurs -15.5",
+        "line": -15.5,
+        "result": "LOSS",
+        "settledAt": "2026-11-20 03:37:13.231",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "112-124"
+      },
+      {
+        "pickId": "cmwmy7awi24ksnzgbqkenz6zv",
+        "matchup": "LA Clippers @ San Antonio Spurs",
+        "selection": "San Antonio Spurs ML (-1020)",
+        "line": -1020,
+        "result": "WIN",
+        "settledAt": "2026-11-20 03:37:13.231",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "112-124"
+      },
+      {
+        "pickId": "cmwmy7axu24kynzgbh4wvpyln",
+        "matchup": "LA Clippers @ San Antonio Spurs",
+        "selection": "OVER 224.5",
+        "line": 224.5,
+        "result": "WIN",
+        "settledAt": "2026-11-20 03:37:13.231",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "112-124"
+      },
+      {
+        "pickId": "cmwn577rp012xfrbvdul3orve",
+        "matchup": "Golden State Warriors @ Memphis Grizzlies",
+        "selection": "Memphis Grizzlies -7.5",
+        "line": -7.5,
+        "result": "WIN",
+        "settledAt": "2026-11-20 03:27:31.136",
+        "clvVerdict": "LOST_TO_CLOSE",
+        "clvValue": -1,
+        "finalScore": "98-126"
+      },
+      {
+        "pickId": "cmwn577w4013ffrbvx37spl1b",
+        "matchup": "New York Knicks @ Minnesota Timberwolves",
+        "selection": "New York Knicks -1.5",
+        "line": 1.5,
+        "result": "WIN",
+        "settledAt": "2026-11-20 03:27:31.136",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "102-99"
+      },
+      {
+        "pickId": "cmwn577xe013lfrbvs0g4m8pd",
+        "matchup": "New York Knicks @ Minnesota Timberwolves",
+        "selection": "OVER 216.5",
+        "line": 216.5,
+        "result": "LOSS",
+        "settledAt": "2026-11-20 03:27:31.136",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "102-99"
+      },
+      {
+        "pickId": "cmwn577t30133frbvfk8jt7as",
+        "matchup": "Golden State Warriors @ Memphis Grizzlies",
+        "selection": "OVER 224.5",
+        "line": 224.5,
+        "result": "LOSS",
+        "settledAt": "2026-11-20 03:27:31.136",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "98-126"
+      },
+      {
+        "pickId": "cmwmytq4e2hlwnzgb404awy27",
+        "matchup": "Stetson Hatters @ Louisville Cardinals",
+        "selection": "Louisville Cardinals -36.5",
+        "line": -36.5,
+        "result": "LOSS",
+        "settledAt": "2026-11-20 03:18:26.185",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "69-83"
+      },
+      {
+        "pickId": "cmwmya3gk27e1nzgbj4y2jvh9",
+        "matchup": "Stetson Hatters @ Louisville Cardinals",
+        "selection": "OVER 154.5",
+        "line": 154.5,
+        "result": "LOSS",
+        "settledAt": "2026-11-20 03:18:26.185",
+        "clvVerdict": "MATCHED_CLOSE",
+        "clvValue": 0,
+        "finalScore": "69-83"
       }
     ]
   },
@@ -479,8 +479,8 @@
     "matchup": "Washington Commanders @ New York Giants",
     "selection": "UNDER 43.5",
     "line": 43.5,
-    "result": "LOSS",
-    "settledAt": "2026-11-13 08:12:31.44",
+    "result": "VOID",
+    "settledAt": "2026-11-14 02:35:37.137",
     "clvLockLine": 43.5,
     "clvCloseLine": 40.625,
     "clvValue": 2.875,

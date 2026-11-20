@@ -1,0 +1,16 @@
+{
+  "name": "gse-ingest-game-event",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "deploy": "gcloud functions deploy gse-ingest-game-event --gen2 --runtime=nodejs22 --region=us-central1 --source=. --entry-point=ingestGameEvent --trigger-topic=gse-game-events --max-instances=5 --memory=256Mi"
+  },
+  "dependencies": {
+    "@google-cloud/bigquery": "^7.9.0",
+    "@google-cloud/functions-framework": "^3.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

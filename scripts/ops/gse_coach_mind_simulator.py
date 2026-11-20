@@ -23,9 +23,12 @@ from pathlib import Path
 from types import MappingProxyType
 import numpy as np
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
 _OPS_DIR = str(Path(__file__).resolve().parent)
-if _OPS_DIR not in sys.path:
-    sys.path.insert(0, _OPS_DIR)
+_SRC_DIR = str(_REPO_ROOT / "src")
+for _p in (_OPS_DIR, _SRC_DIR, str(_REPO_ROOT)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 from week8_forensic_kernels import (  # noqa: E402
     allocate_conserved_box_score,
     assert_no_duplicate_reallocation,
@@ -1330,6 +1333,151 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     conditioners["wave45_picks_props_milp_dfs_harmony_coupled"] = True
     conditioners["wave46_memtx_picks_7props_stacked_dfs_coupled"] = True
 
+    from intelligence.coaching.footballxos_16_category_playbook_engine import (
+        evaluate_footballxos_matchup_intelligence,
+    )
+    from intelligence.coaching.whitefield_and_nflverse_metrics_engine import (
+        evaluate_whitefield_and_nflverse_matchup_profile,
+    )
+    from intelligence.coaching.ftn_and_snap_deep_intelligence_engine import (
+        evaluate_ftn_and_snap_deep_matchup,
+    )
+
+    stream_15l_bundle = evaluate_footballxos_matchup_intelligence(
+        away_team=away_u,
+        home_team=home_u,
+        context=ctx,
+    )
+    stream_15m_bundle = evaluate_whitefield_and_nflverse_matchup_profile(
+        away_team=away_u,
+        home_team=home_u,
+        context=ctx,
+    )
+    stream_15n_bundle = evaluate_ftn_and_snap_deep_matchup(
+        away_team=away_u,
+        home_team=home_u,
+        context=ctx,
+    )
+    julia_carleman_path = Path(root_dir) / "tools" / "julia-carleman" / "src" / "JuliaCarleman.jl"
+    conditioners["stream_15l_away_scheme_epa_delta"] = float(
+        stream_15l_bundle["stream_15l_away_scheme_epa_delta"]
+    )
+    conditioners["stream_15l_home_scheme_epa_delta"] = float(
+        stream_15l_bundle["stream_15l_home_scheme_epa_delta"]
+    )
+    conditioners["stream_15l_kickoff_35_hidden_yardage_ep"] = float(
+        stream_15l_bundle["stream_15l_kickoff_35_hidden_yardage_ep"]
+    )
+    conditioners["stream_15l_away_kickoff_start_yl100"] = float(
+        stream_15l_bundle.get("stream_15l_away_kickoff_start_yl100", 70.0)
+    )
+    conditioners["stream_15l_home_kickoff_start_yl100"] = float(
+        stream_15l_bundle.get("stream_15l_home_kickoff_start_yl100", 70.0)
+    )
+    conditioners["stream_15l_alam_wind_drag_deep_pass_penalty"] = float(
+        stream_15l_bundle["stream_15l_alam_wind_drag_deep_pass_penalty"]
+    )
+    conditioners["stream_15m_away_trench_pressure_delta"] = float(
+        stream_15m_bundle["stream_15m_away_trench_pressure_delta"]
+    )
+    conditioners["stream_15m_home_trench_pressure_delta"] = float(
+        stream_15m_bundle["stream_15m_home_trench_pressure_delta"]
+    )
+    conditioners["stream_15m_away_pressure_hazard_delta"] = float(
+        stream_15m_bundle["stream_15m_away_pressure_hazard_delta"]
+    )
+    conditioners["stream_15m_home_pressure_hazard_delta"] = float(
+        stream_15m_bundle["stream_15m_home_pressure_hazard_delta"]
+    )
+    conditioners["stream_15m_away_non_sneak_sr_edge"] = float(
+        stream_15m_bundle["stream_15m_away_non_sneak_sr_edge"]
+    )
+    conditioners["stream_15m_home_non_sneak_sr_edge"] = float(
+        stream_15m_bundle["stream_15m_home_non_sneak_sr_edge"]
+    )
+    conditioners["stream_15m_away_garbage_time_qbr_edge"] = float(
+        stream_15m_bundle["stream_15m_away_garbage_time_qbr_edge"]
+    )
+    conditioners["stream_15m_home_garbage_time_qbr_edge"] = float(
+        stream_15m_bundle["stream_15m_home_garbage_time_qbr_edge"]
+    )
+    conditioners["stream_15m_away_bellcow_ass_breakout"] = float(
+        stream_15m_bundle["stream_15m_away_bellcow_ass_breakout"]
+    )
+    conditioners["stream_15m_home_bellcow_ass_breakout"] = float(
+        stream_15m_bundle["stream_15m_home_bellcow_ass_breakout"]
+    )
+    conditioners["stream_15m_away_questionable_sigma"] = float(
+        stream_15m_bundle["stream_15m_away_questionable_sigma"]
+    )
+    conditioners["stream_15m_home_questionable_sigma"] = float(
+        stream_15m_bundle["stream_15m_home_questionable_sigma"]
+    )
+    conditioners["stream_15n_away_ftn_twp_regression_epa"] = float(
+        stream_15n_bundle["stream_15n_away_ftn_twp_regression_epa"]
+    )
+    conditioners["stream_15n_home_ftn_twp_regression_epa"] = float(
+        stream_15n_bundle["stream_15n_home_ftn_twp_regression_epa"]
+    )
+    conditioners["stream_15n_away_ftn_progression_wr_credit_epa"] = float(
+        stream_15n_bundle["stream_15n_away_ftn_progression_wr_credit_epa"]
+    )
+    conditioners["stream_15n_home_ftn_progression_wr_credit_epa"] = float(
+        stream_15n_bundle["stream_15n_home_ftn_progression_wr_credit_epa"]
+    )
+    conditioners["stream_15n_away_rb_wr_creation_epa"] = float(
+        stream_15n_bundle["stream_15n_away_rb_wr_creation_epa"]
+    )
+    conditioners["stream_15n_home_rb_wr_creation_epa"] = float(
+        stream_15n_bundle["stream_15n_home_rb_wr_creation_epa"]
+    )
+    conditioners["stream_15n_away_kickoff_start_yl100"] = float(
+        stream_15n_bundle["stream_15n_away_kickoff_start_yl100"]
+    )
+    conditioners["stream_15n_home_kickoff_start_yl100"] = float(
+        stream_15n_bundle["stream_15n_home_kickoff_start_yl100"]
+    )
+    conditioners["stream_15n_kickoff_yl_differential"] = float(
+        stream_15n_bundle["stream_15n_kickoff_yl_differential"]
+    )
+    conditioners["stream_15n_away_fg_short_mid_delta"] = float(
+        stream_15n_bundle["stream_15n_away_fg_short_mid_delta"]
+    )
+    conditioners["stream_15n_home_fg_short_mid_delta"] = float(
+        stream_15n_bundle["stream_15n_home_fg_short_mid_delta"]
+    )
+    conditioners["stream_15n_away_fg_50plus_delta"] = float(
+        stream_15n_bundle["stream_15n_away_fg_50plus_delta"]
+    )
+    conditioners["stream_15n_home_fg_50plus_delta"] = float(
+        stream_15n_bundle["stream_15n_home_fg_50plus_delta"]
+    )
+    conditioners["stream_15n_away_punt_net_mu"] = float(
+        stream_15n_bundle["stream_15n_away_punt_net_mu"]
+    )
+    conditioners["stream_15n_home_punt_net_mu"] = float(
+        stream_15n_bundle["stream_15n_home_punt_net_mu"]
+    )
+    conditioners["stream_15n_away_third_down_epa_resid"] = float(
+        stream_15n_bundle["stream_15n_away_third_down_epa_resid"]
+    )
+    conditioners["stream_15n_home_third_down_epa_resid"] = float(
+        stream_15n_bundle["stream_15n_home_third_down_epa_resid"]
+    )
+    conditioners["stream_15n_away_redzone_epa_resid"] = float(
+        stream_15n_bundle["stream_15n_away_redzone_epa_resid"]
+    )
+    conditioners["stream_15n_home_redzone_epa_resid"] = float(
+        stream_15n_bundle["stream_15n_home_redzone_epa_resid"]
+    )
+    conditioners["stream_15n_away_vs_opp_yac_tfl_epa"] = float(
+        stream_15n_bundle["stream_15n_away_vs_opp_yac_tfl_epa"]
+    )
+    conditioners["stream_15n_home_vs_opp_yac_tfl_epa"] = float(
+        stream_15n_bundle["stream_15n_home_vs_opp_yac_tfl_epa"]
+    )
+    conditioners["julia_carleman_5level_audit_ready"] = bool(julia_carleman_path.is_file())
+
     result = {
         "schema": "gse_pre_projection_universal_and_deep_non_stationary_priors_v1",
         "away_team": away_u,
@@ -1349,6 +1497,9 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         "gse_143_skills_and_7_agy_plugins": skills_143_readiness,
         "gse_livebench_vs_forecastbench": gse_livebench,
         "spatial_micro_pbp_conditioners": spatial_micro_bundle,
+        "stream_15l_footballxos_playbook_intelligence": stream_15l_bundle,
+        "stream_15m_whitefield_trench_isolation": stream_15m_bundle,
+        "stream_15n_ftn_and_snap_deep_intelligence": stream_15n_bundle,
         "wave32_unified_sports_situational_fusion": wave32_fusion,
         "wave34_holistic_biometrics": wave32_fusion["wave34_holistic_biometrics"],
         "wave35_gsi_and_micro_matchups": wave32_fusion["wave35_gsi_and_micro_matchups"],
@@ -1708,9 +1859,120 @@ def simulate_matchup_pbp(
     trauma_comp_pen_scalar = float(traj_cond["qb_trauma_per_sack_comp_penalty"])
     ddqn_4th_boost_scalar = float(traj_cond["double_dqn_4th_down_conv_boost"])
 
+    # Frontier Council + Pass B Red-Team Hardening (Streams 15L + 15M + 15N):
+    # - Apply centered/residualized scheme, trench-efficiency, QBR, TWP, and creation deltas smoothly via _soft_cap_030.
+    # - Route one-owner sack hazard strictly to sack_prob_lut (NOT duplicated into net_epa).
+    # - Route Alam aerodynamic wind penalty to comp_base_lut and empirical Kickoff-35 start position to kickoff_reset_yl_lut[poss].
+    def _soft_cap_030(x: float) -> float:
+        return float(0.030 * math.tanh(float(x) / 0.030))
+
+    aw_15lm_epa = _soft_cap_030(
+        0.45 * float(traj_cond.get("stream_15l_away_scheme_epa_delta", 0.0))
+        + 0.25 * float(traj_cond.get("stream_15m_away_trench_pressure_delta", 0.0))
+        + 0.40 * float(traj_cond.get("stream_15m_away_non_sneak_sr_edge", 0.0))
+        + 0.45 * float(traj_cond.get("stream_15m_away_garbage_time_qbr_edge", 0.0))
+        + 0.35 * float(traj_cond.get("stream_15m_away_bellcow_ass_breakout", 0.0))
+        + 0.40 * float(traj_cond.get("stream_15n_away_ftn_twp_regression_epa", 0.0))
+        + 0.35 * float(traj_cond.get("stream_15n_away_ftn_progression_wr_credit_epa", 0.0))
+        + 0.30 * float(traj_cond.get("stream_15n_away_rb_wr_creation_epa", 0.0))
+        + 0.40 * float(traj_cond.get("stream_15n_away_vs_opp_yac_tfl_epa", 0.0))
+    )
+    hm_15lm_epa = _soft_cap_030(
+        0.45 * float(traj_cond.get("stream_15l_home_scheme_epa_delta", 0.0))
+        + 0.25 * float(traj_cond.get("stream_15m_home_trench_pressure_delta", 0.0))
+        + 0.40 * float(traj_cond.get("stream_15m_home_non_sneak_sr_edge", 0.0))
+        + 0.45 * float(traj_cond.get("stream_15m_home_garbage_time_qbr_edge", 0.0))
+        + 0.35 * float(traj_cond.get("stream_15m_home_bellcow_ass_breakout", 0.0))
+        + 0.40 * float(traj_cond.get("stream_15n_home_ftn_twp_regression_epa", 0.0))
+        + 0.35 * float(traj_cond.get("stream_15n_home_ftn_progression_wr_credit_epa", 0.0))
+        + 0.30 * float(traj_cond.get("stream_15n_home_rb_wr_creation_epa", 0.0))
+        + 0.40 * float(traj_cond.get("stream_15n_home_vs_opp_yac_tfl_epa", 0.0))
+    )
+    third_down_resid_lut = np.array(
+        [
+            float(traj_cond.get("stream_15n_away_third_down_epa_resid", 0.0)),
+            float(traj_cond.get("stream_15n_home_third_down_epa_resid", 0.0)),
+        ],
+        dtype=np.float64,
+    )
+    redzone_resid_lut = np.array(
+        [
+            float(traj_cond.get("stream_15n_away_redzone_epa_resid", 0.0)),
+            float(traj_cond.get("stream_15n_home_redzone_epa_resid", 0.0)),
+        ],
+        dtype=np.float64,
+    )
+    fg_short_mid_lut = np.array(
+        [
+            float(traj_cond.get("stream_15n_away_fg_short_mid_delta", 0.0)),
+            float(traj_cond.get("stream_15n_home_fg_short_mid_delta", 0.0)),
+        ],
+        dtype=np.float64,
+    )
+    fg_50plus_lut = np.array(
+        [
+            float(traj_cond.get("stream_15n_away_fg_50plus_delta", 0.0)),
+            float(traj_cond.get("stream_15n_home_fg_50plus_delta", 0.0)),
+        ],
+        dtype=np.float64,
+    )
+    punt_net_mu_lut = np.array(
+        [
+            float(traj_cond.get("stream_15n_away_punt_net_mu", 42.24)),
+            float(traj_cond.get("stream_15n_home_punt_net_mu", 42.24)),
+        ],
+        dtype=np.float64,
+    )
+    pressure_hazard_15m_lut = np.array(
+        [
+            float(np.clip(float(traj_cond.get("stream_15m_away_pressure_hazard_delta", 0.0)), -0.025, 0.025)),
+            float(np.clip(float(traj_cond.get("stream_15m_home_pressure_hazard_delta", 0.0)), -0.025, 0.025)),
+        ],
+        dtype=np.float64,
+    )
+    aero_wind_comp_delta = float(
+        np.clip(float(traj_cond.get("stream_15l_alam_wind_drag_deep_pass_penalty", 0.0)), -0.04, 0.0)
+    )
+    aw_ko_yl = int(
+        np.clip(
+            round(float(traj_cond.get("stream_15n_away_kickoff_start_yl100", traj_cond.get("stream_15l_away_kickoff_start_yl100", 70.0)))),
+            63,
+            76,
+        )
+    )
+    hm_ko_yl = int(
+        np.clip(
+            round(float(traj_cond.get("stream_15n_home_kickoff_start_yl100", traj_cond.get("stream_15l_home_kickoff_start_yl100", 70.0)))),
+            63,
+            76,
+        )
+    )
+    kickoff_reset_yl_lut = np.array([aw_ko_yl, hm_ko_yl], dtype=np.int32)
+    q_unc_rng = np.random.default_rng(seed + 424242)
+    q_sigma_lut = np.array(
+        [
+            float(traj_cond.get("stream_15m_away_questionable_sigma", 0.0)),
+            float(traj_cond.get("stream_15m_home_questionable_sigma", 0.0)),
+        ],
+        dtype=np.float64,
+    )
+    _pos_z = math.sqrt(0.35 / 0.65)
+    _neg_z = -math.sqrt(0.65 / 0.35)
+    world_q_epa_swing = np.column_stack(
+        [
+            (np.where(q_unc_rng.random(n_sims) < 0.35, _neg_z, _pos_z) * q_sigma_lut[0])
+            if q_sigma_lut[0] > 0.0
+            else np.zeros(n_sims),
+            (np.where(q_unc_rng.random(n_sims) < 0.35, _neg_z, _pos_z) * q_sigma_lut[1])
+            if q_sigma_lut[1] > 0.0
+            else np.zeros(n_sims),
+        ]
+    )
+
     # def_epa is offensive EPA allowed per play (<0 = strong defense, >0 = weak defense).
-    away_net_epa = ((tr_away["off_epa"] + away_sit_epa_delta - away_drop) * away_eff_mult) + tr_home["def_epa"]
-    home_net_epa = ((tr_home["off_epa"] + home_sit_epa_delta - home_drop) * home_eff_mult) + tr_away["def_epa"] + (tr_home["hfa"] / 79.1)
+    hfa_half_epa = 0.5 * (float(tr_home["hfa"]) / 79.1)
+    away_net_epa = ((tr_away["off_epa"] + away_sit_epa_delta + aw_15lm_epa - away_drop) * away_eff_mult) + float(tr_home["def_epa"]) - hfa_half_epa
+    home_net_epa = ((tr_home["off_epa"] + home_sit_epa_delta + hm_15lm_epa - home_drop) * home_eff_mult) + float(tr_away["def_epa"]) + hfa_half_epa
     if has_lb_stage2 and away_qb_tier != "EMERGENCY_QB3_UDFA" and home_qb_tier != "EMERGENCY_QB3_UDFA":
         st2_away_net = float(lb_priors["away_off_epa_adj"]) + float(lb_priors.get("home_def_epa_adj", tr_home["def_epa"]))
         st2_home_net = (
@@ -1829,7 +2091,7 @@ def simulate_matchup_pbp(
     poss = rng.integers(0, 2, size=n_sims)
     down = np.ones(n_sims, dtype=np.int32)
     ydstogo = np.full(n_sims, 10, dtype=np.int32)
-    yardline_100 = np.full(n_sims, 75, dtype=np.int32)
+    yardline_100 = kickoff_reset_yl_lut[poss].copy()
     fourth_down_wp_gaps: list[float] = []
 
     net_epa_lut = np.array([away_net_epa, home_net_epa], dtype=np.float64)
@@ -1935,9 +2197,19 @@ def simulate_matchup_pbp(
         if n_act == 0:
             break
         total_plays[active] += 1
-        script_snap_delta = scripted_boost_scalar if snap_idx < 15 else post_script_cliff_scalar
+        script_snap_delta = (
+            scripted_boost_scalar
+            if snap_idx < 24
+            else (post_script_cliff_scalar if snap_idx < 68 else 0.0)
+        )
         q41_term = q41_opener_lut[poss] if snap_idx < 15 else 0.0
-        net_epa_vec = net_epa_lut[poss] + script_snap_delta + q41_term
+        net_epa_vec = net_epa_lut[poss] + script_snap_delta + q41_term + world_q_epa_swing[np.arange(n_sims), poss]
+        # Situational snap-gated 3rd-down & Red-Zone efficiency residuals (zero double-counting on 1st/2nd open field)
+        net_epa_vec = (
+            net_epa_vec
+            + np.where(down == 3, third_down_resid_lut[poss], 0.0)
+            + np.where(yardline_100 <= 20, redzone_resid_lut[poss], 0.0)
+        )
         pace_base_vec = pace_lut[poss]
         score_diff = (home_score - away_score) * (2 * poss - 1)
         # Game-script tempo elasticity (Vector 1): leading slows +2.8s, trailing accelerates -3.0s
@@ -1960,7 +2232,9 @@ def simulate_matchup_pbp(
             p_conv_all = (
                 0.64 - 0.05 * yd4 + 0.55 * net_epa_vec[idx_4th] + ddqn_4th_boost_scalar + dire_conv_lut[poss[idx_4th]]
             ).clip(0.15, 0.82)
-            p_fg_all = np.where(yl4 <= 42, (0.97 - 0.011 * np.maximum(0, yl4 - 15) + fg_prob_delta_sit).clip(0.15, 0.98), 0.02)
+            ps4 = poss[idx_4th]
+            fg_delta_all = fg_prob_delta_sit + fg_short_mid_lut[ps4] + np.where(yl4 >= 33, fg_50plus_lut[ps4], 0.0)
+            p_fg_all = np.where(yl4 <= 42, (0.97 - 0.011 * np.maximum(0, yl4 - 15) + fg_delta_all).clip(0.15, 0.98), 0.02)
             ep_conv = 6.0 - 0.08 * np.maximum(1, yl4 - yd4 - 2)
             ep_fail = -(6.0 - 0.08 * (100 - yl4).clip(5, 95))
             ep_go = p_conv_all * ep_conv + (1.0 - p_conv_all) * ep_fail
@@ -1979,7 +2253,8 @@ def simulate_matchup_pbp(
             fourth_down_wp_gaps.append(float(np.mean(wp_star - e_wp)))
 
             go_mask = ((yl4 <= 58) & (yd4 <= 3)) | ((yl4 <= 40) & (yd4 <= 5) & tau_ge_040) | ((qtr[idx_4th] == 4) & (sd4 < 0) & (yd4 <= 7))
-            fg_mask = (~go_mask) & (yl4 <= 37)
+            fg_max_yl = np.where(fg_50plus_lut[ps4] > 0.012, 40, 37)
+            fg_mask = (~go_mask) & (yl4 <= fg_max_yl)
             punt_mask = (~go_mask) & (~fg_mask)
             g_idx = idx_4th[go_mask]
             if len(g_idx) > 0:
@@ -1993,7 +2268,7 @@ def simulate_matchup_pbp(
                 home_score[g_idx[td & (poss[g_idx] == 1)]] += 6.95
                 away_score[g_idx[td & (poss[g_idx] == 0)]] += 6.95
                 poss[g_idx[td | (~conv)]] = 1 - poss[g_idx[td | (~conv)]]
-                yardline_100[g_idx[td]] = 75
+                yardline_100[g_idx[td]] = kickoff_reset_yl_lut[poss[g_idx[td]]]
                 yardline_100[g_idx[~conv]] = (100 - yardline_100[g_idx[~conv]]).clip(5, 95)
                 fd_keep = conv & (~td)
                 yardline_100[g_idx[fd_keep]] = new_yl[fd_keep]
@@ -2001,17 +2276,20 @@ def simulate_matchup_pbp(
                 ydstogo[g_idx] = np.minimum(10, yardline_100[g_idx])
             f_idx = idx_4th[fg_mask]
             if len(f_idx) > 0:
-                p_fg = (0.97 - 0.011 * np.maximum(0, yardline_100[f_idx] - 15) + fg_prob_delta_sit).clip(0.45, 0.98)
+                psf = poss[f_idx]
+                ylf = yardline_100[f_idx]
+                fg_delta_f = fg_prob_delta_sit + fg_short_mid_lut[psf] + np.where(ylf >= 33, fg_50plus_lut[psf], 0.0)
+                p_fg = (0.97 - 0.011 * np.maximum(0, ylf - 15) + fg_delta_f).clip(0.45, 0.98)
                 made = rng.random(len(f_idx)) < p_fg
                 home_score[f_idx[made & (poss[f_idx] == 1)]] += 3.0
                 away_score[f_idx[made & (poss[f_idx] == 0)]] += 3.0
                 poss[f_idx] = 1 - poss[f_idx]
-                yardline_100[f_idx] = np.where(made, 75, (100 - yardline_100[f_idx] - 7).clip(20, 80))
+                yardline_100[f_idx] = np.where(made, kickoff_reset_yl_lut[poss[f_idx]], (100 - yardline_100[f_idx] - 7).clip(20, 80))
                 down[f_idx] = 1
                 ydstogo[f_idx] = 10
             p_idx = idx_4th[punt_mask]
             if len(p_idx) > 0:
-                net_punt = rng.integers(38, 46, size=len(p_idx))
+                net_punt = np.rint(rng.normal(punt_net_mu_lut[poss[p_idx]], 4.2)).clip(24, 58).astype(np.int32)
                 poss[p_idx] = 1 - poss[p_idx]
                 yardline_100[p_idx] = (100 - (yardline_100[p_idx] - net_punt)).clip(20, 90)
                 down[p_idx] = 1
@@ -2037,15 +2315,22 @@ def simulate_matchup_pbp(
             p_pass = (base_p + pass_delta_lut[ps_v] + script_pass_mod).clip(0.15, 0.90)
             cur_sacks_v = np.where(is_hm, home_sacks[idx_13], away_sacks[idx_13])
             rz_comp_adj = np.where(yl_v <= 20, -0.020 + 0.35 * rz_td_delta_lut[ps_v], 0.0)
+            aero_wind_comp_delta = aero_wind_comp_delta if "aero_wind_comp_delta" in locals() else 0.0
             comp_base_v = (
                 comp_base_lut[ps_v]
                 + spatial_comp_delta_lut[ps_v]
+                + aero_wind_comp_delta
                 + rz_comp_adj
                 - trauma_comp_pen_scalar * np.minimum(4, cur_sacks_v)
             )
             comp_floor_v = comp_floor_lut[ps_v]
             int_mult_v = int_mult_lut[ps_v]
-            sack_prob_v = (sack_prob_lut[ps_v] + spatial_sack_delta_lut[ps_v] + trauma_sack_add_scalar * np.minimum(4, cur_sacks_v)).clip(0.030, 0.195)
+            sack_prob_v = (
+                sack_prob_lut[ps_v]
+                + spatial_sack_delta_lut[ps_v]
+                + 0.5 * pressure_hazard_15m_lut[ps_v]
+                + trauma_sack_add_scalar * np.minimum(4, cur_sacks_v)
+            ).clip(0.030, 0.195)
 
             if has_jev_tensor:
                 db_idx = np.where(dn_v == 1, 0, np.where(dn_v == 2, 1, np.where(yd_v <= 3, 2, 3)))
@@ -2062,10 +2347,13 @@ def simulate_matchup_pbp(
             to_prob = ((np.where(is_pass, 0.021, 0.008) - 0.015 * ne_v) * np.where(is_pass, int_mult_v, 1.0)).clip(0.003, 0.075)
             is_to = u_out < to_prob
             pass_comp = np.minimum(
-                0.78,
-                np.maximum(
-                    comp_floor_v,
-                    comp_base_v + 0.38 * ne_v + np.where((dn_v == 3) & (yd_v >= 7), dire_conv_lut[ps_v], 0.0),
+                0.98 - to_prob - sack_prob_v,
+                np.minimum(
+                    0.78,
+                    np.maximum(
+                        comp_floor_v,
+                        comp_base_v + 0.38 * ne_v + np.where((dn_v == 3) & (yd_v >= 7), dire_conv_lut[ps_v], 0.0),
+                    ),
                 ),
             )
             third_long_depth = np.where((dn_v == 3) & (yd_v >= 7), 1.35, 0.0)
@@ -2175,7 +2463,7 @@ def simulate_matchup_pbp(
                     home_score[td_i[poss[td_i] == 1]] += 6.95
                     away_score[td_i[poss[td_i] == 0]] += 6.95
                     poss[td_i] = 1 - poss[td_i]
-                    yardline_100[td_i], down[td_i], ydstogo[td_i] = 75, 1, 10
+                    yardline_100[td_i], down[td_i], ydstogo[td_i] = kickoff_reset_yl_lut[poss[td_i]], 1, 10
                 in_f = ~td_nt
                 if np.any(in_f):
                     if_i = nt_i[in_f]

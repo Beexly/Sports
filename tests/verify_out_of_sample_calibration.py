@@ -342,6 +342,10 @@ def run_real_nflverse_walk_forward_backtests() -> dict[str, dict[str, Any]]:
     eval_pinn["sample_size_n"] = len(y_rec_over)
     results["quarantined_pinn_navier_stokes_and_ocular_proxy"] = eval_pinn
 
+    from intelligence.research_gated import verify_zero_live_weight_invariant
+
+    results["research_gated_zero_weight_invariant"] = verify_zero_live_weight_invariant()
+
     return results
 
 
@@ -391,6 +395,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         if pinn_res["PROMOTION_GATE_STATUS"] != "REJECTED":
             print(
                 "EPISTEMIC GATE FAILURE: speculative PINN/ocular noise was not REJECTED",
+                file=sys.stderr,
+            )
+            return 1
+        rg_res = suite.get("research_gated_zero_weight_invariant") or {}
+        if not rg_res.get("all_zero_weight") or int(rg_res.get("quarantined_module_count", 0)) < 4:
+            print(
+                "EPISTEMIC GATE FAILURE: research_gated zero-weight invariant failed",
                 file=sys.stderr,
             )
             return 1

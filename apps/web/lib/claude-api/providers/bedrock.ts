@@ -44,13 +44,42 @@ import {
 export { bedrockConfig, isBedrockConfigured };
 export type { BedrockConfig };
 
+export const GSE_STARTUP_AWS_ACCOUNT_ID = "034220092205";
+export const GSE_STARTUP_AWS_OWNER = "hq@galaxysportsedge.com";
+
+/**
+ * Enforce strict startup-credit AWS account isolation (hq@galaxysportsedge.com).
+ * Rejects any personal AWS account ID or non-034220092205 role ARN if configured in env.
+ */
+export function assertStartupAwsAccountIsolation(env: Env = process.env): void {
+  const candidates = [
+    env["AWS_ACCOUNT_ID"],
+    env["BEDROCK_AWS_ACCOUNT_ID"],
+    env["AWS_ROLE_ARN"],
+    env["AWS_PROFILE_ARN"],
+  ]
+    .map((v) => v?.trim() ?? "")
+    .filter(Boolean);
+
+  for (const val of candidates) {
+    const match = val.match(/\b(\d{12})\b/);
+    if (match && match[1] !== GSE_STARTUP_AWS_ACCOUNT_ID) {
+      throw new BedrockConfigError(
+        `AWS account isolation violation: account "${match[1]}" is blocked; Bedrock must use GSE startup-credit account ${GSE_STARTUP_AWS_ACCOUNT_ID} (${GSE_STARTUP_AWS_OWNER}).`,
+      );
+    }
+  }
+}
+
 /**
  * Explicit opt-in: Bedrock is used ONLY when the operator sets
- * `CLAUDE_PROVIDER=bedrock` AND full AWS credentials are present. Absent either,
- * we stay on the direct Anthropic API.
+ * `CLAUDE_PROVIDER=bedrock`, startup-credit account isolation passes, AND full
+ * AWS credentials are present. Absent either, we stay on the direct Anthropic API.
  */
 export function isBedrockProviderSelected(env: Env = process.env): boolean {
-  return env["CLAUDE_PROVIDER"]?.trim().toLowerCase() === "bedrock" && isBedrockConfigured(env);
+  if (env["CLAUDE_PROVIDER"]?.trim().toLowerCase() !== "bedrock") return false;
+  assertStartupAwsAccountIsolation(env);
+  return isBedrockConfigured(env);
 }
 
 /**
@@ -110,6 +139,7 @@ export async function callBedrockClaudeMessages(
   request: BedrockMessagesRequest,
   env: Env = process.env,
 ): Promise<ClaudeMessagesResult> {
+  assertStartupAwsAccountIsolation(env);
   const config = bedrockConfig(env);
   if (!config) throw new BedrockConfigError("AWS credentials/region not configured for Bedrock.");
 

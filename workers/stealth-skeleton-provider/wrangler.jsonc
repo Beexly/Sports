@@ -1,0 +1,34 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "gse-stealth-skeleton-provider",
+  "account_id": "46f1c1d1c65d19f3f983713b3a8ab67c",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-19",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "limits": {
+    "cpu_ms": 5000
+  },
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1
+    },
+    "traces": {
+      "enabled": true,
+      "head_sampling_rate": 0.1
+    }
+  },
+  "vars": {
+    "STEALTH_SKELETON_PHASE": "dual"
+  },
+  "queues": {
+    "producers": [
+      {
+        "queue": "gse-crowd-rlhf-queue",
+        "binding": "CROWD_RLHF_QUEUE"
+      }
+    ]
+  }
+}

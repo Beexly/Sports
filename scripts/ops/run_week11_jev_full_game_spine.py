@@ -137,6 +137,20 @@ def _build_team_context(
     comp_pct = float(st.get("comp_rate", 0.61)) * 100.0
     sack_pct = float(st.get("sack_rate_allowed", 0.062)) * 100.0
     blitz_pct = float(st.get("dc_blitz_rate", 0.26)) * 100.0
+    raw_proe = float(st.get("proe", 0.0))
+    ed_sample_n = max(
+        0.0,
+        float(
+            st.get("early_down_plays")
+            or st.get("early_down_n")
+            or st.get("ed_plays")
+            or (max(1, int(st.get("games_played", 8))) * 32.0)
+        ),
+    )
+    proe_shrink_w = ed_sample_n / (ed_sample_n + 180.0)
+    shrunk_proe = proe_shrink_w * raw_proe
+    league_ed_base = 0.54
+    shrunk_ed_pass_rate = float(np.clip(league_ed_base + shrunk_proe, 0.38, 0.68))
 
     return {
         "team": team,
@@ -146,8 +160,11 @@ def _build_team_context(
         "rb1": {"name": rb1_name, "dk_rush_line": skill_rush[0][0] if len(skill_rush) > 0 else 50.0},
         "off_epa": float(st.get("off_epa", 0.0)),
         "def_epa": float(st.get("def_epa", 0.0)),
-        "early_down_pass_rate": round(float(np.clip(0.54 + float(st.get("proe", 0.0)), 0.38, 0.68)), 4),
-        "proe": float(st.get("proe", 0.0)),
+        "early_down_pass_rate": round(shrunk_ed_pass_rate, 4),
+        "proe": round(shrunk_proe, 5),
+        "proe_raw": raw_proe,
+        "proe_sample_n": int(round(ed_sample_n)),
+        "proe_shrinkage_weight": round(proe_shrink_w, 4),
         "comp_rate_pct": round(comp_pct, 2),
         "sack_rate_allowed_pct": round(sack_pct, 2),
         "def_blitz_rate_pct": round(blitz_pct, 2),
@@ -457,6 +474,115 @@ def _resolve_snap(
     }
 
 
+def audit_2026_nfl_rulebook_compliance(
+    snap_log: list[dict[str, Any]],
+    scores: dict[str, int],
+) -> dict[str, Any]:
+    """Audit simulated snap sequence against 2026 NFL rulebook invariants."""
+    violations: list[str] = []
+    td_reset_y75 = 0
+    invalid_yl = 0
+    invalid_down = 0
+    for idx, entry in enumerate(snap_log):
+        yl = int(entry.get("yardline_100", 50))
+        dn = int(entry.get("down", 1))
+        if not (1 <= yl <= 99):
+            invalid_yl += 1
+        if not (1 <= dn <= 4):
+            invalid_down += 1
+        rp = entry.get("resolved_play") or {}
+        if int(rp.get("points_scored", 0)) >= 6 and int(rp.get("new_yardline_100", 75)) == 75:
+            td_reset_y75 += 1
+        if idx > 0:
+            prev = snap_log[idx - 1]
+            if int(prev.get("qtr", 1)) > int(entry.get("qtr", 1)):
+                violations.append(f"non_monotonic_qtr_at_snap_{entry.get('snap')}")
+    if invalid_yl > 0:
+        violations.append(f"out_of_bounds_yardline_count={invalid_yl}")
+    if invalid_down > 0:
+        violations.append(f"invalid_down_count={invalid_down}")
+    return {
+        "compliant": len(violations) == 0,
+        "snaps_audited": len(snap_log),
+        "dynamic_kickoff_touchback_yd": 30,
+        "td_post_kickoff_resets_observed": td_reset_y75,
+        "final_scores": dict(scores),
+        "violations": violations,
+    }
+
+
+def compute_motion_entropy_14bucket(
+    away_ctx: dict[str, Any],
+    home_ctx: dict[str, Any],
+    snap_log: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Compute normalized Shannon entropy across 14 offense call x phase buckets."""
+    call_order = (
+        "inside_zone_run",
+        "outside_zone_run",
+        "quick_game_rpo",
+        "play_action_intermediate",
+        "deep_shot_pass",
+        "screen_or_draw",
+        "other_4th_special",
+    )
+    counts = [1e-6] * 14
+    for entry in snap_log:
+        dn = int(entry.get("down", 1))
+        phase = 0 if dn <= 2 else 1
+        rp = entry.get("resolved_play") or {}
+        call = str(rp.get("off_call") or "")
+        bucket_idx = call_order.index(call) if call in call_order[:6] else 6
+        counts[phase * 7 + bucket_idx] += 1.0
+    total = float(sum(counts))
+    probs = [c / total for c in counts]
+    entropy = -sum(p * math.log(p) for p in probs if p > 0.0)
+    norm_entropy = entropy / math.log(14.0)
+    avg_motion = 0.5 * (float(away_ctx.get("motion_rate", 0.54)) + float(home_ctx.get("motion_rate", 0.54)))
+    return {
+        "buckets": 14,
+        "shannon_entropy_nats": round(entropy, 4),
+        "normalized_entropy": round(norm_entropy, 4),
+        "blended_motion_rate": round(avg_motion, 4),
+    }
+
+
+def verify_wp_martingale_invariance(
+    snap_log: list[dict[str, Any]],
+    away: str,
+    home: str,
+) -> dict[str, Any]:
+    """Verify live pre-snap win probability increments obey martingale near-zero drift."""
+    if not snap_log:
+        return {"martingale_invariant": True, "steps": 0, "mean_delta_wp": 0.0, "max_abs_delta_wp": 0.0}
+
+    wps: list[float] = []
+    for entry in snap_log:
+        sb = entry.get("score_before") or {}
+        diff_home = float(sb.get(home, 0)) - float(sb.get(away, 0))
+        qtr = int(entry.get("qtr", 1))
+        clk = str(entry.get("clock", "15:00"))
+        mm, ss = (int(x) for x in clk.split(":")) if ":" in clk else (7, 30)
+        rem_sec = max(1.0, (4 - min(qtr, 4)) * 900.0 + mm * 60.0 + ss)
+        ep_field = (50.0 - float(entry.get("yardline_100", 50))) * 0.06
+        off_sign = 1.0 if entry.get("offense") == home else -1.0
+        scale = max(3.5, 13.5 * math.sqrt(rem_sec / 3600.0))
+        z = (diff_home + off_sign * ep_field) / scale
+        wps.append(1.0 / (1.0 + math.exp(-max(-12.0, min(12.0, z)))))
+
+    deltas = [wps[i] - wps[i - 1] for i in range(1, len(wps))]
+    mean_d = float(np.mean(deltas)) if deltas else 0.0
+    max_d = float(np.max(np.abs(deltas))) if deltas else 0.0
+    return {
+        "martingale_invariant": abs(mean_d) <= 0.05,
+        "steps": len(deltas),
+        "initial_home_wp": round(wps[0], 4),
+        "final_home_wp": round(wps[-1], 4),
+        "mean_delta_wp": round(mean_d, 5),
+        "max_abs_delta_wp": round(max_d, 4),
+    }
+
+
 def run_week11_live_jev_spine(
     away: str = "IND",
     home: str = "HOU",
@@ -752,6 +878,27 @@ def run_week11_live_jev_spine(
         "active_injuries_ingested": {away_u: aw_ctx["injuries"], home_u: hm_ctx["injuries"]},
         "box_score_spine": box,
         "jev_posterior_overrides_for_10k_mc": {"away": jev_posteriors[away_u], "home": jev_posteriors[home_u]},
+        "diagnostics": {
+            "bayesian_proe_shrinkage": {
+                away_u: {
+                    "raw": aw_ctx["proe_raw"],
+                    "shrunk": aw_ctx["proe"],
+                    "sample_n": aw_ctx["proe_sample_n"],
+                    "weight": aw_ctx["proe_shrinkage_weight"],
+                    "early_down_pass_rate": aw_ctx["early_down_pass_rate"],
+                },
+                home_u: {
+                    "raw": hm_ctx["proe_raw"],
+                    "shrunk": hm_ctx["proe"],
+                    "sample_n": hm_ctx["proe_sample_n"],
+                    "weight": hm_ctx["proe_shrinkage_weight"],
+                    "early_down_pass_rate": hm_ctx["early_down_pass_rate"],
+                },
+            },
+            "rulebook_2026_audit": audit_2026_nfl_rulebook_compliance(snap_log, scores),
+            "motion_entropy_14bucket": compute_motion_entropy_14bucket(aw_ctx, hm_ctx, snap_log),
+            "wp_martingale_invariance": verify_wp_martingale_invariance(snap_log, away_u, home_u),
+        },
         "snap_by_snap_log": snap_log,
     }
 

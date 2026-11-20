@@ -11,6 +11,7 @@
 import { callClaudeMessages, type ClaudeMessagesRequest, type ClaudeMessagesResult } from "./messages";
 import { pickModelForSurface } from "./model-router";
 import { cloudAttemptOrder, type JynxCloud } from "./jynx";
+import { recordLatitudeGenAiSpan } from "./latitude-otlp";
 import {
   callBedrockClaudeMessages,
   BedrockConfigError,
@@ -30,6 +31,10 @@ import {
 type Env = Record<string, string | undefined>;
 
 const DEFAULT_MODEL = "claude-sonnet-4-6";
+export const PAID_OVERFLOW_CIRCUIT_DEFAULTS = {
+  maxPaidRetries: 1,
+  maxJobEstimatedUsd: 0.05,
+} as const;
 
 /** Resolve the Anthropic model id a request targets (explicit id > surface > default). */
 export function resolveAnthropicModelId(request: ClaudeMessagesRequest): string {
@@ -84,15 +89,86 @@ export async function callClaude(
     ...(request.cache ? { cache: request.cache } : {}),
   };
 
+  const startedAtMs = Date.now();
   const attempts = cloudAttemptOrder(env);
   for (const cloud of attempts) {
     try {
-      return await invokeCloud(cloud, providerRequest, env);
+      const result = await invokeCloud(cloud, providerRequest, env);
+      void recordLatitudeGenAiSpan(
+        {
+          model: providerRequest.anthropicModelId,
+          responseModel: result.modelName,
+          provider: cloud,
+          surface: request.surface,
+          systemPrompt: request.system,
+          userPrompt: request.user,
+          completionText: result.text,
+          inputTokens: result.inputTokens,
+          outputTokens: result.outputTokens,
+          durationMs: result.durationMs,
+          startedAtMs,
+        },
+        env,
+      );
+      return result;
     } catch (error) {
-      if (!isCloudTransportError(error)) throw error;
+      if (!isCloudTransportError(error)) {
+        void recordLatitudeGenAiSpan(
+          {
+            model: providerRequest.anthropicModelId,
+            provider: cloud,
+            surface: request.surface,
+            systemPrompt: request.system,
+            userPrompt: request.user,
+            inputTokens: 0,
+            outputTokens: 0,
+            durationMs: Date.now() - startedAtMs,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            startedAtMs,
+          },
+          env,
+        );
+        throw error;
+      }
       // try next cloud / cash
     }
   }
 
-  return callClaudeMessages(request);
+  try {
+    const result = await callClaudeMessages(request);
+    void recordLatitudeGenAiSpan(
+      {
+        model: providerRequest.anthropicModelId,
+        responseModel: result.modelName,
+        provider: "anthropic",
+        surface: request.surface,
+        systemPrompt: request.system,
+        userPrompt: request.user,
+        completionText: result.text,
+        inputTokens: result.inputTokens,
+        outputTokens: result.outputTokens,
+        durationMs: result.durationMs,
+        startedAtMs,
+      },
+      env,
+    );
+    return result;
+  } catch (error) {
+    void recordLatitudeGenAiSpan(
+      {
+        model: providerRequest.anthropicModelId,
+        provider: "anthropic",
+        surface: request.surface,
+        systemPrompt: request.system,
+        userPrompt: request.user,
+        inputTokens: 0,
+        outputTokens: 0,
+        durationMs: Date.now() - startedAtMs,
+        errorMessage: error instanceof Error ? error.message : String(error),
+        startedAtMs,
+      },
+      env,
+    );
+    throw error;
+  }
 }

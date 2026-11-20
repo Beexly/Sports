@@ -108,6 +108,17 @@ import {
   type FoundryCorpusSituationalInput,
   type FoundryCorpusSituationalReceipt,
 } from "./foundry-corpus-situational-priors.js";
+import {
+  evaluateLiveCorpusPlaybookAnd4BookBundle,
+  type LiveCorpusPlaybookAnd4BookInput,
+  type LiveCorpusPlaybookAnd4BookResult,
+  type SplitFieldCoverageCheck,
+} from "./live-corpus-playbook-and-4book-intelligence.js";
+import {
+  evaluateWhitefieldTrenchIsolationBundle,
+  type WhitefieldTrenchIsolationInput,
+  type WhitefieldTrenchIsolationResult,
+} from "./whitefield-and-trench-isolation-metrics.js";
 
 export const FAMILY_NAMES = [
   "pressure",
@@ -633,6 +644,10 @@ export interface OverlayInput {
   universal360Overrides?: UniversalNfl360DossierOverrides;
   /** Optional Mega-Sweep 2026-11-06 Reasoning & Hardware-Aware Pipeline input. */
   megaSweepPipelineInput?: MegaSweepPipelineInput;
+  /** Optional Stream 15L FootballXOs 16-hub + Split-Field + Downloads 4-book/7-paper input. */
+  corpusPlaybookAnd4BookInput?: LiveCorpusPlaybookAnd4BookInput;
+  /** Optional Stream 15M Whitefield ASS/True-Routes & 2.5s PBWR/RBWR trench isolation input. */
+  whitefieldTrenchInput?: WhitefieldTrenchIsolationInput;
   /**
    * Optional corpus grounding (literature/corpus-grounding.ts groundGame),
    * computed by the async caller. Shrinks undocumented family deltas only.
@@ -669,6 +684,8 @@ export interface OverlayResult {
   zeroOrphanResult?: ZeroOrphanOverlayResult;
   universal360AndDeepKernels: ReturnType<typeof evaluateUniversalNfl360MetricAndSituationalDossier>;
   megaSweep20261106Pipeline: MegaSweepPipelineOutput;
+  liveCorpusPlaybookAnd4Book: LiveCorpusPlaybookAnd4BookResult;
+  whitefieldTrenchIsolation: WhitefieldTrenchIsolationResult;
   orthogonalization: OrthogonalizationResult;
   independentEdgeDecision: "SPEAK" | "PASS";
   publishAllowed: boolean;
@@ -723,6 +740,36 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
     }
     familyDeltas = modulated as FamilyDeltas;
   }
+  const addFamily = (cur: FamilyDelta | undefined, d: number): FamilyDelta =>
+    Array.isArray(cur) ? [...cur, d] : ((cur as number | undefined) ?? 0) + d;
+
+  const liveCorpusPlaybookAnd4Book = evaluateLiveCorpusPlaybookAnd4BookBundle(
+    input.corpusPlaybookAnd4BookInput,
+  );
+  if (input.corpusPlaybookAnd4BookInput) {
+    const c = liveCorpusPlaybookAnd4Book.familyDeltaContributions;
+    familyDeltas = {
+      ...familyDeltas,
+      pressure: addFamily(familyDeltas.pressure, c.pressure),
+      weather: addFamily(familyDeltas.weather, c.weather),
+      restFatigue: addFamily(familyDeltas.restFatigue, c.restFatigue),
+      coveragePersonnel: addFamily(familyDeltas.coveragePersonnel, c.coveragePersonnel),
+      qbSkillScript: addFamily(familyDeltas.qbSkillScript, c.qbSkillScript),
+      marketMicrostructure: addFamily(familyDeltas.marketMicrostructure, c.marketMicrostructure),
+    };
+  }
+  const whitefieldTrenchIsolation = evaluateWhitefieldTrenchIsolationBundle(
+    input.whitefieldTrenchInput,
+  );
+  if (input.whitefieldTrenchInput) {
+    const w = whitefieldTrenchIsolation.familyDeltaContributions;
+    familyDeltas = {
+      ...familyDeltas,
+      pressure: addFamily(familyDeltas.pressure, w.pressure),
+      coveragePersonnel: addFamily(familyDeltas.coveragePersonnel, w.coveragePersonnel),
+      qbSkillScript: addFamily(familyDeltas.qbSkillScript, w.qbSkillScript),
+    };
+  }
   const result: OverlayResult = {
     streamCalls: calls,
     universal360AndDeepKernels: evaluateUniversalNfl360MetricAndSituationalDossier(
@@ -731,6 +778,8 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
     megaSweep20261106Pipeline: evaluateMegaSweep20261106Pipeline(
       input.megaSweepPipelineInput,
     ),
+    liveCorpusPlaybookAnd4Book,
+    whitefieldTrenchIsolation,
     orthogonalization: orthogonalizeAndShrink(familyDeltas, input.marketAnchorProb, {
       correlationMatrix:
         input.correlationMatrix ?? CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX,
@@ -903,6 +952,16 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
     true,
     "5-Track L1-L5 + 7-Step Weekly Cycle + Double-DQN/PER/CPC + gse-ml-service 5-Model + 30 CSVs/10 Kernels evaluated",
   );
+  mark(
+    "15L:evaluateLiveCorpusPlaybookAnd4BookBundle",
+    true,
+    `${liveCorpusPlaybookAnd4Book.splitFieldMatchup.splitFieldCheck} across ${liveCorpusPlaybookAnd4Book.activeHubCount} FootballXOs hubs`,
+  );
+  mark(
+    "15M:evaluateWhitefieldTrenchIsolationBundle",
+    true,
+    `PBWR=${whitefieldTrenchIsolation.trenchIsolation.pbwr} ASS-breakout=${whitefieldTrenchIsolation.trueRoutesAndAss.breakoutLeadingScore}`,
+  );
   if (foundryCorpusPriors) {
     mark(
       "15L:evaluateFoundryCorpusSituationalPriors",
@@ -968,6 +1027,8 @@ export interface PreProjectionSimulationConditionedInput {
   readonly independentEdgeDecision?: "SPEAK" | "PASS";
   readonly universal360Overrides?: UniversalNfl360DossierOverrides;
   readonly megaSweepPipelineInput?: MegaSweepPipelineInput;
+  readonly corpusPlaybookAnd4BookInput?: LiveCorpusPlaybookAnd4BookInput;
+  readonly whitefieldTrenchInput?: WhitefieldTrenchIsolationInput;
   readonly baseFamilyDeltas?: FamilyDeltas;
 }
 
@@ -984,6 +1045,12 @@ export interface SimulationTrajectoryConditioners {
   readonly gseMlService5ModelCompositeEpaDelta: number;
   readonly morningSweepNgsCommercialCompositeEpa: number;
   readonly compositePreProjectionEpaDelta: number;
+  readonly splitFieldCoverageCheck: SplitFieldCoverageCheck;
+  readonly dynamicKickoff35HiddenYardageEpDelta: number;
+  readonly penny51RushMitigationYpcDelta: number;
+  readonly pbwrQuickPressureIsolationDelta: number;
+  readonly trueRoutesBreakoutIndex: number;
+  readonly rbCreationShareRatio: number;
   readonly conditionAppliedTo10kWorlds175Snaps: true;
 }
 
@@ -993,6 +1060,8 @@ export interface PreProjectionSimulationConditionedOverlayResult {
   readonly week: number;
   readonly universal360Dossier: ReturnType<typeof evaluateUniversalNfl360MetricAndSituationalDossier>;
   readonly megaSweepPipeline: MegaSweepPipelineOutput;
+  readonly liveCorpusPlaybookAnd4Book: LiveCorpusPlaybookAnd4BookResult;
+  readonly whitefieldTrenchIsolation: WhitefieldTrenchIsolationResult;
   readonly conditionedFamilyDeltas: FamilyDeltas;
   readonly masterOverlayResult: OverlayResult;
   readonly simulationTrajectoryConditioners: SimulationTrajectoryConditioners;
@@ -1100,6 +1169,8 @@ export function computePreProjectionAndSimulationConditionedOverlay(
     independentEdgeDecision,
     universal360Overrides: matchupInput.universal360Overrides,
     megaSweepPipelineInput: matchupInput.megaSweepPipelineInput,
+    corpusPlaybookAnd4BookInput: matchupInput.corpusPlaybookAnd4BookInput,
+    whitefieldTrenchInput: matchupInput.whitefieldTrenchInput,
     correlationMatrix: CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX,
     foundryCorpusModulation: {
       pressureSignalZ: pressureDelta * 25,
@@ -1111,6 +1182,9 @@ export function computePreProjectionAndSimulationConditionedOverlay(
       observedSampleSizeN: CORPUS_SNAPSHOT_METADATA.oofNRows,
     },
   });
+
+  const liveCorpusPlaybookAnd4Book = masterOverlayResult.liveCorpusPlaybookAnd4Book;
+  const whitefieldTrenchIsolation = masterOverlayResult.whitefieldTrenchIsolation;
 
   const simulationTrajectoryConditioners: SimulationTrajectoryConditioners = {
     scripted1To15EpaBoost: Number(
@@ -1136,6 +1210,14 @@ export function computePreProjectionAndSimulationConditionedOverlay(
     morningSweepNgsCommercialCompositeEpa:
       megaSweepPipeline.morningSweep30CsvAnd10InnovationKernels.ngsAndCommercialCompositeEpa,
     compositePreProjectionEpaDelta: megaSweepPipeline.compositePreProjectionEpaDelta,
+    splitFieldCoverageCheck: liveCorpusPlaybookAnd4Book.splitFieldMatchup.splitFieldCheck,
+    dynamicKickoff35HiddenYardageEpDelta:
+      liveCorpusPlaybookAnd4Book.kickoff35HiddenYardage.totalHiddenYardageEpDelta,
+    penny51RushMitigationYpcDelta:
+      liveCorpusPlaybookAnd4Book.splitFieldMatchup.penny51RushMitigationYpcDelta,
+    pbwrQuickPressureIsolationDelta: whitefieldTrenchIsolation.trenchIsolation.trenchIsolationEpaDelta,
+    trueRoutesBreakoutIndex: whitefieldTrenchIsolation.trueRoutesAndAss.breakoutLeadingScore,
+    rbCreationShareRatio: whitefieldTrenchIsolation.rbCreationAndBellcow.rbCreationShareRatio,
     conditionAppliedTo10kWorlds175Snaps: true,
   };
 
@@ -1145,6 +1227,8 @@ export function computePreProjectionAndSimulationConditionedOverlay(
     week,
     universal360Dossier,
     megaSweepPipeline,
+    liveCorpusPlaybookAnd4Book,
+    whitefieldTrenchIsolation,
     conditionedFamilyDeltas,
     masterOverlayResult,
     simulationTrajectoryConditioners,

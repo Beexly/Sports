@@ -16,6 +16,7 @@ name: Daily Smoke Test
 on:
   schedule:
     - cron: "30 13 * * *"  # 13:30 UTC = ~9:30am ET / 6:30am PT
+    - cron: "30 8 * * *"   # 08:30 UTC = 02:30am CST verified-ledger sync check
   workflow_dispatch:
 
 concurrency:
@@ -35,3 +36,9 @@ jobs:
           # Required for private-repo workflow list (section 6 of smoke-prod.sh).
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bash scripts/smoke-prod.sh
+
+      - name: Verify daily settlement ledger refresh when DATABASE_URL configured
+        if: ${{ secrets.DATABASE_URL != '' }}
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npm run verify:ledger && node -e "const d = require('./apps/web/lib/ledger/verified-ledger.json'); if (!d.generatedAt || !d.official) process.exit(1); console.log('verified-ledger OK:', d.generatedAt);"

@@ -433,3 +433,8 @@ function sigmoidRow(row: readonly number[], beta: readonly number[]): number {
 }
 
 export { sigmoid, mean };
+export {
+  computeDynamicKickoff35HiddenYardageEp,
+  type DynamicKickoff35Input,
+  type DynamicKickoff35Result,
+} from "./live-corpus-playbook-and-4book-intelligence.js";

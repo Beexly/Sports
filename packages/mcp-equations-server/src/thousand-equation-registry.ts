@@ -19,6 +19,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Premise, VerificationStatus } from "./mcp-cognitive-router.js";
 import { SIGNAL_FAMILIES, MIN_SAMPLE } from "./mcp-cognitive-router.js";
+import { rerankAffinityDiversePremises } from "./affinity-diversity-reranker.js";
 
 export interface MatrixEquationEntry {
   readonly id: string;
@@ -204,7 +205,7 @@ export function isFamilyActive(mask: Uint32Array, familyIdx: number): boolean {
   return ((mask[word]! & (1 << bit)) >>> 0) !== 0;
 }
 
-type CandidatePremise = Premise & {
+export type CandidatePremise = Premise & {
   readonly jacobianSensitivity: number;
   readonly rawLogOddsDelta: number;
   readonly category: string;
@@ -305,11 +306,12 @@ export function selectCandidatePremisesByContextMask(
   const hasSignalsFilter = opts.signals !== undefined;
 
   // NO BACKFILL. Only equations whose family bit fired are visited round-robin.
+  const poolLimit = topK <= 250 ? Math.min(topK * 2, 500) : topK;
   const matched: CandidatePremise[] = [];
   const cursors = new Int32Array(activeBuckets.length);
-  while (matched.length < topK) {
+  while (matched.length < poolLimit) {
     let progressed = false;
-    for (let i = 0; i < activeBuckets.length && matched.length < topK; i += 1) {
+    for (let i = 0; i < activeBuckets.length && matched.length < poolLimit; i += 1) {
       const bucket = activeBuckets[i]!;
       const cursor = cursors[i]!;
       if (cursor < bucket.length) {
@@ -323,5 +325,5 @@ export function selectCandidatePremisesByContextMask(
     if (!progressed) break;
   }
 
-  return matched;
+  return rerankAffinityDiversePremises(matched, { topK });
 }

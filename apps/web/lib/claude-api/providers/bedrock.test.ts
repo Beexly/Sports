@@ -134,4 +134,27 @@ describe("callBedrockClaudeMessages", () => {
       callBedrockClaudeMessages({ ...baseReq }, MAP),
     ).rejects.toBeInstanceOf(BedrockConfigError);
   });
+
+  it("enforces GSE startup-credit AWS account 034220092205 isolation", async () => {
+    await expect(
+      callBedrockClaudeMessages(
+        { ...baseReq },
+        { ...env, AWS_ACCOUNT_ID: "123456789012" },
+      ),
+    ).rejects.toBeInstanceOf(BedrockConfigError);
+    expect(
+      isBedrockProviderSelected({
+        ...CREDS,
+        CLAUDE_PROVIDER: "bedrock",
+        AWS_ROLE_ARN: "arn:aws:iam::034220092205:role/AccountFullAccessRole",
+      }),
+    ).toBe(true);
+    expect(() =>
+      isBedrockProviderSelected({
+        ...CREDS,
+        CLAUDE_PROVIDER: "bedrock",
+        AWS_ROLE_ARN: "arn:aws:iam::999999999999:role/PersonalRole",
+      }),
+    ).toThrow(BedrockConfigError);
+  });
 });

@@ -1843,6 +1843,8 @@ def run_stage1a_all_38_coaching_and_scheme_layers(
         dc_pressure,
         drive_dire_situations,
         fingerprint,
+        footballxos_16_category_playbook_engine,
+        ftn_and_snap_deep_intelligence_engine,
         ingame,
         ol_provider,
         pgwe_luck_audit,
@@ -1859,6 +1861,7 @@ def run_stage1a_all_38_coaching_and_scheme_layers(
         tempo,
         tenures,
         trench_pocket_physics,
+        whitefield_and_nflverse_metrics_engine,
         x_sweep_production_signals,
     )
 
@@ -2193,6 +2196,15 @@ def run_stage1a_all_38_coaching_and_scheme_layers(
         },
         "trench_and_pocket_physics": trench_jax_vs_bal,
         "scheme_matchup_synthesis": scheme_matchup,
+        "stream_15l_footballxos_playbook": footballxos_16_category_playbook_engine.evaluate_footballxos_matchup_intelligence(
+            away, home, {"wind_mph": env_cfg.get("wind_mph", 6.5), "is_indoor": env_cfg.get("is_indoor", False)}
+        ),
+        "stream_15m_whitefield_trench_isolation": whitefield_and_nflverse_metrics_engine.evaluate_whitefield_and_nflverse_matchup_profile(
+            away, home
+        ),
+        "stream_15n_ftn_and_snap_deep_intelligence": ftn_and_snap_deep_intelligence_engine.evaluate_ftn_and_snap_deep_matchup(
+            away, home
+        ),
         "pbp_reproductions_2026_summary": pbp_repro.get("reproductions")
         or {
             **{k: v for k, v in pbp_repro.items() if k not in ("schema", "official_ledger")},

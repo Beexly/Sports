@@ -987,7 +987,7 @@ describe("§9.3 exact per-provider adapters — no nested fallback possible", ()
   it("every registered provider route has exactly one adapter", () => {
     const table = createProviderDispatchers({});
     expect(Object.keys(table).sort()).toEqual(
-      ["anthropic-direct", "bedrock", "cerebras", "local", "vertex"].sort(),
+      ["anthropic-direct", "bedrock", "cerebras", "local", "vercel-gateway", "vertex"].sort(),
     );
   });
 });

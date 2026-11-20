@@ -6,6 +6,8 @@ import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { loadDoctrineBoard } from "@/lib/board/doctrine-loader";
 import { DoctrineBoardView } from "@/components/board/doctrine-board";
+import { getStage5GateStatus } from "@/lib/packages/stage5-gate";
+import { loadActiveSealedSlate } from "@/lib/slate/sealed-slate-store";
 import {
   formatUnits,
   formatWlp,
@@ -32,9 +34,20 @@ export default async function PicksPage(): Promise<JSX.Element> {
     viewerEntitlements = undefined;
   }
 
-  const board = await loadDoctrineBoard(viewerEntitlements);
+  const [board, gateStatus, sealedSlate] = await Promise.all([
+    loadDoctrineBoard(viewerEntitlements),
+    getStage5GateStatus(),
+    loadActiveSealedSlate(),
+  ]);
   const ledger = verifiedLedger;
   const gate = ledger.official.gate;
+  const sealedSlatePlaysCount =
+    sealedSlate.board.main.length +
+    sealedSlate.board.props.length +
+    (sealedSlate.board.watch?.one_q?.length ?? 0) +
+    (sealedSlate.board.watch?.kicking?.length ?? 0) +
+    (sealedSlate.board.watch?.idp?.length ?? 0) +
+    (sealedSlate.board.watch?.atd?.length ?? 0);
 
   return (
     <div className="min-h-screen bg-obsidian text-ion-white">
@@ -78,6 +91,34 @@ export default async function PicksPage(): Promise<JSX.Element> {
             <Link href="/calibration" className="btn btn-ghost min-h-11">
               Calibration progress
             </Link>
+          </div>
+        </section>
+
+        {/* Two-surface honesty split: Free Public Pass Log vs Sealed Member Slate */}
+        <section className="mt-8 grid gap-4 sm:grid-cols-2" data-testid="picks-surface-split">
+          <div className="surface-card p-5">
+            <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-2">
+              Free Public Pass Log
+            </div>
+            <div className="mt-1 font-display text-2xl text-ion-white">
+              {board.zone1.length} public plays - {board.zone2.length} documented passes
+            </div>
+            <p className="mt-2 text-xs leading-relaxed text-ion-2">
+              {gateStatus.checkoutEnabled
+                ? `Live database Stage-5 gate reports ${gateStatus.officialPlayCount} pending published play(s).`
+                : gateStatus.reason}
+            </p>
+          </div>
+          <div className="surface-card p-5">
+            <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-plasma">
+              Sealed Member Slate ({sealedSlate.board.season} Week {sealedSlate.board.week})
+            </div>
+            <div className="mt-1 font-display text-2xl text-ion-white">
+              {sealedSlatePlaysCount} member markets sealed ({sealedSlate.board.counts.evaluated} evaluated)
+            </div>
+            <p className="mt-2 text-xs leading-relaxed text-ion-2">
+              Member packs on /packages unlock the full pre-kickoff packet (game lines, props, 1Q/1H, kicker, IDP, and DFS cores).
+            </p>
           </div>
         </section>
 

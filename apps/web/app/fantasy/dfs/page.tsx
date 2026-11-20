@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description:
     "Plain-English NFL DFS game-environment breakdowns, target volume notes, cash cores, and tournament stack blueprints.",
   alternates: { canonical: "/fantasy/dfs" },
-  robots: { index: true, follow: true },
+  robots: { index: false, follow: true },
 };
 
 export default async function DfsSuitePage() {
@@ -57,7 +57,7 @@ export default async function DfsSuitePage() {
   const note = salaryIsReal
     ? `Licensed DFS salaries are live. ${measuredCopy}`
     : feedDown
-      ? `DraftKings and FanDuel pool projections are active below with role shares verified ahead of kickoff. ${measuredCopy}`
+      ? `No licensed salary feed is connected. Role shares and slate projections are active below with availability verified ahead of kickoff. ${measuredCopy}`
       : `DFS salary board pricing is gated to active Fantasy, Pro, and DFS Pack members. ${measuredCopy}`;
 
   const dfsPackage = getPackageBySlug("week8-all-access") ?? LIVE_PACKAGE_CATALOG[4]!;
@@ -221,6 +221,55 @@ export default async function DfsSuitePage() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* ── SECTION 2B: TOURNAMENT PORTFOLIO BUILDER (PLAIN-ENGLISH SUMMARY) ── */}
+      <section className="surface-card mb-8 border border-mineral bg-eclipse p-6 sm:p-8">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-mineral pb-4">
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-plasma">
+              Multi-Lineup Construction &amp; Overlap Control
+            </p>
+            <h2 className="mt-1 font-display text-2xl font-semibold text-ion-white">
+              Tournament Portfolio Builder
+            </h2>
+            <p className="mt-1 text-sm text-ion-2">
+              Build balanced sets of distinct rosters with quarterback-receiver pairings, automatic inactive filtering, and lower field overlap for multi-entry contests.
+            </p>
+          </div>
+          <span className="border border-orbital-cyan/40 bg-orbital-cyan/10 px-3 py-1 font-mono text-xs text-orbital-cyan">
+            {viewer.canUseFantasyFull ? "Member Portfolio Active" : "Member Preview"}
+          </span>
+        </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <div className="border border-mineral/70 bg-carbon p-4">
+            <div className="font-mono text-[10px] uppercase tracking-wider text-orbital-cyan">
+              Automatic Slate Hygiene
+            </div>
+            <p className="mt-1.5 text-xs leading-5 text-ion-1">
+              Byes, inactive starters, and wrong-window kickoffs are removed before a single roster slot is filled so dead salary never sneaks into your entries.
+            </p>
+          </div>
+          <div className="border border-mineral/70 bg-carbon p-4">
+            <div className="font-mono text-[10px] uppercase tracking-wider text-orbital-cyan">
+              Unique Lineup Cores
+            </div>
+            <p className="mt-1.5 text-xs leading-5 text-ion-1">
+              Each extra roster enforces an overlap ceiling and favors under-rostered bring-back pairings so your tournament entries do not split payouts with the crowd.
+            </p>
+          </div>
+          <div className="border border-mineral/70 bg-carbon p-4">
+            <div className="font-mono text-[10px] uppercase tracking-wider text-orbital-cyan">
+              Full Roster Access
+            </div>
+            <p className="mt-1.5 text-xs leading-5 text-ion-1">
+              {viewer.canUseFantasyFull
+                ? "Your active member pass unlocks multi-lineup Classic and Showdown exports through /api/fantasy/dfs-v2 and the Lineup Doctor above."
+                : "Unlock a Fantasy / DFS Pass below to reveal complete 9-player Classic stacks, Showdown Captain cores, and portfolio exports."}
+            </p>
+          </div>
         </div>
       </section>
 

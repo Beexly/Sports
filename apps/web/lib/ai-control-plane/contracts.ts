@@ -118,7 +118,8 @@ export type ProviderRouteId =
   | "bedrock"
   | "vertex"
   | "cerebras"
-  | "local";
+  | "local"
+  | "vercel-gateway";
 
 /**
  * @deprecated Renamed to {@link ProviderRouteId} (directive §8.1). Kept as an

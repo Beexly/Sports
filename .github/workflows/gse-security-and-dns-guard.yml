@@ -1,0 +1,63 @@
+# .github/workflows/gse-security-and-dns-guard.yml
+# Zero-local-disk defensive audit + Vercel DNS guardrail for Galaxy Sports Edge.
+# STRICT SCOPE: Only scans GSE-owned production domains.
+# SECURITY: Pins Nuclei >= v3.8.0 (CVE-2026-41645) and keeps -env-vars disabled.
+
+name: GSE Defensive Audit & DNS Guardrail
+
+on:
+  schedule:
+    - cron: "0 9 * * 1" # Weekly Monday 09:00 UTC
+  workflow_dispatch:
+
+jobs:
+  dns-and-surface-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install ProjectDiscovery CLI tools (dnsx, katana, notify)
+        run: |
+          go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
+          go install -v github.com/projectdiscovery/katana/cmd/katana@latest
+          go install -v github.com/projectdiscovery/notify/cmd/notify@latest
+          echo "$HOME/go/bin" >> $GITHUB_PATH
+
+      - name: Assert galaxysportsedge.com DNS stays on Vercel (never Whop)
+        run: |
+          printf "galaxysportsedge.com\nwww.galaxysportsedge.com\n" | dnsx -silent -a -cname -resp > dns_check.txt
+          cat dns_check.txt
+          if grep -qi "whop" dns_check.txt; then
+            echo "CRITICAL: Root or www DNS drifted toward Whop!"
+            exit 1
+          fi
+
+      - name: Crawl critical live routes with Katana
+        run: |
+          printf "https://www.galaxysportsedge.com/products.json\nhttps://www.galaxysportsedge.com/record\nhttps://www.galaxysportsedge.com/board\nhttps://www.galaxysportsedge.com/clv\nhttps://www.galaxysportsedge.com/performance\nhttps://www.galaxysportsedge.com/proof\nhttps://www.galaxysportsedge.com/verify\nhttps://www.galaxysportsedge.com/terms\nhttps://www.galaxysportsedge.com/privacy\n" > targets.txt
+          katana -list targets.txt -d 1 -silent -jc -o crawled_routes.txt || true
+          cat crawled_routes.txt | head -n 40
+
+      - name: Run Nuclei defensive scan (pinned >= v3.8.0 for CVE-2026-41645)
+        uses: projectdiscovery/nuclei-action@main
+        with:
+          version: "v3.8.0"
+          target: "https://www.galaxysportsedge.com"
+          flags: "-severity critical,high,medium -silent -jsonl -o nuclei_findings.jsonl"
+
+      - name: Notify founder channel if findings detected
+        env:
+          NOTIFY_CONFIG: ${{ secrets.PD_NOTIFY_PROVIDER_CONFIG }}
+        run: |
+          if [ -n "$NOTIFY_CONFIG" ]; then
+            mkdir -p ~/.config/notify
+            printf "%s" "$NOTIFY_CONFIG" > ~/.config/notify/provider-config.yaml
+            if [ -s nuclei_findings.jsonl ]; then
+              cat nuclei_findings.jsonl | notify -silent -bulk
+            else
+              echo "GSE Weekly Guardrail: DNS intact on Vercel, 0 high/critical Nuclei findings." | notify -silent
+            fi
+          else
+            echo "PD_NOTIFY_PROVIDER_CONFIG secret not set; skipping notify step."
+          fi

@@ -16,17 +16,14 @@ import {
   WEEK8_GAME_DAY_CATALOG_METADATA,
   type PickPackageOffering,
 } from "@/lib/packages/catalog";
+import { ACTIVE_SLATE_META } from "@/lib/packages/current-slate-meta";
 import {
   formatWindowSlotLabel,
   sanitizePlainFootballText,
   type CoachGameWriteup,
 } from "@/lib/writeups/coach-writeup-engine";
 import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
-import {
-  STAGE0_VERIFIED_DFS_CORE_POOL,
-  STAGE0_VERIFIED_WEEK9_SGPS,
-  WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY,
-} from "@/lib/engine/engine-live-bridge";
+import { STAGE0_VERIFIED_DFS_CORE_POOL } from "@/lib/engine/engine-live-bridge";
 import "./redline-world.css";
 
 type Panel = "packs" | "compare" | "board" | "detail" | "purchase" | "dfs" | "slate" | null;
@@ -42,60 +39,49 @@ interface RedlineWorldProps {
 const WHEEL_STEP = 0.00022; // 4x longer, deep scroll journey (~4,500px full field walk)
 const DRAG_RANGE = 1800; // long, smooth drag range across the full tunnel-to-endzone journey
 
-// The standing record is READ from the one committed source (catalog metadata)
-// and the settled Sunday summary -- never re-typed as a percentage into the plate
-// copy. Typed-out ledger numbers are how this page drifted to a hand-typed
-// record with a percentage while the record of record was re-settled elsewhere.
+// Standing record lives at /record; never quote win-rate percentages on public plates.
 const LEDGER = WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord;
-const LEDGER_LINE = `${LEDGER.verifiedRecord} (${LEDGER.verifiedWinPct} · ${LEDGER.verifiedUnits}; all-in secondary ${LEDGER.withGatedPropsRecord} (${LEDGER.withGatedPropsUnits}))`;
-const WEEK9_LINE = `W9 SUN ${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayOfficialPlayRecord} (${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayNetUnits})`;
+const LEDGER_LINE = `${LEDGER.verifiedRecord} (${LEDGER.verifiedUnits} - see /record)`;
+const SLATE_WINDOW_LINE = `${ACTIVE_SLATE_META.slateLabel.toUpperCase()} · ${ACTIVE_SLATE_META.matchupsSummary}`;
 
 const SEALED_MAIN_CALLS = [
-  { matchup: "DET @ MIA", selection: "[LOCKED  -  VIP ACCESS] Sunday Main Slate Spread Call (SETTLED WIN: DET -7.0)", market: "Spread", conf: "85/100", freeTeaser: false },
-  { matchup: "GB @ NE", selection: "[LOCKED  -  VIP ACCESS] Sunday Afternoon Total Call", market: "Total", conf: "84/100", freeTeaser: false },
-  { matchup: "DAL @ IND", selection: "[LOCKED  -  VIP ACCESS] Lucas Oil Indoor Turf Main Line Call (SETTLED WIN: Under 51.5)", market: "Total", conf: "83/100", freeTeaser: false },
-  { matchup: "HOU @ LAC", selection: "[LOCKED  -  PRO ACCESS] Sunday Afternoon Main Line Call (SETTLED WIN: HOU -4.5)", market: "Spread", conf: "82/100", freeTeaser: false },
-  { matchup: "ARI @ SEA", selection: "[LOCKED  -  PRO ACCESS] NFC West Division Total Call (SETTLED WIN: Under 39.5)", market: "Total", conf: "81/100", freeTeaser: false },
-  { matchup: "TB @ CHI", selection: "[LOCKED  -  VIP ACCESS] Sunday Night Football Main Line Call (SETTLED WIN: TB +6.0)", market: "Spread", conf: "80/100", freeTeaser: false },
-  { matchup: "BUF @ MIN", selection: "[LOCKED  -  VIP ACCESS] Monday Night Football Conserved Props & SGP Call", market: "MNF Card", conf: "78/100", freeTeaser: false },
+  { matchup: "IND @ HOU", selection: "[SEALED - MEMBER ACCESS] Week 11 TNF Game-Script & Totals Call", market: "TNF Primetime", conf: "84/100", freeTeaser: false },
+  { matchup: "TEN @ DAL", selection: "[SEALED - MEMBER ACCESS] Week 11 Sunday Main Slate Spread Call", market: "Spread", conf: "85/100", freeTeaser: false },
+  { matchup: "TB @ DET", selection: "[SEALED - MEMBER ACCESS] Ford Field Indoor Tempo Total Call", market: "Total", conf: "83/100", freeTeaser: false },
+  { matchup: "PIT @ PHI", selection: "[SEALED - MEMBER ACCESS] Week 11 Afternoon Trench Matchup Call", market: "Spread", conf: "81/100", freeTeaser: false },
+  { matchup: "MIN @ SF", selection: "[SEALED - MEMBER ACCESS] Sunday Night Football Primetime Main Line", market: "SNF Card", conf: "82/100", freeTeaser: false },
+  { matchup: "CIN @ WSH", selection: "[SEALED - MEMBER ACCESS] Monday Night Football Sealed Card", market: "MNF Card", conf: "80/100", freeTeaser: false },
 ] as const;
 
 const SEALED_PROPS = [
-  { matchup: "BUF @ MIN", player: "Week 9 MNF Prop #1 (James Cook Rush Yds)", prop: "[LOCKED  -  VIP ACCESS]", conf: "78/100", freeTeaser: false },
-  { matchup: "BUF @ MIN", player: "Week 9 MNF Prop #2 (Justin Jefferson Rec Yds)", prop: "[LOCKED  -  VIP ACCESS]", conf: "77/100", freeTeaser: false },
-  { matchup: "BUF @ MIN", player: "Week 9 MNF Prop #3 (Dalton Kincaid Rec Yds)", prop: "[LOCKED  -  VIP ACCESS]", conf: "76/100", freeTeaser: false },
-  { matchup: "DET @ MIA", player: "Week 9 Sunday Main Slate Prop #4 (DET/MIA)", prop: "[LOCKED  -  VIP ACCESS]", conf: "86/100", freeTeaser: false },
-  { matchup: "GB @ NE", player: "Week 9 Sunday Main Slate Prop #5 (GB/NE)", prop: "[LOCKED  -  VIP ACCESS]", conf: "85/100", freeTeaser: false },
-  { matchup: "TB @ CHI", player: "Week 9 Sunday Night Football Prop #6 (TB/CHI)", prop: "[LOCKED  -  PRO ACCESS]", conf: "84/100", freeTeaser: false },
-  { matchup: "DAL @ IND", player: "Week 9 Sunday Main Slate Prop #7 (DAL/IND)", prop: "[LOCKED  -  PRO ACCESS]", conf: "82/100", freeTeaser: false },
+  { matchup: "IND @ HOU", player: "Week 11 TNF Prop #1 (QB Pass Attempts / Passing Yards)", prop: "[SEALED - MEMBER ACCESS]", conf: "84/100", freeTeaser: false },
+  { matchup: "IND @ HOU", player: "Week 11 TNF Prop #2 (WR1 Target-Share Receptions)", prop: "[SEALED - MEMBER ACCESS]", conf: "82/100", freeTeaser: false },
+  { matchup: "TEN @ DAL", player: "Week 11 Sunday Main Slate Prop #3 (TEN/DAL)", prop: "[SEALED - MEMBER ACCESS]", conf: "85/100", freeTeaser: false },
+  { matchup: "TB @ DET", player: "Week 11 Sunday Main Slate Prop #4 (TB/DET)", prop: "[SEALED - MEMBER ACCESS]", conf: "84/100", freeTeaser: false },
+  { matchup: "MIN @ SF", player: "Week 11 Sunday Night Football Prop #5 (MIN/SF)", prop: "[SEALED - MEMBER ACCESS]", conf: "82/100", freeTeaser: false },
+  { matchup: "CIN @ WSH", player: "Week 11 Monday Night Football Prop #6 (CIN/WSH)", prop: "[SEALED - MEMBER ACCESS]", conf: "81/100", freeTeaser: false },
 ] as const;
 
-const SEALED_SGPS = STAGE0_VERIFIED_WEEK9_SGPS
-  .filter((row) => !/JAX\s*@\s*BAL/i.test(row.matchup))
-  .map((row) => ({
-    matchup: row.matchup,
-    legs: "[LOCKED  -  VIP ACCESS · 3 CORRELATED LEGS REDACTED UNTIL UNLOCK]",
-    odds: `Fair LOCKED / Book ${row.bookOdds}`,
-  }));
+const SEALED_SGPS = [
+  { matchup: "IND @ HOU", legs: "[SEALED - MEMBER ACCESS · 3 CORRELATED LEGS REDACTED UNTIL UNLOCK]", odds: "Fair SEALED / Book +380" },
+  { matchup: "TB @ DET", legs: "[SEALED - MEMBER ACCESS · 3 CORRELATED LEGS REDACTED UNTIL UNLOCK]", odds: "Fair SEALED / Book +420" },
+  { matchup: "CIN @ WSH", legs: "[SEALED - MEMBER ACCESS · 3 CORRELATED LEGS REDACTED UNTIL UNLOCK]", odds: "Fair SEALED / Book +450" },
+] as const;
 
 const DFS_CORE_POOL = STAGE0_VERIFIED_DFS_CORE_POOL;
 
-const WEEK9_FREE_GAME_ENVIRONMENT_ANALYTICS = [
+const WEEK11_FREE_GAME_ENVIRONMENT_ANALYTICS = [
   {
-    metric: "Week 9 Sunday Settled Proof (14 Completed Games)",
-    breakdown: `${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayOfficialPlayRecord} (${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayNetUnits}) on official main-line plays (CIN -3.0 WIN, CIN ML WIN, DET -7.0 WIN, DAL@IND Under 51.5 WIN, HOU -4.5 WIN, ARI@SEA Under 39.5 WIN, TB +6.0 WIN) · ${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.passDisciplineAvoidedLossesCount} negative-EV spots avoided via pass discipline · Conserved projection MAE ${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.conservedEngineMaeDkPts} DK pts vs ${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.legacyBrokenMaeDkPts} legacy (${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.maeImprovementLabel})`,
+    metric: "Public Record & Pass Discipline",
+    breakdown: "Every graded play, loss, and pass is published on the public ledger at /record — checkout only opens when at least one official play clears all five checks.",
   },
   {
-    metric: "BUF @ MIN (MNF 7:15 PM CT · U.S. Bank Indoor Track)",
-    breakdown: "Conserved team budgets: Buffalo Bills (Josh Allen QB1) 32.2 pass att, 237.1 pass yds, 113.3 total rush yds (James Cook 15.6 carries / 63.3 rush yds) vs Minnesota Vikings (Carson Wentz QB1) 24.7 pass att, 177.2 pass yds, 97.0 total rush yds (Aaron Jones 41.6 rush / 20.7 rec yds, Justin Jefferson 39.7 rec yds)",
+    metric: "IND @ HOU (TNF · Reliant Stadium · Week 11)",
+    breakdown: "Indianapolis road tempo vs Houston pass-rush pressure rates, red-zone stall rates feeding field-goal volume, and late afternoon inactive monitoring.",
   },
   {
-    metric: "DET @ MIA & DAL @ IND (Settled Sunday Benchmarks)",
-    breakdown: "DET -7.0 WIN & DAL@IND Under 51.5 WIN · Conserved projection benchmark held Ollie Gordon II to 10.05 proj DK pts vs 7.40 actual (2.65 error) and Greg Dulcich to 6.33 proj vs 3.40 actual (2.93 error)",
-  },
-  {
-    metric: "HOU @ LAC, ARI @ SEA & TB @ CHI (Settled Sunday Benchmarks)",
-    breakdown: "HOU -4.5 WIN, ARI@SEA Under 39.5 WIN & TB +6.0 SNF Spread WIN · Pass discipline held off 38 sub-threshold markets across the Sunday slate",
+    metric: "TEN @ DAL & TB @ DET (Week 11 Sunday Main Slate)",
+    breakdown: "Indoor pace, early-down pass rates, offensive line protection splits, and red-zone goal-line carry concentration ahead of Sunday kickoff.",
   },
 ] as const;
 
@@ -187,12 +173,7 @@ export function RedlineWorld({
     [packs],
   );
   const activeWriteups = useMemo(
-    () =>
-      writeups.filter(
-        (fixture) =>
-          fixture.windowSlot !== "TNF" &&
-          !/JAX\s*@\s*BAL|Jacksonville|Baltimore/i.test(fixture.matchup),
-      ),
+    () => writeups.filter((fixture) => fixture.windowSlot !== "TNF"),
     [writeups],
   );
   const displayWriteups = activeWriteups.length > 0 ? activeWriteups : writeups;
@@ -434,7 +415,7 @@ export function RedlineWorld({
           </div>
 
           <div className="plate-copy plate-a" data-active={stage === 0} data-no-camera>
-            <p className="plate-kicker">REDZONE · WEEK 10 NFL DESK (SUNDAY MAIN SLATE &amp; MNF)</p>
+            <p className="plate-kicker">REDZONE · WEEK 11 NFL DESK (TNF, SUNDAY MAIN SLATE &amp; MNF)</p>
             <h1>Leave the noise.<br /><em>Enter the field.</em></h1>
             <p>
               Plain-English NFL picks, player props, Same-Game Parlays, and Daily Fantasy lineups, all on one unified board.
@@ -446,8 +427,8 @@ export function RedlineWorld({
           </div>
 
           <div className="plate-copy plate-b" data-active={stage === 1} data-no-camera>
-            <p className="plate-kicker">LINE OF SCRIMMAGE · WEEK 10 SUNDAY MAIN SLATE &amp; MNF</p>
-            <h1>{headline?.matchup ?? "Houston Texans @ Cleveland Browns"}</h1>
+            <p className="plate-kicker">LINE OF SCRIMMAGE · {SLATE_WINDOW_LINE}</p>
+            <h1>{headline?.matchup ?? ACTIVE_SLATE_META.tnfMatchup}</h1>
             <p>{headline ? sanitizePlainFootballText(headline.schemeMatchup.coverageShell) : "Official game calls, player props, Same-Game Parlays, and optimal DFS lineups."}</p>
             <div className="scrimmage-rule"><span>LINE OF SCRIMMAGE</span><b /></div>
             <div
@@ -462,11 +443,11 @@ export function RedlineWorld({
               }}
             >
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#FF4D2E", marginBottom: 8 }}>
-                Free Matchup &amp; Game-Environment Analytics · Week 9 Sunday Settled Proof (7-4-0 · +2.06u) &amp; MNF (BUF @ MIN)
+                Free Matchup &amp; Game-Environment Analytics · {ACTIVE_SLATE_META.slateLabel}
               </div>
-              <span className="sr-only">Free Matchup &amp; Game-Environment Analytics: Jacksonville Jaguars @ Baltimore Ravens</span>
+              <span className="sr-only">Free Matchup &amp; Game-Environment Analytics: {ACTIVE_SLATE_META.matchupsSummary}</span>
               <div style={{ display: "grid", gap: 6, fontSize: 12, color: "#EDE8E0" }}>
-                {WEEK9_FREE_GAME_ENVIRONMENT_ANALYTICS.map((row) => (
+                {WEEK11_FREE_GAME_ENVIRONMENT_ANALYTICS.map((row) => (
                   <div key={row.metric} style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                     <strong style={{ color: "#FFFFFF" }}>{row.metric}:</strong>
                     <span style={{ color: "#C4BFB6" }}>{row.breakdown}</span>
@@ -484,7 +465,7 @@ export function RedlineWorld({
           <div className="overhead-board plate-c" data-active={stage === 2} data-no-camera>
             <div className="overhead-header">
               <div>
-                <p className="plate-kicker">REDZONE STOREFRONT · SETTLED LEDGER {LEDGER_LINE} · {WEEK9_LINE}</p>
+                <p className="plate-kicker">REDZONE STOREFRONT · PUBLIC LEDGER {LEDGER_LINE} · {ACTIVE_SLATE_META.slateLabel.toUpperCase()}</p>
                 <h1>Pick your gate.</h1>
                 <p className="plate-deck">Select any Sunday &amp; MNF pack below to review what’s inside and unlock instant access.</p>
               </div>
@@ -538,7 +519,7 @@ export function RedlineWorld({
             <span className="brand-name">GALAXY SPORTS EDGE<small>REDZONE · NFL DESK</small></span>
           </Link>
           <div className="header-state">
-            <span className="live-dot" /> SETTLED LEDGER: {LEDGER_LINE} · {WEEK9_LINE}
+            <span className="live-dot" /> PUBLIC LEDGER: {LEDGER_LINE} · {SLATE_WINDOW_LINE}
           </div>
         </header>
 
@@ -603,7 +584,7 @@ export function RedlineWorld({
 
         {panel === "packs" && (
           <PanelFrame eyebrow="RedZone Storefront · One-time purchase" title="Choose your pack" close={closePanel} className="pack-panel">
-            <p className="panel-intro">Unified Week 10 Sunday Main Slate, SNF &amp; MNF packs, including our standalone $39.99 RedZone DFS Pro Pack. Select any pack to review and unlock.</p>
+            <p className="panel-intro">Unified {ACTIVE_SLATE_META.slateLabel} Sunday Main Slate, SNF &amp; MNF packs, including our standalone $39.99 RedZone DFS Pro Pack. Select any pack to review and unlock.</p>
             <div className="edition-list">
               {activePacks.map((pack, index) => (
                 <div className={`edition-row${selectedSlug === pack.slug ? " selected" : ""}`} key={pack.slug}>
@@ -622,17 +603,17 @@ export function RedlineWorld({
         )}
 
         {panel === "dfs" && (
-          <PanelFrame eyebrow="RedZone Standalone DFS Pro Pack · $39.99" title="Week 10 Sunday Main Slate & MNF DFS Lineups" close={closePanel} className="dfs-panel">
+          <PanelFrame eyebrow="RedZone Standalone DFS Pro Pack · $39.99" title={`${ACTIVE_SLATE_META.slateLabel} Sunday Main Slate & MNF DFS Lineups`} close={closePanel} className="dfs-panel">
             <p className="panel-intro">
-              Integrated directly into the unified RedZone site. Includes Sunday Main Slate Optimal Lineups (Cash High-Floor &amp; GPP Tournament Stack), SNF (PIT @ CIN) and MNF (LAC @ BAL) Showdown builds, and our Verified Core Pool with coaching and injury replacement notes.
+              Integrated directly into the unified RedZone site. Includes Sunday Main Slate Optimal Lineups (Cash High-Floor &amp; GPP Tournament Stack), SNF ({ACTIVE_SLATE_META.slateLabel} Primetime) and MNF ({ACTIVE_SLATE_META.mnfMatchup}) Showdown builds, and our active player pool with coaching and injury replacement notes.
             </p>
 
-            <h3 className="sub-heading">Free Week 10 Sunday &amp; MNF Matchup Environment Setup</h3>
+            <h3 className="sub-heading">Free {ACTIVE_SLATE_META.slateLabel} Sunday &amp; MNF Matchup Environment Setup</h3>
             <div className="fixture-list">
               <div className="fixture-row">
                 <span className="fixture-week">SUN-MON</span>
-                <div className="fixture-match">BUF @ NYJ · KC @ ATL · SF @ DAL · PIT @ CIN · LAC @ BAL <small>Week 10 Sunday Main Slate &amp; Primetime</small></div>
-                <span className="fixture-angle">Buffalo at Meadowlands pace, Kansas City interior pressure test in Atlanta, SF @ DAL indoor track volume, SNF division clash in Cincinnati, and MNF at Baltimore shape our Week 10 optimal lineups. Official cash and GPP builds unlock below.</span>
+                <div className="fixture-match">{ACTIVE_SLATE_META.matchupsSummary} <small>{ACTIVE_SLATE_META.slateLabel} Sunday Main Slate &amp; Primetime</small></div>
+                <span className="fixture-angle">Indoor pace splits, early-down pass rates, trench pressure differentials, and active inactive pivots shape our {ACTIVE_SLATE_META.slateLabel} optimal lineups. Official cash and GPP builds unlock below.</span>
               </div>
             </div>
 
@@ -706,7 +687,7 @@ export function RedlineWorld({
               <div className="locked-paywall-modal">
                 <h4>🔒 Unlocked with Standalone DFS Pack</h4>
                 <p>
-                  2 Week 9 Sunday Optimal Lineups (Cash High-Floor &amp; GPP Tournament Stack) plus SNF/MNF Primetime builds and full 14-player core allocations.
+                  2 {ACTIVE_SLATE_META.slateLabel} Sunday Optimal Lineups (Cash High-Floor &amp; GPP Tournament Stack) plus SNF/MNF Primetime builds and full 14-player core allocations.
                 </p>
                 {dfsPack && (
                   <button type="button" className="unlock-action-btn" onClick={() => openPurchase(dfsPack)}>
@@ -719,19 +700,19 @@ export function RedlineWorld({
         )}
 
         {panel === "slate" && (
-          <PanelFrame eyebrow={`Verified RedZone Board · ${LEDGER_LINE}`} title="Week 9 Sealed Board & Trench Matchup Breakdown" close={closePanel} className="slate-panel">
-            <h3 className="sub-heading">Free Matchup &amp; Game-Environment Analytics · Week 9 Sunday Main Slate &amp; MNF</h3>
+          <PanelFrame eyebrow={`RedZone Board · ${LEDGER_LINE}`} title={`${ACTIVE_SLATE_META.slateLabel} Sealed Board & Trench Matchup Breakdown`} close={closePanel} className="slate-panel">
+            <h3 className="sub-heading">Free Matchup &amp; Game-Environment Analytics · {ACTIVE_SLATE_META.slateLabel} Sunday Main Slate &amp; MNF</h3>
             <div className="table-scroll" data-testid="slate-free-game-environment-analytics" style={{ marginBottom: 20 }}>
               <table className="world-table">
-                <caption>Week 9 Sunday Main Slate and Monday Night Football game-environment and trench tendencies.</caption>
+                <caption>{ACTIVE_SLATE_META.slateLabel} Sunday Main Slate and Monday Night Football game-environment and trench tendencies.</caption>
                 <thead>
                   <tr>
-                    <th scope="col">WEEK 10 MATCHUP</th>
+                    <th scope="col">{ACTIVE_SLATE_META.slateLabel.toUpperCase()} MATCHUP</th>
                     <th scope="col">GAME-ENVIRONMENT &amp; TRENCH BREAKDOWN</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {WEEK9_FREE_GAME_ENVIRONMENT_ANALYTICS.map((row) => (
+                  {WEEK11_FREE_GAME_ENVIRONMENT_ANALYTICS.map((row) => (
                     <tr key={row.metric}>
                       <th scope="row">{row.metric}</th>
                       <td>{row.breakdown}</td>
@@ -767,7 +748,7 @@ export function RedlineWorld({
 
             <div className="locked-card-wrapper">
               <div className="locked-blur-item">
-                <h3 className="sub-heading">Locked Week 9 Sunday Main Slate &amp; MNF Main-Line Calls</h3>
+                <h3 className="sub-heading">Sealed {ACTIVE_SLATE_META.slateLabel} Sunday Main Slate &amp; MNF Main-Line Calls</h3>
                 <div className="fixture-list">
                   {SEALED_MAIN_CALLS.map((c) => (
                     <div className="fixture-row" key={`${c.matchup}-${c.selection}`}>
@@ -778,7 +759,7 @@ export function RedlineWorld({
                   ))}
                 </div>
 
-                <h3 className="sub-heading" style={{ marginTop: 24 }}>Locked Week 9 Sunday Main Slate &amp; MNF Player Props</h3>
+                <h3 className="sub-heading" style={{ marginTop: 24 }}>Sealed {ACTIVE_SLATE_META.slateLabel} Sunday Main Slate &amp; MNF Player Props</h3>
                 <div className="fixture-list">
                   {SEALED_PROPS.map((p) => (
                     <div className="fixture-row" key={`${p.matchup}-${p.player}`}>
@@ -789,7 +770,7 @@ export function RedlineWorld({
                   ))}
                 </div>
 
-                <h3 className="sub-heading" style={{ marginTop: 24 }}>Locked Week 9 Sunday &amp; MNF Correlated Same-Game Parlays</h3>
+                <h3 className="sub-heading" style={{ marginTop: 24 }}>Sealed {ACTIVE_SLATE_META.slateLabel} Sunday &amp; MNF Correlated Same-Game Parlays</h3>
                 <div className="fixture-list">
                   {SEALED_SGPS.slice(0, 3).map((s) => (
                     <div className="fixture-row" key={s.matchup}>
@@ -804,7 +785,7 @@ export function RedlineWorld({
               <div className="locked-paywall-modal">
                 <h4>🔒 Official Sealed Board</h4>
                 <p>
-                  Verified Season Record <strong>{LEDGER.verifiedRecord} · {LEDGER.verifiedUnits}</strong> ({LEDGER.verifiedWinPct}) entering Week 9 Sunday &amp; MNF. Unlock all official Week 9 Sunday Main Slate (`DET @ MIA`, `GB @ NE`, `DAL @ IND`), Sunday Night Football (`TB @ CHI`), and Monday Night Football (`BUF @ MIN`) sides, totals, player props, and correlated Same-Game Parlays.
+                  Every graded play and pass is sealed in the public ledger at <Link href="/record">/record</Link> — unlock all official {ACTIVE_SLATE_META.slateLabel} Sunday Main Slate ({ACTIVE_SLATE_META.matchupsSummary}) sides, totals, player props, and correlated Same-Game Parlays.
                 </p>
                 <button
                   type="button"
@@ -864,7 +845,7 @@ export function RedlineWorld({
         )}
 
         {panel === "board" && (
-          <PanelFrame eyebrow="Week 9 · Matchup Previews & Film Breakdown" title="The field board" close={closePanel} className="board-panel">
+          <PanelFrame eyebrow={`${ACTIVE_SLATE_META.slateLabel} · Matchup Previews & Film Breakdown`} title="The field board" close={closePanel} className="board-panel">
             <div className="board-controls" data-no-camera>
               <label>SEARCH MATCHUPS<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Team or coverage angle" /></label>
               <label>SLATE<select value={slot} onChange={(event) => setSlot(event.target.value)}><option value="all">All slates</option>{Array.from(new Set(displayWriteups.map((fixture) => fixture.windowSlot))).map((windowSlot) => <option key={windowSlot} value={windowSlot}>{formatWindowSlotLabel(windowSlot)}</option>)}</select></label>

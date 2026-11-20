@@ -53,6 +53,12 @@ import {
   InternalLlmError,
   type InternalLlmResult,
 } from "@/lib/claude-api/internal-llm";
+import {
+  callVercelGatewayMessages,
+  isVercelGatewayConfigured,
+  VercelGatewayConfigError,
+  VercelGatewayMessagesError,
+} from "@/lib/claude-api/providers/vercel-gateway";
 import type { ProviderRouteId } from "./contracts";
 
 type Env = Record<string, string | undefined>;
@@ -120,6 +126,7 @@ function mapTransportError(error: unknown): ProviderDispatchOutcome {
   if (
     error instanceof BedrockConfigError ||
     error instanceof VertexConfigError ||
+    error instanceof VercelGatewayConfigError ||
     (error instanceof InternalLlmError && error.status === 0)
   ) {
     // Config problems are detected before any network send.
@@ -130,6 +137,7 @@ function mapTransportError(error: unknown): ProviderDispatchOutcome {
     error instanceof CerebrasMessagesError ||
     error instanceof BedrockMessagesError ||
     error instanceof VertexMessagesError ||
+    error instanceof VercelGatewayMessagesError ||
     error instanceof InternalLlmError
   ) {
     const status = (error as { status?: number }).status ?? 0;
@@ -265,6 +273,30 @@ export function dispatchLocal(env: Env = process.env): ProviderDispatchFn {
   };
 }
 
+export function dispatchVercelGateway(env: Env = process.env): ProviderDispatchFn {
+  return async (payload) => {
+    if (!isVercelGatewayConfigured(env)) {
+      return notConfigured("AI_GATEWAY_API_KEY missing");
+    }
+    try {
+      const result = await callVercelGatewayMessages(
+        {
+          model: payload.modelRequested,
+          system: payload.system,
+          user: payload.user,
+          maxTokens: payload.maxTokens,
+          ...(payload.temperature !== undefined ? { temperature: payload.temperature } : {}),
+          ...(payload.fetchImpl ? { fetchImpl: payload.fetchImpl } : {}),
+        },
+        env,
+      );
+      return success("vercel-gateway", result);
+    } catch (error) {
+      return mapTransportError(error);
+    }
+  };
+}
+
 /**
  * The complete route→adapter table. `Record<ProviderRouteId, …>` makes a
  * missing adapter a compile error — every registered route has exactly one
@@ -279,5 +311,6 @@ export function createProviderDispatchers(
     vertex: dispatchVertex(env),
     cerebras: dispatchCerebras(env),
     local: dispatchLocal(env),
+    "vercel-gateway": dispatchVercelGateway(env),
   };
 }

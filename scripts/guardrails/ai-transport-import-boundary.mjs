@@ -157,6 +157,7 @@ export const PERMANENT_ADAPTER_ALLOWLIST = new Set([
   "apps/web/lib/claude-api/providers/bedrock.ts",
   "apps/web/lib/claude-api/providers/vertex.ts",
   "apps/web/lib/claude-api/providers/cerebras.ts",
+  "apps/web/lib/claude-api/providers/vercel-gateway.ts",
   // The sealed AI control-plane's own EXACT per-provider dispatch adapters
   // (directive §9.3, wave5): one provider route = one adapter = one
   // sanctioned transport module, reachable only through the sealed executor

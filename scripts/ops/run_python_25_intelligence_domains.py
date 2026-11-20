@@ -48,13 +48,20 @@ def run_all_31_datasets(away: str = "JAX", home: str = "BAL") -> dict[str, Any]:
     stepn = REPO_ROOT / "data" / "step-n-market"
     datasets_report: dict[str, Any] = {}
 
-    # 1. FTN Charting 2026 (18,019 rows x 29 cols)
-    ftn_df = pd.read_parquet(nflv / "ftn_charting_2026.parquet")
+    # 1. FTN Charting 2026 joined with 2026 PBP
+    fresh_ftn = REPO_ROOT / "intelligence" / "coaching" / "data" / "ftn_charting_2026.parquet"
+    ftn_df = pd.read_parquet(fresh_ftn if fresh_ftn.is_file() else (nflv / "ftn_charting_2026.parquet"))
     pbp_df = _load_pbp_2026_df()
-    pbp_sub = pbp_df[["game_id", "play_id", "posteam", "defteam", "epa", "success"]].rename(
-        columns={"game_id": "nflverse_game_id", "play_id": "nflverse_play_id"}
-    )
-    ftn_merged = ftn_df.merge(pbp_sub, on=["nflverse_game_id", "nflverse_play_id"], how="left")
+    if "play_id" in pbp_df.columns and "success" in pbp_df.columns:
+        pbp_sub = pbp_df[["game_id", "play_id", "posteam", "defteam", "epa", "success"]].rename(
+            columns={"game_id": "nflverse_game_id", "play_id": "nflverse_play_id"}
+        )
+        ftn_merged = ftn_df.merge(pbp_sub, on=["nflverse_game_id", "nflverse_play_id"], how="left")
+    else:
+        ftn_merged = ftn_df.copy()
+        for col, default in (("posteam", ""), ("defteam", ""), ("epa", 0.0), ("success", 0.0)):
+            if col not in ftn_merged.columns:
+                ftn_merged[col] = default
     ftn_teams = {}
     for tm in (away, home):
         tm_off = ftn_merged[ftn_merged["posteam"] == tm]

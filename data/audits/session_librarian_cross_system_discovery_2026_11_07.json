@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at_utc": "2026-11-16T04:08:21.995112+00:00",
+  "generated_at_utc": "2026-11-20T07:31:41.499527+00:00",
   "skill": "session-librarian",
   "mutation_safety_status": "READ_ONLY_DISCOVERY_AND_PLAN_ONLY_ZERO_MUTATIONS",
   "cross_system_checklist_8_of_8": {
@@ -9,94 +9,94 @@
       "sessions_discovered": 20,
       "recent_sessions": [
         {
-          "id": "local-ee392f03de40139443c7440fdb9f622cbf2db485afe8fede73da55eb3fe086c0",
+          "id": "local-9e80f414d6b0613a70fff3f3cfd63c240d578a0e21e7be512d0947d6e1f1b171",
           "title": null,
-          "model": "deepseek/deepseek-v4.1-flash",
-          "billing_provider": "openrouter",
+          "model": "qwen/qwen4-max:free",
+          "billing_provider": "custom",
           "source": "cron",
-          "started": "2026-11-15 21:34:36",
-          "last_active": "2026-11-15 22:07:52"
+          "started": "2026-11-19 23:10:29",
+          "last_active": "2026-11-20 01:07:42"
         },
         {
-          "id": "local-b7f9eddb46993920ca663d5b64d9d0e479677d76253022cbb3577e7e182db403",
-          "title": null,
-          "model": "deepseek/deepseek-v4.1-flash",
-          "billing_provider": "openrouter",
+          "id": "local-597db3cb659b2032522b137897250e63b1e22b56ff1650ef7b2dd1251e804092",
+          "title": "takeover-build-loop \u00b7 Nov 19 19:09",
+          "model": "qwen/qwen4-max:free",
+          "billing_provider": "custom",
           "source": "cron",
-          "started": "2026-11-15 16:07:05",
-          "last_active": "2026-11-15 17:27:47"
+          "started": "2026-11-19 18:50:49",
+          "last_active": "2026-11-19 19:09:13"
         },
         {
-          "id": "local-0e35e826c8908bb71401370dadcfbed7c0ec9e055f5de928b83ff93e0d5ed3e5",
-          "title": "cadence-v4.0-sun-1335 \u00b7 Nov 15 13:44",
-          "model": "deepseek/deepseek-v4.1-flash",
-          "billing_provider": "openrouter",
+          "id": "local-bb0d2b5d6055264d5097a8c06c3ff1b7a61564784dfdaba3ab3aa3fd71b65c44",
+          "title": "cadence-v2.5-thu-1630 \u00b7 Nov 19 16:55",
+          "model": "qwen/qwen4-max:free",
+          "billing_provider": "custom",
           "source": "cron",
-          "started": "2026-11-15 13:35:05",
-          "last_active": "2026-11-15 13:44:24"
+          "started": "2026-11-19 16:31:24",
+          "last_active": "2026-11-19 16:55:27"
         },
         {
-          "id": "local-c1acfd8c75b3143243d7e9e86a0e633dffff263dd8db6de9af14a1aef250021d",
-          "title": "takeover-build-loop \u00b7 Nov 15 12:06",
-          "model": "deepseek/deepseek-v4.1-flash",
-          "billing_provider": "openrouter",
+          "id": "local-66d9f73817ac80f53f397ffc75d9c1643ccecddb26ff3bd16798678e8d64e679",
+          "title": "takeover-build-loop \u00b7 Nov 19 14:50",
+          "model": "qwen/qwen4-max:free",
+          "billing_provider": "custom",
           "source": "cron",
-          "started": "2026-11-15 11:02:05",
-          "last_active": "2026-11-15 12:05:16"
+          "started": "2026-11-19 13:30:05",
+          "last_active": "2026-11-19 14:50:19"
         },
         {
-          "id": "local-36642d73d9e15c2ff46d22d24b2f07dfb857e35a93652cc355ea63e7c0f71c60",
-          "title": "cadence-v4.0-sun-1030 \u00b7 Nov 15 10:54",
-          "model": "deepseek/deepseek-v4.1-flash",
-          "billing_provider": "openrouter",
-          "source": "cron",
-          "started": "2026-11-15 10:30:05",
-          "last_active": "2026-11-15 10:54:29"
-        },
-        {
-          "id": "local-5be0db90b0f14e6e3f9c3230274cbdceeb16b6af3daf18684f2959c815ef327a",
-          "title": "Fetch latest main and prepare worktree",
-          "model": "qwen4-max-preview",
+          "id": "local-155dcf785172b84459086d326214493e75ff2059c3bd49f893e8cc9ebda42c64",
+          "title": "Charcuterie customer info",
+          "model": "qwen4-max",
           "billing_provider": "custom",
           "source": "local",
-          "started": "2026-11-15 00:32:09",
-          "last_active": "2026-11-15 09:41:08"
+          "started": "2026-11-16 11:57:08",
+          "last_active": "2026-11-19 09:49:02"
         },
         {
-          "id": "local-2827332d2da37e6fe3f33f210a43170898b68a15b549d0af3b0a32c66e71565d",
-          "title": "morning-standup-brief \u00b7 Nov 15 09:09",
+          "id": "local-74344ea357d8d5d2852757a9ebde442f138c76b25cc07fc07d62ce67849f0f28",
+          "title": "takeover-build-loop \u00b7 Nov 19 09:29",
           "model": "deepseek/deepseek-v4.1-flash",
           "billing_provider": "openrouter",
           "source": "cron",
-          "started": "2026-11-15 09:08:05",
-          "last_active": "2026-11-15 09:08:39"
+          "started": "2026-11-19 08:02:35",
+          "last_active": "2026-11-19 09:29:26"
         },
         {
-          "id": "local-987c489f2a1bc0cb43e057913c002f83b983e4d6400b9b1d844bca6c414edfc8",
-          "title": "takeover-build-loop \u00b7 Nov 15 07:00",
+          "id": "local-827ae42f59cb115e1ce8dafeca8dbd6c69aa38a17f18f17c84a393ae9c100421",
+          "title": "morning-standup-brief \u00b7 Nov 19 09:09",
           "model": "deepseek/deepseek-v4.1-flash",
           "billing_provider": "openrouter",
           "source": "cron",
-          "started": "2026-11-15 04:31:04",
-          "last_active": "2026-11-15 07:00:18"
+          "started": "2026-11-19 09:08:35",
+          "last_active": "2026-11-19 09:08:50"
         },
         {
-          "id": "local-f9ae876c423ad9e80a666d7407edc5ca8da01bf90a091e9238c1c622f12f5a00",
-          "title": "Placeholder response",
-          "model": "qwen4-max-preview",
-          "billing_provider": "custom",
+          "id": "local-b759e85059da8aa6291f4ed6dc26d9617be1513bdb0a54a245481c647486cf7f",
+          "title": "takeover-build-loop \u00b7 Nov 19 04:02",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "billing_provider": "openrouter",
+          "source": "cron",
+          "started": "2026-11-19 02:25:28",
+          "last_active": "2026-11-19 04:01:24"
+        },
+        {
+          "id": "local-f322925257edc211389575234b0d1c091bcf3f9fcbabd4297906d3a0a62f448a",
+          "title": "Access charcuterie wolf v8 ecosystem files",
+          "model": "deepseek/deepseek-v4.1-flash-1017",
+          "billing_provider": "antigravity-subscription-directsdk",
           "source": "local",
-          "started": "2026-11-15 00:10:31",
-          "last_active": "2026-11-15 00:26:12"
+          "started": "2026-11-17 11:30:46",
+          "last_active": "2026-11-18 22:47:55"
         },
         {
-          "id": "local-edfb092d41104222c9a065c1bfdf0a8835cbc4d130f4b87db14181cfc5cc1eda",
-          "title": null,
+          "id": "local-9573574a96fd7af0dbf382e1d67d75637f162b315fe957acdac59e64891a0158",
+          "title": "takeover-build-loop \u00b7 Nov 18 21:28",
           "model": "deepseek/deepseek-v4.1-flash",
           "billing_provider": "openrouter",
           "source": "cron",
-          "started": "2026-11-14 22:26:46",
-          "last_active": "2026-11-15 00:26:10"
+          "started": "2026-11-18 20:19:28",
+          "last_active": "2026-11-18 21:27:53"
         }
       ]
     },
@@ -124,12 +124,12 @@
     },
     "4_docs_7_buckets": {
       "dfs": 131,
-      "predictions": 352,
+      "predictions": 356,
       "props": 37,
       "fantasy": 29,
-      "engine": 2387,
+      "engine": 2412,
       "data-sources": 579,
-      "arxiv-program": 1589
+      "arxiv-program": 1595
     },
     "5_downloads_dk_exports": [
       "DKSalaries (1).csv",
@@ -140,45 +140,31 @@
       "DKSalaries.csv"
     ],
     "6_git_recent_commits": [
-      "648991cff feat(pregame-dfs): unify Stage-0 truth, 3-noon cadence, 360 boards, and  Showdown DFS optimizer",
-      "0edd941a7 chore(ledger): mark AUTON-WEEK10-DUAL-LOCK-25 DONE with Lock 1 and Lock 2 SHAs",
-      "2ce2d3ede feat(week10): Lock 2 official 10:32 AM CST Noon inactives, vacated-volume DFS conservation, and Owner Writeup",
-      "9334fa500 feat(week10): Lock 1 pre-inactives 12-game 10k-world dossiers, 4 DK slates, and web storefront sync",
-      "2264336ff docs(ops): record AUTON-ETHOS-WEEK10-LAUNCH-24 Week 10 launch readiness in ledger and handoff",
-      "0e9f1615d feat(week10): finalize IDP tackle calibration, 13/13 connected dossiers, 5 DK DFS packets & Sunday launch readiness",
-      "e98513369 Merge remote-tracking branch 'origin/main' into feat/ethos-overnight-week10-sunday-launch-2026-11-15",
-      "1bffc292e fix(seo): the site-wide JSON-LD was still publishing the pre-Nov-13 record to Google",
-      "22776bc03 fix(web): derive the public record on every crawlable manifest, and stop exempting the superseded snapshot",
-      "d17dd83a9 docs(ledger): record corpus-grounding-live CI sports_test guard",
-      "de59717ea test(prediction-engine): skip live Neon HNSW suite against ephemeral CI sports_test Postgres",
-      "ce17626fe docs(ledger): record origin/main 4b793c509 merge and optional mongodb typecheck fix",
-      "74eded412 fix(web): make optional mongodb dynamic import non-literal for clean CI typecheck",
-      "acd87422d Merge remote-tracking branch 'origin/main' into feat/autonomous-workflows-and-corpus-wiring-2026-11-13",
-      "4b793c509 fix(lint): drop the unused catch binding on the public package-unlock endpoint"
+      "6168cfadc feat(ops,intelligence): add live Week 11 TNF 24-prop/Showdown/-bankroll grader & 32-team 2026 PBP situational/trench/quarter priors",
+      "3b9992d98 fix(tnf,paywall): render all 24 IND @ HOU PLAY props, Play-To limits, Branch B 4-leg SGP & Week 11 Showdown DFS",
+      "265908a13 fix(whop,unlock): migrate verifyWhopMembership to v1 API & auto-unlock PaywallRevealCard on Whop purchase redirect",
+      "df09ae0b3 feat(storefront,whop): unlock stage-5 two-door Whop checkout for Week 11 TNF 24-prop card & wire 12 live Whop plans",
+      "fcfdf4790 feat(week11,tnf): publish live IND @ HOU 24-prop writeup, 77-market board, JEV spine & Stripe/Whop storefront",
+      "fca039460 docs(handoff): epistemic-gate tranche 5 \u2014 44 -> 34 (10 fixed, 0 new), ci.yml validation resurrection, Malik Davis finding named",
+      "513914bc0 fix(epistemic-gate): tranche 5 \u2014 Stage-0 clock pins, ledger single-source, ci.yml validation repair (#1303)",
+      "42a073e58 fix(epistemic-gate): make the settlement regression tests hermetic \u2014 no live ESPN write (#1302)",
+      "1605968bc docs(handoff): epistemic-gate tranche 3 \u2014 suite runs end-to-end (12 collection errors -> 0, 59 real failures visible)",
+      "9fcf0b71f fix(epistemic-gate): add sympy dep + isolated TS compiler for parity tests (#1300)",
+      "bbe77e677 Merge pull request #1291 from Beexly/feat/pregame-engine-dfs-harmony-2026-11-15",
+      "f34a8665f feat(guardrails,w11): verify 100pct corpus wiring and emit Week 11 TNF zero-surprise preflight receipt",
+      "0bd35ee86 chore(ops,gsi): consolidate Vercel crons 40->16, document route IA, GSI RUO grant brief, and hygiene audit",
+      "18eb015b5 docs(gcp,ops): author Motif P1/P2 decision packs and founder program evidence URL verifier",
+      "31ccc4931 feat(ops,gcp): implement Motif P0 L10 observability, L2+L5 event contracts, L6+L7 IAP/IAM, and L9 vault guard"
     ],
-    "7_cron_registry_jobs_count": 17,
+    "7_cron_registry_jobs_count": 28,
     "8_working_tree_verified": true
   },
   "proposed_organization_plan_table": [
     {
-      "session_id": "local-ee392f03de40139443c7440fdb9f622cbf2db485afe8fede73da55eb3fe086c0",
+      "session_id": "local-9e80f414d6b0613a70fff3f3cfd63c240d578a0e21e7be512d0947d6e1f1b171",
       "current_title": "<untitled>",
       "proposed_action": "RENAME_CANDIDATE (awaiting user confirmation)",
-      "proposed_new_title": "gse-week9-session-local-ee",
-      "reason": "Generic/empty session title reduces `/resume <title>` prefix discoverability."
-    },
-    {
-      "session_id": "local-b7f9eddb46993920ca663d5b64d9d0e479677d76253022cbb3577e7e182db403",
-      "current_title": "<untitled>",
-      "proposed_action": "RENAME_CANDIDATE (awaiting user confirmation)",
-      "proposed_new_title": "gse-week9-session-local-b7",
-      "reason": "Generic/empty session title reduces `/resume <title>` prefix discoverability."
-    },
-    {
-      "session_id": "local-edfb092d41104222c9a065c1bfdf0a8835cbc4d130f4b87db14181cfc5cc1eda",
-      "current_title": "<untitled>",
-      "proposed_action": "RENAME_CANDIDATE (awaiting user confirmation)",
-      "proposed_new_title": "gse-week9-session-local-ed",
+      "proposed_new_title": "gse-week9-session-local-9e",
       "reason": "Generic/empty session title reduces `/resume <title>` prefix discoverability."
     }
   ],

@@ -1,0 +1,24 @@
+id: gse-security-headers-and-security-txt
+
+info:
+  name: GSE Authorized Self-Audit - Security Headers and security.txt
+  author: gse-ops
+  severity: info
+  description: Verifies authorized Galaxy Sports Edge origins expose baseline transport security headers and /.well-known/security.txt.
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/"
+      - "{{BaseURL}}/.well-known/security.txt"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: header
+        words:
+          - "x-content-type-options"
+        case-insensitive: true

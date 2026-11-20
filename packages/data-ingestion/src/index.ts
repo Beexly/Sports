@@ -490,3 +490,39 @@ export {
   CITY_COORDINATES,
   type WeatherContextReading,
 } from "./nws-weather-client.js";
+
+export {
+  assertAllowedCrawlUrl,
+  crawlUrlWithCloudflareOrFallback,
+  type BrowserCrawlOptions,
+  type BrowserCrawlResult,
+} from "./cloudflare-browser-crawler.js";
+
+export {
+  NIM_BASE_URL,
+  NIM_SERVERLESS_RPM_LIMIT,
+  NIM_VERIFIED_MODELS,
+  NIM_MODEL_ALIASES,
+  SlidingWindowRpmLimiter,
+  resolveNimModelSlug,
+  callNimChat,
+  callNimEmbed,
+  type NimChatOptions,
+  type NimChatResult,
+  type NimEmbedOptions,
+} from "./nvidia-nim-suite.js";
+
+export {
+  isMongoAtlasConfigured,
+  archiveIntelDocument,
+  countSpooledDocuments,
+  type IntelArchiveDocument,
+  type ArchiveWriteResult,
+} from "./mongodb-intel-archive.js";
+
+export {
+  analyzeBeatTextWithCloudNl,
+  startVideoIntelligenceAnnotation,
+  recognizeAudioWithCloudSpeech,
+  type GcpNlAnalysisResult,
+} from "./gcp-ml-clients.js";

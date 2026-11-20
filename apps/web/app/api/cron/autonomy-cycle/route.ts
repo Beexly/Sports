@@ -20,6 +20,8 @@ import {
 import { db } from "@sports/db";
 import { planAutonomyCycle } from "@/lib/autonomy/operating-kernel";
 import { probeCompoundFabricAndGsiHealth } from "@/lib/autonomy/compound-fabric-probe";
+import { probePregameCadenceObservation } from "@/lib/autonomy/pregame-cadence-probe";
+import { probeStorefrontAndCloudHealth } from "@/lib/autonomy/storefront-and-cloud-probe";
 import {
   executeAutonomyCycle,
   resolveAutonomyBaseUrl,
@@ -100,6 +102,8 @@ export async function GET(request: Request): Promise<NextResponse> {
   }
 
   const compoundProbe = probeCompoundFabricAndGsiHealth();
+  const pregameCadence = probePregameCadenceObservation();
+  const storefrontAndCloud = probeStorefrontAndCloudHealth();
 
   const observation = {
     observedAt: new Date().toISOString(),
@@ -125,8 +129,10 @@ export async function GET(request: Request): Promise<NextResponse> {
     openPicks: null,
     canonicalSettled: null,
     minSettledForLearning: gates.minSettledPicksForLearning ?? 100,
+    pregameCadence,
     compoundFabricAgeMinutes: compoundProbe.compoundFabricAgeMinutes,
     gsiRuleInDoctrineHeld: compoundProbe.gsiRuleInDoctrineHeld,
+    storefrontAndCloud,
   };
 
   const plan = planAutonomyCycle(observation);

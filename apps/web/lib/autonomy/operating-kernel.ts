@@ -13,6 +13,7 @@
 
 import type { SettlementHealthBand } from "@/lib/performance/settlement-health";
 import type { SettlementRootCauseCode } from "@/lib/settlement/root-cause-analysis";
+import type { StorefrontAndCloudObservation } from "@/lib/autonomy/storefront-and-cloud-probe";
 
 export type AutonomySeverity = "P0" | "P1" | "P2" | "P3" | "OK";
 
@@ -46,7 +47,12 @@ export type AutonomyActionKind =
   | "QUARANTINE_ENGINE_INTEGRITY_LEAK"
   // Wave 14/16 Compound-Intelligence Fabric & GSI ADR-0003 Doctrine Monitoring
   | "RUN_COMPOUND_FABRIC_AUDIT"
-  | "QUARANTINE_GSI_DOCTRINE_BREACH";
+  | "QUARANTINE_GSI_DOCTRINE_BREACH"
+  // Pure owner-only advisories for storefront, AI gateway, cloud credits & legal deadlines
+  | "ALERT_STOREFRONT_CHECKOUT_GAP"
+  | "ALERT_AI_GATEWAY_OR_FREE_LANE_CLIFF"
+  | "ALERT_CLOUD_CREDIT_OR_CRON_DRIFT"
+  | "ALERT_FILING_DEADLINE_IMMINENT";
 
 export interface AutonomyAction {
   readonly kind: AutonomyActionKind;
@@ -108,6 +114,8 @@ export interface AutonomyObservation {
   readonly compoundFabricAgeMinutes?: number | null;
   /** Wave 16 GSI ADR-0003 rule-in-only neuro-biomarker doctrine check; undefined = not probed. */
   readonly gsiRuleInDoctrineHeld?: boolean;
+  /** Read-only storefront checkout, AI gateway, cloud cron drift & deadline probe. */
+  readonly storefrontAndCloud?: StorefrontAndCloudObservation | null;
 }
 
 /** I8 SLA: free-spine durable snap age ceiling (minutes). */
@@ -454,6 +462,63 @@ export function planAutonomyCycle(obs: AutonomyObservation): AutonomyPlan {
       requiresOwner: false,
       autonomousSafe: true,
     });
+  }
+
+  // ── Pure Storefront, AI Gateway, Cloud Cron & Filing Deadline Advisories ─
+  if (obs.storefrontAndCloud) {
+    const sc = obs.storefrontAndCloud;
+    if (!sc.whopApiKeyPresent || sc.whopPaidCheckoutGapCount > 0) {
+      severity = worse(severity, "P1");
+      actions.push({
+        kind: "ALERT_STOREFRONT_CHECKOUT_GAP",
+        priority: 720,
+        severity: "P1",
+        title: "Resolve Whop storefront checkout env gap",
+        detail: `WHOP_API_KEY present=${sc.whopApiKeyPresent}, missing paid checkout URL env vars=${sc.whopPaidCheckoutGapCount}. Owner must verify Vercel Production env.`,
+        target: "storefront:whop:checkout-env",
+        requiresOwner: true,
+        autonomousSafe: false,
+      });
+    }
+    if (!sc.aiGatewayKeyPresent && sc.nousFreePromoExpiringOrExpired) {
+      severity = worse(severity, "P1");
+      actions.push({
+        kind: "ALERT_AI_GATEWAY_OR_FREE_LANE_CLIFF",
+        priority: 710,
+        severity: "P1",
+        title: "Provision AI Gateway ahead of Nov 23 free-lane cliff",
+        detail: "Nous free promo expires 2026-11-23T15:00Z and AI_GATEWAY_API_KEY is unset. Owner must verify Vercel AI Gateway & NIM failover.",
+        target: "ai:gateway:failover",
+        requiresOwner: true,
+        autonomousSafe: false,
+      });
+    }
+    if (sc.cloudOrCronDriftDetected) {
+      severity = worse(severity, "P1");
+      actions.push({
+        kind: "ALERT_CLOUD_CREDIT_OR_CRON_DRIFT",
+        priority: 690,
+        severity: "P1",
+        title: "Investigate cloud credit or Hermes cron drift",
+        detail: sc.cloudDriftDetail ?? "Cloud credit or Hermes cron schedule drift detected.",
+        target: "infra:cloud-and-cron-drift",
+        requiresOwner: true,
+        autonomousSafe: false,
+      });
+    }
+    if (sc.imminentFilingDeadlines.length > 0) {
+      severity = worse(severity, "P1");
+      actions.push({
+        kind: "ALERT_FILING_DEADLINE_IMMINENT",
+        priority: 740,
+        severity: "P1",
+        title: "Imminent compliance or grant filing deadline",
+        detail: `Owner action required for upcoming deadlines: ${sc.imminentFilingDeadlines.join(", ")}.`,
+        target: "ops:filing-deadlines",
+        requiresOwner: true,
+        autonomousSafe: false,
+      });
+    }
   }
 
   // ── Law / refuse-default (always reinforce when public surfaces look tempting) ─

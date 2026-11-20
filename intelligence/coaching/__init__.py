@@ -4,8 +4,13 @@
 """Coaching tendency engine (c03)."""
 from . import common, load, proe, fingerprint, tenures, regime, sequencing
 from . import script_elasticity, redzone, tempo, adjustments, dc_pressure, ingame
+from . import core_nfl_schemes_and_systems, footballxos_16_category_playbook_engine
+from . import whitefield_and_nflverse_metrics_engine, ftn_and_snap_deep_intelligence_engine
 from .provider import CoachingEngineProvider
 
 __all__ = ["common", "load", "proe", "fingerprint", "tenures", "regime",
            "sequencing", "script_elasticity", "redzone", "tempo",
-           "adjustments", "dc_pressure", "ingame", "CoachingEngineProvider"]
+           "adjustments", "dc_pressure", "ingame",
+           "core_nfl_schemes_and_systems", "footballxos_16_category_playbook_engine",
+           "whitefield_and_nflverse_metrics_engine", "ftn_and_snap_deep_intelligence_engine",
+           "CoachingEngineProvider"]
