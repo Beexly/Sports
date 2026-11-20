@@ -115,6 +115,7 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         causal_pace_and_penalty_discipline_engine,
         causal_turnover_and_early_down_regression_engine,
         causal_rest_travel_and_market_hfa_engine,
+        causal_air_yac_and_rush_success_engine,
         whitefield_and_nflverse_metrics_engine,
     )
     from scripts.ops.gse_coach_mind_simulator import (
@@ -263,6 +264,13 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         "stream_15w_away_ats_null_override",
         "stream_15w_home_ats_null_override",
         "stream_15w_net_sched_resilience_diff",
+        "stream_15x_away_pass_air_yac_edge",
+        "stream_15x_home_pass_air_yac_edge",
+        "stream_15x_away_rush_sr_edge",
+        "stream_15x_home_rush_sr_edge",
+        "stream_15x_away_yac_raw_null_edge",
+        "stream_15x_home_yac_raw_null_edge",
+        "stream_15x_net_air_rush_diff",
         "julia_carleman_5level_audit_ready",
     ]
     missing = [k for k in required_cond_keys if k not in cond or cond[k] is None]
@@ -312,6 +320,9 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         ("stream_15v_away_fumble_luck_null_edge", "stream_15v_home_fumble_luck_null_edge"),
         ("stream_15w_away_sched_resilience_edge", "stream_15w_home_sched_resilience_edge"),
         ("stream_15w_away_ats_null_override", "stream_15w_home_ats_null_override"),
+        ("stream_15x_away_pass_air_yac_edge", "stream_15x_home_pass_air_yac_edge"),
+        ("stream_15x_away_rush_sr_edge", "stream_15x_home_rush_sr_edge"),
+        ("stream_15x_away_yac_raw_null_edge", "stream_15x_home_yac_raw_null_edge"),
     ]
     for ka, kh in swap_pairs:
         if abs(float(cond[ka]) - float(cond_sw[kh])) > 1e-6 or abs(float(cond[kh]) - float(cond_sw[ka])) > 1e-6:
@@ -336,6 +347,8 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         raise RuntimeError("[PRE-SIM GATE FAIL] stream_15v_net_early_down_diff antisymmetry violated.")
     if abs(float(cond["stream_15w_net_sched_resilience_diff"]) + float(cond_sw["stream_15w_net_sched_resilience_diff"])) > 1e-6:
         raise RuntimeError("[PRE-SIM GATE FAIL] stream_15w_net_sched_resilience_diff antisymmetry violated.")
+    if abs(float(cond["stream_15x_net_air_rush_diff"]) + float(cond_sw["stream_15x_net_air_rush_diff"])) > 1e-6:
+        raise RuntimeError("[PRE-SIM GATE FAIL] stream_15x_net_air_rush_diff antisymmetry violated.")
     if abs(float(cond["stream_15n_kickoff_yl_differential"]) + float(cond_sw["stream_15n_kickoff_yl_differential"])) > 1e-6:
         raise RuntimeError("LAYER6_KICKOFF_ANTISYMMETRY_BROKEN")
     if float(cond["stream_15m_home_questionable_sigma"]) <= float(cond["stream_15m_away_questionable_sigma"]):
@@ -389,6 +402,10 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         "rest_hfa_15w_live": hasattr(
             causal_rest_travel_and_market_hfa_engine,
             "evaluate_causal_15w_hfa_rest_matchup",
+        ),
+        "air_yac_rush_15x_live": hasattr(
+            causal_air_yac_and_rush_success_engine,
+            "evaluate_causal_15x_air_yac_rush_matchup",
         ),
         "ftn_joined_rows": int(deep_15n.get("ftn_joined_rows", 0)),
         "snap_rows": int(deep_15n.get("snap_rows", 0)),

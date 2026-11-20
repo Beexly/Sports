@@ -17,6 +17,7 @@ from . import (
     causal_pace_and_penalty_discipline_engine,
     causal_turnover_and_early_down_regression_engine,
     causal_rest_travel_and_market_hfa_engine,
+    causal_air_yac_and_rush_success_engine,
 )
 from .provider import CoachingEngineProvider
 
@@ -34,4 +35,5 @@ __all__ = ["common", "load", "proe", "fingerprint", "tenures", "regime",
            "causal_pace_and_penalty_discipline_engine",
            "causal_turnover_and_early_down_regression_engine",
            "causal_rest_travel_and_market_hfa_engine",
+           "causal_air_yac_and_rush_success_engine",
            "CoachingEngineProvider"]

@@ -1593,6 +1593,9 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     from intelligence.coaching.causal_rest_travel_and_market_hfa_engine import (
         evaluate_causal_15w_hfa_rest_matchup,
     )
+    from intelligence.coaching.causal_air_yac_and_rush_success_engine import (
+        evaluate_causal_15x_air_yac_rush_matchup,
+    )
 
     stream_15s_bundle = evaluate_causal_15s_ngs_matchup(
         away_team=away_u,
@@ -1615,6 +1618,11 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         context=ctx,
     )
     stream_15w_bundle = evaluate_causal_15w_hfa_rest_matchup(
+        away_team=away_u,
+        home_team=home_u,
+        context=ctx,
+    )
+    stream_15x_bundle = evaluate_causal_15x_air_yac_rush_matchup(
         away_team=away_u,
         home_team=home_u,
         context=ctx,
@@ -1730,6 +1738,27 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     conditioners["stream_15w_net_sched_resilience_diff"] = float(
         stream_15w_bundle["stream_15w_net_sched_resilience_diff"]
     )
+    conditioners["stream_15x_away_pass_air_yac_edge"] = float(
+        stream_15x_bundle["stream_15x_away_pass_air_yac_edge"]
+    )
+    conditioners["stream_15x_home_pass_air_yac_edge"] = float(
+        stream_15x_bundle["stream_15x_home_pass_air_yac_edge"]
+    )
+    conditioners["stream_15x_away_rush_sr_edge"] = float(
+        stream_15x_bundle["stream_15x_away_rush_sr_edge"]
+    )
+    conditioners["stream_15x_home_rush_sr_edge"] = float(
+        stream_15x_bundle["stream_15x_home_rush_sr_edge"]
+    )
+    conditioners["stream_15x_away_yac_raw_null_edge"] = float(
+        stream_15x_bundle["stream_15x_away_yac_raw_null_edge"]
+    )
+    conditioners["stream_15x_home_yac_raw_null_edge"] = float(
+        stream_15x_bundle["stream_15x_home_yac_raw_null_edge"]
+    )
+    conditioners["stream_15x_net_air_rush_diff"] = float(
+        stream_15x_bundle["stream_15x_net_air_rush_diff"]
+    )
     conditioners["julia_carleman_5level_audit_ready"] = bool(julia_carleman_path.is_file())
 
     result = {
@@ -1763,6 +1792,7 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         "stream_15u_pace_and_penalty_discipline": stream_15u_bundle,
         "stream_15v_turnover_and_early_down": stream_15v_bundle,
         "stream_15w_rest_hfa_and_market_audit": stream_15w_bundle,
+        "stream_15x_air_yac_and_rush_success": stream_15x_bundle,
         "wave32_unified_sports_situational_fusion": wave32_fusion,
         "wave34_holistic_biometrics": wave32_fusion["wave34_holistic_biometrics"],
         "wave35_gsi_and_micro_matchups": wave32_fusion["wave35_gsi_and_micro_matchups"],
@@ -2167,6 +2197,10 @@ def simulate_matchup_pbp(
         # Honesty invariant: structural HFA/rest resilience beats 2.5pt legacy OOS;
         # closing-line ATS override stays strictly at 0.0 weight.
         + 0.15 * float(traj_cond.get("stream_15w_away_sched_resilience_edge", 0.0))
+        # Honesty invariant: differential Air/YAC pass and rush SR beat OOS baselines;
+        # unshrunk YAC-only raw residual stays at 0.0 weight.
+        + 0.30 * float(traj_cond.get("stream_15x_away_pass_air_yac_edge", 0.0))
+        + 0.20 * float(traj_cond.get("stream_15x_away_rush_sr_edge", 0.0))
     )
     hm_15lm_epa = _soft_cap_030(
         0.45 * float(traj_cond.get("stream_15l_home_scheme_epa_delta", 0.0))
@@ -2194,6 +2228,8 @@ def simulate_matchup_pbp(
         + 0.35 * float(traj_cond.get("stream_15v_home_ed_clean_epa_edge", 0.0))
         + 0.15 * float(traj_cond.get("stream_15v_home_ed_sr_edge", 0.0))
         + 0.15 * float(traj_cond.get("stream_15w_home_sched_resilience_edge", 0.0))
+        + 0.30 * float(traj_cond.get("stream_15x_home_pass_air_yac_edge", 0.0))
+        + 0.20 * float(traj_cond.get("stream_15x_home_rush_sr_edge", 0.0))
     )
     third_down_resid_lut = np.array(
         [
