@@ -380,6 +380,9 @@ def run_real_nflverse_walk_forward_backtests() -> dict[str, dict[str, Any]]:
     from intelligence.coaching.ngs_causal_separation_cpoe_ryoe_engine import (
         evaluate_causal_15s_walkforward_oos,
     )
+    from intelligence.coaching.causal_redzone_and_fourth_down_engine import (
+        evaluate_causal_15t_walkforward_oos,
+    )
 
     results["stream_15p_causal_pos_vuln_walkforward"] = evaluate_causal_15p_walkforward_oos(
         eval_weeks=tuple(range(4, 11))
@@ -391,6 +394,9 @@ def run_real_nflverse_walk_forward_backtests() -> dict[str, dict[str, Any]]:
         eval_weeks=tuple(range(4, 11))
     )
     results["stream_15s_ngs_walkforward"] = evaluate_causal_15s_walkforward_oos(
+        eval_weeks=tuple(range(4, 11))
+    )
+    results["stream_15t_rz_4th_walkforward"] = evaluate_causal_15t_walkforward_oos(
         eval_weeks=tuple(range(4, 11))
     )
 
@@ -481,6 +487,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         ):
             print(
                 "EPISTEMIC GATE FAILURE: Stream 15S pass_cpoe/rush_ryoe failed OOS gate",
+                file=sys.stderr,
+            )
+            return 1
+        s15t = suite.get("stream_15t_rz_4th_walkforward") or {}
+        if not s15t.get("all_promoted_components_beat_baseline"):
+            print(
+                "EPISTEMIC GATE FAILURE: Stream 15T RZ/4th-down promoted components failed OOS gate",
                 file=sys.stderr,
             )
             return 1

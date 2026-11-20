@@ -111,6 +111,7 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         ftn_role_zone_pressure_hazard_engine,
         kicker_air_density_weather_hazard_engine,
         ngs_causal_separation_cpoe_ryoe_engine,
+        causal_redzone_and_fourth_down_engine,
         whitefield_and_nflverse_metrics_engine,
     )
     from scripts.ops.gse_coach_mind_simulator import (
@@ -229,6 +230,15 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         "stream_15s_away_ngs_rush_ryoe_edge",
         "stream_15s_home_ngs_rush_ryoe_edge",
         "stream_15s_net_ngs_skill_diff",
+        "stream_15t_away_rz_td_edge",
+        "stream_15t_home_rz_td_edge",
+        "stream_15t_away_fourth_go_aggression",
+        "stream_15t_home_fourth_go_aggression",
+        "stream_15t_away_fourth_conv_edge",
+        "stream_15t_home_fourth_conv_edge",
+        "stream_15t_away_rz_only_null_edge",
+        "stream_15t_home_rz_only_null_edge",
+        "stream_15t_net_rz_4th_diff",
         "julia_carleman_5level_audit_ready",
     ]
     missing = [k for k in required_cond_keys if k not in cond or cond[k] is None]
@@ -266,6 +276,10 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         ("stream_15s_away_ngs_pass_cpoe_edge", "stream_15s_home_ngs_pass_cpoe_edge"),
         ("stream_15s_away_ngs_rec_sep_yacoe_edge", "stream_15s_home_ngs_rec_sep_yacoe_edge"),
         ("stream_15s_away_ngs_rush_ryoe_edge", "stream_15s_home_ngs_rush_ryoe_edge"),
+        ("stream_15t_away_rz_td_edge", "stream_15t_home_rz_td_edge"),
+        ("stream_15t_away_fourth_go_aggression", "stream_15t_home_fourth_go_aggression"),
+        ("stream_15t_away_fourth_conv_edge", "stream_15t_home_fourth_conv_edge"),
+        ("stream_15t_away_rz_only_null_edge", "stream_15t_home_rz_only_null_edge"),
     ]
     for ka, kh in swap_pairs:
         if abs(float(cond[ka]) - float(cond_sw[kh])) > 1e-6 or abs(float(cond[kh]) - float(cond_sw[ka])) > 1e-6:
@@ -280,6 +294,8 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         raise RuntimeError("[PRE-SIM GATE FAIL] stream_15r_net_kicker_diff antisymmetry violated.")
     if abs(float(cond["stream_15s_net_ngs_skill_diff"]) + float(cond_sw["stream_15s_net_ngs_skill_diff"])) > 1e-6:
         raise RuntimeError("[PRE-SIM GATE FAIL] stream_15s_net_ngs_skill_diff antisymmetry violated.")
+    if abs(float(cond["stream_15t_net_rz_4th_diff"]) + float(cond_sw["stream_15t_net_rz_4th_diff"])) > 1e-6:
+        raise RuntimeError("[PRE-SIM GATE FAIL] stream_15t_net_rz_4th_diff antisymmetry violated.")
     if abs(float(cond["stream_15n_kickoff_yl_differential"]) + float(cond_sw["stream_15n_kickoff_yl_differential"])) > 1e-6:
         raise RuntimeError("LAYER6_KICKOFF_ANTISYMMETRY_BROKEN")
     if float(cond["stream_15m_home_questionable_sigma"]) <= float(cond["stream_15m_away_questionable_sigma"]):
@@ -317,6 +333,10 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         "ngs_causal_15s_live": hasattr(
             ngs_causal_separation_cpoe_ryoe_engine,
             "evaluate_causal_15s_ngs_matchup",
+        ),
+        "redzone_4th_15t_live": hasattr(
+            causal_redzone_and_fourth_down_engine,
+            "evaluate_causal_15t_redzone_4th_matchup",
         ),
         "ftn_joined_rows": int(deep_15n.get("ftn_joined_rows", 0)),
         "snap_rows": int(deep_15n.get("snap_rows", 0)),

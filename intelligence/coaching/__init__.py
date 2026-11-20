@@ -13,6 +13,7 @@ from . import (
     ftn_role_zone_pressure_hazard_engine,
     kicker_air_density_weather_hazard_engine,
     ngs_causal_separation_cpoe_ryoe_engine,
+    causal_redzone_and_fourth_down_engine,
 )
 from .provider import CoachingEngineProvider
 
@@ -26,4 +27,5 @@ __all__ = ["common", "load", "proe", "fingerprint", "tenures", "regime",
            "ftn_role_zone_pressure_hazard_engine",
            "kicker_air_density_weather_hazard_engine",
            "ngs_causal_separation_cpoe_ryoe_engine",
+           "causal_redzone_and_fourth_down_engine",
            "CoachingEngineProvider"]
