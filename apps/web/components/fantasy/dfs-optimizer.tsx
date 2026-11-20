@@ -232,6 +232,10 @@ export function DfsOptimizer({
                   {/* leverage is the upside read — plasma celebrates, it never warns */}
                   <span>Leverage <strong className="text-plasma">{m.leverageScore}</strong></span>
                   <span>Floor-ceiling <strong className="text-ion-white">{m.floor}-{m.ceiling}</strong></span>
+                  <span>Sims <strong className="text-ion-white">{m.simsRun.toLocaleString()}</strong></span>
+                  <span>p90/p99 <strong className="text-ion-white">{m.p90}-{m.p99}</strong></span>
+                  <span>ceilEV <strong className="text-ultraviolet">{m.ceilEV}</strong></span>
+                  <span>Dup risk <strong className={m.dupRisk > 0.5 ? "text-caution" : "text-ion-white"}>{m.dupRisk}</strong></span>
                 </div>
               </div>
             );
