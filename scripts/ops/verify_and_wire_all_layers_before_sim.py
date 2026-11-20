@@ -113,6 +113,7 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         ngs_causal_separation_cpoe_ryoe_engine,
         causal_redzone_and_fourth_down_engine,
         causal_pace_and_penalty_discipline_engine,
+        causal_turnover_and_early_down_regression_engine,
         whitefield_and_nflverse_metrics_engine,
     )
     from scripts.ops.gse_coach_mind_simulator import (
@@ -248,6 +249,13 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         "stream_15u_home_penalty_null_edge",
         "stream_15u_net_tempo_volume_diff",
         "stream_15u_game_expected_plays_delta",
+        "stream_15v_away_ed_clean_epa_edge",
+        "stream_15v_home_ed_clean_epa_edge",
+        "stream_15v_away_ed_sr_edge",
+        "stream_15v_home_ed_sr_edge",
+        "stream_15v_away_fumble_luck_null_edge",
+        "stream_15v_home_fumble_luck_null_edge",
+        "stream_15v_net_early_down_diff",
         "julia_carleman_5level_audit_ready",
     ]
     missing = [k for k in required_cond_keys if k not in cond or cond[k] is None]
@@ -292,6 +300,9 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         ("stream_15u_away_neutral_pace_edge", "stream_15u_home_neutral_pace_edge"),
         ("stream_15u_away_play_volume_edge", "stream_15u_home_play_volume_edge"),
         ("stream_15u_away_penalty_null_edge", "stream_15u_home_penalty_null_edge"),
+        ("stream_15v_away_ed_clean_epa_edge", "stream_15v_home_ed_clean_epa_edge"),
+        ("stream_15v_away_ed_sr_edge", "stream_15v_home_ed_sr_edge"),
+        ("stream_15v_away_fumble_luck_null_edge", "stream_15v_home_fumble_luck_null_edge"),
     ]
     for ka, kh in swap_pairs:
         if abs(float(cond[ka]) - float(cond_sw[kh])) > 1e-6 or abs(float(cond[kh]) - float(cond_sw[ka])) > 1e-6:
@@ -312,6 +323,8 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         raise RuntimeError("[PRE-SIM GATE FAIL] stream_15u_net_tempo_volume_diff antisymmetry violated.")
     if abs(float(cond["stream_15u_game_expected_plays_delta"]) - float(cond_sw["stream_15u_game_expected_plays_delta"])) > 1e-6:
         raise RuntimeError("[PRE-SIM GATE FAIL] stream_15u_game_expected_plays_delta invariance violated.")
+    if abs(float(cond["stream_15v_net_early_down_diff"]) + float(cond_sw["stream_15v_net_early_down_diff"])) > 1e-6:
+        raise RuntimeError("[PRE-SIM GATE FAIL] stream_15v_net_early_down_diff antisymmetry violated.")
     if abs(float(cond["stream_15n_kickoff_yl_differential"]) + float(cond_sw["stream_15n_kickoff_yl_differential"])) > 1e-6:
         raise RuntimeError("LAYER6_KICKOFF_ANTISYMMETRY_BROKEN")
     if float(cond["stream_15m_home_questionable_sigma"]) <= float(cond["stream_15m_away_questionable_sigma"]):
@@ -357,6 +370,10 @@ def verify_layer_6_corpus_streams_15l_15m_and_data_freshness() -> Dict[str, Any]
         "pace_penalty_15u_live": hasattr(
             causal_pace_and_penalty_discipline_engine,
             "evaluate_causal_15u_pace_matchup",
+        ),
+        "turnover_early_down_15v_live": hasattr(
+            causal_turnover_and_early_down_regression_engine,
+            "evaluate_causal_15v_early_down_matchup",
         ),
         "ftn_joined_rows": int(deep_15n.get("ftn_joined_rows", 0)),
         "snap_rows": int(deep_15n.get("snap_rows", 0)),

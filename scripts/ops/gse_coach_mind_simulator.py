@@ -1587,6 +1587,9 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     from intelligence.coaching.causal_pace_and_penalty_discipline_engine import (
         evaluate_causal_15u_pace_matchup,
     )
+    from intelligence.coaching.causal_turnover_and_early_down_regression_engine import (
+        evaluate_causal_15v_early_down_matchup,
+    )
 
     stream_15s_bundle = evaluate_causal_15s_ngs_matchup(
         away_team=away_u,
@@ -1599,6 +1602,11 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         context=ctx,
     )
     stream_15u_bundle = evaluate_causal_15u_pace_matchup(
+        away_team=away_u,
+        home_team=home_u,
+        context=ctx,
+    )
+    stream_15v_bundle = evaluate_causal_15v_early_down_matchup(
         away_team=away_u,
         home_team=home_u,
         context=ctx,
@@ -1675,6 +1683,27 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     conditioners["stream_15u_game_expected_plays_delta"] = float(
         stream_15u_bundle["stream_15u_game_expected_plays_delta"]
     )
+    conditioners["stream_15v_away_ed_clean_epa_edge"] = float(
+        stream_15v_bundle["stream_15v_away_ed_clean_epa_edge"]
+    )
+    conditioners["stream_15v_home_ed_clean_epa_edge"] = float(
+        stream_15v_bundle["stream_15v_home_ed_clean_epa_edge"]
+    )
+    conditioners["stream_15v_away_ed_sr_edge"] = float(
+        stream_15v_bundle["stream_15v_away_ed_sr_edge"]
+    )
+    conditioners["stream_15v_home_ed_sr_edge"] = float(
+        stream_15v_bundle["stream_15v_home_ed_sr_edge"]
+    )
+    conditioners["stream_15v_away_fumble_luck_null_edge"] = float(
+        stream_15v_bundle["stream_15v_away_fumble_luck_null_edge"]
+    )
+    conditioners["stream_15v_home_fumble_luck_null_edge"] = float(
+        stream_15v_bundle["stream_15v_home_fumble_luck_null_edge"]
+    )
+    conditioners["stream_15v_net_early_down_diff"] = float(
+        stream_15v_bundle["stream_15v_net_early_down_diff"]
+    )
     conditioners["julia_carleman_5level_audit_ready"] = bool(julia_carleman_path.is_file())
 
     result = {
@@ -1706,6 +1735,7 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         "stream_15s_ngs_causal_skill": stream_15s_bundle,
         "stream_15t_redzone_and_4th_down": stream_15t_bundle,
         "stream_15u_pace_and_penalty_discipline": stream_15u_bundle,
+        "stream_15v_turnover_and_early_down": stream_15v_bundle,
         "wave32_unified_sports_situational_fusion": wave32_fusion,
         "wave34_holistic_biometrics": wave32_fusion["wave34_holistic_biometrics"],
         "wave35_gsi_and_micro_matchups": wave32_fusion["wave35_gsi_and_micro_matchups"],
@@ -2103,6 +2133,10 @@ def simulate_matchup_pbp(
         # team_penalty_rate failed OOS MSE baseline and stays at 0.0 weight.
         + 0.20 * float(traj_cond.get("stream_15u_away_neutral_pace_edge", 0.0))
         + 0.25 * float(traj_cond.get("stream_15u_away_play_volume_edge", 0.0))
+        # Honesty invariant: early-down clean EPA and SR beat OOS baselines;
+        # volatile fumble_luck_null_edge stays at 0.0 standalone weight.
+        + 0.35 * float(traj_cond.get("stream_15v_away_ed_clean_epa_edge", 0.0))
+        + 0.15 * float(traj_cond.get("stream_15v_away_ed_sr_edge", 0.0))
     )
     hm_15lm_epa = _soft_cap_030(
         0.45 * float(traj_cond.get("stream_15l_home_scheme_epa_delta", 0.0))
@@ -2127,6 +2161,8 @@ def simulate_matchup_pbp(
         + 0.25 * float(traj_cond.get("stream_15t_home_fourth_conv_edge", 0.0))
         + 0.20 * float(traj_cond.get("stream_15u_home_neutral_pace_edge", 0.0))
         + 0.25 * float(traj_cond.get("stream_15u_home_play_volume_edge", 0.0))
+        + 0.35 * float(traj_cond.get("stream_15v_home_ed_clean_epa_edge", 0.0))
+        + 0.15 * float(traj_cond.get("stream_15v_home_ed_sr_edge", 0.0))
     )
     third_down_resid_lut = np.array(
         [

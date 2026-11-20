@@ -15,6 +15,7 @@ from . import (
     ngs_causal_separation_cpoe_ryoe_engine,
     causal_redzone_and_fourth_down_engine,
     causal_pace_and_penalty_discipline_engine,
+    causal_turnover_and_early_down_regression_engine,
 )
 from .provider import CoachingEngineProvider
 
@@ -30,4 +31,5 @@ __all__ = ["common", "load", "proe", "fingerprint", "tenures", "regime",
            "ngs_causal_separation_cpoe_ryoe_engine",
            "causal_redzone_and_fourth_down_engine",
            "causal_pace_and_penalty_discipline_engine",
+           "causal_turnover_and_early_down_regression_engine",
            "CoachingEngineProvider"]

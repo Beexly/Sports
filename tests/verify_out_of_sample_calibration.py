@@ -386,6 +386,9 @@ def run_real_nflverse_walk_forward_backtests() -> dict[str, dict[str, Any]]:
     from intelligence.coaching.causal_pace_and_penalty_discipline_engine import (
         evaluate_causal_15u_walkforward_oos,
     )
+    from intelligence.coaching.causal_turnover_and_early_down_regression_engine import (
+        evaluate_causal_15v_walkforward_oos,
+    )
 
     results["stream_15p_causal_pos_vuln_walkforward"] = evaluate_causal_15p_walkforward_oos(
         eval_weeks=tuple(range(4, 11))
@@ -403,6 +406,9 @@ def run_real_nflverse_walk_forward_backtests() -> dict[str, dict[str, Any]]:
         eval_weeks=tuple(range(4, 11))
     )
     results["stream_15u_pace_penalty_walkforward"] = evaluate_causal_15u_walkforward_oos(
+        eval_weeks=tuple(range(4, 11))
+    )
+    results["stream_15v_early_down_walkforward"] = evaluate_causal_15v_walkforward_oos(
         eval_weeks=tuple(range(4, 11))
     )
 
@@ -507,6 +513,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         if not s15u.get("all_promoted_components_beat_baseline"):
             print(
                 "EPISTEMIC GATE FAILURE: Stream 15U pace/play-volume promoted components failed OOS gate",
+                file=sys.stderr,
+            )
+            return 1
+        s15v = suite.get("stream_15v_early_down_walkforward") or {}
+        if not s15v.get("all_promoted_components_beat_baseline"):
+            print(
+                "EPISTEMIC GATE FAILURE: Stream 15V early-down clean EPA failed OOS gate",
                 file=sys.stderr,
             )
             return 1
