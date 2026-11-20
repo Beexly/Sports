@@ -194,6 +194,8 @@ class ClassicOptimizerConfig:
     max_overlap: Optional[int] = None
     min_hamming_distance: Optional[int] = None
     candidate_pool_size_for_haircut: int = 5_000
+    positional_vuln_weight: float = 0.0
+    positional_vuln_as_of_week: Optional[int] = None
 
 
 @dataclass(frozen=True)
@@ -212,6 +214,28 @@ class ShowdownOptimizerConfig:
     max_overlap: Optional[int] = None
     min_hamming_distance: Optional[int] = None
     candidate_pool_size_for_haircut: int = 2_002
+    positional_vuln_weight: float = 0.0
+    positional_vuln_as_of_week: Optional[int] = None
+
+
+def _resolve_player_15p_vuln_bonus(
+    player: PlayerPoolEntry,
+    weight: float,
+    as_of_week: Optional[int],
+    override_map: Optional[Dict[str, float]] = None,
+) -> float:
+    """Return optional Stream 15P causal positional-vulnerability projection adjustment."""
+    if weight == 0.0:
+        return 0.0
+    if override_map is not None and player.player_id in override_map:
+        return float(weight) * float(override_map[player.player_id])
+    primary_pos = next((pos for pos in ("QB", "RB", "WR", "TE") if pos in player.positions), "")
+    if not primary_pos or not player.opponent:
+        return 0.0
+    from intelligence.coaching.causal_positional_vulnerability_engine import get_player_15p_matchup_z
+
+    z_val = get_player_15p_matchup_z(player.opponent, primary_pos, as_of_week=as_of_week)
+    return float(weight) * float(z_val)
 
 
 @dataclass(frozen=True)
@@ -408,6 +432,7 @@ def optimize_classic_portfolio_v2(
     hygiene_config: SlateHygieneConfig | None = None,
     config: ClassicOptimizerConfig | None = None,
     late_swap: LateSwapState | None = None,
+    positional_vuln_map: Dict[str, float] | None = None,
 ) -> Tuple[List[OptimizedLineup], SlateHygieneReport]:
     cfg = config or ClassicOptimizerConfig()
     hygiene = apply_dynamic_slate_hygiene(players, hygiene_config)
@@ -515,14 +540,15 @@ def optimize_classic_portfolio_v2(
                 if q.team == p.opponent and "DST" in q.positions:
                     sys.add_row({qb_var: 1.0, j: 1.0}, ub=1.0)
 
-    # Objective: maximize projected + ceiling upside + yahoo lag - ownership - Dirichlet duplication log penalty
+    # Objective: maximize projected + ceiling upside + yahoo lag + optional 15P vuln - ownership - Dirichlet duplication log penalty
     obj = np.zeros(n_vars, dtype=np.float64)
     for i, p in enumerate(pool):
         ceil_bonus = cfg.ceiling_upside_weight * max(0.0, float(p.ceiling_points or p.projected_points) - p.projected_points)
         lag_bonus = cfg.yahoo_lag_weight * max(0.0, compute_yahoo_salary_lag_bonus(p))
+        vuln_bonus = _resolve_player_15p_vuln_bonus(p, cfg.positional_vuln_weight, cfg.positional_vuln_as_of_week, positional_vuln_map)
         log_dup = cfg.dup_log_penalty_weight * math.log1p(p.projected_ownership * cfg.dirichlet_concentration)
         own_pen = cfg.ownership_penalty_weight * p.projected_ownership
-        obj[i] = p.projected_points + ceil_bonus + lag_bonus - own_pen - log_dup
+        obj[i] = p.projected_points + ceil_bonus + lag_bonus + vuln_bonus - own_pen - log_dup
     c_vec = -obj
 
     gamma = resolve_hvz_overlap_cap(9, len(games), cfg.max_overlap, cfg.min_hamming_distance)
@@ -592,6 +618,7 @@ def optimize_showdown_portfolio_v2(
     *,
     hygiene_config: SlateHygieneConfig | None = None,
     config: ShowdownOptimizerConfig | None = None,
+    positional_vuln_map: Dict[str, float] | None = None,
 ) -> Tuple[List[OptimizedLineup], SlateHygieneReport]:
     cfg = config or ShowdownOptimizerConfig()
     hygiene = apply_dynamic_slate_hygiene(players, hygiene_config)
@@ -642,10 +669,11 @@ def optimize_showdown_portfolio_v2(
     for i, p in enumerate(pool):
         ceil_b = cfg.ceiling_upside_weight * max(0.0, float(p.ceiling_points or p.projected_points) - p.projected_points)
         lag_b = cfg.yahoo_lag_weight * max(0.0, compute_yahoo_salary_lag_bonus(p))
+        vuln_b = _resolve_player_15p_vuln_bonus(p, cfg.positional_vuln_weight, cfg.positional_vuln_as_of_week, positional_vuln_map)
         c_own = float(p.cpt_projected_ownership or 0.05)
         u_own = float(p.projected_ownership)
-        obj[cpt_v(i)] = p.cpt_projected_points + 1.5 * ceil_b + 1.5 * lag_b - cfg.ownership_penalty_weight * c_own - cfg.dup_log_penalty_weight * math.log1p(c_own * cfg.dirichlet_concentration)
-        obj[util_v(i)] = p.projected_points + ceil_b + lag_b - cfg.ownership_penalty_weight * u_own - cfg.dup_log_penalty_weight * math.log1p(u_own * cfg.dirichlet_concentration)
+        obj[cpt_v(i)] = p.cpt_projected_points + 1.5 * ceil_b + 1.5 * lag_b + 1.5 * vuln_b - cfg.ownership_penalty_weight * c_own - cfg.dup_log_penalty_weight * math.log1p(c_own * cfg.dirichlet_concentration)
+        obj[util_v(i)] = p.projected_points + ceil_b + lag_b + vuln_b - cfg.ownership_penalty_weight * u_own - cfg.dup_log_penalty_weight * math.log1p(u_own * cfg.dirichlet_concentration)
     c_vec = -obj
 
     gamma = resolve_hvz_overlap_cap(6, 1, cfg.max_overlap, cfg.min_hamming_distance)

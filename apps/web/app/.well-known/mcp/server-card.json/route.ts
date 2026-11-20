@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { HELPLINE } from "@/lib/brand";
 import { PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
 
 const MCP_HEADERS: Record<string, string> = {
@@ -19,7 +20,7 @@ export function buildGseMcpServerCard() {
       name: "Galaxy Sports Edge Global Intelligence MCP",
       version: "4.0.0",
       description:
-        `Global quantitative sports analytics (NFL live; NBA, MLB, NHL, NCAA, MLS, and global soccer expanding), DFS builder docs, and tamper-evident settlement verification from Galaxy Sports Network LLC. Settled ledger: ${PUBLIC_RECORD_LINE}. 1-800-GAMBLER.`,
+        `Global quantitative sports analytics (NFL live; NBA, MLB, NHL, NCAA, MLS, and global soccer expanding), DFS builder docs, and tamper-evident settlement verification from Galaxy Sports Network LLC. Settled ledger: ${PUBLIC_RECORD_LINE}. ${HELPLINE.number}.`,
       homepage: "https://www.galaxysportsedge.com",
     },
     transport: {

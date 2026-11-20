@@ -1512,6 +1512,24 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     conditioners["stream_15o_net_trench_contact_diff"] = float(
         stream_15o_bundle["stream_15o_net_trench_contact_diff"]
     )
+    from intelligence.coaching.causal_positional_vulnerability_engine import (
+        evaluate_causal_15p_matchup,
+    )
+
+    stream_15p_bundle = evaluate_causal_15p_matchup(
+        away_team=away_u,
+        home_team=home_u,
+        context=ctx,
+    )
+    conditioners["stream_15p_away_pos_vuln_epa"] = float(
+        stream_15p_bundle["stream_15p_away_pos_vuln_epa"]
+    )
+    conditioners["stream_15p_home_pos_vuln_epa"] = float(
+        stream_15p_bundle["stream_15p_home_pos_vuln_epa"]
+    )
+    conditioners["stream_15p_net_pos_vuln_delta"] = float(
+        stream_15p_bundle["stream_15p_net_pos_vuln_delta"]
+    )
     conditioners["julia_carleman_5level_audit_ready"] = bool(julia_carleman_path.is_file())
 
     result = {
@@ -1537,6 +1555,7 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         "stream_15m_whitefield_trench_isolation": stream_15m_bundle,
         "stream_15n_ftn_and_snap_deep_intelligence": stream_15n_bundle,
         "stream_15o_pfr_learned_trench_scheme_contact": stream_15o_bundle,
+        "stream_15p_causal_pos_vuln": stream_15p_bundle,
         "wave32_unified_sports_situational_fusion": wave32_fusion,
         "wave34_holistic_biometrics": wave32_fusion["wave34_holistic_biometrics"],
         "wave35_gsi_and_micro_matchups": wave32_fusion["wave35_gsi_and_micro_matchups"],
@@ -1917,6 +1936,7 @@ def simulate_matchup_pbp(
         + 0.25 * float(traj_cond.get("stream_15o_away_contact_yac_edge", 0.0))
         + 0.25 * float(traj_cond.get("stream_15o_away_scheme_accuracy_edge", 0.0))
         + 0.25 * float(traj_cond.get("stream_15o_away_penalty_discipline_edge", 0.0))
+        + 0.45 * float(traj_cond.get("stream_15p_away_pos_vuln_epa", 0.0))
     )
     hm_15lm_epa = _soft_cap_030(
         0.45 * float(traj_cond.get("stream_15l_home_scheme_epa_delta", 0.0))
@@ -1932,6 +1952,7 @@ def simulate_matchup_pbp(
         + 0.25 * float(traj_cond.get("stream_15o_home_contact_yac_edge", 0.0))
         + 0.25 * float(traj_cond.get("stream_15o_home_scheme_accuracy_edge", 0.0))
         + 0.25 * float(traj_cond.get("stream_15o_home_penalty_discipline_edge", 0.0))
+        + 0.45 * float(traj_cond.get("stream_15p_home_pos_vuln_epa", 0.0))
     )
     third_down_resid_lut = np.array(
         [

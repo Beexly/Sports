@@ -65,7 +65,7 @@ const RETIRED_FIGURES: ReadonlyArray<{
     // in a transcribed third-party post about a player's salary — is a
     // contract value, not our monthly price; the 2026-11-18 sweep's AGENTS.md
     // digest tripped the bare-amount rule on exactly that line.
-    pattern: /\$19(?![\d.])(?![MmKkBb])/,
+    pattern: /\$19(?![\d.,])(?![MmKkBb])/,
     why: `not an advertised amount in any phase of ${SOURCE_OF_TRUTH}`,
   },
   {
@@ -171,6 +171,10 @@ const EXEMPT_FILES: ReadonlyArray<readonly [string, string]> = [
     "apps/web/public/social/week9_friday_promo/WEEK9-FRIDAY-SOCIAL-COPY-PACK.md",
     "dated Week 9 campaign copy as shipped; its package/pass prices and 47-19-1 ledger were current when the pack was stamped 2026-11-06, and rewriting posted copy would falsify the record. Current door price is set by the packages storefront, not by this pack",
   ],
+  [
+    "docs/revenue/REVENUE_OPERATING_LEDGER.md",
+    "documents live one-time specialty pass rungs ($19-$24 one-time, matching the live TNF pack, not the retired $19/mo recurring Pro subscription; recurring Pro is $39/mo)",
+  ],
 ];
 
 const SKIP_DIRS = new Set([
@@ -250,7 +254,7 @@ describe("docs  -  retired money-path figures stay retired", () => {
       expect(pattern.test(hit), `expected to catch: ${hit}`).toBe(true);
     }
     // A transcribed contract figure is not our price.
-    for (const miss of ["Christian McCaffrey ($19M)", "a $19.07MM cap figure"]) {
+    for (const miss of ["Christian McCaffrey ($19M)", "a $19.07MM cap figure", "$19,343 MRR"]) {
       expect(pattern.test(miss), `expected to skip: ${miss}`).toBe(false);
     }
   });

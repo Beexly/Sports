@@ -1,4 +1,4 @@
-# ADR 0011 - CAGE Pre-Publication Policy Enforcement & Unified Pack Entitlements
+# ADR 0011 — CAGE Pre-Publication Policy Enforcement & Unified Pack Entitlements
 
 **Date:** 2026-11-15
 **Status:** Accepted

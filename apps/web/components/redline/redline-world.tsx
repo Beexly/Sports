@@ -73,7 +73,7 @@ const DFS_CORE_POOL = STAGE0_VERIFIED_DFS_CORE_POOL;
 const WEEK11_FREE_GAME_ENVIRONMENT_ANALYTICS = [
   {
     metric: "Public Record & Pass Discipline",
-    breakdown: "Every graded play, loss, and pass is published on the public ledger at /record — checkout only opens when at least one official play clears all five checks.",
+    breakdown: "Every graded play, loss, and pass is published on the public ledger at /record - checkout only opens when at least one official play clears all five checks.",
   },
   {
     metric: "IND @ HOU (TNF · Reliant Stadium · Week 11)",
@@ -300,7 +300,7 @@ export function RedlineWorld({
       loopRef.current = null;
     };
     // staticMode must be a dependency: toggling reduced-motion has to tear down
-    // the rAF loop (or re-enter the static branch) — with [] the toggle was inert.
+    // the rAF loop (or re-enter the static branch) - with [] the toggle was inert.
   }, [staticMode]);
 
   const goProgress = useCallback((value: number) => {
@@ -785,7 +785,7 @@ export function RedlineWorld({
               <div className="locked-paywall-modal">
                 <h4>🔒 Official Sealed Board</h4>
                 <p>
-                  Every graded play and pass is sealed in the public ledger at <Link href="/record">/record</Link> — unlock all official {ACTIVE_SLATE_META.slateLabel} Sunday Main Slate ({ACTIVE_SLATE_META.matchupsSummary}) sides, totals, player props, and correlated Same-Game Parlays.
+                  Every graded play and pass is sealed in the public ledger at <Link href="/record">/record</Link> - unlock all official {ACTIVE_SLATE_META.slateLabel} Sunday Main Slate ({ACTIVE_SLATE_META.matchupsSummary}) sides, totals, player props, and correlated Same-Game Parlays.
                 </p>
                 <button
                   type="button"

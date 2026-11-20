@@ -153,13 +153,13 @@ function cir(samples) {
     blocks.push(block);
   }
   const points = blocks.map((b) => ({
-    x: round(clamp01(b.massSum / b.weight)),
-    calibrated: round(clamp01(b.value)),
+    x: clamp01(b.massSum / b.weight),
+    calibrated: clamp01(b.value),
   }));
   for (let i = 1; i < points.length; i++) {
     if (points[i].x <= points[i - 1].x) {
       points[i] = {
-        x: round(Math.min(1, points[i - 1].x + 1e-6)),
+        x: Math.min(1, points[i - 1].x + 1e-6),
         calibrated: points[i].calibrated,
       };
     }
@@ -175,7 +175,7 @@ function cir(samples) {
       const hi = points[i];
       if (x <= hi.x) {
         const t = (x - lo.x) / (hi.x - lo.x || 1e-12);
-        return round(clamp01(lo.calibrated + t * (hi.calibrated - lo.calibrated)));
+        return clamp01(lo.calibrated + t * (hi.calibrated - lo.calibrated));
       }
     }
     return points[points.length - 1].calibrated;
@@ -261,7 +261,12 @@ const samples = rows.map((r) => {
   };
 });
 
-samples.sort((a, b) => a.t - b.t || a.p - b.p);
+const hasTimestamps = rows.some(
+  (r) => r.t != null || r.settledAt != null || r.settled_at != null,
+);
+if (hasTimestamps) {
+  samples.sort((a, b) => a.t - b.t || a.p - b.p);
+}
 const frac = 0.7;
 const cut = Math.max(1, Math.floor(samples.length * frac));
 const train = samples.slice(0, cut).map(({ p, y }) => ({ p, y }));
@@ -282,7 +287,7 @@ const selected = test
 const allCal = test.map((s) => ({ p: cirM.predict(s.p), y: s.y }));
 const selEce = selected.length ? ece(selected) : null;
 const paradoxGap =
-  selEce == null ? null : round(Math.abs(selEce - ece(allCal)));
+  selEce == null ? null : round(selEce - ece(allCal));
 
 // Fractional Kelly × deflator demo on first 3 test rows with CIR p
 function fracKelly(p, d, lambda = 0.3) {
@@ -294,7 +299,13 @@ function clvDeflator(rho, n, min = 50) {
   if (rho == null || Number.isNaN(rho) || n < min) return 0;
   return Math.min(1, Math.max(0, rho));
 }
-const clvN = samples.length;
+const clvValues = rows
+  .map((r) => {
+    const raw = r.clvValue ?? r.clv;
+    return raw == null ? NaN : Number(raw);
+  })
+  .filter((v) => Number.isFinite(v));
+const clvN = clvValues.length;
 const deflator = clvDeflator(0.3, clvN);
 const sized = test.slice(0, 5).map((s) => {
   const pCal = cirM.predict(s.p);
@@ -322,6 +333,10 @@ for (const [, src, needle] of need) {
   if (!src.includes(needle)) failed.push(`missing export/source ${needle}`);
 }
 if (dCir < dPava) failed.push(`CIR distinct ${dCir} < PAVA ${dPava}`);
+const eceDegraded = cirEce > rawEce;
+if (eceDegraded && process.argv.includes("--strict-oos")) {
+  failed.push(`CIR ECE degraded OOS (${cirEce} > ${rawEce})`);
+}
 
 const report = {
   input: fixture.replace(root + "/", ""),
@@ -335,6 +350,7 @@ const report = {
   eceRaw: rawEce,
   ecePava: pavaEce,
   eceCir: cirEce,
+  eceDegraded,
   selectedCount: selected.length,
   selectedEceCir: selEce,
   paradoxGap,

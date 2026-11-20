@@ -79,3 +79,43 @@ def test_showdown_portfolio_v2_generates_diverse_captains_and_utilities() -> Non
     lag = compute_yahoo_salary_lag_bonus(pool[0])
     rec = newell_stochastic_ip_recourse_score(lineups[0].slots)
     assert dups >= 0.0 and pom > 0.0 and isinstance(lag, float) and rec > 0.0
+
+
+def test_institutional_dfs_v2_stream_15p_positional_vuln_bridge() -> None:
+    from intelligence.dfs.institutional_dfs_v2_portfolio import (
+        ClassicOptimizerConfig,
+        PlayerPoolEntry,
+        optimize_classic_portfolio_v2,
+    )
+
+    pool = [
+        PlayerPoolEntry("qb1", "Alpha QB", "BUF", "MIA", ("QB",), 6500, 22.0, 0.12, game_id="BUF@MIA", ceiling_points=29.0),
+        PlayerPoolEntry("qb2", "Beta QB", "KC", "LAC", ("QB",), 6500, 20.5, 0.12, game_id="KC@LAC", ceiling_points=29.0),
+        PlayerPoolEntry("rb1", "Alpha RB", "BUF", "MIA", ("RB",), 5500, 14.0, 0.10, game_id="BUF@MIA", ceiling_points=20.0),
+        PlayerPoolEntry("rb2", "Beta RB", "KC", "LAC", ("RB",), 5500, 14.0, 0.10, game_id="KC@LAC", ceiling_points=20.0),
+        PlayerPoolEntry("rb3", "Gamma RB", "DET", "CHI", ("RB",), 5000, 12.0, 0.08, game_id="DET@CHI", ceiling_points=18.0),
+        PlayerPoolEntry("wr1", "Alpha WR1", "BUF", "MIA", ("WR",), 5500, 15.0, 0.12, game_id="BUF@MIA", ceiling_points=23.0),
+        PlayerPoolEntry("wr2", "Alpha WR2", "KC", "LAC", ("WR",), 5500, 15.0, 0.12, game_id="KC@LAC", ceiling_points=23.0),
+        PlayerPoolEntry("wr3", "Gamma WR3", "DET", "CHI", ("WR",), 4800, 13.0, 0.08, game_id="DET@CHI", ceiling_points=20.0),
+        PlayerPoolEntry("wr4", "Delta WR4", "MIA", "BUF", ("WR",), 4400, 12.0, 0.06, game_id="BUF@MIA", ceiling_points=18.0),
+        PlayerPoolEntry("te1", "Alpha TE", "DET", "CHI", ("TE",), 4200, 11.0, 0.08, game_id="DET@CHI", ceiling_points=17.0),
+        PlayerPoolEntry("dst1", "Gamma DST", "DET", "CHI", ("DST",), 2800, 7.0, 0.05, game_id="DET@CHI", ceiling_points=11.0),
+    ]
+    vuln_map = {"qb1": -1.5, "qb2": 2.5, "rb1": 0.2, "rb2": 0.2}
+    lineups_default, _ = optimize_classic_portfolio_v2(
+        pool,
+        num_lineups=1,
+        config=ClassicOptimizerConfig(min_qb_stack=1, min_bringback=0),
+        positional_vuln_map=vuln_map,
+    )
+    lineups_15p, _ = optimize_classic_portfolio_v2(
+        pool,
+        num_lineups=1,
+        config=ClassicOptimizerConfig(min_qb_stack=1, min_bringback=0, positional_vuln_weight=1.5),
+        positional_vuln_map=vuln_map,
+    )
+    qb_default = next(s.player.player_id for s in lineups_default[0].slots if s.slot == "QB")
+    qb_15p = next(s.player.player_id for s in lineups_15p[0].slots if s.slot == "QB")
+    assert qb_default == "qb1"
+    assert qb_15p == "qb2"
+    assert len(lineups_15p[0].slots) == 9

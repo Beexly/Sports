@@ -49,7 +49,8 @@ export class SlidingWindowRpmLimiter {
     while (this.timestamps.length > 0 && this.timestamps[0] <= windowStart) {
       this.timestamps.shift();
     }
-    if (this.timestamps.length < this.maxRequestsPerMinute) {
+    const effectiveRpmLimit = Math.min(this.maxRequestsPerMinute, NIM_SERVERLESS_RPM_LIMIT);
+    if (this.timestamps.length < effectiveRpmLimit) {
       this.timestamps.push(now);
       return 0;
     }

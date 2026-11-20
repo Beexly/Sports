@@ -1846,6 +1846,7 @@ def run_stage1a_all_38_coaching_and_scheme_layers(
         footballxos_16_category_playbook_engine,
         ftn_and_snap_deep_intelligence_engine,
         pfr_learned_trench_scheme_contact_engine,
+        causal_positional_vulnerability_engine,
         ingame,
         ol_provider,
         pgwe_luck_audit,
@@ -2207,6 +2208,11 @@ def run_stage1a_all_38_coaching_and_scheme_layers(
             away, home
         ),
         "stream_15o_pfr_learned_trench_scheme_contact": pfr_learned_trench_scheme_contact_engine.evaluate_learned_trench_scheme_contact_matchup(
+            away,
+            home,
+            {"wind_mph": env_cfg.get("wind_mph", 6.5), "is_indoor": env_cfg.get("is_indoor", False)},
+        ),
+        "stream_15p_causal_pos_vuln": causal_positional_vulnerability_engine.evaluate_causal_15p_matchup(
             away,
             home,
             {"wind_mph": env_cfg.get("wind_mph", 6.5), "is_indoor": env_cfg.get("is_indoor", False)},

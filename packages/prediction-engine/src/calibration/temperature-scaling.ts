@@ -90,7 +90,7 @@ export function expectedCalibrationError(
     let ySum = 0;
     for (let i = 0; i < probs.length; i++) {
       const p = probs[i] ?? 0;
-      if (p > lo && (p <= hi || (b === bins - 1 && p === 1))) {
+      if ((b === 0 ? p >= lo : p > lo) && (p <= hi || (b === bins - 1 && p === 1))) {
         n++;
         pSum += p;
         ySum += labels[i] ?? 0;

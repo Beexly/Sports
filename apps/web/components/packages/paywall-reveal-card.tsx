@@ -60,7 +60,7 @@ function formatConfidenceStrict(raw: string | number): string {
   return cleaned.endsWith("/100") ? cleaned : `${cleaned}/100`;
 }
 
-/** What the catalog says this pack contains — never more. */
+/** What the catalog says this pack contains - never more. */
 function insideList(pkg: PickPackageOffering): string[] {
   return [
     "Spread call",
@@ -72,7 +72,7 @@ function insideList(pkg: PickPackageOffering): string[] {
 }
 
 /**
- * PaywallRevealCard — one purchase band.
+ * PaywallRevealCard - one purchase band.
  *
  * Redline Ledger: identity on the left, price and action on the right, picks
  * revealed in-place below the band after purchase. No nested lock boxes, no
@@ -542,7 +542,7 @@ export function PaywallRevealCard({
               {unlockedWriteups?.[0]?.dfsStacks && unlockedWriteups[0].dfsStacks.cashCore.length > 0 ? (
                 <>
                   <h4 className="rl-display mt-3 text-3xl text-ion-white">
-                    {unlockedWriteups[0].matchup} — Optimal Showdown Roster
+                    {unlockedWriteups[0].matchup} - Optimal Showdown Roster
                   </h4>
                   <p className="mt-2 max-w-[65ch] text-sm text-ion-1">
                     Built from active starters, offensive and defensive line protection splits, verified inactives, and correlated captain leverage.

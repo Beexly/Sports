@@ -860,6 +860,10 @@ def evaluate_22_proprietary_metrics_for_context(
     trench_delta = float(l12.get("scheme_advantage_delta", 0.02))
     scheme_delta = float(l11.get("scheme_advantage_delta", 0.02))
     qb_delta = float(l21.get("qb_clean_pocket_epa_proj", 0.03))
+    stream_15p_delta = float(
+        pkt.get("stream_15p_net_pos_vuln_delta", 0.0)
+        or (pkt.get("stream_15p_causal_pos_vuln") or {}).get("stream_15p_net_pos_vuln_delta", 0.0)
+    )
     overrides = dict(metric_overrides or {})
 
     per_metric: Dict[str, Dict[str, Any]] = {}
@@ -873,7 +877,8 @@ def evaluate_22_proprietary_metrics_for_context(
                 0.35 * base_epa_diff
                 + 0.25 * trench_delta
                 + 0.20 * scheme_delta
-                + 0.20 * qb_delta * (1.0 + 0.02 * ((idx % 5) - 2)),
+                + 0.20 * qb_delta * (1.0 + 0.02 * ((idx % 5) - 2))
+                + (0.15 * stream_15p_delta if stream_15p_delta != 0.0 else 0.0),
                 6,
             )
         contrib = round(w * raw_sig, 6)
@@ -895,6 +900,17 @@ def evaluate_22_proprietary_metrics_for_context(
         "proprietary_22_shrunk_log_odds_delta": shrunk_delta,
         "per_metric_signals": per_metric,
     }
+
+
+def evaluate_empirical_stream_15p_optimizer_walkforward(
+    eval_weeks: Tuple[int, ...] | List[int] = (4, 5, 6, 7, 8, 9, 10),
+) -> Dict[str, Any]:
+    """Strictly causal real-data walk-forward benchmark backed by Stream 15P L-RAPM."""
+    from intelligence.coaching.causal_positional_vulnerability_engine import (
+        evaluate_causal_15p_walkforward_oos,
+    )
+
+    return evaluate_causal_15p_walkforward_oos(eval_weeks=tuple(eval_weeks))
 
 
 if __name__ == "__main__":

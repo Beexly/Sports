@@ -69,7 +69,17 @@ export async function getNanoGptSubscriptionStatus({ env = process.env, nowMs = 
       return { ...baseStatus, status: `HTTP_${res.status}` };
     }
     const usage = await res.json();
-    return { ...baseStatus, status: "ACTIVE_OK", usage };
+    const weeklyUnitsUsed = Number(usage?.weeklyInputUnits ?? usage?.weekly_input_units ?? 0);
+    const dailyImagesUsed = Number(usage?.dailyImages ?? usage?.daily_images ?? 0);
+    const weeklyQuotaExceeded = weeklyUnitsUsed >= WEEKLY_INPUT_TOKEN_LIMIT;
+    const dailyImageQuotaExceeded = dailyImagesUsed >= DAILY_IMAGE_LIMIT;
+    return {
+      ...baseStatus,
+      status: weeklyQuotaExceeded || dailyImageQuotaExceeded ? "QUOTA_CEILING_REACHED" : "ACTIVE_OK",
+      weeklyQuotaExceeded,
+      dailyImageQuotaExceeded,
+      usage,
+    };
   } catch (err) {
     return {
       ...baseStatus,

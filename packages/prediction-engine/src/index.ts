@@ -1583,18 +1583,17 @@ export type {
   DriveResult,
 } from "./expected-metrics/index.js";
 
-// Model Promotion Gate ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â pure eligibility evaluator (paired-Brier EB-LCB +
-// CLV non-inferiority + walk-forward integrity). DARK, and deliberately NOT
-// re-exported from this barrel: window-hash.ts uses node:crypto, and this
-// barrel is imported by CLIENT components (e.g. simulation-cloud.tsx ->
-// lib/sim/score-distribution.ts), so a barrel export drags node:crypto into
-// the browser bundle and breaks the Next build (verified on Vercel deploy
-// dpl_CgarwjnVmeV7). The future server-side consumer (the founder-registered
-// trial harness) imports the submodule path directly:
-//   import { evaluatePromotion } from "@sports/prediction-engine/src/promotion/index.js"
+// Model Promotion Gate - pure eligibility evaluator (paired-Brier EB-LCB +
+// CLV non-inferiority + walk-forward integrity). Pure leaf functions
+// (evaluatePromotion, recomputePromotionDecision, pairedBrierLcb,
+// welchOneSidedNonInferiority, validateWalkForwardIntegrity) are exported
+// from leaf modules at lines 3562-3575; window-hash.ts (computeWindowHash)
+// uses node:crypto and stays excluded from this barrel because client
+// components import @sports/prediction-engine (verified on Vercel deploy
+// dpl_CgarwjnVmeV7). Import ./promotion/window-hash.js directly server-side.
 // See docs/frontier/MODEL_PROMOTION_GATE_CONTRACT.md.
 
-// Honesty surface ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â product No-Bet codes, Phase 0 placebo, Glass Ledger receipts
+// Honesty surface - product No-Bet codes, Phase 0 placebo, Glass Ledger receipts
 // (namespaced Product* to avoid colliding with gse-score NoBetDecision)
 export {
   evaluateProductNoBet,

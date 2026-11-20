@@ -1,4 +1,4 @@
-# ADR 0012 - Source-Grounded Stage-1 Ingestion (`langextract` + `magika`), `LocalStack` Receipts & Polyglot `osv.dev` Security
+# ADR 0012 — Source-Grounded Stage-1 Ingestion (`langextract` + `magika`), `LocalStack` Receipts & Polyglot `osv.dev` Security
 
 **Date:** 2026-11-15
 **Status:** Accepted
