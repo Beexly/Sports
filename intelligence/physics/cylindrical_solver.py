@@ -211,6 +211,79 @@ class CylindricalSpectralSolver:
         ) + float(np.max(self.kz**2))
         return 2.785 / (nu * rho)
 
+    def _compute_substepping(self, dt: float, nu: float) -> Tuple[int, float, float]:
+        """Compute the stability limit, substep count, and substep size for RK4."""
+        limit = self.rk4_stability_limit(nu)
+        sub = 1 if not np.isfinite(limit) else int(np.ceil(dt / (limit * 0.9)))
+        sub = max(sub, 1)
+        h = dt / sub
+        return sub, h, limit
+
+    def _rhs_viscous(
+        self, nu: float, u_r: np.ndarray, u_theta: np.ndarray, u_z: np.ndarray
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """Evaluate viscous right-hand-side for cylindrical velocity components."""
+        return (
+            nu * self._laplacian_scalar(u_r),
+            nu * self._laplacian_theta(u_theta),
+            nu * self._laplacian_scalar(u_z),
+        )
+
+    def _advance_rk4_substep(
+        self, nu: float, h: float, u_r: np.ndarray, u_theta: np.ndarray, u_z: np.ndarray
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """Advance the velocity field by a single RK4 substep of length h with pole regularity."""
+        k1 = self._rhs_viscous(nu, u_r, u_theta, u_z)
+        k2 = self._rhs_viscous(nu, u_r + 0.5 * h * k1[0], u_theta + 0.5 * h * k1[1], u_z + 0.5 * h * k1[2])
+        k3 = self._rhs_viscous(nu, u_r + 0.5 * h * k2[0], u_theta + 0.5 * h * k2[1], u_z + 0.5 * h * k2[2])
+        k4 = self._rhs_viscous(nu, u_r + h * k3[0], u_theta + h * k3[1], u_z + h * k3[2])
+
+        u_r_next = u_r + (h / 6.0) * (k1[0] + 2.0 * k2[0] + 2.0 * k3[0] + k4[0])
+        u_theta_next = u_theta + (h / 6.0) * (k1[1] + 2.0 * k2[1] + 2.0 * k3[1] + k4[1])
+        u_z_next = u_z + (h / 6.0) * (k1[2] + 2.0 * k2[2] + 2.0 * k3[2] + k4[2])
+
+        # Regularity is preserved by the operator, not imposed: re-assert
+        # the exact pole value the analytic seed satisfies.
+        u_theta_next[0, :] = 0.0
+        return u_r_next, u_theta_next, u_z_next
+
+    @staticmethod
+    def _build_evolution_result(
+        t_span: Tuple[float, float],
+        dt: float,
+        nu: float,
+        n_steps: int,
+        sub: int,
+        limit: float,
+        diverged_at: Optional[float],
+        trace: list,
+        u_theta_final: np.ndarray,
+    ) -> Dict[str, Any]:
+        """Compute metrics and assemble the dictionary returned by evolve."""
+        omega_0 = trace[0][1]
+        omega_final = trace[-1][1]
+        ratio = omega_final / omega_0 if omega_0 != 0.0 else float("nan")
+
+        return {
+            "t_span": t_span,
+            "dt": dt,
+            "nu": nu,
+            "n_steps": n_steps,
+            "steps_completed": len(trace) - 1,
+            "completed": diverged_at is None,
+            "diverged_at": diverged_at,
+            "substeps_per_step": sub,
+            "rk4_stability_limit": limit,
+            "omega_0": omega_0,
+            "omega_final": omega_final,
+            "decay_ratio": ratio,
+            "monotone_decay": all(
+                trace[i + 1][1] <= trace[i][1] + 1e-15 for i in range(len(trace) - 1)
+            ),
+            "pole_regularity_satisfied": bool(np.all(np.abs(u_theta_final[0, :]) < 1e-12)),
+            "trace": trace,
+        }
+
     def evolve(
         self,
         t_span: Tuple[float, float] = (0.0, 0.02),
@@ -252,89 +325,46 @@ class CylindricalSpectralSolver:
         if t1 < t0:
             raise ValueError("t_span must be increasing")
 
-        # Stability guard: an explicit RK4 step must stay inside [-2.785, 0] of
-        # the (negative) viscous spectrum. Where dt violates it, subdivide.
-        limit = self.rk4_stability_limit(nu)
-        sub = 1 if not np.isfinite(limit) else int(np.ceil(dt / (limit * 0.9)))
-        sub = max(sub, 1)
-        h = dt / sub
-
+        sub, h, limit = self._compute_substepping(dt, nu)
         u_r, u_theta, u_z = self.initialize_harper_seed(alpha, delta_r, delta_z)
 
-        def rhs(u_r_: np.ndarray, u_theta_: np.ndarray, u_z_: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-            return (
-                nu * self._laplacian_scalar(u_r_),
-                nu * self._laplacian_theta(u_theta_),
-                nu * self._laplacian_scalar(u_z_),
-            )
-
-        def peak_vorticity(u_r_: np.ndarray, u_theta_: np.ndarray, u_z_: np.ndarray) -> float:
-            return self.compute_vorticity(u_r_, u_theta_, u_z_)["max_vorticity"]
-
         n_steps = int(round((t1 - t0) / dt))
-        omega_at_start = peak_vorticity(u_r, u_theta, u_z)
+        omega_at_start = self.compute_vorticity(u_r, u_theta, u_z)["max_vorticity"]
         trace = [(t0, omega_at_start)]
         diverged_at: Optional[float] = None
         if observer is not None:
             observer(t0, u_r, u_theta, u_z)
+
         for step in range(n_steps):
             t = t0 + step * dt
             for _ in range(sub):
-                k1 = rhs(u_r, u_theta, u_z)
-                k2 = rhs(u_r + 0.5 * h * k1[0], u_theta + 0.5 * h * k1[1], u_z + 0.5 * h * k1[2])
-                k3 = rhs(u_r + 0.5 * h * k2[0], u_theta + 0.5 * h * k2[1], u_z + 0.5 * h * k2[2])
-                k4 = rhs(u_r + h * k3[0], u_theta + h * k3[1], u_z + h * k3[2])
-                u_r = u_r + (h / 6.0) * (k1[0] + 2.0 * k2[0] + 2.0 * k3[0] + k4[0])
-                u_theta = u_theta + (h / 6.0) * (k1[1] + 2.0 * k2[1] + 2.0 * k3[1] + k4[1])
-                u_z = u_z + (h / 6.0) * (k1[2] + 2.0 * k2[2] + 2.0 * k3[2] + k4[2])
-                # Regularity is preserved by the operator, not imposed: re-assert
-                # the exact pole value the analytic seed satisfies.
-                u_theta[0, :] = 0.0
+                u_r, u_theta, u_z = self._advance_rk4_substep(nu, h, u_r, u_theta, u_z)
             if not np.all(np.isfinite(u_theta)):
                 diverged_at = t + dt
                 break
-            omega_now = peak_vorticity(u_r, u_theta, u_z)
+            omega_now = self.compute_vorticity(u_r, u_theta, u_z)["max_vorticity"]
             trace.append((t + dt, omega_now))
             if observer is not None:
                 observer(t + dt, u_r, u_theta, u_z)
-            # Optional early abort: a resolution whose observable has left the
-            # physical range by orders of magnitude is diverging, and running it
-            # to the end only burns time to record the same non-answer. The
-            # divergence is REPORTED, never hidden.
             if (
                 abort_on_growth is not None
                 and np.isfinite(omega_now)
                 and omega_now > abort_on_growth * omega_at_start
-            ):
-                diverged_at = t + dt
-                break
-            if not np.isfinite(omega_now):
+            ) or not np.isfinite(omega_now):
                 diverged_at = t + dt
                 break
 
-        omega_0 = trace[0][1]
-        omega_final = trace[-1][1]
-        ratio = omega_final / omega_0 if omega_0 != 0.0 else float("nan")
-
-        return {
-            "t_span": (t0, t1),
-            "dt": dt,
-            "nu": nu,
-            "n_steps": n_steps,
-            "steps_completed": len(trace) - 1,
-            "completed": diverged_at is None,
-            "diverged_at": diverged_at,
-            "substeps_per_step": sub,
-            "rk4_stability_limit": limit,
-            "omega_0": omega_0,
-            "omega_final": omega_final,
-            "decay_ratio": ratio,
-            "monotone_decay": all(
-                trace[i + 1][1] <= trace[i][1] + 1e-15 for i in range(len(trace) - 1)
-            ),
-            "pole_regularity_satisfied": bool(np.all(np.abs(u_theta[0, :]) < 1e-12)),
-            "trace": trace,
-        }
+        return self._build_evolution_result(
+            t_span=(t0, t1),
+            dt=dt,
+            nu=nu,
+            n_steps=n_steps,
+            sub=sub,
+            limit=limit,
+            diverged_at=diverged_at,
+            trace=trace,
+            u_theta_final=u_theta,
+        )
 
     def evaluate_audit(self, alpha: float = 8.0, delta_r: float = 0.3, delta_z: float = 0.15) -> Dict[str, Any]:
         """Run complete spectral audit of the initial seed."""
