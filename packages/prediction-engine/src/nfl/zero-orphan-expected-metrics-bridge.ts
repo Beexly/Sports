@@ -62,11 +62,12 @@ import {
  * Verified against the filesystem by `zero-orphan-engine-audit.test.ts`.
  */
 export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
-  // src/expected-metrics/ (65 modules)
+  // src/expected-metrics/ (68 modules)
   "expected-metrics/adjusted-scramble-epa.ts",
   "expected-metrics/any-a.ts",
   "expected-metrics/avg-separation-expected.ts",
   "expected-metrics/batch3-sports-physics-bridge.ts",
+  "expected-metrics/chronological-time.ts",
   "expected-metrics/cpae-aggregate.ts",
   "expected-metrics/cpae-surface.ts",
   "expected-metrics/defensive-fantasy-points-allowed.ts",
@@ -130,7 +131,7 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "expected-metrics/win-probability.ts",
   "expected-metrics/wr-depth-after-leader.ts",
   "expected-metrics/yoy-persistence.ts",
-  // src/nfl/ (70 modules including this bridge)
+  // src/nfl/ (77 modules including this bridge)
   "nfl/all-in-one-research-signals.ts",
   "nfl/ats-ablation-harness.ts",
   "nfl/belichick-ten-metrics.ts",
