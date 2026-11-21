@@ -26,7 +26,7 @@ concurrency:
 jobs:
   smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     # secrets context is NOT allowed in step-level `if` (workflow fails at
     # startup with zero jobs). Expose it as job env, then gate on env context.
     env:
@@ -40,6 +40,24 @@ jobs:
           # Required for private-repo workflow list (section 6 of smoke-prod.sh).
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bash scripts/smoke-prod.sh
+
+      # The ledger step needs tsx + a generated Prisma client; the runner has
+      # neither after a bare checkout. Mirror the CI install pattern, gated on
+      # the same secret so the morning smoke stays fast when it is absent.
+      - name: Setup Node.js (ledger verification)
+        if: ${{ env.DATABASE_URL != '' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies (ledger verification)
+        if: ${{ env.DATABASE_URL != '' }}
+        run: npm ci --no-audit --no-fund
+
+      - name: Generate Prisma Client (ledger verification)
+        if: ${{ env.DATABASE_URL != '' }}
+        run: npm run db:generate
 
       - name: Verify daily settlement ledger refresh when DATABASE_URL configured
         if: ${{ env.DATABASE_URL != '' }}
