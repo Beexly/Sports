@@ -25,6 +25,8 @@ describe("conformal methods inventory", () => {
     expect(conformalQuantile(scores, 0.1)).toBe(1.0);
     expect(splitConformalResidualThreshold(scores, 0.1)).toBe(1.0);
     expect(conformalQuantile([], 0.1)).toBe(Number.POSITIVE_INFINITY);
+    // Small sample fail-closed: n=5, alpha=0.1 -> ceil(0.9*6)-1 = 5 >= n -> +Infinity
+    expect(conformalQuantile([0.1, 0.2, 0.3, 0.4, 0.5], 0.1)).toBe(Number.POSITIVE_INFINITY);
   });
 
   it("residual and Mondrian + alpha clip", () => {

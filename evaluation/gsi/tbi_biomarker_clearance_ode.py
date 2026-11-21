@@ -13,7 +13,45 @@ from __future__ import annotations
 
 import json
 import math
-from typing import Dict
+from types import MappingProxyType
+from typing import Any, Dict, Mapping
+
+ASSAY_CUTOFFS: Mapping[str, Mapping[str, Any]] = MappingProxyType(
+    {
+        "istat_tbi_plasma": MappingProxyType(
+            {
+                "gfap": 30.0,
+                "uchl1": 360.0,
+                "matrix": "plasma",
+                "source": "FDA 510(k) K201778 decision summary (21 CFR 866.5830)",
+            }
+        ),
+        "banyan_bti_serum": MappingProxyType(
+            {
+                "gfap": 22.0,
+                "uchl1": 327.0,
+                "matrix": "serum",
+                "source": "FDA DEN170045 (restated in K240279 decision summary, 21 CFR 866.5830)",
+            }
+        ),
+        "vidas_tbi_serum": MappingProxyType(
+            {
+                "gfap": 22.0,
+                "uchl1": 327.0,
+                "matrix": "serum",
+                "source": "FDA 510(k) K240279 decision summary (21 CFR 866.5830)",
+            }
+        ),
+        "papa_2022_research_serum": MappingProxyType(
+            {
+                "gfap": 30.0,
+                "uchl1": 327.0,
+                "matrix": "serum",
+                "source": "Papa et al. 2022 research serum pair (non-commercial research provenance)",
+            }
+        ),
+    }
+)
 
 
 def simulate_biphasic_biomarker_clearance(
@@ -39,15 +77,31 @@ def simulate_biphasic_biomarker_clearance(
     return round(val, 4)
 
 
-def evaluate_rule_in_signal(gfap_pg_ml: float, uchl1_pg_ml: float) -> Dict[str, object]:
-    """ADR-0003: Biomarkers supply strictly rule-in alert flags, NEVER clearance/negative exclusion."""
+def evaluate_rule_in_signal(
+    gfap_pg_ml: float,
+    uchl1_pg_ml: float,
+    assay: str = "istat_tbi_plasma",
+) -> Dict[str, object]:
+    """ADR-0003 + FDA 21 CFR 866.5830(b)(2): Biomarkers supply rule-in head-CT triage escalation alerts only.
+
+    Never grants standalone intracranial lesion diagnosis or return-to-play clearance.
+    """
+    if assay not in ASSAY_CUTOFFS:
+        raise ValueError(f"unknown assay {assay!r}; valid assays: {sorted(ASSAY_CUTOFFS)}")
     if gfap_pg_ml < 0 or uchl1_pg_ml < 0:
         raise ValueError("biomarker concentrations must be non-negative")
-    gfap_alert = gfap_pg_ml >= 30.0
-    uchl1_alert = uchl1_pg_ml >= 327.0
+    cut = ASSAY_CUTOFFS[assay]
+    gfap_alert = gfap_pg_ml >= float(cut["gfap"])
+    uchl1_alert = uchl1_pg_ml >= float(cut["uchl1"])
     return {
         "rule_in_only_doctrine": True,
+        "head_ct_triage_escalation_only": True,
+        "standalone_lesion_diagnosis_permitted": False,
         "return_to_play_clearance_permitted": False,
+        "mmp13_excluded": True,
+        "regulatory_basis": "FDA 21 CFR 866.5830(b)(2)",
+        "assay": assay,
+        "assay_provenance": str(cut["source"]),
         "alert_triggered": gfap_alert or uchl1_alert,
         "gfap_pg_ml": gfap_pg_ml,
         "uchl1_pg_ml": uchl1_pg_ml,

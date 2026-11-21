@@ -19,6 +19,8 @@ describe("nested conformal + QOOB", () => {
     const s = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
     expect(conformalQuantile(s, 0.1)).toBe(1.0); // ceil(0.9*11)=10 -> 1.0
     expect(conformalQuantile([], 0.1)).toBe(Number.POSITIVE_INFINITY);
+    // Small sample fail-closed: n=5, alpha=0.1 -> ceil(0.9*6)=6 > 5 -> +Infinity
+    expect(conformalQuantile([0.1, 0.2, 0.3, 0.4, 0.5], 0.1)).toBe(Number.POSITIVE_INFINITY);
   });
 
   it("nested-set interval covers at the nominal rate on iid data", () => {

@@ -224,7 +224,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
       "1Q/1H Derivatives, QB & Skill Props, Kicking, IDP Sacks/Tackles, Longest Plays & Anytime TD Probabilities",
       "DraftKings Showdown Cash & GPP Optimal Lineups with Zero Excluded/Injured Players",
     ],
-    badge: "LIVE TONIGHT - TNF IND @ HOU ($19)",
+    badge: "FINAL (HOU 26-3) - WEEK 11 TNF RECAP",
     includesProps: true,
     includesSgp: true,
     includesDfs: true,

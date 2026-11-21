@@ -9,7 +9,7 @@
 3. **ZERO PII & ZERO SECRETS IN GIT:** Strip personal finance/health/FSA/EEOC/address/phone/credential items from `GSE-MASTER-INVENTORY-2026-11-20-V2.md`; validate with `secret-scan.mjs --all` + diff regex scan.
 4. **License & Clearance:** `s40537-025-01128-3.pdf` is CC-BY-NC-ND 4.0 (strictly learn-only / cite-only); `sportsref_download (10).xls` is learn/audit-only (`data/engine/sources/pfr_2026_punting.csv`); all causal walk-forward computations use cleared CC-BY-4.0 `nflverse` PBP parquets (`week < as_of_week`).
 5. **Epistemic Walk-Forward Honesty:** Hold any Stream 16B component failing baseline OOS MSE at `production_weight = 0.0` (NULL HOLD).
-6. **Autonomy & Public Gate Safety:** Never flip `LIVE_BOARD`, `PUBLISH_LEDGER`, `PUBLIC_PICKS_ENABLED`, or `PERFORMANCE_STATS`; never cite voided `62-23-1` or legacy DB buckets as standing records.
+6. **Autonomy & Public Gate Safety:** Never flip `LIVE_BOARD`, `PUBLISH_LEDGER`, `PUBLIC_PICKS_ENABLED`, or `PERFORMANCE_STATS`; never cite the voided Nov 5 Week 8 legacy batch record or legacy DB buckets as standing records.
 
 ## Tasks Summary
 - **Task 0:** Isolated worktree `C:\Users\Garrett\Sports-worktrees\overnight-goal-2026-11-21` + `node_modules` junction + plan artifact.

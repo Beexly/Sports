@@ -28,13 +28,14 @@ export function mulberry32(seed: number): () => number {
 
 export const ENABLED = false;
 
-/** Finite-sample conformal quantile: ceil((1-alpha)(n+1))-th order statistic. */
+/** Finite-sample conformal quantile: ceil((1-alpha)(n+1))-th order statistic (fail-closed +Infinity if k > n). */
 export function conformalQuantile(scores: readonly number[], alpha: number): number {
   const n = scores.length;
   if (n === 0) return Number.POSITIVE_INFINITY;
   const sorted = [...scores].sort((a, b) => a - b);
-  const k = Math.min(n, Math.ceil((1 - alpha) * (n + 1)));
-  return sorted[k - 1]!;
+  const k = Math.ceil((1 - alpha) * (n + 1));
+  if (k > n) return Number.POSITIVE_INFINITY;
+  return sorted[Math.max(1, k) - 1]!;
 }
 
 /**
