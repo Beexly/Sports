@@ -21,6 +21,8 @@ from . import (
     causal_box_shell_and_charting_engine,
     causal_ol_continuity_and_half_splits_engine,
     causal_third_down_cpoe_st_engine,
+    causal_sequencing_trench_punting_engine,
+    spatial_ghosts_and_step_turn_evaluator,
 )
 from .provider import CoachingEngineProvider
 
@@ -42,4 +44,6 @@ __all__ = ["common", "load", "proe", "fingerprint", "tenures", "regime",
            "causal_box_shell_and_charting_engine",
            "causal_ol_continuity_and_half_splits_engine",
            "causal_third_down_cpoe_st_engine",
+           "causal_sequencing_trench_punting_engine",
+           "spatial_ghosts_and_step_turn_evaluator",
            "CoachingEngineProvider"]

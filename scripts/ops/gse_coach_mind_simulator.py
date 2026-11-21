@@ -1984,6 +1984,42 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     conditioners["stream_16a_net_3d_cpoe_st_diff"] = float(
         stream_16a_bundle["stream_16a_net_3d_cpoe_st_diff"]
     )
+    from intelligence.coaching.causal_sequencing_trench_punting_engine import (
+        evaluate_causal_16b_seq_trench_punt_matchup,
+    )
+
+    stream_16b_bundle = evaluate_causal_16b_seq_trench_punt_matchup(
+        away_team=away_u,
+        home_team=home_u,
+        context=ctx,
+    )
+    conditioners["stream_16b_away_sequencing_edge"] = float(
+        stream_16b_bundle["stream_16b_away_sequencing_edge"]
+    )
+    conditioners["stream_16b_home_sequencing_edge"] = float(
+        stream_16b_bundle["stream_16b_home_sequencing_edge"]
+    )
+    conditioners["stream_16b_away_trench_bt_edge"] = float(
+        stream_16b_bundle["stream_16b_away_trench_bt_edge"]
+    )
+    conditioners["stream_16b_home_trench_bt_edge"] = float(
+        stream_16b_bundle["stream_16b_home_trench_bt_edge"]
+    )
+    conditioners["stream_16b_away_punt_fp_edge"] = float(
+        stream_16b_bundle["stream_16b_away_punt_fp_edge"]
+    )
+    conditioners["stream_16b_home_punt_fp_edge"] = float(
+        stream_16b_bundle["stream_16b_home_punt_fp_edge"]
+    )
+    conditioners["stream_16b_away_null_hold_edge"] = float(
+        stream_16b_bundle["stream_16b_away_null_hold_edge"]
+    )
+    conditioners["stream_16b_home_null_hold_edge"] = float(
+        stream_16b_bundle["stream_16b_home_null_hold_edge"]
+    )
+    conditioners["stream_16b_net_seq_trench_punt_diff"] = float(
+        stream_16b_bundle["stream_16b_net_seq_trench_punt_diff"]
+    )
     conditioners["julia_carleman_5level_audit_ready"] = bool(julia_carleman_path.is_file())
 
     result = {
@@ -2021,6 +2057,7 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         "stream_15y_box_shell_and_charting": stream_15y_bundle,
         "stream_15z_ol_continuity_and_half_splits": stream_15z_bundle,
         "stream_16a_third_down_cpoe_and_st": stream_16a_bundle,
+        "stream_16b_seq_trench_and_punting": stream_16b_bundle,
         "wave32_unified_sports_situational_fusion": wave32_fusion,
         "wave34_holistic_biometrics": wave32_fusion["wave34_holistic_biometrics"],
         "wave35_gsi_and_micro_matchups": wave32_fusion["wave35_gsi_and_micro_matchups"],

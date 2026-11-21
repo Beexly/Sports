@@ -404,6 +404,9 @@ def run_real_nflverse_walk_forward_backtests() -> dict[str, dict[str, Any]]:
     from intelligence.coaching.causal_third_down_cpoe_st_engine import (
         evaluate_causal_16a_walkforward_oos,
     )
+    from intelligence.coaching.causal_sequencing_trench_punting_engine import (
+        evaluate_causal_16b_walkforward_oos,
+    )
 
     results["stream_15p_causal_pos_vuln_walkforward"] = evaluate_causal_15p_walkforward_oos(
         eval_weeks=tuple(range(4, 11))
@@ -439,6 +442,9 @@ def run_real_nflverse_walk_forward_backtests() -> dict[str, dict[str, Any]]:
         eval_weeks=tuple(range(4, 11))
     )
     results["stream_16a_3d_cpoe_st_walkforward"] = evaluate_causal_16a_walkforward_oos(
+        eval_weeks=tuple(range(4, 11))
+    )
+    results["stream_16b_seq_trench_punt_walkforward"] = evaluate_causal_16b_walkforward_oos(
         eval_weeks=tuple(range(4, 11))
     )
 
@@ -585,6 +591,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         if not s16a.get("all_promoted_components_beat_baseline"):
             print(
                 "EPISTEMIC GATE FAILURE: Stream 16A 3rd-down/CPOE/ST failed OOS gate",
+                file=sys.stderr,
+            )
+            return 1
+        s16b = suite.get("stream_16b_seq_trench_punt_walkforward") or {}
+        if not s16b.get("all_promoted_components_beat_baseline"):
+            print(
+                "EPISTEMIC GATE FAILURE: Stream 16B sequencing/Bradley-Terry/punting failed OOS gate",
                 file=sys.stderr,
             )
             return 1
