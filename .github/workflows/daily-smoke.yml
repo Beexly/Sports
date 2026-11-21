@@ -27,6 +27,10 @@ jobs:
   smoke:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    # secrets context is NOT allowed in step-level `if` (workflow fails at
+    # startup with zero jobs). Expose it as job env, then gate on env context.
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,7 +42,5 @@ jobs:
         run: bash scripts/smoke-prod.sh
 
       - name: Verify daily settlement ledger refresh when DATABASE_URL configured
-        if: ${{ secrets.DATABASE_URL != '' }}
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        if: ${{ env.DATABASE_URL != '' }}
         run: npm run verify:ledger && node -e "const d = require('./apps/web/lib/ledger/verified-ledger.json'); if (!d.generatedAt || !d.official) process.exit(1); console.log('verified-ledger OK:', d.generatedAt);"
