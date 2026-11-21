@@ -33,12 +33,23 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from intelligence.calibration.gse_master_compendium_2026_loader import (  # noqa: E402
+    get_week11_plus_compendium_matchup_context,
+    load_compendium_cached,
+    norm_team_code,
+)
+from intelligence.calibration.textbook_and_nflverse_2026_feature_engine import (  # noqa: E402
+    build_causal_multi_dataset_index,
+)
 from intelligence.portfolio.correlated_card_optimizer import (  # noqa: E402
     construct_uncorrelated_game_card,
     evaluate_sgp_strict_gate,
 )
 from scripts.calibration.calibrate_360_prop_families_walkforward import (  # noqa: E402
+    _logit,
+    _sigmoid,
     calibrate_prop_probability,
+    canonicalize_prop_family,
     load_prop_calibration_heads,
 )
 from scripts.ops.evaluate_slate_360_full_markets import (  # noqa: E402
@@ -51,42 +62,77 @@ DEFAULT_OUT_PATH = REPO_ROOT / "data" / "engine" / "week11_sunday_rc1_rc13_recal
 
 
 def _map_stat_type(raw_market: str) -> str:
-    m = (raw_market or "").lower()
-    if "pass" in m and "td" in m:
-        return "passing_tds"
-    if "pass" in m and "att" in m:
-        return "pass_attempts"
-    if "pass" in m and "comp" in m:
+    raw = str(raw_market or "").strip().lower()
+    if raw in {"completions", "comp"}:
         return "pass_completions"
-    if "pass" in m and ("1q" in m or "1st quarter" in m):
-        return "1q_pass_yds"
-    if "pass" in m and "yd" in m:
-        return "passing_yards"
-    if "rush" in m and ("1q" in m or "1st quarter" in m):
-        return "1q_rush_yds"
-    if "longest" in m and "rush" in m:
-        return "longest_rush"
-    if "rush" in m and "yd" in m:
-        return "rushing_yards"
-    if "carries" in m or "rushing attempts" in m:
+    if raw in {"rush_att", "att", "rush_attempts"}:
         return "carries"
-    if "longest" in m and "rec" in m:
+    mapped = canonicalize_prop_family(raw)
+    if mapped and mapped != raw:
+        return mapped
+    if "pass" in raw and "td" in raw:
+        return "passing_tds"
+    if "pass" in raw and "att" in raw:
+        return "pass_attempts"
+    if "comp" in raw:
+        return "pass_completions"
+    if "pass" in raw and ("1q" in raw or "1st quarter" in raw):
+        return "1q_pass_yds"
+    if "pass" in raw and "yd" in raw:
+        return "passing_yards"
+    if "rush" in raw and ("1q" in raw or "1st quarter" in raw):
+        return "1q_rush_yds"
+    if "longest" in raw and "rush" in raw:
+        return "longest_rush"
+    if "rush" in raw and "yd" in raw:
+        return "rushing_yards"
+    if "carries" in raw or "rushing attempts" in raw:
+        return "carries"
+    if "longest" in raw and "rec" in raw:
         return "longest_rec"
-    if "rec" in m and ("1q" in m or "1st quarter" in m):
+    if "rec" in raw and ("1q" in raw or "1st quarter" in raw):
         return "1q_rec_yds"
-    if "rec" in m and "yd" in m:
+    if "rec" in raw and "yd" in raw:
         return "receiving_yards"
-    if "reception" in m:
+    if "reception" in raw:
         return "receptions"
-    if "solo" in m and "tackle" in m:
+    if "solo" in raw and "tackle" in raw:
         return "solo_tackles"
-    if "tackle" in m:
+    if "tackle" in raw:
         return "tackles_plus_assists"
-    if "sack" in m:
+    if "sack" in raw:
         return "sacks"
-    if "anytime" in m or "touchdown" in m:
+    if "anytime" in raw or "touchdown" in raw:
         return "anytime_td"
     return "passing_yards"
+
+
+def _parse_selection_fields(selection: str, fallback_idx: int) -> tuple[str, str, float | None]:
+    txt = " ".join(str(selection or "").split())
+    for side in (" OVER ", " UNDER "):
+        if side in txt.upper():
+            pos_idx = txt.upper().index(side)
+            athlete = txt[:pos_idx].strip()
+            tail = txt[pos_idx + len(side):].strip()
+            try:
+                line_val = float(tail.split()[0])
+            except (ValueError, IndexError):
+                line_val = None
+            return (athlete or f"Player_{fallback_idx}", side.strip(), line_val)
+    return (txt or f"Player_{fallback_idx}", "OVER", None)
+
+
+def _infer_pos_for_prop(player_id: str, stat_fam: str, pos_lookup: dict[str, str]) -> str:
+    pos = pos_lookup.get(player_id, "").upper()
+    if pos in {"QB", "RB", "WR", "TE"}:
+        return pos
+    if any(k in stat_fam for k in ("pass_", "passing_", "1q_pass")):
+        return "QB"
+    if any(k in stat_fam for k in ("rush", "carries")):
+        return "RB"
+    if any(k in stat_fam for k in ("rec", "receptions")):
+        return "WR"
+    return "DEF"
 
 
 def run_sunday_week11_rc1_rc13_recalibration(
@@ -95,6 +141,12 @@ def run_sunday_week11_rc1_rc13_recalibration(
 ) -> dict[str, Any]:
     doc = json.loads(source_path.read_text(encoding="utf-8"))
     heads = load_prop_calibration_heads()
+    compendium = load_compendium_cached()
+    try:
+        ds_idx = build_causal_multi_dataset_index()
+        pos_lookup = ds_idx.pos_by_gsis
+    except Exception:
+        pos_lookup = {}
     rng = np.random.default_rng(20261122)
 
     sunday_games_out: list[dict[str, Any]] = []
@@ -109,6 +161,20 @@ def run_sunday_week11_rc1_rc13_recalibration(
         if matchup == "IND @ HOU":
             continue  # Thursday game already settled & graded separately
 
+        away_tm, home_tm = ("", "")
+        if " @ " in matchup:
+            parts = matchup.split(" @ ", 1)
+            away_tm = norm_team_code(parts[0])
+            home_tm = norm_team_code(parts[1])
+
+        env = g.get("stage2_reasoned_environment") or {}
+        away_pids = set((env.get("away") or {}).get("allocated_targets", {}).keys()) | set(
+            (env.get("away") or {}).get("allocated_carries", {}).keys()
+        )
+        home_pids = set((env.get("home") or {}).get("allocated_targets", {}).keys()) | set(
+            (env.get("home") or {}).get("allocated_carries", {}).keys()
+        )
+
         raw_props = list(g.get("player_props") or [])
         candidates: list[dict[str, Any]] = []
         hit_vectors: dict[str, np.ndarray] = {}
@@ -116,14 +182,43 @@ def run_sunday_week11_rc1_rc13_recalibration(
         for idx, p in enumerate(raw_props):
             total_props_evaluated += 1
             stat_fam = _map_stat_type(str(p.get("market") or p.get("stat_type") or p.get("selection") or ""))
-            sim_mean = float(p.get("model_median", p.get("mean", p.get("line", 0.0))) or 0.0)
-            line = float(p.get("line", sim_mean) or 0.0)
+            parsed_athlete, parsed_lean, parsed_line = _parse_selection_fields(str(p.get("selection") or ""), idx)
+            athlete = str(p.get("player_name") or p.get("athlete") or parsed_athlete)
+            lean = str(p.get("lean") or parsed_lean or "OVER").upper()
+            player_id = str(p.get("player_id") or "").strip()
+
+            line = float(p.get("line") if p.get("line") is not None else (parsed_line or p.get("mean_proj") or 0.0))
+            sim_mean = float(p.get("model_median", p.get("mean_proj", p.get("mean", line))) or 0.0)
             raw_prob = float(p.get("model_prob", 0.50) or 0.50)
             mkt_fair = p.get("devigged_market_prob")
             over_odds = p.get("over_odds")
             under_odds = p.get("under_odds")
 
-            cal = calibrate_prop_probability(raw_prob, float(mkt_fair) if mkt_fair is not None else None, stat_fam, heads=heads)
+            if player_id in away_pids and away_tm and home_tm:
+                p_tm, o_tm, p_home = away_tm, home_tm, False
+            elif player_id in home_pids and away_tm and home_tm:
+                p_tm, o_tm, p_home = home_tm, away_tm, True
+            else:
+                p_tm, o_tm, p_home = away_tm, home_tm, False
+
+            pos_u = _infer_pos_for_prop(player_id, stat_fam, pos_lookup)
+            comp_ctx = (
+                get_week11_plus_compendium_matchup_context(
+                    p_tm, o_tm, pos_u, stat_fam, target_week=11, is_home=p_home, compendium=compendium
+                )
+                if (p_tm and o_tm)
+                else {"causal_eligible": False, "logit_adj": 0.0, "matchup_mult": 1.0}
+            )
+            adj_sign = 1.0 if lean == "OVER" else -1.0
+            raw_prob_comp = float(_sigmoid(_logit(raw_prob) + adj_sign * float(comp_ctx.get("logit_adj", 0.0))))
+
+            cal = calibrate_prop_probability(
+                raw_prob_comp,
+                float(mkt_fair) if mkt_fair is not None else None,
+                stat_fam,
+                lean=lean,
+                heads=heads,
+            )
             drift = check_sim_market_drift_circuit_breaker(sim_mean, line, stat_fam) if line > 0 else {"tripped": False}
 
             two_sided_ok = over_odds is not None and under_odds is not None and mkt_fair is not None
@@ -151,16 +246,26 @@ def run_sunday_week11_rc1_rc13_recalibration(
             hit_vectors[cid] = rng.random(10000) < cal_p
             candidates.append({
                 "id": cid,
-                "athlete": str(p.get("player_name") or p.get("athlete") or f"Player_{idx}"),
+                "athlete": athlete,
+                "team": p_tm,
+                "opp_team": o_tm,
+                "position": pos_u,
                 "market": stat_fam,
+                "lean": lean,
+                "model_lean": lean,
                 "selection": str(p.get("selection") or ""),
                 "line": line,
                 "over_odds": over_odds,
                 "under_odds": under_odds,
                 "market_fair_prob": mkt_fair,
+                "raw_model_prob": raw_prob,
+                "compendium_adjusted_raw_prob": round(raw_prob_comp, 4),
+                "compendium_matchup": comp_ctx,
                 "calibrated_prob": cal_p,
+                "win_prob_on_lean": cal_p,
                 "wilson_lower_90": round(max(0.05, cal_p - 0.03), 4),
                 "edge_net": round(cal_p - float(mkt_fair or 0.50), 4),
+                "edge_vs_market": round(cal_p - float(mkt_fair or 0.50), 4),
                 "publishAllowed": publish_allowed,
                 "decision": decision,
             })
@@ -172,9 +277,28 @@ def run_sunday_week11_rc1_rc13_recalibration(
         approved = [c for c in card["evaluated_candidates"] if c.get("publishAllowed")]
         total_cleared_straights += len(approved)
 
+        srs_tbl = compendium.get("standings_srs", {})
+        conv_tbl = compendium.get("conversions", {})
+        dvp_tbl = compendium.get("defense_vs_position", {})
+        game_compendium_summary = {
+            "away_srs": srs_tbl.get(away_tm, {}).get("srs"),
+            "home_srs": srs_tbl.get(home_tm, {}).get("srs"),
+            "away_rz_td_pct": conv_tbl.get(away_tm, {}).get("rz_td_pct"),
+            "home_rz_td_pct": conv_tbl.get(home_tm, {}).get("rz_td_pct"),
+            "home_def_vs_pos_dk_pg": {
+                pos_k: dvp_tbl.get(pos_k, {}).get(home_tm, {}).get("dk_pt_per_game")
+                for pos_k in ("QB", "RB", "WR", "TE")
+            },
+            "away_def_vs_pos_dk_pg": {
+                pos_k: dvp_tbl.get(pos_k, {}).get(away_tm, {}).get("dk_pt_per_game")
+                for pos_k in ("QB", "RB", "WR", "TE")
+            },
+        }
+
         sunday_games_out.append({
             "matchup": matchup,
             "kickoff_utc": g.get("kickoff_utc"),
+            "compendium_week11_matchup": game_compendium_summary,
             "props_evaluated": len(candidates),
             "cleared_calibrated_straights": len(approved),
             "approved_tickets": approved,
@@ -184,10 +308,11 @@ def run_sunday_week11_rc1_rc13_recalibration(
         })
 
     report = {
-        "schema": "gse_week11_sunday_rc1_rc13_recalibrated_v1",
+        "schema": "gse_week11_sunday_rc1_rc13_recalibrated_v2",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "source_sealed_sha256": doc.get("projection_source_sha256"),
         "calibration_schema": heads.get("schema"),
+        "compendium_schema": compendium.get("schema"),
         "games_count": len(sunday_games_out),
         "summary": {
             "total_props_evaluated": total_props_evaluated,

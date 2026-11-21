@@ -1,18 +1,24 @@
 {
-  "schema": "gse_multisport_walkforward_heads_v1",
-  "generated_at_utc": "2026-11-20T22:18:36.456304+00:00",
+  "schema": "gse_multisport_walkforward_heads_v2",
+  "generated_at_utc": "2026-11-21T01:23:05.813466+00:00",
   "no_fake_data_law": true,
   "sports": {
     "NHL": {
-      "strictly_causal": false,
-      "n_oos": 0,
-      "walkforward_brier": 0.255,
-      "market_baseline_brier": 0.25,
-      "walkforward_accuracy": 0.0,
+      "strictly_causal": true,
+      "w_sim": 0.55,
+      "temp": 1.15,
+      "max_prob_cap": 0.74,
+      "walkforward_brier": 0.24056,
+      "walkforward_log_loss": 0.67378,
+      "walkforward_ece": 0.01288,
+      "walkforward_equal_mass_ece": 0.12715,
+      "market_baseline_brier": 0.24837,
+      "market_baseline_log_loss": 0.68989,
+      "walkforward_accuracy": 0.5692,
+      "winner_accuracy": 0.5753,
+      "n_oos": 2809,
+      "has_closing_odds": false,
       "eligible_for_play": false,
-      "w_sim": 0.15,
-      "temp": 0.65,
-      "max_prob_cap": 0.62,
       "readiness": {
         "sport": "NHL",
         "market_family": "moneypuck_xg_moneyline",
@@ -35,19 +41,16 @@
           ]
         },
         "observed": {
-          "n_oos": 0,
-          "walkforward_brier": 0.255,
-          "market_baseline_brier": 0.25,
-          "walkforward_accuracy": 0.0,
-          "strictly_causal": false,
+          "n_oos": 2809,
+          "walkforward_brier": 0.24056,
+          "market_baseline_brier": 0.24837,
+          "walkforward_accuracy": 0.5692,
+          "strictly_causal": true,
           "spine_age_hours": 1.0
         },
         "reasons": [
-          "Calibration head lacks strictly_causal walk-forward verification.",
-          "OOS sample 0 < required 150 for NHL.",
-          "Walk-forward Brier 0.25500 >= market baseline 0.25000.",
-          "OOS accuracy 0.0000 < NHL floor 0.555.",
-          "Market family explicitly quarantined by causal calibration head (`eligible_for_play=False`)."
+          "Market family explicitly quarantined by causal calibration head (`eligible_for_play=False`).",
+          "MoneyPuck historical feed lacks posted two-sided NHL sportsbook closing odds; held in Tier-B paper learning until closing-line validation."
         ]
       }
     },
@@ -55,9 +58,14 @@
       "strictly_causal": false,
       "n_oos": 0,
       "walkforward_brier": 0.255,
+      "walkforward_log_loss": 0.70315,
+      "walkforward_ece": 0.0,
+      "walkforward_equal_mass_ece": 0.0,
       "market_baseline_brier": 0.25,
+      "market_baseline_log_loss": 0.69315,
       "walkforward_accuracy": 0.0,
       "eligible_for_play": false,
+      "has_closing_odds": false,
       "w_sim": 0.15,
       "temp": 0.65,
       "max_prob_cap": 0.62,
@@ -118,66 +126,9 @@
   "moneypuck_live_environment": {
     "source": "moneypuck.com (attribution required)",
     "season": 2026,
-    "status": "live",
-    "top_teams_xg_share": [
-      {
-        "team": "CAR",
-        "games": 22,
-        "xg_share": 0.61
-      },
-      {
-        "team": "NJD",
-        "games": 22,
-        "xg_share": 0.57
-      },
-      {
-        "team": "MIN",
-        "games": 24,
-        "xg_share": 0.56
-      },
-      {
-        "team": "VGK",
-        "games": 24,
-        "xg_share": 0.55
-      },
-      {
-        "team": "COL",
-        "games": 23,
-        "xg_share": 0.55
-      }
-    ],
-    "top_goalies_gsax": [
-      {
-        "name": "Jesper Wallstedt",
-        "team": "MIN",
-        "games": 21,
-        "gsax": 19.14
-      },
-      {
-        "name": "Jacob Fowler",
-        "team": "MTL",
-        "games": 14,
-        "gsax": 14.17
-      },
-      {
-        "name": "Linus Ullmark",
-        "team": "OTT",
-        "games": 11,
-        "gsax": 10.39
-      },
-      {
-        "name": "Ilya Sorokin",
-        "team": "NYI",
-        "games": 14,
-        "gsax": 10.28
-      },
-      {
-        "name": "Pyotr Kochetkov",
-        "team": "CAR",
-        "games": 14,
-        "gsax": 10.1
-      }
-    ],
+    "status": "skipped_offline",
+    "top_teams_xg_share": [],
+    "top_goalies_gsax": [],
     "errors": []
   }
 }

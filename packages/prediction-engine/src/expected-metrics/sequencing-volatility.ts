@@ -21,6 +21,7 @@ import { buildDrives, type DrivePlay } from "./drives.js";
 import { mean, stddev, round } from "./numeric.js";
 import { computeFeatureSchemaHash, type ExpectedMetricProvenance } from "./types.js";
 import type { SequencingPlay } from "./nflverse-pbp-mapper.js";
+import { compareSeasonWeek } from "./chronological-time.js";
 
 export const SEQUENCING_VOLATILITY_MODEL_VERSION = "gse-sequencing-volatility-v1";
 const FEATURE_KEYS = ["playType"] as const;
@@ -118,7 +119,6 @@ export function computeSequencingVolatility(
     playMap.set(p.playId, p);
   }
 
-  const targetThreshold = targetSeason * 100 + targetWeek;
   const processedDrives: ProcessedDrive[] = [];
 
   for (const drive of drives) {
@@ -135,7 +135,7 @@ export function computeSequencingVolatility(
     const week = driveSeqPlays[0]!.week;
 
     if (season !== targetSeason) continue;
-    if (season * 100 + week >= targetThreshold) continue;
+    if (compareSeasonWeek(season, week, targetSeason, targetWeek) >= 0) continue;
 
     processedDrives.push({
       teamId: drive.posteam,

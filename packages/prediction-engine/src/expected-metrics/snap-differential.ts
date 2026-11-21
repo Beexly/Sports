@@ -17,12 +17,13 @@
  * document this module as yielding official snap counts.
  *
  * WINDOWING: Strict point-in-time (PIT). A target game's window includes only
- * games STRICTLY BEFORE it, sorted by `season * 100 + week`. A game is never
- * included in its own window.
+ * games STRICTLY BEFORE it, sorted by dense chronological `(season, week)`
+ * indexing. A game is never included in its own window.
  */
 
 import { computeFeatureSchemaHash, type ExpectedMetricProvenance } from "./types.js";
 import { round } from "./numeric.js";
+import { chronologicalSeasonWeekIndex } from "./chronological-time.js";
 
 /** One scrimmage play (pass or run) mapped from nflverse. */
 export interface ScrimmagePlayRow {
@@ -84,7 +85,7 @@ export function computeSnapDifferential(plays: readonly ScrimmagePlayRow[]): Tea
     gameId: string;
     season: number;
     week: number;
-    pitKey: number; // season * 100 + week
+    pitKey: number; // dense chronological index
     offPlays: Map<string, number>;
     defPlays: Map<string, number>;
   }
@@ -99,7 +100,7 @@ export function computeSnapDifferential(plays: readonly ScrimmagePlayRow[]): Tea
       gameId,
       season: firstPlay.season,
       week: firstPlay.week,
-      pitKey: firstPlay.season * 100 + firstPlay.week,
+      pitKey: chronologicalSeasonWeekIndex(firstPlay.season, firstPlay.week),
       offPlays: new Map<string, number>(),
       defPlays: new Map<string, number>(),
     };
@@ -119,7 +120,7 @@ export function computeSnapDifferential(plays: readonly ScrimmagePlayRow[]): Tea
     for (const team of stats.defPlays.keys()) allTeams.add(team);
   }
 
-  // Sort games strictly by pitKey (season * 100 + week), then tie-break on gameId
+  // Sort games strictly by dense chronological pitKey, then tie-break on gameId
   gameStatsList.sort((a, b) => {
     if (a.pitKey !== b.pitKey) return a.pitKey - b.pitKey;
     return a.gameId < b.gameId ? -1 : a.gameId > b.gameId ? 1 : 0;

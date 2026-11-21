@@ -14,6 +14,7 @@
 
 import { round } from "./numeric.js";
 import { computeFeatureSchemaHash, type ExpectedMetricProvenance } from "./types.js";
+import { compareSeasonWeek } from "./chronological-time.js";
 
 /** One play size record, mapped from an nflverse play-by-play row. */
 export interface PlaySizePlay {
@@ -224,8 +225,6 @@ export function computePlaySizeDistributions(
   targetSeason: number,
   targetWeek: number
 ): PlaySizeDistribution[] {
-  const targetTime = targetSeason * 100 + targetWeek;
-
   // Group plays by game for rolling windows (requires distinct games)
   const playsByGameAndTeam = new Map<string, {
     offensePlays: Map<string, PlaySizePlay[]>,
@@ -237,8 +236,7 @@ export function computePlaySizeDistributions(
 
   // Filter plays strictly before the target time within the same season
   const eligiblePlays = allPlays.filter(play => {
-    const playTime = play.season * 100 + play.week;
-    return play.season === targetSeason && playTime < targetTime;
+    return play.season === targetSeason && compareSeasonWeek(play.season, play.week, targetSeason, targetWeek) < 0;
   });
 
   for (const play of eligiblePlays) {
@@ -273,7 +271,7 @@ export function computePlaySizeDistributions(
 
   // Better approach for distinct games per team:
   // For each team, find all games they participated in (offense or defense)
-  // Sort those games by play.season * 100 + play.week, then by gameId to be deterministic.
+  // Sort those games by (season, week), then by gameId to be deterministic.
 
   const distributions: PlaySizeDistribution[] = [];
   const teams = Array.from(distinctTeams).sort();
@@ -292,9 +290,8 @@ export function computePlaySizeDistributions(
       // Find a play from gameA and gameB to extract season/week
       const playA = eligiblePlays.find(p => p.gameId === gameA)!;
       const playB = eligiblePlays.find(p => p.gameId === gameB)!;
-      const timeA = playA.season * 100 + playA.week;
-      const timeB = playB.season * 100 + playB.week;
-      if (timeA !== timeB) return timeA - timeB;
+      const cmp = compareSeasonWeek(playA.season, playA.week, playB.season, playB.week);
+      if (cmp !== 0) return cmp;
       return gameA < gameB ? -1 : (gameA > gameB ? 1 : 0);
     });
 

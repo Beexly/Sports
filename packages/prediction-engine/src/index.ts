@@ -3991,6 +3991,7 @@ export {
 } from "./research/capital.js";
 export {
   timeIndex,
+  chronologicalPanelIndex,
   generateDmlPanel,
   DEFAULT_PANEL,
   type QbStatus,

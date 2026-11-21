@@ -261,16 +261,23 @@ export async function GET(req: Request): Promise<NextResponse> {
           continue;
         }
 
-        // Player inputs from the DB (trailing 4 weeks).
+        // Player inputs from the DB (trailing 4 chronological REG weeks, bridging season - 1 when week <= 4).
+        const lookbackFilters =
+          week <= 4
+            ? [
+                ...(week > 1 ? [{ season, week: { gte: 1, lt: week } }] : []),
+                { season: season - 1, week: { gte: 18 - (4 - (week - 1)), lte: 18 } },
+              ]
+            : [{ season, week: { gte: week - 4, lt: week } }];
         const statRows = await db.playerGameStat.findMany({
           where: {
-            season,
             seasonType: "REG",
-            week: { gte: week - 4, lt: week },
+            OR: lookbackFilters,
             playerId: { in: roster.map((p) => p.id) },
           },
           select: {
             playerId: true,
+            season: true,
             week: true,
             targets: true,
             carries: true,
@@ -287,6 +294,7 @@ export async function GET(req: Request): Promise<NextResponse> {
             playerId: r.playerId,
             position: pl?.position ?? null,
             teamSide: (pl?.recentTeam === homeAbbr ? "home" : "away") as "home" | "away",
+            season: r.season,
             week: r.week,
             targets: r.targets,
             carries: r.carries,
@@ -296,7 +304,7 @@ export async function GET(req: Request): Promise<NextResponse> {
             fantasyPointsPpr: r.fantasyPointsPpr,
           };
         });
-        const { inputs, skippedNoGames } = buildPropPlayerInputs(inputsLike, week);
+        const { inputs, skippedNoGames } = buildPropPlayerInputs(inputsLike, week, season);
         gameReport.playerInputs = inputs.length;
         gameReport.skippedNoGames = skippedNoGames.length;
 

@@ -41,6 +41,7 @@ export interface PlayerGameStatLike {
   readonly playerId: string;
   readonly position: string | null;
   readonly teamSide: MarketAnchorTeamSide;
+  readonly season?: number;
   readonly week: number;
   readonly targets: number | null;
   readonly carries: number | null;
@@ -58,6 +59,12 @@ export interface PropPlayerInputReport {
   readonly skippedPosition: readonly string[];
 }
 
+const REG_SEASON_WEEKS = 18;
+
+function chronoRegWeek(season: number, week: number): number {
+  return Math.trunc(season) * REG_SEASON_WEEKS + (Math.min(REG_SEASON_WEEKS, Math.trunc(week)) - 1);
+}
+
 function opportunities(s: PlayerGameStatLike): number {
   return (s.targets ?? 0) + (s.carries ?? 0) + (s.attempts ?? 0);
 }
@@ -68,24 +75,40 @@ function yards(s: PlayerGameStatLike): number {
 
 /**
  * Pure builder: player-week stat rows -> MarketAnchoredPlayerInput[].
- * `week` is the target (upcoming) week; rows must be REG weeks < week.
+ * `week` is the target (upcoming) week; rows must be valid REG weeks (`week >= 1`).
+ * Uses dense 18-week chronological spacing so Weeks 1-4 bridge `targetSeason - 1`
+ * Weeks 15-18 seamlessly instead of starving early-season lookbacks.
  * DB access lives in the caller; this function is unit-testable.
  */
 export function buildPropPlayerInputs(
   rows: readonly PlayerGameStatLike[],
   week: number,
+  targetSeason?: number,
 ): PropPlayerInputReport {
   const skippedNoGames: string[] = [];
   const skippedPosition: string[] = [];
   const inputs: MarketAnchoredPlayerInput[] = [];
 
-  // Group by player; keep trailing-4-week window.
-  const windowWeeks = [week - 1, week - 2, week - 3, week - 4];
-  const byPlayer = new Map<string, PlayerGameStatLike[]>();
+  let maxObservedSeason = 2026;
   for (const r of rows) {
-    if (!windowWeeks.includes(r.week)) continue;
+    if (typeof r.season === "number" && Number.isFinite(r.season) && r.season > maxObservedSeason) {
+      maxObservedSeason = r.season;
+    }
+  }
+  const effTargetSeason = targetSeason ?? maxObservedSeason;
+  const targetChrono = chronoRegWeek(effTargetSeason, week);
+
+  // Group by player; keep trailing-4 chronological REG weeks (gap 1..4).
+  const byPlayer = new Map<string, Array<{ row: PlayerGameStatLike; weight: number }>>();
+  for (const r of rows) {
+    if (!Number.isFinite(r.week) || r.week < 1 || r.week > REG_SEASON_WEEKS) continue;
+    const rowSeason = typeof r.season === "number" && Number.isFinite(r.season) ? r.season : effTargetSeason;
+    const gap = targetChrono - chronoRegWeek(rowSeason, r.week);
+    if (gap < 1 || gap > 4) continue;
+    const w = RECENCY_WEIGHTS[gap - 1] ?? 0;
+    if (w <= 0) continue;
     const list = byPlayer.get(r.playerId) ?? [];
-    list.push(r);
+    list.push({ row: r, weight: w });
     byPlayer.set(r.playerId, list);
   }
 
@@ -93,14 +116,13 @@ export function buildPropPlayerInputs(
   const posUsage = new Map<string, number[]>();
   const posEff = new Map<string, number[]>();
   for (const rs of byPlayer.values()) {
-    const pos = (rs[0]?.position ?? "").toUpperCase();
+    const pos = (rs[0]?.row.position ?? "").toUpperCase();
     if (!ELIGIBLE_POSITIONS.has(pos)) continue;
     let wSum = 0;
     let usageSum = 0;
     let effSum = 0;
     let effW = 0;
-    for (const r of rs) {
-      const w = RECENCY_WEIGHTS[windowWeeks.indexOf(r.week)] ?? 0;
+    for (const { row: r, weight: w } of rs) {
       const opp = opportunities(r);
       wSum += w;
       usageSum += w * opp;
@@ -127,7 +149,7 @@ export function buildPropPlayerInputs(
   }
 
   for (const [pid, rs] of byPlayer) {
-    const pos = (rs[0]?.position ?? "").toUpperCase();
+    const pos = (rs[0]?.row.position ?? "").toUpperCase();
     if (!ELIGIBLE_POSITIONS.has(pos)) {
       skippedPosition.push(pid);
       continue;
@@ -137,8 +159,7 @@ export function buildPropPlayerInputs(
     let effSum = 0;
     let effW = 0;
     let games = 0;
-    for (const r of rs) {
-      const w = RECENCY_WEIGHTS[windowWeeks.indexOf(r.week)] ?? 0;
+    for (const { row: r, weight: w } of rs) {
       const opp = opportunities(r);
       games += 1;
       wSum += w;
@@ -186,7 +207,7 @@ export function buildPropPlayerInputs(
 
     inputs.push({
       playerId: pid,
-      teamSide: rs[0]!.teamSide,
+      teamSide: rs[0]!.row.teamSide,
       position: pos,
       usagePosteriorMean: usagePosterior.posteriorMean,
       efficiencyPosteriorMean: Math.max(0, effPosterior.posteriorMean),

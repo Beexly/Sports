@@ -1,6 +1,7 @@
 import { computeFeatureSchemaHash, type ExpectedMetricProvenance } from "./types.js";
 import { mapNflversePbpToExpectedMetrics, attachOwnEpa, type PbpRow } from "./nflverse-pbp-mapper.js";
 import { buildDrives, type DrivePlay, type Drive } from "./drives.js";
+import { compareSeasonWeek } from "./chronological-time.js";
 
 export const GAME_SCRIPT_SPLITS_MODEL_VERSION = "gse-game-script-splits-v1";
 export const GAME_SCRIPT_SPLITS_FEATURE_KEYS = ["teamId", "half"] as const;
@@ -49,8 +50,6 @@ export function computeGameScriptSplits(
     fixtureWeek: number,
     minPlays: number = 60
 ): TeamHalfSplits[] {
-    const cutoffId = fixtureSeason * 100 + fixtureWeek;
-
     const validRows: PbpRow[] = [];
     let windowStartWeek = Infinity;
     let windowEndWeek = -Infinity;
@@ -60,8 +59,7 @@ export function computeGameScriptSplits(
         const week = num(r["week"]);
         if (!Number.isFinite(season) || !Number.isFinite(week)) continue;
 
-        const rowId = season * 100 + week;
-        if (rowId < cutoffId) {
+        if (compareSeasonWeek(season, week, fixtureSeason, fixtureWeek) < 0) {
             validRows.push(r);
             if (week < windowStartWeek) windowStartWeek = week;
             if (week > windowEndWeek) windowEndWeek = week;

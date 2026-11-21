@@ -15,6 +15,7 @@
 
 import { round } from "./numeric.js";
 import { computeFeatureSchemaHash, type ExpectedMetricProvenance } from "./types.js";
+import { compareSeasonWeek } from "./chronological-time.js";
 
 export const THIRD_DOWN_TARGET_SHARE_MODEL_VERSION = "gse-third-down-target-share-v1";
 const THIRD_DOWN_TARGET_SHARE_FEATURE_KEYS = ["down", "play_type", "receiver_player_id"] as const;
@@ -65,7 +66,7 @@ export function computeThirdDownTargetShare(
   // Point-in-time filter: strictly before targetWeek in targetSeason
   const filtered = plays.filter((p) => {
     if (p.season !== targetSeason) return false;
-    return p.season * 100 + p.week < targetSeason * 100 + targetWeek;
+    return compareSeasonWeek(p.season, p.week, targetSeason, targetWeek) < 0;
   });
 
   // Collect distinct games (weeks) per team to handle rolling windows

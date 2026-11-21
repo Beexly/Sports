@@ -8,6 +8,7 @@
  */
 
 import type { Drive, DriveResult } from "./drives.js";
+import { compareSeasonWeek, parseGameIdSeasonWeek, type SeasonWeek } from "./chronological-time.js";
 
 const FAILURE_RESULTS = new Set<DriveResult>([
   "PUNT",
@@ -23,14 +24,9 @@ const EXCLUDED_RESULTS = new Set<DriveResult>([
   "OTHER",
 ]);
 
-/** Parses "YYYY_WW_AWAY_HOME" to YYYY * 100 + WW */
-function gameIdToTime(gameId: string): number {
-  const parts = gameId.split("_");
-  if (parts.length < 2) return 0;
-  const year = parseInt(parts[0]!, 10);
-  const week = parseInt(parts[1]!, 10);
-  if (isNaN(year) || isNaN(week)) return 0;
-  return year * 100 + week;
+/** Parses "YYYY_WW_AWAY_HOME" cleanly without base-100 arithmetic. */
+function parseDriveGameTime(gameId: string): SeasonWeek {
+  return parseGameIdSeasonWeek(gameId) ?? { season: 0, week: 0 };
 }
 
 export interface DriveFailureRates {
@@ -51,17 +47,22 @@ export function computeDriveFailureRates(
   targetTeam: string,
   targetGameId: string
 ): DriveFailureRates {
-  const targetTime = gameIdToTime(targetGameId);
-  const targetSeason = Math.floor(targetTime / 100);
+  const targetTime = parseDriveGameTime(targetGameId);
+  const targetSeason = targetTime.season;
 
   // Filter for valid past drives strictly before the game time
   const pastDrives = drives.filter(d => {
-    const time = gameIdToTime(d.gameId);
-    return time < targetTime;
+    const time = parseDriveGameTime(d.gameId);
+    return compareSeasonWeek(time.season, time.week, targetTime.season, targetTime.week) < 0;
   });
 
-  // Sort descending by gameId to process latest games first
-  pastDrives.sort((a, b) => b.gameId.localeCompare(a.gameId));
+  // Sort descending chronologically (then gameId) to process latest games first
+  pastDrives.sort((a, b) => {
+    const ta = parseDriveGameTime(a.gameId);
+    const tb = parseDriveGameTime(b.gameId);
+    const cmp = compareSeasonWeek(tb.season, tb.week, ta.season, ta.week);
+    return cmp !== 0 ? cmp : b.gameId.localeCompare(a.gameId);
+  });
 
   const offRates = calculateRates(pastDrives, targetTeam, targetSeason, true);
   const defRates = calculateRates(pastDrives, targetTeam, targetSeason, false);
@@ -86,10 +87,15 @@ function calculateRates(
     }
   }
 
-  // Sort games descending
-  const sortedGames = Array.from(gamesPlayed).sort((a, b) => b.localeCompare(a));
+  // Sort games descending chronologically
+  const sortedGames = Array.from(gamesPlayed).sort((a, b) => {
+    const ta = parseDriveGameTime(a);
+    const tb = parseDriveGameTime(b);
+    const cmp = compareSeasonWeek(tb.season, tb.week, ta.season, ta.week);
+    return cmp !== 0 ? cmp : b.localeCompare(a);
+  });
 
-  const seasonGames = new Set(sortedGames.filter(g => Math.floor(gameIdToTime(g) / 100) === targetSeason));
+  const seasonGames = new Set(sortedGames.filter(g => parseDriveGameTime(g).season === targetSeason));
   const last8Games = new Set(sortedGames.slice(0, 8));
   const last16Games = new Set(sortedGames.slice(0, 16));
 

@@ -78,4 +78,24 @@ describe("props player-input builder", () => {
     expect(r.inputs).toHaveLength(0);
     expect(r.skippedNoGames).toHaveLength(0);
   });
+
+  it("bridges prior-season Weeks 15-18 seamlessly for Weeks 1-2 without starvation", () => {
+    const w1Rows = [
+      row({ season: 2025, week: 18, targets: 10, receivingYards: 110 }),
+      row({ season: 2025, week: 17, targets: 8, receivingYards: 90 }),
+      row({ season: 2025, week: 16, targets: 6, receivingYards: 70 }),
+      row({ season: 2025, week: 15, targets: 6, receivingYards: 60 }),
+    ];
+    const w1 = buildPropPlayerInputs(w1Rows, 1, 2026);
+    expect(w1.inputs).toHaveLength(1);
+    expect(w1.inputs[0]!.usagePosteriorMean).toBeGreaterThan(7);
+
+    const w2Rows = [
+      row({ season: 2026, week: 1, targets: 9, receivingYards: 95 }),
+      ...w1Rows.slice(0, 3),
+    ];
+    const w2 = buildPropPlayerInputs(w2Rows, 2, 2026);
+    expect(w2.inputs).toHaveLength(1);
+    expect(w2.inputs[0]!.usagePosteriorMean).toBeGreaterThan(7);
+  });
 });

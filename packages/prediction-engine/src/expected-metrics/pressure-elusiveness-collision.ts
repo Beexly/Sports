@@ -1,5 +1,6 @@
 import { round } from "./numeric.js";
 import { computeFeatureSchemaHash, type ExpectedMetricProvenance } from "./types.js";
+import { compareSeasonWeek } from "./chronological-time.js";
 
 /**
  * Pressure-vs-Elusiveness Collision (SHADOW).
@@ -78,35 +79,34 @@ function getWindowGames(
   teamId: string,
   teamField: "posteam" | "defteam"
 ): Set<string> {
-  const targetWindowKey = targetSeason * 100 + targetWeek;
-  const gameKeys = new Set<number>();
-  const gameIdToKey = new Map<number, string>();
+  const byGame = new Map<string, { season: number; week: number; gameId: string }>();
 
   for (const p of plays) {
-    const playWindowKey = Number(p.gameId.split("_")[0]) * 100 + p.week;
-    if (playWindowKey < targetWindowKey && p[teamField] === teamId) {
-      gameKeys.add(playWindowKey);
-      gameIdToKey.set(playWindowKey, p.gameId);
+    if (p[teamField] !== teamId) continue;
+    const playSeason = Number(p.gameId.split("_")[0]);
+    if (!Number.isFinite(playSeason)) continue;
+    if (compareSeasonWeek(playSeason, p.week, targetSeason, targetWeek) < 0) {
+      if (!byGame.has(p.gameId)) {
+        byGame.set(p.gameId, { season: playSeason, week: p.week, gameId: p.gameId });
+      }
     }
   }
 
-  const sortedKeys = Array.from(gameKeys).sort((a, b) => a - b);
-  let includedKeys: number[] = [];
+  const sortedGames = Array.from(byGame.values()).sort((a, b) => {
+    const cmp = compareSeasonWeek(a.season, a.week, b.season, b.week);
+    return cmp !== 0 ? cmp : a.gameId.localeCompare(b.gameId);
+  });
 
+  let included: typeof sortedGames = [];
   if (windowMode === "season-to-date") {
-    // Only include games from the target season
-    includedKeys = sortedKeys.filter(k => Math.floor(k / 100) === targetSeason);
+    included = sortedGames.filter(g => g.season === targetSeason);
   } else if (windowMode === "rolling-4") {
-    includedKeys = sortedKeys.slice(-4);
+    included = sortedGames.slice(-4);
   } else if (windowMode === "rolling-8") {
-    includedKeys = sortedKeys.slice(-8);
+    included = sortedGames.slice(-8);
   }
 
-  const includedGameIds = new Set<string>();
-  for (const k of includedKeys) {
-    includedGameIds.add(gameIdToKey.get(k)!);
-  }
-  return includedGameIds;
+  return new Set(included.map(g => g.gameId));
 }
 
 export function buildQbElusivenessProxyRow(

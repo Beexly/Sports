@@ -1,0 +1,63 @@
+{
+  "schema": "gse_real_sportsbook_walkforward_benchmark_v1",
+  "strictly_causal": true,
+  "fanduel_historical_props": {
+    "passing_yards": {
+      "n_oos": 292,
+      "model_brier": 0.25059,
+      "model_log_loss": 0.69431,
+      "model_ece": 0.02607,
+      "model_equal_mass_ece": 0.14983,
+      "fanduel_brier": 0.25008,
+      "fanduel_log_loss": 0.6933,
+      "fanduel_ece": 0.01712,
+      "directional_acc": 0.5,
+      "over_base_rate": 0.5171
+    },
+    "receiving_yards": {
+      "n_oos": 1577,
+      "model_brier": 0.25062,
+      "model_log_loss": 0.69439,
+      "model_ece": 0.01677,
+      "model_equal_mass_ece": 0.13409,
+      "fanduel_brier": 0.25,
+      "fanduel_log_loss": 0.69316,
+      "fanduel_ece": 0.00252,
+      "directional_acc": 0.4914,
+      "over_base_rate": 0.499
+    },
+    "receptions": {
+      "n_oos": 1460,
+      "model_brier": 0.24109,
+      "model_log_loss": 0.67488,
+      "model_ece": 0.01719,
+      "model_equal_mass_ece": 0.14214,
+      "fanduel_brier": 0.24446,
+      "fanduel_log_loss": 0.68197,
+      "fanduel_ece": 0.00938,
+      "directional_acc": 0.5507,
+      "over_base_rate": 0.4836
+    },
+    "rushing_yards": {
+      "n_oos": 704,
+      "model_brier": 0.24983,
+      "model_log_loss": 0.69281,
+      "model_ece": 0.00957,
+      "model_equal_mass_ece": 0.10855,
+      "fanduel_brier": 0.24986,
+      "fanduel_log_loss": 0.69286,
+      "fanduel_ece": 0.01407,
+      "directional_acc": 0.5128,
+      "over_base_rate": 0.4858
+    }
+  },
+  "nfl_2026_22book_ml": {
+    "n_oos": 72,
+    "model_brier": 0.22291,
+    "model_log_loss": 0.63979,
+    "model_ece": 0.09572,
+    "close_22book_brier": 0.22291,
+    "close_22book_log_loss": 0.63979,
+    "model_acc": 0.6528
+  }
+}

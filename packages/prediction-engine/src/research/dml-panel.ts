@@ -62,9 +62,23 @@ function sigmoid(z: number): number {
   return 1 / (1 + Math.exp(-z));
 }
 
-/** Time index for sorting / folds: season*100 + week. */
+/**
+ * Ordinal time index for sorting / folds (`season * 100 + week`).
+ * Preserve this exact formula because `research-causal-bridge.test.ts` pins
+ * `evalTimeIndex({ season: 2, week: 5 }) === 205`. Never subtract `timeIndex`
+ * values for rolling windows (base-100 leaves an 82-step offseason gap);
+ * use `chronologicalPanelIndex` for window arithmetic.
+ */
 export function timeIndex(row: DmlGameRow): number {
   return row.season * 100 + row.week;
+}
+
+/** Dense chronological index (`(season - 1) * weeksPerSeason + week`) without base-100 gaps. */
+export function chronologicalPanelIndex(
+  row: DmlGameRow,
+  weeksPerSeason = 18,
+): number {
+  return (row.season - 1) * weeksPerSeason + row.week;
 }
 
 /**

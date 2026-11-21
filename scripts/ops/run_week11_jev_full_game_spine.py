@@ -26,7 +26,10 @@ if HERMES_JEV_PATH.exists() and str(HERMES_JEV_PATH) not in sys.path:
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from jevkit import client as jev_client  # noqa: E402
+try:
+    from jevkit import client as jev_client  # noqa: E402
+except ImportError:
+    jev_client = None  # type: ignore[assignment]
 from scripts.ops.enforce_stage0_roster_and_board_allowlist import (  # noqa: E402
     load_stage0_game_roster_allowlist,
 )
@@ -689,6 +692,11 @@ def run_week11_live_jev_spine(
         }
         for tm in (away_u, home_u)
     }
+
+    if jev_client is None:
+        raise RuntimeError(
+            "jevkit is not installed in this environment; live JEV snap-by-snap execution requires jevkit."
+        )
 
     t_start = time.monotonic()
     while clock_sec > 0.0 and snap_num < 164:
