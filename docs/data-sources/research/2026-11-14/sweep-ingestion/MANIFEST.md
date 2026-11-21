@@ -614,9 +614,28 @@ Source: ~/workspace/ig-for-you-sweep/reports/2026-11-20-PM.md.
 codes (no inventory loss). Delta file
 delta-2026-11-20-ig-pm.jsonl: 52 records (20 dossier + 32
 inventoried; all 52 shortcode-keyed, 0 slug-keyed), 0 collisions,
-46,812 bytes. Verdicts: CONTEXT-ONLY 42, LEARN-ONLY 9, WATCH 1.
+45,304 bytes after lane/source_file normalization to the
+corpus convention (lane ig-for-you, source_file basename).
+Verdicts: CONTEXT-ONLY 42, LEARN-ONLY 9, WATCH 1.
 Material items: Tufazip v2 compression benchmark (enwik9,
 0.843 bits/byte, rank 13), NASDAQ -5.28 percent session verified
 across outlets, Higgsfield Black Friday discount verified to
 Nov 30 (bundle claim unverified), fal.ai ad (1,500+ models plus
 MCP server, no free tier). Running corpus total: 13,198 records.
+
+## Delta 2026-11-20 X PM (landed 2026-11-20)
+
+Source: ~/workspace/x-for-you-sweep/reports/2026-11-20-PM.md.
+60 unique NEW posts with status IDs (51 watchlist + 9 feed),
+20 dossiers covering 37 posts. Delta file
+delta-2026-11-20-x-pm.jsonl: 120 records (37 dossier + 83
+inventoried; 59 ID-keyed + 61 slug-keyed NO-ID feed rows),
+1 duplicate skipped, 8 further items skipped with reasons in
+the report (4 text-matches to dossiered watchlist posts,
+2 SEEN in AM, 1 quoted-original counted once, 2 sportsbook
+exclusions plus 1 sportsbook promo among inventoried),
+126,297 bytes. Verdicts: TEST 8, ADOPT 1, LEARN-ONLY 26,
+WATCH 1, CONTEXT-ONLY 1, INVENTORIED 83. Material items:
+RoundtableSN personnel-adjusted defensive EPA table,
+abhigyanbuilds 7-repo AI curriculum, sfdata9ers and
+RoundtableSN EPA tables. Running corpus total: 13,318 records.
