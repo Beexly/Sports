@@ -605,3 +605,18 @@ Adjusted EPA plus PFF Grade Blend (36-QB table), Patton and
 StatRankings Play Caller Tendencies, RoundtableSN 32-team
 defensive tables, tejfbanalytics Mahomes deep-throw CPOE by
 receiver. Running corpus total: 13,146 records.
+
+## Delta 2026-11-20 IG PM (landed 2026-11-20)
+
+Source: ~/workspace/ig-for-you-sweep/reports/2026-11-20-PM.md.
+66 feed positions (52 organic + 14 ads); 52/52 organic NEW,
+0 duplicates skipped, 32 inventoried-only items all saved with
+codes (no inventory loss). Delta file
+delta-2026-11-20-ig-pm.jsonl: 52 records (20 dossier + 32
+inventoried; all 52 shortcode-keyed, 0 slug-keyed), 0 collisions,
+46,812 bytes. Verdicts: CONTEXT-ONLY 42, LEARN-ONLY 9, WATCH 1.
+Material items: Tufazip v2 compression benchmark (enwik9,
+0.843 bits/byte, rank 13), NASDAQ -5.28 percent session verified
+across outlets, Higgsfield Black Friday discount verified to
+Nov 30 (bundle claim unverified), fal.ai ad (1,500+ models plus
+MCP server, no free tier). Running corpus total: 13,198 records.
